@@ -120,6 +120,7 @@ function setKeyState(code, isDown) {
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
   if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen()) return;
+  if (window.RoadsterTaxi?.handleKeydown(e)) return;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
     e.preventDefault();
   }
@@ -195,7 +196,7 @@ window.addEventListener('keydown', (e) => {
     sound.beep(520, 0.05);
     return;
   }
-  if (e.code === 'BracketRight' || e.code === 'Equal') {
+  if (e.code === 'BracketRight') {
     state.camZoom = THREE.MathUtils.clamp((state.camZoom || 0.75) - 0.1, 0.55, 1.35);
     updateZoomButtonLabel();
     sound.beep(640, 0.05);
@@ -346,6 +347,7 @@ function renderBannerText() {
 }
 
 function switchMap(targetMap) {
+  window.RoadsterTaxi?.stop();
   window.RoadsterRanked?.abort('map');
   currentMap = targetMap === 'city' ? 'city' : 'highway';
   selectedMapInModal = currentMap;
@@ -417,9 +419,11 @@ function resetCar() {
   state.bannerTimer = 0;
   renderBannerText();
   sound.beep(520, 0.1);
+  window.RoadsterTaxi?.onReset();
 }
 
 function applyTranslations() {
+  window.RoadsterTaxi?.render();
   window.RoadsterMusic?.render();
   window.RoadsterRanked?.render();
   const t = I18N[currentLang];

@@ -1940,6 +1940,7 @@ function animate(now) {
   const dt = Math.min(0.05, (now - lastTime) / 1000);
   lastTime = now;
   updateSimulation(dt);
+  window.RoadsterTaxi?.tick();
   renderer.render(scene, camera);
 }
 

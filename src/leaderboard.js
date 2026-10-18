@@ -261,6 +261,7 @@
       if (typeof data.runId !== 'string' || !data.runId || data.durationMs !== DURATION) throw new Error('invalid_run');
       // Baseline only after the server has issued a run. No elapsed sandbox score can carry over.
       normalizing = true;
+      window.RoadsterTaxi?.stop();
       resetCar();
       clearAllInputKeys();
       trafficLevelIndex = 1;

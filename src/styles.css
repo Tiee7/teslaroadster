@@ -237,3 +237,18 @@ html, body {
 #audio-settings .ranked-button { min-height: 44px; }
 #music-label { margin-top: 24px; font-weight: 700; }
 @media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }
+
+/* Created only after the hidden city mode has been explicitly enabled. */
+.city-taxi-hud {
+  position: fixed; z-index: 12; left: 50%; bottom: 13.5rem;
+  transform: translateX(-50%); width: max-content; max-width: min(30rem, calc(100vw - 2rem));
+  display: flex; flex-direction: column; gap: 0.25rem; padding: 0.65rem 1rem;
+  border: 1px solid rgba(134, 239, 172, 0.45); border-radius: 0.8rem;
+  background: rgba(4, 20, 16, 0.86); color: #dcfce7; text-align: center;
+  font-size: 0.75rem; line-height: 1.4; pointer-events: none;
+}
+.city-taxi-hud strong { font-size: 0.85rem; color: #86efac; }
+@media (max-width: 767px) {
+  .city-taxi-hud { bottom: 12.5rem; padding: 0.45rem 0.7rem; font-size: 0.65rem; }
+  .city-taxi-hud strong { font-size: 0.75rem; }
+}

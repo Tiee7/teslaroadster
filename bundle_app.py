@@ -8,7 +8,7 @@ def bundle():
     src_dir = root / 'src'
     html = (src_dir / 'index.html').read_text(encoding='utf-8')
     css = (src_dir / 'styles.css').read_text(encoding='utf-8')
-    js_files = ['config.js', 'audio.js', 'music.js', 'world.js', 'vehicles.js', 'ui-hud.js', 'leaderboard.js', 'physics-main.js']
+    js_files = ['config.js', 'audio.js', 'music.js', 'world.js', 'vehicles.js', 'taxi.js', 'ui-hud.js', 'leaderboard.js', 'physics-main.js']
     bundled_js_parts = []
     for filename in js_files:
         content = (src_dir / filename).read_text(encoding='utf-8')
