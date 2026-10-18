@@ -1,0 +1,135 @@
+/* 2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulator - Stylesheet */
+* { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #060911;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #f8fafc;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+#game-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.glass-panel {
+  background: rgba(10, 15, 28, 0.80);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.65);
+}
+.glass-pill {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  transition: all 0.08s ease;
+}
+.glass-pill:active {
+  transform: scale(0.93);
+  background: rgba(14, 165, 233, 0.45);
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.65);
+}
+.key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 1.45rem;
+  padding: 0 0.38rem;
+  border-radius: 0.35rem;
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-bottom-width: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #38bdf8;
+  transition: all 0.08s ease;
+}
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.22rem 0.4rem;
+  border-radius: 0.45rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(51, 65, 85, 0.45);
+}
+.ctrl-label {
+  font-size: 0.72rem;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.key-badge.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #7dd3fc;
+  transform: translateY(1px);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
+}
+.nozzle-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: rgba(51, 65, 85, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  transition: all 0.08s ease;
+}
+.nozzle-dot.firing {
+  background: #38bdf8;
+  border-color: #e0f2fe;
+  box-shadow: 0 0 8px #38bdf8, 0 0 14px #0284c7;
+  transform: scale(1.25);
+}
+@keyframes pulseWarning {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.02); }
+}
+.map-card {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.map-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.75);
+  box-shadow: 0 14px 32px -6px rgba(14, 165, 233, 0.35);
+}
+.map-card.selected {
+  border-color: #38bdf8;
+  background: rgba(14, 116, 144, 0.25);
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
+}
+.warning-pulse {
+  animation: pulseWarning 0.45s infinite ease-in-out;
+}
+
+/* Minimalist HUD View - Distraction-free clean view with essential 600L COPV gas gauge preserved */
+.hud-minimal-view {
+  padding-bottom: 0.65rem !important;
+}
+.hud-minimal-view #touch-controls {
+  display: none !important;
+}
+.hud-minimal-view #hud-cluster {
+  max-width: 44rem !important;
+  background: rgba(8, 14, 26, 0.75) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55) !important;
+  padding: 0.45rem 1rem !important;
+}
+.hud-minimal-view #ui-tank-hint {
+  display: none !important;
+}
