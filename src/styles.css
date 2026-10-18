@@ -133,3 +133,56 @@ html, body {
 .hud-minimal-view #ui-tank-hint {
   display: none !important;
 }
+
+/* Ranked runs: independent of utility-CSS loading; native dialog handles focus. */
+.ranked-button {
+  min-height: 36px; padding: 7px 12px; border: 1px solid #39718e; border-radius: 9px;
+  background: #102637; color: #d9f6ff; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.ranked-button:hover { background: #1b3a50; }
+.ranked-button:disabled { opacity: .5; cursor: wait; }
+.ranked-button:focus-visible, #ranked-dialog input:focus-visible, #ranked-dialog select:focus-visible,
+#ranked-hud-open:focus-visible, .ranked-details summary:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 3px; }
+.ranked-primary { background: #08677f; border-color: #43c8e7; color: white; }
+.ranked-hud { display: flex; justify-content: center; padding: 0 12px 4px; pointer-events: none; }
+#ranked-hud-open { pointer-events: auto; display: flex; gap: 14px; align-items: center; max-width: min(94vw, 750px); padding: 5px 12px; border-radius: 9px; border: 1px solid #294257; color: #c5d8e7; background: rgba(6, 15, 26, .88); font: inherit; font-size: 11px; cursor: pointer; }
+#ranked-countdown { color: #7ee7f5; font-size: 17px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ranked-hud[data-phase="running"] #ranked-hud-open { border-color: #22d3ee; }
+.ranked-hud[data-phase="complete"] #ranked-hud-open, .ranked-hud[data-phase="aborted"] #ranked-hud-open { border-color: #fbbf24; }
+#ranked-dialog { padding: 0; width: min(620px, calc(100vw - 24px)); max-height: min(90vh, 860px); max-height: min(90dvh, 860px); overflow-y: auto; border: 1px solid #3a829b; border-radius: 18px; color: #e8f4fc; background: #0a1523; box-shadow: 0 25px 100px #000c; }
+#ranked-dialog::backdrop { background: rgba(2, 6, 15, .82); backdrop-filter: blur(6px); }
+#ranked-dialog [hidden] { display: none !important; }
+.ranked-panel { padding: 22px; }
+.ranked-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+#ranked-title { margin: 0; font-size: 23px; line-height: 1.25; }
+.ranked-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ranked-heading .ranked-actions { flex-shrink: 0; }
+.ranked-status { color: #8de5f7; font-size: 13px; line-height: 1.5; }
+.ranked-current, #ranked-nickname-label { font-size: 13px; line-height: 1.6; }
+#ranked-nickname-label { display: block; margin-top: 14px; font-weight: 700; }
+#ranked-nickname, #ranked-category { display: block; width: 100%; padding: 10px 12px; margin-top: 5px; border: 1px solid #456075; border-radius: 8px; background: #111f30; color: #fff; font: inherit; font-size: 16px; user-select: text; -webkit-user-select: text; }
+#ranked-nickname:disabled { opacity: .65; }
+.ranked-small, .ranked-details p { color: #a8bacb; font-size: 12px; line-height: 1.6; margin: 7px 0; }
+.ranked-error { color: #fca5a5; font-size: 12px; line-height: 1.5; }
+.ranked-error:empty, #ranked-name-lock:empty { display: none; }
+.ranked-result { font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
+.ranked-run-actions { margin-top: 12px; }
+.ranked-details { margin: 20px 0; padding: 12px 0; border-top: 1px solid #29394c; border-bottom: 1px solid #29394c; }
+.ranked-details summary { color: #bdd5e8; cursor: pointer; font-size: 12px; }
+.ranked-notice { color: #fde68a; font-size: 12px; line-height: 1.5; }
+.ranked-board-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.ranked-board-heading label { font-size: 15px; font-weight: 700; width: 100%; }
+#ranked-category { width: auto; flex: 1; min-width: 180px; font-size: 13px; margin: 0; }
+#ranked-table { width: 100%; border-collapse: collapse; margin-top: 12px; table-layout: fixed; font-size: 13px; }
+#ranked-table th, #ranked-table td { padding: 10px 7px; text-align: left; border-bottom: 1px solid #233447; overflow-wrap: anywhere; }
+#ranked-table th { color: #9cb2c6; font-size: 11px; }
+#ranked-table th:first-child { width: 16%; }
+#ranked-table th:last-child { width: 27%; }
+#ranked-table td:last-child, #ranked-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  .ranked-panel { padding: 16px; }
+  #ranked-title { font-size: 20px; }
+  .ranked-run-actions > button { flex: 1 1 100%; }
+  .ranked-button { min-height: 40px; }
+  .ranked-nav { min-height: 32px; }
+}

@@ -1900,6 +1900,8 @@ function updateSimulation(dt) {
 
 function animate(now) {
   requestAnimationFrame(animate);
+  // Snapshot the score before any simulation step beyond the real-time deadline.
+  window.RoadsterRanked?.tick(now);
   const dt = Math.min(0.05, (now - lastTime) / 1000);
   lastTime = now;
   updateSimulation(dt);

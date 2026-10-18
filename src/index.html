@@ -36,6 +36,8 @@
 
     <!-- Action Controls Bar -->
     <div id="hud-action-bar" class="pointer-events-auto flex flex-wrap items-center gap-1.5 md:gap-2">
+      <button id="btn-leaderboard" type="button" class="ranked-button ranked-nav">🏁 Leaderboard</button>
+
       <!-- Language Switcher (Default EN, toggle ZH) -->
       <button id="btn-lang" type="button" class="glass-panel hover:bg-sky-500/20 active:scale-95 transition rounded-lg px-3 py-1.5 text-xs font-bold text-cyan-300 border border-cyan-400/40 flex items-center gap-1.5 cursor-pointer">
         <span>🌐</span>
@@ -112,6 +114,9 @@
       </button>
     </div>
   </header>
+  <div id="ranked-hud" class="ranked-hud" data-phase="idle">
+    <button id="ranked-hud-open" type="button" aria-haspopup="dialog"><span id="ranked-hud-status" role="status">Sandbox • challenge is optional</span><strong id="ranked-countdown" aria-live="off"></strong></button>
+  </div>
 
   <!-- Center Alert Banner for Thruster Status (8s Auto-Descent / 10s Freefall / Stunt Bonus) -->
   <div class="relative z-10 pointer-events-none flex flex-col items-center justify-center mt-1 px-4">
@@ -549,6 +554,7 @@
       <h2 id="crash-title" class="text-2xl font-extrabold text-white">VEHICLE DESTROYED</h2>
       <p id="crash-reason" class="text-xs text-rose-200 mt-1 mb-4">Impact force exceeded the 18.0 G monocoque structural limit!</p>
 
+      <p id="ranked-crash-status" class="text-sm text-cyan-200 mb-3" role="status"></p>
       <div class="grid grid-cols-3 gap-2 bg-slate-950/90 border border-rose-500/40 rounded-xl p-3 mb-5 text-center">
         <div>
           <div id="crash-lbl-speed" class="text-[10px] text-slate-400 uppercase">Impact Δv</div>
@@ -645,12 +651,54 @@
     </div>
   </div>
 
+  <!-- Native modal keeps keyboard focus contained without pausing the ranked clock. -->
+  <dialog id="ranked-dialog" aria-labelledby="ranked-title" aria-describedby="ranked-privacy">
+    <div class="ranked-panel">
+      <div class="ranked-heading">
+        <h2 id="ranked-title">60-second challenge</h2>
+        <div class="ranked-actions"><button id="ranked-language" type="button" class="ranked-button">中文</button><button id="ranked-close" type="button" class="ranked-button" aria-label="Close leaderboard">✕</button></div>
+      </div>
+      <p id="ranked-status" class="ranked-status" role="status"></p>
+      <p id="ranked-running-hint" class="ranked-notice" hidden></p>
+      <div class="ranked-current"><span id="ranked-current-label">Challenge category</span>: <strong id="ranked-current-category"></strong></div>
+      <p id="ranked-settings-hint" class="ranked-small"></p>
+      <label id="ranked-nickname-label" for="ranked-nickname">Public nickname</label>
+      <input id="ranked-nickname" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="ranked-nickname-hint ranked-name-lock" />
+      <p id="ranked-nickname-hint" class="ranked-small"></p>
+      <p id="ranked-name-lock" class="ranked-small"></p>
+      <p id="ranked-error" class="ranked-error" role="alert"></p>
+      <p id="ranked-result" class="ranked-result" hidden></p>
+      <p id="ranked-baseline" class="ranked-small"></p>
+      <div class="ranked-actions ranked-run-actions">
+        <button id="ranked-start" type="button" class="ranked-button ranked-primary">Start 60-second challenge</button>
+        <button id="ranked-abort" type="button" class="ranked-button" hidden>Cancel challenge</button>
+        <button id="ranked-submit" type="button" class="ranked-button ranked-primary" hidden>Submit public score</button>
+        <button id="ranked-discard" type="button" class="ranked-button" hidden>Discard result</button>
+      </div>
+      <p id="ranked-privacy" class="ranked-small"></p>
+      <details class="ranked-details"><summary>Rules / 规则 · v1</summary><p id="ranked-rules"></p><p id="ranked-trust"></p></details>
+      <div class="ranked-board-heading">
+        <label id="ranked-category-label" for="ranked-category">Public leaderboard</label>
+        <select id="ranked-category">
+          <option value="highway-realistic">Elevated Highway · Realistic</option>
+          <option value="highway-fantasy">Elevated Highway · Fantasy</option>
+          <option value="city-realistic">Cyber City · Realistic</option>
+          <option value="city-fantasy">Cyber City · Fantasy</option>
+        </select>
+        <button id="ranked-refresh" type="button" class="ranked-button">Refresh board</button>
+      </div>
+      <p id="ranked-board-status" class="ranked-small" role="status"></p>
+      <table id="ranked-table" hidden><thead><tr><th id="ranked-rank-label" scope="col">Rank</th><th id="ranked-name-label" scope="col">Nickname</th><th id="ranked-score-label" scope="col">Score</th></tr></thead><tbody id="ranked-entries"></tbody></table>
+    </div>
+  </dialog>
+
   <!-- Modular Functional Scripts -->
   <script src="config.js"></script>
   <script src="audio.js"></script>
   <script src="world.js"></script>
   <script src="vehicles.js"></script>
   <script src="ui-hud.js"></script>
+  <script src="leaderboard.js"></script>
   <script src="physics-main.js"></script>
 </body>
 </html>

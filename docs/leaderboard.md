@@ -1,0 +1,51 @@
+# Persistent leaderboard v1
+
+## Gameplay and ranking
+
+This project was originally an endless sandbox, with score displayed as `Math.round(state.score + state.carsCleared * 10)`. Ranked play adds an explicit **60-second score challenge**, leaving sandbox play available. Scores use the existing overtaking, stunt, blast, helipad, and supersonic bonuses. Four independent all-time boards separate `highway-realistic`, `highway-fantasy`, `city-realistic`, and `city-fantasy`.
+
+A ranked start repairs/resets the car and score, uses 36 traffic cars, Cyber Night weather, Plaid off, and stabilizer on. Ranked changes to map, physics, traffic, weather, Plaid, stabilizer, or reset invalidate the challenge. Losing focus/backgrounding invalidates it too. Camera, paint, units and language remain cosmetic. Destruction freezes the achieved score; the original 60-second period must finish before explicit submission. No score is published automatically. Each anonymous browser identity has one best result per board; equal/lower results do not rename or replace its best entry. Top 100 are public. Equal scores are ordered by Redis's reverse lexicographic member tie order.
+
+## Deployment
+
+Vercel runs the three `api/*.js` Node.js 24 functions. There are no runtime npm dependencies. `npm run build` publishes only the committed, bundled `index.html` to `public/`; backend code, tests, documentation and environment files are not static assets. Vercel builds `api/` separately. The root directory is the repository root, framework preset is Other, output directory `public`, build command `npm run build`. Run `python3 bundle_app.py` and checks before committing source edits.
+
+Required **server-only** deployment environment variables:
+
+- `UPSTASH_REDIS_REST_URL`: HTTPS REST endpoint of a durable Upstash Redis database.
+- `UPSTASH_REDIS_REST_TOKEN`: its write-capable REST token. Never expose it to browser code or use a public/client-prefixed environment name.
+- `LEADERBOARD_SECRET`: a cryptographically random secret containing at least 32 bytes. Generate/provide through an approved secure deployment setup, not in a repository or chat. Rotation resets anonymous cookie identities and IP pseudonyms; old board entries remain.
+- `LEADERBOARD_ORIGIN`: exact canonical public origin, e.g. `https://your-project.vercel.app`, without trailing slash/path. The deployment's Vercel-provided `VERCEL_URL` is also accepted for preview smoke tests.
+
+Optional `KV_REST_API_URL` / `KV_REST_API_TOKEN` are supported server-only aliases for integrations injecting those names. Explicit `UPSTASH_*` values take precedence. `LEADERBOARD_NAMESPACE` defaults to `roadster:v1`; set a **different namespace for every preview/test environment** or preferably use a separate database. Do not let public previews share production leaderboard data or secrets. There is no dummy persistent fallback when a database is missing. The game remains playable and the leaderboard reports unavailable.
+
+Provisioning a database, linking an integration, creating/configuring persistent credentials and publishing a deployment are separate account-level steps. This code does not create accounts, secrets, databases or provider permissions. Configure durable storage/backups and review provider usage limits before announcing a production board.
+
+Official references: [Vercel Node.js functions](https://vercel.com/docs/functions/runtimes/node-js), [Upstash REST API](https://upstash.com/docs/redis/features/restapi), [Vercel trusted request headers](https://vercel.com/docs/headers/request-headers).
+
+## API
+
+All writes require exact allowed `Origin` and `application/json`. Responses are JSON; errors are `{ "error": { "code": "...", "message": "..." } }`. Errors and all writes are `no-store`. No CORS permission is granted to third-party sites.
+
+- `POST /api/run`, body `{ "category": "highway-realistic" }`: creates a server-timed run and returns `{runId,durationMs:60000,expiresAt,serverNow}`. Sets a signed, host-only, Secure, HttpOnly, SameSite=Strict, one-year anonymous cookie. The ID is server-issued; the score API never accepts identity or category overrides. One active run per identity for 65 seconds prevents concurrent starts. An already-submitted run permits immediate play-again. If a start response is lost, wait 65 seconds before a fresh start; do not silently create repeated runs.
+- `POST /api/score`, body `{ "runId": "...", "nickname": "...", "score": 1500, "elapsedMs": 60000 }`: validates fully before rate-limit/database writes, checks signed identity, stored ownership, category and server-observed elapsed time, then atomically consumes the run and updates best score. Returns `{accepted:true,improved,bestScore,rank}`. Exact same normalized payload is idempotent for 10 minutes after acceptance, so an uncertain network result can be retried. A different payload for the consumed run returns 409. Unsubmitted runs expire after 10 minutes. The server requires at least 60 seconds since issuance and rejects expired runs.
+- `GET /api/leaderboard?category=...`: only the one category parameter is accepted. Returns `{category,entries:[{rank,nickname,score}],limit:100}`. No player IDs or cookies are returned/set. CDN cache: 10 seconds fresh plus 20 seconds stale-while-revalidate; an accepted result may therefore take up to roughly 30 seconds to appear in a cached list.
+
+## Validation and abuse limits
+
+- Request body limit 2 KiB after/alongside the platform's parser, plus streaming limit in local/raw requests; content-length is checked first when supplied. Vercel may parse its bounded request body before the function executes; the application does not claim to prevent that platform parsing cost.
+- Strict exact fields, no arrays/null/unknown properties, UUID v4 run IDs, finite integer score `0..250000`, exact integer duration `60000`.
+- Nicknames are 1–20 Unicode codepoints and at most 80 UTF-8 bytes after NFKC normalization and trimming. They must begin with a letter/number, and otherwise contain letters, combining marks, numbers, ordinary spaces, underscores or hyphens. All Unicode control/format/private-use/surrogate characters are rejected before normalization. No HTML, URLs, scripts, quotes, emoji sequences or bidi/zero-width controls. The frontend uses `textContent` for user/database-controlled text; stored entries are validated on read as defense in depth.
+- Redis commands are structured JSON arrays, not command strings made by interpolation; nicknames are values, never keys, executable Lua or HTML. User fields do not choose a Redis command/namespace/board.
+- Atomic Redis Lua handles rate increments, active runs, score comparison, leaderboard updates and replay receipts. Per fixed window: starts 20/IP and 8/player per 10 minutes; submissions 60/IP and 15/player per minute; uncached board requests 120/IP per minute. IPs are HMAC-pseudonymized with the secret, never stored raw; Vercel's trusted client-IP headers are used. Rate keys expire after their window. Fixed windows allow a burst across a boundary, and users sharing an IP share its allowance.
+- Upstash requests have four-second timeouts and no redirects; functions allow 20 seconds for the three sequential score operations. Infrastructure errors return generic 503 without stack traces, secrets or provider messages. Writes are fail-closed. A timed-out successful write is recovered via the exact-payload receipt, not by submitting a new result.
+
+## Privacy and limitations
+
+The nickname and best score are public. Use a pseudonym; do not enter contact details or sensitive information. The identity belongs to the browser, not a verified person. Clearing cookies/changing browsers creates a new identity; shared browsers share one best score. The signed anonymous identity is not an account or login. The server stores a random player ID, public nickname/best per category, temporary run data, and temporary pseudonymized rate keys. Best scores and names are retained until an operator's deliberate moderation/reset; run and rate data expire. There is no v1 account recovery or cross-device identity, moderation dashboard, verified replay, or automated profanity service.
+
+This is **basic abuse resistance, not cheat-proof competition**. Simulation and scoring still execute in the browser. A modified client can fabricate plausible scores, hide setting changes, or obtain multiple identities; coarse time/score validation cannot prove legitimate driving. Random traffic and frame-rate differences also affect comparability. Use v1 for casual play, not prizes, financial rewards, or integrity-critical contests. Stronger competition would require authoritative server simulation or validated replay/event telemetry and additional abuse controls.
+
+## Verification
+
+`npm test` runs Node's built-in test runner with isolated in-memory Redis models; `npm run check` checks source/API syntax, inline bundle syntax, duplicate DOM IDs, exact bundle reproducibility and deployment settings. `npm run build` verifies the static artifact path. A separate Lua runtime regression test (when the optional installed liblua shared library is available) exercises the actual exported Lua with Redis/cjson test shims. These are local tests, not proof of a configured/live Upstash database or successful Vercel deployment. Final production smoke test must start a real run, reject premature submission, accept a 60-second score, retry the exact payload, reject changed replay, verify Top 100 from another browser, and verify persistence after deployment/restart. Use a separate test namespace and avoid polluting the production board.

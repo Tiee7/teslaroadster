@@ -99,6 +99,8 @@ function setKeyState(code, isDown) {
 }
 
 window.addEventListener('keydown', (e) => {
+  // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
+  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen()) return;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
     e.preventDefault();
   }
@@ -325,6 +327,7 @@ function renderBannerText() {
 }
 
 function switchMap(targetMap) {
+  window.RoadsterRanked?.abort('map');
   currentMap = targetMap === 'city' ? 'city' : 'highway';
   selectedMapInModal = currentMap;
   highwayEnvGroup.visible = (currentMap === 'highway');
@@ -337,6 +340,7 @@ function switchMap(targetMap) {
 }
 
 function resetCar() {
+  window.RoadsterRanked?.abort('reset');
   clearDebris();
   carMeshGroup.visible = true;
   document.getElementById('modal-destroyed').classList.add('hidden');
@@ -395,6 +399,7 @@ function resetCar() {
 }
 
 function applyTranslations() {
+  window.RoadsterRanked?.render();
   const t = I18N[currentLang];
   const hudBtnEl = document.getElementById('ui-hud-mode-btn');
   if (hudBtnEl) hudBtnEl.textContent = state.hudMinimal ? t.hudBtnMinimal : t.hudBtnFull;
@@ -678,6 +683,7 @@ if (btnHudMode) {
 
 
 function selectWeatherMode(idx, playAudio = true) {
+  if (idx !== weatherIndex) window.RoadsterRanked?.abort('weather');
   weatherIndex = THREE.MathUtils.clamp(idx, 0, WEATHER_PRESETS.length - 1);
   const wp = WEATHER_PRESETS[weatherIndex];
 
@@ -778,6 +784,7 @@ function renderModalWeatherGrid() {
 document.getElementById('btn-weather').addEventListener('click', () => cycleWeatherMode());
 
 document.getElementById('btn-traffic').addEventListener('click', () => {
+  window.RoadsterRanked?.abort('traffic');
   trafficLevelIndex = (trafficLevelIndex + 1) % 3;
   const counts = [20, 36, 52];
   populateTraffic(counts[trafficLevelIndex]);
@@ -801,6 +808,7 @@ document.getElementById('btn-reset').addEventListener('click', resetCar);
 
 
 function togglePhysicsMode() {
+  window.RoadsterRanked?.abort('physics');
   state.physicsMode = (state.physicsMode === 'realistic') ? 'fantasy' : 'realistic';
   if (state.physicsMode === 'fantasy') {
     state.insaneMode = false;
@@ -815,6 +823,7 @@ function togglePhysicsMode() {
 }
 
 function togglePlaidMode() {
+  window.RoadsterRanked?.abort('plaid');
   if (state.physicsMode !== 'realistic') {
     state.physicsMode = 'realistic';
   }
@@ -898,6 +907,7 @@ function toggleAltitudeHold() {
 }
 
 function toggleStabilizer() {
+  window.RoadsterRanked?.abort('stabilizer');
   state.autoStabilizer = !state.autoStabilizer;
   const btn = document.getElementById('btn-stabilizer');
   if (state.autoStabilizer) {

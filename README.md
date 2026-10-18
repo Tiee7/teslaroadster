@@ -115,3 +115,9 @@ tesla_roadster_simulator_package/
 
 ---
 *Generated for 2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulation Deliverable Suite.*
+
+## Persistent leaderboard v1 / 持久排行榜
+
+新增自愿参加的 60 秒积分挑战，按地图与物理模式分为四个榜单，每个匿名浏览器身份仅保留各榜最高成绩，公开前 100 名。昵称和成绩会公开，请使用化名。排行榜需要 Vercel Node.js API 和已配置的 Upstash Redis；直接打开单文件仍可进行沙盒模拟，但不能使用在线排行榜。服务端会过滤并验证昵称、请求结构、范围、身份、单次挑战编号、时间及频率，之后才写入榜单。浏览器端游戏无法完全防作弊。
+
+See [deployment, API, security, privacy and testing details](docs/leaderboard.md). No production credentials are included. Development checks: `python3 bundle_app.py`, `npm test`, `npm run check`, `npm run build`. `npm run dev` serves the bundled game locally and returns a clear unavailable response until server-only leaderboard environment values are configured.
