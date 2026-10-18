@@ -116,6 +116,45 @@ html, body {
   animation: pulseWarning 0.45s infinite ease-in-out;
 }
 
+/* Side panels and center notices have independent geometry. Reserve a constant
+   notice lane on narrow screens so neither appearing nor dismissing one moves
+   the panels. Header/footer observation also keeps each panel scrollable. */
+#hud-main { position: relative; min-height: 0; }
+#hud-notifications {
+  position: absolute; top: 4px; left: 352px; right: 288px; z-index: 11;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  pointer-events: none;
+}
+#hud-notifications > div { max-width: 100%; flex-shrink: 0; }
+#hud-notifications #status-banner { overflow-wrap: anywhere; }
+#hud-side-panels {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 8px; padding: 4px 20px 0;
+  padding-top: calc(4px + var(--hud-notice-space, 0px));
+}
+#hud-left, #hud-right { flex-shrink: 0; min-width: 0; }
+#hud-left, #hud-right-card {
+  max-height: max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - 16px));
+  max-height: max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - 16px));
+  overflow-y: auto;
+}
+@media (max-width: 1100px) {
+  #hud-top-container { --hud-notice-space: 100px; }
+  #hud-notifications { left: 12px; right: 12px; max-height: var(--hud-notice-space); overflow-y: auto; pointer-events: auto; }
+}
+@media (max-width: 767px) {
+  #hud-header { max-height: 30vh; max-height: 30dvh; overflow-y: auto; pointer-events: auto; }
+  #hud-side-panels { padding-left: 12px; padding-right: 12px; }
+  #hud-left, #hud-right { width: calc((100% - 8px) / 2); }
+  #hud-right-card { width: 100%; }
+  #hud-left-header, #hud-right-header { min-width: 0; }
+  #ui-controls-header, #ui-telemetry-header { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+@media (max-width: 1100px) and (max-height: 600px) {
+  #hud-header { max-height: 25vh; max-height: 25dvh; overflow-y: auto; pointer-events: auto; }
+  #hud-footer { max-height: 32vh; max-height: 32dvh; overflow-y: auto; pointer-events: auto; }
+}
+
 /* Minimalist HUD View - Distraction-free clean view with essential 600L COPV gas gauge preserved */
 .hud-minimal-view {
   padding-bottom: 0.65rem !important;
@@ -142,10 +181,13 @@ html, body {
 .ranked-button:hover { background: #1b3a50; }
 .ranked-button:disabled { opacity: .5; cursor: wait; }
 .ranked-button:focus-visible, #ranked-dialog input:focus-visible, #ranked-dialog select:focus-visible,
-#ranked-hud-open:focus-visible, .ranked-details summary:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 3px; }
+#ranked-hud-open:focus-visible, #ranked-hud-dismiss:focus-visible, .ranked-details summary:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 3px; }
 .ranked-primary { background: #08677f; border-color: #43c8e7; color: white; }
-.ranked-hud { display: flex; justify-content: center; padding: 0 12px 4px; pointer-events: none; }
-#ranked-hud-open { pointer-events: auto; display: flex; gap: 14px; align-items: center; max-width: min(94vw, 750px); padding: 5px 12px; border-radius: 9px; border: 1px solid #294257; color: #c5d8e7; background: rgba(6, 15, 26, .88); font: inherit; font-size: 11px; cursor: pointer; }
+.ranked-hud { display: flex; justify-content: center; min-width: 0; pointer-events: none; }
+.ranked-hud[hidden] { display: none; }
+#ranked-hud-open { pointer-events: auto; display: flex; gap: 14px; align-items: center; min-width: 0; max-width: 750px; padding: 5px 12px; border-radius: 9px 0 0 9px; border: 1px solid #294257; color: #c5d8e7; background: rgba(6, 15, 26, .88); font: inherit; font-size: 11px; cursor: pointer; }
+#ranked-hud-status { overflow-wrap: anywhere; }
+#ranked-hud-dismiss { pointer-events: auto; flex-shrink: 0; min-width: 32px; min-height: 32px; border: 1px solid #294257; border-left: 0; border-radius: 0 9px 9px 0; background: rgba(6, 15, 26, .95); color: #c5d8e7; cursor: pointer; }
 #ranked-countdown { color: #7ee7f5; font-size: 17px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ranked-hud[data-phase="running"] #ranked-hud-open { border-color: #22d3ee; }
 .ranked-hud[data-phase="complete"] #ranked-hud-open, .ranked-hud[data-phase="aborted"] #ranked-hud-open { border-color: #fbbf24; }

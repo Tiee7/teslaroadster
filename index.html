@@ -133,6 +133,45 @@ html, body {
   animation: pulseWarning 0.45s infinite ease-in-out;
 }
 
+/* Side panels and center notices have independent geometry. Reserve a constant
+   notice lane on narrow screens so neither appearing nor dismissing one moves
+   the panels. Header/footer observation also keeps each panel scrollable. */
+#hud-main { position: relative; min-height: 0; }
+#hud-notifications {
+  position: absolute; top: 4px; left: 352px; right: 288px; z-index: 11;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  pointer-events: none;
+}
+#hud-notifications > div { max-width: 100%; flex-shrink: 0; }
+#hud-notifications #status-banner { overflow-wrap: anywhere; }
+#hud-side-panels {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 8px; padding: 4px 20px 0;
+  padding-top: calc(4px + var(--hud-notice-space, 0px));
+}
+#hud-left, #hud-right { flex-shrink: 0; min-width: 0; }
+#hud-left, #hud-right-card {
+  max-height: max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - 16px));
+  max-height: max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - 16px));
+  overflow-y: auto;
+}
+@media (max-width: 1100px) {
+  #hud-top-container { --hud-notice-space: 100px; }
+  #hud-notifications { left: 12px; right: 12px; max-height: var(--hud-notice-space); overflow-y: auto; pointer-events: auto; }
+}
+@media (max-width: 767px) {
+  #hud-header { max-height: 30vh; max-height: 30dvh; overflow-y: auto; pointer-events: auto; }
+  #hud-side-panels { padding-left: 12px; padding-right: 12px; }
+  #hud-left, #hud-right { width: calc((100% - 8px) / 2); }
+  #hud-right-card { width: 100%; }
+  #hud-left-header, #hud-right-header { min-width: 0; }
+  #ui-controls-header, #ui-telemetry-header { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+@media (max-width: 1100px) and (max-height: 600px) {
+  #hud-header { max-height: 25vh; max-height: 25dvh; overflow-y: auto; pointer-events: auto; }
+  #hud-footer { max-height: 32vh; max-height: 32dvh; overflow-y: auto; pointer-events: auto; }
+}
+
 /* Minimalist HUD View - Distraction-free clean view with essential 600L COPV gas gauge preserved */
 .hud-minimal-view {
   padding-bottom: 0.65rem !important;
@@ -159,10 +198,13 @@ html, body {
 .ranked-button:hover { background: #1b3a50; }
 .ranked-button:disabled { opacity: .5; cursor: wait; }
 .ranked-button:focus-visible, #ranked-dialog input:focus-visible, #ranked-dialog select:focus-visible,
-#ranked-hud-open:focus-visible, .ranked-details summary:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 3px; }
+#ranked-hud-open:focus-visible, #ranked-hud-dismiss:focus-visible, .ranked-details summary:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 3px; }
 .ranked-primary { background: #08677f; border-color: #43c8e7; color: white; }
-.ranked-hud { display: flex; justify-content: center; padding: 0 12px 4px; pointer-events: none; }
-#ranked-hud-open { pointer-events: auto; display: flex; gap: 14px; align-items: center; max-width: min(94vw, 750px); padding: 5px 12px; border-radius: 9px; border: 1px solid #294257; color: #c5d8e7; background: rgba(6, 15, 26, .88); font: inherit; font-size: 11px; cursor: pointer; }
+.ranked-hud { display: flex; justify-content: center; min-width: 0; pointer-events: none; }
+.ranked-hud[hidden] { display: none; }
+#ranked-hud-open { pointer-events: auto; display: flex; gap: 14px; align-items: center; min-width: 0; max-width: 750px; padding: 5px 12px; border-radius: 9px 0 0 9px; border: 1px solid #294257; color: #c5d8e7; background: rgba(6, 15, 26, .88); font: inherit; font-size: 11px; cursor: pointer; }
+#ranked-hud-status { overflow-wrap: anywhere; }
+#ranked-hud-dismiss { pointer-events: auto; flex-shrink: 0; min-width: 32px; min-height: 32px; border: 1px solid #294257; border-left: 0; border-radius: 0 9px 9px 0; background: rgba(6, 15, 26, .95); color: #c5d8e7; cursor: pointer; }
 #ranked-countdown { color: #7ee7f5; font-size: 17px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ranked-hud[data-phase="running"] #ranked-hud-open { border-color: #22d3ee; }
 .ranked-hud[data-phase="complete"] #ranked-hud-open, .ranked-hud[data-phase="aborted"] #ranked-hud-open { border-color: #fbbf24; }
@@ -225,7 +267,7 @@ html, body {
   <!-- Unified Non-Overlapping Top HUD Container -->
   <div id="hud-top-container" class="fixed inset-x-0 top-0 z-10 pointer-events-none flex flex-col">
   <!-- Top Navigation & Telemetry Header -->
-  <header class="relative z-10 pointer-events-none flex flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-5 md:py-2.5">
+  <header id="hud-header" class="relative z-10 pointer-events-none flex flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-5 md:py-2.5">
     <!-- Brand & Model Badge -->
     <div id="hud-brand-badge" class="pointer-events-auto glass-panel rounded-xl px-3.5 py-2 flex items-center gap-3">
       <div class="w-2.5 h-8 rounded-full bg-gradient-to-b from-cyan-400 via-sky-500 to-blue-600 shadow-[0_0_12px_rgba(56,189,248,0.8)]"></div>
@@ -320,8 +362,12 @@ html, body {
       </button>
     </div>
   </header>
+  <div id="hud-main">
+  <!-- Notifications are an overlay, independent of the anchored side panels. -->
+  <div id="hud-notifications">
   <div id="ranked-hud" class="ranked-hud" data-phase="idle">
     <button id="ranked-hud-open" type="button" aria-haspopup="dialog"><span id="ranked-hud-status" role="status">Sandbox • challenge is optional</span><strong id="ranked-countdown" aria-live="off"></strong></button>
+    <button id="ranked-hud-dismiss" type="button" aria-label="Hide challenge status">✕</button>
   </div>
 
   <!-- Center Alert Banner for Thruster Status (8s Auto-Descent / 10s Freefall / Stunt Bonus) -->
@@ -331,9 +377,10 @@ html, body {
       <div id="status-banner-sub" class="text-[11px] text-slate-200 mt-0.5"></div>
     </div>
   </div>
+  </div>
 
-  <!-- Side Panels Row (Automatically flows below header, never overlapping header buttons) -->
-  <div class="w-full flex items-start justify-between px-3 md:px-5 mt-1 pointer-events-none gap-2">
+  <!-- Side panels stay anchored below the header when notifications change. -->
+  <div id="hud-side-panels" class="pointer-events-none">
   <!-- Left HUD: Clean, Grouped 6-DOF Attitude & Controls Guide Card -->
   <aside id="hud-left" class="pointer-events-auto glass-panel rounded-xl p-3 w-72 md:w-80 transition-all duration-200 max-h-[calc(100vh-11.5rem)] overflow-y-auto">
     <div id="hud-left-header" class="flex items-center justify-between gap-2 border-b border-slate-700/70 pb-1.5 mb-2">
@@ -410,10 +457,10 @@ html, body {
       <div class="ctrl-row">
         <span id="ui-ctrl-roll" class="ctrl-label">Roll • Pitch</span>
         <div class="flex items-center gap-1 shrink-0">
-          <span id="key-left" class="key-badge" title="Roll Left (J or Left Arrow)">J ↺</span>
-          <span id="key-right" class="key-badge" title="Roll Right (L or Right Arrow)">L ↻</span>
-          <span id="key-up" class="key-badge" title="Pitch Up (I or Up Arrow)">I ▲</span>
-          <span id="key-down" class="key-badge" title="Pitch Down (K or Down Arrow)">K ▼</span>
+          <span id="key-left" data-hold-key="KeyJ" class="key-badge cursor-pointer" title="Roll Left (J or Left Arrow)">J ↺</span>
+          <span id="key-right" data-hold-key="KeyL" class="key-badge cursor-pointer" title="Roll Right (L or Right Arrow)">L ↻</span>
+          <span id="key-up" data-hold-key="KeyI" class="key-badge cursor-pointer" title="Pitch Up (I or Up Arrow)">I ▲</span>
+          <span id="key-down" data-hold-key="KeyK" class="key-badge cursor-pointer" title="Pitch Down (K or Down Arrow)">K ▼</span>
         </div>
       </div>
 
@@ -572,17 +619,22 @@ html, body {
   </aside>
   </div>
   </div>
+  </div>
 
   <!-- Bottom HUD: Speedometer, 10-Second COPV Air Tank Bar & On-Screen Touch/Click Controls -->
   <footer id="hud-footer" class="fixed bottom-0 inset-x-0 z-10 pointer-events-none p-3 md:p-4 flex flex-col items-center gap-2">
     <!-- Touch / Mouse Quick Action Buttons -->
     <div id="touch-controls" class="pointer-events-auto flex flex-wrap items-center justify-center gap-1.5 md:hidden">
-      <button data-hold-key="KeyW" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">W/I ▲</button>
-      <button data-hold-key="KeyA" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">A/J ◀</button>
+      <button data-hold-key="KeyW" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">W ▲</button>
+      <button data-hold-key="KeyA" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">A ◀</button>
       <button data-hold-key="KeyH" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-300 border-rose-400 active:bg-rose-600">H (Brake)</button>
       <button data-hold-key="KeyU" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-amber-300 border-amber-400 active:bg-amber-600">U (Drift)</button>
-      <button data-hold-key="KeyD" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">D/L ▶</button>
-      <button data-hold-key="KeyS" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 active:bg-slate-700">S/K (Rev)</button>
+      <button data-hold-key="KeyD" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">D ▶</button>
+      <button data-hold-key="KeyS" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 active:bg-slate-700">S (Rev)</button>
+      <button data-hold-key="KeyI" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Pitch nose up (I)">I ↶ Pitch</button>
+      <button data-hold-key="KeyK" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Pitch nose down (K)">K ↷ Pitch</button>
+      <button data-hold-key="KeyJ" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Roll left (J)">J ◀ Roll</button>
+      <button data-hold-key="KeyL" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Roll right (L)">L ▶ Roll</button>
       <button data-hold-key="Space" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-cyan-300 border-cyan-400 active:bg-cyan-500">SPACE</button>
       <button data-hold-key="ShiftLeft" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-slate-200 active:bg-slate-700" title="Thrust Descend (Shift)">SHIFT ▼</button>
       <button id="btn-touch-jump" type="button" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-emerald-300 border-emerald-400 active:bg-emerald-600 cursor-pointer" title="6m Quick Jump (O)">O (6m)</button>
@@ -1088,7 +1140,7 @@ const I18N = {
     modalHDrive: "1. Driving & Vertical Flight",
     modalListDrive: "<li><b class='text-cyan-300 mono'>W / ; / H / U / S</b> : W Drive, <b>;</b> Rear Rocket Boost, H Foot Brake, <b>U</b> Handbrake Drift, S Reverse</li><li><b class='text-cyan-300 mono'>SPACE / O / N</b> : <b>SPACE</b> Climb (+30% speed), <b>O</b> Quick 2.5× Jump to 6m, <b>N</b> Mid-Air Altitude Hold</li><li><b class='text-cyan-300 mono'>A / D & Q / E</b> : A/D Ground Steer & Air Yaw; Q/E Mid-Air Lateral Strafe</li><li><b class='text-cyan-300 mono'>SHIFT / B</b> : <b>SHIFT</b> Thrust Descend, <b>B</b> Toggle Speed Unit (KM/h ⇄ MPH)</li>",
     modalHAttitude: "2. 6-DOF Attitude & Map Shortcuts",
-    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (or ← / →)</b> : <b>Roll</b> left / right (hold for 360° barrel rolls!)</li><li><b class='text-cyan-300 mono'>I / K (or ↑ / ↓)</b> : <b>Pitch</b> nose up / down</li><li><b class='text-cyan-300 mono'>Q / E & A / D</b> : <b>Q/E</b> mid-air lateral move, <b>A/D</b> mid-air nose turn</li><li><b class='text-cyan-300 mono'>M / R / X</b> : Select Map (M), Repair & Reset (R), Auto-Level (X)</li>",
+    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (or ← / →)</b> : <b>Roll</b> left / right (hold for 360° barrel rolls!)</li><li><b class='text-cyan-300 mono'>I / K (or ↑ / ↓)</b> : <b>Pitch</b> nose up / down (hold for full 360° flips)</li><li><b class='text-cyan-300 mono'>Q / E & A / D</b> : <b>Q/E</b> mid-air lateral move, <b>A/D</b> mid-air nose turn</li><li><b class='text-cyan-300 mono'>M / R / X</b> : Select Map (M), Repair & Reset (R), Auto-Level (X, after 2 seconds without attitude input)</li>",
     modalHTank: "3. 10s Air Tank & Physics Destruction Threshold",
     modalPTank: "• <b>Air Tank (10.0s)</b>: At <b>8.0s used (2.0s left)</b>, low pressure triggers <b>Auto-Descent</b>; at <b>10.0s used (0.0s left)</b>, thrusters cut out for immediate <b>Freefall</b>.<br/>• <b>Physics Collision Destruction</b>: Impacts calculate relative velocity Δv, kinetic energy, and peak G-force. Any single impact exceeding <b>18.0 G (Δv ≥ 100 km/h)</b> or cumulative hull damage reaching 0% triggers <b>Immediate Total Destruction</b>!",
     modalBtnResume: "Resume Simulation"
@@ -1250,7 +1302,7 @@ const I18N = {
     modalHDrive: "1. 地面驾驶与垂直浮空控制",
     modalListDrive: "<li><b class='text-cyan-300 mono'>W / ; / H / U / S</b> : W 电驱加速、<b>;</b> 尾部喷气加速、H 脚刹、<b>U</b> 手刹失抓地力漂移、S 倒车</li><li><b class='text-cyan-300 mono'>SPACE / O / N</b> : <b>SPACE</b> 爬升（提速30%）、<b>O</b> 2.5倍速跳跃至6米高度、<b>N</b> 空中保持当前高度悬浮（少量用气）</li><li><b class='text-cyan-300 mono'>A / D 与 Q / E</b> : A/D 地面转向与空中车头偏航；Q/E 空中车身左右横移</li><li><b class='text-cyan-300 mono'>SHIFT / B</b> : <b>SHIFT</b> 喷气主动下降、<b>B</b> 速度单位切换 (KM/h ⇄ MPH)</li>",
     modalHAttitude: "2. 空中六自由度姿态与快捷键",
-    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (或 ← / →)</b> : 控制 <b>Roll (横滚)</b>，长按可做空中360°翻滚</li><li><b class='text-cyan-300 mono'>I / K (或 ↑ / ↓)</b> : 控制 <b>Pitch (俯仰)</b>，车头抬头/低头</li><li><b class='text-cyan-300 mono'>Q / E 与 A / D</b> : 空中 <b>Q/E</b> 车身左右横移，<b>A/D</b> 车头左右转向</li><li><b class='text-cyan-300 mono'>M / R / X</b> : 切换地图 (M)、修复重置车辆 (R)、姿态自动回正开关 (X)</li>",
+    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (或 ← / →)</b> : 控制 <b>Roll (横滚)</b>，长按可做空中360°翻滚</li><li><b class='text-cyan-300 mono'>I / K (或 ↑ / ↓)</b> : 控制 <b>Pitch (俯仰)</b>，长按可前后连续360°翻滚</li><li><b class='text-cyan-300 mono'>Q / E 与 A / D</b> : 空中 <b>Q/E</b> 车身左右横移，<b>A/D</b> 车头左右转向</li><li><b class='text-cyan-300 mono'>M / R / X</b> : 切换地图 (M)、修复重置车辆 (R)、姿态自动回正开关 (X，松开姿态控制2秒后介入)</li>",
     modalHTank: "3. 10秒空气槽与真实物理碰撞损毁机制",
     modalPTank: "• <b>10秒空气槽</b>: <b>第8.0秒</b>触发低压<b>自动下降</b>；<b>第10.0秒用完喷气</b>推进器断气并<b>立刻自由落体</b>。<br/>• <b>物理碰撞损毁</b>: 实时计算相对碰撞速度 Δv、动能与峰值过载 G 值。单次撞击超过 <b>18.0 G (相对速度 ≥ 100 km/h)</b> 或结构完整度归零时，车辆<b>直接解体损毁</b>！",
     modalBtnResume: "返回游戏"
@@ -1320,6 +1372,8 @@ const state = {
   steerAngle: 0.0,
   roll: 0.0,
   pitch: 0.0,
+  attitudeIdleSeconds: 0.0,
+  wasAirborne: false,
   yaw: 0.0,
   vRoll: 0.0,
   vPitch: 0.0,
@@ -3985,6 +4039,25 @@ function clearTireSmoke() {
 // MODULE: ui-hud.js
 // =========================================================================
 
+// Size only from the header/footer, never from transient center notifications.
+function updateHudBounds() {
+  const container = document.getElementById('hud-top-container');
+  const header = document.getElementById('hud-header');
+  const footer = document.getElementById('hud-footer');
+  if (!container || !header || !footer) return;
+  container.style.setProperty('--hud-header-height', `${header.getBoundingClientRect().height}px`);
+  container.style.setProperty('--hud-footer-height', `${footer.getBoundingClientRect().height}px`);
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const hudBoundsObserver = new ResizeObserver(updateHudBounds);
+  ['hud-header', 'hud-footer'].forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) hudBoundsObserver.observe(element);
+  });
+}
+window.addEventListener('resize', updateHudBounds);
+updateHudBounds();
+
 function toggleHudMode() {
   state.hudMinimal = !state.hudMinimal;
   const brandBadge = document.getElementById('hud-brand-badge');
@@ -4363,6 +4436,8 @@ function resetCar() {
   state.steerAngle = 0.0;
   state.roll = 0.0;
   state.pitch = 0.0;
+  state.attitudeIdleSeconds = 0.0;
+  state.wasAirborne = false;
   state.yaw = 0.0;
   state.vRoll = 0.0;
   state.vPitch = 0.0;
@@ -5029,8 +5104,12 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   const secondaryText = isUnitKmh ? `${mph} MPH` : `${kmh} km/h`;
 
   ctx.fillStyle = mph >= 230 ? '#38bdf8' : '#ffffff';
-  ctx.font = 'extrabold 54px "JetBrains Mono", monospace';
-  ctx.fillText(String(primarySpeed).padStart(3, ' '), 14, 86);
+  // Canvas accepts numeric weights; "extrabold" silently kept the preceding
+  // 12px font, making this readout look different from the synchronized HUD.
+  ctx.font = '800 54px "JetBrains Mono", monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText(String(primarySpeed), 122, 86);
+  ctx.textAlign = 'left';
   ctx.font = 'bold 14px "JetBrains Mono", monospace';
   ctx.fillStyle = '#38bdf8';
   ctx.fillText(primaryLabel, 132, 62);
@@ -5058,7 +5137,7 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.stroke();
 
   ctx.rotate(-state.roll);
-  const pitchShift = THREE.MathUtils.clamp(state.pitch * 65, -34, 34);
+  const pitchShift = THREE.MathUtils.clamp(Math.sin(state.pitch) * 65, -34, 34);
   ctx.strokeStyle = '#10b981';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
@@ -5444,6 +5523,7 @@ if (container) {
   let boardState = 'empty';
   let boardRows = [];
   let boardLoaded = false;
+  let hudDismissed = false;
   const t = () => copy[currentLang === 'zh' ? 'zh' : 'en'];
   const category = () => `${currentMap}-${state.physicsMode}`;
   const score = () => Math.max(0, Math.round(state.score + state.carsCleared * 10));
@@ -5495,6 +5575,8 @@ if (container) {
     };
     Object.entries(labels).forEach(([id, value]) => text(id, value));
     $('ranked-close').setAttribute('aria-label', c.close);
+    $('ranked-hud-dismiss').setAttribute('aria-label', currentLang === 'zh' ? '隐藏挑战成绩提示' : 'Hide challenge status');
+    visible('ranked-hud', !hudDismissed);
     $('ranked-category').querySelectorAll('option').forEach((option) => { option.textContent = categoryName(option.value); });
     text('ranked-current-category', categoryName(run && isInFlight() ? run.category : category()));
     const message = statusText();
@@ -5524,6 +5606,7 @@ if (container) {
   }
 
   function open() {
+    hudDismissed = false;
     clearAllInputKeys();
     if (!dialog.open) {
       returnFocus = document.activeElement;
@@ -5695,6 +5778,11 @@ if (container) {
   }
   $('btn-leaderboard').addEventListener('click', open);
   $('ranked-hud-open').addEventListener('click', open);
+  $('ranked-hud-dismiss').addEventListener('click', () => {
+    hudDismissed = true;
+    visible('ranked-hud', false);
+    $('btn-leaderboard').focus();
+  });
   $('ranked-close').addEventListener('click', close);
   $('ranked-language').addEventListener('click', toggleLanguage);
   $('ranked-start').addEventListener('click', start);
@@ -5982,6 +6070,10 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
   }
 
   state.vx += bounceVx;
+  if (state.wasAirborne) {
+    state.vz += bounceVz || 0;
+    state.speed = Math.hypot(state.vx, state.vz);
+  }
   state.vy = Math.max(state.vy, bounceVy);
   state.vRoll += (Math.random() - 0.5) * 3.5;
   state.vPitch += (Math.random() - 0.5) * 2.5;
@@ -6030,6 +6122,35 @@ function updateDestroyedModalText() {
 // =========================================================================
 populateTraffic(36);
 let lastTime = performance.now();
+
+function wrapAnglePi(rad) {
+  return ((rad + Math.PI) % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2) - Math.PI;
+}
+
+function readAttitudeInput(isAirborne) {
+  // Touch controls use the same key state as the keyboard and arrow aliases.
+  const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
+  const rollRight = Boolean(keys['KeyL'] || keys['ArrowRight']);
+  const pitchUp = Boolean(keys['KeyI'] || keys['ArrowUp']);
+  const pitchDown = Boolean(keys['KeyK'] || keys['ArrowDown']);
+  const yawLeft = isAirborne && Boolean(keys['KeyA']);
+  const yawRight = isAirborne && Boolean(keys['KeyD']);
+  return {
+    rawRollInput: Number(rollLeft) - Number(rollRight),
+    rawPitchInput: Number(pitchUp) - Number(pitchDown),
+    rawYawInput: Number(yawLeft) - Number(yawRight),
+    // Opposing held controls still count as player input, even if their torques cancel.
+    hasManualAttitudeInput: rollLeft || rollRight || pitchUp || pitchDown || yawLeft || yawRight ||
+      (isAirborne && Boolean(keys['KeyQ'] || keys['KeyE']))
+  };
+}
+
+function advanceAttitudeIdle(dt, hasInput) {
+  const previousIdle = state.attitudeIdleSeconds || 0;
+  state.attitudeIdleSeconds = hasInput ? 0 : Math.min(2.0, previousIdle + dt);
+  // Only apply the portion of this frame after the full two-second grace period.
+  return hasInput || !state.autoStabilizer ? 0 : Math.min(dt, Math.max(0, previousIdle + dt - 2.0));
+}
 
 function updateSimulation(dt) {
   const t = I18N[currentLang];
@@ -6111,6 +6232,8 @@ function updateSimulation(dt) {
     }
   }
   const isAirborne = (state.y - groundElevation) > 0.15;
+  const { rawRollInput, rawPitchInput, rawYawInput, hasManualAttitudeInput } = readAttitudeInput(isAirborne);
+  const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
   // Unified COPV Air Tank Consumption Helper (Requirement 3: ALL airborne thrusters & ';' rear boost consume tank)
   function consumeAirTank(amount, airborneNow) {
@@ -6233,39 +6356,58 @@ function updateSimulation(dt) {
   const nosePitchCos = Math.cos(state.pitch);
   const nosePitchSin = Math.sin(state.pitch);
 
-  if (currentMap === 'highway') {
-    if (isAirborne) {
-      state.isDrifting = false;
-      state.wasHandbraking = false;
-      // Airborne lateral body translation via Q / E + roll/nose vector
-      const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
+  if (isAirborne) {
+    state.isDrifting = false;
+    state.wasHandbraking = false;
+    state.driftAngle = 0.0;
+    // Preserve world-space momentum throughout flips; only thrust changes its direction.
+    if (isRearThrusterFiring) {
+      const boostAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
+      state.vx += noseHorizX * nosePitchCos * boostAirAccel * dt;
+      state.vz += noseHorizZ * nosePitchCos * boostAirAccel * dt;
       const maxAirVy = currentMaxClimbVy * 1.35;
-      if (isRearThrusterFiring) {
-        // Rear thrusters accelerate strictly along the 3D nose direction
-        state.speed = Math.min(state.airMaxSpeed, state.speed + currentAirAccel * Math.max(0.25, nosePitchCos) * dt);
-        state.vy = Math.min(maxAirVy, state.vy + currentAirAccel * nosePitchSin * 0.55 * dt);
-      } else if (isFootBraking || isReversing) {
-        if (canUseRCS) {
-          state.speed = Math.max(0.0, state.speed - 38.0 * dt);
-        }
-      } else {
-        // Fix Issue 3: Faster, realistic airborne aerodynamic stall / drag deceleration when not thrusting
-        const airStallDecel = 15.5 + 0.0085 * state.speed * state.speed;
-        if (state.speed > 0.1) {
-          state.speed = Math.max(0.0, state.speed * Math.pow(0.45, dt) - airStallDecel * dt);
-        } else if (state.speed < -0.1) {
-          state.speed = Math.min(0.0, state.speed * Math.pow(0.45, dt) + airStallDecel * dt);
-        } else {
-          state.speed = 0.0;
-        }
+      state.vy = Math.min(maxAirVy, state.vy + boostAirAccel * nosePitchSin * 0.55 * dt);
+      const horizMag = Math.hypot(state.vx, state.vz);
+      if (horizMag > state.airMaxSpeed) {
+        state.vx *= state.airMaxSpeed / horizMag;
+        state.vz *= state.airMaxSpeed / horizMag;
       }
-      const rollDrift = Math.sin(state.roll) * 12.0;
-      const noseLatVx = noseHorizX * state.speed;
-      const strafeVx = rightHorizX * (jetDir * 18.0);
-      const targetAirVx = noseLatVx + strafeVx + rollDrift;
-      state.vx += (targetAirVx - state.vx) * (isRearThrusterFiring ? 10.0 : 6.5) * dt;
-      state.vz = noseHorizZ * state.speed;
     } else {
+      const horizMag = Math.hypot(state.vx, state.vz);
+      const isAirBrake = isFootBraking || isReversing;
+      const airStallDecel = 15.5 + 0.0085 * horizMag * horizMag;
+      const nextMag = isAirBrake
+        ? (canUseRCS ? Math.max(0, horizMag - 38.0 * dt) : horizMag)
+        : Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
+      const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
+      state.vx *= coastScale;
+      state.vz *= coastScale;
+    }
+
+    // Q/E and roll drift retain their responsive lateral assist without rebuilding forward momentum.
+    const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
+    const targetStrafe = jetDir * 18.0 + Math.sin(state.roll) * (currentMap === 'highway' ? 12.0 : 10.0);
+    const strafeRate = currentMap === 'highway' ? (isRearThrusterFiring ? 10.0 : 6.5) : 6.0;
+    const lateralSpeed = state.vx * rightHorizX + state.vz * rightHorizZ;
+    const strafeChange = Math.abs(targetStrafe) > 0.001
+      ? (targetStrafe - lateralSpeed) * Math.min(1.0, strafeRate * dt)
+      : 0;
+    state.vx += rightHorizX * strafeChange;
+    state.vz += rightHorizZ * strafeChange;
+    state.airStrafeSpeed = lateralSpeed + strafeChange;
+    state.speed = Math.hypot(state.vx, state.vz);
+  } else {
+    if (state.wasAirborne) {
+      // Hand inertial flight velocity back to the existing signed ground-drive convention.
+      const forwardVelocity = state.vx * noseHorizX + state.vz * noseHorizZ;
+      state.speed = (forwardVelocity >= 0 ? 1 : -1) * Math.hypot(state.vx, state.vz);
+    }
+    state.airStrafeSpeed = 0.0;
+  }
+  state.wasAirborne = isAirborne;
+
+  if (currentMap === 'highway') {
+    if (!isAirborne) {
       // Ground mode on highway
       if (isAccelerating) {
         const effAccel = isRearThrusterFiring ? (isRealMode ? 38.0 * fuelBurnThrustFactor : 120.0 * fuelBurnThrustFactor) : (isHandbraking ? currentGroundAccel * 0.88 : currentGroundAccel);
@@ -6361,52 +6503,20 @@ function updateSimulation(dt) {
       } else {
         state.vx = (state.x < 0 ? 1 : -1) * Math.min(2.5, Math.abs(state.vx) * 0.25);
       }
-      state.speed = Math.max(0.0, state.speed - 8.0 * dt);
+      if (isAirborne) {
+        const horizontalSpeed = Math.hypot(state.vx, state.vz);
+        const railScale = horizontalSpeed > 0 ? Math.max(0, horizontalSpeed - 8.0 * dt) / horizontalSpeed : 0;
+        state.vx *= railScale;
+        state.vz *= railScale;
+        state.speed = Math.hypot(state.vx, state.vz);
+      } else {
+        state.speed = Math.max(0.0, state.speed - 8.0 * dt);
+      }
       state.yaw *= Math.pow(0.04, dt);
     }
   } else {
     // City Open-World Mode: True 2D Velocity Vector + Momentum-Preserving Handbrake Drift
-    if (isAirborne) {
-      state.isDrifting = false;
-      state.wasHandbraking = false;
-      state.driftAngle = 0.0;
-      const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
-      const targetStrafe = jetDir * 18.0 + Math.sin(state.roll) * 10.0;
-      state.airStrafeSpeed = (state.airStrafeSpeed || 0) + (targetStrafe - (state.airStrafeSpeed || 0)) * 6.0 * dt;
-
-      const maxAirVy = currentMaxClimbVy * 1.35;
-      if (isRearThrusterFiring) {
-        // Airborne W or ; fires rear thrusters along the 3D nose vector
-        const boostAirAccel = isRealMode ? currentAirAccel : 145.0;
-        state.vx += noseHorizX * nosePitchCos * boostAirAccel * dt;
-        state.vz += noseHorizZ * nosePitchCos * boostAirAccel * dt;
-        state.vy = Math.min(maxAirVy, state.vy + boostAirAccel * nosePitchSin * 0.55 * dt);
-        const horizMag = Math.hypot(state.vx, state.vz);
-        if (horizMag > state.airMaxSpeed) {
-          state.vx = (state.vx / horizMag) * state.airMaxSpeed;
-          state.vz = (state.vz / horizMag) * state.airMaxSpeed;
-        }
-        state.speed = Math.hypot(state.vx, state.vz);
-      } else {
-        if (isFootBraking || isReversing) {
-          if (canUseRCS) {
-            state.speed = Math.max(0.0, state.speed - 38.0 * dt);
-          }
-        } else {
-          // Fix Issue 3: Realistic fast airborne stall deceleration when not thrusting in mid-air
-          const airStallDecel = 15.5 + 0.0085 * state.speed * state.speed;
-          if (state.speed > 0.1) {
-            state.speed = Math.max(0.0, state.speed * Math.pow(0.45, dt) - airStallDecel * dt);
-          } else if (state.speed < -0.1) {
-            state.speed = Math.min(0.0, state.speed * Math.pow(0.45, dt) + airStallDecel * dt);
-          } else {
-            state.speed = 0.0;
-          }
-        }
-        state.vx = noseHorizX * state.speed + rightHorizX * state.airStrafeSpeed;
-        state.vz = noseHorizZ * state.speed + rightHorizZ * state.airStrafeSpeed;
-      }
-    } else {
+    if (!isAirborne) {
       state.airStrafeSpeed = 0.0;
       let vForward = state.vx * noseHorizX + state.vz * noseHorizZ;
       let vLateral = state.vx * rightHorizX + state.vz * rightHorizZ;
@@ -6534,12 +6644,12 @@ function updateSimulation(dt) {
       const impactV = Math.abs(state.speed);
       state.x = THREE.MathUtils.clamp(state.x, -limit, limit);
       state.z = THREE.MathUtils.clamp(state.z, -limit, limit);
-      state.speed *= -0.35;
       state.vx *= -0.35;
       state.vz *= -0.35;
+      state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * -0.35;
       state.yaw *= Math.pow(0.10, dt);
       if (impactV > 10.0) {
-        triggerPhysicsCollision(impactV, 'crashReasonThreshold', -state.vx * 0.4, 2.0, -state.vz * 0.4);
+        triggerPhysicsCollision(impactV, 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.4, 2.0, isAirborne ? 0 : -state.vz * 0.4);
       }
     }
   }
@@ -6595,11 +6705,14 @@ function updateSimulation(dt) {
     // Smooth upward deceleration towards soft touchdown speed (-1.5 m/s)
     state.vy = Math.min(-1.5, state.vy + AUTO_BRAKE_ACCEL * dt);
 
-    // Gently auto-level roll and pitch without abrupt single-frame snapping
-    state.roll += (0.0 - state.roll) * 10.0 * dt;
-    state.pitch += (0.0 - state.pitch) * 10.0 * dt;
-    state.vRoll *= Math.pow(0.20, dt);
-    state.vPitch *= Math.pow(0.20, dt);
+    // Emergency braking still protects descent; attitude assist respects manual control and its grace period.
+    if (stabilizerDt > 0) {
+      const levelBlend = 1.0 - Math.exp(-10.0 * stabilizerDt);
+      state.roll -= wrapAnglePi(state.roll) * levelBlend;
+      state.pitch -= wrapAnglePi(state.pitch) * levelBlend;
+      state.vRoll *= Math.pow(0.20, stabilizerDt);
+      state.vPitch *= Math.pow(0.20, stabilizerDt);
+    }
   } else {
     state.isAutoLandingSave = false;
     // Manual Space or Shift cancels automated 6m jump or altitude hold
@@ -6746,12 +6859,6 @@ function updateSimulation(dt) {
     }
   }
 
-  // Requirement 3: J / L (and Left/Right arrows) -> Roll; I / K (and Up/Down arrows) -> Pitch
-  const rawRollInput = ((keys['KeyJ'] || keys['ArrowLeft']) ? 1 : 0) - ((keys['KeyL'] || keys['ArrowRight']) ? 1 : 0);
-  const rawPitchInput = ((keys['KeyI'] || keys['ArrowUp']) ? 1 : 0) - ((keys['KeyK'] || keys['ArrowDown']) ? 1 : 0);
-  // Requirement 2: In mid-air, A / D rotates the car nose left/right (Yaw)
-  const rawYawInput = isAirborne ? ((keys['KeyA'] ? 1 : 0) - (keys['KeyD'] ? 1 : 0)) : 0;
-
   // Requirement 3: All airborne attitude RCS jets (Roll, Pitch, Yaw) consume COPV air tank!
   canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
   let rollInput = 0;
@@ -6769,9 +6876,7 @@ function updateSimulation(dt) {
 
   const rcsAuthority = isAirborne ? 1.0 : 0.35;
 
-  const wrapAnglePi = (rad) => ((rad + Math.PI) % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2) - Math.PI;
   state.roll = wrapAnglePi(state.roll);
-  state.pitch = wrapAnglePi(state.pitch);
 
   if (canUseRCS && rollInput !== 0) {
     state.vRoll += rollInput * 3.6 * rcsAuthority * dt;
@@ -6785,10 +6890,10 @@ function updateSimulation(dt) {
     const targetGroundRoll = (-state.steerInput * 0.048 * speedLean) + (latG * 0.012);
     state.roll += (targetGroundRoll - state.roll) * 11.0 * dt;
     state.vRoll = 0.0;
-  } else if (state.autoStabilizer) {
+  } else if (stabilizerDt > 0) {
     // Shortest-path + angular-momentum-assisted roll self-righting
     const predictedRoll = wrapAnglePi(state.roll + state.vRoll * 0.28);
-    state.vRoll += (-predictedRoll * 7.8 - state.vRoll * 4.5) * dt;
+    state.vRoll += (-predictedRoll * 7.8 - state.vRoll * 4.5) * stabilizerDt;
   }
 
   if (canUseRCS && pitchInput !== 0) {
@@ -6796,9 +6901,10 @@ function updateSimulation(dt) {
     if (isAirborne) {
       state.vy += pitchInput * 1.1 * dt;
     }
-  } else if (state.autoStabilizer || !isAirborne) {
-    // Smoothly return pitch to level attitude with critically-damped spring
-    state.vPitch += (-state.pitch * 6.5 - state.vPitch * 4.2) * dt;
+  } else if (stabilizerDt > 0 || !isAirborne) {
+    // Use the nearest equivalent level attitude without unwinding completed flips.
+    const pitchError = wrapAnglePi(state.pitch);
+    state.vPitch += (-pitchError * 6.5 - state.vPitch * 4.2) * (isAirborne ? stabilizerDt : dt);
   }
 
   if (isAirborne) {
@@ -6815,25 +6921,21 @@ function updateSimulation(dt) {
   state.vYaw *= Math.pow(0.25, dt);
 
   state.roll = wrapAnglePi(state.roll + state.vRoll * dt);
-  // Aerodynamic pitch restoring torque from rear active wing above 100 km/h
-  if (pitchInput === 0 && Math.abs(state.speed) > 28.0) {
+  // Wing attitude assist follows the same delayed stabilizer as the RCS springs.
+  if (pitchInput === 0 && (stabilizerDt > 0 || !isAirborne) && Math.abs(state.speed) > 28.0) {
     const aeroPitchStab = Math.min(3.5, Math.pow(Math.abs(state.speed) / 35.0, 2)) * 0.45;
-    state.vPitch += (-state.pitch * aeroPitchStab) * dt;
+    state.vPitch += (-wrapAnglePi(state.pitch) * aeroPitchStab) * (isAirborne ? stabilizerDt : dt);
   }
+  // Keep pitch continuous through +/-180 and complete forward/backward 360-degree loops.
+  // THREE renders the Euler angle directly; no Euler extraction or airborne pitch clamp is needed.
   state.pitch += state.vPitch * dt;
-
-  // Smoothly bound pitch angle to stable aerodynamic envelope [-1.30, 1.30] rad (~±74.5°)
-  // This guarantees complete immunity against gimbal lock, lookAt singularity, and wrapAnglePi inversion chatter!
-  state.pitch = THREE.MathUtils.clamp(state.pitch, -1.30, 1.30);
-  if ((state.pitch >= 1.299 && state.vPitch > 0) || (state.pitch <= -1.299 && state.vPitch < 0)) {
-    state.vPitch = 0.0;
-  }
   state.yaw += state.vYaw * dt;
 
   const trueGroundAgl = Math.max(0.0, state.y - groundElevation);
   if (trueGroundAgl < 0.35) {
     const maxGroundPitch = THREE.MathUtils.lerp(0.14, 1.30, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
-    state.pitch = THREE.MathUtils.clamp(state.pitch, -maxGroundPitch, maxGroundPitch);
+    const groundPitch = wrapAnglePi(state.pitch);
+    state.pitch += THREE.MathUtils.clamp(groundPitch, -maxGroundPitch, maxGroundPitch) - groundPitch;
     const maxGroundRoll = THREE.MathUtils.lerp(0.18, 3.14, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
     state.roll = THREE.MathUtils.clamp(state.roll, -maxGroundRoll, maxGroundRoll);
     if (currentMap === 'highway' && trueGroundAgl < 0.15) {
@@ -6904,8 +7006,14 @@ function updateSimulation(dt) {
           else if (minD === dFront) state.z = b.minZ - 1.9;
           else state.z = b.maxZ + 1.9;
 
-          state.speed *= -0.3;
-          triggerPhysicsCollision(Math.max(12, impactSpeed), 'crashReasonThreshold', -state.vx * 0.5, 2.0, -state.vz * 0.5);
+          if (isAirborne) {
+            state.vx *= -0.3;
+            state.vz *= -0.3;
+            state.speed = Math.hypot(state.vx, state.vz);
+          } else {
+            state.speed *= -0.3;
+          }
+          triggerPhysicsCollision(Math.max(12, impactSpeed), 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.5, 2.0, isAirborne ? 0 : -state.vz * 0.5);
           if (state.isDestroyed) return;
         }
       }
@@ -7067,7 +7175,7 @@ function updateSimulation(dt) {
     if (car.blastTimer && car.blastTimer > 0) {
       car.blastTimer = Math.max(0, car.blastTimer - dt);
       car.mesh.position.x += car.blastVx * dt;
-      car.mesh.position.z += (currentMap === 'highway' ? (state.speed - car.speed + car.blastVz) : car.blastVz) * dt;
+      car.mesh.position.z += (currentMap === 'highway' ? (-state.vz - car.speed + car.blastVz) : car.blastVz) * dt;
       car.y = (car.y || 0) + car.blastVy * dt;
       car.blastVy -= 22.0 * dt;
       if (car.y <= 0.0) {
@@ -7093,7 +7201,7 @@ function updateSimulation(dt) {
         }
       }
     } else if (currentMap === 'highway') {
-      const relSpeed = (state.speed - car.speed) * WORLD_SPEED_SCALE;
+      const relSpeed = (-state.vz - car.speed) * WORLD_SPEED_SCALE;
       car.mesh.position.z += relSpeed * dt;
 
       car.changeTimer -= dt;
@@ -7157,11 +7265,26 @@ function updateSimulation(dt) {
 
         if (currentMap === 'highway') {
           car.mesh.position.z -= 8.0;
-          state.speed = Math.max(14.0, state.speed * 0.58);
+          if (isAirborne) {
+            const horizontalSpeed = Math.hypot(state.vx, state.vz);
+            const reducedSpeed = Math.min(horizontalSpeed, Math.max(14.0, horizontalSpeed * 0.58));
+            const collisionScale = horizontalSpeed > 0 ? reducedSpeed / horizontalSpeed : 0;
+            state.vx *= collisionScale;
+            state.vz *= collisionScale;
+            state.speed = Math.hypot(state.vx, state.vz);
+          } else {
+            state.speed = Math.max(14.0, state.speed * 0.58);
+          }
         } else {
           car.mesh.position.x += Math.sign(car.mesh.position.x - state.x || 1) * 5.0;
           car.mesh.position.z += Math.sign(car.mesh.position.z - state.z || 1) * 5.0;
-          state.speed *= -0.35;
+          if (isAirborne) {
+            state.vx *= -0.35;
+            state.vz *= -0.35;
+            state.speed = Math.hypot(state.vx, state.vz);
+          } else {
+            state.speed *= -0.35;
+          }
         }
 
         const pushX = Math.sign(state.x - car.mesh.position.x || 1) * 7.5;
@@ -7305,7 +7428,7 @@ function updateSimulation(dt) {
     rainLinesMesh.position.set(state.x, Math.max(0, state.y - 20), playerWorldZ);
     const posAttr = rainLinesMesh.geometry.attributes.position;
     const arr = posAttr.array;
-    const slantZ = (currentMap === 'highway' ? state.speed : state.vz) * 0.04;
+    const slantZ = (currentMap === 'highway' ? -state.vz : state.vz) * 0.04;
     for (let i = 0; i < rainCount; i++) {
       let ry = arr[i * 6 + 1] - 62.0 * dt;
       if (ry < 0) ry += 90.0;

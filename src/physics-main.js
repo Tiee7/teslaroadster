@@ -255,6 +255,10 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
   }
 
   state.vx += bounceVx;
+  if (state.wasAirborne) {
+    state.vz += bounceVz || 0;
+    state.speed = Math.hypot(state.vx, state.vz);
+  }
   state.vy = Math.max(state.vy, bounceVy);
   state.vRoll += (Math.random() - 0.5) * 3.5;
   state.vPitch += (Math.random() - 0.5) * 2.5;
@@ -303,6 +307,35 @@ function updateDestroyedModalText() {
 // =========================================================================
 populateTraffic(36);
 let lastTime = performance.now();
+
+function wrapAnglePi(rad) {
+  return ((rad + Math.PI) % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2) - Math.PI;
+}
+
+function readAttitudeInput(isAirborne) {
+  // Touch controls use the same key state as the keyboard and arrow aliases.
+  const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
+  const rollRight = Boolean(keys['KeyL'] || keys['ArrowRight']);
+  const pitchUp = Boolean(keys['KeyI'] || keys['ArrowUp']);
+  const pitchDown = Boolean(keys['KeyK'] || keys['ArrowDown']);
+  const yawLeft = isAirborne && Boolean(keys['KeyA']);
+  const yawRight = isAirborne && Boolean(keys['KeyD']);
+  return {
+    rawRollInput: Number(rollLeft) - Number(rollRight),
+    rawPitchInput: Number(pitchUp) - Number(pitchDown),
+    rawYawInput: Number(yawLeft) - Number(yawRight),
+    // Opposing held controls still count as player input, even if their torques cancel.
+    hasManualAttitudeInput: rollLeft || rollRight || pitchUp || pitchDown || yawLeft || yawRight ||
+      (isAirborne && Boolean(keys['KeyQ'] || keys['KeyE']))
+  };
+}
+
+function advanceAttitudeIdle(dt, hasInput) {
+  const previousIdle = state.attitudeIdleSeconds || 0;
+  state.attitudeIdleSeconds = hasInput ? 0 : Math.min(2.0, previousIdle + dt);
+  // Only apply the portion of this frame after the full two-second grace period.
+  return hasInput || !state.autoStabilizer ? 0 : Math.min(dt, Math.max(0, previousIdle + dt - 2.0));
+}
 
 function updateSimulation(dt) {
   const t = I18N[currentLang];
@@ -384,6 +417,8 @@ function updateSimulation(dt) {
     }
   }
   const isAirborne = (state.y - groundElevation) > 0.15;
+  const { rawRollInput, rawPitchInput, rawYawInput, hasManualAttitudeInput } = readAttitudeInput(isAirborne);
+  const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
   // Unified COPV Air Tank Consumption Helper (Requirement 3: ALL airborne thrusters & ';' rear boost consume tank)
   function consumeAirTank(amount, airborneNow) {
@@ -506,39 +541,58 @@ function updateSimulation(dt) {
   const nosePitchCos = Math.cos(state.pitch);
   const nosePitchSin = Math.sin(state.pitch);
 
-  if (currentMap === 'highway') {
-    if (isAirborne) {
-      state.isDrifting = false;
-      state.wasHandbraking = false;
-      // Airborne lateral body translation via Q / E + roll/nose vector
-      const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
+  if (isAirborne) {
+    state.isDrifting = false;
+    state.wasHandbraking = false;
+    state.driftAngle = 0.0;
+    // Preserve world-space momentum throughout flips; only thrust changes its direction.
+    if (isRearThrusterFiring) {
+      const boostAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
+      state.vx += noseHorizX * nosePitchCos * boostAirAccel * dt;
+      state.vz += noseHorizZ * nosePitchCos * boostAirAccel * dt;
       const maxAirVy = currentMaxClimbVy * 1.35;
-      if (isRearThrusterFiring) {
-        // Rear thrusters accelerate strictly along the 3D nose direction
-        state.speed = Math.min(state.airMaxSpeed, state.speed + currentAirAccel * Math.max(0.25, nosePitchCos) * dt);
-        state.vy = Math.min(maxAirVy, state.vy + currentAirAccel * nosePitchSin * 0.55 * dt);
-      } else if (isFootBraking || isReversing) {
-        if (canUseRCS) {
-          state.speed = Math.max(0.0, state.speed - 38.0 * dt);
-        }
-      } else {
-        // Fix Issue 3: Faster, realistic airborne aerodynamic stall / drag deceleration when not thrusting
-        const airStallDecel = 15.5 + 0.0085 * state.speed * state.speed;
-        if (state.speed > 0.1) {
-          state.speed = Math.max(0.0, state.speed * Math.pow(0.45, dt) - airStallDecel * dt);
-        } else if (state.speed < -0.1) {
-          state.speed = Math.min(0.0, state.speed * Math.pow(0.45, dt) + airStallDecel * dt);
-        } else {
-          state.speed = 0.0;
-        }
+      state.vy = Math.min(maxAirVy, state.vy + boostAirAccel * nosePitchSin * 0.55 * dt);
+      const horizMag = Math.hypot(state.vx, state.vz);
+      if (horizMag > state.airMaxSpeed) {
+        state.vx *= state.airMaxSpeed / horizMag;
+        state.vz *= state.airMaxSpeed / horizMag;
       }
-      const rollDrift = Math.sin(state.roll) * 12.0;
-      const noseLatVx = noseHorizX * state.speed;
-      const strafeVx = rightHorizX * (jetDir * 18.0);
-      const targetAirVx = noseLatVx + strafeVx + rollDrift;
-      state.vx += (targetAirVx - state.vx) * (isRearThrusterFiring ? 10.0 : 6.5) * dt;
-      state.vz = noseHorizZ * state.speed;
     } else {
+      const horizMag = Math.hypot(state.vx, state.vz);
+      const isAirBrake = isFootBraking || isReversing;
+      const airStallDecel = 15.5 + 0.0085 * horizMag * horizMag;
+      const nextMag = isAirBrake
+        ? (canUseRCS ? Math.max(0, horizMag - 38.0 * dt) : horizMag)
+        : Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
+      const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
+      state.vx *= coastScale;
+      state.vz *= coastScale;
+    }
+
+    // Q/E and roll drift retain their responsive lateral assist without rebuilding forward momentum.
+    const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
+    const targetStrafe = jetDir * 18.0 + Math.sin(state.roll) * (currentMap === 'highway' ? 12.0 : 10.0);
+    const strafeRate = currentMap === 'highway' ? (isRearThrusterFiring ? 10.0 : 6.5) : 6.0;
+    const lateralSpeed = state.vx * rightHorizX + state.vz * rightHorizZ;
+    const strafeChange = Math.abs(targetStrafe) > 0.001
+      ? (targetStrafe - lateralSpeed) * Math.min(1.0, strafeRate * dt)
+      : 0;
+    state.vx += rightHorizX * strafeChange;
+    state.vz += rightHorizZ * strafeChange;
+    state.airStrafeSpeed = lateralSpeed + strafeChange;
+    state.speed = Math.hypot(state.vx, state.vz);
+  } else {
+    if (state.wasAirborne) {
+      // Hand inertial flight velocity back to the existing signed ground-drive convention.
+      const forwardVelocity = state.vx * noseHorizX + state.vz * noseHorizZ;
+      state.speed = (forwardVelocity >= 0 ? 1 : -1) * Math.hypot(state.vx, state.vz);
+    }
+    state.airStrafeSpeed = 0.0;
+  }
+  state.wasAirborne = isAirborne;
+
+  if (currentMap === 'highway') {
+    if (!isAirborne) {
       // Ground mode on highway
       if (isAccelerating) {
         const effAccel = isRearThrusterFiring ? (isRealMode ? 38.0 * fuelBurnThrustFactor : 120.0 * fuelBurnThrustFactor) : (isHandbraking ? currentGroundAccel * 0.88 : currentGroundAccel);
@@ -634,52 +688,20 @@ function updateSimulation(dt) {
       } else {
         state.vx = (state.x < 0 ? 1 : -1) * Math.min(2.5, Math.abs(state.vx) * 0.25);
       }
-      state.speed = Math.max(0.0, state.speed - 8.0 * dt);
+      if (isAirborne) {
+        const horizontalSpeed = Math.hypot(state.vx, state.vz);
+        const railScale = horizontalSpeed > 0 ? Math.max(0, horizontalSpeed - 8.0 * dt) / horizontalSpeed : 0;
+        state.vx *= railScale;
+        state.vz *= railScale;
+        state.speed = Math.hypot(state.vx, state.vz);
+      } else {
+        state.speed = Math.max(0.0, state.speed - 8.0 * dt);
+      }
       state.yaw *= Math.pow(0.04, dt);
     }
   } else {
     // City Open-World Mode: True 2D Velocity Vector + Momentum-Preserving Handbrake Drift
-    if (isAirborne) {
-      state.isDrifting = false;
-      state.wasHandbraking = false;
-      state.driftAngle = 0.0;
-      const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
-      const targetStrafe = jetDir * 18.0 + Math.sin(state.roll) * 10.0;
-      state.airStrafeSpeed = (state.airStrafeSpeed || 0) + (targetStrafe - (state.airStrafeSpeed || 0)) * 6.0 * dt;
-
-      const maxAirVy = currentMaxClimbVy * 1.35;
-      if (isRearThrusterFiring) {
-        // Airborne W or ; fires rear thrusters along the 3D nose vector
-        const boostAirAccel = isRealMode ? currentAirAccel : 145.0;
-        state.vx += noseHorizX * nosePitchCos * boostAirAccel * dt;
-        state.vz += noseHorizZ * nosePitchCos * boostAirAccel * dt;
-        state.vy = Math.min(maxAirVy, state.vy + boostAirAccel * nosePitchSin * 0.55 * dt);
-        const horizMag = Math.hypot(state.vx, state.vz);
-        if (horizMag > state.airMaxSpeed) {
-          state.vx = (state.vx / horizMag) * state.airMaxSpeed;
-          state.vz = (state.vz / horizMag) * state.airMaxSpeed;
-        }
-        state.speed = Math.hypot(state.vx, state.vz);
-      } else {
-        if (isFootBraking || isReversing) {
-          if (canUseRCS) {
-            state.speed = Math.max(0.0, state.speed - 38.0 * dt);
-          }
-        } else {
-          // Fix Issue 3: Realistic fast airborne stall deceleration when not thrusting in mid-air
-          const airStallDecel = 15.5 + 0.0085 * state.speed * state.speed;
-          if (state.speed > 0.1) {
-            state.speed = Math.max(0.0, state.speed * Math.pow(0.45, dt) - airStallDecel * dt);
-          } else if (state.speed < -0.1) {
-            state.speed = Math.min(0.0, state.speed * Math.pow(0.45, dt) + airStallDecel * dt);
-          } else {
-            state.speed = 0.0;
-          }
-        }
-        state.vx = noseHorizX * state.speed + rightHorizX * state.airStrafeSpeed;
-        state.vz = noseHorizZ * state.speed + rightHorizZ * state.airStrafeSpeed;
-      }
-    } else {
+    if (!isAirborne) {
       state.airStrafeSpeed = 0.0;
       let vForward = state.vx * noseHorizX + state.vz * noseHorizZ;
       let vLateral = state.vx * rightHorizX + state.vz * rightHorizZ;
@@ -807,12 +829,12 @@ function updateSimulation(dt) {
       const impactV = Math.abs(state.speed);
       state.x = THREE.MathUtils.clamp(state.x, -limit, limit);
       state.z = THREE.MathUtils.clamp(state.z, -limit, limit);
-      state.speed *= -0.35;
       state.vx *= -0.35;
       state.vz *= -0.35;
+      state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * -0.35;
       state.yaw *= Math.pow(0.10, dt);
       if (impactV > 10.0) {
-        triggerPhysicsCollision(impactV, 'crashReasonThreshold', -state.vx * 0.4, 2.0, -state.vz * 0.4);
+        triggerPhysicsCollision(impactV, 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.4, 2.0, isAirborne ? 0 : -state.vz * 0.4);
       }
     }
   }
@@ -868,11 +890,14 @@ function updateSimulation(dt) {
     // Smooth upward deceleration towards soft touchdown speed (-1.5 m/s)
     state.vy = Math.min(-1.5, state.vy + AUTO_BRAKE_ACCEL * dt);
 
-    // Gently auto-level roll and pitch without abrupt single-frame snapping
-    state.roll += (0.0 - state.roll) * 10.0 * dt;
-    state.pitch += (0.0 - state.pitch) * 10.0 * dt;
-    state.vRoll *= Math.pow(0.20, dt);
-    state.vPitch *= Math.pow(0.20, dt);
+    // Emergency braking still protects descent; attitude assist respects manual control and its grace period.
+    if (stabilizerDt > 0) {
+      const levelBlend = 1.0 - Math.exp(-10.0 * stabilizerDt);
+      state.roll -= wrapAnglePi(state.roll) * levelBlend;
+      state.pitch -= wrapAnglePi(state.pitch) * levelBlend;
+      state.vRoll *= Math.pow(0.20, stabilizerDt);
+      state.vPitch *= Math.pow(0.20, stabilizerDt);
+    }
   } else {
     state.isAutoLandingSave = false;
     // Manual Space or Shift cancels automated 6m jump or altitude hold
@@ -1019,12 +1044,6 @@ function updateSimulation(dt) {
     }
   }
 
-  // Requirement 3: J / L (and Left/Right arrows) -> Roll; I / K (and Up/Down arrows) -> Pitch
-  const rawRollInput = ((keys['KeyJ'] || keys['ArrowLeft']) ? 1 : 0) - ((keys['KeyL'] || keys['ArrowRight']) ? 1 : 0);
-  const rawPitchInput = ((keys['KeyI'] || keys['ArrowUp']) ? 1 : 0) - ((keys['KeyK'] || keys['ArrowDown']) ? 1 : 0);
-  // Requirement 2: In mid-air, A / D rotates the car nose left/right (Yaw)
-  const rawYawInput = isAirborne ? ((keys['KeyA'] ? 1 : 0) - (keys['KeyD'] ? 1 : 0)) : 0;
-
   // Requirement 3: All airborne attitude RCS jets (Roll, Pitch, Yaw) consume COPV air tank!
   canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
   let rollInput = 0;
@@ -1042,9 +1061,7 @@ function updateSimulation(dt) {
 
   const rcsAuthority = isAirborne ? 1.0 : 0.35;
 
-  const wrapAnglePi = (rad) => ((rad + Math.PI) % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2) - Math.PI;
   state.roll = wrapAnglePi(state.roll);
-  state.pitch = wrapAnglePi(state.pitch);
 
   if (canUseRCS && rollInput !== 0) {
     state.vRoll += rollInput * 3.6 * rcsAuthority * dt;
@@ -1058,10 +1075,10 @@ function updateSimulation(dt) {
     const targetGroundRoll = (-state.steerInput * 0.048 * speedLean) + (latG * 0.012);
     state.roll += (targetGroundRoll - state.roll) * 11.0 * dt;
     state.vRoll = 0.0;
-  } else if (state.autoStabilizer) {
+  } else if (stabilizerDt > 0) {
     // Shortest-path + angular-momentum-assisted roll self-righting
     const predictedRoll = wrapAnglePi(state.roll + state.vRoll * 0.28);
-    state.vRoll += (-predictedRoll * 7.8 - state.vRoll * 4.5) * dt;
+    state.vRoll += (-predictedRoll * 7.8 - state.vRoll * 4.5) * stabilizerDt;
   }
 
   if (canUseRCS && pitchInput !== 0) {
@@ -1069,9 +1086,10 @@ function updateSimulation(dt) {
     if (isAirborne) {
       state.vy += pitchInput * 1.1 * dt;
     }
-  } else if (state.autoStabilizer || !isAirborne) {
-    // Smoothly return pitch to level attitude with critically-damped spring
-    state.vPitch += (-state.pitch * 6.5 - state.vPitch * 4.2) * dt;
+  } else if (stabilizerDt > 0 || !isAirborne) {
+    // Use the nearest equivalent level attitude without unwinding completed flips.
+    const pitchError = wrapAnglePi(state.pitch);
+    state.vPitch += (-pitchError * 6.5 - state.vPitch * 4.2) * (isAirborne ? stabilizerDt : dt);
   }
 
   if (isAirborne) {
@@ -1088,25 +1106,21 @@ function updateSimulation(dt) {
   state.vYaw *= Math.pow(0.25, dt);
 
   state.roll = wrapAnglePi(state.roll + state.vRoll * dt);
-  // Aerodynamic pitch restoring torque from rear active wing above 100 km/h
-  if (pitchInput === 0 && Math.abs(state.speed) > 28.0) {
+  // Wing attitude assist follows the same delayed stabilizer as the RCS springs.
+  if (pitchInput === 0 && (stabilizerDt > 0 || !isAirborne) && Math.abs(state.speed) > 28.0) {
     const aeroPitchStab = Math.min(3.5, Math.pow(Math.abs(state.speed) / 35.0, 2)) * 0.45;
-    state.vPitch += (-state.pitch * aeroPitchStab) * dt;
+    state.vPitch += (-wrapAnglePi(state.pitch) * aeroPitchStab) * (isAirborne ? stabilizerDt : dt);
   }
+  // Keep pitch continuous through +/-180 and complete forward/backward 360-degree loops.
+  // THREE renders the Euler angle directly; no Euler extraction or airborne pitch clamp is needed.
   state.pitch += state.vPitch * dt;
-
-  // Smoothly bound pitch angle to stable aerodynamic envelope [-1.30, 1.30] rad (~±74.5°)
-  // This guarantees complete immunity against gimbal lock, lookAt singularity, and wrapAnglePi inversion chatter!
-  state.pitch = THREE.MathUtils.clamp(state.pitch, -1.30, 1.30);
-  if ((state.pitch >= 1.299 && state.vPitch > 0) || (state.pitch <= -1.299 && state.vPitch < 0)) {
-    state.vPitch = 0.0;
-  }
   state.yaw += state.vYaw * dt;
 
   const trueGroundAgl = Math.max(0.0, state.y - groundElevation);
   if (trueGroundAgl < 0.35) {
     const maxGroundPitch = THREE.MathUtils.lerp(0.14, 1.30, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
-    state.pitch = THREE.MathUtils.clamp(state.pitch, -maxGroundPitch, maxGroundPitch);
+    const groundPitch = wrapAnglePi(state.pitch);
+    state.pitch += THREE.MathUtils.clamp(groundPitch, -maxGroundPitch, maxGroundPitch) - groundPitch;
     const maxGroundRoll = THREE.MathUtils.lerp(0.18, 3.14, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
     state.roll = THREE.MathUtils.clamp(state.roll, -maxGroundRoll, maxGroundRoll);
     if (currentMap === 'highway' && trueGroundAgl < 0.15) {
@@ -1177,8 +1191,14 @@ function updateSimulation(dt) {
           else if (minD === dFront) state.z = b.minZ - 1.9;
           else state.z = b.maxZ + 1.9;
 
-          state.speed *= -0.3;
-          triggerPhysicsCollision(Math.max(12, impactSpeed), 'crashReasonThreshold', -state.vx * 0.5, 2.0, -state.vz * 0.5);
+          if (isAirborne) {
+            state.vx *= -0.3;
+            state.vz *= -0.3;
+            state.speed = Math.hypot(state.vx, state.vz);
+          } else {
+            state.speed *= -0.3;
+          }
+          triggerPhysicsCollision(Math.max(12, impactSpeed), 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.5, 2.0, isAirborne ? 0 : -state.vz * 0.5);
           if (state.isDestroyed) return;
         }
       }
@@ -1340,7 +1360,7 @@ function updateSimulation(dt) {
     if (car.blastTimer && car.blastTimer > 0) {
       car.blastTimer = Math.max(0, car.blastTimer - dt);
       car.mesh.position.x += car.blastVx * dt;
-      car.mesh.position.z += (currentMap === 'highway' ? (state.speed - car.speed + car.blastVz) : car.blastVz) * dt;
+      car.mesh.position.z += (currentMap === 'highway' ? (-state.vz - car.speed + car.blastVz) : car.blastVz) * dt;
       car.y = (car.y || 0) + car.blastVy * dt;
       car.blastVy -= 22.0 * dt;
       if (car.y <= 0.0) {
@@ -1366,7 +1386,7 @@ function updateSimulation(dt) {
         }
       }
     } else if (currentMap === 'highway') {
-      const relSpeed = (state.speed - car.speed) * WORLD_SPEED_SCALE;
+      const relSpeed = (-state.vz - car.speed) * WORLD_SPEED_SCALE;
       car.mesh.position.z += relSpeed * dt;
 
       car.changeTimer -= dt;
@@ -1430,11 +1450,26 @@ function updateSimulation(dt) {
 
         if (currentMap === 'highway') {
           car.mesh.position.z -= 8.0;
-          state.speed = Math.max(14.0, state.speed * 0.58);
+          if (isAirborne) {
+            const horizontalSpeed = Math.hypot(state.vx, state.vz);
+            const reducedSpeed = Math.min(horizontalSpeed, Math.max(14.0, horizontalSpeed * 0.58));
+            const collisionScale = horizontalSpeed > 0 ? reducedSpeed / horizontalSpeed : 0;
+            state.vx *= collisionScale;
+            state.vz *= collisionScale;
+            state.speed = Math.hypot(state.vx, state.vz);
+          } else {
+            state.speed = Math.max(14.0, state.speed * 0.58);
+          }
         } else {
           car.mesh.position.x += Math.sign(car.mesh.position.x - state.x || 1) * 5.0;
           car.mesh.position.z += Math.sign(car.mesh.position.z - state.z || 1) * 5.0;
-          state.speed *= -0.35;
+          if (isAirborne) {
+            state.vx *= -0.35;
+            state.vz *= -0.35;
+            state.speed = Math.hypot(state.vx, state.vz);
+          } else {
+            state.speed *= -0.35;
+          }
         }
 
         const pushX = Math.sign(state.x - car.mesh.position.x || 1) * 7.5;
@@ -1578,7 +1613,7 @@ function updateSimulation(dt) {
     rainLinesMesh.position.set(state.x, Math.max(0, state.y - 20), playerWorldZ);
     const posAttr = rainLinesMesh.geometry.attributes.position;
     const arr = posAttr.array;
-    const slantZ = (currentMap === 'highway' ? state.speed : state.vz) * 0.04;
+    const slantZ = (currentMap === 'highway' ? -state.vz : state.vz) * 0.04;
     for (let i = 0; i < rainCount; i++) {
       let ry = arr[i * 6 + 1] - 62.0 * dt;
       if (ry < 0) ry += 90.0;

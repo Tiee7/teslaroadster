@@ -165,7 +165,7 @@ const I18N = {
     modalHDrive: "1. Driving & Vertical Flight",
     modalListDrive: "<li><b class='text-cyan-300 mono'>W / ; / H / U / S</b> : W Drive, <b>;</b> Rear Rocket Boost, H Foot Brake, <b>U</b> Handbrake Drift, S Reverse</li><li><b class='text-cyan-300 mono'>SPACE / O / N</b> : <b>SPACE</b> Climb (+30% speed), <b>O</b> Quick 2.5× Jump to 6m, <b>N</b> Mid-Air Altitude Hold</li><li><b class='text-cyan-300 mono'>A / D & Q / E</b> : A/D Ground Steer & Air Yaw; Q/E Mid-Air Lateral Strafe</li><li><b class='text-cyan-300 mono'>SHIFT / B</b> : <b>SHIFT</b> Thrust Descend, <b>B</b> Toggle Speed Unit (KM/h ⇄ MPH)</li>",
     modalHAttitude: "2. 6-DOF Attitude & Map Shortcuts",
-    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (or ← / →)</b> : <b>Roll</b> left / right (hold for 360° barrel rolls!)</li><li><b class='text-cyan-300 mono'>I / K (or ↑ / ↓)</b> : <b>Pitch</b> nose up / down</li><li><b class='text-cyan-300 mono'>Q / E & A / D</b> : <b>Q/E</b> mid-air lateral move, <b>A/D</b> mid-air nose turn</li><li><b class='text-cyan-300 mono'>M / R / X</b> : Select Map (M), Repair & Reset (R), Auto-Level (X)</li>",
+    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (or ← / →)</b> : <b>Roll</b> left / right (hold for 360° barrel rolls!)</li><li><b class='text-cyan-300 mono'>I / K (or ↑ / ↓)</b> : <b>Pitch</b> nose up / down (hold for full 360° flips)</li><li><b class='text-cyan-300 mono'>Q / E & A / D</b> : <b>Q/E</b> mid-air lateral move, <b>A/D</b> mid-air nose turn</li><li><b class='text-cyan-300 mono'>M / R / X</b> : Select Map (M), Repair & Reset (R), Auto-Level (X, after 2 seconds without attitude input)</li>",
     modalHTank: "3. 10s Air Tank & Physics Destruction Threshold",
     modalPTank: "• <b>Air Tank (10.0s)</b>: At <b>8.0s used (2.0s left)</b>, low pressure triggers <b>Auto-Descent</b>; at <b>10.0s used (0.0s left)</b>, thrusters cut out for immediate <b>Freefall</b>.<br/>• <b>Physics Collision Destruction</b>: Impacts calculate relative velocity Δv, kinetic energy, and peak G-force. Any single impact exceeding <b>18.0 G (Δv ≥ 100 km/h)</b> or cumulative hull damage reaching 0% triggers <b>Immediate Total Destruction</b>!",
     modalBtnResume: "Resume Simulation"
@@ -327,7 +327,7 @@ const I18N = {
     modalHDrive: "1. 地面驾驶与垂直浮空控制",
     modalListDrive: "<li><b class='text-cyan-300 mono'>W / ; / H / U / S</b> : W 电驱加速、<b>;</b> 尾部喷气加速、H 脚刹、<b>U</b> 手刹失抓地力漂移、S 倒车</li><li><b class='text-cyan-300 mono'>SPACE / O / N</b> : <b>SPACE</b> 爬升（提速30%）、<b>O</b> 2.5倍速跳跃至6米高度、<b>N</b> 空中保持当前高度悬浮（少量用气）</li><li><b class='text-cyan-300 mono'>A / D 与 Q / E</b> : A/D 地面转向与空中车头偏航；Q/E 空中车身左右横移</li><li><b class='text-cyan-300 mono'>SHIFT / B</b> : <b>SHIFT</b> 喷气主动下降、<b>B</b> 速度单位切换 (KM/h ⇄ MPH)</li>",
     modalHAttitude: "2. 空中六自由度姿态与快捷键",
-    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (或 ← / →)</b> : 控制 <b>Roll (横滚)</b>，长按可做空中360°翻滚</li><li><b class='text-cyan-300 mono'>I / K (或 ↑ / ↓)</b> : 控制 <b>Pitch (俯仰)</b>，车头抬头/低头</li><li><b class='text-cyan-300 mono'>Q / E 与 A / D</b> : 空中 <b>Q/E</b> 车身左右横移，<b>A/D</b> 车头左右转向</li><li><b class='text-cyan-300 mono'>M / R / X</b> : 切换地图 (M)、修复重置车辆 (R)、姿态自动回正开关 (X)</li>",
+    modalListAttitude: "<li><b class='text-cyan-300 mono'>J / L (或 ← / →)</b> : 控制 <b>Roll (横滚)</b>，长按可做空中360°翻滚</li><li><b class='text-cyan-300 mono'>I / K (或 ↑ / ↓)</b> : 控制 <b>Pitch (俯仰)</b>，长按可前后连续360°翻滚</li><li><b class='text-cyan-300 mono'>Q / E 与 A / D</b> : 空中 <b>Q/E</b> 车身左右横移，<b>A/D</b> 车头左右转向</li><li><b class='text-cyan-300 mono'>M / R / X</b> : 切换地图 (M)、修复重置车辆 (R)、姿态自动回正开关 (X，松开姿态控制2秒后介入)</li>",
     modalHTank: "3. 10秒空气槽与真实物理碰撞损毁机制",
     modalPTank: "• <b>10秒空气槽</b>: <b>第8.0秒</b>触发低压<b>自动下降</b>；<b>第10.0秒用完喷气</b>推进器断气并<b>立刻自由落体</b>。<br/>• <b>物理碰撞损毁</b>: 实时计算相对碰撞速度 Δv、动能与峰值过载 G 值。单次撞击超过 <b>18.0 G (相对速度 ≥ 100 km/h)</b> 或结构完整度归零时，车辆<b>直接解体损毁</b>！",
     modalBtnResume: "返回游戏"
@@ -397,6 +397,8 @@ const state = {
   steerAngle: 0.0,
   roll: 0.0,
   pitch: 0.0,
+  attitudeIdleSeconds: 0.0,
+  wasAirborne: false,
   yaw: 0.0,
   vRoll: 0.0,
   vPitch: 0.0,

@@ -26,7 +26,7 @@
   <!-- Unified Non-Overlapping Top HUD Container -->
   <div id="hud-top-container" class="fixed inset-x-0 top-0 z-10 pointer-events-none flex flex-col">
   <!-- Top Navigation & Telemetry Header -->
-  <header class="relative z-10 pointer-events-none flex flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-5 md:py-2.5">
+  <header id="hud-header" class="relative z-10 pointer-events-none flex flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-5 md:py-2.5">
     <!-- Brand & Model Badge -->
     <div id="hud-brand-badge" class="pointer-events-auto glass-panel rounded-xl px-3.5 py-2 flex items-center gap-3">
       <div class="w-2.5 h-8 rounded-full bg-gradient-to-b from-cyan-400 via-sky-500 to-blue-600 shadow-[0_0_12px_rgba(56,189,248,0.8)]"></div>
@@ -121,8 +121,12 @@
       </button>
     </div>
   </header>
+  <div id="hud-main">
+  <!-- Notifications are an overlay, independent of the anchored side panels. -->
+  <div id="hud-notifications">
   <div id="ranked-hud" class="ranked-hud" data-phase="idle">
     <button id="ranked-hud-open" type="button" aria-haspopup="dialog"><span id="ranked-hud-status" role="status">Sandbox • challenge is optional</span><strong id="ranked-countdown" aria-live="off"></strong></button>
+    <button id="ranked-hud-dismiss" type="button" aria-label="Hide challenge status">✕</button>
   </div>
 
   <!-- Center Alert Banner for Thruster Status (8s Auto-Descent / 10s Freefall / Stunt Bonus) -->
@@ -132,9 +136,10 @@
       <div id="status-banner-sub" class="text-[11px] text-slate-200 mt-0.5"></div>
     </div>
   </div>
+  </div>
 
-  <!-- Side Panels Row (Automatically flows below header, never overlapping header buttons) -->
-  <div class="w-full flex items-start justify-between px-3 md:px-5 mt-1 pointer-events-none gap-2">
+  <!-- Side panels stay anchored below the header when notifications change. -->
+  <div id="hud-side-panels" class="pointer-events-none">
   <!-- Left HUD: Clean, Grouped 6-DOF Attitude & Controls Guide Card -->
   <aside id="hud-left" class="pointer-events-auto glass-panel rounded-xl p-3 w-72 md:w-80 transition-all duration-200 max-h-[calc(100vh-11.5rem)] overflow-y-auto">
     <div id="hud-left-header" class="flex items-center justify-between gap-2 border-b border-slate-700/70 pb-1.5 mb-2">
@@ -211,10 +216,10 @@
       <div class="ctrl-row">
         <span id="ui-ctrl-roll" class="ctrl-label">Roll • Pitch</span>
         <div class="flex items-center gap-1 shrink-0">
-          <span id="key-left" class="key-badge" title="Roll Left (J or Left Arrow)">J ↺</span>
-          <span id="key-right" class="key-badge" title="Roll Right (L or Right Arrow)">L ↻</span>
-          <span id="key-up" class="key-badge" title="Pitch Up (I or Up Arrow)">I ▲</span>
-          <span id="key-down" class="key-badge" title="Pitch Down (K or Down Arrow)">K ▼</span>
+          <span id="key-left" data-hold-key="KeyJ" class="key-badge cursor-pointer" title="Roll Left (J or Left Arrow)">J ↺</span>
+          <span id="key-right" data-hold-key="KeyL" class="key-badge cursor-pointer" title="Roll Right (L or Right Arrow)">L ↻</span>
+          <span id="key-up" data-hold-key="KeyI" class="key-badge cursor-pointer" title="Pitch Up (I or Up Arrow)">I ▲</span>
+          <span id="key-down" data-hold-key="KeyK" class="key-badge cursor-pointer" title="Pitch Down (K or Down Arrow)">K ▼</span>
         </div>
       </div>
 
@@ -373,17 +378,22 @@
   </aside>
   </div>
   </div>
+  </div>
 
   <!-- Bottom HUD: Speedometer, 10-Second COPV Air Tank Bar & On-Screen Touch/Click Controls -->
   <footer id="hud-footer" class="fixed bottom-0 inset-x-0 z-10 pointer-events-none p-3 md:p-4 flex flex-col items-center gap-2">
     <!-- Touch / Mouse Quick Action Buttons -->
     <div id="touch-controls" class="pointer-events-auto flex flex-wrap items-center justify-center gap-1.5 md:hidden">
-      <button data-hold-key="KeyW" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">W/I ▲</button>
-      <button data-hold-key="KeyA" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">A/J ◀</button>
+      <button data-hold-key="KeyW" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">W ▲</button>
+      <button data-hold-key="KeyA" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">A ◀</button>
       <button data-hold-key="KeyH" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-300 border-rose-400 active:bg-rose-600">H (Brake)</button>
       <button data-hold-key="KeyU" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-amber-300 border-amber-400 active:bg-amber-600">U (Drift)</button>
-      <button data-hold-key="KeyD" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">D/L ▶</button>
-      <button data-hold-key="KeyS" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 active:bg-slate-700">S/K (Rev)</button>
+      <button data-hold-key="KeyD" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">D ▶</button>
+      <button data-hold-key="KeyS" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 active:bg-slate-700">S (Rev)</button>
+      <button data-hold-key="KeyI" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Pitch nose up (I)">I ↶ Pitch</button>
+      <button data-hold-key="KeyK" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Pitch nose down (K)">K ↷ Pitch</button>
+      <button data-hold-key="KeyJ" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Roll left (J)">J ◀ Roll</button>
+      <button data-hold-key="KeyL" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Roll right (L)">L ▶ Roll</button>
       <button data-hold-key="Space" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-cyan-300 border-cyan-400 active:bg-cyan-500">SPACE</button>
       <button data-hold-key="ShiftLeft" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-slate-200 active:bg-slate-700" title="Thrust Descend (Shift)">SHIFT ▼</button>
       <button id="btn-touch-jump" type="button" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-emerald-300 border-emerald-400 active:bg-emerald-600 cursor-pointer" title="6m Quick Jump (O)">O (6m)</button>

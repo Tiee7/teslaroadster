@@ -1,4 +1,23 @@
 
+// Size only from the header/footer, never from transient center notifications.
+function updateHudBounds() {
+  const container = document.getElementById('hud-top-container');
+  const header = document.getElementById('hud-header');
+  const footer = document.getElementById('hud-footer');
+  if (!container || !header || !footer) return;
+  container.style.setProperty('--hud-header-height', `${header.getBoundingClientRect().height}px`);
+  container.style.setProperty('--hud-footer-height', `${footer.getBoundingClientRect().height}px`);
+}
+if (typeof ResizeObserver !== 'undefined') {
+  const hudBoundsObserver = new ResizeObserver(updateHudBounds);
+  ['hud-header', 'hud-footer'].forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) hudBoundsObserver.observe(element);
+  });
+}
+window.addEventListener('resize', updateHudBounds);
+updateHudBounds();
+
 function toggleHudMode() {
   state.hudMinimal = !state.hudMinimal;
   const brandBadge = document.getElementById('hud-brand-badge');
@@ -377,6 +396,8 @@ function resetCar() {
   state.steerAngle = 0.0;
   state.roll = 0.0;
   state.pitch = 0.0;
+  state.attitudeIdleSeconds = 0.0;
+  state.wasAirborne = false;
   state.yaw = 0.0;
   state.vRoll = 0.0;
   state.vPitch = 0.0;
@@ -1043,8 +1064,12 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   const secondaryText = isUnitKmh ? `${mph} MPH` : `${kmh} km/h`;
 
   ctx.fillStyle = mph >= 230 ? '#38bdf8' : '#ffffff';
-  ctx.font = 'extrabold 54px "JetBrains Mono", monospace';
-  ctx.fillText(String(primarySpeed).padStart(3, ' '), 14, 86);
+  // Canvas accepts numeric weights; "extrabold" silently kept the preceding
+  // 12px font, making this readout look different from the synchronized HUD.
+  ctx.font = '800 54px "JetBrains Mono", monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText(String(primarySpeed), 122, 86);
+  ctx.textAlign = 'left';
   ctx.font = 'bold 14px "JetBrains Mono", monospace';
   ctx.fillStyle = '#38bdf8';
   ctx.fillText(primaryLabel, 132, 62);
@@ -1072,7 +1097,7 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.stroke();
 
   ctx.rotate(-state.roll);
-  const pitchShift = THREE.MathUtils.clamp(state.pitch * 65, -34, 34);
+  const pitchShift = THREE.MathUtils.clamp(Math.sin(state.pitch) * 65, -34, 34);
   ctx.strokeStyle = '#10b981';
   ctx.lineWidth = 2.5;
   ctx.beginPath();

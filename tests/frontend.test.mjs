@@ -218,3 +218,42 @@ test('crash overlay includes its own ranked countdown', () => {
   assert.match(html, /id="ranked-crash-status"/);
   assert.match(source, /text\('ranked-crash-status'/);
 });
+
+test('submitted score status can be dismissed and reopened without losing result', async () => {
+  const h = harness();
+  await h.start('Keep Result'); h.state.score = 222; h.advance(60000);
+  await h.click('ranked-submit');
+  assert.equal(h.phase(), 'submitted');
+  const result = h.elements['ranked-result'].textContent;
+  await h.click('ranked-close');
+  await h.click('ranked-hud-dismiss');
+  assert.equal(h.elements['ranked-hud'].hidden, true);
+  assert.equal(h.document.activeElement.id, 'btn-leaderboard');
+  h.window.RoadsterRanked.render();
+  await h.click('ranked-language');
+  assert.equal(h.elements['ranked-hud'].hidden, true, 'translation must not restore a dismissed notice');
+  assert.equal(h.phase(), 'submitted');
+  await h.click('btn-leaderboard');
+  assert.equal(h.elements['ranked-hud'].hidden, false);
+  assert.equal(h.elements['ranked-dialog'].open, true);
+  await h.click('ranked-language');
+  assert.equal(h.elements['ranked-result'].textContent, result);
+  assert.match(h.elements['ranked-status'].textContent, /Score accepted/);
+  assert.equal(h.calls.filter(c => c.url === '/api/score').length, 1);
+});
+
+test('dismissal preserves a pending result and does not stop an active countdown', async () => {
+  const h = harness(); await h.start();
+  await h.click('ranked-hud-dismiss');
+  h.advance(59000);
+  assert.equal(h.phase(), 'running');
+  assert.equal(h.elements['ranked-countdown'].textContent, '1s');
+  assert.equal(h.elements['ranked-hud'].hidden, true);
+  h.advance(1000);
+  assert.equal(h.phase(), 'complete');
+  await h.click('ranked-close'); await h.click('ranked-hud-dismiss');
+  assert.equal(h.elements['ranked-hud'].hidden, true);
+  await h.click('btn-leaderboard');
+  assert.equal(h.elements['ranked-submit'].hidden, false);
+  assert.equal(h.phase(), 'complete');
+});

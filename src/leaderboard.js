@@ -85,6 +85,7 @@
   let boardState = 'empty';
   let boardRows = [];
   let boardLoaded = false;
+  let hudDismissed = false;
   const t = () => copy[currentLang === 'zh' ? 'zh' : 'en'];
   const category = () => `${currentMap}-${state.physicsMode}`;
   const score = () => Math.max(0, Math.round(state.score + state.carsCleared * 10));
@@ -136,6 +137,8 @@
     };
     Object.entries(labels).forEach(([id, value]) => text(id, value));
     $('ranked-close').setAttribute('aria-label', c.close);
+    $('ranked-hud-dismiss').setAttribute('aria-label', currentLang === 'zh' ? '隐藏挑战成绩提示' : 'Hide challenge status');
+    visible('ranked-hud', !hudDismissed);
     $('ranked-category').querySelectorAll('option').forEach((option) => { option.textContent = categoryName(option.value); });
     text('ranked-current-category', categoryName(run && isInFlight() ? run.category : category()));
     const message = statusText();
@@ -165,6 +168,7 @@
   }
 
   function open() {
+    hudDismissed = false;
     clearAllInputKeys();
     if (!dialog.open) {
       returnFocus = document.activeElement;
@@ -336,6 +340,11 @@
   }
   $('btn-leaderboard').addEventListener('click', open);
   $('ranked-hud-open').addEventListener('click', open);
+  $('ranked-hud-dismiss').addEventListener('click', () => {
+    hudDismissed = true;
+    visible('ranked-hud', false);
+    $('btn-leaderboard').focus();
+  });
   $('ranked-close').addEventListener('click', close);
   $('ranked-language').addEventListener('click', toggleLanguage);
   $('ranked-start').addEventListener('click', start);
