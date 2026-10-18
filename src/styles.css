@@ -186,3 +186,12 @@ html, body {
   .ranked-button { min-height: 40px; }
   .ranked-nav { min-height: 32px; }
 }
+
+/* Native audio settings remain usable without the WebGL scene or CDN styles. */
+#audio-settings { padding: 0; width: min(460px, calc(100vw - 24px)); max-height: 85dvh; overflow-y: auto; border: 1px solid #3a829b; border-radius: 18px; color: #e8f4fc; background: #0a1523; box-shadow: 0 25px 100px #000c; }
+#audio-settings::backdrop { background: rgba(2, 6, 15, .82); backdrop-filter: blur(6px); }
+#audio-settings-title { margin: 0; font-size: 21px; }
+#audio-settings .ranked-heading { align-items: center; }
+#audio-settings .ranked-button { min-height: 44px; }
+#music-label { margin-top: 24px; font-weight: 700; }
+@media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }

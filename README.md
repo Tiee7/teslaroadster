@@ -121,3 +121,9 @@ tesla_roadster_simulator_package/
 新增自愿参加的 60 秒积分挑战，按地图与物理模式分为四个榜单，每个匿名浏览器身份仅保留各榜最高成绩，公开前 100 名。昵称和成绩会公开，请使用化名。排行榜需要 Vercel Node.js API 和已配置的 Upstash Redis；直接打开单文件仍可进行沙盒模拟，但不能使用在线排行榜。服务端会过滤并验证昵称、请求结构、范围、身份、单次挑战编号、时间及频率，之后才写入榜单。浏览器端游戏无法完全防作弊。
 
 See [deployment, API, security, privacy and testing details](docs/leaderboard.md). No production credentials are included. Development checks: `python3 bundle_app.py`, `npm test`, `npm run check`, `npm run build`. `npm run dev` serves the bundled game locally and returns a clear unavailable response until server-only leaderboard environment values are configured.
+
+## Looping background music / 循环背景音乐
+
+The user-provided `assets/Ludicrous_Velocity_bgm.mp3` is served unchanged (178.584 seconds, stereo MP3, 24 kHz / 64 kbps). A single player starts on the first permitted tap/key interaction and loops across vehicle resets, map changes, and game modes. Open **Settings → Pause music / Resume music** (also available from the initial map-selection screen). Pause preserves the playback position; the enabled/paused preference is remembered in this browser. Position itself is not restored after a page reload. Vehicle SFX uses the separate top-bar SFX control. Music temporarily pauses while the page is hidden and resumes when visible if enabled, subject to browser autoplay restrictions. If playback is blocked, Settings provides a retry. Settings initializes before the WebGL world.
+
+`npm run build` copies the MP3 into `public/assets/`; serve the site over HTTP rather than copying only index.html. `npm run dev` supports audio GET, HEAD, and byte-range requests. Run `npm test`, `python3 tests/lua_runtime.py`, `npm run check`, and `npm run build` for local regression checks.

@@ -100,7 +100,7 @@ function setKeyState(code, isDown) {
 
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
-  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen()) return;
+  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen()) return;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
     e.preventDefault();
   }
@@ -399,6 +399,7 @@ function resetCar() {
 }
 
 function applyTranslations() {
+  window.RoadsterMusic?.render();
   window.RoadsterRanked?.render();
   const t = I18N[currentLang];
   const hudBtnEl = document.getElementById('ui-hud-mode-btn');

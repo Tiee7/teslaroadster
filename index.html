@@ -199,6 +199,15 @@ html, body {
   .ranked-nav { min-height: 32px; }
 }
 
+/* Native audio settings remain usable without the WebGL scene or CDN styles. */
+#audio-settings { padding: 0; width: min(460px, calc(100vw - 24px)); max-height: 85dvh; overflow-y: auto; border: 1px solid #3a829b; border-radius: 18px; color: #e8f4fc; background: #0a1523; box-shadow: 0 25px 100px #000c; }
+#audio-settings::backdrop { background: rgba(2, 6, 15, .82); backdrop-filter: blur(6px); }
+#audio-settings-title { margin: 0; font-size: 21px; }
+#audio-settings .ranked-heading { align-items: center; }
+#audio-settings .ranked-button { min-height: 44px; }
+#music-label { margin-top: 24px; font-weight: 700; }
+@media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }
+
 </style>
 </head>
 <body class="relative w-full h-full overflow-hidden">
@@ -288,9 +297,11 @@ html, body {
         <span id="ui-hud-mode-btn">🖥️ HUD: Full (Z)</span>
       </button>
 
-      <!-- Sound Toggle -->
+      <button id="btn-settings" type="button" class="ranked-button ranked-nav" aria-haspopup="dialog" aria-controls="audio-settings">⚙ Settings</button>
+
+      <!-- Sound Effects Toggle (music is controlled separately in Settings) -->
       <button id="btn-sound" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 cursor-pointer">
-        <span id="ui-sound-btn">🔊 Audio: ON</span>
+        <span id="ui-sound-btn">🔊 SFX: ON</span>
       </button>
 
       <!-- Reset Car Button -->
@@ -634,9 +645,12 @@ html, body {
           <h1 id="map-modal-title" class="text-xl md:text-2xl font-extrabold text-white mt-1">Configure 2026 Roadster & Select World</h1>
           <p id="map-modal-sub" class="text-xs text-slate-300 mt-0.5">Customize your official SpaceX cold-gas rocket exterior finish and simulation world before entering the game.</p>
         </div>
+        <div class="flex flex-wrap items-center justify-end gap-2">
+        <button id="btn-map-audio-settings" type="button" class="ranked-button" aria-haspopup="dialog" aria-controls="audio-settings">⚙ Audio settings</button>
         <button id="btn-map-modal-lang" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 hover:bg-cyan-500/30 cursor-pointer shrink-0">
           🌐 中文 / EN
         </button>
+        </div>
       </div>
 
       <!-- STEP 1: Rich Pre-Game Multi-Paint Selection Grid (进游戏前先选择涂装) -->
@@ -882,6 +896,20 @@ html, body {
     </div>
   </dialog>
 
+  <audio id="roadster-bgm" src="/assets/Ludicrous_Velocity_bgm.mp3" loop preload="none" playsinline></audio>
+  <dialog id="audio-settings" aria-labelledby="audio-settings-title">
+    <div class="ranked-panel">
+      <div class="ranked-heading">
+        <h2 id="audio-settings-title">Audio settings</h2>
+        <button id="audio-settings-close" type="button" class="ranked-button" autofocus>Back to game</button>
+      </div>
+      <p id="music-label">Background music · loop</p>
+      <button id="music-toggle" type="button" class="ranked-button ranked-primary" aria-pressed="true" aria-describedby="music-status">Pause music</button>
+      <p id="music-status" class="ranked-status" role="status"></p>
+      <p id="music-note" class="ranked-small"></p>
+    </div>
+  </dialog>
+
   <!-- Modular Functional Scripts -->
   <script>
 
@@ -952,8 +980,8 @@ const I18N = {
     bannerSonicSub: "Prandtl-Glauert Shock Cone & 80kN De Laval Mach Diamonds Active!",
     modalWeatherStep: "STEP 3 • WEATHER & TIME",
     modalWeatherTitle: "Select Dynamic Weather & Lighting",
-    soundOn: "🔊 Audio: ON",
-    soundOff: "🔇 Audio: OFF",
+    soundOn: "🔊 SFX: ON",
+    soundOff: "🔇 SFX: OFF",
     resetBtn: "↺ Reset (R)",
     helpBtn: "? Controls & Specs (P)",
     controlsHeader: "Flight & Drive Controls",
@@ -1720,6 +1748,121 @@ class SoundEngine {
 }
 
 const sound = new SoundEngine();
+
+
+// =========================================================================
+// MODULE: music.js
+// =========================================================================
+// One persistent HTML media player, independent of WebGL and the synthesized SFX.
+// Keep this module before world.js so settings still work if 3D initialization fails.
+(() => {
+  if (window.RoadsterMusic) return;
+  const audio = document.getElementById('roadster-bgm');
+  const dialog = document.getElementById('audio-settings');
+  const openButton = document.getElementById('btn-settings');
+  const mapOpenButton = document.getElementById('btn-map-audio-settings');
+  const toggleButton = document.getElementById('music-toggle');
+  const storageKey = 'roadster.bgm.enabled.v1';
+  let enabled = true;
+  try { enabled = localStorage.getItem(storageKey) !== 'false'; } catch (_) {}
+  let unlocked = false;
+  let pageSuspended = false;
+  let pending = null;
+  let requestId = 0;
+  let failed = false;
+  let returnFocus = openButton;
+  audio.loop = true;
+  audio.volume = 0.35;
+
+  const shouldPlay = () => enabled && unlocked && !document.hidden && !pageSuspended;
+  function render() {
+    const zh = currentLang === 'zh';
+    openButton.textContent = zh ? '⚙ 设置' : '⚙ Settings';
+    mapOpenButton.textContent = zh ? '⚙ 声音设置' : '⚙ Audio settings';
+    document.getElementById('audio-settings-title').textContent = zh ? '声音设置' : 'Audio settings';
+    document.getElementById('audio-settings-close').textContent = zh ? '返回游戏' : 'Back to game';
+    document.getElementById('music-label').textContent = zh ? '常驻背景音乐 · 循环播放' : 'Background music · loop';
+    document.getElementById('music-note').textContent = zh
+      ? 'Ludicrous Velocity · 暂停后从原位置继续；此浏览器会记住你的选择。车辆音效由顶部音效按钮独立控制。'
+      : 'Ludicrous Velocity · Resume from the paused position. Your choice is saved in this browser. Vehicle sound effects have their own top-bar control.';
+    // A failed/blocked play remains enabled, but the next explicit click retries it.
+    toggleButton.textContent = failed ? (zh ? '播放音乐' : 'Play music')
+      : enabled ? (zh ? '暂停音乐' : 'Pause music') : (zh ? '继续播放' : 'Resume music');
+    toggleButton.setAttribute('aria-pressed', String(enabled));
+    document.getElementById('music-status').textContent = !enabled ? (zh ? '已暂停' : 'Paused')
+      : failed ? (zh ? '播放未开始，请点「播放音乐」重试。' : 'Playback did not start. Tap Play music to retry.')
+      : !audio.paused ? (zh ? '正在循环播放' : 'Playing on repeat')
+      : pending !== null ? (zh ? '正在加载音乐…' : 'Loading music…')
+      : (zh ? '点击或按键后开始播放；切到后台时会暂时暂停。' : 'Starts after a tap or keypress. Pauses while this page is in the background.');
+  }
+  function pause() {
+    requestId++;
+    pending = null;
+    audio.pause(); // Do not mute or reset currentTime: resume keeps the same position.
+    render();
+  }
+  function play() {
+    if (!shouldPlay() || !audio.paused || pending !== null) return;
+    const id = ++requestId;
+    pending = id;
+    failed = false;
+    render();
+    try {
+      if (audio.error) audio.load();
+      Promise.resolve(audio.play()).then(() => {
+        if (pending === id) pending = null;
+        // A late play promise must not undo a pause or a background transition.
+        if (!shouldPlay()) audio.pause();
+        render();
+      }, () => {
+        if (requestId !== id) return;
+        pending = null;
+        failed = true;
+        render();
+      });
+    } catch (_) {
+      pending = null;
+      failed = true;
+      render();
+    }
+  }
+  function gesture(event) {
+    // Let this button make one deliberate pause/resume/retry decision on click.
+    if (!event.isTrusted || event.target === toggleButton) return;
+    unlocked = true;
+    play();
+  }
+  // Keep listeners after an autoplay rejection so the next real gesture can retry.
+  for (const type of ['pointerdown', 'keydown', 'click']) {
+    document.addEventListener(type, gesture, { capture: true, passive: true });
+  }
+  toggleButton.addEventListener('click', (event) => {
+    if (event.isTrusted) unlocked = true;
+    enabled = !enabled || failed;
+    failed = false;
+    try { localStorage.setItem(storageKey, String(enabled)); } catch (_) {}
+    if (enabled) play(); else pause();
+    render();
+  });
+  function openSettings(event) {
+    returnFocus = event.currentTarget;
+    // Function declarations may exist even after a failed WebGL startup.
+    try { if (typeof clearAllInputKeys === 'function') clearAllInputKeys(); } catch (_) {}
+    render();
+    if (!dialog.open) dialog.showModal();
+  }
+  openButton.addEventListener('click', openSettings);
+  mapOpenButton.addEventListener('click', openSettings);
+  document.getElementById('audio-settings-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => returnFocus.focus());
+  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); else play(); });
+  window.addEventListener('pagehide', () => { pageSuspended = true; pause(); });
+  window.addEventListener('pageshow', () => { pageSuspended = false; play(); });
+  for (const type of ['playing', 'pause', 'waiting']) audio.addEventListener(type, render);
+  audio.addEventListener('error', () => { failed = true; pending = null; render(); });
+  window.RoadsterMusic = { render, isSettingsOpen: () => dialog.open };
+  render();
+})();
 
 
 // =========================================================================
@@ -3938,7 +4081,7 @@ function setKeyState(code, isDown) {
 
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
-  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen()) return;
+  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen()) return;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
     e.preventDefault();
   }
@@ -4237,6 +4380,7 @@ function resetCar() {
 }
 
 function applyTranslations() {
+  window.RoadsterMusic?.render();
   window.RoadsterRanked?.render();
   const t = I18N[currentLang];
   const hudBtnEl = document.getElementById('ui-hud-mode-btn');
