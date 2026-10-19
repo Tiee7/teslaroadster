@@ -65,3 +65,68 @@ test('NPC mix reuses the preserved classic and touring/track detail without chan
   }
   assert.deepEqual(counts,{'classic-roadster':12,'sculpted-track':12,'sculpted-touring':12});
 });
+
+
+test('stable frame view synchronization does no recursive scene lookups or repeated cabin copies',()=>{
+  const f=fixture();
+  let lookups=0, copies=0;
+  const exterior=f.carMeshGroup.getObjectByName('reference-roadster-exterior');
+  const cabin=f.carMeshGroup.getObjectByName('reference-cockpit');
+  const get=exterior.getObjectByName.bind(exterior);
+  exterior.getObjectByName=(name)=>{lookups++;return get(name);};
+  for(const part of cabin.children){
+    const copy=part.position.copy.bind(part.position);
+    part.position.copy=(value)=>{copies++;return copy(value);};
+  }
+  for(const active of [false,true,false,true]){
+    f.setCockpitPerspective(active);f.setCockpitExteriorDetailsVisible(!active);
+    const before=copies;
+    for(let frame=0;frame<120;frame++){
+      f.setCockpitPerspective(active);f.setCockpitExteriorDetailsVisible(!active);
+    }
+    assert.equal(copies,before,'unchanged frames must not rebuild cabin transforms');
+  }
+  assert.equal(lookups,0,'mesh handles should be resolved once at startup');
+  f.window.innerWidth=390;f.window.innerHeight=844;
+  const before=copies;
+  f.resizeCockpitDisplay();assert.ok(copies>before,'explicit resizing must still lay out the cabin');
+  f.api.setCockpit('classic');f.api.setCockpit('reference');
+  assert.ok(visible(cabin),'changing cockpit in FPV must still apply immediately');
+});
+
+test('reference shadows use two invisible bounded silhouette batches and retain the live wing pivot',()=>{
+  const f=fixture();const proxies=[];
+  f.carMeshGroup.traverse(part=>{if(part.userData.shadowProxy)proxies.push(part);});
+  assert.equal(proxies.length,2);
+  assert.equal(proxies[0].material,proxies[1].material);
+  let triangles=0;
+  for(const proxy of proxies){
+    assert.equal(proxy.castShadow,true);assert.equal(proxy.material.colorWrite,false);assert.equal(proxy.material.depthWrite,false);
+    const intersections=[];proxy.raycast({},intersections);assert.equal(intersections.length,0);
+    triangles+=proxy.geometry.index.array.length/3;
+    const preview=f.api.getPreviewModel().getObjectByName(proxy.name);assert.equal(preview.visible,false,'studio should skip shadow-only resources');
+  }
+  assert.ok(triangles<15000,'caster geometry must stay bounded');
+  assert.equal(proxies.find(p=>p.name==='reference-wing-shadow').parent,f.activeWingGroup.getObjectByName('reference-active-wing'));
+  const exterior=f.carMeshGroup.getObjectByName('reference-roadster-exterior');
+  exterior.traverse(part=>{if(part.geometry&&!part.userData.shadowProxy)assert.equal(part.castShadow,false);});
+  f.api.setModel('classic');assert.ok(proxies.every(p=>!visible(p)));
+  f.api.setModel('reference');assert.ok(proxies.every(visible));
+});
+
+
+test('viewport changes preserve exterior driver offset without relying on per-frame visibility repair',()=>{
+  const f=fixture();
+  for(const model of ['reference','classic'])for(const cockpit of ['reference','classic']){
+    f.api.setModel(model);f.api.setCockpit(cockpit);f.setCockpitPerspective(false);f.setCockpitExteriorDetailsVisible(true);
+    for(const [width,height] of [[390,844],[1440,900],[844,390]]){
+      f.window.innerWidth=width;f.window.innerHeight=height;
+      f.window.dispatchEvent({type:'resize'});
+      assert.equal(f.yokeWheelGroup.position.x,cockpit==='reference'?-.34:0,'native resize listener should preserve the chosen exterior cabin');
+      f.resizeCockpitDisplay();
+      assert.equal(f.yokeWheelGroup.position.x,cockpit==='reference'?-.34:0,'explicit layout must preserve the same driver offset');
+      f.setCockpitPerspective(false);f.setCockpitExteriorDetailsVisible(true);
+      assert.equal(f.yokeWheelGroup.position.x,cockpit==='reference'?-.34:0,'stable frame should not need to repair layout');
+    }
+  }
+});

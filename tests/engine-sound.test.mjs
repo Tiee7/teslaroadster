@@ -163,3 +163,32 @@ test('production map switches and repeated vehicle or challenge resets retain th
   }
   assert.equal(h.saved.length, 1); assert.equal(h.contexts.length, 1);
 });
+
+
+test('replacement motor is a quiet rounded electric hum, silent at rest and bounded at extreme speed', () => {
+  const {sound} = harness(); sound.init();
+  assert.equal(sound.engineOsc.type, 'sine');
+  assert.equal(sound.engineOvertoneOsc.type, 'sine');
+  assert.equal(sound.engineOvertoneGain.gain.value, .12);
+  assert.equal(sound.engineFilter.type, 'lowpass');
+  assert.equal(sound.engineFilter.frequency.value, 420);
+  assert.equal(sound.engineFilter.Q.value, .5);
+  assert.deepEqual(sound.engineOvertoneOsc.connections, [sound.engineOvertoneGain]);
+  assert.deepEqual(sound.engineOvertoneGain.connections, [sound.engineFilter]);
+  for (const speed of [-10, 0, NaN, Infinity]) {
+    sound.update(speed, false, false, false);
+    assert.equal(sound.engineGain.gain.value, 0, 'no persistent idle drone');
+    assert.equal(sound.engineOsc.frequency.value, 58);
+  }
+  for (const speed of [.001, .03, .06, .5, 1, 1.5, 100]) {
+    sound.update(speed, false, false, false);
+    const normalPitch = sound.engineOsc.frequency.value;
+    assert.ok(sound.engineGain.gain.value > 0 && sound.engineGain.gain.value <= .026);
+    assert.ok(normalPitch >= 58 && normalPitch <= 196);
+    assert.equal(sound.engineOvertoneOsc.frequency.value, normalPitch * 2);
+    assert.equal(sound.engineGain.gain.targets.at(-1).constant, .09);
+    sound.update(speed, true, false, false);
+    assert.ok(Math.abs(sound.engineOsc.frequency.value - normalPitch - 6) < 1e-10, 'boost should not create the old harsh pitch leap');
+    assert.ok(sound.engineOvertoneOsc.frequency.value <= 404);
+  }
+});

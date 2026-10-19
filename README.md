@@ -246,3 +246,11 @@ A grounded or rooftop O jump preserves its inherited horizontal vector for the f
 Powered overspeed settles continuously toward the flight envelope instead of an instantaneous speed clamp. These are horizontal gameplay assists; the unpowered vertical path remains analytic 9.81 m/s² Earth gravity, with no downward injection or terminal-speed cap. Ground EV/boost coasting, paid retro braking, attitude grace, crash effects and crash-score rules retain their existing behavior. Reset and landing clear the launch transition.
 
 Regression checks cover actual O launches, powered and unpowered handoffs, A/W and D/W turns, bank/strafe response, mode changes, repeated airborne O, reset, both maps, irregular frames and 30/60/144 Hz, alongside the existing vertical ballistics, tank-depletion and collision tests. Visual gameplay verification still requires a WebGL-capable browser.
+
+## Softer electric-drive sound and reference-model responsiveness
+
+The motor simulation now uses a quiet, rounded sine-based electric hum, fades to
+silence at rest and keeps its separate engine/SFX/music controls. Detailed visible
+reference meshes remain unchanged; two bounded silhouette batches replace 108
+individual shadow casters. Camera/model visibility updates are cached rather than
+repeated on every frame. See [investigation and verification limits](docs/audio-input-latency.md).

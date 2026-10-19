@@ -9,6 +9,9 @@ class SoundEngine {
     this.thrusterGain = null;
     this.engineOsc = null;
     this.engineGain = null;
+    this.engineOvertoneOsc = null;
+    this.engineFilter = null;
+    this.engineOvertoneGain = null;
     this.simulatedEngineGain = null;
     this.simulatedEngineEnabled = true;
     try { this.simulatedEngineEnabled = localStorage.getItem('roadster.engineSound.enabled.v1') !== 'false'; } catch (_) {}
@@ -52,13 +55,19 @@ class SoundEngine {
       this.thrusterGain.connect(this.ctx.destination);
       whiteNoise.start(0);
 
-      // 2. Plaid Tri-Motor High-Frequency Turbine Hum
+      // 2. Soft electric-drive hum: rounded sine tones, no buzzy sawtooth idle
       this.engineOsc = this.ctx.createOscillator();
-      this.engineOsc.type = 'sawtooth';
-      this.engineOsc.frequency.value = 55;
-      const engFilter = this.ctx.createBiquadFilter();
-      engFilter.type = 'lowpass';
-      engFilter.frequency.value = 260;
+      this.engineOsc.type = 'sine';
+      this.engineOsc.frequency.value = 58;
+      this.engineOvertoneOsc = this.ctx.createOscillator();
+      this.engineOvertoneOsc.type = 'sine';
+      this.engineOvertoneOsc.frequency.value = 116;
+      this.engineOvertoneGain = this.ctx.createGain();
+      this.engineOvertoneGain.gain.value = 0.12;
+      this.engineFilter = this.ctx.createBiquadFilter();
+      this.engineFilter.type = 'lowpass';
+      this.engineFilter.frequency.value = 420;
+      this.engineFilter.Q.value = 0.5;
 
       this.engineGain = this.ctx.createGain();
       this.engineGain.gain.value = 0.0;
@@ -67,11 +76,14 @@ class SoundEngine {
       this.simulatedEngineGain = this.ctx.createGain();
       this.simulatedEngineGain.gain.value = this.simulatedEngineEnabled ? 1 : 0;
 
-      this.engineOsc.connect(engFilter);
-      engFilter.connect(this.engineGain);
+      this.engineOsc.connect(this.engineFilter);
+      this.engineOvertoneOsc.connect(this.engineOvertoneGain);
+      this.engineOvertoneGain.connect(this.engineFilter);
+      this.engineFilter.connect(this.engineGain);
       this.engineGain.connect(this.simulatedEngineGain);
       this.simulatedEngineGain.connect(this.ctx.destination);
       this.engineOsc.start(0);
+      this.engineOvertoneOsc.start(0);
 
       // 3. Ground Tire Grip Screech Synthesizer (High-Speed Cornering & Hard Braking)
       this.screechOsc = this.ctx.createOscillator();
@@ -126,9 +138,14 @@ class SoundEngine {
     const thrustLevel = (isThrusting ? 0.24 : 0) + (isAttitudeFiring ? 0.09 : 0);
     this.thrusterGain.gain.setTargetAtTime(thrustLevel, now, 0.04);
 
-    const motorFreq = 50 + speedRatio * 210 + (isThrusting ? 85 : 0);
-    this.engineOsc.frequency.setTargetAtTime(motorFreq, now, 0.05);
-    this.engineGain.gain.setTargetAtTime(0.03 + speedRatio * 0.055, now, 0.05);
+    // Keep speed feedback low and smooth. Silence at rest avoids the old
+    // continuous sawtooth drone; boost no longer jumps the pitch by 85 Hz.
+    const motorSpeed = Math.max(0, Math.min(1.5, Number.isFinite(speedRatio) ? speedRatio : 0));
+    const motorFreq = 58 + motorSpeed * 92 + (isThrusting ? 6 : 0);
+    this.engineOsc.frequency.setTargetAtTime(motorFreq, now, 0.09);
+    this.engineOvertoneOsc.frequency.setTargetAtTime(motorFreq * 2, now, 0.09);
+    const movingLevel = Math.min(1, motorSpeed / 0.06);
+    this.engineGain.gain.setTargetAtTime(movingLevel * (0.007 + Math.min(1, motorSpeed) * 0.019), now, 0.09);
 
     if (this.screechGain && this.screechOsc) {
       const clampScreech = Math.min(0.16, Math.max(0.0, tireScreechIntensity * 0.14));

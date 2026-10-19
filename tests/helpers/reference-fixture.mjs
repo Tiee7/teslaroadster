@@ -8,9 +8,19 @@ class Vec {
   setScalar(n) { return this.set(n,n,n); }
   copy(v) { return this.set(v.x,v.y,v.z); }
   clone() { return new Vec(this.x,this.y,this.z); }
+  fromBufferAttribute(p,i) { return this.set(p.getX(i),p.getY(i),p.getZ(i)); }
+  applyMatrix4(m) {
+    const {position:p,rotation:r,scale:s}=m;
+    let x=this.x*s.x,y=this.y*s.y,z=this.z*s.z;
+    [x,y]=[Math.cos(r.z)*x-Math.sin(r.z)*y,Math.sin(r.z)*x+Math.cos(r.z)*y];
+    [x,z]=[Math.cos(r.y)*x+Math.sin(r.y)*z,-Math.sin(r.y)*x+Math.cos(r.y)*z];
+    [y,z]=[Math.cos(r.x)*y-Math.sin(r.x)*z,Math.sin(r.x)*y+Math.cos(r.x)*z];
+    return this.set(x+p.x,y+p.y,z+p.z);
+  }
 }
 class Object3D {
   constructor(geometry,material) { Object.assign(this,{geometry,material,children:[],position:new Vec(),rotation:new Vec(),scale:new Vec(1,1,1),visible:true,userData:{},name:''}); }
+  updateMatrix() { this.matrix={position:this.position,rotation:this.rotation,scale:this.scale}; }
   add(...parts) { for (const part of parts) { part.parent?.remove(part); part.parent=this; this.children.push(part); } return this; }
   remove(part) { this.children=this.children.filter(child=>child!==part); part.parent=null; return this; }
   getObjectByName(name) { if (this.name===name) return this; for(const child of this.children){ const found=child.getObjectByName(name); if(found)return found; } }

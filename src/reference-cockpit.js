@@ -124,7 +124,13 @@
   const basePerspective = setCockpitPerspective;
   const baseExteriorDetails = setCockpitExteriorDetailsVisible;
   function resizeReferenceCabin() {
-    if (!cockpitPerspectiveActive || cockpit !== 'reference') return;
+    // The original resize listener restores the neutral exterior yoke pose.
+    // Reapply the chosen cabin's driver offset here; stable frame sync is idle.
+    if (!cockpitPerspectiveActive) {
+      yokeWheelGroup.position.x = cockpit === 'reference' ? -.34 : 0;
+      return;
+    }
+    if (cockpit !== 'reference') return;
     // Use the proven responsive projection and clearances of the original pod.
     dashFace.position.copy(fpvDashFascia.position);
     dashFace.rotation.copy(fpvDashFascia.rotation);
@@ -146,22 +152,27 @@
     referenceColumn.rotation.copy(fpvSteeringColumn.rotation);
     referenceColumn.scale.copy(fpvSteeringColumn.scale);
   }
+  // Camera synchronization is called twice by the frame loop. Cache the stable
+  // handles once and only apply configuration/view changes when they change.
+  const referenceCanopy = referenceExterior.getObjectByName('reference-canopy');
+  const referenceRails = referenceExterior.getObjectByName('reference-canopy-rails');
+  const referenceFrontLights = referenceExterior.getObjectByName('reference-front-lights');
+  const referenceShoulders = ['referenceShoulder-1','referenceShoulder1'].map(name => referenceExterior.getObjectByName(name));
+  let appliedView = null;
+  let appliedExteriorDetails = null;
   function syncView(active = cockpitPerspectiveActive) {
+    const view = `${model}:${cockpit}:${Boolean(active)}`;
+    if (appliedView === view) return;
+    appliedView = view;
     classicExterior.visible = model === 'classic';
     referenceExterior.visible = model === 'reference';
-    const canopy = referenceExterior.getObjectByName('reference-canopy');
-    const rails = referenceExterior.getObjectByName('reference-canopy-rails');
-    const frontLights = referenceExterior.getObjectByName('reference-front-lights');
-    if (canopy) canopy.visible = !active;
-    if (rails) rails.visible = !active;
-    if (frontLights) frontLights.visible = !active;
+    if (referenceCanopy) referenceCanopy.visible = !active;
+    if (referenceRails) referenceRails.visible = !active;
+    if (referenceFrontLights) referenceFrontLights.visible = !active;
     // The sculpted high fender crowns sit at the very bottom of a driver view.
     // Omit just these two external panels in FPV so the complete upper 65% of
     // the road stays clear; restore their exact geometry in every outside view.
-    for (const name of ['referenceShoulder-1','referenceShoulder1']) {
-      const shoulder = referenceExterior.getObjectByName(name);
-      if (shoulder) shoulder.visible = !active;
-    }
+    referenceShoulders.forEach(shoulder => { if (shoulder) shoulder.visible = !active; });
     oldWingParts.forEach(part => { part.visible = model === 'classic'; });
     oldRearJetParts.forEach(part => { part.visible = model === 'classic'; });
     referenceJets.visible = model === 'reference';
@@ -180,7 +191,13 @@
   }
   resizeCockpitDisplay = function () { baseResize(); resizeReferenceCabin(); };
   setCockpitPerspective = function (active) { basePerspective(active); syncView(active); };
-  setCockpitExteriorDetailsVisible = function (visible) { baseExteriorDetails(visible); syncView(!visible); };
+  setCockpitExteriorDetailsVisible = function (visible) {
+    if (appliedExteriorDetails !== visible) {
+      appliedExteriorDetails = visible;
+      baseExteriorDetails(visible);
+    }
+    syncView(!visible);
+  };
   window.addEventListener('resize', resizeReferenceCabin);
   function choose(kind, id) {
     if (!valid(id)) return false;
@@ -197,7 +214,9 @@
   const selectedModel = model, selectedCockpit = cockpit;
   for (const exteriorId of ['reference','classic']) for (const cockpitId of ['reference','classic']) {
     model = exteriorId; cockpit = cockpitId; syncView(false);
-    previewSources.set(`${model}:${cockpit}`,carMeshGroup.clone(true));
+    const source = carMeshGroup.clone(true);
+    source.traverse(part => { if (part.userData.shadowProxy) part.visible = false; });
+    previewSources.set(`${model}:${cockpit}`,source);
   }
   model = selectedModel; cockpit = selectedCockpit;
   window.RoadsterVehicle = {

@@ -353,6 +353,77 @@ function buildReferenceRoadsterExterior() {
     box(`referenceWingBaseMount${side}`, [.076, .019, .095], [side * .460, -.052, -.044], carbon, activeWing);
   }
 
+  // Render the exact detailed exterior once, rather than drawing every trim
+  // panel again into the 2048² shadow map. Two shared-material silhouette
+  // batches retain the body footprint and independently animated wing.
+  // Surface decimation affects ONLY the shadow pass; visible meshes are intact.
+  const shadowMaterial = new THREE.MeshBasicMaterial({
+    colorWrite: false, depthWrite: false, side: THREE.FrontSide,
+    shadowSide: THREE.DoubleSide
+  });
+  function shadowBatch(name, roots, parent) {
+    const positions = [], indices = [];
+    const point = new THREE.Vector3();
+    const append = part => {
+      if (!part.geometry || !part.castShadow) return;
+      part.castShadow = false;
+      part.updateMatrix();
+      const p = part.geometry.attributes.position, index = part.geometry.index?.array;
+      const offset = positions.length / 3;
+      const push = at => {
+        point.fromBufferAttribute(p, at).applyMatrix4(part.matrix);
+        positions.push(point.x, point.y, point.z);
+      };
+      const rows = part.userData.surfaceRows, columns = part.userData.surfaceColumns;
+      if (rows && columns) {
+        // Retain extra source rows at tight wheel openings and sill creases.
+        // Uniform decimation alone can bridge those sharp profile transitions.
+        const samples = (last, step, across, rowAxis) => {
+          const out = [];
+          const at = (i,j) => (rowAxis ? i * (columns + 1) + j : j * (columns + 1) + i) * 3;
+          const refine = (first,end) => {
+            let error = 0, split = first;
+            for (let i=first+1; i<end; i++) for (let j=0; j<=across; j++) {
+              const t = (i-first)/(end-first), a = at(first,j), b = at(end,j), v = at(i,j);
+              let distance2 = 0;
+              for (let axis=0; axis<3; axis++) distance2 += (p.array[v+axis] - mix(p.array[a+axis],p.array[b+axis],t)) ** 2;
+              if (distance2 > error) { error = distance2; split = i; }
+            }
+            if (error > .008 ** 2) { refine(first,split); refine(split,end); }
+            else out.push(first);
+          };
+          for (let first=0; first<last; first+=step) refine(first,Math.min(last,first+step));
+          out.push(last); return out;
+        };
+        const rs = samples(rows,4,columns,true), cs = samples(columns,2,rows,false);
+        part.userData.shadowGridRows = rs;
+        part.userData.shadowGridColumns = cs;
+        rs.forEach(r => cs.forEach(c => push(r * (columns + 1) + c)));
+        const flip = index[1] > index[2];
+        for (let r=0; r<rs.length-1; r++) for (let c=0; c<cs.length-1; c++) {
+          const a = offset + r * cs.length + c, b = a + 1, lo = a + cs.length, d = lo + 1;
+          indices.push(...(flip ? [a,d,lo,a,b,d] : [a,lo,d,a,d,b]));
+        }
+      } else {
+        for (let i=0; i<p.count; i++) push(i);
+        for (const at of index || Array.from({length:p.count}, (_,i) => i)) indices.push(offset + at);
+      }
+    };
+    roots.forEach(root => root.traverse(append));
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices); geometry.computeVertexNormals();
+    geometry.computeBoundingBox(); geometry.computeBoundingSphere();
+    const proxy = new THREE.Mesh(geometry, shadowMaterial);
+    proxy.name = name; proxy.castShadow = true;
+    proxy.userData.shadowProxy = true;
+    // The invisible caster must never obstruct instrument, light or road rays.
+    proxy.raycast = () => {};
+    parent.add(proxy);
+  }
+  shadowBatch('reference-body-shadow', [body,canopy,rails,frontLights,rearLights], exterior);
+  shadowBatch('reference-wing-shadow', [activeWing], activeWing);
+
   // Stable integration contract, without depending on construction order.
   exterior.userData.parts = parts;
   exterior.userData.canopy = canopy;
