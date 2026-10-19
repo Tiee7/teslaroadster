@@ -31,6 +31,7 @@ function harness({ stored, blockedStorage = false, deferred = false } = {}) {
     audio.paused = false; return Promise.resolve();
   };
   const context = vm.createContext({ window, document, currentLang: 'en', Promise,
+    sound: { simulatedEngineEnabled: true, setSimulatedEngineEnabled(enabled) { this.simulatedEngineEnabled = enabled; } },
     localStorage: { getItem() { if (blockedStorage) throw Error('blocked'); return stored; }, setItem(key, value) { if (blockedStorage) throw Error('blocked'); saved.push({ key, value }); } },
     clearAllInputKeys() { context.keysCleared = (context.keysCleared || 0) + 1; },
   });

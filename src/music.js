@@ -7,6 +7,7 @@
   const openButton = document.getElementById('btn-settings');
   const mapOpenButton = document.getElementById('btn-map-audio-settings');
   const toggleButton = document.getElementById('music-toggle');
+  const engineToggleButton = document.getElementById('engine-sound-toggle');
   const storageKey = 'roadster.bgm.enabled.v1';
   let enabled = true;
   try { enabled = localStorage.getItem(storageKey) !== 'false'; } catch (_) {}
@@ -26,6 +27,14 @@
     mapOpenButton.textContent = zh ? '⚙ 声音设置' : '⚙ Audio settings';
     document.getElementById('audio-settings-title').textContent = zh ? '声音设置' : 'Audio settings';
     document.getElementById('audio-settings-close').textContent = zh ? '返回游戏' : 'Back to game';
+    document.getElementById('engine-sound-label').textContent = zh ? '模拟音浪' : 'Simulated engine sound';
+    engineToggleButton.textContent = zh
+      ? `模拟音浪：${sound.simulatedEngineEnabled ? '开启' : '关闭'}`
+      : `Engine sound: ${sound.simulatedEngineEnabled ? 'On' : 'Off'}`;
+    engineToggleButton.setAttribute('aria-pressed', String(sound.simulatedEngineEnabled));
+    document.getElementById('engine-sound-note').textContent = zh
+      ? '关闭后不播放发动机模拟声。其他音效和背景音乐独立控制；此浏览器会记住你的选择。'
+      : 'Turn off the simulated motor hum. Other sound effects and music keep their separate controls. Your choice is saved in this browser.';
     document.getElementById('music-label').textContent = zh ? '常驻背景音乐 · 循环播放' : 'Background music · loop';
     document.getElementById('music-note').textContent = zh
       ? 'Ludicrous Velocity · 暂停后从原位置继续；此浏览器会记住你的选择。车辆音效由顶部音效按钮独立控制。'
@@ -87,6 +96,10 @@
     failed = false;
     try { localStorage.setItem(storageKey, String(enabled)); } catch (_) {}
     if (enabled) play(); else pause();
+    render();
+  });
+  engineToggleButton.addEventListener('click', () => {
+    sound.setSimulatedEngineEnabled(!sound.simulatedEngineEnabled);
     render();
   });
   function openSettings(event) {

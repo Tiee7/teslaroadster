@@ -235,7 +235,7 @@ html, body {
 #audio-settings-title { margin: 0; font-size: 21px; }
 #audio-settings .ranked-heading { align-items: center; }
 #audio-settings .ranked-button { min-height: 44px; }
-#music-label { margin-top: 24px; font-weight: 700; }
+#music-label, #engine-sound-label { margin-top: 24px; font-weight: 700; }
 @media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }
 
 /* Occupied trips keep an unframed arrow and meters in the safe top-left corner.

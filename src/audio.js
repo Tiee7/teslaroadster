@@ -9,6 +9,9 @@ class SoundEngine {
     this.thrusterGain = null;
     this.engineOsc = null;
     this.engineGain = null;
+    this.simulatedEngineGain = null;
+    this.simulatedEngineEnabled = true;
+    try { this.simulatedEngineEnabled = localStorage.getItem('roadster.engineSound.enabled.v1') !== 'false'; } catch (_) {}
     this.screechOsc = null;
     this.screechGain = null;
     this.screechFilter = null;
@@ -59,10 +62,15 @@ class SoundEngine {
 
       this.engineGain = this.ctx.createGain();
       this.engineGain.gain.value = 0.0;
+      // Only the simulated motor passes through this preference gate. Thrusters,
+      // tires, alerts and the separate HTML music player keep their own controls.
+      this.simulatedEngineGain = this.ctx.createGain();
+      this.simulatedEngineGain.gain.value = this.simulatedEngineEnabled ? 1 : 0;
 
       this.engineOsc.connect(engFilter);
       engFilter.connect(this.engineGain);
-      this.engineGain.connect(this.ctx.destination);
+      this.engineGain.connect(this.simulatedEngineGain);
+      this.simulatedEngineGain.connect(this.ctx.destination);
       this.engineOsc.start(0);
 
       // 3. Ground Tire Grip Screech Synthesizer (High-Speed Cornering & Hard Braking)
@@ -91,6 +99,16 @@ class SoundEngine {
 
       this.initialized = true;
     } catch (e) {}
+  }
+
+  setSimulatedEngineEnabled(enabled) {
+    this.simulatedEngineEnabled = Boolean(enabled);
+    try { localStorage.setItem('roadster.engineSound.enabled.v1', String(this.simulatedEngineEnabled)); } catch (_) {}
+    // Settings must work before the first driving gesture without creating or
+    // resuming an AudioContext. A short ramp also avoids a pop during driving.
+    if (this.simulatedEngineGain && this.ctx) {
+      this.simulatedEngineGain.gain.setTargetAtTime(this.simulatedEngineEnabled ? 1 : 0, this.ctx.currentTime, 0.015);
+    }
   }
 
   update(speedRatio, isThrusting, isAttitudeFiring, isDestroyed, tireScreechIntensity = 0.0) {

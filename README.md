@@ -129,6 +129,8 @@ The user-provided `assets/Ludicrous_Velocity_bgm.mp3` is served unchanged (178.5
 
 `npm run build` copies the MP3 into `public/assets/`; serve the site over HTTP rather than copying only index.html. `npm run dev` supports audio GET, HEAD, and byte-range requests. Run `npm test`, `python3 tests/lua_runtime.py`, `npm run check`, and `npm run build` for local regression checks.
 
+Settings also provides **Simulated engine sound / 模拟音浪**. It defaults to on, remembers its own on/off preference in this browser, and fades the synthesized motor hum in or out immediately. Turning it off leaves thrusters, tire screech, collisions, alerts and background music under their existing controls. The setting works before audio initialization and survives vehicle resets, map changes, challenge restarts and page reloads. It does not create or resume an AudioContext by itself, and the top-bar SFX mute still takes precedence.
+
 ## Vercel Web Analytics / 网站访问分析
 
 The game uses Vercel's [official plain-HTML integration](https://vercel.com/docs/analytics/quickstart): a `window.va` queue and a deferred first-party `/_vercel/insights/script.js` script in `src/index.html`, carried into the standalone bundle and production build. This is a static HTML/JavaScript app, so the Next.js-only `@vercel/analytics/next` component and a framework migration are unnecessary. Analytics initializes independently of WebGL, leaderboard requests, and background music. No custom events, nicknames, scores, or player identity tokens are sent by game code.
