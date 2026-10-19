@@ -1571,13 +1571,17 @@ function populateTraffic(count) {
       mesh.rotation.y = 0;
       trafficGroup.add(mesh);
 
-      const spd = 15 + (laneIdx * 2.2) + Math.random() * 3.5;
+      const spd = 16 + Math.random() * 14; // One cruise speed per driver, retained across wraps.
       trafficCars.push({
         mesh,
         mode: 'highway',
         laneIdx,
         targetX: laneX,
         speed: spd,
+        desiredSpeed: spd,
+        laneChange: null,
+        laneChangeCooldown: 0,
+        blockedTime: 0,
         vx: 0,
         vz: -spd,
         y: 0,
@@ -1589,8 +1593,7 @@ function populateTraffic(count) {
         blastVYaw: 0,
         blastTimer: 0,
         length: mesh.userData.length,
-        height: mesh.userData.height,
-        changeTimer: 2 + Math.random() * 6
+        height: mesh.userData.height
       });
     }
   } else {

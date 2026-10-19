@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 
+const traffic = readFileSync(new URL('../src/highway-traffic.js', import.meta.url), 'utf8');
 const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
 const config = readFileSync(new URL('../src/config.js', import.meta.url), 'utf8');
 const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
@@ -25,7 +26,7 @@ const movement = section(physics, '  let canUseRCS =', '  const wantsHover =');
 const completeMotion = section(physics, '  const isRealMode =', '  const playerWorldZ =');
 const groundRecharge = section(physics, '    // A firing retro jet uses the same tank;', '\n  }\n\n  // Requirement 3: All airborne attitude RCS jets');
 const roadScroll = section(physics, '  // Highway road markings & arches scroll', '  trafficCars.forEach');
-const trafficScroll = section(physics, '      const relSpeed =', '      car.changeTimer -=');
+const trafficScroll = 'highwayTraffic.step([car], { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, dt, LANE_CENTERS, WORLD_SPEED_SCALE);';
 const blastScroll = physics.match(/      car\.mesh\.position\.z \+= \(currentMap === 'highway'[^\n]+/)[0];
 const collision = section(physics, 'function triggerPhysicsCollision(', 'function destroyVehicle(');
 const trafficCollision = section(physics, '        const relVx = state.vx', '\n      }\n    }\n  });');
@@ -69,7 +70,7 @@ function harness(overrides = {}, map = 'highway') {
     showBanner: (...args) => banners.push(args), clearDebris() {}, renderBannerText() {},
     destroyVehicle() { context.gameState.isDestroyed = true; },
   });
-  vm.runInContext(`${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
+  vm.runInContext(`${traffic}\n${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
     function stepAttitude(dt) {
       const groundElevation = testGroundElevation;
       ${input}

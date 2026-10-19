@@ -1585,6 +1585,10 @@ function updateSimulation(dt) {
   if (rcsYawRetroActive) activeCount++;
   document.getElementById('val-active-nozzles').textContent = `${activeCount}${t.activeSuffix}`;
 
+  if (currentMap === 'highway') {
+    highwayTraffic.step(trafficCars, { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, dt, LANE_CENTERS, WORLD_SPEED_SCALE);
+  }
+
   // Highway road markings & arches scroll at calibrated world Z velocity (both forward & reverse wrap)
   if (currentMap === 'highway') {
     const scrollDz = (-state.vz) * WORLD_SPEED_SCALE * dt;
@@ -1634,42 +1638,11 @@ function updateSimulation(dt) {
         }
       }
     } else if (currentMap === 'highway') {
-      const relSpeed = (-state.vz - car.speed) * WORLD_SPEED_SCALE;
-      car.mesh.position.z += relSpeed * dt;
-
-      car.changeTimer -= dt;
-      if (car.changeTimer <= 0) {
-        car.changeTimer = 4 + Math.random() * 7;
-        const dir = Math.random() < 0.5 ? -1 : 1;
-        const nextLane = THREE.MathUtils.clamp(car.laneIdx + dir, 0, LANE_COUNT - 1);
-        car.laneIdx = nextLane;
-        car.targetX = LANE_CENTERS[nextLane];
-      }
-      const dxLane = car.targetX - car.mesh.position.x;
-      car.mesh.position.x += dxLane * 3.0 * dt;
-      car.mesh.rotation.y = -THREE.MathUtils.clamp(dxLane * 0.045, -0.14, 0.14);
-      car.mesh.rotation.z = -THREE.MathUtils.clamp(dxLane * 0.025, -0.06, 0.06);
-      car.vx = dxLane * 3.0;
-      car.vz = -car.speed;
-
-      if (car.mesh.position.z > 65) {
-        car.mesh.position.z = -440 - Math.random() * 60;
-        car.blastTimer = 0;
-        car.blastVx = 0;
-        car.blastVy = 0;
-        car.blastVz = 0;
-        car.y = 0;
-        car.mesh.position.y = 0;
-        car.mesh.position.x = car.targetX;
-        car.mesh.rotation.x = 0;
-        car.mesh.rotation.y = 0;
-        car.mesh.rotation.z = 0;
+      if (car.highwayPassedThisFrame) {
         if (!state.isDestroyed) {
           state.carsCleared += 1;
           state.score += state.y > 1.5 ? 25 : 10;
         }
-      } else if (car.mesh.position.z < -480) {
-        car.mesh.position.z = 55;
       }
     } else {
       car.mesh.position.x += car.vx * WORLD_SPEED_SCALE * dt;

@@ -113,6 +113,21 @@ function setKeyState(code, isDown) {
   if (isDown) sound.init();
 }
 
+function refillAirTank() {
+  // Invalidate ranked eligibility before the sandbox tank changes. A pending
+  // server issuance is also released by the ranked controller when it arrives.
+  window.RoadsterRanked?.abort('refill', { silent: true });
+  state.airRemaining = MAX_AIR_SECONDS;
+  state.airUsedContinuous = 0;
+  state.gasMassKg = 144;
+  state.isAutoDescending8s = false;
+  state.isFreefalling = false;
+  if (state.bannerType === '8s' || state.bannerType === 'freefall') {
+    state.bannerTimer = 0;
+    renderBannerText();
+  }
+}
+
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
   if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen() || window.RoadsterStart?.isPaintOpen()) return;
@@ -125,6 +140,14 @@ window.addEventListener('keydown', (e) => {
       e.preventDefault();
       launchSelectedMap();
     }
+    return;
+  }
+  if (e.code === 'Digit0' || e.code === 'Numpad0') {
+    const hasOverlay = ['modal-help', 'modal-destroyed'].some((id) => {
+      const overlay = document.getElementById(id);
+      return overlay && !overlay.classList.contains('hidden');
+    });
+    if (!e.repeat && !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey && !document.hidden && !state.isDestroyed && !hasOverlay) refillAirTank();
     return;
   }
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();

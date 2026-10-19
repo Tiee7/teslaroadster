@@ -77,6 +77,7 @@
   let deadline = 0;
   const pendingEnds = new Map();
   let pendingStart = Promise.resolve();
+  let startAttempt = null;
   let requestVersion = 0;
   let boardVersion = 0;
   let reason = '';
@@ -188,14 +189,16 @@
     if (phase === 'starting') abort('closed');
     dialog.close();
   }
-  function abort(why) {
+  function abort(why, { silent = false } = {}) {
     if (normalizing || !isInFlight()) return;
+    if (phase === 'starting' && startAttempt) startAttempt.silent = silent;
     requestVersion += 1;
-    phase = 'aborted';
-    reason = why;
+    phase = silent ? 'idle' : 'aborted';
+    reason = silent ? '' : why;
+    if (silent) { hudDismissed = true; errorType = ''; error = ''; }
     const endedRun = run;
     run = null;
-    if (endedRun) queueEnd(endedRun.runId);
+    if (endedRun) queueEnd(endedRun.runId, { silent });
     clearAllInputKeys();
     render();
   }
@@ -242,8 +245,9 @@
     } finally { clearTimeout(timer); }
   }
   // Keep uncertain end requests by exact run ID. A delayed retry can never end a newer run.
-  function queueEnd(runId) {
-    if (!pendingEnds.has(runId)) pendingEnds.set(runId, { promise: null });
+  function queueEnd(runId, { silent = false } = {}) {
+    if (!pendingEnds.has(runId)) pendingEnds.set(runId, { promise: null, silent });
+    else if (silent) pendingEnds.get(runId).silent = true;
     return endRun(runId);
   }
   function endRun(runId) {
@@ -260,7 +264,7 @@
         pendingEnds.delete(runId);
         return true;
       } catch (failure) {
-        if (!isInFlight()) {
+        if (!isInFlight() && !entry.silent) {
           errorType = 'endError'; error = failure.name === 'AbortError' ? '' : failure.message;
           render();
         }
@@ -286,6 +290,8 @@
     const chosen = category();
     const previousStart = pendingStart;
     const version = ++requestVersion;
+    const attempt = { silent: false };
+    startAttempt = attempt;
     let issuedRunId = null;
     phase = 'starting'; error = ''; errorType = ''; result = null; run = null; savedReply = null;
     clearAllInputKeys(); render();
@@ -301,7 +307,7 @@
       }).then((data) => {
         if (typeof data.runId === 'string' && data.runId && data.runId.length <= 100) {
           issuedRunId = data.runId;
-          if (version !== requestVersion || phase !== 'starting') queueEnd(issuedRunId);
+          if (version !== requestVersion || phase !== 'starting') queueEnd(issuedRunId, { silent: attempt.silent });
         }
         return data;
       });

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 
+const traffic = readFileSync(new URL('../src/highway-traffic.js', import.meta.url), 'utf8');
 const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
 const config = readFileSync(new URL('../src/config.js', import.meta.url), 'utf8');
 const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
@@ -23,7 +24,7 @@ const airTank = section(physics, '  let airConsumedThisFrame =', '  let canUseRC
 const movementSetup = section(physics, '  const isRealMode =', '  let groundElevation =');
 const movement = section(physics, '  let canUseRCS =', '  const wantsHover =');
 const roadScroll = section(physics, '  // Highway road markings & arches scroll', '  trafficCars.forEach');
-const trafficScroll = section(physics, '      const relSpeed =', '      car.changeTimer -=');
+const trafficScroll = 'highwayTraffic.step([car], { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, dt, LANE_CENTERS, WORLD_SPEED_SCALE);';
 const blastScroll = physics.match(/      car\.mesh\.position\.z \+= \(currentMap === 'highway'[^\n]+/)[0];
 const collision = section(physics, 'function triggerPhysicsCollision(', 'function destroyVehicle(');
 const trafficCollision = section(physics, '        const relVx = state.vx', '\n      }\n    }\n  });');
@@ -67,7 +68,7 @@ function harness(overrides = {}, map = 'highway') {
     showBanner: (...args) => banners.push(args), clearDebris() {}, renderBannerText() {},
     destroyVehicle() { context.gameState.isDestroyed = true; },
   });
-  vm.runInContext(`${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
+  vm.runInContext(`${traffic}\n${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
     function stepAttitude(dt) {
       const groundElevation = testGroundElevation;
       ${input}
@@ -381,7 +382,7 @@ test('highway road, traffic and blast scrolling follow actual vz rather than pos
     const prop = { position: { z: 0 } };
     h.context.scrollingProps.push(prop); h.context.stepRoad(0.1);
     close(prop.position.z, -vz * 1.65 * 0.1);
-    const car = { speed: 10, blastVz: 5, mesh: { position: { z: 0 } } };
+    const car = { mode: 'highway', laneIdx: 0, speed: 10, desiredSpeed: 10, length: 4.62, blastVz: 5, mesh: { position: { x: -12.5, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } } };
     h.context.stepTraffic(0.1, car);
     close(car.mesh.position.z, (-vz - 10) * 1.65 * 0.1);
     car.mesh.position.z = 0; h.context.stepBlast(0.1, car);
