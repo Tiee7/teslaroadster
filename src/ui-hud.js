@@ -729,24 +729,8 @@ function selectWeatherMode(idx, playAudio = true) {
 
   scene.environment = wp.marsSun ? marsSunsetEnvMap : studioEnvMap;
 
-  // Update highway & city asphalt materials for wet mirror reflection or dry dusk
-  roadMat.roughness = wp.roadRoughness;
-  roadMat.metalness = wp.roadMetalness;
-  roadMat.envMapIntensity = wp.roadEnvIntensity;
-  roadMat.needsUpdate = true;
-
-  if (cityAsphaltMat) {
-    cityAsphaltMat.roughness = wp.roadRoughness;
-    cityAsphaltMat.metalness = wp.roadMetalness;
-    cityAsphaltMat.envMapIntensity = wp.roadEnvIntensity;
-    cityAsphaltMat.needsUpdate = true;
-  }
-  if (typeof cityAsphaltEWMat !== "undefined" && cityAsphaltEWMat) {
-    cityAsphaltEWMat.roughness = wp.roadRoughness;
-    cityAsphaltEWMat.metalness = wp.roadMetalness;
-    cityAsphaltEWMat.envMapIntensity = wp.roadEnvIntensity;
-    cityAsphaltEWMat.needsUpdate = true;
-  }
+  // Isolate wet asphalt from the car's studio lighting, on both maps/road axes.
+  [roadMat, cityAsphaltMat, cityAsphaltEWMat].forEach(material => applyRoadWeather(material, wp));
 
 
   if (typeof headlightSpotL !== 'undefined' && typeof headlightSpotR !== 'undefined') {

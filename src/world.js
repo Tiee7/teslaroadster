@@ -71,6 +71,62 @@ function createAutomotiveStudioEnv() {
 }
 const studioEnvMap = createAutomotiveStudioEnv();
 
+// Asphalt must not reflect the vehicle's imaginary studio softboxes. Keep that
+// environment for the car, and give wet roads only a dim, continuous night sky.
+function createWetRoadEnv() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  const sky = ctx.createLinearGradient(0, 0, 0, 128);
+  sky.addColorStop(0, '#040812');
+  sky.addColorStop(0.45, '#101c2a');
+  sky.addColorStop(0.55, '#101c2a');
+  sky.addColorStop(1, '#03060c');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, 256, 128);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  return texture;
+}
+const wetRoadEnvMap = createWetRoadEnv();
+
+// Deterministic, non-emissive microdetail. Repeat in metres rather than stretching
+// one noise patch over an entire avenue; N-S and E-W roads use the same scale.
+function createWetRoadDetail(width, length) {
+  const size = 64;
+  const data = new Uint8Array(size * size * 4);
+  let seed = 1729;
+  for (let i = 0; i < size * size; i++) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    // r128 multiplies this green channel by material.roughness. Keep its floor
+    // high enough to avoid reintroducing the rim light's saturated mirror spot.
+    const grain = 240 + Math.floor((seed / 4294967296) * 16);
+    data.set([grain, grain, grain, 255], i * 4);
+  }
+  const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(width / 8, length / 8);
+  texture.magFilter = THREE.LinearFilter;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.generateMipmaps = true;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function applyRoadWeather(material, weather) {
+  if (!material) return;
+  material.roughness = weather.roadRoughness;
+  material.metalness = weather.roadMetalness;
+  material.envMapIntensity = weather.roadEnvIntensity;
+  // null deliberately restores the existing scene environment in dry modes.
+  material.envMap = weather.rain ? wetRoadEnvMap : null;
+  material.roughnessMap = weather.rain ? material.userData.wetRoadDetail : null;
+  material.bumpMap = weather.rain ? material.userData.wetRoadDetail : null;
+  material.bumpScale = weather.rain ? 0.006 : 1;
+  material.needsUpdate = true;
+}
+
 function createMarsSunsetEnv() {
   const c = document.createElement('canvas');
   c.width = 1024;
@@ -196,6 +252,7 @@ const roadMat = new THREE.MeshStandardMaterial({
   polygonOffsetFactor: 1,
   polygonOffsetUnits: 1
 });
+roadMat.userData.wetRoadDetail = createWetRoadDetail(ROAD_WIDTH, 2600);
 const roadMesh = new THREE.Mesh(roadGeo, roadMat);
 roadMesh.rotation.x = -Math.PI / 2;
 roadMesh.receiveShadow = true;
@@ -322,6 +379,8 @@ function buildOpenWorldCity() {
     polygonOffsetFactor: -2,
     polygonOffsetUnits: -2
   });
+  cityAsphaltMat.userData.wetRoadDetail = createWetRoadDetail(CITY_ROAD_WIDTH, CITY_HALF_BOUND * 2);
+  cityAsphaltEWMat.userData.wetRoadDetail = createWetRoadDetail(CITY_HALF_BOUND * 2, CITY_ROAD_WIDTH);
   const yellowLineMat = new THREE.MeshBasicMaterial({
     color: 0xf59e0b,
     polygonOffset: true,
