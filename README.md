@@ -48,7 +48,8 @@ tesla_roadster_simulator_package/
 - **18G 致命碰撞解体物理**：实时计算相对碰撞速度 $\Delta v$、冲击过载与形变动能，单次撞击 $\ge 18.0\,\text{G}$（$\Delta v \ge 100\,\text{km/h}$）或车体耐久归零直接粉碎性解体。
 
 ### 3. UI 界面人性化与交互增强 (UI Humanization)
-- **极简追视模式保留高压空气槽 (重构修复)**：按下 `Z` 键进入极简追视视图时，收起无关功能菜单与两侧说明，但屏幕底部悬浮保留 600L COPV 气瓶剩余量仪表（流速、剩余秒数、升数、状态标签与第 8 秒警戒线）。
+- **三档 HUD**：`Z` 或顶部 HUD 按钮依次切换完整 → 中等 → 极简，并在本浏览器保存选择。中等保留左右面板、相机入口与手机触控驾驶按钮，收起装饰、其余功能菜单与底部提示；极简进一步收起两侧面板与触控按钮。两档精简模式均保留车外速度/气量仪表、接客方向与必要通知。FPV 仅使用车内实时仪表，不重复悬浮速度/气量。
+- **清晰车内气量条**：实体仪表屏移入固定座舱视场，气量横槽与文字分离，带 20% 警戒线；车内外共用实时剩余量，满瓶、持续喷气、耗尽和重置一致。移除挡视线的车内中央后视镜与支架。
 - **中英双语极速切换 (🌐)**：全局 DOM 元素、弹窗指南、实时警报与语音朗读均支持一键热切换。
 - **12 款官方精调航天质感车漆**：航天阳极白 (Ano White)、主打多涂层红、暗夜钛黑、星舰液态亮银、赛博电光蓝等。
 - **3 大动态天气与光照系统**：星际暗夜 (Cyber Night)、赛博霓虹雨夜 (Neon Rain，含柔和细腻的湿沥青反光、挡风玻璃水滴与雷暴雷鸣)、火星落日黄昏 (Mars Sunset)。
@@ -80,7 +81,7 @@ tesla_roadster_simulator_package/
 | **I / K (或 ↑ / ↓)** | 空中俯仰 (Pitch) | 长按可连续向前 / 向后 360° 翻滚 |
 | **Y** | 狂暴 Plaid 模式开关 | 解锁 370 km/h 极速与火箭弹射动力 |
 | **B** | 速度单位切换 | KM/h (公里/小时) ⇄ MPH (英里/小时) |
-| **Z** | HUD 界面模式切换 | 完整仪表 ⇄ 极简追视（保留气瓶剩余量仪表） |
+| **Z** | HUD 界面模式切换 | 完整 → 中等（保留两侧）→ 极简；自动记住选择 |
 | **F** | 物理模式切换 | 常规物理模式 (Realistic) ⇄ 幻想极速模式 (Fantasy) |
 | **C** | 第一人称座舱视角 (FPV) | 进入超清战机级座舱（实时仪表屏、Yoke转动、HUD十字线） |
 | **V** | 3D 展厅特写视角 (Showroom) | 镜头环绕欣赏 1:1 车身工业细节 |
@@ -141,3 +142,11 @@ Cockpit tank seconds, liters, fill and gas mass now use the current remaining-ai
 While a passenger is on board, an upper-left arrow points directly toward the green destination relative to the car's heading: up means ahead, right means the car's right. It updates in every camera/HUD mode, shows straight-line horizontal distance, and disappears on delivery, passenger loss, reset or map exit. Its own layout row keeps it above the side controls on desktop and small screens. It is a bearing indicator, not a turn-by-turn road route.
 
 Regression checks cover full/partial/empty/recharging tanks, same-frame cockpit/external readings, cardinal and arbitrary vehicle headings, full-turn angle boundaries and passenger lifecycle cleanup. The available cloud environment cannot validate real WebGL gameplay or visual appearance.
+
+### HUD、座舱与撞毁积分更新
+
+HUD 的中等档保留两侧面板、相机入口、语言/设置/排行榜入口以及手机触控驾驶按钮；按钮或 Z 循环三档并保存选择。精简档不隐藏载客目的地方向或关键通知。
+
+车内仪表重排为速度、清晰横向剩余气量槽（20% 警戒线、秒数、升数、质量）及接客信息。实体屏和转向舵盘位置微调，适配竖屏宽度，防止仪表被视场边缘、仪表台或转动舵盘遮挡。移除中央后视镜及支架；外部侧镜保持原状。
+
+撞毁弹窗显示与右侧遥测一致的驾驶总分；已开启城市接客时另显示扣分后的独立接客积分，保留排行榜状态。弹窗在小屏可滚动，修复/换地图按钮可达。

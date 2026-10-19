@@ -311,10 +311,12 @@ carMeshGroup.add(consoleTunnel, gearStrip, hazardBtn);
 
 // Center Console Tilted Touchscreen Display (offset cleanly from bezel to prevent Z-fighting)
 const screenBezel = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.25, 0.018), titaniumMaterial);
-screenBezel.position.set(0, 0.61, -0.64);
+// Lift the essential speed, air and passenger bands into the fixed FPV
+// frustum, clear of the cowling and the yoke sightline.
+screenBezel.position.set(0, 0.795, -0.916);
 screenBezel.rotation.x = -0.26;
 const screenDisplay = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.23), screenGlowMat);
-screenDisplay.position.set(0, 0.615, -0.624);
+screenDisplay.position.set(0, 0.80, -0.90);
 screenDisplay.rotation.x = -0.26;
 
 // Fighter-Jet Translucent HUD Combiner Glass above Steering Yoke
@@ -327,10 +329,12 @@ const steeringColumn = new THREE.Mesh(
   new THREE.CylinderGeometry(0.028, 0.032, 0.26, 16).rotateX(Math.PI / 2 - 0.22),
   titaniumMaterial
 );
-steeringColumn.position.set(0, 0.65, -0.58);
+steeringColumn.position.set(0, 0.60, -0.58);
 
 const yokeWheelGroup = new THREE.Group();
-yokeWheelGroup.position.set(0, 0.675, -0.46);
+// Lower the wheel/column together so a fully turned yoke cannot cover the air
+// bar or passenger strip. Steering geometry and animation remain unchanged.
+yokeWheelGroup.position.set(0, 0.625, -0.46);
 yokeWheelGroup.rotation.x = -0.20;
 
 // Yoke Center Hub & Horn Pad
@@ -373,17 +377,15 @@ for (let i = 0; i < 7; i++) {
 
 carMeshGroup.add(seatBack, dashCowling, screenBezel, screenDisplay, hudCombinerMesh, steeringColumn, yokeWheelGroup);
 
-// Digital Streaming Rear-View Camera Mirror Display
-const mirrorHousing = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.042, 0.016), carbonMaterial);
-mirrorHousing.position.set(0, 0.98, -0.44);
-mirrorHousing.rotation.x = -0.15;
-const mirrorScreenMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-const mirrorScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.036), mirrorScreenMat);
-mirrorScreen.position.set(0, 0.98, -0.43);
-mirrorScreen.rotation.x = -0.15;
-const mirrorMount = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.065, 8), titaniumMaterial);
-mirrorMount.position.set(0, 1.02, -0.44);
-carMeshGroup.add(mirrorHousing, mirrorScreen, mirrorMount);
+// Uniform scaling preserves the texture proportions and keeps the complete
+// physical display inside a tall phone's narrower horizontal FPV frustum.
+function resizeCockpitDisplay() {
+  const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
+  screenBezel.scale.setScalar(scale);
+  screenDisplay.scale.setScalar(scale);
+}
+window.addEventListener('resize', resizeCockpitDisplay);
+resizeCockpitDisplay();
 
 // Interior Ambient LED Light Piping along Door Sills and Dash
 const ambientLightMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });

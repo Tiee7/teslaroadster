@@ -155,21 +155,21 @@ html, body {
   #hud-footer { max-height: 32vh; max-height: 32dvh; overflow-y: auto; pointer-events: auto; }
 }
 
-/* Minimalist HUD View - Distraction-free clean view with essential 600L COPV gas gauge preserved */
-.hud-minimal-view {
+/* Medium keeps both side panels and mobile touch controls; minimal hides them. */
+.hud-compact-view {
   padding-bottom: 0.65rem !important;
 }
 .hud-minimal-view #touch-controls {
   display: none !important;
 }
-.hud-minimal-view #hud-cluster {
+.hud-compact-view #hud-cluster {
   max-width: 44rem !important;
   background: rgba(8, 14, 26, 0.75) !important;
   border: 1px solid rgba(56, 189, 248, 0.35) !important;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55) !important;
   padding: 0.45rem 1rem !important;
 }
-.hud-minimal-view #ui-tank-hint {
+.hud-compact-view #ui-tank-hint {
   display: none !important;
 }
 
@@ -299,4 +299,36 @@ html, body {
 @media (max-width: 1100px) and (max-height: 600px) {
   /* Only the instruments scroll; the passenger row remains visible at the edge. */
   #hud-footer.taxi-active { overflow: visible; padding: 8px; gap: 4px; }
+}
+
+/* Destruction summary stays readable and its repair/map controls reachable. */
+.crash-dialog-content { max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); overflow-y: auto; }
+#crash-score-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 8px; margin-bottom: 18px; }
+.crash-score-card { padding: 12px; border: 1px solid #395066; border-radius: 12px; background: #080f1e; color: #cbd5e1; font-size: 12px; }
+.crash-score-card strong { display: block; margin-top: 4px; color: #67e8f9; font-size: 24px; overflow-wrap: anywhere; }
+#crash-passenger-score strong { color: #86efac; }
+#crash-passenger-score[hidden] { display: none; }
+/* Phones can cross md's width breakpoint in landscape; retain actual driving
+   inputs for touch users in Full/Medium instead of relying on viewport width. */
+@media (pointer: coarse) {
+  body:not([data-hud-mode="minimal"]) #touch-controls { display: flex; }
+}
+/* Medium FPV leaves a clear center/lower instrument zone on phones. Both side
+   cards remain present and scrollable rather than covering the physical bar. */
+@media (max-width: 1100px) {
+  .cockpit-view[data-hud-mode="medium"] #hud-top-container { --hud-notice-space: 32px; }
+  .cockpit-view[data-hud-mode="medium"] #hud-left,
+  .cockpit-view[data-hud-mode="medium"] #hud-right-card {
+    padding: 6px;
+    max-height: min(12vh, max(32px, calc(45vh - var(--hud-header-height, 60px) - var(--hud-navigation-height, 0px) - var(--hud-notice-space, 32px) - 8px)));
+    max-height: min(12dvh, max(32px, calc(45dvh - var(--hud-header-height, 60px) - var(--hud-navigation-height, 0px) - var(--hud-notice-space, 32px) - 8px)));
+    overflow-y: auto;
+  }
+  .cockpit-view[data-hud-mode="medium"] #hud-left-header,
+  .cockpit-view[data-hud-mode="medium"] #hud-right-header { padding: 0; margin: 0; border: 0; }
+}
+
+@media (max-width: 1100px) and (max-height: 600px) {
+  .cockpit-view[data-hud-mode="medium"] #hud-top-container { --hud-notice-space: 24px; }
+  body[data-hud-mode="medium"] #hud-action-bar { flex-wrap: nowrap; max-width: 100%; min-width: 0; overflow-x: auto; }
 }

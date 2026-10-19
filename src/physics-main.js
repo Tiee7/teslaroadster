@@ -288,7 +288,25 @@ function destroyVehicle(reasonKey) {
   document.getElementById('modal-destroyed').classList.remove('hidden');
 }
 
+function updateDestroyedScores() {
+  const t = I18N[currentLang];
+  // The summary is aria-live: unchanged frames must not announce it again.
+  const put = (id, value) => {
+    const element = document.getElementById(id), text = String(value);
+    if (element.textContent !== text) element.textContent = text;
+  };
+  const drivingScore = Math.round(state.score + state.carsCleared * 10);
+  put('crash-lbl-score', t.crashLblScore);
+  put('crash-val-score', drivingScore);
+  const passenger = window.RoadsterTaxi?.snapshot();
+  const passengerRow = document.getElementById('crash-passenger-score');
+  if (passengerRow.hidden !== !passenger?.active) passengerRow.hidden = !passenger?.active;
+  put('crash-lbl-passenger-score', t.crashLblPassengerScore);
+  put('crash-val-passenger-score', passenger?.active ? passenger.score : 0);
+}
+
 function updateDestroyedModalText() {
+  updateDestroyedScores();
   const t = I18N[currentLang];
   document.getElementById('crash-badge').textContent = t.crashBadge;
   document.getElementById('crash-title').textContent = t.crashTitle;
@@ -1893,11 +1911,12 @@ function updateSimulation(dt) {
     speedEl.className = 'mono text-3xl md:text-4xl font-extrabold text-white tracking-tight';
   }
 
-  const pct = Math.max(0, Math.min(100, (state.airRemaining / MAX_AIR_SECONDS) * 100));
-  const liters = Math.round((state.airRemaining / MAX_AIR_SECONDS) * 600);
+  const tank = getAirTankReadout(state.airRemaining);
+  const pct = tank.fraction * 100;
+  const liters = tank.liters;
   const gasMassEl = document.getElementById('val-gas-mass');
-  if (gasMassEl) gasMassEl.textContent = `${(pct * 1.44).toFixed(1)} kg`;
-  document.getElementById('val-air-sec').textContent = `${state.airRemaining.toFixed(1)}s`;
+  if (gasMassEl) gasMassEl.textContent = `${tank.massKg.toFixed(1)} kg`;
+  document.getElementById('val-air-sec').textContent = `${tank.seconds.toFixed(1)}s`;
   document.getElementById('val-air-liters').textContent = `(${liters}L)`;
   const burnUsedEl = document.getElementById('val-burn-used');
   if (burnUsedEl) burnUsedEl.textContent = `${state.airUsedContinuous.toFixed(1)}s`;
@@ -1973,6 +1992,7 @@ function animate(now) {
   lastTime = now;
   updateSimulation(dt);
   window.RoadsterTaxi?.tick();
+  if (state.isDestroyed) updateDestroyedScores();
   renderer.render(scene, camera);
 }
 

@@ -27,6 +27,8 @@ const I18N = {
     bannerPlaidOffTitle: "⚡ PLAID BOOST DISENGAGED (Y)",
     bannerPlaidOffSub: "Top speed limited to 200 km/h pure electric drive without rocket plumes.",
     hudBtnFull: "HUD: Full (Z)",
+    hudBtnMedium: "HUD: Medium (Z)",
+    hudModeHint: "Cycle HUD: Full → Medium → Minimal (Z)",
     hudBtnMinimal: "HUD: Minimal (Z)",
     banner0to100: "⚡ 0-100 KM/H RECORD: 1.88s!",
     banner200Kmh: "🚀 200 KM/H EV CRUISING RECORD!",
@@ -149,6 +151,8 @@ const I18N = {
     crashLblSpeed: "Impact Δv",
     crashLblG: "Peak G-Force",
     crashLblEnergy: "Impact Energy",
+    crashLblScore: "Flight & Drive Score",
+    crashLblPassengerScore: "Passenger Score (Separate)",
     crashBtnRespawn: "↺ Repair & Respawn (R)",
     crashBtnMap: "🗺️ Switch Map (M)",
     modalBadge: "OCT 15, 2026 MCGREGOR DEMO SPEC",
@@ -189,6 +193,8 @@ const I18N = {
     bannerPlaidOffTitle: "⚡ 狂暴模式已关闭 (Y)",
     bannerPlaidOffSub: "恢复常规纯电加速，无火箭喷气，最高时速限制 200 km/h。",
     hudBtnFull: "界面: 完整 (Z)",
+    hudBtnMedium: "界面: 中等 (Z)",
+    hudModeHint: "切换界面：完整 → 中等 → 极简 (Z)",
     hudBtnMinimal: "界面: 极简追视 (Z)",
     banner0to100: "⚡ 0-100 加速达成：1.88秒！",
     banner200Kmh: "🚀 突破 200 KM/H 纯电极速！",
@@ -311,6 +317,8 @@ const I18N = {
     crashLblSpeed: "相对碰撞速度 Δv",
     crashLblG: "峰值冲击过载",
     crashLblEnergy: "碰撞动能释放",
+    crashLblScore: "驾驶总分",
+    crashLblPassengerScore: "接客积分（独立计算）",
     crashBtnRespawn: "↺ 修复并重新开始 (R)",
     crashBtnMap: "🗺️ 切换地图 (M)",
     modalBadge: "2026年10月15日 德州演示真车 1:1 复刻",
@@ -357,6 +365,13 @@ const WORLD_SPEED_SCALE = 1.65; // Calibrates 3D venue traversal speed to match 
 const MAX_AIR_SECONDS = 10.0;
 const AUTO_DESCENT_USED_SECONDS = 8.0;
 
+// One bounded, live reading for both the exterior gauge and the cockpit bar.
+function getAirTankReadout(remainingSeconds) {
+  const seconds = Math.max(0, Math.min(MAX_AIR_SECONDS, Number.isFinite(remainingSeconds) ? remainingSeconds : 0));
+  const fraction = seconds / MAX_AIR_SECONDS;
+  return { seconds, fraction, liters: Math.round(fraction * 600), massKg: fraction * 144.0 };
+}
+
 const VEHICLE_MASS_KG = 1850;
 const CRITICAL_IMPACT_DV = 28.0; // m/s (~100.8 km/h relative impact velocity)
 const CRITICAL_G_LIMIT = 18.0;   // 18.0 G single-impact destruction threshold
@@ -375,7 +390,8 @@ const state = {
   physicsMode: "realistic", // "realistic" (常规模式) or "fantasy" (幻想模式)
   insaneMode: false,    // 'Y' toggles Plaid / 狂暴模式 up to 370 km/h
   speedUnit: "kmh",     // 'kmh' or 'mph' (default kmh in Chinese)
-  hudMinimal: false,
+  hudMode: "full",
+  hudMinimal: false, // Compatibility flag for the former two-mode HUD.
   speedMilestone: 0,
   tireTemp: 35.0,
   gasMassKg: 144.0,

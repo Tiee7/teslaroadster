@@ -172,21 +172,21 @@ html, body {
   #hud-footer { max-height: 32vh; max-height: 32dvh; overflow-y: auto; pointer-events: auto; }
 }
 
-/* Minimalist HUD View - Distraction-free clean view with essential 600L COPV gas gauge preserved */
-.hud-minimal-view {
+/* Medium keeps both side panels and mobile touch controls; minimal hides them. */
+.hud-compact-view {
   padding-bottom: 0.65rem !important;
 }
 .hud-minimal-view #touch-controls {
   display: none !important;
 }
-.hud-minimal-view #hud-cluster {
+.hud-compact-view #hud-cluster {
   max-width: 44rem !important;
   background: rgba(8, 14, 26, 0.75) !important;
   border: 1px solid rgba(56, 189, 248, 0.35) !important;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55) !important;
   padding: 0.45rem 1rem !important;
 }
-.hud-minimal-view #ui-tank-hint {
+.hud-compact-view #ui-tank-hint {
   display: none !important;
 }
 
@@ -318,6 +318,38 @@ html, body {
   #hud-footer.taxi-active { overflow: visible; padding: 8px; gap: 4px; }
 }
 
+/* Destruction summary stays readable and its repair/map controls reachable. */
+.crash-dialog-content { max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); overflow-y: auto; }
+#crash-score-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 8px; margin-bottom: 18px; }
+.crash-score-card { padding: 12px; border: 1px solid #395066; border-radius: 12px; background: #080f1e; color: #cbd5e1; font-size: 12px; }
+.crash-score-card strong { display: block; margin-top: 4px; color: #67e8f9; font-size: 24px; overflow-wrap: anywhere; }
+#crash-passenger-score strong { color: #86efac; }
+#crash-passenger-score[hidden] { display: none; }
+/* Phones can cross md's width breakpoint in landscape; retain actual driving
+   inputs for touch users in Full/Medium instead of relying on viewport width. */
+@media (pointer: coarse) {
+  body:not([data-hud-mode="minimal"]) #touch-controls { display: flex; }
+}
+/* Medium FPV leaves a clear center/lower instrument zone on phones. Both side
+   cards remain present and scrollable rather than covering the physical bar. */
+@media (max-width: 1100px) {
+  .cockpit-view[data-hud-mode="medium"] #hud-top-container { --hud-notice-space: 32px; }
+  .cockpit-view[data-hud-mode="medium"] #hud-left,
+  .cockpit-view[data-hud-mode="medium"] #hud-right-card {
+    padding: 6px;
+    max-height: min(12vh, max(32px, calc(45vh - var(--hud-header-height, 60px) - var(--hud-navigation-height, 0px) - var(--hud-notice-space, 32px) - 8px)));
+    max-height: min(12dvh, max(32px, calc(45dvh - var(--hud-header-height, 60px) - var(--hud-navigation-height, 0px) - var(--hud-notice-space, 32px) - 8px)));
+    overflow-y: auto;
+  }
+  .cockpit-view[data-hud-mode="medium"] #hud-left-header,
+  .cockpit-view[data-hud-mode="medium"] #hud-right-header { padding: 0; margin: 0; border: 0; }
+}
+
+@media (max-width: 1100px) and (max-height: 600px) {
+  .cockpit-view[data-hud-mode="medium"] #hud-top-container { --hud-notice-space: 24px; }
+  body[data-hud-mode="medium"] #hud-action-bar { flex-wrap: nowrap; max-width: 100%; min-width: 0; overflow-x: auto; }
+}
+
 </style>
 </head>
 <body class="relative w-full h-full overflow-hidden">
@@ -402,8 +434,8 @@ html, body {
       <button id="btn-camera-zoom" type="button" class="glass-panel hover:bg-cyan-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-400/30 cursor-pointer" title="Adjust Camera Zoom ([ / ] or Mouse Wheel)">
         <span id="ui-camera-zoom-btn">🔍 Zoom: Close</span>
       </button>
-      <!-- HUD Mode Toggle (Full vs Minimalist Pursuit) -->
-      <button id="btn-hud-mode" type="button" class="glass-panel hover:bg-cyan-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-400/30 cursor-pointer" title="Toggle Clean HUD (Z)">
+      <!-- HUD Mode Toggle (Full → Medium → Minimal) -->
+      <button id="btn-hud-mode" type="button" class="glass-panel hover:bg-cyan-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-400/30 cursor-pointer" title="Cycle HUD: Full → Medium → Minimal (Z)" aria-label="Cycle HUD: Full → Medium → Minimal (Z)">
         <span id="ui-hud-mode-btn">🖥️ HUD: Full (Z)</span>
       </button>
 
@@ -872,7 +904,7 @@ html, body {
 
   <!-- Vehicle Destroyed / Crash Telemetry Overlay Modal -->
   <div id="modal-destroyed" class="fixed inset-0 z-30 bg-rose-950/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="glass-panel rounded-2xl max-w-lg w-full p-6 border-2 border-rose-500 shadow-[0_0_50px_rgba(244,63,94,0.45)] text-center">
+    <div class="crash-dialog-content glass-panel rounded-2xl max-w-lg w-full p-6 border-2 border-rose-500 shadow-[0_0_50px_rgba(244,63,94,0.45)] text-center">
       <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 border border-rose-400 text-2xl mb-2">💥</div>
       <div id="crash-badge" class="text-[11px] mono font-bold uppercase px-2.5 py-0.5 rounded bg-rose-500/30 text-rose-200 inline-block mb-1">CRITICAL STRUCTURAL FAILURE</div>
       <h2 id="crash-title" class="text-2xl font-extrabold text-white">VEHICLE DESTROYED</h2>
@@ -891,6 +923,17 @@ html, body {
         <div>
           <div id="crash-lbl-energy" class="text-[10px] text-slate-400 uppercase">Impact Energy</div>
           <div id="crash-val-energy" class="mono text-sm md:text-base font-extrabold text-amber-300">980 kJ</div>
+        </div>
+      </div>
+
+      <div id="crash-score-summary" aria-live="polite" aria-atomic="true">
+        <div class="crash-score-card">
+          <div id="crash-lbl-score">Flight &amp; Drive Score</div>
+          <strong id="crash-val-score" class="mono">0</strong>
+        </div>
+        <div id="crash-passenger-score" class="crash-score-card" hidden>
+          <div id="crash-lbl-passenger-score">Passenger Score (Separate)</div>
+          <strong id="crash-val-passenger-score" class="mono">0</strong>
         </div>
       </div>
 
@@ -1065,6 +1108,8 @@ const I18N = {
     bannerPlaidOffTitle: "⚡ PLAID BOOST DISENGAGED (Y)",
     bannerPlaidOffSub: "Top speed limited to 200 km/h pure electric drive without rocket plumes.",
     hudBtnFull: "HUD: Full (Z)",
+    hudBtnMedium: "HUD: Medium (Z)",
+    hudModeHint: "Cycle HUD: Full → Medium → Minimal (Z)",
     hudBtnMinimal: "HUD: Minimal (Z)",
     banner0to100: "⚡ 0-100 KM/H RECORD: 1.88s!",
     banner200Kmh: "🚀 200 KM/H EV CRUISING RECORD!",
@@ -1187,6 +1232,8 @@ const I18N = {
     crashLblSpeed: "Impact Δv",
     crashLblG: "Peak G-Force",
     crashLblEnergy: "Impact Energy",
+    crashLblScore: "Flight & Drive Score",
+    crashLblPassengerScore: "Passenger Score (Separate)",
     crashBtnRespawn: "↺ Repair & Respawn (R)",
     crashBtnMap: "🗺️ Switch Map (M)",
     modalBadge: "OCT 15, 2026 MCGREGOR DEMO SPEC",
@@ -1227,6 +1274,8 @@ const I18N = {
     bannerPlaidOffTitle: "⚡ 狂暴模式已关闭 (Y)",
     bannerPlaidOffSub: "恢复常规纯电加速，无火箭喷气，最高时速限制 200 km/h。",
     hudBtnFull: "界面: 完整 (Z)",
+    hudBtnMedium: "界面: 中等 (Z)",
+    hudModeHint: "切换界面：完整 → 中等 → 极简 (Z)",
     hudBtnMinimal: "界面: 极简追视 (Z)",
     banner0to100: "⚡ 0-100 加速达成：1.88秒！",
     banner200Kmh: "🚀 突破 200 KM/H 纯电极速！",
@@ -1349,6 +1398,8 @@ const I18N = {
     crashLblSpeed: "相对碰撞速度 Δv",
     crashLblG: "峰值冲击过载",
     crashLblEnergy: "碰撞动能释放",
+    crashLblScore: "驾驶总分",
+    crashLblPassengerScore: "接客积分（独立计算）",
     crashBtnRespawn: "↺ 修复并重新开始 (R)",
     crashBtnMap: "🗺️ 切换地图 (M)",
     modalBadge: "2026年10月15日 德州演示真车 1:1 复刻",
@@ -1395,6 +1446,13 @@ const WORLD_SPEED_SCALE = 1.65; // Calibrates 3D venue traversal speed to match 
 const MAX_AIR_SECONDS = 10.0;
 const AUTO_DESCENT_USED_SECONDS = 8.0;
 
+// One bounded, live reading for both the exterior gauge and the cockpit bar.
+function getAirTankReadout(remainingSeconds) {
+  const seconds = Math.max(0, Math.min(MAX_AIR_SECONDS, Number.isFinite(remainingSeconds) ? remainingSeconds : 0));
+  const fraction = seconds / MAX_AIR_SECONDS;
+  return { seconds, fraction, liters: Math.round(fraction * 600), massKg: fraction * 144.0 };
+}
+
 const VEHICLE_MASS_KG = 1850;
 const CRITICAL_IMPACT_DV = 28.0; // m/s (~100.8 km/h relative impact velocity)
 const CRITICAL_G_LIMIT = 18.0;   // 18.0 G single-impact destruction threshold
@@ -1413,7 +1471,8 @@ const state = {
   physicsMode: "realistic", // "realistic" (常规模式) or "fantasy" (幻想模式)
   insaneMode: false,    // 'Y' toggles Plaid / 狂暴模式 up to 370 km/h
   speedUnit: "kmh",     // 'kmh' or 'mph' (default kmh in Chinese)
-  hudMinimal: false,
+  hudMode: "full",
+  hudMinimal: false, // Compatibility flag for the former two-mode HUD.
   speedMilestone: 0,
   tireTemp: 35.0,
   gasMassKg: 144.0,
@@ -2971,10 +3030,12 @@ carMeshGroup.add(consoleTunnel, gearStrip, hazardBtn);
 
 // Center Console Tilted Touchscreen Display (offset cleanly from bezel to prevent Z-fighting)
 const screenBezel = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.25, 0.018), titaniumMaterial);
-screenBezel.position.set(0, 0.61, -0.64);
+// Lift the essential speed, air and passenger bands into the fixed FPV
+// frustum, clear of the cowling and the yoke sightline.
+screenBezel.position.set(0, 0.795, -0.916);
 screenBezel.rotation.x = -0.26;
 const screenDisplay = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.23), screenGlowMat);
-screenDisplay.position.set(0, 0.615, -0.624);
+screenDisplay.position.set(0, 0.80, -0.90);
 screenDisplay.rotation.x = -0.26;
 
 // Fighter-Jet Translucent HUD Combiner Glass above Steering Yoke
@@ -2987,10 +3048,12 @@ const steeringColumn = new THREE.Mesh(
   new THREE.CylinderGeometry(0.028, 0.032, 0.26, 16).rotateX(Math.PI / 2 - 0.22),
   titaniumMaterial
 );
-steeringColumn.position.set(0, 0.65, -0.58);
+steeringColumn.position.set(0, 0.60, -0.58);
 
 const yokeWheelGroup = new THREE.Group();
-yokeWheelGroup.position.set(0, 0.675, -0.46);
+// Lower the wheel/column together so a fully turned yoke cannot cover the air
+// bar or passenger strip. Steering geometry and animation remain unchanged.
+yokeWheelGroup.position.set(0, 0.625, -0.46);
 yokeWheelGroup.rotation.x = -0.20;
 
 // Yoke Center Hub & Horn Pad
@@ -3033,17 +3096,15 @@ for (let i = 0; i < 7; i++) {
 
 carMeshGroup.add(seatBack, dashCowling, screenBezel, screenDisplay, hudCombinerMesh, steeringColumn, yokeWheelGroup);
 
-// Digital Streaming Rear-View Camera Mirror Display
-const mirrorHousing = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.042, 0.016), carbonMaterial);
-mirrorHousing.position.set(0, 0.98, -0.44);
-mirrorHousing.rotation.x = -0.15;
-const mirrorScreenMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-const mirrorScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.036), mirrorScreenMat);
-mirrorScreen.position.set(0, 0.98, -0.43);
-mirrorScreen.rotation.x = -0.15;
-const mirrorMount = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.065, 8), titaniumMaterial);
-mirrorMount.position.set(0, 1.02, -0.44);
-carMeshGroup.add(mirrorHousing, mirrorScreen, mirrorMount);
+// Uniform scaling preserves the texture proportions and keeps the complete
+// physical display inside a tall phone's narrower horizontal FPV frustum.
+function resizeCockpitDisplay() {
+  const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
+  screenBezel.scale.setScalar(scale);
+  screenDisplay.scale.setScalar(scale);
+}
+window.addEventListener('resize', resizeCockpitDisplay);
+resizeCockpitDisplay();
 
 // Interior Ambient LED Light Piping along Door Sills and Dash
 const ambientLightMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
@@ -4579,60 +4640,51 @@ function syncHudPerspective() {
   updateHudBounds();
 }
 
-function toggleHudMode() {
-  state.hudMinimal = !state.hudMinimal;
-  const brandBadge = document.getElementById('hud-brand-badge');
-  const actionBar = document.getElementById('hud-action-bar');
-  const hudLeft = document.getElementById('hud-left');
-  const hudRight = document.getElementById('hud-right');
-  const hudFooter = document.getElementById('hud-footer');
+const HUD_MODES = ['full', 'medium', 'minimal'];
+const HUD_STORAGE_KEY = 'roadster-hud-mode';
+function normalizeHudMode(value) {
+  if (HUD_MODES.includes(value)) return value;
+  // Accept the former boolean shape without treating an unknown value as minimal.
+  return value === true || value === 'true' ? 'minimal' : 'full';
+}
 
-  // Buttons to hide when HUD is minimized, leaving ONLY #btn-lang and #btn-hud-mode
-  const nonMinimalBtnIds = [
-    'btn-map-select',
-    'btn-physics-mode',
-    'btn-plaid-mode',
-    'btn-unit-toggle',
-    'btn-paint',
-    'btn-weather',
-    'btn-traffic',
-    'btn-camera',
-    'btn-camera-zoom',
-    'btn-sound',
-    'btn-reset',
-    'btn-help'
+function applyHudMode() {
+  const mode = normalizeHudMode(state.hudMode ?? state.hudMinimal);
+  state.hudMode = mode;
+  state.hudMinimal = mode === 'minimal';
+  const compact = mode !== 'full';
+  document.body.dataset.hudMode = mode;
+  document.getElementById('hud-brand-badge')?.classList.toggle('hidden', compact);
+  document.getElementById('hud-action-bar')?.classList.toggle('ml-auto', compact);
+  const extraButtons = [
+    'btn-map-select', 'btn-physics-mode', 'btn-plaid-mode', 'btn-unit-toggle',
+    'btn-paint', 'btn-weather', 'btn-traffic', 'btn-camera-zoom',
+    'btn-sound', 'btn-reset', 'btn-help'
   ];
+  extraButtons.forEach(id => document.getElementById(id)?.classList.toggle('hidden', compact));
+  document.getElementById('btn-camera')?.classList.toggle('hidden', mode === 'minimal');
+  ['hud-left', 'hud-right'].forEach(id => document.getElementById(id)?.classList.toggle('hidden', mode === 'minimal'));
+  const footer = document.getElementById('hud-footer');
+  footer?.classList.remove('hidden');
+  footer?.classList.toggle('hud-compact-view', compact);
+  footer?.classList.toggle('hud-minimal-view', mode === 'minimal');
+  updateHudBounds();
+}
 
-  if (state.hudMinimal) {
-    if (brandBadge) brandBadge.classList.add('hidden');
-    if (actionBar) actionBar.classList.add('ml-auto');
-    nonMinimalBtnIds.forEach((id) => {
-      const btn = document.getElementById(id);
-      if (btn) btn.classList.add('hidden');
-    });
-    if (hudLeft) hudLeft.classList.add('hidden');
-    if (hudRight) hudRight.classList.add('hidden');
-    // Requirement 3: Retain 600L COPV Air Tank gauge in minimized HUD view
-    if (hudFooter) {
-      hudFooter.classList.remove('hidden');
-      hudFooter.classList.add('hud-minimal-view');
-    }
-  } else {
-    if (brandBadge) brandBadge.classList.remove('hidden');
-    if (actionBar) actionBar.classList.remove('ml-auto');
-    nonMinimalBtnIds.forEach((id) => {
-      const btn = document.getElementById(id);
-      if (btn) btn.classList.remove('hidden');
-    });
-    if (hudLeft) hudLeft.classList.remove('hidden');
-    if (hudRight) hudRight.classList.remove('hidden');
-    if (hudFooter) {
-      hudFooter.classList.remove('hidden');
-      hudFooter.classList.remove('hud-minimal-view');
-    }
-  }
+function restoreHudMode() {
+  let mode = state.hudMode ?? state.hudMinimal;
+  try { mode = localStorage.getItem(HUD_STORAGE_KEY) ?? mode; } catch (_) {}
+  state.hudMode = normalizeHudMode(mode);
+  applyHudMode();
+}
+
+function toggleHudMode() {
+  const current = normalizeHudMode(state.hudMode ?? state.hudMinimal);
+  state.hudMode = HUD_MODES[(HUD_MODES.indexOf(current) + 1) % HUD_MODES.length];
+  applyHudMode();
+  try { localStorage.setItem(HUD_STORAGE_KEY, state.hudMode); } catch (_) {}
   applyTranslations();
-  sound.beep(state.hudMinimal ? 540 : 720, 0.08);
+  sound.beep({ full: 720, medium: 630, minimal: 540 }[state.hudMode], 0.08);
 }
 
 // =========================================================================
@@ -4693,7 +4745,7 @@ window.addEventListener('keydown', (e) => {
     return;
   }
   if (e.code === 'KeyZ') {
-    toggleHudMode();
+    if (!e.repeat) toggleHudMode();
     return;
   }
   if (e.code === 'KeyF') {
@@ -4991,7 +5043,9 @@ function applyTranslations() {
   window.RoadsterRanked?.render();
   const t = I18N[currentLang];
   const hudBtnEl = document.getElementById('ui-hud-mode-btn');
-  if (hudBtnEl) hudBtnEl.textContent = state.hudMinimal ? t.hudBtnMinimal : t.hudBtnFull;
+  if (hudBtnEl) hudBtnEl.textContent = ({ full: t.hudBtnFull, medium: t.hudBtnMedium, minimal: t.hudBtnMinimal })[state.hudMode] || t.hudBtnFull;
+  document.getElementById('btn-hud-mode')?.setAttribute('title', t.hudModeHint);
+  document.getElementById('btn-hud-mode')?.setAttribute('aria-label', t.hudModeHint);
   if (document.getElementById('ui-lbl-downforce')) document.getElementById('ui-lbl-downforce').textContent = t.lblDownforce;
   if (document.getElementById('ui-lbl-tire-temp')) document.getElementById('ui-lbl-tire-temp').textContent = t.lblTireTemp;
   if (document.getElementById('ui-lbl-drag-coeff')) document.getElementById('ui-lbl-drag-coeff').textContent = t.lblDragCoeff;
@@ -5265,6 +5319,7 @@ if (btnUnitEl) btnUnitEl.addEventListener('click', toggleSpeedUnit);
 const valSpeedUnitEl = document.getElementById('val-speed-unit');
 if (valSpeedUnitEl) valSpeedUnitEl.addEventListener('click', toggleSpeedUnit);
 document.getElementById('btn-paint').addEventListener('click', () => cyclePaintFinish());
+restoreHudMode();
 const btnHudMode = document.getElementById('btn-hud-mode');
 if (btnHudMode) {
   btnHudMode.addEventListener('click', toggleHudMode);
@@ -5638,186 +5693,54 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.fillStyle = (isTurnRight && blinkActive) ? '#10b981' : 'rgba(51, 65, 85, 0.45)';
   ctx.fillText('▶', 156, 42);
 
-  // Artificial Horizon Pitch & Roll Ladder (Center-Left)
-  ctx.save();
-  ctx.translate(105, 165);
-  ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(0, 0, 48, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.rotate(-state.roll);
-  const pitchShift = THREE.MathUtils.clamp(Math.sin(state.pitch) * 65, -34, 34);
-  ctx.strokeStyle = '#10b981';
-  ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.moveTo(-36, pitchShift);
-  ctx.lineTo(36, pitchShift);
-  ctx.stroke();
-  ctx.strokeStyle = '#38bdf8';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(-18, pitchShift - 14);
-  ctx.lineTo(18, pitchShift - 14);
-  ctx.moveTo(-18, pitchShift + 14);
-  ctx.lineTo(18, pitchShift + 14);
-  ctx.stroke();
-  // 3D Velocity Vector / Flight Path Marker (FPM)
-  const fpmX = THREE.MathUtils.clamp((state.vx || 0) * 0.45, -28, 28);
-  const fpmY = THREE.MathUtils.clamp(-(state.vy || 0) * 0.85, -28, 28);
-  ctx.save();
-  ctx.translate(105 + fpmX, 165 + fpmY);
-  ctx.strokeStyle = '#38bdf8';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(0, 0, 5, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(-11, 0); ctx.lineTo(-5, 0);
-  ctx.moveTo(5, 0); ctx.lineTo(11, 0);
-  ctx.moveTo(0, -5); ctx.lineTo(0, -9);
-  ctx.stroke();
-  ctx.restore();
-
-  ctx.restore();
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = 'bold 11px "JetBrains Mono", monospace';
-  ctx.fillText(`PITCH ${Math.round(THREE.MathUtils.radToDeg(state.pitch))}°  ROLL ${Math.round(THREE.MathUtils.radToDeg(state.roll))}°`, 38, 232);
-
-  // 600L COPV Air Pressure Bar at Bottom
-  // Read the current tank once: the physics mass cache is updated before this
-  // frame's consumption/recharge, and zero must remain an empty tank.
-  const airSeconds = Math.max(0, Math.min(MAX_AIR_SECONDS, Number.isFinite(state.airRemaining) ? state.airRemaining : 0));
-  const airPct = airSeconds / MAX_AIR_SECONDS;
-  const gasMassKg = airPct * 144.0;
-  ctx.fillStyle = '#1e293b';
-  ctx.fillRect(18, 268, 476, 22);
-  const isLowAir = airPct <= 0.20 && airPct > 0.001;
-  const pulseAlpha = isLowAir ? (0.7 + 0.3 * Math.sin(performance.now() * 0.015)) : 1.0;
-  ctx.fillStyle = state.isFreefalling ? '#ef4444' : (state.isAutoDescending8s ? `rgba(245, 158, 11, ${pulseAlpha})` : '#06b6d4');
-  ctx.fillRect(18, 268, 476 * airPct, 22);
-  // 8s Auto-Descent threshold line (20%)
-  ctx.fillStyle = '#fbbf24';
-  ctx.fillRect(18 + 476 * 0.20, 264, 3, 30);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 13px "JetBrains Mono", monospace';
-  ctx.fillText(`600L COPV TANK: ${airSeconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s (${Math.round(airPct * 600)}L)`, 26, 284);
-  // Keep the gas readout with the tank, clear of the artificial horizon and
-  // the passenger strip at y=237..263.
+  // Essentials use dedicated bands: speed 34..96, tank 108..202, telemetry
+  // 210..230, passenger 237..263. The old bottom bar was below the FPV frustum
+  // and behind the dashboard. No other instrument may paint over this track.
+  const tank = getAirTankReadout(state.airRemaining);
+  const lowAir = tank.fraction <= 0.20;
+  const tankColor = tank.fraction === 0 || state.isFreefalling ? '#f87171' : (lowAir || state.isAutoDescending8s ? '#fbbf24' : '#67e8f9');
+  ctx.textAlign = 'left';
   ctx.fillStyle = '#cbd5e1';
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText(`GAS: ${gasMassKg.toFixed(1)} kg`, 26, 307);
-
-  // 2. CENTER-RIGHT PANEL: Live G-Force Ball Meter (G-Meter)
-  const gxCenter = 268, gyCenter = 135, gRadius = 58;
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
-  ctx.lineWidth = 1.5;
-  [gRadius, gRadius * 0.62, gRadius * 0.28].forEach((r) => {
-    ctx.beginPath();
-    ctx.arc(gxCenter, gyCenter, r, 0, Math.PI * 2);
-    ctx.stroke();
-  });
-  ctx.beginPath();
-  ctx.moveTo(gxCenter - gRadius, gyCenter);
-  ctx.lineTo(gxCenter + gRadius, gyCenter);
-  ctx.moveTo(gxCenter, gyCenter - gRadius);
-  ctx.lineTo(gxCenter, gyCenter + gRadius);
-  ctx.stroke();
-
-  // G-Force Ball position
-  const ballX = gxCenter + THREE.MathUtils.clamp(state.lateralG * 14, -gRadius + 8, gRadius - 8);
-  const ballY = gyCenter + THREE.MathUtils.clamp(state.longitudinalG * 14, -gRadius + 8, gRadius - 8);
-  ctx.fillStyle = '#f59e0b';
-  ctx.beginPath();
-  ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Peak G-Force retention ring indicator
-  if (!state.peakGPos) state.peakGPos = { x: 0, y: 0, mag: 0 };
-  const currentGMag = Math.hypot(state.lateralG || 0, state.longitudinalG || 0);
-  if (currentGMag >= state.peakGPos.mag || (state.peakGTimer || 0) <= 0) {
-    state.peakGPos = {
-      x: state.lateralG || 0,
-      y: state.longitudinalG || 0,
-      mag: currentGMag
-    };
-    state.peakGTimer = 2.4;
-  }
-  if (state.peakGPos.mag > 0.3) {
-    const peakX = gxCenter + THREE.MathUtils.clamp(state.peakGPos.x * 14, -gRadius + 8, gRadius - 8);
-    const peakY = gyCenter + THREE.MathUtils.clamp(state.peakGPos.y * 14, -gRadius + 8, gRadius - 8);
-    ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(peakX, peakY, 6, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  const totalG = Math.hypot(state.longitudinalG, state.lateralG, 1.0);
-  ctx.fillStyle = '#f8fafc';
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText(`G-FORCE: ${totalG.toFixed(1)}G`, gxCenter - 44, gyCenter + gRadius + 20);
-  ctx.fillStyle = '#f59e0b';
-  ctx.font = 'bold 10px "JetBrains Mono", monospace';
-  ctx.fillText(`PEAK: ${(state.peakGPos ? state.peakGPos.mag : 0).toFixed(1)}G`, gxCenter - 28, gyCenter - gRadius - 8);
-
-  // 3. RIGHT PANEL: 10-Nozzle SpaceX Cold-Gas Firing Topology Diagram
-  const nxCenter = 422, nyCenter = 135;
+  ctx.font = 'bold 16px "JetBrains Mono", monospace';
+  ctx.fillText('COPV AIR · 600L', 18, 120);
+  ctx.textAlign = 'right';
+  ctx.fillStyle = tankColor;
+  ctx.font = 'bold 20px "JetBrains Mono", monospace';
+  ctx.fillText(`${tank.seconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s`, 494, 120);
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(18, 134, 476, 40);
+  const airGradient = ctx.createLinearGradient(22, 0, 490, 0);
+  airGradient.addColorStop(0, '#06b6d4');
+  airGradient.addColorStop(0.55, '#38bdf8');
+  airGradient.addColorStop(1, '#34d399');
+  ctx.fillStyle = lowAir || state.isAutoDescending8s || state.isFreefalling ? tankColor : airGradient;
+  ctx.fillRect(22, 138, 468 * tank.fraction, 32);
   ctx.strokeStyle = '#64748b';
   ctx.lineWidth = 2;
-  ctx.strokeRect(nxCenter - 34, nyCenter - 64, 68, 128);
-  ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
-  ctx.fillRect(nxCenter - 32, nyCenter - 62, 64, 124);
+  ctx.strokeRect(18, 134, 476, 40);
+  // Same 20% / 2 seconds remaining warning marker as the exterior gauge.
+  ctx.fillStyle = '#fbbf24';
+  ctx.fillRect(22 + 468 * 0.20, 134, 3, 40);
+  ctx.font = 'bold 16px "JetBrains Mono", monospace';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#cbd5e1';
+  ctx.fillText(`${tank.liters}L REMAINING`, 18, 198);
+  ctx.textAlign = 'right';
+  ctx.fillText(`GAS: ${tank.massKg.toFixed(1)} kg`, 494, 198);
 
-  const drawNozzleIndicator = (dx, dy, isFiring, col = '#38bdf8') => {
-    ctx.fillStyle = isFiring ? col : '#334155';
-    ctx.beginPath();
-    ctx.arc(nxCenter + dx, nyCenter + dy, isFiring ? 6.5 : 4.5, 0, Math.PI * 2);
-    ctx.fill();
-    if (isFiring) {
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
-  };
-  // 2 Front Retro Nozzles
-  drawNozzleIndicator(-14, -58, isFrontRetroFiring, '#38bdf8');
-  drawNozzleIndicator(14, -58, isFrontRetroFiring, '#38bdf8');
-  // 4 Underbody Lift Nozzles
-  drawNozzleIndicator(-24, -26, isLiftFiring, '#2dd4bf');
-  drawNozzleIndicator(24, -26, isLiftFiring, '#2dd4bf');
-  drawNozzleIndicator(-24, 26, isLiftFiring, '#2dd4bf');
-  drawNozzleIndicator(24, 26, isLiftFiring, '#2dd4bf');
-  // 2 Lateral RCS Attitude Nozzles
-  drawNozzleIndicator(-32, 0, rcsRollPitchActive || rcsYawRetroActive, '#f59e0b');
-  drawNozzleIndicator(32, 0, rcsRollPitchActive || rcsYawRetroActive, '#f59e0b');
-  // 4 Rear 80kN Supersonic Nozzles
-  [-21, -7, 7, 21].forEach((rx) => {
-    drawNozzleIndicator(rx, 60, rearActive, '#0ea5e9');
-  });
-
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 11px "JetBrains Mono", monospace';
-  ctx.fillText('10 RCS TOPOLOGY', nxCenter - 48, nyCenter + 84);
-
-  // Dynamic Battery Power Output (kW) & Flow Readout
-  const accelVal = Math.abs(state.longitudinalG || 0) * 9.81;
-  const powerKw = Math.min(1250, Math.round((accelVal * VEHICLE_MASS_KG * (Math.abs(state.speed) + 2.0)) / 1000));
-  const isRegen = Boolean(keys["KeyH"]) && state.speed > 2.0;
-  ctx.fillStyle = isRegen ? '#10b981' : '#38bdf8';
   ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText(isRegen ? `REGEN: -${Math.round(powerKw * 0.45)} kW` : `POWER: ${powerKw} kW`, 18, 108);
-  const socPct = THREE.MathUtils.clamp(98 - Math.round((state.carsCleared || 0) * 0.15), 72, 100);
+  ctx.fillStyle = tankColor;
+  ctx.textAlign = 'left';
+  const anyJet = rearActive || isLiftFiring || isFrontRetroFiring || rcsRollPitchActive || rcsYawRetroActive;
+  const tankStatus = tank.fraction === 0 ? 'EMPTY' : (state.isAutoDescending8s ? 'AUTO-DESCEND'
+    : (lowAir ? 'LOW AIR · 20%' : (anyJet ? 'THRUST' : (tank.fraction < 0.995 ? 'RECHARGING' : 'COPV READY'))));
+  ctx.fillText(tankStatus, 18, 224);
+  const totalG = Math.hypot(state.longitudinalG || 0, state.lateralG || 0, 1.0);
+  const activeNozzles = (rearActive ? 4 : 0) + (isLiftFiring ? 4 : 0) + (rcsRollPitchActive || rcsYawRetroActive || isFrontRetroFiring ? 2 : 0);
+  ctx.textAlign = 'right';
   ctx.fillStyle = '#94a3b8';
-  ctx.font = 'bold 11px "JetBrains Mono", monospace';
-  ctx.fillText(`BATT: ${socPct}% // 200 kWh PACK`, 18, 126);
-  ctx.fillStyle = (state.tireTemp > 80) ? '#f59e0b' : '#38bdf8';
-  ctx.fillText(`TIRE: ${Math.round(state.tireTemp || 35)}°C (μ ${(state.tireGripMu || 1.0).toFixed(2)}) // AERO: ${state.downforceN || 0} N`, 18, 144);
-  ctx.fillText(`CD: ${(state.dragCoeffCd || 0.34).toFixed(2)}`, 18, 162);
+  ctx.fillText(`${totalG.toFixed(1)}G · RCS ${activeNozzles}/10`, 494, 224);
+  ctx.textAlign = 'left';
 
   window.RoadsterTaxi?.drawCockpit(ctx);
   cockpitHudTexture.needsUpdate = true;
@@ -6625,7 +6548,25 @@ function destroyVehicle(reasonKey) {
   document.getElementById('modal-destroyed').classList.remove('hidden');
 }
 
+function updateDestroyedScores() {
+  const t = I18N[currentLang];
+  // The summary is aria-live: unchanged frames must not announce it again.
+  const put = (id, value) => {
+    const element = document.getElementById(id), text = String(value);
+    if (element.textContent !== text) element.textContent = text;
+  };
+  const drivingScore = Math.round(state.score + state.carsCleared * 10);
+  put('crash-lbl-score', t.crashLblScore);
+  put('crash-val-score', drivingScore);
+  const passenger = window.RoadsterTaxi?.snapshot();
+  const passengerRow = document.getElementById('crash-passenger-score');
+  if (passengerRow.hidden !== !passenger?.active) passengerRow.hidden = !passenger?.active;
+  put('crash-lbl-passenger-score', t.crashLblPassengerScore);
+  put('crash-val-passenger-score', passenger?.active ? passenger.score : 0);
+}
+
 function updateDestroyedModalText() {
+  updateDestroyedScores();
   const t = I18N[currentLang];
   document.getElementById('crash-badge').textContent = t.crashBadge;
   document.getElementById('crash-title').textContent = t.crashTitle;
@@ -8230,11 +8171,12 @@ function updateSimulation(dt) {
     speedEl.className = 'mono text-3xl md:text-4xl font-extrabold text-white tracking-tight';
   }
 
-  const pct = Math.max(0, Math.min(100, (state.airRemaining / MAX_AIR_SECONDS) * 100));
-  const liters = Math.round((state.airRemaining / MAX_AIR_SECONDS) * 600);
+  const tank = getAirTankReadout(state.airRemaining);
+  const pct = tank.fraction * 100;
+  const liters = tank.liters;
   const gasMassEl = document.getElementById('val-gas-mass');
-  if (gasMassEl) gasMassEl.textContent = `${(pct * 1.44).toFixed(1)} kg`;
-  document.getElementById('val-air-sec').textContent = `${state.airRemaining.toFixed(1)}s`;
+  if (gasMassEl) gasMassEl.textContent = `${tank.massKg.toFixed(1)} kg`;
+  document.getElementById('val-air-sec').textContent = `${tank.seconds.toFixed(1)}s`;
   document.getElementById('val-air-liters').textContent = `(${liters}L)`;
   const burnUsedEl = document.getElementById('val-burn-used');
   if (burnUsedEl) burnUsedEl.textContent = `${state.airUsedContinuous.toFixed(1)}s`;
@@ -8310,6 +8252,7 @@ function animate(now) {
   lastTime = now;
   updateSimulation(dt);
   window.RoadsterTaxi?.tick();
+  if (state.isDestroyed) updateDestroyedScores();
   renderer.render(scene, camera);
 }
 

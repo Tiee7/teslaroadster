@@ -7,12 +7,16 @@ const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
 const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
 const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
 const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+const config = readFileSync(new URL('../src/config.js', import.meta.url), 'utf8');
+const tankReader = config.slice(config.indexOf('function getAirTankReadout('), config.indexOf('const VEHICLE_MASS_KG'));
+const getAirTankReadout = vm.runInNewContext(`${tankReader}\ngetAirTankReadout`, { MAX_AIR_SECONDS: 10 });
 
 function drawCockpitTank(tankState) {
   const renderer = hud.slice(hud.indexOf('function updateCockpitHudScreen('), hud.indexOf('// FULL-SCREEN DYNAMIC SPEED LINES'));
   const text = [], rects = [];
   const ctx = new Proxy({
-    fillText(value, x, y) { text.push({ value, x, y, font: this.font }); },
+    fillText(value, x, y) { text.push({ value, x, y, font: this.font, align: this.textAlign }); },
+    createLinearGradient() { return { addColorStop() {} }; },
     fillRect(x, y, width, height) { rects.push({ x, y, width, height }); },
   }, { get: (target, key) => key in target ? target[key] : () => {} });
   const texture = {};
@@ -22,7 +26,7 @@ function drawCockpitTank(tankState) {
   };
   const context = vm.createContext({
     cockpitHudCtx: ctx, cockpitHudTexture: texture, state, keys: {},
-    MAX_AIR_SECONDS: 10, VEHICLE_MASS_KG: 1850,
+    MAX_AIR_SECONDS: 10, VEHICLE_MASS_KG: 1850, getAirTankReadout,
     THREE: { MathUtils: { radToDeg: value => value * 180 / Math.PI,
       clamp: (value, min, max) => Math.min(max, Math.max(min, value)) } },
     performance: { now: () => 0 },
@@ -46,12 +50,13 @@ test('cockpit gas, seconds, liters and fill use the current air tank, including 
     [10, 0, '10.0', 600, '144.0'],
   ]) {
     const { text, rects } = drawCockpitTank({ airRemaining, gasMassKg });
-    assert.equal(text.find(draw => draw.value.startsWith('600L COPV TANK:')).value,
-      `600L COPV TANK: ${seconds}s / 10.0s (${liters}L)`);
+    assert.equal(text.find(draw => draw.value.endsWith('s / 10.0s')).value,
+      `${seconds}s / 10.0s`);
     assert.deepEqual(text.filter(draw => draw.value.includes('GAS:')).map(draw => draw.value), [`GAS: ${mass} kg`]);
-    const fills = rects.filter(draw => draw.x === 18 && draw.y === 268 && draw.height === 22);
-    assert.equal(fills[0].width, 476);
-    assert.ok(Math.abs(fills[1].width - 476 * airRemaining / 10) < 1e-10);
+    assert.ok(text.some(draw => draw.value === `${liters}L REMAINING`));
+    assert.ok(rects.some(draw => draw.x === 18 && draw.y === 134 && draw.width === 476 && draw.height === 40));
+    const fill = rects.find(draw => draw.x === 22 && draw.y === 138 && draw.height === 32);
+    assert.ok(Math.abs(fill.width - 468 * airRemaining / 10) < 1e-10);
   }
 });
 
@@ -61,32 +66,34 @@ test('cockpit tank bounds and gas text stay inside their reserved area without o
     [NaN, '0.0', 0, '0.0', 0], [undefined, '0.0', 0, '0.0', 0],
   ]) {
     const { text, rects } = drawCockpitTank({ airRemaining });
-    const tank = text.find(draw => draw.value.startsWith('600L COPV TANK:'));
+    const tank = text.find(draw => draw.value.endsWith('s / 10.0s'));
     const gas = text.find(draw => draw.value.startsWith('GAS:'));
-    assert.equal(tank.value, `600L COPV TANK: ${seconds}s / 10.0s (${liters}L)`);
+    assert.equal(tank.value, `${seconds}s / 10.0s`);
     assert.equal(gas.value, `GAS: ${mass} kg`);
-    assert.equal(tank.y, 284);
-    assert.ok(gas.y - 12 > 290 && gas.y < 316);
-    assert.ok(gas.x >= 18 && gas.x < 494);
-    assert.match(gas.font, /12px/);
-    const fills = rects.filter(draw => draw.x === 18 && draw.y === 268 && draw.height === 22);
-    assert.equal(fills[1].width, 476 * pct);
+    assert.equal(tank.y, 120);
+    assert.equal(gas.y, 198); assert.equal(gas.x, 494); assert.equal(gas.align, 'right');
+    assert.match(gas.font, /16px/);
+    assert.ok(text.some(draw => draw.value === `${liters}L REMAINING`));
+    const fill = rects.find(draw => draw.x === 22 && draw.y === 138 && draw.height === 32);
+    assert.equal(fill.width, 468 * pct);
+    assert.ok(rects.some(draw => draw.x === 22 + 468 * 0.2 && draw.y === 134 && draw.height === 40));
+    assert.ok(text.every(draw => draw.y < 237), 'instruments remain above passenger band');
     assert.ok(rects.some(draw => draw.x === 16 && draw.y === 237 && draw.height === 26), 'passenger strip remains rendered');
   }
 });
 
 test('external telemetry updates gas mass and matches cockpit seconds/liters/mass on the same frame', () => {
-  const footerTank = physics.slice(physics.indexOf('  const pct = '), physics.indexOf("  const barFill = document.getElementById('air-bar-fill');"));
+  const footerTank = physics.slice(physics.indexOf('  const tank = getAirTankReadout('), physics.indexOf("  const barFill = document.getElementById('air-bar-fill');"));
   for (const airRemaining of [10, 5, 2, 0.001, 0, 0.5, 10]) {
     const elements = Object.fromEntries(['val-gas-mass', 'val-air-sec', 'val-air-liters', 'val-burn-used'].map(id => [id, {}]));
     vm.runInNewContext(footerTank, {
       state: { airRemaining, airUsedContinuous: 10 - airRemaining, gasMassKg: 144 },
-      MAX_AIR_SECONDS: 10, document: { getElementById: id => elements[id] },
+      MAX_AIR_SECONDS: 10, getAirTankReadout, document: { getElementById: id => elements[id] },
     });
     const { text } = drawCockpitTank({ airRemaining, gasMassKg: 144 });
     assert.equal(text.find(draw => draw.value.startsWith('GAS:')).value, `GAS: ${elements['val-gas-mass'].textContent}`);
-    assert.ok(text.find(draw => draw.value.startsWith('600L COPV TANK:')).value.includes(elements['val-air-sec'].textContent));
-    assert.ok(text.find(draw => draw.value.startsWith('600L COPV TANK:')).value.endsWith(elements['val-air-liters'].textContent));
+    assert.ok(text.find(draw => draw.value.endsWith('s / 10.0s')).value.includes(elements['val-air-sec'].textContent));
+    assert.ok(text.some(draw => draw.value === `${elements['val-air-liters'].textContent.slice(1, -1)} REMAINING`));
   }
 });
 
@@ -153,16 +160,14 @@ test('HUD bounds observe only permanent header/footer, never transient alerts', 
   assert.deepEqual(observed, [elements['hud-header'], elements['hud-footer']]);
 });
 
-test('cockpit pitch horizon returns to neutral after either full flip', () => {
-  const line = hud.match(/  const pitchShift = [^\n]+;/)[0];
-  for (const pitch of [0, 2 * Math.PI, -2 * Math.PI, 4 * Math.PI]) {
-    const value = vm.runInNewContext(`${line}\npitchShift`, { state: { pitch }, THREE: { MathUtils: { clamp: (x, min, max) => Math.min(max, Math.max(min, x)) } } });
-    assert.ok(Math.abs(value) < 1e-10);
-  }
-  const pitchShift = pitch => vm.runInNewContext(`${line}\npitchShift`, { state: { pitch }, THREE: { MathUtils: { clamp: (x, min, max) => Math.min(max, Math.max(min, x)) } } });
-  for (const boundary of [Math.PI, -Math.PI, 2 * Math.PI, -2 * Math.PI]) {
-    assert.ok(Math.abs(pitchShift(boundary - 0.0001) - pitchShift(boundary + 0.0001)) < 0.02, 'no horizon jump across inverted/full-loop boundaries');
-  }
+test('cockpit essentials have separate speed, tank, telemetry and passenger bands', () => {
+  const { text, rects } = drawCockpitTank({ airRemaining: 2 });
+  assert.ok(text.find(t => t.value === '0').y < 100);
+  const track = rects.find(r => r.x === 18 && r.y === 134);
+  assert.equal(track.height, 40);
+  assert.ok(text.filter(t => t.y >= 108 && t.y <= 120).every(t => t.y < track.y));
+  assert.ok(text.filter(t => t.y > 174).every(t => t.y < 237));
+  assert.ok(rects.find(r => r.y === 237 && r.height === 26));
 });
 
 test('FPV switches duplicate floating information off immediately while preserving side controls', () => {
@@ -179,7 +184,30 @@ test('FPV switches duplicate floating information off immediately while preservi
   }
   assert.equal(updates, 7);
   assert.match(hud, /function applyTranslations\(\) \{\s*syncHudPerspective\(\)/);
-  const selectors = css.match(/\.cockpit-view[^}]+\}/g).join('');
+  const selectors = css.match(/\.cockpit-view[^}]+\}/g).filter(rule => /display:\s*none/.test(rule)).join('');
   assert.match(selectors, /#hud-cluster/); assert.match(selectors, /\.city-taxi-hud/);
   assert.doesNotMatch(selectors, /#hud-left|#hud-right|#touch-controls/);
+});
+
+test('actual continuous consumption, depletion and reset immediately update the cockpit bar with exterior readings', () => {
+  const consume = physics.slice(physics.indexOf('  function consumeAirTank('), physics.indexOf('  let canUseRCS'));
+  const reset = hud.slice(hud.indexOf('function resetCar('), hud.indexOf('function applyTranslations('));
+  const state = { airRemaining: 10, airUsedContinuous: 0, isFreefalling: false, vy: 0 };
+  const context = vm.createContext({ state, MAX_AIR_SECONDS: 10, AUTO_DESCENT_USED_SECONDS: 8,
+    showBanner() {}, sound: { speakAlert() {}, beep() {} }, window: {}, clearDebris() {}, carMeshGroup: {},
+    currentMap: 'city', renderBannerText() {}, document: { getElementById: () => ({ classList: { add() {}, remove() {} } }) },
+  });
+  vm.runInContext(`${consume}\n${reset}`, context);
+  for (let frame = 0; frame <= 50; frame++) {
+    const reading = getAirTankReadout(state.airRemaining);
+    const { text, rects } = drawCockpitTank({ ...state, gasMassKg: 144 });
+    const fill = rects.find(r => r.x === 22 && r.y === 138 && r.height === 32);
+    assert.equal(fill.width, 468 * reading.fraction);
+    assert.ok(text.some(t => t.value === `${reading.seconds.toFixed(1)}s / 10.0s`));
+    assert.ok(text.some(t => t.value === `${reading.liters}L REMAINING`));
+    if (frame < 50) context.consumeAirTank(0.2, true);
+  }
+  assert.equal(state.airRemaining, 0); assert.equal(state.isFreefalling, true);
+  context.resetCar(); assert.equal(state.airRemaining, 10); assert.equal(state.isFreefalling, false);
+  const full = drawCockpitTank(state); assert.equal(full.rects.find(r => r.x === 22 && r.y === 138).width, 468);
 });

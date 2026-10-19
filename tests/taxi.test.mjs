@@ -315,9 +315,11 @@ test('menus pause transitions; destruction clears the occupied ride before any p
 
 test('integration has no discoverable entry, retains zoom brackets and keeps taxi fares out of ranked state', () => {
   const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
-  const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+  const hiddenCrashScore = html.match(/<div id="crash-passenger-score"[^>]* hidden>[\s\S]*?<\/strong>\s*<\/div>/)?.[0];
+  assert.ok(hiddenCrashScore, 'passenger crash score is hidden until the secret game is active');
+  const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(hiddenCrashScore, '');
   assert.doesNotMatch(visibleHtml, /taxi|passenger|接客|乘客|快捷键[^<]*=|\[=\]|aria-keyshortcuts\s*=\s*["']=["']/i);
-  assert.doesNotMatch(config, /taxi|passenger|接客|乘客/);
+  assert.doesNotMatch(config.replace(/^.*crashLblPassengerScore:.*$/gm, ''), /taxi|passenger|接客|乘客/);
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
   assert.match(hud, /if \(window\.RoadsterTaxi\?\.handleKeydown\(e\)\) return/);
   assert.ok(hud.indexOf("closest('input") < hud.indexOf('RoadsterTaxi?.handleKeydown(e)'));
@@ -329,7 +331,7 @@ test('integration has no discoverable entry, retains zoom brackets and keeps tax
   assert.doesNotMatch(source, /state\.score\s*[+\-*/]?=|\/api\/|fetch\(/);
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
   assert.match(physics, /state\.isDestroyed = true;\s*window\.RoadsterTaxi\?\.onDestroyed\(\)/);
-  assert.match(physics, /updateSimulation\(dt\);\s*window\.RoadsterTaxi\?\.tick\(\);\s*renderer\.render/);
+  assert.match(physics, /updateSimulation\(dt\);\s*window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*renderer\.render/);
   const bundler = readFileSync(new URL('../bundle_app.py', import.meta.url), 'utf8');
   assert.match(bundler, /'vehicles\.js', 'taxi\.js', 'ui-hud\.js'/);
 });
