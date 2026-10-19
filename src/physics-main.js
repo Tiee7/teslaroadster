@@ -337,6 +337,37 @@ function advanceAttitudeIdle(dt, hasInput) {
   return hasInput || !state.autoStabilizer ? 0 : Math.min(dt, Math.max(0, previousIdle + dt - 2.0));
 }
 
+// Keep the chase rig in vehicle-relative space. World-space smoothing makes a
+// moving car surge toward/away from the camera when frame time changes. Smooth
+// only the rig offsets; translate its position and aim by the same current pose.
+let chaseCameraState = null;
+
+function resetChaseCamera() {
+  chaseCameraState = null;
+}
+
+function updateChaseCamera(anchor, positionOffset, lookOffset, dt, shake) {
+  if (!chaseCameraState || chaseCameraState.map !== currentMap) {
+    chaseCameraState = { map: currentMap, position: { ...positionOffset }, look: { ...lookOffset } };
+  }
+  const blend = 1.0 - Math.exp(-9.0 * Math.max(0, dt));
+  for (const axis of ['x', 'y', 'z']) {
+    chaseCameraState.position[axis] += (positionOffset[axis] - chaseCameraState.position[axis]) * blend;
+    chaseCameraState.look[axis] += (lookOffset[axis] - chaseCameraState.look[axis]) * blend;
+  }
+  // Shake is a render-only offset, never accumulated into the follow state.
+  camera.position.set(
+    anchor.x + chaseCameraState.position.x + shake.x,
+    anchor.y + chaseCameraState.position.y + shake.y,
+    anchor.z + chaseCameraState.position.z + shake.z
+  );
+  camera.lookAt(
+    anchor.x + chaseCameraState.look.x + shake.x * 0.5,
+    anchor.y + chaseCameraState.look.y + shake.y * 0.5,
+    anchor.z + chaseCameraState.look.z + shake.z * 0.5
+  );
+}
+
 function updateSimulation(dt) {
   const t = I18N[currentLang];
 
@@ -662,7 +693,7 @@ function updateSimulation(dt) {
         state.wasHandbraking = false;
         state.driftAngle *= Math.pow(0.005, dt);
         const targetHwyYaw = -state.steerInput * 0.16 * turnSign * Math.min(1.0, speedFactor);
-        state.yaw += (targetHwyYaw - state.yaw) * 12.0 * dt;
+        state.yaw += wrapAnglePi(targetHwyYaw - state.yaw) * (1.0 - Math.exp(-12.0 * dt));
         state.vYaw = 0.0;
         const targetVx = isRearThrusterFiring
           ? (noseHorizX * state.speed)
@@ -697,7 +728,7 @@ function updateSimulation(dt) {
       } else {
         state.speed = Math.max(0.0, state.speed - 8.0 * dt);
       }
-      state.yaw *= Math.pow(0.04, dt);
+      state.yaw -= wrapAnglePi(state.yaw) * (1.0 - Math.pow(0.04, dt));
     }
   } else {
     // City Open-World Mode: True 2D Velocity Vector + Momentum-Preserving Handbrake Drift
@@ -832,7 +863,7 @@ function updateSimulation(dt) {
       state.vx *= -0.35;
       state.vz *= -0.35;
       state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * -0.35;
-      state.yaw *= Math.pow(0.10, dt);
+      state.yaw -= wrapAnglePi(state.yaw) * (1.0 - Math.pow(0.10, dt));
       if (impactV > 10.0) {
         triggerPhysicsCollision(impactV, 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.4, 2.0, isAirborne ? 0 : -state.vz * 0.4);
       }
@@ -1124,7 +1155,8 @@ function updateSimulation(dt) {
     const maxGroundRoll = THREE.MathUtils.lerp(0.18, 3.14, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
     state.roll = THREE.MathUtils.clamp(state.roll, -maxGroundRoll, maxGroundRoll);
     if (currentMap === 'highway' && trueGroundAgl < 0.15) {
-      state.yaw = THREE.MathUtils.clamp(state.yaw, -0.85, 0.85);
+      const groundYaw = wrapAnglePi(state.yaw);
+      state.yaw += THREE.MathUtils.clamp(groundYaw, -0.85, 0.85) - groundYaw;
     }
     state.accumulatedRoll = 0;
   } else {
@@ -1222,20 +1254,7 @@ function updateSimulation(dt) {
     ? Math.min(0.025, ((state.downforceN - 400) / 7500.0) * 0.025)
     : 0.0;
   state.aeroSquash = THREE.MathUtils.lerp(state.aeroSquash || 0.0, aeroSquashTarget, 8.0 * dt);
-  const visualY = Math.max(groundElevation, state.y - (state.suspensionSquash || 0) - (state.aeroSquash || 0));
-  playerWrapper.position.set(state.x, visualY, playerWorldZ);
 
-  // Dynamic chassis weight transfer (Pitch Squat under acceleration & Dive under braking, plus roll under steering)
-  let pitchSquat = 0.0;
-  if (!isAirborne) {
-    if (isAccelerating) {
-      pitchSquat = isRearThrusterFiring ? 0.032 : 0.016;
-    } else if (isFootBraking || isReversing) {
-      pitchSquat = -0.026;
-    }
-  }
-  const bodyRollTilt = !isAirborne ? (-state.steerInput * 0.032) : 0.0;
-  roadsterAttitudeGroup.rotation.set(state.pitch + pitchSquat, state.yaw, state.roll + bodyRollTilt);
 
   // Dynamic Tire Drift Smoke Puffs & Brake Lockup Smoke
   if (!isAirborne && !state.isDestroyed && typeof spawnTireSmokePuff === 'function') {
@@ -1478,6 +1497,22 @@ function updateSimulation(dt) {
     }
   });
 
+  // Render the resolved pose after traffic contact (which can change state.y).
+  const visualY = Math.max(groundElevation, state.y - (state.suspensionSquash || 0) - (state.aeroSquash || 0));
+  playerWrapper.position.set(state.x, visualY, playerWorldZ);
+
+  // Dynamic chassis weight transfer (Pitch Squat under acceleration & Dive under braking, plus roll under steering)
+  let pitchSquat = 0.0;
+  if (!isAirborne) {
+    if (isAccelerating) {
+      pitchSquat = isRearThrusterFiring ? 0.032 : 0.016;
+    } else if (isFootBraking || isReversing) {
+      pitchSquat = -0.026;
+    }
+  }
+  const bodyRollTilt = !isAirborne ? (-state.steerInput * 0.032) : 0.0;
+  roadsterAttitudeGroup.rotation.set(state.pitch + pitchSquat, state.yaw, state.roll + bodyRollTilt);
+
   // Calculate Real-Time G-Forces, Tire Screech, Sonic Boom & Yoke Rotation
   const accelMs2 = (state.speed - (state.prevSpeed || state.speed)) / Math.max(0.001, dt);
   state.prevSpeed = state.speed;
@@ -1644,7 +1679,7 @@ function updateSimulation(dt) {
   const targetShake = isCockpitFpv
     ? 0.0
     : ((isAnyThrust ? 0.025 : 0.0) + (isSupersonic ? 0.032 : 0.0) + (state.impactCooldown > 0 ? 0.14 : 0.0));
-  state.cameraShake = isCockpitFpv ? 0.0 : THREE.MathUtils.lerp(state.cameraShake || 0, targetShake, 12 * dt);
+  state.cameraShake = isCockpitFpv ? 0.0 : THREE.MathUtils.lerp(state.cameraShake || 0, targetShake, 1.0 - Math.exp(-12.0 * dt));
   const shakeX = (Math.random() - 0.5) * state.cameraShake;
   const shakeY = (Math.random() - 0.5) * state.cameraShake;
   const shakeZ = (Math.random() - 0.5) * state.cameraShake;
@@ -1662,6 +1697,8 @@ function updateSimulation(dt) {
   }
   roadsterCanopyMesh.visible = !isCockpitFpv;
   if (typeof hudCombinerMesh !== "undefined") hudCombinerMesh.visible = false;
+
+  if (cameraModeIndex !== 0) resetChaseCamera();
 
   if (cameraModeIndex === 1) {
     // 3D Showroom Turntable Close-Up Inspection Orbit (Press V or Cam button)
@@ -1697,16 +1734,12 @@ function updateSimulation(dt) {
     const zoom = (state.camZoom || 0.75);
     if (cameraModeIndex === 0) {
       const airOffset = Math.max(0.0, state.y);
-      const targetCamX = state.x * 0.82;
-      const pitchCamLift = Math.sin(state.pitch) * 0.85;
-      const targetCamY = visualY + 1.48 + 1.05 * zoom + Math.min(1.8, airOffset * 0.12) + pitchCamLift;
-      const targetCamZ = Math.max(3.6, 5.2 * zoom);
-      camera.position.x += (targetCamX - camera.position.x) * 9 * dt + shakeX;
-      camera.position.y += (targetCamY - camera.position.y) * 9 * dt + shakeY;
-      camera.position.z += (targetCamZ - camera.position.z) * 9 * dt + shakeZ;
-      const pitchLook = Math.sin(state.pitch) * 2.2;
-      const lookY = visualY + 0.65 + pitchLook;
-      camera.lookAt(state.x + shakeX * 0.5, lookY + shakeY * 0.5, -9);
+      updateChaseCamera(
+        { x: state.x, y: visualY, z: playerWorldZ },
+        { x: -state.x * 0.18, y: 1.48 + 1.05 * zoom + Math.min(1.8, airOffset * 0.12) + Math.sin(state.pitch) * 0.85, z: Math.max(3.6, 5.2 * zoom) },
+        { x: 0, y: 0.65 + Math.sin(state.pitch) * 2.2, z: -9 },
+        dt, { x: shakeX, y: shakeY, z: shakeZ }
+      );
     } else {
       camera.position.set(state.x * 0.5 + shakeX, state.y + 8.5 * zoom + shakeY, 11.5 * zoom + shakeZ);
       camera.lookAt(state.x, state.y, -12);
@@ -1718,16 +1751,12 @@ function updateSimulation(dt) {
     if (cameraModeIndex === 0) {
       const airOffset = Math.max(0.0, state.y - groundElevation);
       const distBack = 5.4 * zoom;
-      const targetCamX = state.x + sinY * distBack;
-      const pitchCamLift = Math.sin(state.pitch) * 0.85;
-      const targetCamY = visualY + 1.54 + 1.05 * zoom + Math.min(1.8, airOffset * 0.12) + pitchCamLift;
-      const targetCamZ = state.z + cosY * distBack;
-      camera.position.x += (targetCamX - camera.position.x) * 9 * dt + shakeX;
-      camera.position.y += (targetCamY - camera.position.y) * 9 * dt + shakeY;
-      camera.position.z += (targetCamZ - camera.position.z) * 9 * dt + shakeZ;
-      const pitchLook = Math.sin(state.pitch) * 2.2;
-      const lookY = visualY + 0.65 + pitchLook;
-      camera.lookAt(state.x - sinY * 10, lookY, state.z - cosY * 10);
+      updateChaseCamera(
+        { x: state.x, y: visualY, z: playerWorldZ },
+        { x: sinY * distBack, y: 1.54 + 1.05 * zoom + Math.min(1.8, airOffset * 0.12) + Math.sin(state.pitch) * 0.85, z: cosY * distBack },
+        { x: -sinY * 10, y: 0.65 + Math.sin(state.pitch) * 2.2, z: -cosY * 10 },
+        dt, { x: shakeX, y: shakeY, z: shakeZ }
+      );
     } else {
       camera.position.set(state.x + sinY * 11.5 * zoom + shakeX, state.y + 10.5 * zoom + shakeY, state.z + cosY * 11.5 * zoom + shakeZ);
       camera.lookAt(state.x, state.y, state.z);
