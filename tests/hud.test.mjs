@@ -82,3 +82,22 @@ test('cockpit pitch horizon returns to neutral after either full flip', () => {
     assert.ok(Math.abs(pitchShift(boundary - 0.0001) - pitchShift(boundary + 0.0001)) < 0.02, 'no horizon jump across inverted/full-loop boundaries');
   }
 });
+
+test('FPV switches duplicate floating information off immediately while preserving side controls', () => {
+  const start = hud.indexOf('function syncHudPerspective()');
+  const sync = hud.slice(start, hud.indexOf('function toggleHudMode()', start));
+  const classes = new Set(); let updates = 0;
+  const context = vm.createContext({ cameraModeIndex: 0, updateHudBounds() { updates++; }, document: { body: { classList: {
+    toggle(name, enabled) { if (enabled) classes.add(name); else classes.delete(name); },
+  } } } });
+  vm.runInContext(sync, context);
+  for (const mode of [0, 3, 3, 2, 3, 1, 0]) {
+    context.cameraModeIndex = mode; vm.runInContext('syncHudPerspective()', context);
+    assert.equal(classes.has('cockpit-view'), mode === 3);
+  }
+  assert.equal(updates, 7);
+  assert.match(hud, /function applyTranslations\(\) \{\s*syncHudPerspective\(\)/);
+  const selectors = css.match(/\.cockpit-view[^}]+\}/g).join('');
+  assert.match(selectors, /#hud-cluster/); assert.match(selectors, /\.city-taxi-hud/);
+  assert.doesNotMatch(selectors, /#hud-left|#hud-right|#touch-controls/);
+});

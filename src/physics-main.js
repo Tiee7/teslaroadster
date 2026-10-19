@@ -270,6 +270,7 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
 function destroyVehicle(reasonKey) {
   if (state.isDestroyed) return;
   state.isDestroyed = true;
+  window.RoadsterTaxi?.onDestroyed();
   state.hullIntegrity = 0;
   state.destroyReasonKey = reasonKey || 'crashReasonThreshold';
   carMeshGroup.visible = false;

@@ -18,6 +18,11 @@ if (typeof ResizeObserver !== 'undefined') {
 window.addEventListener('resize', updateHudBounds);
 updateHudBounds();
 
+function syncHudPerspective() {
+  document.body.classList.toggle('cockpit-view', cameraModeIndex === 3);
+  updateHudBounds();
+}
+
 function toggleHudMode() {
   state.hudMinimal = !state.hudMinimal;
   const brandBadge = document.getElementById('hud-brand-badge');
@@ -423,6 +428,7 @@ function resetCar() {
 }
 
 function applyTranslations() {
+  syncHudPerspective();
   window.RoadsterTaxi?.render();
   window.RoadsterMusic?.render();
   window.RoadsterRanked?.render();
@@ -1247,6 +1253,7 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.fillText(`TIRE: ${Math.round(state.tireTemp || 35)}°C (μ ${(state.tireGripMu || 1.0).toFixed(2)}) // AERO: ${state.downforceN || 0} N`, 18, 144);
   ctx.fillText(`CD: ${(state.dragCoeffCd || 0.34).toFixed(2)} // GAS: ${(state.gasMassKg || 144.0).toFixed(1)} kg`, 18, 162);
 
+  window.RoadsterTaxi?.drawCockpit(ctx);
   cockpitHudTexture.needsUpdate = true;
 }
 
