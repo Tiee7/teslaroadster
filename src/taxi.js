@@ -280,21 +280,21 @@ const CityTaxiModel = (() => {
     const data = snapshot();
     if (!data.active) return;
     ctx.save();
-    // Reserved strip between the flight instruments and tank; speed stays intact.
-    ctx.fillStyle = '#061810'; ctx.fillRect(16, 237, 480, 26);
-    ctx.textAlign = 'left'; ctx.fillStyle = '#86efac'; ctx.font = 'bold 11px sans-serif';
+    // Reserved bottom strip of the compact pod, clear of speed and the air bar.
+    ctx.fillStyle = '#061810'; ctx.fillRect(16, 160, 480, 38);
+    ctx.textAlign = 'left'; ctx.fillStyle = '#86efac'; ctx.font = 'bold 18px sans-serif';
     ctx.fillText(isZh() ? `接客积分 ${data.score} · 已送达 ${data.delivered} 位`
-      : `PASSENGER ${data.score} PTS · ${data.delivered} DELIVERED`, 22, 248, 468);
+      : `${data.score} PTS · ${data.delivered} DELIVERED`, 22, 176, 468);
     const remaining = data.passenger ? Math.round(Math.hypot(state.x - data.passenger.destination.x, state.z - data.passenger.destination.z)) : null;
     const detail = data.passenger
       ? (isZh() ? `载客中 · 绿色目的地 ${remaining} 米 · 送达 +${data.passenger.fare}`
-        : `ON BOARD · GREEN DEST ${remaining}m · FARE +${data.passenger.fare}`)
+        : `ON BOARD · ${remaining}m · +${data.passenger.fare}`)
       : lastEvent?.type === 'passenger-lost'
         ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 白柱等待 ${data.waiting.length} 位`
-          : `PASSENGER LOST · PENALTY ${lastEvent.penalty} · ${data.waiting.length} WAITING`)
+          : `PASSENGER LOST · -${lastEvent.penalty} · ${data.waiting.length} WAITING`)
         : (isZh() ? `空车 · ${data.waiting.length} 位乘客等待 · 前往白色光柱`
-          : `EMPTY · ${data.waiting.length} WAITING · FOLLOW WHITE COLUMNS`);
-    ctx.fillStyle = '#dcfce7'; ctx.fillText(detail, 22, 260, 468);
+          : `EMPTY · ${data.waiting.length} WAITING`);
+    ctx.fillStyle = '#dcfce7'; ctx.fillText(detail, 22, 194, 468);
     ctx.restore();
   }
   function start() {

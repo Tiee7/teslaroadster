@@ -1015,115 +1015,76 @@ resizeVfxCanvas();
 function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetroFiring, rcsRollPitchActive, rcsYawRetroActive) {
   if (!cockpitHudCtx) return;
   const ctx = cockpitHudCtx;
-  const W = 512, H = 320;
-
-  // Translucent Dark Aerospace Glass Background
+  const W = 512, H = 200;
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = 'rgba(6, 12, 24, 0.90)';
   ctx.fillRect(0, 0, W, H);
-
-  // Outer Cyan Telemetry Border
-  ctx.strokeStyle = mph >= 230 ? '#38bdf8' : 'rgba(56, 189, 248, 0.55)';
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
   ctx.lineWidth = 3;
   ctx.strokeRect(4, 4, W - 8, H - 8);
-
-  // Digital Compass Heading & Cardinal Tape (Top Center)
-  const curYawDeg = Math.round(((-THREE.MathUtils.radToDeg(state.yaw) % 360) + 360) % 360);
-  const cardinalDirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  const cardIndex = Math.round(curYawDeg / 45) % 8;
-  const cardStr = cardinalDirs[cardIndex];
-  ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-  ctx.fillRect(296, 12, 108, 20);
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
-  ctx.strokeRect(296, 12, 108, 20);
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 11px "JetBrains Mono", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText(`HDG ${String(curYawDeg).padStart(3, "0")}° ${cardStr}`, 350, 26);
-  ctx.textAlign = 'left';
-
-  // 1. LEFT PANEL: Digital Speed, Flight Mode & 600L COPV Tank Bar
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText('TESLA ROADSTER // ROCKET TELEMETRY', 18, 26);
 
   const isUnitKmh = (state.speedUnit === 'kmh');
   const primarySpeed = isUnitKmh ? kmh : mph;
   const primaryLabel = isUnitKmh ? 'KM/H' : 'MPH';
   const secondaryText = isUnitKmh ? `${mph} MPH` : `${kmh} km/h`;
-
   ctx.fillStyle = mph >= 230 ? '#38bdf8' : '#ffffff';
-  // Canvas accepts numeric weights; "extrabold" silently kept the preceding
-  // 12px font, making this readout look different from the synchronized HUD.
   ctx.font = '800 54px "JetBrains Mono", monospace';
   ctx.textAlign = 'right';
-  ctx.fillText(String(primarySpeed), 122, 86);
+  ctx.fillText(String(primarySpeed), 140, 75);
   ctx.textAlign = 'left';
-  ctx.font = 'bold 14px "JetBrains Mono", monospace';
+  ctx.font = 'bold 22px "JetBrains Mono", monospace';
   ctx.fillStyle = '#38bdf8';
-  ctx.fillText(primaryLabel, 132, 62);
+  ctx.fillText(primaryLabel, 22, 104);
   ctx.fillStyle = '#cbd5e1';
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText(secondaryText, 132, 84);
+  ctx.font = 'bold 18px "JetBrains Mono", monospace';
+  ctx.fillText(secondaryText, 22, 132);
 
-  // Cockpit Turn Signal Blinkers
+  // Cockpit Turn Signal Blinkers stay in the speed column, away from the road.
   const isTurnLeft = (state.steerInput > 0.12) || Boolean(keys['KeyA']);
   const isTurnRight = (state.steerInput < -0.12) || Boolean(keys['KeyD']);
   const blinkActive = (Math.sin(performance.now() * 0.013) > 0);
-  ctx.font = 'bold 15px "JetBrains Mono", monospace';
-  ctx.fillStyle = (isTurnLeft && blinkActive) ? '#10b981' : 'rgba(51, 65, 85, 0.45)';
-  ctx.fillText('◀', 132, 42);
-  ctx.fillStyle = (isTurnRight && blinkActive) ? '#10b981' : 'rgba(51, 65, 85, 0.45)';
-  ctx.fillText('▶', 156, 42);
+  ctx.font = 'bold 20px "JetBrains Mono", monospace';
+  ctx.fillStyle = (isTurnLeft && blinkActive) ? '#10b981' : '#334155';
+  ctx.fillText('◀', 22, 30);
+  ctx.fillStyle = (isTurnRight && blinkActive) ? '#10b981' : '#334155';
+  ctx.fillText('▶', 52, 30);
 
-  // Essentials use dedicated bands: speed 34..96, tank 108..202, telemetry
-  // 210..230, passenger 237..263. The old bottom bar was below the FPV frustum
-  // and behind the dashboard. No other instrument may paint over this track.
+  // A short, wide pod replaces the tall telemetry screen. Keep the shared live
+  // speed/tank and passenger data while dedicating the upper view to the road.
   const tank = getAirTankReadout(state.airRemaining);
   const lowAir = tank.fraction <= 0.20;
   const tankColor = tank.fraction === 0 || state.isFreefalling ? '#f87171' : (lowAir || state.isAutoDescending8s ? '#fbbf24' : '#67e8f9');
   ctx.textAlign = 'left';
   ctx.fillStyle = '#cbd5e1';
-  ctx.font = 'bold 16px "JetBrains Mono", monospace';
-  ctx.fillText('COPV AIR · 600L', 18, 120);
+  ctx.font = 'bold 22px "JetBrains Mono", monospace';
+  ctx.fillText('COPV AIR · 600L', 178, 30);
   ctx.textAlign = 'right';
   ctx.fillStyle = tankColor;
-  ctx.font = 'bold 20px "JetBrains Mono", monospace';
-  ctx.fillText(`${tank.seconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s`, 494, 120);
+  ctx.font = 'bold 30px "JetBrains Mono", monospace';
+  ctx.fillText(`${tank.seconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s`, 494, 66);
   ctx.fillStyle = '#0f172a';
-  ctx.fillRect(18, 134, 476, 40);
-  const airGradient = ctx.createLinearGradient(22, 0, 490, 0);
+  ctx.fillRect(178, 78, 316, 32);
+  const airGradient = ctx.createLinearGradient(182, 0, 490, 0);
   airGradient.addColorStop(0, '#06b6d4');
   airGradient.addColorStop(0.55, '#38bdf8');
   airGradient.addColorStop(1, '#34d399');
   ctx.fillStyle = lowAir || state.isAutoDescending8s || state.isFreefalling ? tankColor : airGradient;
-  ctx.fillRect(22, 138, 468 * tank.fraction, 32);
-  ctx.strokeStyle = '#64748b';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(18, 134, 476, 40);
-  // Same 20% / 2 seconds remaining warning marker as the exterior gauge.
+  ctx.fillRect(182, 82, 308 * tank.fraction, 24);
+  ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+  ctx.strokeRect(178, 78, 316, 32);
   ctx.fillStyle = '#fbbf24';
-  ctx.fillRect(22 + 468 * 0.20, 134, 3, 40);
-  ctx.font = 'bold 16px "JetBrains Mono", monospace';
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#cbd5e1';
-  ctx.fillText(`${tank.liters}L REMAINING`, 18, 198);
+  ctx.fillRect(182 + 308 * 0.20, 78, 3, 32);
+  ctx.font = 'bold 20px "JetBrains Mono", monospace';
+  ctx.textAlign = 'left'; ctx.fillStyle = '#cbd5e1';
+  ctx.fillText(`${tank.liters}L`, 178, 134);
   ctx.textAlign = 'right';
-  ctx.fillText(`GAS: ${tank.massKg.toFixed(1)} kg`, 494, 198);
-
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillStyle = tankColor;
-  ctx.textAlign = 'left';
+  ctx.fillText(`GAS: ${tank.massKg.toFixed(1)} kg`, 494, 134);
+  ctx.font = 'bold 18px "JetBrains Mono", monospace';
+  ctx.fillStyle = tankColor; ctx.textAlign = 'left';
   const anyJet = rearActive || isLiftFiring || isFrontRetroFiring || rcsRollPitchActive || rcsYawRetroActive;
   const tankStatus = tank.fraction === 0 ? 'EMPTY' : (state.isAutoDescending8s ? 'AUTO-DESCEND'
     : (lowAir ? 'LOW AIR · 20%' : (anyJet ? 'THRUST' : (tank.fraction < 0.995 ? 'RECHARGING' : 'COPV READY'))));
-  ctx.fillText(tankStatus, 18, 224);
-  const totalG = Math.hypot(state.longitudinalG || 0, state.lateralG || 0, 1.0);
-  const activeNozzles = (rearActive ? 4 : 0) + (isLiftFiring ? 4 : 0) + (rcsRollPitchActive || rcsYawRetroActive || isFrontRetroFiring ? 2 : 0);
-  ctx.textAlign = 'right';
-  ctx.fillStyle = '#94a3b8';
-  ctx.fillText(`${totalG.toFixed(1)}G · RCS ${activeNozzles}/10`, 494, 224);
-  ctx.textAlign = 'left';
+  ctx.fillText(tankStatus, 22, 156);
 
   window.RoadsterTaxi?.drawCockpit(ctx);
   cockpitHudTexture.needsUpdate = true;

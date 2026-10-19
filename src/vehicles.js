@@ -2,6 +2,8 @@
 // 4. PLAYER VEHICLE: TRUE 2026 TESLA ROADSTER CYBER-WEDGE MODEL (V8)
 //    Rebuilt 1:1 from user reference photos (image_ed309d, ed30b9, ed8256)
 // =========================================================================
+// One fixed driver pose is shared by the camera and projection-sized instruments.
+const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.58 });
 const playerWrapper = new THREE.Group();
 playerWrapper.position.set(2.5, 0, 0);
 scene.add(playerWrapper);
@@ -246,6 +248,7 @@ const roadsterCanopyMesh = buildCyberCanopyV8();
 carMeshGroup.add(roadsterCanopyMesh);
 
 // White Painted A-Pillar & Roof Arch Side Rails (Matches bodyMaterial color!)
+const roadsterCanopyRails = [];
 [-1, 1].forEach((side) => {
   const railGrid = [];
   const nz = 36;
@@ -261,6 +264,7 @@ carMeshGroup.add(roadsterCanopyMesh);
   }
   const railMesh = new THREE.Mesh(createSmoothGridGeometry(railGrid), bodyMaterial);
   carMeshGroup.add(railMesh);
+  roadsterCanopyRails.push(railMesh);
 });
 
 // =========================================================================
@@ -269,7 +273,7 @@ carMeshGroup.add(roadsterCanopyMesh);
 // Live Dynamic CanvasTexture for Center Touchscreen & Fighter HUD Combiner
 const cockpitHudCanvas = document.createElement('canvas');
 cockpitHudCanvas.width = 512;
-cockpitHudCanvas.height = 320;
+cockpitHudCanvas.height = 200;
 const cockpitHudCtx = cockpitHudCanvas.getContext('2d');
 const cockpitHudTexture = new THREE.CanvasTexture(cockpitHudCanvas);
 const screenGlowMat = new THREE.MeshBasicMaterial({
@@ -377,12 +381,49 @@ for (let i = 0; i < 7; i++) {
 
 carMeshGroup.add(seatBack, dashCowling, screenBezel, screenDisplay, hudCombinerMesh, steeringColumn, yokeWheelGroup);
 
-// Uniform scaling preserves the texture proportions and keeps the complete
-// physical display inside a tall phone's narrower horizontal FPV frustum.
+// Only FPV gets the low, compact instrument pod. Exterior/showroom geometry
+// returns to its original pose, including the roof rails and steering wheel.
+let cockpitPerspectiveActive = false;
 function resizeCockpitDisplay() {
-  const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
-  screenBezel.scale.setScalar(scale);
-  screenDisplay.scale.setScalar(scale);
+  if (!cockpitPerspectiveActive) {
+    const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
+    screenBezel.position.set(0, 0.795, -0.916);
+    screenDisplay.position.set(0, 0.80, -0.90);
+    screenBezel.rotation.x = screenDisplay.rotation.x = -0.26;
+    screenBezel.scale.setScalar(scale);
+    screenDisplay.scale.setScalar(scale);
+    return;
+  }
+  const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight);
+  // The complete screen stays below 78% of the view, with a 2% bottom gap.
+  // Pixel and width caps stop it growing into a giant slab on desktops/phones.
+  const pixels = Math.min(156, Math.max(92, height * 0.15), height * 0.20, width * 0.68 * 200 / 512);
+  const depth = COCKPIT_VIEW.displayDepth, halfFov = Math.tan(Math.PI / 6);
+  const slope = COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope);
+  const displayHeight = 2 * depth * halfFov * pixels / height;
+  const displayWidth = displayHeight * 512 / 200;
+  const centerNdcY = -0.96 + pixels / height;
+  const vertical = centerNdcY * depth * halfFov;
+  const y = COCKPIT_VIEW.eyeHeight + (-slope * depth + vertical) / norm;
+  const z = COCKPIT_VIEW.eyeZ + (-depth - slope * vertical) / norm;
+  const angle = -Math.atan(slope);
+  screenDisplay.position.set(0, y, z);
+  screenDisplay.rotation.x = angle;
+  screenDisplay.scale.set(displayWidth / 0.38, displayHeight / 0.23, 1);
+  // Keep the bezel behind the face along its normal, including its thickness.
+  screenBezel.position.set(0, y - slope * 0.012 / norm, z - 0.012 / norm);
+  screenBezel.rotation.x = angle;
+  screenBezel.scale.set((displayWidth + 0.010) / 0.40, (displayHeight + 0.010) / 0.25, 0.5);
+}
+function setCockpitPerspective(active) {
+  if (cockpitPerspectiveActive === active) return;
+  cockpitPerspectiveActive = active;
+  roadsterCanopyRails.forEach(rail => { rail.visible = !active; });
+  dashCowling.position.y = active ? 0.50 : 0.62;
+  steeringColumn.position.y = active ? 0.50 : 0.60;
+  yokeWheelGroup.position.y = active ? 0.52 : 0.625;
+  dashPipe.visible = !active;
+  resizeCockpitDisplay();
 }
 window.addEventListener('resize', resizeCockpitDisplay);
 resizeCockpitDisplay();

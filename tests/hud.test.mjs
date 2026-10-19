@@ -31,7 +31,7 @@ function drawCockpitTank(tankState) {
       clamp: (value, min, max) => Math.min(max, Math.max(min, value)) } },
     performance: { now: () => 0 },
     // Exercise the existing reserved passenger strip after all instruments.
-    window: { RoadsterTaxi: { drawCockpit(c) { c.fillRect(16, 237, 480, 26); } } },
+    window: { RoadsterTaxi: { drawCockpit(c) { c.fillRect(16, 160, 480, 38); } } },
   });
   vm.runInContext(`${renderer}\nupdateCockpitHudScreen(0, 0, false, false, false, false, false);`, context);
   assert.equal(texture.needsUpdate, true);
@@ -53,10 +53,10 @@ test('cockpit gas, seconds, liters and fill use the current air tank, including 
     assert.equal(text.find(draw => draw.value.endsWith('s / 10.0s')).value,
       `${seconds}s / 10.0s`);
     assert.deepEqual(text.filter(draw => draw.value.includes('GAS:')).map(draw => draw.value), [`GAS: ${mass} kg`]);
-    assert.ok(text.some(draw => draw.value === `${liters}L REMAINING`));
-    assert.ok(rects.some(draw => draw.x === 18 && draw.y === 134 && draw.width === 476 && draw.height === 40));
-    const fill = rects.find(draw => draw.x === 22 && draw.y === 138 && draw.height === 32);
-    assert.ok(Math.abs(fill.width - 468 * airRemaining / 10) < 1e-10);
+    assert.ok(text.some(draw => draw.value === `${liters}L`));
+    assert.ok(rects.some(draw => draw.x === 178 && draw.y === 78 && draw.width === 316 && draw.height === 32));
+    const fill = rects.find(draw => draw.x === 182 && draw.y === 82 && draw.height === 24);
+    assert.ok(Math.abs(fill.width - 308 * airRemaining / 10) < 1e-10);
   }
 });
 
@@ -70,15 +70,15 @@ test('cockpit tank bounds and gas text stay inside their reserved area without o
     const gas = text.find(draw => draw.value.startsWith('GAS:'));
     assert.equal(tank.value, `${seconds}s / 10.0s`);
     assert.equal(gas.value, `GAS: ${mass} kg`);
-    assert.equal(tank.y, 120);
-    assert.equal(gas.y, 198); assert.equal(gas.x, 494); assert.equal(gas.align, 'right');
-    assert.match(gas.font, /16px/);
-    assert.ok(text.some(draw => draw.value === `${liters}L REMAINING`));
-    const fill = rects.find(draw => draw.x === 22 && draw.y === 138 && draw.height === 32);
-    assert.equal(fill.width, 468 * pct);
-    assert.ok(rects.some(draw => draw.x === 22 + 468 * 0.2 && draw.y === 134 && draw.height === 40));
-    assert.ok(text.every(draw => draw.y < 237), 'instruments remain above passenger band');
-    assert.ok(rects.some(draw => draw.x === 16 && draw.y === 237 && draw.height === 26), 'passenger strip remains rendered');
+    assert.equal(tank.y, 66);
+    assert.equal(gas.y, 134); assert.equal(gas.x, 494); assert.equal(gas.align, 'right');
+    assert.match(gas.font, /20px/);
+    assert.ok(text.some(draw => draw.value === `${liters}L`));
+    const fill = rects.find(draw => draw.x === 182 && draw.y === 82 && draw.height === 24);
+    assert.equal(fill.width, 308 * pct);
+    assert.ok(rects.some(draw => draw.x === 182 + 308 * 0.2 && draw.y === 78 && draw.height === 32));
+    assert.ok(text.every(draw => draw.y < 160), 'instruments remain above passenger band');
+    assert.ok(rects.some(draw => draw.x === 16 && draw.y === 160 && draw.height === 38), 'passenger strip remains rendered');
   }
 });
 
@@ -93,7 +93,7 @@ test('external telemetry updates gas mass and matches cockpit seconds/liters/mas
     const { text } = drawCockpitTank({ airRemaining, gasMassKg: 144 });
     assert.equal(text.find(draw => draw.value.startsWith('GAS:')).value, `GAS: ${elements['val-gas-mass'].textContent}`);
     assert.ok(text.find(draw => draw.value.endsWith('s / 10.0s')).value.includes(elements['val-air-sec'].textContent));
-    assert.ok(text.some(draw => draw.value === `${elements['val-air-liters'].textContent.slice(1, -1)} REMAINING`));
+    assert.ok(text.some(draw => draw.value === elements['val-air-liters'].textContent.slice(1, -1)));
   }
 });
 
@@ -122,7 +122,8 @@ test('cockpit and footer use identical speed, units and rounded values with read
       assert.equal(draws[2].text, subSpeedEl.textContent.split(' • ')[0]);
       assert.match(draws[0].font, /^(?:bold|[1-9]00) 54px /);
       assert.equal(draws[0].align, 'right');
-      assert.ok(draws[0].x > 115 && draws[0].x < draws[1].x);
+      assert.equal(draws[0].x, 140); assert.equal(draws[0].y, 75);
+      assert.equal(draws[1].x, 22); assert.equal(draws[1].y, 104);
       assert.equal(draws[1].align, 'left'); assert.equal(draws[2].align, 'left');
     }
   }
@@ -160,14 +161,14 @@ test('HUD bounds observe only permanent header/footer, never transient alerts', 
   assert.deepEqual(observed, [elements['hud-header'], elements['hud-footer']]);
 });
 
-test('cockpit essentials have separate speed, tank, telemetry and passenger bands', () => {
+test('cockpit essentials have separate speed/tank columns and a reserved passenger strip', () => {
   const { text, rects } = drawCockpitTank({ airRemaining: 2 });
   assert.ok(text.find(t => t.value === '0').y < 100);
-  const track = rects.find(r => r.x === 18 && r.y === 134);
-  assert.equal(track.height, 40);
-  assert.ok(text.filter(t => t.y >= 108 && t.y <= 120).every(t => t.y < track.y));
-  assert.ok(text.filter(t => t.y > 174).every(t => t.y < 237));
-  assert.ok(rects.find(r => r.y === 237 && r.height === 26));
+  const track = rects.find(r => r.x === 178 && r.y === 78);
+  assert.equal(track.height, 32);
+  assert.ok(text.filter(t => t.y >= 22 && t.y <= 66).every(t => t.y < track.y));
+  assert.ok(text.filter(t => t.y > 110).every(t => t.y < 160));
+  assert.ok(rects.find(r => r.y === 160 && r.height === 38));
 });
 
 test('FPV switches duplicate floating information off immediately while preserving side controls', () => {
@@ -201,13 +202,13 @@ test('actual continuous consumption, depletion and reset immediately update the 
   for (let frame = 0; frame <= 50; frame++) {
     const reading = getAirTankReadout(state.airRemaining);
     const { text, rects } = drawCockpitTank({ ...state, gasMassKg: 144 });
-    const fill = rects.find(r => r.x === 22 && r.y === 138 && r.height === 32);
-    assert.equal(fill.width, 468 * reading.fraction);
+    const fill = rects.find(r => r.x === 182 && r.y === 82 && r.height === 24);
+    assert.equal(fill.width, 308 * reading.fraction);
     assert.ok(text.some(t => t.value === `${reading.seconds.toFixed(1)}s / 10.0s`));
-    assert.ok(text.some(t => t.value === `${reading.liters}L REMAINING`));
+    assert.ok(text.some(t => t.value === `${reading.liters}L`));
     if (frame < 50) context.consumeAirTank(0.2, true);
   }
   assert.equal(state.airRemaining, 0); assert.equal(state.isFreefalling, true);
   context.resetCar(); assert.equal(state.airRemaining, 10); assert.equal(state.isFreefalling, false);
-  const full = drawCockpitTank(state); assert.equal(full.rects.find(r => r.x === 22 && r.y === 138).width, 468);
+  const full = drawCockpitTank(state); assert.equal(full.rects.find(r => r.x === 182 && r.y === 82).width, 308);
 });

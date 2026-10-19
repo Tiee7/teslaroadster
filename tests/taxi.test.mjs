@@ -486,8 +486,8 @@ test('cockpit passenger strip shows live destination distance and local score wi
   Object.assign(h.state, trip.destination, { x: trip.destination.x - 100 });
   h.taxi.drawCockpit(ctx); assert.match(draws.at(-1).text, /ON BOARD.*100m/);
   assert.match(draws.at(-1).text, new RegExp(String(trip.fare)));
-  for (const draw of draws) { assert.ok(draw.y > 232 && draw.y < 264); assert.ok(draw.x >= 18 && draw.x + draw.width < 512); }
-  for (const [x, y, width, height] of fills) { assert.ok(y > 232 && y + height < 264); }
+  for (const draw of draws) { assert.ok(draw.y > 160 && draw.y < 198); assert.ok(draw.x >= 18 && draw.x + draw.width < 512); }
+  for (const [x, y, width, height] of fills) { assert.ok(y >= 160 && y + height <= 198); }
   h.move(trip.destination); h.taxi.drawCockpit(ctx); assert.match(draws.at(-2).text, new RegExp(`${trip.fare} PTS`));
   h.context.currentLang = 'zh'; h.taxi.drawCockpit(ctx); assert.match(draws.at(-1).text, /空车/);
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');

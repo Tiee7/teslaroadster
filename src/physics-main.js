@@ -1781,6 +1781,7 @@ function updateSimulation(dt) {
     camera.updateProjectionMatrix();
   }
   roadsterCanopyMesh.visible = !isCockpitFpv;
+  setCockpitPerspective(isCockpitFpv);
   if (typeof hudCombinerMesh !== "undefined") hudCombinerMesh.visible = false;
 
   if (cameraModeIndex !== 0) resetChaseCamera();
@@ -1800,8 +1801,8 @@ function updateSimulation(dt) {
     // Requirement 7: Rock-solid Cockpit FPV Camera
     playerWrapper.updateMatrixWorld(true);
     roadsterAttitudeGroup.updateMatrixWorld(true);
-    const eyeLocal = new THREE.Vector3(0.0, 0.88, -0.15);
-    const forwardLocal = new THREE.Vector3(0.0, -0.04, -1.0).normalize();
+    const eyeLocal = new THREE.Vector3(0.0, COCKPIT_VIEW.eyeHeight, COCKPIT_VIEW.eyeZ);
+    const forwardLocal = new THREE.Vector3(0.0, -COCKPIT_VIEW.downwardSlope, -1.0).normalize();
     const upLocal = new THREE.Vector3(0.0, 1.0, 0.0);
 
     const eyeWorld = eyeLocal.applyMatrix4(roadsterAttitudeGroup.matrixWorld);

@@ -2713,6 +2713,8 @@ buildOpenWorldCity();
 // 4. PLAYER VEHICLE: TRUE 2026 TESLA ROADSTER CYBER-WEDGE MODEL (V8)
 //    Rebuilt 1:1 from user reference photos (image_ed309d, ed30b9, ed8256)
 // =========================================================================
+// One fixed driver pose is shared by the camera and projection-sized instruments.
+const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.58 });
 const playerWrapper = new THREE.Group();
 playerWrapper.position.set(2.5, 0, 0);
 scene.add(playerWrapper);
@@ -2957,6 +2959,7 @@ const roadsterCanopyMesh = buildCyberCanopyV8();
 carMeshGroup.add(roadsterCanopyMesh);
 
 // White Painted A-Pillar & Roof Arch Side Rails (Matches bodyMaterial color!)
+const roadsterCanopyRails = [];
 [-1, 1].forEach((side) => {
   const railGrid = [];
   const nz = 36;
@@ -2972,6 +2975,7 @@ carMeshGroup.add(roadsterCanopyMesh);
   }
   const railMesh = new THREE.Mesh(createSmoothGridGeometry(railGrid), bodyMaterial);
   carMeshGroup.add(railMesh);
+  roadsterCanopyRails.push(railMesh);
 });
 
 // =========================================================================
@@ -2980,7 +2984,7 @@ carMeshGroup.add(roadsterCanopyMesh);
 // Live Dynamic CanvasTexture for Center Touchscreen & Fighter HUD Combiner
 const cockpitHudCanvas = document.createElement('canvas');
 cockpitHudCanvas.width = 512;
-cockpitHudCanvas.height = 320;
+cockpitHudCanvas.height = 200;
 const cockpitHudCtx = cockpitHudCanvas.getContext('2d');
 const cockpitHudTexture = new THREE.CanvasTexture(cockpitHudCanvas);
 const screenGlowMat = new THREE.MeshBasicMaterial({
@@ -3088,12 +3092,49 @@ for (let i = 0; i < 7; i++) {
 
 carMeshGroup.add(seatBack, dashCowling, screenBezel, screenDisplay, hudCombinerMesh, steeringColumn, yokeWheelGroup);
 
-// Uniform scaling preserves the texture proportions and keeps the complete
-// physical display inside a tall phone's narrower horizontal FPV frustum.
+// Only FPV gets the low, compact instrument pod. Exterior/showroom geometry
+// returns to its original pose, including the roof rails and steering wheel.
+let cockpitPerspectiveActive = false;
 function resizeCockpitDisplay() {
-  const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
-  screenBezel.scale.setScalar(scale);
-  screenDisplay.scale.setScalar(scale);
+  if (!cockpitPerspectiveActive) {
+    const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
+    screenBezel.position.set(0, 0.795, -0.916);
+    screenDisplay.position.set(0, 0.80, -0.90);
+    screenBezel.rotation.x = screenDisplay.rotation.x = -0.26;
+    screenBezel.scale.setScalar(scale);
+    screenDisplay.scale.setScalar(scale);
+    return;
+  }
+  const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight);
+  // The complete screen stays below 78% of the view, with a 2% bottom gap.
+  // Pixel and width caps stop it growing into a giant slab on desktops/phones.
+  const pixels = Math.min(156, Math.max(92, height * 0.15), height * 0.20, width * 0.68 * 200 / 512);
+  const depth = COCKPIT_VIEW.displayDepth, halfFov = Math.tan(Math.PI / 6);
+  const slope = COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope);
+  const displayHeight = 2 * depth * halfFov * pixels / height;
+  const displayWidth = displayHeight * 512 / 200;
+  const centerNdcY = -0.96 + pixels / height;
+  const vertical = centerNdcY * depth * halfFov;
+  const y = COCKPIT_VIEW.eyeHeight + (-slope * depth + vertical) / norm;
+  const z = COCKPIT_VIEW.eyeZ + (-depth - slope * vertical) / norm;
+  const angle = -Math.atan(slope);
+  screenDisplay.position.set(0, y, z);
+  screenDisplay.rotation.x = angle;
+  screenDisplay.scale.set(displayWidth / 0.38, displayHeight / 0.23, 1);
+  // Keep the bezel behind the face along its normal, including its thickness.
+  screenBezel.position.set(0, y - slope * 0.012 / norm, z - 0.012 / norm);
+  screenBezel.rotation.x = angle;
+  screenBezel.scale.set((displayWidth + 0.010) / 0.40, (displayHeight + 0.010) / 0.25, 0.5);
+}
+function setCockpitPerspective(active) {
+  if (cockpitPerspectiveActive === active) return;
+  cockpitPerspectiveActive = active;
+  roadsterCanopyRails.forEach(rail => { rail.visible = !active; });
+  dashCowling.position.y = active ? 0.50 : 0.62;
+  steeringColumn.position.y = active ? 0.50 : 0.60;
+  yokeWheelGroup.position.y = active ? 0.52 : 0.625;
+  dashPipe.visible = !active;
+  resizeCockpitDisplay();
 }
 window.addEventListener('resize', resizeCockpitDisplay);
 resizeCockpitDisplay();
@@ -4495,21 +4536,21 @@ const CityTaxiModel = (() => {
     const data = snapshot();
     if (!data.active) return;
     ctx.save();
-    // Reserved strip between the flight instruments and tank; speed stays intact.
-    ctx.fillStyle = '#061810'; ctx.fillRect(16, 237, 480, 26);
-    ctx.textAlign = 'left'; ctx.fillStyle = '#86efac'; ctx.font = 'bold 11px sans-serif';
+    // Reserved bottom strip of the compact pod, clear of speed and the air bar.
+    ctx.fillStyle = '#061810'; ctx.fillRect(16, 160, 480, 38);
+    ctx.textAlign = 'left'; ctx.fillStyle = '#86efac'; ctx.font = 'bold 18px sans-serif';
     ctx.fillText(isZh() ? `接客积分 ${data.score} · 已送达 ${data.delivered} 位`
-      : `PASSENGER ${data.score} PTS · ${data.delivered} DELIVERED`, 22, 248, 468);
+      : `${data.score} PTS · ${data.delivered} DELIVERED`, 22, 176, 468);
     const remaining = data.passenger ? Math.round(Math.hypot(state.x - data.passenger.destination.x, state.z - data.passenger.destination.z)) : null;
     const detail = data.passenger
       ? (isZh() ? `载客中 · 绿色目的地 ${remaining} 米 · 送达 +${data.passenger.fare}`
-        : `ON BOARD · GREEN DEST ${remaining}m · FARE +${data.passenger.fare}`)
+        : `ON BOARD · ${remaining}m · +${data.passenger.fare}`)
       : lastEvent?.type === 'passenger-lost'
         ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 白柱等待 ${data.waiting.length} 位`
-          : `PASSENGER LOST · PENALTY ${lastEvent.penalty} · ${data.waiting.length} WAITING`)
+          : `PASSENGER LOST · -${lastEvent.penalty} · ${data.waiting.length} WAITING`)
         : (isZh() ? `空车 · ${data.waiting.length} 位乘客等待 · 前往白色光柱`
-          : `EMPTY · ${data.waiting.length} WAITING · FOLLOW WHITE COLUMNS`);
-    ctx.fillStyle = '#dcfce7'; ctx.fillText(detail, 22, 260, 468);
+          : `EMPTY · ${data.waiting.length} WAITING`);
+    ctx.fillStyle = '#dcfce7'; ctx.fillText(detail, 22, 194, 468);
     ctx.restore();
   }
   function start() {
@@ -5603,115 +5644,76 @@ resizeVfxCanvas();
 function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetroFiring, rcsRollPitchActive, rcsYawRetroActive) {
   if (!cockpitHudCtx) return;
   const ctx = cockpitHudCtx;
-  const W = 512, H = 320;
-
-  // Translucent Dark Aerospace Glass Background
+  const W = 512, H = 200;
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = 'rgba(6, 12, 24, 0.90)';
   ctx.fillRect(0, 0, W, H);
-
-  // Outer Cyan Telemetry Border
-  ctx.strokeStyle = mph >= 230 ? '#38bdf8' : 'rgba(56, 189, 248, 0.55)';
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
   ctx.lineWidth = 3;
   ctx.strokeRect(4, 4, W - 8, H - 8);
-
-  // Digital Compass Heading & Cardinal Tape (Top Center)
-  const curYawDeg = Math.round(((-THREE.MathUtils.radToDeg(state.yaw) % 360) + 360) % 360);
-  const cardinalDirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  const cardIndex = Math.round(curYawDeg / 45) % 8;
-  const cardStr = cardinalDirs[cardIndex];
-  ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-  ctx.fillRect(296, 12, 108, 20);
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
-  ctx.strokeRect(296, 12, 108, 20);
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 11px "JetBrains Mono", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText(`HDG ${String(curYawDeg).padStart(3, "0")}° ${cardStr}`, 350, 26);
-  ctx.textAlign = 'left';
-
-  // 1. LEFT PANEL: Digital Speed, Flight Mode & 600L COPV Tank Bar
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText('TESLA ROADSTER // ROCKET TELEMETRY', 18, 26);
 
   const isUnitKmh = (state.speedUnit === 'kmh');
   const primarySpeed = isUnitKmh ? kmh : mph;
   const primaryLabel = isUnitKmh ? 'KM/H' : 'MPH';
   const secondaryText = isUnitKmh ? `${mph} MPH` : `${kmh} km/h`;
-
   ctx.fillStyle = mph >= 230 ? '#38bdf8' : '#ffffff';
-  // Canvas accepts numeric weights; "extrabold" silently kept the preceding
-  // 12px font, making this readout look different from the synchronized HUD.
   ctx.font = '800 54px "JetBrains Mono", monospace';
   ctx.textAlign = 'right';
-  ctx.fillText(String(primarySpeed), 122, 86);
+  ctx.fillText(String(primarySpeed), 140, 75);
   ctx.textAlign = 'left';
-  ctx.font = 'bold 14px "JetBrains Mono", monospace';
+  ctx.font = 'bold 22px "JetBrains Mono", monospace';
   ctx.fillStyle = '#38bdf8';
-  ctx.fillText(primaryLabel, 132, 62);
+  ctx.fillText(primaryLabel, 22, 104);
   ctx.fillStyle = '#cbd5e1';
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillText(secondaryText, 132, 84);
+  ctx.font = 'bold 18px "JetBrains Mono", monospace';
+  ctx.fillText(secondaryText, 22, 132);
 
-  // Cockpit Turn Signal Blinkers
+  // Cockpit Turn Signal Blinkers stay in the speed column, away from the road.
   const isTurnLeft = (state.steerInput > 0.12) || Boolean(keys['KeyA']);
   const isTurnRight = (state.steerInput < -0.12) || Boolean(keys['KeyD']);
   const blinkActive = (Math.sin(performance.now() * 0.013) > 0);
-  ctx.font = 'bold 15px "JetBrains Mono", monospace';
-  ctx.fillStyle = (isTurnLeft && blinkActive) ? '#10b981' : 'rgba(51, 65, 85, 0.45)';
-  ctx.fillText('◀', 132, 42);
-  ctx.fillStyle = (isTurnRight && blinkActive) ? '#10b981' : 'rgba(51, 65, 85, 0.45)';
-  ctx.fillText('▶', 156, 42);
+  ctx.font = 'bold 20px "JetBrains Mono", monospace';
+  ctx.fillStyle = (isTurnLeft && blinkActive) ? '#10b981' : '#334155';
+  ctx.fillText('◀', 22, 30);
+  ctx.fillStyle = (isTurnRight && blinkActive) ? '#10b981' : '#334155';
+  ctx.fillText('▶', 52, 30);
 
-  // Essentials use dedicated bands: speed 34..96, tank 108..202, telemetry
-  // 210..230, passenger 237..263. The old bottom bar was below the FPV frustum
-  // and behind the dashboard. No other instrument may paint over this track.
+  // A short, wide pod replaces the tall telemetry screen. Keep the shared live
+  // speed/tank and passenger data while dedicating the upper view to the road.
   const tank = getAirTankReadout(state.airRemaining);
   const lowAir = tank.fraction <= 0.20;
   const tankColor = tank.fraction === 0 || state.isFreefalling ? '#f87171' : (lowAir || state.isAutoDescending8s ? '#fbbf24' : '#67e8f9');
   ctx.textAlign = 'left';
   ctx.fillStyle = '#cbd5e1';
-  ctx.font = 'bold 16px "JetBrains Mono", monospace';
-  ctx.fillText('COPV AIR · 600L', 18, 120);
+  ctx.font = 'bold 22px "JetBrains Mono", monospace';
+  ctx.fillText('COPV AIR · 600L', 178, 30);
   ctx.textAlign = 'right';
   ctx.fillStyle = tankColor;
-  ctx.font = 'bold 20px "JetBrains Mono", monospace';
-  ctx.fillText(`${tank.seconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s`, 494, 120);
+  ctx.font = 'bold 30px "JetBrains Mono", monospace';
+  ctx.fillText(`${tank.seconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s`, 494, 66);
   ctx.fillStyle = '#0f172a';
-  ctx.fillRect(18, 134, 476, 40);
-  const airGradient = ctx.createLinearGradient(22, 0, 490, 0);
+  ctx.fillRect(178, 78, 316, 32);
+  const airGradient = ctx.createLinearGradient(182, 0, 490, 0);
   airGradient.addColorStop(0, '#06b6d4');
   airGradient.addColorStop(0.55, '#38bdf8');
   airGradient.addColorStop(1, '#34d399');
   ctx.fillStyle = lowAir || state.isAutoDescending8s || state.isFreefalling ? tankColor : airGradient;
-  ctx.fillRect(22, 138, 468 * tank.fraction, 32);
-  ctx.strokeStyle = '#64748b';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(18, 134, 476, 40);
-  // Same 20% / 2 seconds remaining warning marker as the exterior gauge.
+  ctx.fillRect(182, 82, 308 * tank.fraction, 24);
+  ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+  ctx.strokeRect(178, 78, 316, 32);
   ctx.fillStyle = '#fbbf24';
-  ctx.fillRect(22 + 468 * 0.20, 134, 3, 40);
-  ctx.font = 'bold 16px "JetBrains Mono", monospace';
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#cbd5e1';
-  ctx.fillText(`${tank.liters}L REMAINING`, 18, 198);
+  ctx.fillRect(182 + 308 * 0.20, 78, 3, 32);
+  ctx.font = 'bold 20px "JetBrains Mono", monospace';
+  ctx.textAlign = 'left'; ctx.fillStyle = '#cbd5e1';
+  ctx.fillText(`${tank.liters}L`, 178, 134);
   ctx.textAlign = 'right';
-  ctx.fillText(`GAS: ${tank.massKg.toFixed(1)} kg`, 494, 198);
-
-  ctx.font = 'bold 12px "JetBrains Mono", monospace';
-  ctx.fillStyle = tankColor;
-  ctx.textAlign = 'left';
+  ctx.fillText(`GAS: ${tank.massKg.toFixed(1)} kg`, 494, 134);
+  ctx.font = 'bold 18px "JetBrains Mono", monospace';
+  ctx.fillStyle = tankColor; ctx.textAlign = 'left';
   const anyJet = rearActive || isLiftFiring || isFrontRetroFiring || rcsRollPitchActive || rcsYawRetroActive;
   const tankStatus = tank.fraction === 0 ? 'EMPTY' : (state.isAutoDescending8s ? 'AUTO-DESCEND'
     : (lowAir ? 'LOW AIR · 20%' : (anyJet ? 'THRUST' : (tank.fraction < 0.995 ? 'RECHARGING' : 'COPV READY'))));
-  ctx.fillText(tankStatus, 18, 224);
-  const totalG = Math.hypot(state.longitudinalG || 0, state.lateralG || 0, 1.0);
-  const activeNozzles = (rearActive ? 4 : 0) + (isLiftFiring ? 4 : 0) + (rcsRollPitchActive || rcsYawRetroActive || isFrontRetroFiring ? 2 : 0);
-  ctx.textAlign = 'right';
-  ctx.fillStyle = '#94a3b8';
-  ctx.fillText(`${totalG.toFixed(1)}G · RCS ${activeNozzles}/10`, 494, 224);
-  ctx.textAlign = 'left';
+  ctx.fillText(tankStatus, 22, 156);
 
   window.RoadsterTaxi?.drawCockpit(ctx);
   cockpitHudTexture.needsUpdate = true;
@@ -8012,6 +8014,7 @@ function updateSimulation(dt) {
     camera.updateProjectionMatrix();
   }
   roadsterCanopyMesh.visible = !isCockpitFpv;
+  setCockpitPerspective(isCockpitFpv);
   if (typeof hudCombinerMesh !== "undefined") hudCombinerMesh.visible = false;
 
   if (cameraModeIndex !== 0) resetChaseCamera();
@@ -8031,8 +8034,8 @@ function updateSimulation(dt) {
     // Requirement 7: Rock-solid Cockpit FPV Camera
     playerWrapper.updateMatrixWorld(true);
     roadsterAttitudeGroup.updateMatrixWorld(true);
-    const eyeLocal = new THREE.Vector3(0.0, 0.88, -0.15);
-    const forwardLocal = new THREE.Vector3(0.0, -0.04, -1.0).normalize();
+    const eyeLocal = new THREE.Vector3(0.0, COCKPIT_VIEW.eyeHeight, COCKPIT_VIEW.eyeZ);
+    const forwardLocal = new THREE.Vector3(0.0, -COCKPIT_VIEW.downwardSlope, -1.0).normalize();
     const upLocal = new THREE.Vector3(0.0, 1.0, 0.0);
 
     const eyeWorld = eyeLocal.applyMatrix4(roadsterAttitudeGroup.matrixWorld);
