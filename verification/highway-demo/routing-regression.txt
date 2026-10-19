@@ -1,0 +1,11 @@
+✔ useful safe three-stage route is not suppressed behind a slow queue at 30 Hz (521.443058ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 60 Hz (692.70513ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 144 Hz (1240.769838ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2569.529306

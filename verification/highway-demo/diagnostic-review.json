@@ -1,0 +1,5707 @@
+{
+  "controllerSha256": "c6326df96cd2f5d154c01acd772318fd4d3b0c53d108a20e7caa5495060b30ba",
+  "sourceUnchanged": true,
+  "seed": 7,
+  "count": 20,
+  "fps": 60,
+  "method": "Production physics/collisions/NPC AI unchanged. Observations expose planner closures. Counterfactual changes only one selected route at 6.483333s to [1,2,3], retaining production controls, rolling revalidation and all real dynamics.",
+  "baseline": {
+    "forcedRoute": null,
+    "forcedAt": null,
+    "seconds": 14.000000000000275,
+    "physicalForwardMetres": 370.97940466197906,
+    "end": {
+      "x": -6.173674288748252,
+      "speedKmh": 46.55310309468617,
+      "gas": 10
+    },
+    "minimumSpeedAfterForcedTimeKmh": 37.95259634583783,
+    "above220Seconds": 0,
+    "airSeconds": 0,
+    "impacts": 0,
+    "crashed": false,
+    "jumps": 0,
+    "minCollisionEnvelopeRatio": 2.157258613088555,
+    "stats": {
+      "started": 5,
+      "completed": 4,
+      "jumps": 0,
+      "targetLane": 2,
+      "changing": true
+    }
+  },
+  "counterfactual": {
+    "forcedRoute": [
+      1,
+      2,
+      3
+    ],
+    "forcedAt": 6.483333333333,
+    "seconds": 14.000000000000275,
+    "physicalForwardMetres": 543.8466972341162,
+    "end": {
+      "x": -12.500014903308502,
+      "speedKmh": 219.92139563927682,
+      "gas": 9.981963126524631
+    },
+    "minimumSpeedAfterForcedTimeKmh": 44.9874959420986,
+    "above220Seconds": 2.249999999999997,
+    "airSeconds": 0,
+    "impacts": 0,
+    "crashed": false,
+    "jumps": 0,
+    "minCollisionEnvelopeRatio": 1.8547972262491081,
+    "stats": {
+      "started": 9,
+      "completed": 9,
+      "jumps": 0,
+      "targetLane": 0,
+      "changing": false
+    }
+  },
+  "progressGainMetres": 172.8672925721371,
+  "opportunities": [
+    {
+      "t": 2.416666666666663,
+      "player": {
+        "x": -12.523818683179913,
+        "y": 0,
+        "vx": -0.44603603669289704,
+        "vz": -45.18813707339076,
+        "speedKmh": 162.68066458283218,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": 1.5249999999999986,
+      "decisionCooldown": 0.3,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 115.50722768246912,
+        "score": 388.8768069206173
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 387.5158132756578,
+          "flow": 134.0632531026313,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 390.8768069206173
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -447.01298520264567,
+          "speedKmh": 161.23916515149176,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -322.08520157645125,
+          "speedKmh": 83.59684439150533,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -284.9140227132674,
+          "speedKmh": 77.47401592765564,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -251.81236428269708,
+          "speedKmh": 83.87730867349896,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -200.20573411503082,
+          "speedKmh": 79.85678344997937,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -193.2942665885812,
+          "speedKmh": 102.023422928878,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -122.13518729971277,
+          "speedKmh": 74.65479242117628,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -84.41112721137445,
+          "speedKmh": 75.36968122063482,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -52.7500870284667,
+          "speedKmh": 86.81321501238264,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -3.52674831098999,
+          "speedKmh": 73.94517975957558,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": 25.070164209589635,
+          "speedKmh": 82.0644809949716,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -18.20610531997019,
+          "speedKmh": 143.75996098453373,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -434.6447019410592,
+          "speedKmh": 77.14742379354999,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -378.5985239156701,
+          "speedKmh": 70.21949557909232,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -430.82526800819227,
+          "speedKmh": 119.33806206591915,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -408.3322207889238,
+          "speedKmh": 98.88977798801442,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -387.2968916080641,
+          "speedKmh": 79.76761536802148,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -384.2427591770506,
+          "speedKmh": 76.99023814587699,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -363.20030655209865,
+          "speedKmh": 88.0707169070602,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -341.601731826764,
+          "speedKmh": 69.42905285259121,
+          "laneChange": null
+        }
+      ]
+    },
+    {
+      "t": 3.433333333333326,
+      "player": {
+        "x": -12.500083602237208,
+        "y": 0,
+        "vx": 0.00035752111399795373,
+        "vz": -35.78793366418569,
+        "speedKmh": 128.83656119115446,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": "Infinity",
+      "decisionCooldown": 0.23333333333333334,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 98.19708267887488,
+        "score": 384.54927066971874
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 383.55610046664265,
+          "flow": 118.22440186657055,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 386.54927066971874
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -454.07408749013524,
+          "speedKmh": 161.23916515149176,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -292.96691895649326,
+          "speedKmh": 83.59735083912034,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.984353468740687,
+          "z": -252.45161487956477,
+          "speedKmh": 75.07337956193575,
+          "laneChange": {
+            "from": 2,
+            "to": 1,
+            "startX": -2.5,
+            "elapsed": 2.6
+          }
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -222.74085647638552,
+          "speedKmh": 83.54725879650317,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -169.20295080044122,
+          "speedKmh": 79.27574546451098,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -172.47265119747365,
+          "speedKmh": 100.80861543383399,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -88.85031848336976,
+          "speedKmh": 74.6546780578518,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -51.43612264157858,
+          "speedKmh": 75.23042962391979,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -25.06777423556577,
+          "speedKmh": 86.54069716355845,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": 30.09466943883305,
+          "speedKmh": 73.92128269756593,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": 54.93474908367296,
+          "speedKmh": 81.93085771343623,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -15.95173361990613,
+          "speedKmh": 138.83107283831757,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -402.53368725935013,
+          "speedKmh": 77.19694290075745,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -343.0146237623446,
+          "speedKmh": 69.35655009495957,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -418.3616379291078,
+          "speedKmh": 119.33813511936069,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -386.3402490815272,
+          "speedKmh": 98.88981265565727,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -356.3946309543102,
+          "speedKmh": 79.76808383225804,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -352.04620574010994,
+          "speedKmh": 76.99025429176551,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -336.16692462061303,
+          "speedKmh": 88.16700129208962,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -305.8809043066366,
+          "speedKmh": 69.49358447240698,
+          "laneChange": null
+        }
+      ]
+    },
+    {
+      "t": 4.4499999999999895,
+      "player": {
+        "x": -12.50000007539212,
+        "y": 0,
+        "vx": 7.393321483969673e-7,
+        "vz": -29.363508158026054,
+        "speedKmh": 105.7086293688938,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": "Infinity",
+      "decisionCooldown": 0.16666666666666669,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 88.20271939968761,
+        "score": 382.0506798499219
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 381.49405215695936,
+          "flow": 109.9762086278375,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 384.0506798499219
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -475.14660662806796,
+          "speedKmh": 161.23916515149176,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -277.8618605128697,
+          "speedKmh": 83.60373774225272,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -6.202360236937201,
+          "z": -233.0633190555619,
+          "speedKmh": 74.00825287083238,
+          "laneChange": {
+            "from": 2,
+            "to": 1,
+            "startX": -2.5,
+            "elapsed": 2.6
+          }
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -207.56691249353878,
+          "speedKmh": 83.3808350714179,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -151.97685591213008,
+          "speedKmh": 78.84180317226803,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -165.13092770863264,
+          "speedKmh": 99.72959225869258,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -69.57696459303202,
+          "speedKmh": 74.6551371167553,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -32.38846675492988,
+          "speedKmh": 75.05605803455498,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -11.26901375091901,
+          "speedKmh": 86.27160062898288,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": 49.71370532369612,
+          "speedKmh": 73.90602950762259,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -446.2696354104801,
+          "speedKmh": 81.97667664376647,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -25.519469025354866,
+          "speedKmh": 134.31240528462774,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -384.4531314926048,
+          "speedKmh": 77.2302224291022,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -321.1896487817497,
+          "speedKmh": 69.0649614991984,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -419.90945470225125,
+          "speedKmh": 119.33819155082963,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -378.3597081036395,
+          "speedKmh": 98.88983803972093,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -339.4578740453911,
+          "speedKmh": 79.33865279518452,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -333.86107535269366,
+          "speedKmh": 76.99026510780413,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -323.2896417511228,
+          "speedKmh": 88.62885483956403,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -284.2719258077417,
+          "speedKmh": 69.80270438527354,
+          "laneChange": null
+        }
+      ]
+    },
+    {
+      "t": 5.466666666666653,
+      "player": {
+        "x": -12.500000000034232,
+        "y": 0,
+        "vx": 6.554887597968639e-10,
+        "vz": -25.68164320733973,
+        "speedKmh": 92.45391554642302,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": "Infinity",
+      "decisionCooldown": 0.10000000000000003,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 82.5067434305606,
+        "score": 380.62668585764015
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 380.6459468642913,
+          "flow": 106.58378745716517,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 382.62668585764015
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": 34.57515813792611,
+          "speedKmh": 144.4092198628377,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -270.9873932397337,
+          "speedKmh": 83.61224323296274,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -221.67785230792182,
+          "speedKmh": 73.9194554738289,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -200.5713015235219,
+          "speedKmh": 83.33072444361153,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -142.80086684910376,
+          "speedKmh": 78.50889240165685,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -165.53238526328937,
+          "speedKmh": 98.7231300389571,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -58.53119976628401,
+          "speedKmh": 74.65725711084254,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -21.498325081678544,
+          "speedKmh": 74.93237519616017,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -5.580968272363435,
+          "speedKmh": 86.0564892130983,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": 61.111214444210304,
+          "speedKmh": 73.8973901493275,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -438.6810415765138,
+          "speedKmh": 82.16270395392993,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -41.25669743001139,
+          "speedKmh": 129.97219500597194,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -374.61239117941665,
+          "speedKmh": 77.25257619995827,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -307.5271591796349,
+          "speedKmh": 69.04657446559716,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -429.68431620143417,
+          "speedKmh": 119.33823514233507,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -378.60619883878485,
+          "speedKmh": 98.88985662623197,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -330.4259734962317,
+          "speedKmh": 78.67733234466716,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -323.90297066862144,
+          "speedKmh": 76.9902723534055,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -318.88782033299424,
+          "speedKmh": 89.20835144145626,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -271.0335212018932,
+          "speedKmh": 70.09369377190544,
+          "laneChange": null
+        }
+      ]
+    },
+    {
+      "t": 6.483333333333316,
+      "player": {
+        "x": -12.499999999999995,
+        "y": 0,
+        "vx": 3.2897749283967173e-13,
+        "vz": -23.562980120081647,
+        "speedKmh": 84.82672843229393,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": "Infinity",
+      "decisionCooldown": 0.03333333333333338,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 79.09275496053918,
+        "score": 379.7731887401348
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 380.41744143927446,
+          "flow": 105.66976575709789,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 381.7731887401348
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 5,
+          "x": 11.869808100221336,
+          "z": 11.033475287248656,
+          "speedKmh": 133.34666860256812,
+          "laneChange": {
+            "from": 5,
+            "to": 4,
+            "startX": 12.5,
+            "elapsed": 1.85
+          }
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -268.8356683559008,
+          "speedKmh": 83.62102236611078,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -215.07828227663532,
+          "speedKmh": 74.25752117097,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -198.29006537111627,
+          "speedKmh": 83.3565679787425,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -138.2045365616695,
+          "speedKmh": 78.24050835878425,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -170.1914462047784,
+          "speedKmh": 97.74439414321,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -52.20098806925877,
+          "speedKmh": 74.62330743099632,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -15.280128156551118,
+          "speedKmh": 74.85406934975084,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -4.575795660943507,
+          "speedKmh": 86.09174365021022,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -449.26342938716385,
+          "speedKmh": 73.92364298714557,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -435.88366213541605,
+          "speedKmh": 82.29149876548664,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -59.70718118132872,
+          "speedKmh": 125.69279520912869,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -369.49891041475195,
+          "speedKmh": 77.26758580680263,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -298.6088450559848,
+          "speedKmh": 69.15797033866475,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -444.17786305500374,
+          "speedKmh": 119.33826881536973,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -383.57136446708665,
+          "speedKmh": 98.88987023549248,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -325.87607955789633,
+          "speedKmh": 78.29869665340637,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -318.663536218553,
+          "speedKmh": 76.99027720719111,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -319.4808457473911,
+          "speedKmh": 89.80360989066493,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -262.6450810308525,
+          "speedKmh": 70.37012595186789,
+          "laneChange": null
+        }
+      ]
+    },
+    {
+      "t": 7.499999999999979,
+      "player": {
+        "x": -12.499999999999998,
+        "y": 0,
+        "vx": -6.901764839314592e-15,
+        "vz": -22.39555504902687,
+        "speedKmh": 80.62399817649674,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": "Infinity",
+      "decisionCooldown": 0.2833333333333333,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 77.08610738671229,
+        "score": 379.27152684667806
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 380.3219291327302,
+          "flow": 105.28771653092073,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 381.27152684667806
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 5,
+          "x": 7.719125968372341,
+          "z": -10.431038846608043,
+          "speedKmh": 124.0853692111879,
+          "laneChange": {
+            "from": 5,
+            "to": 4,
+            "startX": 12.5,
+            "elapsed": 1.85
+          }
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -269.3626862552791,
+          "speedKmh": 83.62922089665484,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -211.34562863142727,
+          "speedKmh": 74.71970062920835,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -198.70734225060016,
+          "speedKmh": 83.42849937517124,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -136.16845924642877,
+          "speedKmh": 78.0145297726218,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -177.06927723048094,
+          "speedKmh": 96.7615260179537,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -48.51989368608644,
+          "speedKmh": 74.56922793762914,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -11.708862388408583,
+          "speedKmh": 74.81098623316927,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -6.254091302088503,
+          "speedKmh": 86.09569188243373,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -445.2809399228285,
+          "speedKmh": 73.96839024059597,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -435.81123182826445,
+          "speedKmh": 82.38051031848477,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -78.84382620191441,
+          "speedKmh": 121.4357432878357,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -367.06596460104237,
+          "speedKmh": 77.2776617016952,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -292.4324779321144,
+          "speedKmh": 69.32643977919881,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -461.34619015301803,
+          "speedKmh": 119.33829482669908,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -391.21130195932335,
+          "speedKmh": 98.8898802003506,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -323.8674567860357,
+          "speedKmh": 78.09023901962684,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -316.09887004757337,
+          "speedKmh": 76.99028045871323,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -323.0206413198531,
+          "speedKmh": 90.37140203235577,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -257.0592940107412,
+          "speedKmh": 70.6428948011832,
+          "laneChange": null
+        }
+      ]
+    },
+    {
+      "t": 8.500000000000002,
+      "player": {
+        "x": -12.499999999999998,
+        "y": 0,
+        "vx": -6.9012805586148075e-15,
+        "vz": -21.7109342826739,
+        "speedKmh": 78.15936341762604,
+        "gas": 10
+      },
+      "target": 0,
+      "currentThreat": "Infinity",
+      "decisionCooldown": 0.23333333333333334,
+      "stay": {
+        "collision": "Infinity",
+        "flowMetres": 75.91426396804003,
+        "score": 378.97856599201003
+      },
+      "options": [
+        {
+          "lane": 1,
+          "safeFirstStep": true,
+          "room": 3.6,
+          "score": 380.6340450079701,
+          "flow": 106.53618003188039,
+          "route": [
+            1,
+            2,
+            3
+          ],
+          "passesScore": false,
+          "requiredScore": 380.97856599201003
+        }
+      ],
+      "traffic": [
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -29.169022095618327,
+          "speedKmh": 116.371246318559,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -271.3668322541197,
+          "speedKmh": 83.63638713563891,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -209.37417251287062,
+          "speedKmh": 75.19716481215046,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -200.63907103043223,
+          "speedKmh": 83.52409332812633,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -135.55211272560916,
+          "speedKmh": 77.8201306721121,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -184.86460133052242,
+          "speedKmh": 95.76926829170534,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -46.36129501471128,
+          "speedKmh": 74.53424587976532,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -9.664705948193571,
+          "speedKmh": 74.79270918048927,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -9.383622281232727,
+          "speedKmh": 86.07778440373085,
+          "laneChange": null
+        },
+        {
+          "lane": 0,
+          "x": -12.5,
+          "z": -442.8626611353166,
+          "speedKmh": 73.99754505736828,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -437.2561052757793,
+          "speedKmh": 82.44111697793251,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -97.22115454985673,
+          "speedKmh": 117.2862088481699,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -366.158929113937,
+          "speedKmh": 77.28433400273484,
+          "laneChange": null
+        },
+        {
+          "lane": 2,
+          "x": -2.5,
+          "z": -287.9215932735157,
+          "speedKmh": 69.51135593483438,
+          "laneChange": null
+        },
+        {
+          "lane": 1,
+          "x": -7.5,
+          "z": -479.71532083426104,
+          "speedKmh": 119.3383146302933,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -400.20823960610664,
+          "speedKmh": 98.88988739453475,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -323.3044877571625,
+          "speedKmh": 77.98648326255382,
+          "laneChange": null
+        },
+        {
+          "lane": 5,
+          "x": 12.5,
+          "z": -315.05848993809747,
+          "speedKmh": 76.9902826077617,
+          "laneChange": null
+        },
+        {
+          "lane": 3,
+          "x": 2.5,
+          "z": -328.2331118714281,
+          "speedKmh": 90.88654814621067,
+          "laneChange": null
+        },
+        {
+          "lane": 4,
+          "x": 7.5,
+          "z": -253.17026803497802,
+          "speedKmh": 70.90602466734077,
+          "laneChange": null
+        }
+      ]
+    }
+  ],
+  "longerPrediction": {
+    "t": 6.483333333333316,
+    "horizon": 7,
+    "stay": {
+      "collision": "Infinity",
+      "flowMetres": 149.75800019535095,
+      "finalKmh": 74.40474400404943
+    },
+    "candidate": {
+      "route": [
+        1,
+        2,
+        3
+      ],
+      "collision": "Infinity",
+      "flowMetres": 243.4646152993731,
+      "finalKmh": 105.28165503262217
+    },
+    "netScoreGain": 17.426653776005537
+  },
+  "forceSnapshot": {
+    "t": 6.483333333333316,
+    "player": {
+      "x": -12.499999999999995,
+      "y": 0,
+      "z": 0,
+      "vx": 3.2897749283967173e-13,
+      "vy": 0,
+      "vz": -23.562980120081647,
+      "airStrafeSpeed": 0,
+      "speed": 23.562980120081647,
+      "maxSpeed": 55.55555555555556,
+      "airMaxSpeed": 31.5,
+      "physicsMode": "realistic",
+      "insaneMode": false,
+      "speedUnit": "kmh",
+      "hudMode": "full",
+      "hudMinimal": false,
+      "speedMilestone": 0,
+      "tireTemp": 35,
+      "gasMassKg": 144,
+      "dragCoeffCd": 0.3557017220782292,
+      "suspensionVelocity": 0,
+      "downforceN": 0,
+      "brakeHeat": 0,
+      "wasAirBraking": false,
+      "camZoom": 0.75,
+      "isDrifting": false,
+      "driftAngle": 0,
+      "isAltitudeHold": false,
+      "holdTargetY": 0,
+      "isJumping6m": false,
+      "jumpTargetY": 6,
+      "driftTimer": 0,
+      "steerInput": 5.290591831588516e-16,
+      "steerAngle": -2.010424896003636e-16,
+      "roll": -3.552713678800501e-15,
+      "pitch": 0,
+      "attitudeIdleSeconds": 0,
+      "wasAirborne": false,
+      "jumpInertiaSeconds": null,
+      "yaw": -3.846640317617799e-15,
+      "vRoll": 0,
+      "vPitch": 0,
+      "vYaw": 0,
+      "accumulatedRoll": 0,
+      "airRemaining": 10,
+      "airUsedContinuous": 0,
+      "isAutoDescending8s": false,
+      "isFreefalling": false,
+      "autoStabilizer": true,
+      "hullIntegrity": 100,
+      "lastImpactG": 0,
+      "lastImpactDvKmh": 0,
+      "lastImpactEnergyKj": 0,
+      "impactCooldown": 0,
+      "isDestroyed": false,
+      "destroyReasonKey": "crashReasonThreshold",
+      "carsCleared": 0,
+      "blastedCarsCount": 0,
+      "score": 0,
+      "finalDrivingResult": null,
+      "distanceMeters": 0,
+      "distanceBySpeed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "bannerTimer": 0,
+      "bannerType": null,
+      "hasTriggeredHelipad": false,
+      "isAutoLandingSave": false,
+      "lastAutoSaveAlt": 0,
+      "wasSupersonic": false,
+      "cameraShake": 0,
+      "longitudinalG": 0,
+      "lateralG": 0,
+      "prevSpeed": 42,
+      "lightningTimer": 6.5,
+      "lightningFlash": 0,
+      "jumpInertiaGraceSeconds": null,
+      "wasHandbraking": false
+    },
+    "stats": {
+      "started": 3,
+      "completed": 3,
+      "jumps": 0,
+      "targetLane": 0,
+      "changing": false
+    }
+  },
+  "baselineMergeEvents": [
+    {
+      "t": 0,
+      "stats": {
+        "started": 1,
+        "completed": 0,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": true
+      },
+      "x": 2.5,
+      "speedKmh": 151.20000000000002
+    },
+    {
+      "t": 0.8166666666666675,
+      "stats": {
+        "started": 2,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 1,
+        "changing": true
+      },
+      "x": -2.5189623741319096,
+      "speedKmh": 133.11332403501132
+    },
+    {
+      "t": 1.6166666666666658,
+      "stats": {
+        "started": 3,
+        "completed": 2,
+        "jumps": 0,
+        "targetLane": 0,
+        "changing": true
+      },
+      "x": -7.522282482516264,
+      "speedKmh": 153.23726848951335
+    },
+    {
+      "t": 12.866666666666886,
+      "stats": {
+        "started": 4,
+        "completed": 3,
+        "jumps": 0,
+        "targetLane": 1,
+        "changing": true
+      },
+      "x": -12.499999999999998,
+      "speedKmh": 74.73163911600291
+    },
+    {
+      "t": 13.750000000000263,
+      "stats": {
+        "started": 5,
+        "completed": 4,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": true
+      },
+      "x": -7.502397276125804,
+      "speedKmh": 42.40857760380993
+    }
+  ],
+  "fastPasses": [
+    {
+      "npcKmh": 160,
+      "distanceWorldMetres": 100,
+      "passAtSeconds": 3.0833333333333335,
+      "peakKmh": 252.27874684405208,
+      "endKmh": 250.8220848513271,
+      "crashed": false,
+      "impacts": 0,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 160,
+      "distanceWorldMetres": 180,
+      "passAtSeconds": 4.966666666666667,
+      "peakKmh": 252.27577163231882,
+      "endKmh": 252.07584679826599,
+      "crashed": false,
+      "impacts": 0,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 170,
+      "distanceWorldMetres": 100,
+      "passAtSeconds": 3.3833333333333333,
+      "peakKmh": 252.2783793643927,
+      "endKmh": 250.03877299246636,
+      "crashed": false,
+      "impacts": 0,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 170,
+      "distanceWorldMetres": 180,
+      "passAtSeconds": 5.75,
+      "peakKmh": 252.2797822141222,
+      "endKmh": 250.0102094061948,
+      "crashed": false,
+      "impacts": 0,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 180,
+      "distanceWorldMetres": 100,
+      "passAtSeconds": 3.816666666666667,
+      "peakKmh": 252.2787544315924,
+      "endKmh": 250.81380080026892,
+      "crashed": false,
+      "impacts": 0,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 180,
+      "distanceWorldMetres": 180,
+      "passAtSeconds": 6.833333333333333,
+      "peakKmh": 252.27523774208422,
+      "endKmh": 250.3986835612466,
+      "crashed": false,
+      "impacts": 0,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    }
+  ],
+  "rejectionAudit": {
+    "definition": "A production-decision candidate passed safePath, is collision-free for all 3.6s, predicts more physical progress than staying, but fails the unchanged score threshold. Consecutive qualifying production decisions are joined only with the same target and <=0.35s separation; spans are observed spans, not proof for unobserved frames.",
+    "seed": 7,
+    "count": 20,
+    "fps": 60,
+    "summary": {
+      "seconds": 45.016666666665394,
+      "decisions": 127,
+      "scoreOnlyRejectedDecisions": 48,
+      "scoreOnlyRejectedCandidates": 48,
+      "longestObservedRejectionSpan": 6.016666666666669,
+      "intervals": [
+        {
+          "start": 2.416666666666663,
+          "last": 8.433333333333332,
+          "target": 0,
+          "count": 20,
+          "observedSpanSeconds": 6.016666666666669
+        },
+        {
+          "start": 11.600000000000156,
+          "last": 12.550000000000203,
+          "target": 0,
+          "count": 4,
+          "observedSpanSeconds": 0.9500000000000473
+        },
+        {
+          "start": 16.20000000000036,
+          "last": 18.73333333333355,
+          "target": 3,
+          "count": 9,
+          "observedSpanSeconds": 2.5333333333331893
+        },
+        {
+          "start": 29.349999999999614,
+          "last": 30.933333333332858,
+          "target": 4,
+          "count": 6,
+          "observedSpanSeconds": 1.5833333333332433
+        },
+        {
+          "start": 37.58333333333248,
+          "last": 39.166666666665726,
+          "target": 4,
+          "count": 6,
+          "observedSpanSeconds": 1.5833333333332433
+        },
+        {
+          "start": 41.06666666666562,
+          "last": 41.699999999998916,
+          "target": 4,
+          "count": 3,
+          "observedSpanSeconds": 0.6333333333332973
+        }
+      ],
+      "stats": {
+        "started": 7,
+        "completed": 7,
+        "jumps": 0,
+        "targetLane": 4,
+        "changing": false
+      },
+      "crashed": false,
+      "impacts": 0,
+      "airSeconds": 0,
+      "above220Seconds": 0.7500000000000007,
+      "events": [
+        {
+          "t": 0,
+          "x": 2.5,
+          "stats": {
+            "started": 1,
+            "completed": 0,
+            "jumps": 0,
+            "targetLane": 2,
+            "changing": true
+          }
+        },
+        {
+          "t": 0.8166666666666675,
+          "x": -2.5189623741319096,
+          "stats": {
+            "started": 2,
+            "completed": 1,
+            "jumps": 0,
+            "targetLane": 1,
+            "changing": true
+          }
+        },
+        {
+          "t": 1.6166666666666658,
+          "x": -7.522282482516264,
+          "stats": {
+            "started": 3,
+            "completed": 2,
+            "jumps": 0,
+            "targetLane": 0,
+            "changing": true
+          }
+        },
+        {
+          "t": 12.866666666666886,
+          "x": -12.499999999999998,
+          "stats": {
+            "started": 4,
+            "completed": 3,
+            "jumps": 0,
+            "targetLane": 1,
+            "changing": true
+          }
+        },
+        {
+          "t": 13.750000000000263,
+          "x": -7.502397276125804,
+          "stats": {
+            "started": 5,
+            "completed": 4,
+            "jumps": 0,
+            "targetLane": 2,
+            "changing": true
+          }
+        },
+        {
+          "t": 14.550000000000303,
+          "x": -2.437405172118389,
+          "stats": {
+            "started": 6,
+            "completed": 5,
+            "jumps": 0,
+            "targetLane": 3,
+            "changing": true
+          }
+        },
+        {
+          "t": 28.23333333333301,
+          "x": 2.5,
+          "stats": {
+            "started": 7,
+            "completed": 6,
+            "jumps": 0,
+            "targetLane": 4,
+            "changing": true
+          }
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "t": 0,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 151.20000000000002,
+        "stayFlow": 90.91718022302484,
+        "stayScore": 382.7292950557562,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 389.05399861253136,
+            "flow": 140.21599445012544,
+            "route": [
+              2,
+              1,
+              0
+            ],
+            "flowGain": 49.29881422710059,
+            "accepted": true,
+            "scoreGain": 6.324703556775148,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 385.615737919372,
+            "flow": 118.46295167748792,
+            "route": [
+              4,
+              5,
+              5
+            ],
+            "flowGain": 27.54577145446308,
+            "accepted": true,
+            "scoreGain": 2.886442863615798,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 2.416666666666663,
+        "target": 0,
+        "x": -12.523818683179913,
+        "speedKmh": 162.68066458283218,
+        "stayFlow": 115.50722768246912,
+        "stayScore": 388.8768069206173,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 387.5158132756578,
+            "flow": 134.0632531026313,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 18.556025420162186,
+            "accepted": false,
+            "scoreGain": -1.3609936449594784,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 2.7333333333333285,
+        "target": 0,
+        "x": -12.501866633251726,
+        "speedKmh": 153.6454795072916,
+        "stayFlow": 109.16184581669003,
+        "stayScore": 387.2904614541725,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 386.0546641223846,
+            "flow": 128.2186564895384,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 19.05681067284837,
+            "accepted": false,
+            "scoreGain": -1.2357973317878646,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 3.049999999999994,
+        "target": 0,
+        "x": -12.498679413792438,
+        "speedKmh": 141.4538418360906,
+        "stayFlow": 103.68114254082367,
+        "stayScore": 385.9202856352059,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 384.78900006787893,
+            "flow": 123.1560002715157,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 19.474857730692023,
+            "accepted": false,
+            "scoreGain": -1.1312855673269837,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 3.3666666666666596,
+        "target": 0,
+        "x": -12.50009868090973,
+        "speedKmh": 130.849693275628,
+        "stayFlow": 99.06924138303631,
+        "stayScore": 384.7673103457591,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 383.7026212738947,
+            "flow": 118.81048509557881,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 19.7412437125425,
+            "accepted": false,
+            "scoreGain": -1.064689071864393,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 3.683333333333325,
+        "target": 0,
+        "x": -12.500002151829065,
+        "speedKmh": 121.90645971070172,
+        "stayFlow": 95.19642342863581,
+        "stayScore": 383.79910585715896,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 382.88771005793876,
+            "flow": 115.55084023175496,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 20.35441680311915,
+            "accepted": false,
+            "scoreGain": -0.9113957992202018,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 3.9999999999999907,
+        "target": 0,
+        "x": -12.499998287100533,
+        "speedKmh": 114.38483403198121,
+        "stayFlow": 91.94547095880102,
+        "stayScore": 382.98636773970026,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 382.188017169528,
+            "flow": 112.75206867811198,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 20.806597719310957,
+            "accepted": false,
+            "scoreGain": -0.7983505701722606,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 4.316666666666657,
+        "target": 0,
+        "x": -12.50000017279369,
+        "speedKmh": 108.06044257469115,
+        "stayFlow": 89.21584527577346,
+        "stayScore": 382.3039613189434,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 381.6875218277754,
+            "flow": 110.75008731110164,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 21.534242035328177,
+            "accepted": false,
+            "scoreGain": -0.6164394911679665,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 4.633333333333322,
+        "target": 0,
+        "x": -12.49999999910105,
+        "speedKmh": 102.7428480463931,
+        "stayFlow": 86.92438646786805,
+        "stayScore": 381.731096616967,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 381.260774895753,
+            "flow": 109.04309958301194,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 22.11871311514389,
+            "accepted": false,
+            "scoreGain": -0.47032172121402027,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 4.949999999999988,
+        "target": 0,
+        "x": -12.499999998009866,
+        "speedKmh": 98.27206393586266,
+        "stayFlow": 85.00353763078496,
+        "stayScore": 381.2508844076962,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.9378192957041,
+            "flow": 107.75127718281658,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 22.747739552031618,
+            "accepted": false,
+            "scoreGain": -0.31306511199210263,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 5.266666666666653,
+        "target": 0,
+        "x": -12.500000000245558,
+        "speedKmh": 94.51321000685671,
+        "stayFlow": 83.38985889572103,
+        "stayScore": 380.8474647239303,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.70378530038414,
+            "flow": 106.81514120153665,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 23.425282305815614,
+            "accepted": false,
+            "scoreGain": -0.14367942354613206,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 5.583333333333319,
+        "target": 0,
+        "x": -12.499999999993568,
+        "speedKmh": 91.35278824894156,
+        "stayFlow": 82.03869871614627,
+        "stayScore": 380.50967467903655,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.5967788838475,
+            "flow": 106.38711553538987,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 24.348416819243596,
+            "accepted": false,
+            "scoreGain": 0.08710420481094161,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 5.899999999999984,
+        "target": 0,
+        "x": -12.499999999997964,
+        "speedKmh": 88.69551643445888,
+        "stayFlow": 80.88750940477019,
+        "stayScore": 380.2218773511926,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.50362198295903,
+            "flow": 106.01448793183623,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 25.126978527066044,
+            "accepted": false,
+            "scoreGain": 0.2817446317664576,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 6.21666666666665,
+        "target": 0,
+        "x": -12.50000000000031,
+        "speedKmh": 86.44305197169757,
+        "stayFlow": 79.81253831956009,
+        "stayScore": 379.95313457989005,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.46017539360537,
+            "flow": 105.84070157442153,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 26.02816325486144,
+            "accepted": false,
+            "scoreGain": 0.5070408137153208,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 6.5333333333333155,
+        "target": 0,
+        "x": -12.499999999999986,
+        "speedKmh": 84.54919495298948,
+        "stayFlow": 78.96912725759262,
+        "stayScore": 379.74228181439815,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.42055919719627,
+            "flow": 105.68223678878516,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 26.713109531192543,
+            "accepted": false,
+            "scoreGain": 0.6782773827981146,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 6.849999999999981,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 83.05483234127662,
+        "stayFlow": 78.2555190616955,
+        "stayScore": 379.56387976542385,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.4588655631149,
+            "flow": 105.83546225245955,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 27.579943190764055,
+            "accepted": false,
+            "scoreGain": 0.8949857976910494,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 7.1666666666666465,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 81.75553401339111,
+        "stayFlow": 77.6292720939031,
+        "stayScore": 379.4073180234758,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.5260252301434,
+            "flow": 106.10410092057352,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 28.474828826670418,
+            "accepted": false,
+            "scoreGain": 1.1187072066675796,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 7.483333333333312,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 80.6486116201391,
+        "stayFlow": 77.1105952629709,
+        "stayScore": 379.27764881574274,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.3169968165941,
+            "flow": 105.26798726637648,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 28.157392003405576,
+            "accepted": false,
+            "scoreGain": 1.039348000851362,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 7.799999999999978,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 79.74281642665805,
+        "stayFlow": 76.67407144493541,
+        "stayScore": 379.16851786123385,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.4063540439666,
+            "flow": 105.62541617586628,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 28.95134473093087,
+            "accepted": false,
+            "scoreGain": 1.2378361827327353,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 8.11666666666665,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 78.96810919697619,
+        "stayFlow": 76.29027523745654,
+        "stayScore": 379.07256880936416,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.52458676088236,
+            "flow": 106.09834704352936,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 29.808071806072817,
+            "accepted": false,
+            "scoreGain": 1.4520179515182008,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 8.433333333333332,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 78.25695991816058,
+        "stayFlow": 75.9750726453591,
+        "stayScore": 378.9937681613398,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 380.6050381185172,
+            "flow": 106.42015247406891,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 30.445079828709808,
+            "accepted": false,
+            "scoreGain": 1.6112699571773987,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 8.750000000000014,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 77.73229115328503,
+        "stayFlow": 75.69375215443098,
+        "stayScore": 378.92343803860774,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.7140024343742,
+            "flow": 70.85600973749676,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.837742416934219,
+            "accepted": false,
+            "scoreGain": -5.2094356042335335,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 9.066666666666697,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 77.20856933258278,
+        "stayFlow": 75.46690750226483,
+        "stayScore": 378.8667268755662,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.6586180866136,
+            "flow": 70.63447234645457,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.832435155810259,
+            "accepted": false,
+            "scoreGain": -5.208108788952586,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 9.383333333333379,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 76.74700172308332,
+        "stayFlow": 75.27334510010918,
+        "stayScore": 378.8183362750273,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.6118912148191,
+            "flow": 70.44756485927637,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.825780240832813,
+            "accepted": false,
+            "scoreGain": -5.206445060208239,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 9.700000000000061,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 76.28618149773683,
+        "stayFlow": 75.11647046440861,
+        "stayScore": 378.77911761610216,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.5746741755194,
+            "flow": 70.29869670207769,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.817773762330916,
+            "accepted": false,
+            "scoreGain": -5.204443440582736,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 10.016666666666744,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 75.8261029699577,
+        "stayFlow": 74.99689243461074,
+        "stayScore": 378.7492231086527,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.5458599331444,
+            "flow": 70.18343973257774,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.813452702033004,
+            "accepted": false,
+            "scoreGain": -5.2033631755082865,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 10.333333333333426,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 75.46546556231688,
+        "stayFlow": 74.91326781374576,
+        "stayScore": 378.72831695343643,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.52573002887675,
+            "flow": 70.10292011550692,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.810347698238843,
+            "accepted": false,
+            "scoreGain": -5.202586924559682,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 10.650000000000109,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 75.30469473308851,
+        "stayFlow": 74.84686001509019,
+        "stayScore": 378.71171500377255,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.5104268225915,
+            "flow": 70.04170729036599,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.805152724724195,
+            "accepted": false,
+            "scoreGain": -5.201288181181042,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 10.966666666666791,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 75.19419894062742,
+        "stayFlow": 74.79018482313843,
+        "stayScore": 378.6975462057846,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.49784492813336,
+            "flow": 69.9913797125335,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.798805110604931,
+            "accepted": false,
+            "scoreGain": -5.199701277651229,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 11.283333333333474,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 75.08420075866744,
+        "stayFlow": 74.74213826005406,
+        "stayScore": 378.68553456501354,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 373.4874801105526,
+            "flow": 69.94992044221037,
+            "route": [
+              1,
+              0,
+              0
+            ],
+            "flowGain": -4.792217817843692,
+            "accepted": false,
+            "scoreGain": -5.19805445446093,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 11.600000000000156,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 74.9980614758818,
+        "stayFlow": 74.70077280678387,
+        "stayScore": 378.67519320169595,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 378.1750600721876,
+            "flow": 96.70024028875045,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 21.999467481966576,
+            "accepted": false,
+            "scoreGain": -0.500133129508356,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 11.916666666666838,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 74.91217799729168,
+        "stayFlow": 74.6657282159847,
+        "stayScore": 378.6664320539962,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 378.73920440630474,
+            "flow": 98.95681762521902,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 24.291089409234317,
+            "accepted": false,
+            "scoreGain": 0.0727723523085615,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 12.23333333333352,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 74.85257215350913,
+        "stayFlow": 74.63649689945932,
+        "stayScore": 378.65912422486485,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 379.19730746060907,
+            "flow": 100.78922984243621,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 26.152732942976897,
+            "accepted": false,
+            "scoreGain": 0.5381832357442136,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 12.550000000000203,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 74.79269909725947,
+        "stayFlow": 74.61066807168342,
+        "stayScore": 378.65266701792086,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 379.6120019433538,
+            "flow": 102.44800777341526,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 27.837339701731835,
+            "accepted": false,
+            "scoreGain": 0.9593349254329269,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 12.866666666666886,
+        "target": 0,
+        "x": -12.499999999999998,
+        "speedKmh": 74.73163911600291,
+        "stayFlow": 74.58914011618589,
+        "stayScore": 378.6472850290465,
+        "candidates": [
+          {
+            "lane": 1,
+            "room": 3.6,
+            "score": 382.29537016026006,
+            "flow": 113.18148064104015,
+            "route": [
+              1,
+              2,
+              3
+            ],
+            "flowGain": 38.592340524854265,
+            "accepted": true,
+            "scoreGain": 3.648085131213577,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 15.56666666666702,
+        "target": 3,
+        "x": 2.7800696134518574,
+        "speedKmh": 182.48871325025763,
+        "stayFlow": 176.7843726594891,
+        "stayScore": 404.19609316487225,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 394.33435294646966,
+            "flow": 153.33741178587863,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -23.446960873610465,
+            "accepted": false,
+            "scoreGain": -9.861740218402588,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 394.4871516577965,
+            "flow": 153.94860663118607,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -22.835766028303027,
+            "accepted": false,
+            "scoreGain": -9.708941507075735,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 15.883333333333702,
+        "target": 3,
+        "x": 2.4013554546472755,
+        "speedKmh": 226.02268478961025,
+        "stayFlow": 168.85289612392594,
+        "stayScore": 402.2132240309815,
+        "candidates": []
+      },
+      {
+        "t": 16.20000000000036,
+        "target": 3,
+        "x": 2.522116928337168,
+        "speedKmh": 231.8429928991628,
+        "stayFlow": 158.17489027228487,
+        "stayScore": 399.5437225680712,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 398.52302523447804,
+            "flow": 162.09210093791222,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 3.9172106656273513,
+            "accepted": false,
+            "scoreGain": -1.020697333593148,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 393.25363911149805,
+            "flow": 149.01455644599218,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -9.160333826292685,
+            "accepted": false,
+            "scoreGain": -6.290083456573143,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 16.51666666666701,
+        "target": 3,
+        "x": 2.506723369665439,
+        "speedKmh": 224.280590209831,
+        "stayFlow": 147.31663400207813,
+        "stayScore": 396.82915850051955,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 396.3811025759006,
+            "flow": 153.52441030360256,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 6.207776301524433,
+            "accepted": false,
+            "scoreGain": -0.4480559246189273,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 390.5547875547461,
+            "flow": 138.21915021898445,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -9.09748378309368,
+            "accepted": false,
+            "scoreGain": -6.274370945773455,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 16.83333333333366,
+        "target": 3,
+        "x": 2.4991077647529494,
+        "speedKmh": 205.20519420615952,
+        "stayFlow": 137.54821542254612,
+        "stayScore": 394.3870538556365,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 393.8522492932085,
+            "flow": 143.40899717283412,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 5.860781750287998,
+            "accepted": false,
+            "scoreGain": -0.5348045624280076,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 387.8942516915373,
+            "flow": 127.57700676614922,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -9.971208656396897,
+            "accepted": false,
+            "scoreGain": -6.492802164099203,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 17.150000000000308,
+        "target": 3,
+        "x": 2.5000430927763126,
+        "speedKmh": 187.3004692447655,
+        "stayFlow": 129.1230315257681,
+        "stayScore": 392.280757881442,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 391.5086097212808,
+            "flow": 134.03443888512317,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 4.911407359355053,
+            "accepted": false,
+            "scoreGain": -0.7721481601612368,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 385.232215099896,
+            "flow": 116.92886039958393,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -12.194171126184187,
+            "accepted": false,
+            "scoreGain": -7.048542781546018,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 17.466666666666956,
+        "target": 3,
+        "x": 2.5000101299381283,
+        "speedKmh": 171.02455835795757,
+        "stayFlow": 121.99744138945098,
+        "stayScore": 390.49936034736277,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 389.4980386786829,
+            "flow": 125.99215471473173,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 3.994713325280742,
+            "accepted": false,
+            "scoreGain": -1.00132166867985,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 382.3560513637341,
+            "flow": 105.4242054549363,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -16.573235934514685,
+            "accepted": false,
+            "scoreGain": -8.143308983628685,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 17.783333333333605,
+        "target": 3,
+        "x": 2.4999980768861687,
+        "speedKmh": 157.23561177919066,
+        "stayFlow": 116.00366935043718,
+        "stayScore": 389.0009173376093,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 387.7618939570512,
+            "flow": 119.04757582820483,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 3.043906477767649,
+            "accepted": false,
+            "scoreGain": -1.2390233805580806,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 18.100000000000254,
+        "target": 3,
+        "x": 2.500000114928888,
+        "speedKmh": 145.63352134493013,
+        "stayFlow": 110.96831413104967,
+        "stayScore": 387.74207853276243,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 386.26463770201013,
+            "flow": 113.05855080804058,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 2.090236676990912,
+            "accepted": false,
+            "scoreGain": -1.4774408307523004,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 18.416666666666902,
+        "target": 3,
+        "x": 2.5000000124265256,
+        "speedKmh": 135.87785597428626,
+        "stayFlow": 106.74179969350851,
+        "stayScore": 386.6854499233771,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 384.9681154207889,
+            "flow": 107.87246168315542,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 1.1306619896469101,
+            "accepted": false,
+            "scoreGain": -1.717334502588244,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 382.4002736115121,
+            "flow": 105.60109444604828,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -1.1407052474602324,
+            "accepted": false,
+            "scoreGain": -4.28517631186503,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 18.73333333333355,
+        "target": 3,
+        "x": 2.4999999968746986,
+        "speedKmh": 127.67557084671759,
+        "stayFlow": 103.19716901279824,
+        "stayScore": 385.79929225319955,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 383.8404479219482,
+            "flow": 103.3617916877928,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": 0.16462267499456118,
+            "accepted": false,
+            "scoreGain": -1.9588443312513277,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 381.4696669442781,
+            "flow": 101.87866777711238,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -1.3185012356858579,
+            "accepted": false,
+            "scoreGain": -4.329625308921436,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 19.0500000000002,
+        "target": 3,
+        "x": 2.5000000002337126,
+        "speedKmh": 120.77971486861537,
+        "stayFlow": 100.22289171799791,
+        "stayScore": 385.0557229294995,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 382.8548039489357,
+            "flow": 99.41921579574283,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -0.8036759222550813,
+            "accepted": false,
+            "scoreGain": -2.200918980563813,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 380.6797174444012,
+            "flow": 98.71886977760477,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -1.5040219403931445,
+            "accepted": false,
+            "scoreGain": -4.37600548509829,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 19.36666666666685,
+        "target": 3,
+        "x": 2.5000000000109375,
+        "speedKmh": 114.98257495779467,
+        "stayFlow": 97.72616584507028,
+        "stayScore": 384.43154146126756,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 381.98969191112457,
+            "flow": 95.95876764449821,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -1.7673982005720745,
+            "accepted": false,
+            "scoreGain": -2.44184955014299,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 380.00747495511354,
+            "flow": 96.02989982045418,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -1.6962660246161079,
+            "accepted": false,
+            "scoreGain": -4.42406650615402,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 19.683333333333497,
+        "target": 3,
+        "x": 2.499999999995725,
+        "speedKmh": 110.10946855443787,
+        "stayFlow": 95.63350721676095,
+        "stayScore": 383.90837680419025,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 381.22599567052305,
+            "flow": 92.9039826820921,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -2.7295245346688404,
+            "accepted": false,
+            "scoreGain": -2.6823811336672065,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 379.43522211665874,
+            "flow": 93.740888466635,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -1.8926187501259477,
+            "accepted": false,
+            "scoreGain": -4.473154687531519,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 20.000000000000146,
+        "target": 3,
+        "x": 2.500000000000391,
+        "speedKmh": 106.01349047106513,
+        "stayFlow": 93.87930174685182,
+        "stayScore": 383.46982543671294,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 380.5479127995085,
+            "flow": 90.1916511980339,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -3.6876505488179276,
+            "accepted": false,
+            "scoreGain": -2.921912637204457,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 378.94710064174166,
+            "flow": 91.78840256696668,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -2.0908991798851417,
+            "accepted": false,
+            "scoreGain": -4.522724794971282,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 20.316666666666794,
+        "target": 3,
+        "x": 2.5000000000000044,
+        "speedKmh": 102.57109350514055,
+        "stayFlow": 92.41053791632766,
+        "stayScore": 383.1026344790819,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 379.94078491314156,
+            "flow": 87.76313965256627,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -4.647398263761389,
+            "accepted": false,
+            "scoreGain": -3.161849565940372,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 378.5295288860848,
+            "flow": 90.11811554433919,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -2.292422371988465,
+            "accepted": false,
+            "scoreGain": -4.573105592997138,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 20.633333333333443,
+        "target": 3,
+        "x": 2.4999999999999942,
+        "speedKmh": 99.67837241263747,
+        "stayFlow": 91.17061668742603,
+        "stayScore": 382.7926541718565,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 379.39430340868057,
+            "flow": 85.57721363472227,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -5.5934030527037635,
+            "accepted": false,
+            "scoreGain": -3.3983507631759267,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 378.1584694531034,
+            "flow": 88.63387781241371,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -2.5367388750123183,
+            "accepted": false,
+            "scoreGain": -4.63418471875309,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 20.95000000000009,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 97.24793939533413,
+        "stayFlow": 90.12794567848155,
+        "stayScore": 382.5319864196204,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 378.8975615097079,
+            "flow": 83.59024603883158,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -6.537699639649972,
+            "accepted": false,
+            "scoreGain": -3.634424909912525,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 377.8367333844819,
+            "flow": 87.34693353792747,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -2.7810121405540826,
+            "accepted": false,
+            "scoreGain": -4.695253035138535,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 21.26666666666674,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 95.20629690867794,
+        "stayFlow": 89.24013572289685,
+        "stayScore": 382.3100339307242,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 378.4439868228212,
+            "flow": 81.77594729128488,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -7.464188431611973,
+            "accepted": false,
+            "scoreGain": -3.8660471079030003,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 377.5520936425077,
+            "flow": 86.20837457003076,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -3.031761152866096,
+            "accepted": false,
+            "scoreGain": -4.757940288216503,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 21.58333333333339,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 93.52983795152184,
+        "stayFlow": 88.48038327564622,
+        "stayScore": 382.1200958189116,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 378.0265743960636,
+            "flow": 80.10629758425445,
+            "route": [
+              2,
+              2,
+              2
+            ],
+            "flowGain": -8.37408569139177,
+            "accepted": false,
+            "scoreGain": -4.093521422847971,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 377.3006763197229,
+            "flow": 85.20270527889181,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -3.277677996754406,
+            "accepted": false,
+            "scoreGain": -4.819419499188655,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 21.900000000000038,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 92.16252109952615,
+        "stayFlow": 87.81401835099359,
+        "stayScore": 381.9535045877484,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 377.7933716550195,
+            "flow": 87.17348662007788,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -0.6405317309157113,
+            "accepted": false,
+            "scoreGain": -4.160132932728914,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 377.07553889462855,
+            "flow": 84.30215557851417,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -3.511862772479418,
+            "accepted": false,
+            "scoreGain": -4.877965693119847,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 22.216666666666686,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 90.99415464201468,
+        "stayFlow": 87.28226344765451,
+        "stayScore": 381.8205658619136,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 377.6131223210079,
+            "flow": 86.45248928403149,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -0.8297741636230285,
+            "accepted": false,
+            "scoreGain": -4.207443540905729,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 376.8722632406655,
+            "flow": 83.48905296266207,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -3.793210484992443,
+            "accepted": false,
+            "scoreGain": -4.948302621248104,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 22.533333333333335,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 90.01531626323813,
+        "stayFlow": 86.81425191965818,
+        "stayScore": 381.7035629799145,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 377.4309606731238,
+            "flow": 85.72384269249523,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -1.0904092271629509,
+            "accepted": false,
+            "scoreGain": -4.272602306790702,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 376.6872187227421,
+            "flow": 82.74887489096832,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -4.065377028689852,
+            "accepted": false,
+            "scoreGain": -5.01634425717242,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 22.849999999999984,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 89.16859086388654,
+        "stayFlow": 86.42437063443202,
+        "stayScore": 381.606092658608,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 377.28828054931466,
+            "flow": 85.15312219725872,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -1.2712484371732984,
+            "accepted": false,
+            "scoreGain": -4.317812109293357,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 376.51695398937727,
+            "flow": 82.06781595750907,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -4.356554676922954,
+            "accepted": false,
+            "scoreGain": -5.089138669230749,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 23.166666666666632,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 88.50309803923805,
+        "stayFlow": 86.09317231595035,
+        "stayScore": 381.5232930789876,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 377.1521176691541,
+            "flow": 84.60847067661649,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -1.4847016393338635,
+            "accepted": false,
+            "scoreGain": -4.371175409833484,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 376.32780439207454,
+            "flow": 81.31121756829813,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -4.781954747652222,
+            "accepted": false,
+            "scoreGain": -5.195488686913052,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 23.48333333333328,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 87.90133804804715,
+        "stayFlow": 85.81180570672359,
+        "stayScore": 381.4529514266809,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 377.0247194349312,
+            "flow": 84.09887773972497,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -1.7129279669986204,
+            "accepted": false,
+            "scoreGain": -4.428231991749669,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 376.1783841009192,
+            "flow": 80.71353640367666,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -5.0982693030469335,
+            "accepted": false,
+            "scoreGain": -5.274567325761723,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 23.79999999999993,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 87.36097453237358,
+        "stayFlow": 85.58100638678276,
+        "stayScore": 381.3952515966957,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.9041963497239,
+            "flow": 83.61678539889576,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -1.9642209878870034,
+            "accepted": false,
+            "scoreGain": -4.491055246971769,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 376.0374171255365,
+            "flow": 80.14966850214586,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -5.431337884636903,
+            "accepted": false,
+            "scoreGain": -5.357834471159208,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 24.11666666666658,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 86.88183313926017,
+        "stayFlow": 85.38688474081908,
+        "stayScore": 381.3467211852048,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.7900751006775,
+            "flow": 83.16030040271,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -2.2265843381090775,
+            "accepted": false,
+            "scoreGain": -4.556646084527301,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.903345988908,
+            "flow": 79.61338395563187,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -5.77350078518721,
+            "accepted": false,
+            "scoreGain": -5.443375196296813,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 24.433333333333227,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 86.40356993945012,
+        "stayFlow": 85.23304921376231,
+        "stayScore": 381.3082623034406,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.6825977635153,
+            "flow": 82.7303910540611,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -2.5026581597012125,
+            "accepted": false,
+            "scoreGain": -4.62566453992531,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.77530974907916,
+            "flow": 79.1012389963167,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -6.131810217445619,
+            "accepted": false,
+            "scoreGain": -5.5329525543614295,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 24.749999999999876,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.92617850260335,
+        "stayFlow": 85.11840919634413,
+        "stayScore": 381.27960229908604,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.5817829540443,
+            "flow": 82.32713181617707,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -2.7912773801670596,
+            "accepted": false,
+            "scoreGain": -4.697819345041751,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.61366127018846,
+            "flow": 78.45464508075372,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -6.663764115590411,
+            "accepted": false,
+            "scoreGain": -5.665941028897578,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 25.066666666666524,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.57810793593254,
+        "stayFlow": 85.04144256284272,
+        "stayScore": 381.2603606407107,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.486079530048,
+            "flow": 81.94431812019207,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -3.097124442650653,
+            "accepted": false,
+            "scoreGain": -4.774281110662685,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.45454211079107,
+            "flow": 77.81816844316417,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -7.22327411967855,
+            "accepted": false,
+            "scoreGain": -5.805818529919634,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 25.383333333333173,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.43598375209064,
+        "stayFlow": 84.9809458601733,
+        "stayScore": 381.2452364650433,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.39220478115914,
+            "flow": 81.56881912463658,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -3.412126735536731,
+            "accepted": false,
+            "scoreGain": -4.853031683884183,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.3378559466976,
+            "flow": 77.35142378679026,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -7.629522073383043,
+            "accepted": false,
+            "scoreGain": -5.907380518345747,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 25.69999999999982,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.32129263061863,
+        "stayFlow": 84.93071722019518,
+        "stayScore": 381.2326793050488,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.29762987232925,
+            "flow": 81.19051948931693,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -3.7401977308782506,
+            "accepted": false,
+            "scoreGain": -4.935049432719552,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.22338086666485,
+            "flow": 76.89352346665939,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -8.037193753535789,
+            "accepted": false,
+            "scoreGain": -6.009298438383951,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 26.01666666666647,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.20730332714498,
+        "stayFlow": 84.89011798164174,
+        "stayScore": 381.2225294954104,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.20225014696035,
+            "flow": 80.80900058784144,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -4.081117393800298,
+            "accepted": false,
+            "scoreGain": -5.02027934845006,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 375.06254389218293,
+            "flow": 76.25017556873183,
+            "route": [
+              4,
+              3,
+              3
+            ],
+            "flowGain": -8.639942412909903,
+            "accepted": false,
+            "scoreGain": -6.159985603227483,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 26.33333333333312,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.1178054553183,
+        "stayFlow": 84.85705703877537,
+        "stayScore": 381.21426425969383,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 376.0750469626716,
+            "flow": 80.30018785068633,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -4.556869188089038,
+            "accepted": false,
+            "scoreGain": -5.139217297022242,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 26.649999999999768,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 85.05565138767626,
+        "stayFlow": 84.83125246506077,
+        "stayScore": 381.2078131162652,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 375.97530959097924,
+            "flow": 79.90123836391705,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -4.930014101143726,
+            "accepted": false,
+            "scoreGain": -5.232503525285949,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 26.966666666666416,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 84.99427992430364,
+        "stayFlow": 84.81029738232003,
+        "stayScore": 381.20257434558,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 375.87281478286064,
+            "flow": 79.49125913144255,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -5.319038250877483,
+            "accepted": false,
+            "scoreGain": -5.329759562719346,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 27.283333333333065,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 84.9305758239835,
+        "stayFlow": 84.79418833018669,
+        "stayScore": 381.19854708254667,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 375.7671694712115,
+            "flow": 79.06867788484604,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -5.725510445340646,
+            "accepted": false,
+            "scoreGain": -5.431377611335165,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 27.599999999999714,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 84.89628565707743,
+        "stayFlow": 84.78338705266289,
+        "stayScore": 381.1958467631657,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 375.6586753387333,
+            "flow": 78.63470135493326,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -6.148685697729633,
+            "accepted": false,
+            "scoreGain": -5.537171424432415,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 27.916666666666362,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 84.85964591221021,
+        "stayFlow": 84.77415573232338,
+        "stayScore": 381.19353893308084,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 375.46378281202493,
+            "flow": 77.85513124809977,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -6.919024484223613,
+            "accepted": false,
+            "scoreGain": -5.729756121055914,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 28.23333333333301,
+        "target": 3,
+        "x": 2.5,
+        "speedKmh": 84.85091823828796,
+        "stayFlow": 84.76895882872297,
+        "stayScore": 381.19223970718076,
+        "candidates": [
+          {
+            "lane": 2,
+            "room": 3.6,
+            "score": 375.34296888673356,
+            "flow": 77.37187554693428,
+            "route": [
+              2,
+              3,
+              3
+            ],
+            "flowGain": -7.397083281788696,
+            "accepted": false,
+            "scoreGain": -5.849270820447202,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 4,
+            "room": 3.6,
+            "score": 385.94765055228623,
+            "flow": 111.7906022091449,
+            "route": [
+              4,
+              4,
+              4
+            ],
+            "flowGain": 27.02164338042192,
+            "accepted": true,
+            "scoreGain": 4.755410845105473,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 29.033333333332966,
+        "target": 4,
+        "x": 7.509998801099575,
+        "speedKmh": 110.58589517179848,
+        "stayFlow": 112.12124724820322,
+        "stayScore": 388.0303118120508,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 382.24354848402464,
+            "flow": 104.97419393609866,
+            "route": [
+              3,
+              4,
+              4
+            ],
+            "flowGain": -7.1470533121045605,
+            "accepted": false,
+            "scoreGain": -5.786763328026154,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 29.349999999999614,
+        "target": 4,
+        "x": 7.501616137444267,
+        "speedKmh": 129.3958951717984,
+        "stayFlow": 109.41471083227634,
+        "stayScore": 387.3536777080691,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 384.64177294190966,
+            "flow": 114.56709176763869,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 5.152380935362345,
+            "accepted": false,
+            "scoreGain": -2.711904766159421,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 29.666666666666263,
+        "target": 4,
+        "x": 7.498920839587335,
+        "speedKmh": 137.17456171319856,
+        "stayFlow": 105.23460194677341,
+        "stayScore": 386.30865048669335,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 383.4768072415775,
+            "flow": 109.90722896631006,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 4.672627019536648,
+            "accepted": false,
+            "scoreGain": -2.831843245115863,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 379.3753647939408,
+            "flow": 93.5014591757632,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -11.733142771010208,
+            "accepted": false,
+            "scoreGain": -6.933285692752577,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 29.98333333333291,
+        "target": 4,
+        "x": 7.50007158319362,
+        "speedKmh": 130.06412963708104,
+        "stayFlow": 101.08688026209485,
+        "stayScore": 385.2717200655237,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 381.703044886085,
+            "flow": 102.81217954434013,
+            "route": [
+              3,
+              3,
+              2
+            ],
+            "flowGain": 1.725299282245274,
+            "accepted": false,
+            "scoreGain": -3.568675179438685,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 378.1185705349252,
+            "flow": 88.4742821397008,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -12.612598122394047,
+            "accepted": false,
+            "scoreGain": -7.153149530598512,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 30.29999999999956,
+        "target": 4,
+        "x": 7.500002442123389,
+        "speedKmh": 122.05089209795872,
+        "stayFlow": 97.54388896801507,
+        "stayScore": 384.3859722420038,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 380.6487930080877,
+            "flow": 98.59517203235067,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 1.0512830643356068,
+            "accepted": false,
+            "scoreGain": -3.7371792339160947,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 30.61666666666621,
+        "target": 4,
+        "x": 7.499998601559488,
+        "speedKmh": 115.15794606922597,
+        "stayFlow": 94.56387182865005,
+        "stayScore": 383.6409679571625,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 379.78327238219543,
+            "flow": 95.13308952878168,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 0.569217700131631,
+            "accepted": false,
+            "scoreGain": -3.8576955749670674,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 30.933333333332858,
+        "target": 4,
+        "x": 7.500000131233378,
+        "speedKmh": 109.35144452992131,
+        "stayFlow": 92.06366480561584,
+        "stayScore": 383.01591620140397,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 379.06560627287837,
+            "flow": 92.26242509151348,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 0.1987602858976345,
+            "accepted": false,
+            "scoreGain": -3.9503099285255985,
+            "scoreOnlyRejection": true
+          }
+        ]
+      },
+      {
+        "t": 31.249999999999506,
+        "target": 4,
+        "x": 7.500000000397869,
+        "speedKmh": 104.46953528909162,
+        "stayFlow": 89.96759334041516,
+        "stayScore": 382.49189833510377,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 378.4662966039293,
+            "flow": 89.8651864157173,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": -0.10240692469785984,
+            "accepted": false,
+            "scoreGain": -4.025601731174447,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 377.89404869835136,
+            "flow": 87.57619479340539,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.3913985470097714,
+            "accepted": false,
+            "scoreGain": -4.597849636752414,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 31.566666666666155,
+        "target": 4,
+        "x": 7.499999998335684,
+        "speedKmh": 100.36587481932827,
+        "stayFlow": 88.20636213852073,
+        "stayScore": 382.0515905346302,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 377.43058767445405,
+            "flow": 85.72235069781613,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.484011440704606,
+            "accepted": false,
+            "scoreGain": -4.621002860176134,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 31.883333333332804,
+        "target": 4,
+        "x": 7.500000000192675,
+        "speedKmh": 96.91662729851059,
+        "stayFlow": 86.73193510102087,
+        "stayScore": 381.6829837752552,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 377.0392719850928,
+            "flow": 84.15708794037107,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.574847160649796,
+            "accepted": false,
+            "scoreGain": -4.643711790162399,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 32.199999999999456,
+        "target": 4,
+        "x": 7.499999999996175,
+        "speedKmh": 94.0176096276793,
+        "stayFlow": 85.49819626081262,
+        "stayScore": 381.37454906520315,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 376.7079920615476,
+            "flow": 82.8319682461904,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.66622801462222,
+            "accepted": false,
+            "scoreGain": -4.666557003655555,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 32.516666666666104,
+        "target": 4,
+        "x": 7.499999999998231,
+        "speedKmh": 91.58121893055214,
+        "stayFlow": 84.43988604439735,
+        "stayScore": 381.10997151109933,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 376.42828908481704,
+            "flow": 81.71315633926814,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.726729705129216,
+            "accepted": false,
+            "scoreGain": -4.681682426282293,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 32.83333333333275,
+        "target": 4,
+        "x": 7.500000000000251,
+        "speedKmh": 89.5337974879481,
+        "stayFlow": 83.55425916582179,
+        "stayScore": 380.88856479145545,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 376.1914341639704,
+            "flow": 80.76573665588165,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.7885225099401367,
+            "accepted": false,
+            "scoreGain": -4.6971306274850235,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 33.1499999999994,
+        "target": 4,
+        "x": 7.499999999999991,
+        "speedKmh": 87.85782874261191,
+        "stayFlow": 82.79503331545583,
+        "stayScore": 380.69875832886396,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.99045065815176,
+            "flow": 79.96180263260703,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.833230682848793,
+            "accepted": false,
+            "scoreGain": -4.708307670712202,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 33.46666666666605,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 86.48835108580738,
+        "stayFlow": 82.13197593890904,
+        "stayScore": 380.5329939847273,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.81830262862877,
+            "flow": 79.27321051451511,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.8587654243939227,
+            "accepted": false,
+            "scoreGain": -4.714691356098513,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 33.7833333333327,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 85.31387598748164,
+        "stayFlow": 81.56991322774739,
+        "stayScore": 380.3924783069368,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.67080471908287,
+            "flow": 78.68321887633152,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.886694351415869,
+            "accepted": false,
+            "scoreGain": -4.721673587853957,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 34.09999999999935,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 84.33805190133914,
+        "stayFlow": 81.09520272252374,
+        "stayScore": 380.2738006806309,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.543402657853,
+            "flow": 78.17361063141196,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.9215920911117763,
+            "accepted": false,
+            "scoreGain": -4.730398022777933,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 34.416666666665996,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 83.49634841474975,
+        "stayFlow": 80.69573968883701,
+        "stayScore": 380.17393492220924,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.43335750964405,
+            "flow": 77.73343003857619,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -2.9623096502608206,
+            "accepted": false,
+            "scoreGain": -4.740577412565187,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 34.733333333332645,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 82.77952153784797,
+        "stayFlow": 80.35989012368653,
+        "stayScore": 380.0899725309216,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.33813005365124,
+            "flow": 77.35252021460494,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.0073699090815893,
+            "accepted": false,
+            "scoreGain": -4.7518424772703725,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 35.049999999999294,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 82.18531492355483,
+        "stayFlow": 80.06548486320246,
+        "stayScore": 380.01637121580063,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.255583647412,
+            "flow": 77.02233458964798,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.043150273554474,
+            "accepted": false,
+            "scoreGain": -4.7607875683886505,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 35.36666666666594,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 81.65422676588715,
+        "stayFlow": 79.82359743354188,
+        "stayScore": 379.95589935838547,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.1837166242861,
+            "flow": 76.73486649714427,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.08873093639761,
+            "accepted": false,
+            "scoreGain": -4.772182734099374,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 35.68333333333259,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 81.18523087644989,
+        "stayFlow": 79.61528576428223,
+        "stayScore": 379.90382144107053,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.1208966653679,
+            "flow": 76.48358666147162,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.1316991028106145,
+            "accepted": false,
+            "scoreGain": -4.782924775702611,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 35.99999999999924,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 80.71703827493285,
+        "stayFlow": 79.44314398279207,
+        "stayScore": 379.860785995698,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.06729366835367,
+            "flow": 76.26917467341471,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.1739693093773553,
+            "accepted": false,
+            "scoreGain": -4.793492327344325,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 36.31666666666589,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 80.24964296510191,
+        "stayFlow": 79.30997605422371,
+        "stayScore": 379.8274940135559,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 375.0222423823561,
+            "flow": 76.08896952942459,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.2210065247991224,
+            "accepted": false,
+            "scoreGain": -4.805251631199781,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 36.63333333333254,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.78303898454237,
+        "stayFlow": 79.2144433555969,
+        "stayScore": 379.8036108388992,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.9858455428521,
+            "flow": 75.94338217140837,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.2710611841885253,
+            "accepted": false,
+            "scoreGain": -4.817765296047128,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 36.949999999999186,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.61767035171825,
+        "stayFlow": 79.14467767658928,
+        "stayScore": 379.7861694191473,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.9349485099577,
+            "flow": 75.73979403983076,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.4048836367585267,
+            "accepted": false,
+            "scoreGain": -4.851220909189635,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 37.266666666665834,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.50403760198628,
+        "stayFlow": 79.08543942737577,
+        "stayScore": 379.77135985684396,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.90875188269644,
+            "flow": 75.63500753078577,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.450431896590004,
+            "accepted": false,
+            "scoreGain": -4.862607974147522,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 37.58333333333248,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.3910655022991,
+        "stayFlow": 79.03625395414475,
+        "stayScore": 379.7590634885362,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.5680178064007,
+            "flow": 82.27207122560279,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 3.235817271458032,
+            "accepted": false,
+            "scoreGain": -3.1910456821354956,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.88456399407926,
+            "flow": 75.53825597631699,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.4979979778277652,
+            "accepted": false,
+            "scoreGain": -4.874499494456927,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 37.89999999999913,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.28059817400461,
+        "stayFlow": 78.9951341487328,
+        "stayScore": 379.7487835371832,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.5908886791781,
+            "flow": 82.36355471671237,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 3.3684205679795696,
+            "accepted": false,
+            "scoreGain": -3.157894858005136,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.8619166622249,
+            "flow": 75.4476666488997,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.547467499833104,
+            "accepted": false,
+            "scoreGain": -4.886866874958287,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 38.21666666666578,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.21932546676561,
+        "stayFlow": 78.96176101275438,
+        "stayScore": 379.7404402531886,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.6150033330548,
+            "flow": 82.4600133322193,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 3.4982523194649247,
+            "accepted": false,
+            "scoreGain": -3.1254369201337795,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.84124920584645,
+            "flow": 75.36499682338582,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.5967641893685567,
+            "accepted": false,
+            "scoreGain": -4.8991910473421285,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 38.53333333333243,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.13403144111957,
+        "stayFlow": 78.93376254572938,
+        "stayScore": 379.73344063643236,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.6398795975483,
+            "flow": 82.55951839019319,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 3.6257558444638107,
+            "accepted": false,
+            "scoreGain": -3.0935610388840473,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.8220270483056,
+            "flow": 75.28810819322223,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.645654352507151,
+            "accepted": false,
+            "scoreGain": -4.911413588126777,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 38.84999999999908,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.07304299891717,
+        "stayFlow": 78.91048519399303,
+        "stayScore": 379.72762129849826,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.6656844765178,
+            "flow": 82.66273790607116,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 3.752252712078132,
+            "accepted": false,
+            "scoreGain": -3.061936821980453,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.8046258147765,
+            "flow": 75.21850325910607,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.691981934886954,
+            "accepted": false,
+            "scoreGain": -4.922995483721763,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 39.166666666665726,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.03963336818359,
+        "stayFlow": 78.8921526859736,
+        "stayScore": 379.7230381714934,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.69175914040363,
+            "flow": 82.76703656161447,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 3.874883875640876,
+            "accepted": false,
+            "scoreGain": -3.0312790310897526,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.78826871733986,
+            "flow": 75.15307486935941,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.7390778166141843,
+            "accepted": false,
+            "scoreGain": -4.934769454153525,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 39.483333333332375,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 79.00413864899106,
+        "stayFlow": 78.8774737518705,
+        "stayScore": 379.7193684379676,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 374.760704133361,
+            "flow": 75.04281653344401,
+            "route": [
+              3,
+              4,
+              4
+            ],
+            "flowGain": -3.8346572184264858,
+            "accepted": false,
+            "scoreGain": -4.9586643046066,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.7723466605713,
+            "flow": 75.08938664228515,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.788087109585348,
+            "accepted": false,
+            "scoreGain": -4.947021777396287,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 39.799999999999024,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.96966992304992,
+        "stayFlow": 78.86611155422376,
+        "stayScore": 379.71652788855596,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 374.79125015627903,
+            "flow": 75.16500062511612,
+            "route": [
+              3,
+              4,
+              4
+            ],
+            "flowGain": -3.7011109291076423,
+            "accepted": false,
+            "scoreGain": -4.925277732276925,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.75679222757117,
+            "flow": 75.02716891028471,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.838942643939049,
+            "accepted": false,
+            "scoreGain": -4.959735660984791,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 40.11666666666567,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.93428501688923,
+        "stayFlow": 78.85766839998487,
+        "stayScore": 379.71441709999624,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 374.8215660231538,
+            "flow": 75.28626409261531,
+            "route": [
+              3,
+              4,
+              4
+            ],
+            "flowGain": -3.571404307369562,
+            "accepted": false,
+            "scoreGain": -4.892851076842419,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.74205033283386,
+            "flow": 74.96820133133538,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.8894670686494948,
+            "accepted": false,
+            "scoreGain": -4.972366767162384,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 40.43333333333232,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.92343879529186,
+        "stayFlow": 78.85141328156554,
+        "stayScore": 379.7128533203914,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 374.8536066500966,
+            "flow": 75.41442660038649,
+            "route": [
+              3,
+              4,
+              4
+            ],
+            "flowGain": -3.43698668117905,
+            "accepted": false,
+            "scoreGain": -4.8592466702947945,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.7281795365144,
+            "flow": 74.91271814605756,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.9386951355079844,
+            "accepted": false,
+            "scoreGain": -4.9846737838769855,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 40.74999999999897,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.88612796199851,
+        "stayFlow": 78.84688832419606,
+        "stayScore": 379.711722081049,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 374.88496713375605,
+            "flow": 75.53986853502417,
+            "route": [
+              3,
+              4,
+              4
+            ],
+            "flowGain": -3.307019789171889,
+            "accepted": false,
+            "scoreGain": -4.8267549472929545,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.71469935871227,
+            "flow": 74.85879743484912,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -3.9880908893469353,
+            "accepted": false,
+            "scoreGain": -4.997022722336737,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 41.06666666666562,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.8769724945591,
+        "stayFlow": 78.84477914003415,
+        "stayScore": 379.71119478500856,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.84339575471597,
+            "flow": 83.3735830188638,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 4.528803878829649,
+            "accepted": false,
+            "scoreGain": -2.8677990302925878,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.70167177032414,
+            "flow": 74.80668708129654,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.038092058737604,
+            "accepted": false,
+            "scoreGain": -5.009523014684419,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 41.38333333333227,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.86705638007392,
+        "stayFlow": 78.84447876224317,
+        "stayScore": 379.7111196905608,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.8988892380751,
+            "flow": 83.59555695230046,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 4.751078190057285,
+            "accepted": false,
+            "scoreGain": -2.8122304524856645,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.6884671616014,
+            "flow": 74.75386864640558,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.090610115837592,
+            "accepted": false,
+            "scoreGain": -5.022652528959384,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 41.699999999998916,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.85423511808129,
+        "stayFlow": 78.84494439433657,
+        "stayScore": 379.71123609858415,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 376.9197920647282,
+            "flow": 83.67916825891278,
+            "route": [
+              3,
+              2,
+              2
+            ],
+            "flowGain": 4.834223864576217,
+            "accepted": false,
+            "scoreGain": -2.791444033855953,
+            "scoreOnlyRejection": true
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.67546079743386,
+            "flow": 74.70184318973533,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.143101204601237,
+            "accepted": false,
+            "scoreGain": -5.035775301150295,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 42.016666666665564,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.86864345990577,
+        "stayFlow": 78.84601633266854,
+        "stayScore": 379.71150408316714,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.66304912228196,
+            "flow": 74.65219648912786,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.19381984354068,
+            "accepted": false,
+            "scoreGain": -5.048454960885181,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 42.33333333333221,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.85991053110726,
+        "stayFlow": 78.84835755245345,
+        "stayScore": 379.7120893881134,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.65047184442363,
+            "flow": 74.60188737769462,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.2464701747588265,
+            "accepted": false,
+            "scoreGain": -5.061617543689749,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 42.64999999999886,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.84219885485192,
+        "stayFlow": 78.8507637515803,
+        "stayScore": 379.7126909378951,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.6382443390482,
+            "flow": 74.55297735619283,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.297786395387476,
+            "accepted": false,
+            "scoreGain": -5.074446598846919,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 42.96666666666551,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.8580002688647,
+        "stayFlow": 78.85394884401593,
+        "stayScore": 379.713487211004,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.625824507186,
+            "flow": 74.5032980287439,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.350650815272033,
+            "accepted": false,
+            "scoreGain": -5.087662703818012,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 43.28333333333216,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.86034515422931,
+        "stayFlow": 78.85684698054507,
+        "stayScore": 379.71421174513625,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.6135663253309,
+            "flow": 74.45426530132369,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.4025816792213845,
+            "accepted": false,
+            "scoreGain": -5.100645419805346,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 43.59999999999881,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.85255670865818,
+        "stayFlow": 78.86128009084103,
+        "stayScore": 379.7153200227103,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.60096072615016,
+            "flow": 74.40384290460071,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.457437186240327,
+            "accepted": false,
+            "scoreGain": -5.11435929656011,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 43.916666666665456,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.860574923057,
+        "stayFlow": 78.86525969009847,
+        "stayScore": 379.7163149225246,
+        "candidates": [
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.5884609185826,
+            "flow": 74.35384367433039,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.511416015768077,
+            "accepted": false,
+            "scoreGain": -5.127854003941991,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 44.233333333332105,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.86331031023244,
+        "stayFlow": 78.86925140827115,
+        "stayScore": 379.7173128520678,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 375.63894396878374,
+            "flow": 70.555775875135,
+            "route": [
+              3,
+              3,
+              3
+            ],
+            "flowGain": -8.313475533136156,
+            "accepted": false,
+            "scoreGain": -4.078368883284043,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.5759174562048,
+            "flow": 74.3036698248192,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.565581583451959,
+            "accepted": false,
+            "scoreGain": -5.141395395862958,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 44.549999999998754,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.86534525183683,
+        "stayFlow": 78.87347154845706,
+        "stayScore": 379.71836788711425,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 375.7501501150051,
+            "flow": 71.00060046002044,
+            "route": [
+              3,
+              3,
+              3
+            ],
+            "flowGain": -7.872871088436625,
+            "accepted": false,
+            "scoreGain": -3.968217772109142,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.56352078009604,
+            "flow": 74.25408312038422,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.619388428072838,
+            "accepted": false,
+            "scoreGain": -5.154847107018213,
+            "scoreOnlyRejection": false
+          }
+        ]
+      },
+      {
+        "t": 44.8666666666654,
+        "target": 4,
+        "x": 7.499999999999999,
+        "speedKmh": 78.86774222521944,
+        "stayFlow": 78.87836808142731,
+        "stayScore": 379.7195920203568,
+        "candidates": [
+          {
+            "lane": 3,
+            "room": 3.6,
+            "score": 375.86093755470745,
+            "flow": 71.44375021882978,
+            "route": [
+              3,
+              3,
+              3
+            ],
+            "flowGain": -7.434617862597534,
+            "accepted": false,
+            "scoreGain": -3.8586544656493516,
+            "scoreOnlyRejection": false
+          },
+          {
+            "lane": 5,
+            "room": 3.6,
+            "score": 374.52331133306905,
+            "flow": 74.09324533227623,
+            "route": [
+              5,
+              4,
+              4
+            ],
+            "flowGain": -4.7851227491510855,
+            "accepted": false,
+            "scoreGain": -5.196280687287754,
+            "scoreOnlyRejection": false
+          }
+        ]
+      }
+    ]
+  }
+}

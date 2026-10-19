@@ -1,0 +1,57 @@
+[
+  {
+    "fixture": "four-six-lane-walls-30m-apart",
+    "fps": 60,
+    "initialGas": 10,
+    "seconds": 0.6333333333333336,
+    "impacts": 1,
+    "crashed": true,
+    "jumps": 1,
+    "jumpTimes": [
+      0.016666666666666666
+    ],
+    "airPct": 100,
+    "longestAirSeconds": 0.6333333333333336,
+    "peakY": 2.3,
+    "airLiftSeconds": 0.11666666666666665,
+    "airRearBoostSeconds": 0,
+    "finalGas": 8.686196818678866,
+    "finalSpeed": 135.05283897546025
+  },
+  {
+    "fixture": "four-six-lane-walls-30m-apart",
+    "fps": 60,
+    "initialGas": 4.3,
+    "seconds": 0.6333333333333336,
+    "impacts": 1,
+    "crashed": true,
+    "jumps": 1,
+    "jumpTimes": [
+      0.016666666666666666
+    ],
+    "airPct": 100,
+    "longestAirSeconds": 0.6333333333333336,
+    "peakY": 2.3,
+    "airLiftSeconds": 0.11666666666666665,
+    "airRearBoostSeconds": 0,
+    "finalGas": 2.9861968186788657,
+    "finalSpeed": 135.05283897546025
+  },
+  {
+    "fixture": "four-six-lane-walls-30m-apart",
+    "fps": 60,
+    "initialGas": 0,
+    "seconds": 0.26666666666666666,
+    "impacts": 1,
+    "crashed": true,
+    "jumps": 0,
+    "jumpTimes": [],
+    "airPct": 0,
+    "longestAirSeconds": 0,
+    "peakY": 0,
+    "airLiftSeconds": 0,
+    "airRearBoostSeconds": 0,
+    "finalGas": 0.3075095878596932,
+    "finalSpeed": 109.22953385285822
+  }
+]

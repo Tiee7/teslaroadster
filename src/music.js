@@ -103,6 +103,7 @@
     render();
   });
   function openSettings(event) {
+    globalThis.window?.RoadsterDemo?.stop();
     returnFocus = event.currentTarget;
     // Function declarations may exist even after a failed WebGL startup.
     try { if (typeof clearAllInputKeys === 'function') clearAllInputKeys(); } catch (_) {}

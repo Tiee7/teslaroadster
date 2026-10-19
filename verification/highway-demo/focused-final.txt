@@ -1,0 +1,45 @@
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 30 Hz (459.454279ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 30 Hz (407.220114ms)
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 60 Hz (500.741272ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 60 Hz (545.723971ms)
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 144 Hz (632.387085ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 144 Hz (780.567098ms)
+✔ empty/freefall tank retains mechanical following brakes and only ordinary grounded recharge (65.642318ms)
+✔ last tank fraction pays only its proportional following-brake impulse (39.314046ms)
+✔ following trajectory matches real H impulse, fractional gas and longitudinal venue scale (369.82551ms)
+✔ manual W/H precedence remains unchanged before and after demo ownership (35.341791ms)
+✔ demo cancels a running ranked session, waits for exact server end, and never submits its score (34.458014ms)
+✔ late ranked issuance is ended before pending demo becomes active (11.946709ms)
+✔ unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit (14.903573ms)
+✔ failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry (11.954561ms)
+✔ cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end (7.382382ms)
+✔ programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch (15.360552ms)
+✔ old completed manual snapshot survives demo scoring and submits the original immutable payload (8.165762ms)
+✔ demo UI is highway-only, translates live, and adds no keyboard shortcut (7.034559ms)
+✔ repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank (13.130843ms)
+✔ manual keys, mobile sticks and jump/hold actions cannot fight active demo input (9.127431ms)
+✔ legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo (9.721877ms)
+✔ boxed-in demo uses its short jump through the real O action and releases airborne propulsion (16.392647ms)
+✔ blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control (62.758992ms)
+✔ pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves (20.173123ms)
+✔ mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed (36.228613ms)
+✔ mobile paint menu stops demo and keeps vehicle neutral throughout the open picker (7.901765ms)
+✔ opening any mobile overlay cancels pending demo even if server-end confirmation arrives later (44.973106ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 30 Hz (190.388156ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 60 Hz (332.50977ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 144 Hz (655.966261ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 30 Hz (162.72917ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 60 Hz (326.23344ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 144 Hz (538.970832ms)
+✔ fast rear approach blocks its target lane while the other adjacent gap is used (175.071791ms)
+✔ sudden unbrakeable six-lane wall uses one paid low hop, no sustained airborne throttle/lift, and returns to the ground (345.601217ms)
+✔ empty tank cannot create boost, jump or refill; ordinary grounded recharge is bounded (22.312172ms)
+✔ planner is read-only, ignores waiting/hidden traffic and always targets whole lane centers (3.443318ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3975.460533

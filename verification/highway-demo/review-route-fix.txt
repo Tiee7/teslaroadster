@@ -1,0 +1,454 @@
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 30 Hz (720.111129ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 30 Hz (725.652964ms)
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 60 Hz (598.208957ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 60 Hz (602.842917ms)
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 144 Hz (817.130973ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 144 Hz (749.245605ms)
+✔ empty/freefall tank retains mechanical following brakes and only ordinary grounded recharge (50.266332ms)
+✔ last tank fraction pays only its proportional following-brake impulse (25.983006ms)
+✔ following trajectory matches real H impulse, fractional gas and longitudinal venue scale (328.195946ms)
+✔ manual W/H precedence remains unchanged before and after demo ownership (33.408103ms)
+✔ demo cancels a running ranked session, waits for exact server end, and never submits its score (59.780334ms)
+✔ late ranked issuance is ended before pending demo becomes active (9.563319ms)
+✔ unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit (12.131588ms)
+✔ failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry (35.813479ms)
+✔ cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end (8.972288ms)
+✔ programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch (22.325897ms)
+✔ old completed manual snapshot survives demo scoring and submits the original immutable payload (9.377288ms)
+✔ demo UI is highway-only, translates live, and adds no keyboard shortcut (7.30047ms)
+✔ repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank (21.727315ms)
+✔ manual keys, mobile sticks and jump/hold actions cannot fight active demo input (22.03208ms)
+✔ legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo (7.122592ms)
+✔ boxed-in demo uses its short jump through the real O action and releases airborne propulsion (16.376329ms)
+✔ blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control (105.307412ms)
+✔ pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves (27.671342ms)
+✔ mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed (44.40681ms)
+✔ mobile paint menu stops demo and keeps vehicle neutral throughout the open picker (6.782519ms)
+✔ opening any mobile overlay cancels pending demo even if server-end confirmation arrives later (57.101001ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 30 Hz (235.792488ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 60 Hz (475.434857ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 144 Hz (864.354826ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 30 Hz (195.903562ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 60 Hz (403.246768ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 144 Hz (556.090345ms)
+✔ fast rear approach blocks its target lane while the other adjacent gap is used (163.298998ms)
+✔ sudden unbrakeable six-lane wall uses one paid low hop, no sustained airborne throttle/lift, and returns to the ground (293.670368ms)
+✔ empty tank cannot create boost, jump or refill; ordinary grounded recharge is bounded (14.090204ms)
+✔ planner is read-only, ignores waiting/hidden traffic and always targets whole lane centers (2.816354ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 30 Hz (750.0879ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 60 Hz (1114.202708ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 144 Hz (1993.272055ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4861.218913
+
+DIAGNOSTIC REPLAY SUMMARY
+{
+  "sourceUnchanged": true,
+  "before": {
+    "label": "before-route-fix",
+    "seconds": 45.016666666665394,
+    "impacts": 0,
+    "crashed": false,
+    "jumps": 0,
+    "stats": {
+      "started": 7,
+      "completed": 7,
+      "jumps": 0,
+      "targetLane": 4,
+      "changing": false
+    },
+    "speed": {
+      "p10": 75.35127383513515,
+      "p50": 84.86453757222979,
+      "p90": 130.53328412753666,
+      "above220Pct": 1.874219075385304
+    },
+    "centerPct": 93.33580155497982,
+    "longestStripeSeconds": 0.4333333333333333,
+    "overtakes": 14,
+    "racerOvertakes": 2,
+    "audit": {
+      "decisions": 127,
+      "scoreOnlyRejectedCandidates": 48,
+      "scoreOnlyRejectedUnchosenDecisions": 48,
+      "longestObservedRejectionSpan": 6.016666666666669,
+      "intervals": [
+        {
+          "start": 2.416666666666663,
+          "last": 8.433333333333332,
+          "target": 0,
+          "count": 20,
+          "observedSpanSeconds": 6.016666666666669
+        },
+        {
+          "start": 11.600000000000156,
+          "last": 12.550000000000203,
+          "target": 0,
+          "count": 4,
+          "observedSpanSeconds": 0.9500000000000473
+        },
+        {
+          "start": 16.20000000000036,
+          "last": 18.73333333333355,
+          "target": 3,
+          "count": 9,
+          "observedSpanSeconds": 2.5333333333331893
+        },
+        {
+          "start": 29.349999999999614,
+          "last": 30.933333333332858,
+          "target": 4,
+          "count": 6,
+          "observedSpanSeconds": 1.5833333333332433
+        },
+        {
+          "start": 37.58333333333248,
+          "last": 39.166666666665726,
+          "target": 4,
+          "count": 6,
+          "observedSpanSeconds": 1.5833333333332433
+        },
+        {
+          "start": 41.06666666666562,
+          "last": 41.699999999998916,
+          "target": 4,
+          "count": 3,
+          "observedSpanSeconds": 0.6333333333332973
+        }
+      ]
+    }
+  },
+  "after": {
+    "label": "minimal-route-fix",
+    "seconds": 45.016666666665394,
+    "impacts": 0,
+    "crashed": false,
+    "jumps": 0,
+    "stats": {
+      "started": 23,
+      "completed": 23,
+      "jumps": 0,
+      "targetLane": 4,
+      "changing": false
+    },
+    "speed": {
+      "p10": 113.3122016283315,
+      "p50": 150.96461811673052,
+      "p90": 230.4059957778554,
+      "above220Pct": 14.119117034569243
+    },
+    "centerPct": 77.63791188448786,
+    "longestStripeSeconds": 0.4666666666666666,
+    "overtakes": 53,
+    "racerOvertakes": 3,
+    "audit": {
+      "decisions": 88,
+      "scoreOnlyRejectedCandidates": 8,
+      "scoreOnlyRejectedUnchosenDecisions": 8,
+      "longestObservedRejectionSpan": 0.949999999999946,
+      "intervals": [
+        {
+          "start": 15.816666666667032,
+          "last": 15.816666666667032,
+          "target": 0,
+          "count": 1,
+          "observedSpanSeconds": 0
+        },
+        {
+          "start": 16.450000000000347,
+          "last": 17.400000000000293,
+          "target": 0,
+          "count": 4,
+          "observedSpanSeconds": 0.949999999999946
+        },
+        {
+          "start": 21.833333333333375,
+          "last": 21.833333333333375,
+          "target": 0,
+          "count": 1,
+          "observedSpanSeconds": 0
+        },
+        {
+          "start": 36.03333333333257,
+          "last": 36.03333333333257,
+          "target": 5,
+          "count": 1,
+          "observedSpanSeconds": 0
+        },
+        {
+          "start": 44.83333333333207,
+          "last": 44.83333333333207,
+          "target": 4,
+          "count": 1,
+          "observedSpanSeconds": 0
+        }
+      ]
+    }
+  },
+  "racerCases": [
+    {
+      "npcKmh": 160,
+      "distanceWorldMetres": 100,
+      "crossing": {
+        "t": 2.966666666666667,
+        "fromZ": -0.1938390520934462,
+        "toZ": 0.4960282138908657,
+        "worldDelta": 0.6898672659843119
+      },
+      "peakKmh": 252.27874684405208,
+      "endKmh": 250.8220848513271,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 160,
+      "distanceWorldMetres": 180,
+      "crossing": {
+        "t": 4.85,
+        "fromZ": -0.20304599307320526,
+        "toZ": 0.48741681717955476,
+        "worldDelta": 0.69046281025276
+      },
+      "peakKmh": 252.27577163231882,
+      "endKmh": 252.07584679826599,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 170,
+      "distanceWorldMetres": 100,
+      "crossing": {
+        "t": 3.25,
+        "fromZ": -0.519595437513,
+        "toZ": 0.09638832425798871,
+        "worldDelta": 0.6159837617709887
+      },
+      "peakKmh": 252.2783793643927,
+      "endKmh": 250.03877299246636,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 170,
+      "distanceWorldMetres": 180,
+      "crossing": {
+        "t": 5.616666666666666,
+        "fromZ": -0.3552081039423829,
+        "toZ": 0.2714130767264703,
+        "worldDelta": 0.6266211806688532
+      },
+      "peakKmh": 252.2797822141222,
+      "endKmh": 250.0102094061948,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 180,
+      "distanceWorldMetres": 100,
+      "crossing": {
+        "t": 3.6666666666666665,
+        "fromZ": -0.36178652517330234,
+        "toZ": 0.18781777504909436,
+        "worldDelta": 0.5496043002223967
+      },
+      "peakKmh": 252.2787544315924,
+      "endKmh": 250.81380080026892,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    },
+    {
+      "npcKmh": 180,
+      "distanceWorldMetres": 180,
+      "crossing": {
+        "t": 6.683333333333334,
+        "fromZ": -0.03599043420664427,
+        "toZ": 0.49957652695532695,
+        "worldDelta": 0.5355669611619712
+      },
+      "peakKmh": 252.27523774208422,
+      "endKmh": 250.3986835612466,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "stats": {
+        "started": 1,
+        "completed": 1,
+        "jumps": 0,
+        "targetLane": 2,
+        "changing": false
+      }
+    }
+  ]
+}
+
+
+LIFECYCLE HUD COVERAGE ADDENDUM
+Command: node --test tests/highway-demo-lifecycle.test.mjs
+Controller SHA-256: 34412641c929d1f5ff67ac1b093324852051bd57af5f5a09cafe9e8abc6fefed
+
+✔ demo cancels a running ranked session, waits for exact server end, and never submits its score (39.787288ms)
+✔ late ranked issuance is ended before pending demo becomes active (8.174085ms)
+✔ unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit (9.045808ms)
+✔ failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry (10.417184ms)
+✔ cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end (6.226611ms)
+✔ programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch (25.220241ms)
+✔ old completed manual snapshot survives demo scoring and submits the original immutable payload (22.618627ms)
+✔ demo UI is highway-only, translates live, and adds no keyboard shortcut (5.851136ms)
+✔ native demo switch remains reachable in full, medium and minimal HUD modes without appearing in the city (7.466409ms)
+✔ repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank (7.897108ms)
+✔ manual keys, mobile sticks and jump/hold actions cannot fight active demo input (9.802819ms)
+✔ legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo (16.708364ms)
+✔ boxed-in demo uses its short jump through the real O action and releases airborne propulsion (27.726037ms)
+✔ blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control (75.886985ms)
+✔ pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves (34.333206ms)
+✔ mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed (25.536017ms)
+✔ mobile paint menu stops demo and keeps vehicle neutral throughout the open picker (7.304855ms)
+✔ opening any mobile overlay cancels pending demo even if server-end confirmation arrives later (34.092808ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 511.216884
+
+Distinct focused coverage after this addendum: 41 cases (physics 10 + following 10 + lifecycle 18 + routing 3).
+Only lifecycle was rerun for the test-only helper/HUD coverage addition. No production changes or repeated long diagnostics.
+
+
+PENDING ANALOG OWNERSHIP FINAL ADDENDUM
+Latest combined focused run (physics 10 + following 10 + lifecycle 19 + routing 3):
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 30 Hz (550.991548ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 30 Hz (487.523098ms)
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 60 Hz (550.201416ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 60 Hz (618.640806ms)
+✔ boxed-in demo follows a slower wall using ordinary paid H braking at 144 Hz (763.024106ms)
+✔ clearing congestion releases following immediately and recovers 220+ with real boost at 144 Hz (666.275933ms)
+✔ empty/freefall tank retains mechanical following brakes and only ordinary grounded recharge (52.858217ms)
+✔ last tank fraction pays only its proportional following-brake impulse (23.897744ms)
+✔ following trajectory matches real H impulse, fractional gas and longitudinal venue scale (235.050811ms)
+✔ manual W/H precedence remains unchanged before and after demo ownership (31.044922ms)
+✔ demo cancels a running ranked session, waits for exact server end, and never submits its score (30.676878ms)
+✔ late ranked issuance is ended before pending demo becomes active (8.782261ms)
+✔ unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit (15.231778ms)
+✔ failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry (10.207127ms)
+✔ cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end (6.877181ms)
+✔ programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch (15.188394ms)
+✔ old completed manual snapshot survives demo scoring and submits the original immutable payload (8.333175ms)
+✔ demo UI is highway-only, translates live, and adds no keyboard shortcut (6.927096ms)
+✔ native demo switch remains reachable in full, medium and minimal HUD modes without appearing in the city (10.689976ms)
+✔ repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank (10.444315ms)
+✔ manual keys, mobile sticks and jump/hold actions cannot fight active demo input (9.043785ms)
+✔ legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo (17.381908ms)
+✔ pending ranked cancellation also owns analog mobile input and returns neutral until ready or cancelled (9.720594ms)
+✔ boxed-in demo uses its short jump through the real O action and releases airborne propulsion (20.95802ms)
+✔ blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control (29.34438ms)
+✔ pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves (28.255951ms)
+✔ mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed (36.795891ms)
+✔ mobile paint menu stops demo and keeps vehicle neutral throughout the open picker (22.407048ms)
+✔ opening any mobile overlay cancels pending demo even if server-end confirmation arrives later (40.27719ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 30 Hz (221.424826ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 60 Hz (313.042205ms)
+✔ real input from rest, full ground throttle, paid boost and centered cruise at 144 Hz (677.957965ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 30 Hz (196.225982ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 60 Hz (298.583566ms)
+✔ slow front driver uses a complete adjacent lane rather than a stripe at 144 Hz (672.801701ms)
+✔ fast rear approach blocks its target lane while the other adjacent gap is used (178.601895ms)
+✔ sudden unbrakeable six-lane wall uses one paid low hop, no sustained airborne throttle/lift, and returns to the ground (337.073861ms)
+✔ empty tank cannot create boost, jump or refill; ordinary grounded recharge is bounded (18.313331ms)
+✔ planner is read-only, ignores waiting/hidden traffic and always targets whole lane centers (3.840286ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 30 Hz (752.062864ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 60 Hz (916.118867ms)
+✔ useful safe three-stage route is not suppressed behind a slow queue at 144 Hz (1680.19082ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4114.960784
+
+PASS: matrix fixture isActive/isBusy are both constant true; old/new production input readers return identical drive and grounded/airborne attitude results for five neutral/throttle/boost/brake/steer/strafe input samples. This equivalence applies to the matrix fixture, not to real pending UI state.
+
+
+=== Final native-Space accessibility review: 2026-10-19 15:50 UTC ===
+Command: node --test tests/highway-demo-lifecycle.test.mjs
+Exit: 0
+Controller SHA-256: 34412641c929d1f5ff67ac1b093324852051bd57af5f5a09cafe9e8abc6fefed
+Review: no blocking issue. Focused native type=button Space returns before driving interception; keydown does not preventDefault or set lift, keyup only releases. Existing UI test checks idle and active states. Native browser key-to-click behavior itself is not simulated by this fake DOM. Distinct focused coverage remains 42; only lifecycle 19 rerun for this final delta.
+
+✔ demo cancels a running ranked session, waits for exact server end, and never submits its score (24.107818ms)
+✔ late ranked issuance is ended before pending demo becomes active (5.839177ms)
+✔ unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit (7.400489ms)
+✔ failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry (8.09166ms)
+✔ cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end (4.715944ms)
+✔ programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch (9.771481ms)
+✔ old completed manual snapshot survives demo scoring and submits the original immutable payload (8.911475ms)
+✔ demo UI is highway-only, translates live, and adds no keyboard shortcut (6.968478ms)
+✔ native demo switch remains reachable in full, medium and minimal HUD modes without appearing in the city (6.055704ms)
+✔ repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank (7.926942ms)
+✔ manual keys, mobile sticks and jump/hold actions cannot fight active demo input (5.968101ms)
+✔ legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo (10.121798ms)
+✔ pending ranked cancellation also owns analog mobile input and returns neutral until ready or cancelled (8.595799ms)
+✔ boxed-in demo uses its short jump through the real O action and releases airborne propulsion (19.999269ms)
+✔ blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control (28.35061ms)
+✔ pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves (21.644056ms)
+✔ mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed (20.688547ms)
+✔ mobile paint menu stops demo and keeps vehicle neutral throughout the open picker (9.145097ms)
+✔ opening any mobile overlay cancels pending demo even if server-end confirmation arrives later (32.737693ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 453.086119

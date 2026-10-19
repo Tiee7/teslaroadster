@@ -271,6 +271,7 @@ function destroyVehicle(reasonKey) {
   state.isDestroyed = true;
   window.RoadsterTaxi?.onDestroyed();
   RoadsterDrivingScore.freeze(state);
+  globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('crash');
   state.hullIntegrity = 0;
   state.destroyReasonKey = reasonKey || 'crashReasonThreshold';
@@ -371,18 +372,23 @@ const JUMP_INERTIA_BLEND_SECONDS = 0.60;
 function advanceAirHandling(dt, isAirborne) {
   if (!isAirborne) {
     state.jumpInertiaSeconds = null;
+    state.jumpInertiaGraceSeconds = null;
     return 0;
   }
   if (!Number.isFinite(state.jumpInertiaSeconds)) return dt;
+  // A low demo hop retains its paid launch vector for at most one second.
+  // Manual O and ordinary flight keep their existing quarter-second grace.
+  const grace = Number.isFinite(state.jumpInertiaGraceSeconds)
+    ? Math.max(JUMP_INERTIA_GRACE_SECONDS, Math.min(1.0, state.jumpInertiaGraceSeconds)) : JUMP_INERTIA_GRACE_SECONDS;
   const before = state.jumpInertiaSeconds;
   const after = before + dt;
   const integratedBlend = seconds => {
-    const u = (seconds - JUMP_INERTIA_GRACE_SECONDS) / JUMP_INERTIA_BLEND_SECONDS;
+    const u = (seconds - grace) / JUMP_INERTIA_BLEND_SECONDS;
     if (u <= 0) return 0;
-    if (u >= 1) return seconds - JUMP_INERTIA_GRACE_SECONDS - JUMP_INERTIA_BLEND_SECONDS / 2;
+    if (u >= 1) return seconds - grace - JUMP_INERTIA_BLEND_SECONDS / 2;
     return JUMP_INERTIA_BLEND_SECONDS * (u ** 3 - 0.5 * u ** 4);
   };
-  state.jumpInertiaSeconds = after >= JUMP_INERTIA_GRACE_SECONDS + JUMP_INERTIA_BLEND_SECONDS ? null : after;
+  state.jumpInertiaSeconds = after >= grace + JUMP_INERTIA_BLEND_SECONDS ? null : after;
   return Math.max(0, Math.min(dt, integratedBlend(after) - integratedBlend(before)));
 }
 
@@ -462,6 +468,7 @@ function integrateFreefall(y, vy, dt, surfaceY) {
 }
 
 function readDriveInput() {
+  if (globalThis.window?.RoadsterDemo?.isBusy()) return window.RoadsterDemo.input();
   const touch = globalThis.window?.RoadsterTouch?.readInput() || {};
   const axis = name => Math.max(-1, Math.min(1, Number.isFinite(touch[name]) ? touch[name] : 0));
   const amount = (name, ...codes) => Math.max(0, axis(name), ...codes.map(code => Number(Boolean(keys[code]))));
@@ -477,6 +484,7 @@ function readDriveInput() {
 }
 
 function readAttitudeInput(isAirborne) {
+  if (globalThis.window?.RoadsterDemo?.isBusy()) return { rawRollInput: 0, rawPitchInput: 0, rawYawInput: 0, hasManualAttitudeInput: false };
   // Keep keyboard ownership independent: a released thumb cannot release W.
   const drive = readDriveInput();
   const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
@@ -535,6 +543,7 @@ function updateChaseCamera(anchor, positionOffset, lookOffset, dt, shake) {
 }
 
 function updateSimulation(dt) {
+  globalThis.window?.RoadsterDemo?.step(dt);
   const t = I18N[currentLang];
 
   if (state.impactCooldown > 0) {
@@ -1268,6 +1277,7 @@ function updateSimulation(dt) {
 
   if (state.y <= 0.0 && state.vy <= 0) {
     state.y = 0.0;
+    state.jumpInertiaGraceSeconds = null;
     const downImpactSpeed = -prevVy;
     if (downImpactSpeed > 0.8) {
       state.suspensionSquash = Math.min(0.048, downImpactSpeed * 0.0035);

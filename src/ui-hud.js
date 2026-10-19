@@ -104,6 +104,7 @@ const keyBadgeMap = {
 };
 
 function setKeyState(code, isDown) {
+  if (isDown && globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN'].includes(code)) return;
   keys[code] = isDown;
   const badgeId = keyBadgeMap[code];
   if (badgeId) {
@@ -142,6 +143,9 @@ window.addEventListener('keydown', (e) => {
     }
     return;
   }
+  // Focused native activation is an interface action, not a driving hotkey.
+  if (e.code === 'Space' && e.target === document.getElementById('btn-highway-demo')) return;
+  if (globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN', 'Digit0', 'Numpad0'].includes(e.code)) { if (!e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault(); return; }
   if (e.code === 'Digit0' || e.code === 'Numpad0') {
     const hasOverlay = ['modal-help', 'modal-destroyed'].some((id) => {
       const overlay = document.getElementById(id);
@@ -383,6 +387,7 @@ function switchMap(targetMap) {
 function resetCar() {
   window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
+  globalThis.window?.RoadsterDemo?.stop();
   if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
   clearDebris();
@@ -427,6 +432,7 @@ function resetCar() {
   state.attitudeIdleSeconds = 0.0;
   state.wasAirborne = false;
   state.jumpInertiaSeconds = null;
+  state.jumpInertiaGraceSeconds = null;
   state.yaw = 0.0;
   state.vRoll = 0.0;
   state.vPitch = 0.0;
@@ -457,6 +463,7 @@ function resetCar() {
 
 function applyTranslations() {
   syncHudPerspective();
+  globalThis.window?.RoadsterDemo?.render();
   window.RoadsterTouch?.setLanguage();
   window.RoadsterTaxi?.render();
   window.RoadsterMusic?.render();
@@ -656,6 +663,7 @@ function clearAllInputKeys() {
 }
 
 function openMapSelectModal() {
+  globalThis.window?.RoadsterDemo?.stop();
   clearAllInputKeys();
   highlightSelectedMapCard(currentMap);
   document.getElementById('modal-destroyed').classList.add('hidden');
@@ -809,6 +817,7 @@ function renderModalWeatherGrid() {
 document.getElementById('btn-weather').addEventListener('click', () => cycleWeatherMode());
 
 document.getElementById('btn-traffic').addEventListener('click', () => {
+  globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('traffic');
   trafficLevelIndex = (trafficLevelIndex + 1) % 3;
   const counts = [20, 36, 52];
@@ -833,6 +842,7 @@ document.getElementById('btn-reset').addEventListener('click', resetCar);
 
 
 function togglePhysicsMode() {
+  globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('physics');
   state.physicsMode = (state.physicsMode === 'realistic') ? 'fantasy' : 'realistic';
   if (state.physicsMode === 'fantasy') {
@@ -848,6 +858,7 @@ function togglePhysicsMode() {
 }
 
 function togglePlaidMode() {
+  globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('plaid');
   if (state.physicsMode !== 'realistic') {
     state.physicsMode = 'realistic';
@@ -869,6 +880,7 @@ function toggleSpeedUnit() {
 }
 
 function triggerJump6m() {
+  if (globalThis.window?.RoadsterDemo?.isBusy() && !window.RoadsterDemo.isRequestingJump()) return;
   if (state.isDestroyed || state.isFreefalling || state.airRemaining <= 0.15) return;
   sound.init();
   let groundElev = 0.0;
@@ -885,21 +897,26 @@ function triggerJump6m() {
   const currentAgl = Math.max(0.0, state.y - groundElev);
   // Only a fresh ground/roof takeoff gets launch grace. Midair O taps cannot
   // restart it and disable normal flight handling.
-  if (currentAgl <= 0.15) state.jumpInertiaSeconds = 0;
+  if (currentAgl <= 0.15) {
+    state.jumpInertiaSeconds = 0;
+    state.jumpInertiaGraceSeconds = globalThis.window?.RoadsterDemo?.isRequestingJump() ? 0.95 : null;
+  }
   // Jump to 6.0m above ground/rooftop (or +6.0m if already flying above 5.5m)
   state.jumpStartY = state.y;
-  state.jumpTargetY = (currentAgl < 5.5) ? (groundElev + 6.0) : Math.min(MAX_FLIGHT_ALTITUDE, state.y + 6.0);
+  const demoJumpHeight = globalThis.window?.RoadsterDemo?.isRequestingJump() ? window.RoadsterDemo.jumpHeight() : 6.0;
+  state.jumpTargetY = (currentAgl < 5.5) ? (groundElev + demoJumpHeight) : Math.min(MAX_FLIGHT_ALTITUDE, state.y + 6.0);
   state.isJumping6m = true;
   state.isAltitudeHold = false;
   const nBadge = document.getElementById('key-n');
   if (nBadge) nBadge.classList.remove('active');
   const baseClimbVy = (state.physicsMode === 'realistic') ? (6.2 * 1.3) : (28.0 * 1.3);
   state.vy = Math.max(state.vy, baseClimbVy * 2.5);
-  showBanner('jump6m', 2.0);
+  if (!globalThis.window?.RoadsterDemo?.isRequestingJump()) showBanner('jump6m', 2.0);
   sound.beep(820, 0.12);
 }
 
 function toggleAltitudeHold() {
+  if (globalThis.window?.RoadsterDemo?.isBusy()) return;
   if (state.isDestroyed) return;
   sound.init();
   let groundElev = 0.0;
@@ -935,6 +952,7 @@ function toggleAltitudeHold() {
 }
 
 function toggleStabilizer() {
+  globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('stabilizer');
   state.autoStabilizer = !state.autoStabilizer;
   const btn = document.getElementById('btn-stabilizer');
@@ -950,6 +968,7 @@ function toggleStabilizer() {
 document.getElementById('btn-stabilizer').addEventListener('click', toggleStabilizer);
 
 function toggleHelpModal() {
+  globalThis.window?.RoadsterDemo?.stop();
   clearAllInputKeys();
   const modal = document.getElementById('modal-help');
   modal.classList.toggle('hidden');

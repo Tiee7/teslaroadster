@@ -1,0 +1,17 @@
+✔ one open shared envelope per outlet has finite bounded topology, unlit alpha and no solid disks (642.023721ms)
+✔ body selection places actual mouth coordinates; view changes preserve selected layout (462.856087ms)
+✔ roll/pitch/yaw/strafe reuse the correctly directed physical ports without duplicate plumes (503.247839ms)
+✔ highway/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (681.227089ms)
+✔ highway/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (691.253195ms)
+✔ city/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (713.641009ms)
+✔ city/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (760.230396ms)
+✔ analog requests scale the correct longitudinal axis, release immediately and hide every FPV plume (461.010652ms)
+✔ emergency lift uses its accepted full command at low tank, and 3D retro chooses paid travel components (469.495608ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5559.962588

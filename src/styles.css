@@ -517,3 +517,9 @@ html, body {
 @media (max-width: 370px) {
   .start-vehicle-options { grid-template-columns: minmax(0, 1fr); gap: 6px; }
 }
+
+/* One always-reachable, native switch. No floating status panel over the road. */
+.highway-demo-toggle[aria-pressed="true"] { border-color: #34d399; color: #a7f3d0; background: rgba(6, 78, 59, .8); }
+.highway-demo-toggle[hidden] { display: none !important; }
+.highway-demo-active #mobile-drive-controls { opacity: .45; }
+@media (pointer: coarse) { .highway-demo-toggle { min-height: 44px; } }

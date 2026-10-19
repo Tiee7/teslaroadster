@@ -132,6 +132,7 @@
     renderPreview();
   }
   function openPaint(event, fromHistory = false) {
+    globalThis.window?.RoadsterDemo?.stop();
     if (picker.open) return;
     // Back is asynchronous in browsers. Queue an immediate reopen until the
     // previous picker entry is actually gone, rather than stacking stale entries.

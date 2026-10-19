@@ -1,0 +1,3104 @@
+{
+  "sourceControllerSha256": "34412641c929d1f5ff67ac1b093324852051bd57af5f5a09cafe9e8abc6fefed",
+  "variantControllerSha256": "e877df47688d28f8172b05aac0fc6c9159c97229c5ba07405cb24eedecd97f9f",
+  "method": "Only in-memory common decision/stay/route horizon changes from 3.6 to 7 seconds. Three route stages, rack/yaw/lateral dynamics, 0.08-second dwell, headway, safePath first-step and emergency geometry, input controls, gas and all production physics/collisions/NPC AI are unchanged. Six new horizon variants; 20-car current baselines reused, three 36-car baselines run locally.",
+  "transforms": [
+    [
+      "trajectory([target],3.6,false)",
+      "trajectory([target],7,false)"
+    ],
+    [
+      "currentThreat < 3.6",
+      "currentThreat < 7"
+    ],
+    [
+      "trajectory([target],3.6)",
+      "trajectory([target],7)"
+    ],
+    [
+      "stayCollision===Infinity?3.6:stayCollision",
+      "stayCollision===Infinity?7:stayCollision"
+    ],
+    [
+      "trajectory(route,3.6)",
+      "trajectory(route,7)"
+    ],
+    [
+      "collision===Infinity?3.6:collision",
+      "collision===Infinity?7:collision"
+    ],
+    [
+      "trajectory([lane],4.2)",
+      "trajectory([lane],7)"
+    ]
+  ],
+  "rows": [
+    {
+      "variant": "current-3.6s",
+      "origin": "reused planning-final.json balanced row",
+      "count": 20,
+      "seed": 1,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 12,
+      "completed": 11,
+      "centerPct": 89.1891891891895,
+      "maxStripeSeconds": 0.41666666666666663,
+      "speedP50": 114.89532793609447,
+      "speedP90": 231.26466937748032,
+      "above220Pct": 17.61765930862192,
+      "overtakes": 43,
+      "racerOvertakes": 2
+    },
+    {
+      "variant": "current-3.6s",
+      "origin": "reused planning-final.json balanced row",
+      "count": 20,
+      "seed": 7,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 23,
+      "completed": 23,
+      "centerPct": 77.63791188448786,
+      "maxStripeSeconds": 0.4666666666666666,
+      "speedP50": 150.96461811673052,
+      "speedP90": 230.4059957778554,
+      "above220Pct": 14.119117034569342,
+      "overtakes": 53,
+      "racerOvertakes": 3
+    },
+    {
+      "variant": "current-3.6s",
+      "origin": "reused planning-final.json balanced row",
+      "count": 20,
+      "seed": 23,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 20,
+      "completed": 20,
+      "centerPct": 80.4146612365796,
+      "maxStripeSeconds": 0.49999999999999994,
+      "speedP50": 185.97293699818957,
+      "speedP90": 231.95613505209678,
+      "above220Pct": 34.86047480216755,
+      "overtakes": 61,
+      "racerOvertakes": 3
+    },
+    {
+      "variant": "common-7s",
+      "origin": "new production-dynamics replay",
+      "count": 20,
+      "seed": 1,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 18,
+      "completed": 17,
+      "targetLane": 5,
+      "changing": true,
+      "airPct": 0,
+      "centerPct": 83.67271380970057,
+      "maxStripeSeconds": 0.44999999999999996,
+      "speedP50": 118.85578665656153,
+      "speedP90": 231.8352470418373,
+      "above220Pct": 24.989587671804223,
+      "overtakes": 49,
+      "racerOvertakes": 3,
+      "minGas": 9.320000000000022,
+      "wallSeconds": 11.389,
+      "overtakeEvents": [
+        {
+          "t": 0.5666666666666668,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.015621723252165265,
+          "toZ": 0.2511455346946051
+        },
+        {
+          "t": 1.0666666666666678,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.09040693950183865,
+          "toZ": 0.8566252728768124
+        },
+        {
+          "t": 1.9666666666666646,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.5264999799311711,
+          "toZ": 0.19980126798253706
+        },
+        {
+          "t": 7.216666666666646,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.1655560033849757,
+          "toZ": 0.017150753977274752
+        },
+        {
+          "t": 8.24999999999999,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.1523042171735548,
+          "toZ": 0.05501748326471187
+        },
+        {
+          "t": 10.033333333333411,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.055290754359133915,
+          "toZ": 0.1223974017287151
+        },
+        {
+          "t": 10.466666666666766,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.06601712734093879,
+          "toZ": 0.02140485210849577
+        },
+        {
+          "t": 14.36666666666696,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.07305640002316596,
+          "toZ": 0.037086236137984174
+        },
+        {
+          "t": 16.766666666666996,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.02073271002555383,
+          "toZ": 0.047819063368918606
+        },
+        {
+          "t": 18.166666666666917,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.9074128144163269,
+          "toZ": 0.2634933132828643
+        },
+        {
+          "t": 18.333333333333574,
+          "carIndex": 8,
+          "driverType": "racer",
+          "fromZ": -0.8745072314145663,
+          "toZ": 0.28419664936297906
+        },
+        {
+          "t": 18.416666666666902,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.81320150487428,
+          "toZ": 0.4014087077824937
+        },
+        {
+          "t": 18.666666666666888,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.36047473474218505,
+          "toZ": 0.8144125113433451
+        },
+        {
+          "t": 18.883333333333542,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.8500679526180779,
+          "toZ": 0.3216206035917639
+        },
+        {
+          "t": 19.25000000000019,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.4525067565179579,
+          "toZ": 0.7516688099154023
+        },
+        {
+          "t": 19.75000000000016,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.6594088528844317,
+          "toZ": 0.5151328652008871
+        },
+        {
+          "t": 19.83333333333349,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -1.0087184175256376,
+          "toZ": 0.1903708395366721
+        },
+        {
+          "t": 19.850000000000154,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.040642914377930994,
+          "toZ": 1.125068870738545
+        },
+        {
+          "t": 20.53333333333345,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.7721309870913959,
+          "toZ": 0.3572833785324454
+        },
+        {
+          "t": 20.783333333333434,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.034535753206140773,
+          "toZ": 1.1494271020692137
+        },
+        {
+          "t": 22.066666666666695,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -1.1165717796133336,
+          "toZ": 0.047250920556674014
+        },
+        {
+          "t": 24.216666666666573,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.17606081572925025,
+          "toZ": 1.029730529586692
+        },
+        {
+          "t": 24.283333333333236,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.10837138808961777,
+          "toZ": 1.0719138055575486
+        },
+        {
+          "t": 24.283333333333236,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.8265225506987766,
+          "toZ": 0.3780065279003866
+        },
+        {
+          "t": 24.41666666666656,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.3712613430609266,
+          "toZ": 0.7518737887810334
+        },
+        {
+          "t": 24.73333333333321,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.32722226098946416,
+          "toZ": 0.7444668435618718
+        },
+        {
+          "t": 25.149999999999853,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.4504558954021005,
+          "toZ": 0.7424979891523473
+        },
+        {
+          "t": 25.16666666666652,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.12849320806468167,
+          "toZ": 1.0893342231002985
+        },
+        {
+          "t": 25.19999999999985,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.03211555735438254,
+          "toZ": 1.203233932654513
+        },
+        {
+          "t": 25.5166666666665,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.34055028319735325,
+          "toZ": 0.7782042978122601
+        },
+        {
+          "t": 25.833333333333147,
+          "carIndex": 8,
+          "driverType": "racer",
+          "fromZ": -0.2506228983392762,
+          "toZ": 0.7377483506207678
+        },
+        {
+          "t": 26.48333333333311,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.5510426296262007,
+          "toZ": 0.23342026289998896
+        },
+        {
+          "t": 26.533333333333108,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.04206551584681739,
+          "toZ": 0.710398209224637
+        },
+        {
+          "t": 26.783333333333093,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.27691715873596745,
+          "toZ": 0.4230315888634304
+        },
+        {
+          "t": 28.249999999999677,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.3885856666559323,
+          "toZ": 0.25196685784489903
+        },
+        {
+          "t": 28.283333333333008,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.0957644024237857,
+          "toZ": 0.5698251955901782
+        },
+        {
+          "t": 28.616666666666323,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.42397770015089453,
+          "toZ": 0.43624429155542943
+        },
+        {
+          "t": 29.36666666666628,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.9756253820003806,
+          "toZ": 0.21754263672847918
+        },
+        {
+          "t": 29.63333333333293,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.6773573858045088,
+          "toZ": 0.4535458065134075
+        },
+        {
+          "t": 29.91666666666625,
+          "carIndex": 17,
+          "driverType": "racer",
+          "fromZ": -0.2969439937243906,
+          "toZ": 0.6841563048717147
+        },
+        {
+          "t": 30.933333333332858,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -1.1562912899670852,
+          "toZ": 0.008539552964537345
+        },
+        {
+          "t": 34.04999999999935,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.1768692736384183,
+          "toZ": 0.09172616748260431
+        },
+        {
+          "t": 34.63333333333265,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.027914889646357854,
+          "toZ": 0.14089486785305932
+        },
+        {
+          "t": 35.38333333333261,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.12709404837719374,
+          "toZ": 0.4868378641313994
+        },
+        {
+          "t": 36.53333333333254,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.31935012201072244,
+          "toZ": 0.13963786174877357
+        },
+        {
+          "t": 36.63333333333254,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.17443800659185266,
+          "toZ": 0.27014087512146007
+        },
+        {
+          "t": 36.84999999999919,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.21544088977395298,
+          "toZ": 0.14380411487779288
+        },
+        {
+          "t": 39.06666666666573,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.2153497074729384,
+          "toZ": 0.044873632747153724
+        },
+        {
+          "t": 39.43333333333238,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.19236551309713565,
+          "toZ": 0.04094026012441232
+        }
+      ]
+    },
+    {
+      "variant": "common-7s",
+      "origin": "new production-dynamics replay",
+      "count": 20,
+      "seed": 7,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 20,
+      "completed": 20,
+      "targetLane": 5,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 80.1554979637177,
+      "maxStripeSeconds": 0.4833333333333333,
+      "speedP50": 160.3072616697867,
+      "speedP90": 232.04512315514216,
+      "above220Pct": 32.31986672220044,
+      "overtakes": 60,
+      "racerOvertakes": 4,
+      "minGas": 9.030858374504703,
+      "wallSeconds": 9.205,
+      "overtakeEvents": [
+        {
+          "t": 3.1999999999999935,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.05156895303566639,
+          "toZ": 0.39736402778107244
+        },
+        {
+          "t": 3.9166666666666576,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.6467884613766707,
+          "toZ": 0.21681824704906982
+        },
+        {
+          "t": 4.866666666666655,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.9400880344857176,
+          "toZ": 0.1682755050539626
+        },
+        {
+          "t": 5.13333333333332,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.9677724457608241,
+          "toZ": 0.21932742335700195
+        },
+        {
+          "t": 5.399999999999986,
+          "carIndex": 11,
+          "driverType": "racer",
+          "fromZ": -0.29050465046003504,
+          "toZ": 0.3865132427767407
+        },
+        {
+          "t": 5.666666666666652,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.7981452067879646,
+          "toZ": 0.4090457277964903
+        },
+        {
+          "t": 7.533333333333312,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.08768037419834429,
+          "toZ": 0.9350316012536273
+        },
+        {
+          "t": 8.216666666666654,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.33033018386849533,
+          "toZ": 0.5824655110824141
+        },
+        {
+          "t": 8.51666666666667,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.8287157984294184,
+          "toZ": 0.0418825538382851
+        },
+        {
+          "t": 8.700000000000012,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.5066913745788685,
+          "toZ": 0.3427512016741471
+        },
+        {
+          "t": 11.550000000000153,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.10034818073841445,
+          "toZ": 0.30602883304283646
+        },
+        {
+          "t": 12.416666666666863,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.06251813138333318,
+          "toZ": 0.7597794310324048
+        },
+        {
+          "t": 12.43333333333353,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.8005582915564894,
+          "toZ": 0.11590375129922237
+        },
+        {
+          "t": 14.10000000000028,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.28387870441659063,
+          "toZ": 0.16507700749834953
+        },
+        {
+          "t": 14.36666666666696,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.3386305342336896,
+          "toZ": 0.3871085418940845
+        },
+        {
+          "t": 14.800000000000315,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.44022129423422995,
+          "toZ": 0.4502531437335223
+        },
+        {
+          "t": 14.90000000000032,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.0439882697137568,
+          "toZ": 0.9149095242944985
+        },
+        {
+          "t": 15.916666666667037,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.9611023173679172,
+          "toZ": 0.2502984240602022
+        },
+        {
+          "t": 16.066666666667036,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.8313088095030878,
+          "toZ": 0.29427412824995947
+        },
+        {
+          "t": 16.150000000000365,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.36181868820679886,
+          "toZ": 0.7805440478789885
+        },
+        {
+          "t": 17.200000000000305,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.7507726830253725,
+          "toZ": 0.4459671532994969
+        },
+        {
+          "t": 17.68333333333361,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -1.1967395107951346,
+          "toZ": 0.012668006786257457
+        },
+        {
+          "t": 17.900000000000265,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.42346083141128,
+          "toZ": 0.6938113260908159
+        },
+        {
+          "t": 19.333333333333517,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.6989714229731965,
+          "toZ": 0.47001761723199365
+        },
+        {
+          "t": 19.766666666666826,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.12499070325771844,
+          "toZ": 0.7280749950116799
+        },
+        {
+          "t": 20.000000000000146,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.3265984994077551,
+          "toZ": 0.8896624548661463
+        },
+        {
+          "t": 20.13333333333347,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.6062351641135524,
+          "toZ": 0.5693647921707847
+        },
+        {
+          "t": 20.33333333333346,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.39819436890106563,
+          "toZ": 0.8101402993994313
+        },
+        {
+          "t": 20.733333333333437,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.2112120008461693,
+          "toZ": 0.9280597352922857
+        },
+        {
+          "t": 21.016666666666755,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.3305406954290009,
+          "toZ": 0.9044662030572685
+        },
+        {
+          "t": 21.250000000000075,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.17504909146172531,
+          "toZ": 0.9860085816468476
+        },
+        {
+          "t": 21.633333333333386,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -1.1478584708002482,
+          "toZ": 0.031949861468481
+        },
+        {
+          "t": 21.783333333333378,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.838057049102634,
+          "toZ": 0.36376321966003955
+        },
+        {
+          "t": 22.066666666666695,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.0519840192971619,
+          "toZ": 1.1273829005334
+        },
+        {
+          "t": 22.66666666666666,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.4507885462243262,
+          "toZ": 0.6254380873555023
+        },
+        {
+          "t": 23.01666666666664,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -1.2045811874899037,
+          "toZ": 0.019614651151742102
+        },
+        {
+          "t": 23.7166666666666,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.015717965535852585,
+          "toZ": 1.1257700747480535
+        },
+        {
+          "t": 23.733333333333267,
+          "carIndex": 0,
+          "driverType": "racer",
+          "fromZ": -0.6034487390475454,
+          "toZ": 0.37007522080772115
+        },
+        {
+          "t": 24.083333333333247,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.4995414247940442,
+          "toZ": 0.5475144034257315
+        },
+        {
+          "t": 24.41666666666656,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.8813896638802681,
+          "toZ": 0.3090211567381256
+        },
+        {
+          "t": 24.866666666666536,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.7184863996647612,
+          "toZ": 0.39117313027372824
+        },
+        {
+          "t": 26.933333333333085,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.22167205733852502,
+          "toZ": 0.0877070349293847
+        },
+        {
+          "t": 30.21666666666623,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.01759230378556159,
+          "toZ": 0.3992519478594521
+        },
+        {
+          "t": 31.46666666666616,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.22732618401769344,
+          "toZ": 0.16694739816957682
+        },
+        {
+          "t": 31.566666666666155,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.029171634922167622,
+          "toZ": 0.42522108370661565
+        },
+        {
+          "t": 32.24999999999945,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.560959506608218,
+          "toZ": 0.023573434177216468
+        },
+        {
+          "t": 32.58333333333277,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.29837761213052694,
+          "toZ": 0.4363202994917311
+        },
+        {
+          "t": 35.09999999999929,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.2643203675709372,
+          "toZ": 0.10583034215077008
+        },
+        {
+          "t": 35.23333333333262,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.06884223025225433,
+          "toZ": 0.2685011280782128
+        },
+        {
+          "t": 35.866666666665914,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.0021954959932415363,
+          "toZ": 0.24989084600120132
+        },
+        {
+          "t": 37.21666666666584,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.20787322525376767,
+          "toZ": 0.049833650491630355
+        },
+        {
+          "t": 40.71666666666564,
+          "carIndex": 0,
+          "driverType": "racer",
+          "fromZ": -0.09571244477137697,
+          "toZ": 0.28661891711720855
+        },
+        {
+          "t": 40.86666666666563,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.621595970899343,
+          "toZ": 0.15314200161406843
+        },
+        {
+          "t": 42.016666666665564,
+          "carIndex": 11,
+          "driverType": "racer",
+          "fromZ": -0.3184396782463792,
+          "toZ": 0.535842506010963
+        },
+        {
+          "t": 42.61666666666553,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.8050413185629111,
+          "toZ": 0.35761504528898214
+        },
+        {
+          "t": 42.79999999999885,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.890911268162611,
+          "toZ": 0.07457117020031667
+        },
+        {
+          "t": 43.08333333333217,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.891117775241038,
+          "toZ": 0.3131632797205117
+        },
+        {
+          "t": 43.216666666665496,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.3035473401635995,
+          "toZ": 0.8513345372490366
+        },
+        {
+          "t": 43.38333333333215,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.8684064806070089,
+          "toZ": 0.32934266683683444
+        },
+        {
+          "t": 43.83333333333213,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.8032781235552274,
+          "toZ": 0.1745495934753013
+        }
+      ]
+    },
+    {
+      "variant": "common-7s",
+      "origin": "new production-dynamics replay",
+      "count": 20,
+      "seed": 23,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 20,
+      "completed": 19,
+      "targetLane": 3,
+      "changing": true,
+      "airPct": 0,
+      "centerPct": 81.11810440577618,
+      "maxStripeSeconds": 0.4666666666666666,
+      "speedP50": 96.79303505680029,
+      "speedP90": 230.82169802789693,
+      "above220Pct": 13.702623906705842,
+      "overtakes": 36,
+      "racerOvertakes": 0,
+      "minGas": 9.093333333333362,
+      "wallSeconds": 10.315,
+      "overtakeEvents": [
+        {
+          "t": 1.649999999999999,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.46679907253623176,
+          "toZ": 0.173435124662616
+        },
+        {
+          "t": 2.6499999999999955,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.03040691033453069,
+          "toZ": 0.5346245058757554
+        },
+        {
+          "t": 4.0666666666666575,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.15965463839971772,
+          "toZ": 0.13377511614220938
+        },
+        {
+          "t": 7.033333333333314,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.6035743926933479,
+          "toZ": 0.43342129650783034
+        },
+        {
+          "t": 7.383333333333312,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.2504368415050089,
+          "toZ": 0.9218391051829311
+        },
+        {
+          "t": 8.666666666666677,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.3286104668491179,
+          "toZ": 0.7665476149321928
+        },
+        {
+          "t": 8.85000000000002,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.896101308671577,
+          "toZ": 0.2833022782320398
+        },
+        {
+          "t": 9.266666666666707,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.713397208927766,
+          "toZ": 0.3567048771857062
+        },
+        {
+          "t": 10.200000000000086,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.6590138827248577,
+          "toZ": 0.05912939501291503
+        },
+        {
+          "t": 10.900000000000121,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.19976174997869472,
+          "toZ": 0.21031004148304305
+        },
+        {
+          "t": 14.866666666666985,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.049521798344163204,
+          "toZ": 0.040787261655156934
+        },
+        {
+          "t": 15.483333333333682,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.013095909077476847,
+          "toZ": 0.07210761738002526
+        },
+        {
+          "t": 18.250000000000245,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -1.1824218393237294,
+          "toZ": 0.036275227666708876
+        },
+        {
+          "t": 18.333333333333574,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.8393023810293885,
+          "toZ": 0.32432414821610833
+        },
+        {
+          "t": 18.433333333333568,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.8299570291905976,
+          "toZ": 0.2898507214779136
+        },
+        {
+          "t": 18.883333333333542,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.12023755611758391,
+          "toZ": 1.0934875067628032
+        },
+        {
+          "t": 20.01666666666681,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.3433390534560645,
+          "toZ": 0.7142437050279808
+        },
+        {
+          "t": 20.18333333333347,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.12453808036658431,
+          "toZ": 0.8289743480613904
+        },
+        {
+          "t": 21.666666666666718,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.5124813635209331,
+          "toZ": 0.6611006844160585
+        },
+        {
+          "t": 21.883333333333372,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.19758968679914513,
+          "toZ": 0.9907214471157972
+        },
+        {
+          "t": 22.616666666666664,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.3154560895459171,
+          "toZ": 0.488948450447665
+        },
+        {
+          "t": 22.699999999999992,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.6092643353845741,
+          "toZ": 0.09794190808161007
+        },
+        {
+          "t": 22.949999999999978,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.10956195175621875,
+          "toZ": 0.47854516143490156
+        },
+        {
+          "t": 25.833333333333147,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.10186892690673141,
+          "toZ": 0.14304162038413895
+        },
+        {
+          "t": 26.166666666666462,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.15035003211175238,
+          "toZ": 0.06189047681374346
+        },
+        {
+          "t": 37.69999999999914,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.048014783598206406,
+          "toZ": 0.01929781196843844
+        },
+        {
+          "t": 40.79999999999897,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.3283412041878506,
+          "toZ": 0.08707515946916172
+        },
+        {
+          "t": 40.79999999999897,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.07487712421357179,
+          "toZ": 0.3502813298745408
+        },
+        {
+          "t": 41.48333333333226,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.5452353233164968,
+          "toZ": 0.17547925122559882
+        },
+        {
+          "t": 41.56666666666559,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.21011551289571584,
+          "toZ": 0.6579186287012031
+        },
+        {
+          "t": 41.666666666665584,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.5672656209261451,
+          "toZ": 0.4132375359289404
+        },
+        {
+          "t": 42.23333333333222,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.4121477045412143,
+          "toZ": 0.22791920427802115
+        },
+        {
+          "t": 43.449999999998816,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.15993456296465114,
+          "toZ": 0.5645287635096373
+        },
+        {
+          "t": 43.71666666666547,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.504494810011605,
+          "toZ": 0.07854685634210967
+        },
+        {
+          "t": 44.68333333333208,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.8841246798885338,
+          "toZ": 0.12677970524425808
+        },
+        {
+          "t": 44.899999999998734,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.5394220168765926,
+          "toZ": 0.17018789933422562
+        }
+      ]
+    },
+    {
+      "variant": "current-3.6s",
+      "origin": "new production-dynamics replay",
+      "count": 36,
+      "seed": 1,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 14,
+      "completed": 14,
+      "targetLane": 3,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 87.11588300629434,
+      "maxStripeSeconds": 0.41666666666666663,
+      "speedP50": 104.5328965830657,
+      "speedP90": 158.00543413045617,
+      "above220Pct": 1.6243231986672628,
+      "overtakes": 37,
+      "racerOvertakes": 2,
+      "minGas": 9.305833333333355,
+      "wallSeconds": 11.311,
+      "overtakeEvents": [
+        {
+          "t": 0.09999999999999999,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.4164528283140419,
+          "toZ": 0.0009373509418445503
+        },
+        {
+          "t": 1.649999999999999,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.10418265241661825,
+          "toZ": 0.10463092269598398
+        },
+        {
+          "t": 4.099999999999991,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.002997597715123479,
+          "toZ": 0.2338990118127111
+        },
+        {
+          "t": 4.19999999999999,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.015869664570929948,
+          "toZ": 0.11097041470850502
+        },
+        {
+          "t": 5.23333333333332,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.29318349729663745,
+          "toZ": 0.027864571496160895
+        },
+        {
+          "t": 5.349999999999986,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.07952679170883165,
+          "toZ": 0.08045185608443989
+        },
+        {
+          "t": 7.016666666666647,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.17327899659660384,
+          "toZ": 0.366400301326239
+        },
+        {
+          "t": 7.849999999999977,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.7154977359439801,
+          "toZ": 0.0031765003066362985
+        },
+        {
+          "t": 7.949999999999977,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.6112274385405928,
+          "toZ": 0.12599824855213815
+        },
+        {
+          "t": 8.04999999999998,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.18393814812944909,
+          "toZ": 0.36547496642668065
+        },
+        {
+          "t": 9.900000000000071,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.9340774034809903,
+          "toZ": 0.041875550739246425
+        },
+        {
+          "t": 10.316666666666759,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.12725897764116723,
+          "toZ": 1.0500750245152395
+        },
+        {
+          "t": 10.616666666666774,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.20249294600094503,
+          "toZ": 1.0448218798540065
+        },
+        {
+          "t": 11.300000000000141,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.382755641593176,
+          "toZ": 0.43636130191484757
+        },
+        {
+          "t": 11.400000000000146,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.5365588076851703,
+          "toZ": 0.27220908488688056
+        },
+        {
+          "t": 12.866666666666886,
+          "carIndex": 30,
+          "driverType": "cruise",
+          "fromZ": -0.04687447521411087,
+          "toZ": 0.3282102102430894
+        },
+        {
+          "t": 12.933333333333556,
+          "carIndex": 29,
+          "driverType": "cruise",
+          "fromZ": -0.27448479000854736,
+          "toZ": 0.08534414506876531
+        },
+        {
+          "t": 21.50000000000006,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.13663497786453765,
+          "toZ": 0.15272586162809176
+        },
+        {
+          "t": 22.000000000000032,
+          "carIndex": 25,
+          "driverType": "cruise",
+          "fromZ": -0.0851057347027181,
+          "toZ": 0.1804559086276042
+        },
+        {
+          "t": 22.233333333333352,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.1439535103209251,
+          "toZ": 0.09535799762800534
+        },
+        {
+          "t": 22.86666666666665,
+          "carIndex": 23,
+          "driverType": "cruise",
+          "fromZ": -0.22674625132509135,
+          "toZ": 0.065090163861725
+        },
+        {
+          "t": 23.699999999999935,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.26220755596509127,
+          "toZ": 0.3617912329347156
+        },
+        {
+          "t": 24.76666666666654,
+          "carIndex": 28,
+          "driverType": "cruise",
+          "fromZ": -0.10790171375500401,
+          "toZ": 0.44078474950848523
+        },
+        {
+          "t": 25.066666666666524,
+          "carIndex": 32,
+          "driverType": "cruise",
+          "fromZ": -0.4548983369378403,
+          "toZ": 0.10317805540156544
+        },
+        {
+          "t": 25.93333333333314,
+          "carIndex": 22,
+          "driverType": "cruise",
+          "fromZ": -0.1911070834945644,
+          "toZ": 0.29293427141281886
+        },
+        {
+          "t": 25.93333333333314,
+          "carIndex": 31,
+          "driverType": "cruise",
+          "fromZ": -0.09013998963402442,
+          "toZ": 0.39813999484703877
+        },
+        {
+          "t": 27.53333333333305,
+          "carIndex": 34,
+          "driverType": "cruise",
+          "fromZ": -0.21852322262972296,
+          "toZ": 0.15323425412086777
+        },
+        {
+          "t": 28.249999999999677,
+          "carIndex": 35,
+          "driverType": "cruise",
+          "fromZ": -0.27262144841821684,
+          "toZ": 0.11840875338329804
+        },
+        {
+          "t": 28.433333333333,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.35583336219081524,
+          "toZ": 0.01820332332003738
+        },
+        {
+          "t": 29.24999999999962,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.008027472392240054,
+          "toZ": 0.21709887904042618
+        },
+        {
+          "t": 31.949999999999466,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.0984125400142094,
+          "toZ": 0.5443375425471965
+        },
+        {
+          "t": 32.633333333332764,
+          "carIndex": 6,
+          "driverType": "racer",
+          "fromZ": -0.460545879604253,
+          "toZ": 0.03151689875889918
+        },
+        {
+          "t": 33.06666666666607,
+          "carIndex": 33,
+          "driverType": "cruise",
+          "fromZ": -0.31311983262778115,
+          "toZ": 0.07941606896560705
+        },
+        {
+          "t": 33.46666666666605,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.01082946028810966,
+          "toZ": 0.20963412616818333
+        },
+        {
+          "t": 33.49999999999938,
+          "carIndex": 8,
+          "driverType": "racer",
+          "fromZ": -0.10792380521973785,
+          "toZ": 0.11393008343826713
+        },
+        {
+          "t": 34.34999999999933,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.09933537459284697,
+          "toZ": 0.09978686763947472
+        },
+        {
+          "t": 34.44999999999933,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.14327087234127472,
+          "toZ": 0.004151897011500927
+        }
+      ]
+    },
+    {
+      "variant": "common-7s",
+      "origin": "new production-dynamics replay",
+      "count": 36,
+      "seed": 1,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 26,
+      "completed": 26,
+      "targetLane": 5,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 76.08293224731649,
+      "maxStripeSeconds": 0.4666666666666666,
+      "speedP50": 109.57195260365245,
+      "speedP90": 209.3078854030249,
+      "above220Pct": 8.121615993336293,
+      "overtakes": 52,
+      "racerOvertakes": 4,
+      "minGas": 9.036666666666697,
+      "wallSeconds": 13.42,
+      "overtakeEvents": [
+        {
+          "t": 0.09999999999999999,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.4164528283140419,
+          "toZ": 0.0009373509418445503
+        },
+        {
+          "t": 3.049999999999994,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.09073817003315396,
+          "toZ": 0.02771606745062201
+        },
+        {
+          "t": 5.583333333333319,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.19892905238212394,
+          "toZ": 0.08139020336611846
+        },
+        {
+          "t": 6.299999999999983,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.3209915677040989,
+          "toZ": 0.0014526194488711508
+        },
+        {
+          "t": 6.333333333333316,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.24221280618979202,
+          "toZ": 0.14762106426846439
+        },
+        {
+          "t": 6.983333333333314,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.07643074374099768,
+          "toZ": 0.4643833615724893
+        },
+        {
+          "t": 7.733333333333311,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.4819509819171086,
+          "toZ": 0.6444603378247871
+        },
+        {
+          "t": 8.266666666666657,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.7044018004216605,
+          "toZ": 0.12213842118120266
+        },
+        {
+          "t": 8.31666666666666,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.143031073684443,
+          "toZ": 0.7447781423192821
+        },
+        {
+          "t": 8.416666666666664,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.6546946067571983,
+          "toZ": 0.04588140537008023
+        },
+        {
+          "t": 10.300000000000091,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.2831020849038727,
+          "toZ": 0.6069334955102019
+        },
+        {
+          "t": 10.750000000000114,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.33009932795995556,
+          "toZ": 0.8513312364752332
+        },
+        {
+          "t": 11.016666666666794,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.4158627839421625,
+          "toZ": 0.8315791459534232
+        },
+        {
+          "t": 11.716666666666828,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.3457465125028565,
+          "toZ": 0.5675239066915869
+        },
+        {
+          "t": 11.800000000000166,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.7500780518719783,
+          "toZ": 0.15762614601998182
+        },
+        {
+          "t": 13.8333333333336,
+          "carIndex": 29,
+          "driverType": "cruise",
+          "fromZ": -0.4028655554399396,
+          "toZ": 0.02048775152547777
+        },
+        {
+          "t": 13.96666666666694,
+          "carIndex": 30,
+          "driverType": "cruise",
+          "fromZ": -0.21267710915925458,
+          "toZ": 0.2220529440424831
+        },
+        {
+          "t": 14.916666666666988,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.8255919327892446,
+          "toZ": 0.16688544726546883
+        },
+        {
+          "t": 15.150000000000333,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.8528590853870543,
+          "toZ": 0.14439549258637696
+        },
+        {
+          "t": 15.333333333333675,
+          "carIndex": 25,
+          "driverType": "cruise",
+          "fromZ": -0.3544794316072353,
+          "toZ": 0.5837061054960156
+        },
+        {
+          "t": 16.05000000000037,
+          "carIndex": 31,
+          "driverType": "cruise",
+          "fromZ": -0.5247176979765173,
+          "toZ": 0.1585668038889394
+        },
+        {
+          "t": 16.16666666666703,
+          "carIndex": 8,
+          "driverType": "racer",
+          "fromZ": -0.004051070943858481,
+          "toZ": 0.4283953048948716
+        },
+        {
+          "t": 16.333333333333687,
+          "carIndex": 28,
+          "driverType": "cruise",
+          "fromZ": -0.1224477786224859,
+          "toZ": 0.4912273453410877
+        },
+        {
+          "t": 17.200000000000305,
+          "carIndex": 34,
+          "driverType": "cruise",
+          "fromZ": -0.39528248132152916,
+          "toZ": 0.026197898410655063
+        },
+        {
+          "t": 18.81666666666688,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.16258550971606933,
+          "toZ": 0.13291643719025187
+        },
+        {
+          "t": 19.066666666666865,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.12157430100524325,
+          "toZ": 0.015202131631878002
+        },
+        {
+          "t": 32.01666666666613,
+          "carIndex": 35,
+          "driverType": "cruise",
+          "fromZ": -0.02941113378586248,
+          "toZ": 0.04974232945297803
+        },
+        {
+          "t": 34.59999999999932,
+          "carIndex": 32,
+          "driverType": "cruise",
+          "fromZ": -0.21206695683493354,
+          "toZ": 0.038862336859758484
+        },
+        {
+          "t": 35.11666666666596,
+          "carIndex": 33,
+          "driverType": "cruise",
+          "fromZ": -0.32701947055444025,
+          "toZ": 0.1793500031513673
+        },
+        {
+          "t": 35.516666666665934,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.2261661856759165,
+          "toZ": 0.31581188338274113
+        },
+        {
+          "t": 35.983333333332574,
+          "carIndex": 8,
+          "driverType": "racer",
+          "fromZ": -0.03694120900988401,
+          "toZ": 0.3484928988569308
+        },
+        {
+          "t": 36.1666666666659,
+          "carIndex": 23,
+          "driverType": "cruise",
+          "fromZ": -0.31114326707720297,
+          "toZ": 0.0886682306178962
+        },
+        {
+          "t": 37.09999999999918,
+          "carIndex": 22,
+          "driverType": "cruise",
+          "fromZ": -0.41274676860114345,
+          "toZ": 0.061302950443262005
+        },
+        {
+          "t": 37.266666666665834,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.4866258802632011,
+          "toZ": 0.12773238713681556
+        },
+        {
+          "t": 37.533333333332486,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.26801474255052343,
+          "toZ": 0.11200993989465824
+        },
+        {
+          "t": 38.99999999999907,
+          "carIndex": 1,
+          "driverType": "cruise",
+          "fromZ": -0.3224481945482113,
+          "toZ": 0.19467230118544
+        },
+        {
+          "t": 39.64999999999903,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.6868077240081665,
+          "toZ": 0.5196914684315834
+        },
+        {
+          "t": 39.73333333333236,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -1.1815634223891593,
+          "toZ": 0.005094172050470691
+        },
+        {
+          "t": 39.78333333333236,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -1.0979793668804434,
+          "toZ": 0.1371193403034212
+        },
+        {
+          "t": 39.84999999999902,
+          "carIndex": 6,
+          "driverType": "racer",
+          "fromZ": -0.2931864787708349,
+          "toZ": 0.8521750021553831
+        },
+        {
+          "t": 40.39999999999899,
+          "carIndex": 26,
+          "driverType": "racer",
+          "fromZ": -0.3478962170759232,
+          "toZ": 0.795823777098883
+        },
+        {
+          "t": 40.44999999999899,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.41424498765580453,
+          "toZ": 0.81267419711467
+        },
+        {
+          "t": 40.533333333332315,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.5590207654426713,
+          "toZ": 0.6866810718651266
+        },
+        {
+          "t": 40.71666666666564,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.002129682620038542,
+          "toZ": 1.1272733355669724
+        },
+        {
+          "t": 40.94999999999896,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.3052309063679781,
+          "toZ": 0.8396512512865095
+        },
+        {
+          "t": 40.98333333333229,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.538595233379423,
+          "toZ": 0.6793788513180714
+        },
+        {
+          "t": 41.74999999999891,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.3064982170868522,
+          "toZ": 0.7302675397812992
+        },
+        {
+          "t": 42.08333333333223,
+          "carIndex": 29,
+          "driverType": "cruise",
+          "fromZ": -0.2644906488344976,
+          "toZ": 0.6654568579551876
+        },
+        {
+          "t": 42.43333333333221,
+          "carIndex": 30,
+          "driverType": "cruise",
+          "fromZ": -0.04292700763931889,
+          "toZ": 0.7586601360776979
+        },
+        {
+          "t": 43.08333333333217,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.07786514574087877,
+          "toZ": 0.4371354472092952
+        },
+        {
+          "t": 44.51666666666542,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.059214563976279,
+          "toZ": 0.21989843814544707
+        },
+        {
+          "t": 44.88333333333207,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.17194820714482026,
+          "toZ": 0.03497405660135375
+        }
+      ]
+    },
+    {
+      "variant": "current-3.6s",
+      "origin": "new production-dynamics replay",
+      "count": 36,
+      "seed": 7,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 13,
+      "completed": 13,
+      "targetLane": 4,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 87.4861162532399,
+      "maxStripeSeconds": 0.5166666666666666,
+      "speedP50": 99.48139495352923,
+      "speedP90": 152.11406100681754,
+      "above220Pct": 0,
+      "overtakes": 37,
+      "racerOvertakes": 3,
+      "minGas": 9.47583333333335,
+      "wallSeconds": 14.373,
+      "overtakeEvents": [
+        {
+          "t": 0.06666666666666667,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.1346236602590294,
+          "toZ": 0.2736078929870406
+        },
+        {
+          "t": 2.066666666666664,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.016806279719516187,
+          "toZ": 0.002982168789759581
+        },
+        {
+          "t": 6.083333333333317,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.29468972771020896,
+          "toZ": 0.030941965339648825
+        },
+        {
+          "t": 6.383333333333316,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.1665190810809672,
+          "toZ": 0.11607968052843826
+        },
+        {
+          "t": 6.783333333333315,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.14057114262039322,
+          "toZ": 0.024897922332035027
+        },
+        {
+          "t": 16.55000000000034,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.0008576403686409405,
+          "toZ": 0.03034724368974804
+        },
+        {
+          "t": 17.933333333333596,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.006965236549744153,
+          "toZ": 0.1713739684150394
+        },
+        {
+          "t": 18.85000000000021,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.033178954107882574,
+          "toZ": 0.1297222389450258
+        },
+        {
+          "t": 19.700000000000163,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.07383605181609065,
+          "toZ": 0.21362237815080998
+        },
+        {
+          "t": 22.28333333333335,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.10683612697078093,
+          "toZ": 0.15137692658161167
+        },
+        {
+          "t": 24.949999999999864,
+          "carIndex": 15,
+          "driverType": "racer",
+          "fromZ": -0.12433183628898556,
+          "toZ": 0.013714559854129699
+        },
+        {
+          "t": 25.28333333333318,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.03324306664702348,
+          "toZ": 0.014096613924932153
+        },
+        {
+          "t": 25.81666666666648,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.03683971126306204,
+          "toZ": 0.09762455747946039
+        },
+        {
+          "t": 28.63333333333299,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.01639135795716929,
+          "toZ": 0.019686929217665163
+        },
+        {
+          "t": 32.73333333333276,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.3602795792930491,
+          "toZ": 0.20195562728020566
+        },
+        {
+          "t": 33.08333333333274,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.4997590033724312,
+          "toZ": 0.19369770340319092
+        },
+        {
+          "t": 33.099999999999405,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.4347120215648481,
+          "toZ": 0.2001400226979072
+        },
+        {
+          "t": 34.04999999999935,
+          "carIndex": 29,
+          "driverType": "racer",
+          "fromZ": -0.44250952636418833,
+          "toZ": 0.02002624286666732
+        },
+        {
+          "t": 34.08333333333268,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.15366692782618274,
+          "toZ": 0.24763670332983168
+        },
+        {
+          "t": 34.28333333333267,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.37883690304067325,
+          "toZ": 0.013257751664358886
+        },
+        {
+          "t": 34.966666666665965,
+          "carIndex": 31,
+          "driverType": "cruise",
+          "fromZ": -0.0029986160223215985,
+          "toZ": 0.3553331545800673
+        },
+        {
+          "t": 35.06666666666596,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.20535421981612184,
+          "toZ": 0.08980850714412197
+        },
+        {
+          "t": 35.56666666666593,
+          "carIndex": 34,
+          "driverType": "racer",
+          "fromZ": -0.27984744883636375,
+          "toZ": 0.219018141287319
+        },
+        {
+          "t": 36.333333333332554,
+          "carIndex": 28,
+          "driverType": "cruise",
+          "fromZ": -0.3965470657264435,
+          "toZ": 0.3777830774445632
+        },
+        {
+          "t": 37.066666666665846,
+          "carIndex": 23,
+          "driverType": "cruise",
+          "fromZ": -0.19454005281121411,
+          "toZ": 0.3306666851327934
+        },
+        {
+          "t": 37.183333333332506,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.20975064692741346,
+          "toZ": 0.2268738494882624
+        },
+        {
+          "t": 37.499999999999154,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.27936783194241904,
+          "toZ": 0.060979841107402566
+        },
+        {
+          "t": 37.733333333332475,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.20264327846258545,
+          "toZ": 0.1672768728723803
+        },
+        {
+          "t": 38.29999999999911,
+          "carIndex": 25,
+          "driverType": "cruise",
+          "fromZ": -0.4643044012346421,
+          "toZ": 0.1038861986717351
+        },
+        {
+          "t": 39.09999999999906,
+          "carIndex": 2,
+          "driverType": "cruise",
+          "fromZ": -0.2666708657568724,
+          "toZ": 0.24728579207829116
+        },
+        {
+          "t": 40.11666666666567,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.38981647643847916,
+          "toZ": 0.3714472754895336
+        },
+        {
+          "t": 40.199999999999,
+          "carIndex": 32,
+          "driverType": "cruise",
+          "fromZ": -0.27925383332873077,
+          "toZ": 0.4524433432580517
+        },
+        {
+          "t": 40.416666666665655,
+          "carIndex": 33,
+          "driverType": "cruise",
+          "fromZ": -0.6158815300012032,
+          "toZ": 0.03332074409524788
+        },
+        {
+          "t": 40.966666666665624,
+          "carIndex": 22,
+          "driverType": "cruise",
+          "fromZ": -0.022519401878979606,
+          "toZ": 0.2351786923359342
+        },
+        {
+          "t": 42.99999999999884,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.3169637194944248,
+          "toZ": 0.39928354434800195
+        },
+        {
+          "t": 43.649999999998805,
+          "carIndex": 24,
+          "driverType": "cruise",
+          "fromZ": -0.2522968354257469,
+          "toZ": 0.3212327851157708
+        },
+        {
+          "t": 44.61666666666542,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.06541205500504144,
+          "toZ": 0.2881909896229008
+        }
+      ]
+    },
+    {
+      "variant": "common-7s",
+      "origin": "new production-dynamics replay",
+      "count": 36,
+      "seed": 7,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 17,
+      "completed": 17,
+      "targetLane": 4,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 84.89448352462094,
+      "maxStripeSeconds": 0.31666666666666665,
+      "speedP50": 87.86684991532465,
+      "speedP90": 101.27664884243251,
+      "above220Pct": 0,
+      "overtakes": 17,
+      "racerOvertakes": 3,
+      "minGas": 9.390833333333353,
+      "wallSeconds": 18.482,
+      "overtakeEvents": [
+        {
+          "t": 0.06666666666666667,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.1346236602590294,
+          "toZ": 0.2736078929870406
+        },
+        {
+          "t": 2.066666666666664,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.016806279719516187,
+          "toZ": 0.002982168789759581
+        },
+        {
+          "t": 7.833333333333311,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.08276852659725398,
+          "toZ": 0.07090478325907315
+        },
+        {
+          "t": 8.399999999999997,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.08345898999183735,
+          "toZ": 0.0839262176187249
+        },
+        {
+          "t": 12.416666666666863,
+          "carIndex": 18,
+          "driverType": "cruise",
+          "fromZ": -0.019532876543330465,
+          "toZ": 0.0008219348986239286
+        },
+        {
+          "t": 14.466666666666965,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.12431846382622014,
+          "toZ": 0.02957876148854116
+        },
+        {
+          "t": 15.23333333333367,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.1660058323435579,
+          "toZ": 0.019074430683653443
+        },
+        {
+          "t": 17.383333333333628,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.004658578004440361,
+          "toZ": 0.24975833818232474
+        },
+        {
+          "t": 18.70000000000022,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.16498999703000272,
+          "toZ": 0.42004380512844497
+        },
+        {
+          "t": 19.0500000000002,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.18223186845125172,
+          "toZ": 0.675599001095886
+        },
+        {
+          "t": 19.650000000000166,
+          "carIndex": 15,
+          "driverType": "racer",
+          "fromZ": -0.17045545573165255,
+          "toZ": 0.022199580820837228
+        },
+        {
+          "t": 20.88333333333343,
+          "carIndex": 15,
+          "driverType": "racer",
+          "fromZ": -0.061989969797193956,
+          "toZ": 0.030424492850033333
+        },
+        {
+          "t": 25.799999999999816,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.12631010142475643,
+          "toZ": 0.023018875426453367
+        },
+        {
+          "t": 27.699999999999708,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.10828395801077781,
+          "toZ": 0.020502217893214908
+        },
+        {
+          "t": 27.8499999999997,
+          "carIndex": 10,
+          "driverType": "cruise",
+          "fromZ": -0.04233354987495755,
+          "toZ": 0.10946755667955771
+        },
+        {
+          "t": 31.78333333333281,
+          "carIndex": 30,
+          "driverType": "racer",
+          "fromZ": -0.018355091937309248,
+          "toZ": 0.02664874405922118
+        },
+        {
+          "t": 39.166666666665726,
+          "carIndex": 31,
+          "driverType": "cruise",
+          "fromZ": -0.0652064518065931,
+          "toZ": 0.019884034961125466
+        }
+      ]
+    },
+    {
+      "variant": "current-3.6s",
+      "origin": "new production-dynamics replay",
+      "count": 36,
+      "seed": 23,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 14,
+      "completed": 14,
+      "targetLane": 3,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 86.44946316179232,
+      "maxStripeSeconds": 0.4833333333333333,
+      "speedP50": 105.87440298468104,
+      "speedP90": 185.51830971592517,
+      "above220Pct": 7.413577675968516,
+      "overtakes": 50,
+      "racerOvertakes": 3,
+      "minGas": 8.9516666666667,
+      "wallSeconds": 14.762,
+      "overtakeEvents": [
+        {
+          "t": 0.850000000000001,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.3973658430408533,
+          "toZ": 0.21979096083421545
+        },
+        {
+          "t": 2.533333333333329,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.21487959120832656,
+          "toZ": 0.6337832612436879
+        },
+        {
+          "t": 2.6499999999999955,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.35371193590729766,
+          "toZ": 0.28789958920295433
+        },
+        {
+          "t": 2.6999999999999953,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.40083223937926377,
+          "toZ": 0.036159949855464946
+        },
+        {
+          "t": 4.183333333333324,
+          "carIndex": 18,
+          "driverType": "racer",
+          "fromZ": -0.4232188575577361,
+          "toZ": 0.08807900637991667
+        },
+        {
+          "t": 4.516666666666656,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.08889963903760378,
+          "toZ": 1.000800020001509
+        },
+        {
+          "t": 4.816666666666655,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.41872183377957994,
+          "toZ": 0.7121601177109602
+        },
+        {
+          "t": 5.249999999999987,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.6811935199516932,
+          "toZ": 0.4420528463270863
+        },
+        {
+          "t": 5.3833333333333195,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.07824064728141189,
+          "toZ": 1.0579347137575708
+        },
+        {
+          "t": 5.666666666666652,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.29160032038823114,
+          "toZ": 0.7830094183883471
+        },
+        {
+          "t": 5.883333333333318,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.517779269891832,
+          "toZ": 0.4640015957149164
+        },
+        {
+          "t": 7.24999999999998,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.2405346688509164,
+          "toZ": 0.14307048325106675
+        },
+        {
+          "t": 7.949999999999977,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.24607280729282532,
+          "toZ": 0.006575202670461688
+        },
+        {
+          "t": 13.350000000000243,
+          "carIndex": 10,
+          "driverType": "racer",
+          "fromZ": -0.8461486509006597,
+          "toZ": 0.14828898317200834
+        },
+        {
+          "t": 13.43333333333358,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.4900617922706041,
+          "toZ": 0.5961243098079116
+        },
+        {
+          "t": 13.866666666666935,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.47781338748972213,
+          "toZ": 0.7251766796869432
+        },
+        {
+          "t": 13.866666666666935,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.08015769327621225,
+          "toZ": 1.165405179381799
+        },
+        {
+          "t": 14.16666666666695,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.09288919613183366,
+          "toZ": 1.041785611947451
+        },
+        {
+          "t": 14.550000000000303,
+          "carIndex": 28,
+          "driverType": "cruise",
+          "fromZ": -0.3223778480142525,
+          "toZ": 0.8833564246723604
+        },
+        {
+          "t": 14.56666666666697,
+          "carIndex": 24,
+          "driverType": "cruise",
+          "fromZ": -0.9097356288748668,
+          "toZ": 0.32969302696226377
+        },
+        {
+          "t": 14.666666666666975,
+          "carIndex": 25,
+          "driverType": "cruise",
+          "fromZ": -0.9737818476135669,
+          "toZ": 0.2536431201282767
+        },
+        {
+          "t": 15.416666666667012,
+          "carIndex": 23,
+          "driverType": "cruise",
+          "fromZ": -0.4800452257593688,
+          "toZ": 0.7186228144489448
+        },
+        {
+          "t": 15.866666666667035,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.06186383577344756,
+          "toZ": 0.9670421210765234
+        },
+        {
+          "t": 16.20000000000036,
+          "carIndex": 31,
+          "driverType": "cruise",
+          "fromZ": -0.42750256449996893,
+          "toZ": 0.38993196026271104
+        },
+        {
+          "t": 16.583333333333673,
+          "carIndex": 29,
+          "driverType": "cruise",
+          "fromZ": -0.0037897819750807304,
+          "toZ": 0.6632674257436941
+        },
+        {
+          "t": 17.433333333333625,
+          "carIndex": 35,
+          "driverType": "cruise",
+          "fromZ": -0.436471705854541,
+          "toZ": 0.03985031549389262
+        },
+        {
+          "t": 18.533333333333562,
+          "carIndex": 34,
+          "driverType": "cruise",
+          "fromZ": -0.12382825900161826,
+          "toZ": 0.27301875453409197
+        },
+        {
+          "t": 19.566666666666837,
+          "carIndex": 30,
+          "driverType": "cruise",
+          "fromZ": -0.10144976813077666,
+          "toZ": 0.22899210358476418
+        },
+        {
+          "t": 21.416666666666732,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.21620813799019223,
+          "toZ": 0.09791244820963158
+        },
+        {
+          "t": 22.216666666666686,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.13493867315992075,
+          "toZ": 0.13930463994409703
+        },
+        {
+          "t": 22.250000000000018,
+          "carIndex": 20,
+          "driverType": "cruise",
+          "fromZ": -0.13095115404180102,
+          "toZ": 0.13441296885542314
+        },
+        {
+          "t": 24.84999999999987,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.16466413772658323,
+          "toZ": 0.13581489274750397
+        },
+        {
+          "t": 24.866666666666536,
+          "carIndex": 33,
+          "driverType": "cruise",
+          "fromZ": -0.17028647730799595,
+          "toZ": 0.06961399639344146
+        },
+        {
+          "t": 24.949999999999864,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.14354171276660632,
+          "toZ": 0.14324922071641338
+        },
+        {
+          "t": 25.19999999999985,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.12607715144714798,
+          "toZ": 0.1264110454421591
+        },
+        {
+          "t": 25.4666666666665,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.07860614180561909,
+          "toZ": 0.15771524727846126
+        },
+        {
+          "t": 27.816666666666368,
+          "carIndex": 32,
+          "driverType": "cruise",
+          "fromZ": -0.32690039133580173,
+          "toZ": 0.07732328873683492
+        },
+        {
+          "t": 28.149999999999682,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.10798759222404125,
+          "toZ": 0.22854117969083382
+        },
+        {
+          "t": 32.36666666666611,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.10088063227743552,
+          "toZ": 0.10771312411147715
+        },
+        {
+          "t": 32.81666666666609,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.09901711290968103,
+          "toZ": 0.02434880136510148
+        },
+        {
+          "t": 34.44999999999933,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.05991682280069971,
+          "toZ": 0.14115149808526467
+        },
+        {
+          "t": 34.583333333332654,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.04695298252587392,
+          "toZ": 0.07283085283810595
+        },
+        {
+          "t": 35.81666666666592,
+          "carIndex": 26,
+          "driverType": "cruise",
+          "fromZ": -0.002870986480527471,
+          "toZ": 0.21204576966008282
+        },
+        {
+          "t": 37.2333333333325,
+          "carIndex": 24,
+          "driverType": "cruise",
+          "fromZ": -0.28640796388147827,
+          "toZ": 0.10449733363112151
+        },
+        {
+          "t": 37.71666666666581,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.023412031460883054,
+          "toZ": 0.2910687898090744
+        },
+        {
+          "t": 41.16666666666561,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.013268229896649386,
+          "toZ": 0.11571297858137472
+        },
+        {
+          "t": 43.1166666666655,
+          "carIndex": 25,
+          "driverType": "cruise",
+          "fromZ": -0.10114833838074552,
+          "toZ": 0.01931176164403081
+        },
+        {
+          "t": 44.583333333332085,
+          "carIndex": 22,
+          "driverType": "racer",
+          "fromZ": -0.16458457037840912,
+          "toZ": 0.47321786054575865
+        },
+        {
+          "t": 44.64999999999875,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.14188120083492373,
+          "toZ": 0.6554738374776821
+        },
+        {
+          "t": 44.816666666665405,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.04769701725706943,
+          "toZ": 0.6654712304986877
+        }
+      ]
+    },
+    {
+      "variant": "common-7s",
+      "origin": "new production-dynamics replay",
+      "count": 36,
+      "seed": 23,
+      "fps": 60,
+      "seconds": 45.016666666665394,
+      "impacts": 0,
+      "crashed": false,
+      "jumps": 0,
+      "started": 15,
+      "completed": 15,
+      "targetLane": 4,
+      "changing": false,
+      "airPct": 0,
+      "centerPct": 85.85708996667941,
+      "maxStripeSeconds": 0.44999999999999996,
+      "speedP50": 92.27507442706447,
+      "speedP90": 168.53023085616587,
+      "above220Pct": 2.290712203248706,
+      "overtakes": 39,
+      "racerOvertakes": 3,
+      "minGas": 9.107500000000028,
+      "wallSeconds": 18.144,
+      "overtakeEvents": [
+        {
+          "t": 0.850000000000001,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.3973658430408533,
+          "toZ": 0.21979096083421545
+        },
+        {
+          "t": 2.533333333333329,
+          "carIndex": 15,
+          "driverType": "cruise",
+          "fromZ": -0.21487959120832656,
+          "toZ": 0.6337832612436879
+        },
+        {
+          "t": 2.6499999999999955,
+          "carIndex": 16,
+          "driverType": "cruise",
+          "fromZ": -0.35371193590729766,
+          "toZ": 0.28789958920295433
+        },
+        {
+          "t": 2.6999999999999953,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.40083223937926377,
+          "toZ": 0.036159949855464946
+        },
+        {
+          "t": 4.183333333333324,
+          "carIndex": 18,
+          "driverType": "racer",
+          "fromZ": -0.4232188575577361,
+          "toZ": 0.08807900637991667
+        },
+        {
+          "t": 4.516666666666656,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.08889963903760378,
+          "toZ": 1.000800020001509
+        },
+        {
+          "t": 4.816666666666655,
+          "carIndex": 14,
+          "driverType": "cruise",
+          "fromZ": -0.41872183377957994,
+          "toZ": 0.7121601177109602
+        },
+        {
+          "t": 5.249999999999987,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.6811935199516932,
+          "toZ": 0.4420528463270863
+        },
+        {
+          "t": 5.3833333333333195,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.07824064728141189,
+          "toZ": 1.0579347137575708
+        },
+        {
+          "t": 5.666666666666652,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.29160032038823114,
+          "toZ": 0.7830094183883471
+        },
+        {
+          "t": 5.883333333333318,
+          "carIndex": 8,
+          "driverType": "cruise",
+          "fromZ": -0.517779269891832,
+          "toZ": 0.4640015957149164
+        },
+        {
+          "t": 8.683333333333344,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.08325303743004911,
+          "toZ": 0.15670750273503672
+        },
+        {
+          "t": 9.483333333333384,
+          "carIndex": 6,
+          "driverType": "cruise",
+          "fromZ": -0.27066664523046857,
+          "toZ": 0.020240970929125857
+        },
+        {
+          "t": 10.016666666666744,
+          "carIndex": 10,
+          "driverType": "racer",
+          "fromZ": -0.3899003535307012,
+          "toZ": 0.44565539752244177
+        },
+        {
+          "t": 10.166666666666751,
+          "carIndex": 4,
+          "driverType": "cruise",
+          "fromZ": -0.3925850723614296,
+          "toZ": 0.5103041394169535
+        },
+        {
+          "t": 10.766666666666781,
+          "carIndex": 5,
+          "driverType": "cruise",
+          "fromZ": -0.719142077376261,
+          "toZ": 0.011568505444567001
+        },
+        {
+          "t": 10.966666666666791,
+          "carIndex": 27,
+          "driverType": "cruise",
+          "fromZ": -0.5806970408321944,
+          "toZ": 0.14348196225966015
+        },
+        {
+          "t": 11.050000000000129,
+          "carIndex": 3,
+          "driverType": "cruise",
+          "fromZ": -0.09030602311123548,
+          "toZ": 0.5011728705917441
+        },
+        {
+          "t": 11.833333333333501,
+          "carIndex": 28,
+          "driverType": "cruise",
+          "fromZ": -1.0035001968896604,
+          "toZ": 0.19237608068704737
+        },
+        {
+          "t": 11.933333333333506,
+          "carIndex": 24,
+          "driverType": "cruise",
+          "fromZ": -0.23510460639132846,
+          "toZ": 0.9840595892696837
+        },
+        {
+          "t": 12.016666666666843,
+          "carIndex": 25,
+          "driverType": "cruise",
+          "fromZ": -0.4770700801536547,
+          "toZ": 0.715275660686747
+        },
+        {
+          "t": 12.90000000000022,
+          "carIndex": 23,
+          "driverType": "cruise",
+          "fromZ": -0.14039104809393765,
+          "toZ": 0.6135124208131886
+        },
+        {
+          "t": 13.383333333333578,
+          "carIndex": 0,
+          "driverType": "cruise",
+          "fromZ": -0.3634911654391396,
+          "toZ": 0.19530628900081648
+        },
+        {
+          "t": 14.400000000000295,
+          "carIndex": 31,
+          "driverType": "cruise",
+          "fromZ": -0.23772312084536684,
+          "toZ": 0.26173007640884544
+        },
+        {
+          "t": 14.800000000000315,
+          "carIndex": 29,
+          "driverType": "cruise",
+          "fromZ": -0.2542329421697476,
+          "toZ": 0.16709178823511622
+        },
+        {
+          "t": 16.116666666667033,
+          "carIndex": 35,
+          "driverType": "cruise",
+          "fromZ": -0.06452667324312017,
+          "toZ": 0.20826401185391757
+        },
+        {
+          "t": 17.516666666666953,
+          "carIndex": 34,
+          "driverType": "cruise",
+          "fromZ": -0.5165919568056395,
+          "toZ": 0.01591246129660251
+        },
+        {
+          "t": 18.066666666666922,
+          "carIndex": 30,
+          "driverType": "cruise",
+          "fromZ": -0.09274939357169165,
+          "toZ": 0.33701770286716887
+        },
+        {
+          "t": 20.56666666666678,
+          "carIndex": 17,
+          "driverType": "cruise",
+          "fromZ": -0.1671642057895604,
+          "toZ": 0.06197646991768249
+        },
+        {
+          "t": 21.250000000000075,
+          "carIndex": 21,
+          "driverType": "cruise",
+          "fromZ": -0.06003773062802398,
+          "toZ": 0.109737031206874
+        },
+        {
+          "t": 22.51666666666667,
+          "carIndex": 33,
+          "driverType": "cruise",
+          "fromZ": -0.17375243920796002,
+          "toZ": 0.02173360222559756
+        },
+        {
+          "t": 25.533333333333164,
+          "carIndex": 9,
+          "driverType": "cruise",
+          "fromZ": -0.0019213845546262598,
+          "toZ": 0.18913019837752257
+        },
+        {
+          "t": 27.41666666666639,
+          "carIndex": 11,
+          "driverType": "cruise",
+          "fromZ": -0.1869884226841214,
+          "toZ": 0.010247097254814264
+        },
+        {
+          "t": 28.283333333333008,
+          "carIndex": 19,
+          "driverType": "cruise",
+          "fromZ": -0.07555488640343763,
+          "toZ": 0.08633695676163713
+        },
+        {
+          "t": 32.516666666666104,
+          "carIndex": 10,
+          "driverType": "racer",
+          "fromZ": -0.09522273228806923,
+          "toZ": 0.025312423975015277
+        },
+        {
+          "t": 32.5666666666661,
+          "carIndex": 12,
+          "driverType": "cruise",
+          "fromZ": -0.0018268874940364638,
+          "toZ": 0.10482896122529216
+        },
+        {
+          "t": 38.583333333332426,
+          "carIndex": 32,
+          "driverType": "cruise",
+          "fromZ": -0.07053457730852651,
+          "toZ": 0.01099399037939261
+        },
+        {
+          "t": 42.34999999999888,
+          "carIndex": 7,
+          "driverType": "cruise",
+          "fromZ": -0.011898311884248801,
+          "toZ": 0.022136976178835976
+        },
+        {
+          "t": 44.98333333333206,
+          "carIndex": 13,
+          "driverType": "cruise",
+          "fromZ": -0.03921849262544673,
+          "toZ": 0.02023474302667714
+        }
+      ]
+    }
+  ],
+  "finished": true,
+  "sourceUnchanged": true,
+  "comparisons": [
+    {
+      "count": 20,
+      "seed": 1,
+      "delta": {
+        "medianKmh": 3.9604587204670594,
+        "above220PercentagePoints": 7.3719283631823025,
+        "centerPercentagePoints": -5.516475379488938,
+        "overtakes": 6
+      }
+    },
+    {
+      "count": 20,
+      "seed": 7,
+      "delta": {
+        "medianKmh": 9.342643553056178,
+        "above220PercentagePoints": 18.200749687631095,
+        "centerPercentagePoints": 2.5175860792298437,
+        "overtakes": 7
+      }
+    },
+    {
+      "count": 20,
+      "seed": 23,
+      "delta": {
+        "medianKmh": -89.17990194138928,
+        "above220PercentagePoints": -21.15785089546171,
+        "centerPercentagePoints": 0.703443169196575,
+        "overtakes": -25
+      }
+    },
+    {
+      "count": 36,
+      "seed": 1,
+      "delta": {
+        "medianKmh": 5.039056020586742,
+        "above220PercentagePoints": 6.497292794669031,
+        "centerPercentagePoints": -11.032950758977847,
+        "overtakes": 15
+      }
+    },
+    {
+      "count": 36,
+      "seed": 7,
+      "delta": {
+        "medianKmh": -11.614545038204582,
+        "above220PercentagePoints": 0,
+        "centerPercentagePoints": -2.5916327286189613,
+        "overtakes": -20
+      }
+    },
+    {
+      "count": 36,
+      "seed": 23,
+      "delta": {
+        "medianKmh": -13.599328557616573,
+        "above220PercentagePoints": -5.12286547271981,
+        "centerPercentagePoints": -0.5923731951129128,
+        "overtakes": -11
+      }
+    }
+  ],
+  "summary": [
+    {
+      "count": 20,
+      "before": {
+        "meanRunMedianKmh": 150.61096101700483,
+        "meanAbove220Pct": 22.199083715119603,
+        "meanCenterPct": 82.41392077008565,
+        "maximumStripeSeconds": 0.49999999999999994,
+        "totalOvertakes": 157,
+        "totalRacerOvertakes": 8,
+        "totalImpacts": 0,
+        "totalJumps": 0,
+        "crashedRuns": 0,
+        "totalStarted": 55,
+        "totalCompleted": 54
+      },
+      "after": {
+        "meanRunMedianKmh": 125.31869446104952,
+        "meanAbove220Pct": 23.6706927669035,
+        "meanCenterPct": 81.64877205973148,
+        "maximumStripeSeconds": 0.4833333333333333,
+        "totalOvertakes": 145,
+        "totalRacerOvertakes": 7,
+        "totalImpacts": 0,
+        "totalJumps": 0,
+        "crashedRuns": 0,
+        "totalStarted": 58,
+        "totalCompleted": 56
+      }
+    },
+    {
+      "count": 36,
+      "before": {
+        "meanRunMedianKmh": 103.29623150709199,
+        "meanAbove220Pct": 3.012633624878593,
+        "meanCenterPct": 87.01715414044219,
+        "maximumStripeSeconds": 0.5166666666666666,
+        "totalOvertakes": 124,
+        "totalRacerOvertakes": 8,
+        "totalImpacts": 0,
+        "totalJumps": 0,
+        "crashedRuns": 0,
+        "totalStarted": 41,
+        "totalCompleted": 41
+      },
+      "after": {
+        "meanRunMedianKmh": 96.5712923153472,
+        "meanAbove220Pct": 3.4707760655283333,
+        "meanCenterPct": 82.27816857953896,
+        "maximumStripeSeconds": 0.4666666666666666,
+        "totalOvertakes": 108,
+        "totalRacerOvertakes": 10,
+        "totalImpacts": 0,
+        "totalJumps": 0,
+        "crashedRuns": 0,
+        "totalStarted": 58,
+        "totalCompleted": 58
+      }
+    }
+  ],
+  "conclusion": "Do not adopt the uniform 7-second, three-stage horizon-only variant. It does not produce a stable improvement across the six paired cases: mean run medians decrease at both densities and total overtakes decrease, despite no observed collisions or jumps. Keep the current production candidate and disclose residual low-speed following; these results do not prove every remaining slow period unavoidable."
+}
