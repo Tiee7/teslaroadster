@@ -464,6 +464,18 @@ html, body {
   body[data-hud-mode="medium"] #hud-action-bar { flex-wrap: nowrap; max-width: 100%; min-width: 0; overflow-x: auto; }
 }
 
+/* Independent exterior/cockpit choices stay native, compact, and touch-safe. */
+.start-vehicle-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.start-vehicle-options label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 12px; line-height: 16px; font-weight: 600; color: #cbd5e1; }
+.start-vehicle-options select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid #3b5870; border-radius: 9px; color: #f1f5f9; background: #122236; font: inherit; font-size: 16px; }
+@media (max-width: 650px) {
+  .start-vehicle-options label { gap: 4px; font-size: 11px; line-height: 14px; }
+  .start-vehicle-options select { padding-inline: 6px; }
+}
+@media (max-width: 370px) {
+  .start-vehicle-options { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}
+
 </style>
 </head>
 <body class="relative w-full h-full overflow-hidden">
@@ -926,6 +938,10 @@ html, body {
           </span>
         </button>
         <div class="start-choices">
+          <div id="start-vehicle-options" class="start-vehicle-options" role="group" aria-label="Vehicle configuration">
+            <label for="start-model"><span id="start-model-label">Vehicle model</span><select id="start-model"><option value="reference" selected>Roadster 2 · Reference</option><option value="classic">Classic Roadster</option></select></label>
+            <label for="start-cockpit"><span id="start-cockpit-label">Cockpit</span><select id="start-cockpit"><option value="reference" selected>Reference cockpit</option><option value="classic">Classic cockpit</option></select></label>
+          </div>
           <section class="start-worlds" aria-labelledby="ui-modal-map-title">
             <h2 id="ui-modal-map-title" class="start-section-title">World</h2>
             <div class="start-world-grid">
@@ -954,7 +970,7 @@ html, body {
       <footer class="start-footer">
         <div id="modal-config-summary" class="start-screen-reader" aria-live="polite">
           <span id="ui-ready-prefix">Ready to launch with:</span>
-          <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
+          <span id="summary-model-chip">Roadster 2 · Reference</span>, <span id="summary-cockpit-chip">Reference cockpit</span>, <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
         </div>
         <button id="btn-launch-selected-map" type="button" class="start-launch"><span id="ui-btn-launch-map">Launch simulation</span><span aria-hidden="true">→</span></button>
       </footer>
@@ -4568,6 +4584,668 @@ function clearTireSmoke() {
 
 
 // =========================================================================
+// MODULE: reference-exterior.js
+// =========================================================================
+// Reference-led 2026 Roadster exterior. Units and axles match vehicles.js.
+// All smooth panels are indexed tangent-normal surfaces. Separate meshes retain
+// the intentional hood, shoulder, sill and transom creases of the reference car.
+function buildReferenceRoadsterExterior() {
+  const exterior = new THREE.Group();
+  exterior.name = 'reference-roadster-exterior';
+  const parts = {};
+  const own = (name, parent = exterior) => {
+    const group = new THREE.Group(); group.name = name; parent.add(group); parts[name] = group; return group;
+  };
+  const body = own('reference-body');
+  const canopy = own('reference-canopy');
+  const rails = own('reference-canopy-rails');
+  const frontLights = own('reference-front-lights');
+  const rearLights = own('reference-rear-lights');
+  const activeWing = own('reference-active-wing');
+  // This group is deliberately local to the existing animated spoiler pivot
+  // (0, .85, 2.04). Move it under activeWingGroup without changing its transform.
+  activeWing.userData.pivot = [0, 0.85, 2.04];
+
+  const paint = typeof bodyMaterial !== 'undefined' ? bodyMaterial : new THREE.MeshPhysicalMaterial({ color: 0xf2f4f5, roughness: 0.24, metalness: 0.24, clearcoat: 1 });
+  const carbon = typeof carbonMaterial !== 'undefined' ? carbonMaterial : new THREE.MeshStandardMaterial({ color: 0x090c10, metalness: 0.35, roughness: 0.35 });
+  const metal = typeof titaniumMaterial !== 'undefined' ? titaniumMaterial : new THREE.MeshStandardMaterial({ color: 0x7c858b, metalness: 0.9, roughness: 0.22 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x080c10, metalness: 0.38, roughness: 0.28, side: THREE.FrontSide });
+  const recess = new THREE.MeshStandardMaterial({ color: 0x030507, metalness: 0.08, roughness: 0.58, side: THREE.FrontSide });
+  const glass = new THREE.MeshPhysicalMaterial({ color: 0x080e13, metalness: 0.37, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.08, reflectivity: 0.83, envMapIntensity: 1.1, side: THREE.FrontSide });
+  const sideGlass = new THREE.MeshPhysicalMaterial({ color: 0x10191f, metalness: 0.40, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.09, envMapIntensity: 1.0, side: THREE.FrontSide });
+  const seamMaterial = new THREE.MeshBasicMaterial({ color: 0x1b2328, side: THREE.FrontSide });
+  const lampWhite = new THREE.MeshBasicMaterial({ color: 0xf8fcff, side: THREE.FrontSide });
+  const lampRed = typeof tailLightMat !== 'undefined' ? tailLightMat : new THREE.MeshBasicMaterial({ color: 0xe91d36, side: THREE.FrontSide });
+  const lampStop = typeof chmslMat !== 'undefined' ? chmslMat : new THREE.MeshBasicMaterial({ color: 0x55101b, side: THREE.FrontSide });
+  const lampReverse = typeof reverseLightMat !== 'undefined' ? reverseLightMat : new THREE.MeshBasicMaterial({ color: 0xfaffff, transparent: true, opacity: 0, side: THREE.FrontSide });
+  const amberL = typeof turnSignalMatL !== 'undefined' ? turnSignalMatL : new THREE.MeshBasicMaterial({ color: 0xffa321, transparent: true, opacity: 0, side: THREE.FrontSide });
+  const amberR = typeof turnSignalMatR !== 'undefined' ? turnSignalMatR : new THREE.MeshBasicMaterial({ color: 0xffa321, transparent: true, opacity: 0, side: THREE.FrontSide });
+
+  const mix = (a, b, t) => a + (b - a) * t;
+  const addMesh = (name, geometry, material, parent = body) => {
+    const mesh = new THREE.Mesh(geometry, material); mesh.name = name;
+    mesh.castShadow = material !== lampWhite && material !== lampRed;
+    mesh.receiveShadow = true; parent.add(mesh); return mesh;
+  };
+  // Shared derivatives at every control station, shape-preserving PCHIP.
+  function profile(stations) {
+    const keys = Object.keys(stations[0]).filter(k => k !== 'z');
+    const h = stations.slice(1).map((p, i) => p.z - stations[i].z);
+    const slopes = {};
+    for (const key of keys) {
+      const d = h.map((v, i) => (stations[i + 1][key] - stations[i][key]) / v);
+      const m = new Array(stations.length).fill(0);
+      const end = (h0, h1, d0, d1) => {
+        let v = ((2 * h0 + h1) * d0 - h0 * d1) / (h0 + h1);
+        if (v * d0 <= 0) v = 0; else if (d0 * d1 < 0 && Math.abs(v) > Math.abs(3 * d0)) v = 3 * d0;
+        return v;
+      };
+      if (d.length === 1) m.fill(d[0]);
+      else {
+        m[0] = end(h[0], h[1], d[0], d[1]);
+        const n = d.length - 1; m[n + 1] = end(h[n], h[n - 1], d[n], d[n - 1]);
+        for (let i = 1; i <= n; i++) if (d[i - 1] * d[i] > 0) {
+          const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1];
+          m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]);
+        }
+      }
+      slopes[key] = m;
+    }
+    return z => {
+      if (z <= stations[0].z) return stations[0];
+      if (z >= stations[stations.length - 1].z) return stations[stations.length - 1];
+      let i = 0; while (z > stations[i + 1].z) i++;
+      const t = (z - stations[i].z) / h[i], t2 = t * t, t3 = t2 * t, result = { z };
+      for (const key of keys) result[key] = (2 * t3 - 3 * t2 + 1) * stations[i][key]
+        + (t3 - 2 * t2 + t) * h[i] * slopes[key][i]
+        + (-2 * t3 + 3 * t2) * stations[i + 1][key]
+        + (t3 - t2) * h[i] * slopes[key][i + 1];
+      return result;
+    };
+  }
+  function surface(name, at, rows, columns, material, parent = body, flip = false) {
+    const positions = [], normals = [], indices = [], grid = [];
+    for (let i = 0; i <= rows; i++) {
+      const row = []; for (let j = 0; j <= columns; j++) { const p = at(i / rows, j / columns); row.push(p); positions.push(...p); }
+      grid.push(row);
+    }
+    const stride = columns + 1;
+    for (let i = 0; i < rows; i++) for (let j = 0; j < columns; j++) {
+      const a = i * stride + j, b = a + 1, c = a + stride, d = c + 1;
+      indices.push(...(flip ? [a, d, c, a, b, d] : [a, c, d, a, d, b]));
+    }
+    for (let i = 0; i <= rows; i++) for (let j = 0; j <= columns; j++) {
+      const p0 = grid[Math.max(0, i - 1)][j], p1 = grid[Math.min(rows, i + 1)][j];
+      const q0 = grid[i][Math.max(0, j - 1)], q1 = grid[i][Math.min(columns, j + 1)];
+      const a = p1.map((v, k) => v - p0[k]), b = q1.map((v, k) => v - q0[k]);
+      const n = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+      const length = Math.hypot(...n) || 1; normals.push(...n.map(v => v / length * (flip ? -1 : 1)));
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+    geometry.setIndex(indices); geometry.computeBoundingBox(); geometry.computeBoundingSphere();
+    const mesh = addMesh(name, geometry, material, parent); mesh.userData.surfaceRows = rows; mesh.userData.surfaceColumns = columns; return mesh;
+  }
+  // Convex planar facets, wound once toward a known exterior direction. Lenses
+  // never contain reverse triangles and never use emissive rear/side faces.
+  function facet(name, points, material, parent = body, toward = [0, 1, 0]) {
+    const a = points[0], b = points[1], c = points[2];
+    const u = b.map((v, k) => v - a[k]), v = c.map((n, k) => n - a[k]);
+    const n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const reverse = n.reduce((sum, value, k) => sum + value * toward[k], 0) < 0;
+    const index = []; for (let i = 1; i < points.length - 1; i++) index.push(...(reverse ? [0, i + 1, i] : [0, i, i + 1]));
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(points.flat(), 3)); g.setIndex(index); g.computeVertexNormals();
+    return addMesh(name, g, material, parent);
+  }
+  const box = (name, size, position, material, parent = body) => {
+    const mesh = addMesh(name, new THREE.BoxGeometry(...size), material, parent); mesh.position.set(...position); return mesh;
+  };
+  function ribbon(name, pointAt, width, material, parent, outward = [0, 1, 0], segments = 64) {
+    // Explicit narrow surfaces avoid floating tubes and chunky raised shutlines.
+    const points = []; for (let i = 0; i <= segments; i++) points.push(pointAt(i / segments));
+    return surface(name, (t, u) => {
+      const f = t * segments, i = Math.min(segments - 1, Math.floor(f)), k = f - i;
+      const p = points[i].map((v, axis) => mix(v, points[i + 1][axis], k));
+      const prev = points[Math.max(0, i - 1)], next = points[Math.min(segments, i + 1)];
+      const tangent = next.map((v, axis) => v - prev[axis]);
+      const side = [outward[1] * tangent[2] - outward[2] * tangent[1], outward[2] * tangent[0] - outward[0] * tangent[2], outward[0] * tangent[1] - outward[1] * tangent[0]];
+      const len = Math.hypot(...side) || 1;
+      return p.map((v, axis) => v + side[axis] / len * (u - 0.5) * width);
+    }, segments, 1, material, parent, false);
+  }
+
+  const shape = profile([
+    { z: -2.32, innerX: .680, innerY: .505, crestX: .870, crestY: .620, edgeX: .954, edgeY: .560, waistX: .951, waistY: .355, sillY: .155 },
+    { z: -2.10, innerX: .615, innerY: .680, crestX: .855, crestY: .738, edgeX: .981, edgeY: .636, waistX: .986, waistY: .420, sillY: .158 },
+    { z: -1.85, innerX: .628, innerY: .700, crestX: .860, crestY: .775, edgeX: 1.000, edgeY: .706, waistX: 1.013, waistY: .482, sillY: .160 },
+    { z: -1.36, innerX: .654, innerY: .715, crestX: .866, crestY: .791, edgeX: 1.005, edgeY: .747, waistX: 1.020, waistY: .522, sillY: .165 },
+    { z: -1.06, innerX: .668, innerY: .710, crestX: .858, crestY: .775, edgeX: .992, edgeY: .731, waistX: 1.005, waistY: .520, sillY: .168 },
+    { z: -.72, innerX: .830, innerY: .738, crestX: .886, crestY: .770, edgeX: .973, edgeY: .725, waistX: .994, waistY: .492, sillY: .176 },
+    { z: -.10, innerX: .802, innerY: .772, crestX: .864, crestY: .788, edgeX: .963, edgeY: .746, waistX: .990, waistY: .501, sillY: .190 },
+    { z: .42, innerX: .748, innerY: .810, crestX: .852, crestY: .832, edgeX: .979, edgeY: .785, waistX: 1.000, waistY: .534, sillY: .207 },
+    { z: .90, innerX: .602, innerY: .851, crestX: .841, crestY: .881, edgeX: 1.000, edgeY: .832, waistX: 1.017, waistY: .587, sillY: .210 },
+    { z: 1.38, innerX: .375, innerY: .863, crestX: .820, crestY: .906, edgeX: 1.005, edgeY: .854, waistX: 1.020, waistY: .620, sillY: .208 },
+    { z: 1.72, innerX: .215, innerY: .860, crestX: .792, crestY: .897, edgeX: .986, edgeY: .852, waistX: .997, waistY: .612, sillY: .207 },
+    { z: 2.03, innerX: .205, innerY: .862, crestX: .754, crestY: .882, edgeX: .950, edgeY: .838, waistX: .958, waistY: .598, sillY: .208 },
+    { z: 2.26, innerX: .205, innerY: .860, crestX: .715, crestY: .869, edgeX: .910, edgeY: .823, waistX: .918, waistY: .571, sillY: .210 }
+  ]);
+  const openingY = z => {
+    const s = shape(z); let y = s.sillY;
+    const df = z + 1.36, dr = z - 1.38;
+    if (Math.abs(df) < .405) y = Math.max(y, .160 + 1.305 * Math.sqrt(Math.max(0, .405 ** 2 - df ** 2)));
+    if (Math.abs(dr) < .430) y = Math.max(y, .160 + 1.420 * Math.sqrt(Math.max(0, .430 ** 2 - dr ** 2)));
+    return y;
+  };
+  function shoulderPoint(z, u, side) {
+    const s = shape(z);
+    // Two cubic arcs share a horizontal tangent across each fender crown.
+    let x, y;
+    if (u < .55) {
+      const t = u / .55; x = mix(s.innerX, s.crestX, t);
+      y = mix(s.innerY, s.crestY, Math.sin(t * Math.PI / 2));
+    } else {
+      const t = (u - .55) / .45; x = mix(s.crestX, s.edgeX, t);
+      y = s.crestY - (s.crestY - s.edgeY) * (1 - Math.cos(t * Math.PI / 2));
+    }
+    return [side * x, y, z];
+  }
+  function sidePoint(z, u, side) {
+    const s = shape(z), bottom = openingY(z), waist = Math.max(s.waistY, bottom + .013);
+    if (u < .48) {
+      const t = u / .48;
+      return [side * mix(s.edgeX, s.waistX, t), mix(s.edgeY, waist, t), z];
+    }
+    const t = (u - .48) / .52;
+    return [side * (mix(s.waistX, s.waistX - .052, t) - .009 * Math.sin(Math.PI * t)), mix(waist, bottom, t), z];
+  }
+
+  // Broad, almost planar hood. Its width stays substantial at the nose.
+  surface('referenceFlatWedgeHood', (t, u) => {
+    const z = mix(-2.32, -1.06, t), s = shape(z), x = (u * 2 - 1) * s.innerX;
+    return [x, s.innerY + .0045 * (1 - (u * 2 - 1) ** 2), z];
+  }, 96, 32, paint);
+  for (const side of [-1, 1]) {
+    surface(`referenceShoulder${side}`, (t, u) => shoulderPoint(mix(-2.10, 2.26, t), u, side), 176, 32, paint, body, side < 0);
+    // The shoulder-to-door break is deliberately separate from the crown.
+    surface(`referenceUpperFlank${side}`, (t, u) => sidePoint(mix(-2.32, 2.26, t), u * .48, side), 240, 8, paint, body, side < 0);
+    surface(`referenceSculptedDoor${side}`, (t, u) => sidePoint(mix(-2.32, 2.26, t), .48 + u * .52, side), 240, 16, paint, body, side < 0);
+    // Painted arch return/lip, nested behind the body edge, without faceted rings.
+    surface(`referenceArchReturn${side}`, (t, u) => {
+      const z = mix(-2.32, 2.26, t), s = shape(z), y = openingY(z);
+      return [side * (s.waistX - .052 - u * .035), y - u * .014, z];
+    }, 240, 3, paint, body, side < 0);
+    // A narrow black sill undercuts the white body between the two wheel holes.
+    surface(`referenceCarbonSill${side}`, (t, u) => {
+      const z = mix(-2.30, 2.24, t), s = shape(z), top = openingY(z);
+      return [side * (s.waistX - .054 + u * .008), mix(top - .008, Math.max(.12, top - .044), u), z];
+    }, 224, 3, carbon, body, side < 0);
+
+    // The forward fender is folded around an actual triangular recessed lamp,
+    // rather than a luminous triangle pasted onto the windshield-facing hood.
+    const p = (x, y, z) => [side * x, y, z];
+    const lampTip = p(.680, .511, -2.327), lampInner = p(.616, .669, -2.126), lampOuter = p(.850, .670, -2.126);
+    facet(`referenceFrontShoulderTop${side}`, [p(.615, .680, -2.10), p(.855, .738, -2.10), lampOuter, lampInner], paint, body, [0, 1, -.3]);
+    facet(`referenceFrontCheek${side}`, [lampTip, lampOuter, p(.982, .637, -2.10), p(.954, .560, -2.32), p(.951, .280, -2.32), p(.708, .280, -2.32)], paint, body, [side * .2, .15, -1]);
+    facet(`referenceLampPocket${side}`, [lampTip, lampInner, lampOuter], recess, frontLights, [0, .25, -1]);
+    // Deep charcoal liner: the small luminous face is always -Z-facing.
+    const triangle = [p(.687, .531, -2.327), p(.630, .654, -2.141), p(.829, .655, -2.141)];
+    const lens = facet(`referenceTriangleHeadlamp${side}`, triangle, lampWhite, frontLights, [0, .25, -1]);
+    lens.userData.forwardOnly = true;
+    // A restrained dark upper eyebrow makes the triangular inset read in sun.
+    facet(`referenceHeadlightEyebrow${side}`, [p(.622, .667, -2.132), p(.846, .668, -2.132), p(.839, .655, -2.148), p(.628, .654, -2.148)], dark, frontLights, [0, .3, -1]);
+    const indicator = facet(`referenceFrontIndicator${side}`, [p(.640, .650, -2.148), p(.826, .651, -2.148), p(.816, .642, -2.161), p(.644, .641, -2.161)], side < 0 ? amberL : amberR, frontLights, [0, .3, -1]);
+    indicator.userData.forwardOnly = true;
+
+    // Side intake aft of the front wheel, plus the white knife-edge that borders it.
+    facet(`referenceSideBladeRecess${side}`, [p(.999, .617, -.932), p(.998, .624, -.783), p(.983, .278, -.738), p(.967, .232, -.887)], recess, body, [side, 0, 0]);
+    facet(`referenceSideBlade${side}`, [p(1.001, .625, -.766), p(.996, .625, -.730), p(.950, .222, -.686), p(.969, .224, -.737)], paint, body, [side, 0, 0]);
+
+    // Narrow, surface-following door shutlines. They are not raised black bars.
+    for (const z of [-.650, .780]) ribbon(`referenceDoorSeam${side}_${z}`, t => {
+      const a = sidePoint(z + .018 * Math.sin(Math.PI * t), mix(.02, .97, t), side); a[0] += side * .0012; return a;
+    }, .0028, seamMaterial, body, [side, 0, 0], 48);
+    const handle = box(`referenceFlushDoorHandle${side}`, [.003, .010, .094], [side * .990, .659, .35], dark);
+    handle.rotation.x = -.08;
+    // Small mirror camera fairings stay inside the original overall width.
+    box(`referenceMirrorStalk${side}`, [.075, .012, .032], [side * .895, .756, -.745], carbon);
+    const mirror = box(`referenceMirrorPod${side}`, [.132, .032, .062], [side * .949, .770, -.751], paint);
+    mirror.rotation.y = -side * .10;
+    facet(`referenceMirrorGlass${side}`, [p(.906, .757, -.718), p(1.007, .757, -.728), p(1.007, .778, -.728), p(.906, .778, -.718)], metal, body, [0, 0, 1]);
+  }
+
+  // Front mask: broad painted corners surround a black recessed, continuous
+  // center fascia. The thin cross-nose white light has a single emitting face.
+  facet('referenceFrontFasciaRecess', [[-.704, .487, -2.307], [.704, .487, -2.307], [.732, .257, -2.307], [-.732, .257, -2.307]], dark, body, [0, 0, -1]);
+  facet('referenceFrontLowerIntake', [[-.701, .285, -2.316], [.701, .285, -2.316], [.754, .188, -2.316], [-.754, .188, -2.316]], recess, body, [0, 0, -1]);
+  facet('referenceFrontBarHousing', [[-.690, .512, -2.329], [.690, .512, -2.329], [.695, .483, -2.329], [-.695, .483, -2.329]], dark, frontLights, [0, 0, -1]);
+  const noseBar = facet('referenceCrossNoseLight', [[-.684, .504, -2.331], [.684, .504, -2.331], [.688, .493, -2.331], [-.688, .493, -2.331]], lampWhite, frontLights, [0, 0, -1]);
+  noseBar.userData.forwardOnly = true;
+  facet('referenceGrilleHorizontalBlade', [[-.715, .341, -2.319], [.715, .341, -2.319], [.717, .328, -2.319], [-.717, .328, -2.319]], carbon, body, [0, 0, -1]);
+  facet('referenceFrontSplitterTop', [[-.970, .154, -2.358], [.970, .154, -2.358], [.972, .154, -2.170], [-.972, .154, -2.170]], carbon, body, [0, 1, 0]);
+  facet('referenceFrontSplitterEdge', [[-.970, .154, -2.358], [.970, .154, -2.358], [.970, .126, -2.358], [-.970, .126, -2.358]], dark, body, [0, 0, -1]);
+  // A tiny, non-luminous nose badge, with no oversized logo on the hood.
+  facet('referenceNoseBadgeTop', [[-.023, .391, -2.323], [.023, .391, -2.323], [.017, .386, -2.323], [-.017, .386, -2.323]], metal, body, [0, 0, -1]);
+  facet('referenceNoseBadgeStem', [[-.004, .387, -2.324], [.004, .387, -2.324], [.002, .370, -2.324], [-.002, .370, -2.324]], metal, body, [0, 0, -1]);
+  ribbon('referenceHoodRearShutline', t => {
+    const x = mix(-.665, .665, t); return [x, .713 + .0045 * (1 - (x / .668) ** 2), -1.063];
+  }, .0025, seamMaterial, body, [0, 1, 0], 48);
+
+  // The black canopy is one long tapered teardrop. White structural rails live
+  // between its roof and side windows, and all three are individually hideable.
+  const canopyProfile = profile([
+    { z: -1.065, w: .642, y: .719, bw: .669, by: .712 },
+    { z: -.820, w: .615, y: .913, bw: .832, by: .741 },
+    { z: -.360, w: .550, y: 1.096, bw: .820, by: .764 },
+    { z: .025, w: .516, y: 1.137, bw: .792, by: .782 },
+    { z: .450, w: .451, y: 1.094, bw: .734, by: .813 },
+    { z: .900, w: .343, y: .997, bw: .599, by: .850 },
+    { z: 1.330, w: .248, y: .914, bw: .390, by: .865 },
+    { z: 1.710, w: .198, y: .865, bw: .214, by: .861 }
+  ]);
+  const canopyStart = -1.065, canopyEnd = 1.710;
+  surface('referencePanoramicCanopy', (t, u) => {
+    const z = mix(canopyStart, canopyEnd, t), s = canopyProfile(z), q = 2 * u - 1;
+    return [q * (s.w - .027), s.y + .012 * (1 - q * q), z];
+  }, 128, 40, glass, canopy);
+  for (const side of [-1, 1]) {
+    surface(`referenceWhiteRoofRail${side}`, (t, u) => {
+      const z = mix(canopyStart, canopyEnd, t), s = canopyProfile(z);
+      const rearFlare = .045 * Math.sin(Math.PI * Math.max(0, Math.min(1, (z - .55) / 1.15)));
+      return [side * (s.w - .027 + u * (.062 + rearFlare)), s.y - .006 * u + .002 * Math.sin(Math.PI * u), z];
+    }, 120, 6, paint, rails, side < 0);
+    surface(`referenceSideWindow${side}`, (t, u) => {
+      const z = mix(canopyStart, canopyEnd, t), s = canopyProfile(z);
+      const rearFlare = .045 * Math.sin(Math.PI * Math.max(0, Math.min(1, (z - .55) / 1.15)));
+      const inner = Math.min(s.bw - .003, s.w + .035 + rearFlare);
+      return [side * mix(inner, s.bw, u), mix(Math.max(s.by + .002, s.y - .008), s.by, u) - .0004 * Math.sin(Math.PI * u), z];
+    }, 120, 18, sideGlass, canopy, side < 0);
+    // Narrow painted sill at the base of the side glass, terminating into the
+    // broad white rear buttress. It follows the same shared station profile.
+    surface(`referenceWindowSill${side}`, (t, u) => {
+      const z = mix(-.925, 1.710, t), s = canopyProfile(z);
+      return [side * (s.bw + u * .022), s.by - u * .014, z];
+    }, 100, 3, paint, rails, side < 0);
+  }
+  // Front cowl has an opaque dark reverse face. Nothing luminous faces the cabin.
+  facet('referenceWindshieldCowl', [[-.668, .714, -1.067], [.668, .714, -1.067], [.650, .731, -1.040], [-.650, .731, -1.040]], dark, canopy, [0, 1, -.3]);
+  ribbon('referenceWindshieldWiper', t => [mix(-.37, .28, t), .741 + .018 * Math.sin(Math.PI * t), -1.018], .004, dark, canopy, [0, 1, -.3], 48);
+
+  // Closed upper rear deck and transom. The black lamp slot is recessed inside
+  // an actual painted surround, with walls, back panel and a lower white beam.
+  surface('referenceRearDeckCenter', (t, u) => {
+    const z = mix(1.708, 2.260, t), s = shape(z), q = u * 2 - 1;
+    return [q * s.innerX, s.innerY + .0015 * (1 - q * q), z];
+  }, 40, 24, paint);
+  const atRear = (x, y, z = 2.278) => [x, y, z];
+  facet('referenceRearLampRecess', [atRear(-.850, .837, 2.245), atRear(.850, .837, 2.245), atRear(.850, .713, 2.245), atRear(-.850, .713, 2.245)], recess, body, [0, 0, 1]);
+  facet('referenceRearTopBeam', [atRear(-.909, .863), atRear(.909, .863), atRear(.856, .832), atRear(-.856, .832)], paint, body, [0, .2, 1]);
+  facet('referenceRearLowerBeam', [atRear(-.856, .715), atRear(.856, .715), atRear(.904, .666), atRear(-.904, .666)], paint, body, [0, -.1, 1]);
+  for (const side of [-1, 1]) {
+    facet(`referenceRearCorner${side}`, [[side * .909, .863, 2.278], [side * .856, .832, 2.278], [side * .856, .715, 2.278], [side * .904, .666, 2.278], [side * .924, .579, 2.252], [side * .926, .818, 2.252]], paint, body, [side * .1, 0, 1]);
+    facet(`referenceRearSlotSidewall${side}`, [[side * .856, .832, 2.278], [side * .850, .830, 2.245], [side * .850, .718, 2.245], [side * .856, .715, 2.278]], dark, body, [0, 0, 1]);
+  }
+  facet('referenceRearSlotCeiling', [atRear(-.856, .832), atRear(.856, .832), atRear(.850, .830, 2.245), atRear(-.850, .830, 2.245)], dark, body, [0, -1, 0]);
+  facet('referenceRearSlotSill', [atRear(-.856, .715), atRear(.856, .715), atRear(.850, .718, 2.245), atRear(-.850, .718, 2.245)], dark, body, [0, 1, 0]);
+  facet('referenceRearSlotHorizontalBlade', [atRear(-.842, .766, 2.262), atRear(.842, .766, 2.262), atRear(.842, .754, 2.262), atRear(-.842, .754, 2.262)], dark, body, [0, 0, 1]);
+  const tail = facet('referenceRearContinuousRedLight', [atRear(-.838, .794, 2.269), atRear(.838, .794, 2.269), atRear(.838, .781, 2.269), atRear(-.838, .781, 2.269)], lampRed, rearLights, [0, 0, 1]);
+  tail.userData.rearOnly = true;
+  facet('referenceRearCenterStopLamp', [[-.172, .878, 1.715], [.172, .878, 1.715], [.172, .866, 1.715], [-.172, .866, 1.715]], lampStop, rearLights, [0, 0, 1]);
+  for (const side of [-1, 1]) {
+    const x0 = side * .625, x1 = side * .835;
+    facet(`referenceRearIndicator${side}`, [atRear(x0, .795, 2.271), atRear(x1, .795, 2.271), atRear(x1, .780, 2.271), atRear(x0, .780, 2.271)], side < 0 ? amberL : amberR, rearLights, [0, 0, 1]);
+    const x = side * .330;
+    facet(`referenceReverseLamp${side}`, [atRear(x - .053, .740, 2.267), atRear(x + .053, .740, 2.267), atRear(x + .053, .728, 2.267), atRear(x - .053, .728, 2.267)], lampReverse, rearLights, [0, 0, 1]);
+  }
+  facet('referenceRearPaintedBumper', [atRear(-.903, .666, 2.273), atRear(.903, .666, 2.273), atRear(.713, .638, 2.279), atRear(-.713, .638, 2.279)], paint, body, [0, 0, 1]);
+  // Broad black lower fascia is closed behind the four existing nozzles, whose
+  // local positions stay x=[-.45,-.15,.15,.45], y=.50 and z=2.23.
+  facet('referenceRearJetRecess', [[-.714, .636, 2.231], [.714, .636, 2.231], [.714, .351, 2.231], [-.714, .351, 2.231]], recess, body, [0, 0, 1]);
+  for (const side of [-1, 1]) {
+    facet(`referenceDiffuserOuterCheek${side}`, [[side * .924, .579, 2.263], [side * .714, .636, 2.278], [side * .714, .351, 2.278], [side * .764, .202, 2.292], [side * .919, .221, 2.268]], carbon, body, [side * .1, 0, 1]);
+    facet(`referenceJetPocketSide${side}`, [[side * .714, .636, 2.278], [side * .714, .636, 2.231], [side * .714, .351, 2.231], [side * .714, .351, 2.278]], dark, body, [-side, 0, 0]);
+  }
+  facet('referenceJetPocketHeader', [[-.714, .636, 2.278], [.714, .636, 2.278], [.714, .636, 2.231], [-.714, .636, 2.231]], carbon, body, [0, -1, 0]);
+  facet('referenceJetPocketLowerLip', [[-.714, .351, 2.231], [.714, .351, 2.231], [.714, .351, 2.292], [-.714, .351, 2.292]], carbon, body, [0, 1, 0]);
+  // Continuous undertray and deep diffuser keep road/sky from showing through.
+  surface('referenceClosedUndertray', (t, u) => {
+    const z = mix(-2.22, 2.29, t), x = mix(-.745, .745, u);
+    const rise = Math.max(0, (z - 1.65) / .64);
+    return [x, .129 + .074 * rise * rise + .012 * Math.cos((u - .5) * Math.PI), z];
+  }, 100, 32, carbon);
+  box('referenceClosedDiffuserBacking', [1.60,.17,.035], [0,.275,2.13], recess);
+  facet('referenceDiffuserTrailingFace', [[-.748, .205, 2.292], [.748, .205, 2.292], [.748, .130, 2.292], [-.748, .130, 2.292]], dark, body, [0, 0, 1]);
+  for (const x of [-.710, -.473, -.237, 0, .237, .473, .710]) {
+    const fin = facet(`referenceDiffuserFin${x}`, [[x, .135, 1.82], [x, .143, 2.292], [x, .350, 2.292], [x, .275, 2.10], [x, .166, 1.82]], carbon, body, [x < 0 ? -1 : 1, 0, 0]);
+    // Closed small fin thickness, rather than double-sided paper-thin black fins.
+    const edge = box(`referenceDiffuserFinEdge${x}`, [.010, .206, .025], [x, .247, 2.280], carbon); edge.rotation.x = -.06;
+    fin.userData.diffuser = true;
+  }
+
+  // Raised active white wing. The blade and endplates are all local to the
+  // existing animation pivot, so braking/deployment never creates two spoilers.
+  const wingProfile = (x, z) => .102 + .014 * (1 - (x / .855) ** 2) + .011 * Math.sin((z + .145) / .280 * Math.PI);
+  surface('referenceWhiteWingBlade', (t, u) => {
+    const z = mix(-.145, .135, t), x = mix(-.855, .855, u); return [x, wingProfile(x, z), z];
+  }, 18, 56, paint, activeWing);
+  surface('referenceWingCarbonUnderside', (t, u) => {
+    const z = mix(-.145, .135, t), x = mix(-.855, .855, u); return [x, wingProfile(x, z) - .024, z];
+  }, 18, 56, carbon, activeWing, true);
+  facet('referenceWingLeadingEdge', [[-.855, .102, -.145], [.855, .102, -.145], [.855, .078, -.145], [-.855, .078, -.145]], paint, activeWing, [0, 0, -1]);
+  facet('referenceWingTrailingEdge', [[-.855, .102, .135], [.855, .102, .135], [.855, .078, .135], [-.855, .078, .135]], carbon, activeWing, [0, 0, 1]);
+  for (const side of [-1, 1]) {
+    const x = side * .855;
+    facet(`referenceWhiteWingEndplate${side}`, [[x, .111, -.145], [x, .111, .140], [x, -.065, .148], [x, -.032, -.130]], paint, activeWing, [side, 0, 0]);
+    box(`referenceWingEndplateThickness${side}`, [.015, .146, .270], [x - side * .0075, .023, .002], paint, activeWing);
+    const strut = box(`referenceWingSupport${side}`, [.025, .136, .043], [side * .460, .015, -.027], metal, activeWing); strut.rotation.x = -.24;
+    box(`referenceWingBaseMount${side}`, [.076, .019, .095], [side * .460, -.052, -.044], carbon, activeWing);
+  }
+
+  // Stable integration contract, without depending on construction order.
+  exterior.userData.parts = parts;
+  exterior.userData.canopy = canopy;
+  exterior.userData.rails = rails;
+  exterior.userData.frontLights = frontLights;
+  exterior.userData.rearLights = rearLights;
+  exterior.userData.activeWing = activeWing;
+  exterior.userData.materials = { paint, glass, sideGlass, lampWhite, lampRed, lampStop, lampReverse, amberL, amberR };
+  exterior.userData.axles = { front: { z: -1.36, y: .32, radius: .32 }, rear: { z: 1.38, y: .35, radius: .35 } };
+  exterior.userData.rearNozzleClearance = { x: [-.61, .61], y: [.39, .63], z: 2.23 };
+  exterior.userData.wingPivot = [0, .85, 2.04];
+  // Public numeric samplers support runtime geometry tests and future matching.
+  exterior.userData.sampleShoulder = (z, u, side = 1) => shoulderPoint(z, u, side);
+  exterior.userData.sampleFlank = (z, u, side = 1) => sidePoint(z, u, side);
+  exterior.userData.wheelOpeningY = openingY;
+  return exterior;
+}
+
+
+// =========================================================================
+// MODULE: reference-cockpit.js
+// =========================================================================
+// Reference-photo cabin and independent, persisted vehicle presentation choices.
+// The established camera, live instrument texture, physics and wheel animation
+// remain shared. The classic exterior and complete classic cockpit stay intact.
+(() => {
+  const referenceExterior = buildReferenceRoadsterExterior();
+  // The builder exposes live integration handles. Object3D.clone serializes
+  // userData, so strip graph/material references before any studio cloning;
+  // geometry and materials must stay shared rather than serialized four times.
+  for (const key of ['parts','canopy','rails','frontLights','rearLights','activeWing','materials']) delete referenceExterior.userData[key];
+  const classicExterior = new THREE.Group();
+  classicExterior.name = 'classic-roadster-exterior';
+  const oldWingParts = activeWingGroup.children.slice();
+  const oldRearJetParts = rearNozzlesGimbalGroup.children.filter(part => !rearPlumes.includes(part));
+  const referenceJets = new THREE.Group();
+  referenceJets.name = 'reference-four-rear-jets';
+  const jetMetal = new THREE.MeshStandardMaterial({color:0xa3a8aa,metalness:.91,roughness:.26});
+  const jetInner = new THREE.MeshStandardMaterial({color:0x101315,metalness:.24,roughness:.64});
+  for (const x of [-.45,-.15,.15,.45]) {
+    const sleeve = new THREE.Mesh(new THREE.CylinderGeometry(.094,.065,.15,32,1,true).rotateX(Math.PI/2),jetMetal);
+    sleeve.position.set(x,0,.065);
+    const lip = new THREE.Mesh(new THREE.RingGeometry(.080,.096,40),jetMetal);
+    lip.position.set(x,0,.142);
+    const inner = new THREE.Mesh(new THREE.CylinderGeometry(.079,.060,.11,32,1,true).rotateX(Math.PI/2),jetInner);
+    inner.position.set(x,0,.074);
+    const back = new THREE.Mesh(new THREE.CircleGeometry(.063,32),jetInner);
+    back.position.set(x,0,.015);
+    referenceJets.add(sleeve,lip,inner,back);
+  }
+  rearNozzlesGimbalGroup.add(referenceJets);
+  const referenceWing = referenceExterior.getObjectByName('reference-active-wing');
+  if (referenceWing) activeWingGroup.add(referenceWing);
+
+  const ambientPipes = carMeshGroup.children.filter(part => part.material === ambientLightMat);
+  const classicInteriorParts = [seatBack, dashCowling, consoleTunnel, gearStrip, hazardBtn, steeringColumn, dashPipe, ...ambientPipes];
+  const sharedParts = new Set([
+    ...classicInteriorParts, screenBezel, screenDisplay, hudCombinerMesh, yokeWheelGroup, fpvDashboardGroup,
+    ...wheels.map(wheel => wheel.parent), activeWingGroup, rearNozzlesGimbalGroup,
+    headlightSpotL, headlightSpotR, headlightTargetL, headlightTargetR,
+    ...rearPlumes, ...liftPlumes, ...descendPlumes, ...frontRetroNozzles, ...frontRetroPlumes,
+    ...Object.values(rcsPlumes), sonicBoomConeGroup
+  ]);
+  carMeshGroup.children.slice().forEach(part => { if (!sharedParts.has(part)) classicExterior.add(part); });
+  carMeshGroup.add(classicExterior, referenceExterior);
+
+  const cabinMat = new THREE.MeshStandardMaterial({ color: 0x111518, metalness: .12, roughness: .72 });
+  const softMat = new THREE.MeshStandardMaterial({ color: 0x24282a, metalness: .03, roughness: .84 });
+  const trimMat = new THREE.MeshStandardMaterial({ color: 0xc6ccce, metalness: .68, roughness: .28 });
+  const referenceCabin = new THREE.Group();
+  referenceCabin.name = 'reference-cockpit';
+  const referenceYoke = new THREE.Group();
+  referenceYoke.name = 'reference-yoke';
+  const oldYokeParts = yokeWheelGroup.children.slice();
+  const mesh = (geo, mat, name) => { const part = new THREE.Mesh(geo, mat); part.name = name; return part; };
+  // A padded squared U, with bright side rails and a broad, unlit central pad.
+  const railCurve = new THREE.CatmullRomCurve3([
+    [-.116,.071,.016], [-.157,.077,.016], [-.169,.045,.016], [-.168,-.050,.016],
+    [-.145,-.073,.016], [0,-.077,.016], [.145,-.073,.016], [.168,-.050,.016],
+    [.169,.045,.016], [.157,.077,.016], [.116,.071,.016]
+  ].map(p => new THREE.Vector3(...p)), false, 'centripetal');
+  const grip = mesh(new THREE.TubeGeometry(railCurve, 72, .015, 10, false), cabinMat, 'reference-yoke-padded-rim');
+  const rim = mesh(new THREE.TubeGeometry(railCurve, 72, .0055, 8, false), trimMat, 'reference-yoke-silver-rim');
+  rim.position.z = .014;
+  const hub = mesh(new THREE.BoxGeometry(.178,.072,.035), cabinMat, 'reference-yoke-horn-pad');
+  hub.position.set(0,-.003,.012);
+  const spoke = mesh(new THREE.BoxGeometry(.272,.022,.023), softMat, 'reference-yoke-cross-spoke');
+  spoke.position.set(0,-.025,.006);
+  referenceYoke.add(grip, rim, hub, spoke);
+  [-1,1].forEach(side => {
+    const button = mesh(new THREE.BoxGeometry(.014,.007,.004), trimMat, 'reference-yoke-thumb-control');
+    button.position.set(side*.119,.013,.030);
+    referenceYoke.add(button);
+  });
+  const badge = mesh(new THREE.BoxGeometry(.023,.003,.003), trimMat, 'reference-yoke-center-badge');
+  badge.position.set(0,.011,.031);
+  referenceYoke.add(badge);
+  yokeWheelGroup.add(referenceYoke);
+
+  // Actual sculpted dashboard surfaces, rather than a HUD pasted over the road.
+  // The shallow top lip stays below the established 65%-of-view road boundary.
+  const dashboardGeometry = new THREE.BoxGeometry(1,1,.12,32,4,1);
+  const dashVertices = dashboardGeometry.attributes.position;
+  for (let i=0; i<dashVertices.count; i++) {
+    const x = dashVertices.getX(i);
+    dashVertices.setZ(i,dashVertices.getZ(i)+.12*x*x);
+  }
+  dashboardGeometry.computeVertexNormals();
+  const dashFace = mesh(dashboardGeometry, cabinMat, 'reference-dash-fascia');
+  const dashTop = mesh(new THREE.BoxGeometry(1,.014,.17), softMat, 'reference-dash-soft-upper');
+  const dashAccent = mesh(new THREE.BoxGeometry(1,.004,.008), trimMat, 'reference-dash-satin-seam');
+  const screenCradle = mesh(new THREE.BoxGeometry(.40,.25,.012), cabinMat, 'reference-center-screen-cradle');
+  const referenceMount = fpvColumnMount.clone();
+  referenceMount.material = cabinMat; referenceMount.name = 'reference-column-mount';
+  const referenceColumn = fpvSteeringColumn.clone();
+  referenceColumn.material = cabinMat; referenceColumn.name = 'reference-steering-column';
+  referenceCabin.add(dashFace,dashTop,dashAccent,screenCradle,referenceMount,referenceColumn);
+  const referenceConsole = mesh(new THREE.BoxGeometry(.26,.17,.68), cabinMat, 'reference-console');
+  referenceConsole.position.set(.13,.41,-.23);
+  referenceConsole.rotation.x = -.13;
+  const driveStrip = mesh(new THREE.BoxGeometry(.034,.005,.22), trimMat, 'reference-console-drive-strip');
+  driveStrip.position.set(.13,.502,-.39);
+  driveStrip.rotation.x = -.13;
+  const referenceSeats = new THREE.Group();
+  [-.38,.38].forEach(x => {
+    const back = mesh(new THREE.BoxGeometry(.39,.47,.105), softMat, 'reference-seat-back');
+    back.position.set(x,.56,.43); back.rotation.x = -.20;
+    const head = mesh(new THREE.BoxGeometry(.23,.16,.095), cabinMat, 'reference-seat-headrest');
+    head.position.set(x,.87,.48); head.rotation.x = -.20;
+    referenceSeats.add(back, head);
+  });
+  const referenceInterior = new THREE.Group();
+  referenceInterior.name = 'reference-interior';
+  referenceInterior.add(referenceConsole,driveStrip,referenceSeats);
+  carMeshGroup.add(referenceCabin,referenceInterior);
+
+  let model = 'reference', cockpit = 'reference';
+  try {
+    const storedModel = localStorage.getItem('roadster-exterior-model');
+    const storedCockpit = localStorage.getItem('roadster-cockpit-model');
+    if (storedModel === 'classic') model = storedModel;
+    if (storedCockpit === 'classic') cockpit = storedCockpit;
+  } catch (_) {}
+  const valid = id => id === 'reference' || id === 'classic';
+  const baseResize = resizeCockpitDisplay;
+  const basePerspective = setCockpitPerspective;
+  const baseExteriorDetails = setCockpitExteriorDetailsVisible;
+  function resizeReferenceCabin() {
+    if (!cockpitPerspectiveActive || cockpit !== 'reference') return;
+    // Use the proven responsive projection and clearances of the original pod.
+    dashFace.position.copy(fpvDashFascia.position);
+    dashFace.rotation.copy(fpvDashFascia.rotation);
+    dashFace.scale.copy(fpvDashFascia.scale);
+    dashTop.position.copy(fpvDashLedge.position);
+    dashTop.rotation.copy(fpvDashLedge.rotation);
+    dashTop.scale.copy(fpvDashLedge.scale);
+    dashAccent.position.copy(fpvDashTrim.position);
+    dashAccent.rotation.copy(fpvDashTrim.rotation);
+    dashAccent.scale.copy(fpvDashTrim.scale);
+    screenCradle.position.copy(screenBezel.position);
+    screenCradle.rotation.copy(screenBezel.rotation);
+    screenCradle.scale.set(screenBezel.scale.x*1.02,screenBezel.scale.y*.92,.5);
+    screenCradle.position.z -= .002;
+    referenceMount.position.copy(fpvColumnMount.position);
+    referenceMount.rotation.copy(fpvColumnMount.rotation);
+    referenceMount.scale.copy(fpvColumnMount.scale);
+    referenceColumn.position.copy(fpvSteeringColumn.position);
+    referenceColumn.rotation.copy(fpvSteeringColumn.rotation);
+    referenceColumn.scale.copy(fpvSteeringColumn.scale);
+  }
+  function syncView(active = cockpitPerspectiveActive) {
+    classicExterior.visible = model === 'classic';
+    referenceExterior.visible = model === 'reference';
+    const canopy = referenceExterior.getObjectByName('reference-canopy');
+    const rails = referenceExterior.getObjectByName('reference-canopy-rails');
+    const frontLights = referenceExterior.getObjectByName('reference-front-lights');
+    if (canopy) canopy.visible = !active;
+    if (rails) rails.visible = !active;
+    if (frontLights) frontLights.visible = !active;
+    // The sculpted high fender crowns sit at the very bottom of a driver view.
+    // Omit just these two external panels in FPV so the complete upper 65% of
+    // the road stays clear; restore their exact geometry in every outside view.
+    for (const name of ['referenceShoulder-1','referenceShoulder1']) {
+      const shoulder = referenceExterior.getObjectByName(name);
+      if (shoulder) shoulder.visible = !active;
+    }
+    oldWingParts.forEach(part => { part.visible = model === 'classic'; });
+    oldRearJetParts.forEach(part => { part.visible = model === 'classic'; });
+    referenceJets.visible = model === 'reference';
+    if (referenceWing) referenceWing.visible = model === 'reference';
+    oldYokeParts.forEach(part => { part.visible = cockpit === 'classic'; });
+    referenceYoke.visible = cockpit === 'reference';
+    if (!active) yokeWheelGroup.position.x = cockpit === 'reference' ? -.34 : 0;
+    classicInteriorParts.forEach(part => { part.visible = cockpit === 'classic'; });
+    if (cockpit === 'classic') {
+      dashCowling.visible = steeringColumn.visible = dashPipe.visible = !active;
+    }
+    fpvDashboardGroup.visible = active && cockpit === 'classic';
+    referenceCabin.visible = active && cockpit === 'reference';
+    referenceInterior.visible = cockpit === 'reference' && !active;
+    resizeReferenceCabin();
+  }
+  resizeCockpitDisplay = function () { baseResize(); resizeReferenceCabin(); };
+  setCockpitPerspective = function (active) { basePerspective(active); syncView(active); };
+  setCockpitExteriorDetailsVisible = function (visible) { baseExteriorDetails(visible); syncView(!visible); };
+  window.addEventListener('resize', resizeReferenceCabin);
+  function choose(kind, id) {
+    if (!valid(id)) return false;
+    if (kind === 'model') model = id; else cockpit = id;
+    try { localStorage.setItem(kind === 'model' ? 'roadster-exterior-model' : 'roadster-cockpit-model', id); } catch (_) {}
+    syncView();
+    window.dispatchEvent(new Event('roadster-vehicle-change'));
+    return true;
+  }
+  // Capture each launch configuration at its neutral exterior pose before any
+  // driving/camera animation. Studio previews never inherit an FPV-hidden
+  // canopy, enlarged driver wheel, active jet plume or turned/rotating wheel.
+  const previewSources = new Map();
+  const selectedModel = model, selectedCockpit = cockpit;
+  for (const exteriorId of ['reference','classic']) for (const cockpitId of ['reference','classic']) {
+    model = exteriorId; cockpit = cockpitId; syncView(false);
+    previewSources.set(`${model}:${cockpit}`,carMeshGroup.clone(true));
+  }
+  model = selectedModel; cockpit = selectedCockpit;
+  window.RoadsterVehicle = {
+    getModel: () => model, getCockpit: () => cockpit,
+    setModel: id => choose('model',id), setCockpit: id => choose('cockpit',id),
+    getPreviewModel: () => previewSources.get(`${model}:${cockpit}`),
+    syncView
+  };
+  syncView(false);
+})();
+
+
+// =========================================================================
+// MODULE: reference-traffic.js
+// =========================================================================
+// Reuse the preserved Roadster as a shared, efficient traffic variant. Gameplay
+// dimensions, wheel-spin handles, lane logic and collision behavior stay exact.
+(() => {
+  function reducedLoft(source, rows, columns, rowStep, columnStep) {
+    const grid = [], p = source.attributes.position;
+    for (let row = 0; row < rows; row += rowStep) {
+      const points = [];
+      for (let column = 0; column < columns; column += columnStep) {
+        const at = row * columns + column;
+        points.push([p.getX(at),p.getY(at),p.getZ(at)]);
+      }
+      grid.push(points);
+    }
+    return createSmoothGridGeometry(grid, true);
+  }
+  const classicBody = reducedLoft(roadsterBodyMesh.geometry,161,81,4,2);
+  const classicCanopy = reducedLoft(roadsterCanopyMesh.geometry,73,41,3,2);
+  const frontCap = new THREE.BoxGeometry(1.65,.24,.08);
+  const rearCap = new THREE.BoxGeometry(1.72,.56,.08);
+  const lightBar = new THREE.BoxGeometry(1.14,.018,.024);
+  const sideIntake = new THREE.BoxGeometry(.018,.13,.32);
+  const skirt = new THREE.BoxGeometry(.035,.045,1.82);
+  const baseCreate = createTrafficVehicleMesh;
+  const classicVariants = new Set([0,3]);
+  createTrafficVehicleMesh = function (typeIndex) {
+    const car = baseCreate(typeIndex);
+    const paint = sharedTrafficPaintMats[typeIndex % sharedTrafficPaintMats.length];
+    const isClassic = classicVariants.has(typeIndex % 6);
+    car.userData.model = isClassic ? 'classic-roadster' : (typeIndex % 2 ? 'sculpted-track' : 'sculpted-touring');
+    if (isClassic) {
+      const body = car.children.find(part => part.geometry === legacySupercarBodyGeo);
+      const canopy = car.children.find(part => part.geometry === legacySupercarCanopyGeo);
+      body.geometry = classicBody;
+      canopy.geometry = classicCanopy;
+      canopy.material = goldCanopyMaterial;
+      const front = new THREE.Mesh(frontCap, carbonMaterial);
+      front.position.set(0,.27,-2.26);
+      const rear = new THREE.Mesh(rearCap,paint);
+      rear.position.set(0,.565,2.24);
+      const noseLight = new THREE.Mesh(lightBar,sharedTrafficHLMat);
+      noseLight.position.set(0,.416,-2.307);
+      car.add(front,rear,noseLight);
+      // Match the preserved model's tall slit rather than the older low tailbar.
+      car.children.filter(part => part.geometry === sharedTrafficTaillightGeo).forEach(part => { part.position.y = .805; part.position.z = 2.289; });
+      roadsterCanopyRails.forEach(source => car.add(new THREE.Mesh(source.geometry,paint)));
+    }
+    // All road cars gain physical sills and dark rear-quarter intakes. Their
+    // palette and touring/track aero mix remain shared, without material clones.
+    [-1,1].forEach(side => {
+      const sill = new THREE.Mesh(skirt,carbonMaterial);
+      sill.position.set(side*.958,.17,-.02);
+      const intake = new THREE.Mesh(sideIntake,carbonMaterial);
+      intake.position.set(side*.98,.47,.70);
+      intake.rotation.x = -.18;
+      car.add(sill,intake);
+    });
+    if (!isClassic && typeIndex % 2 === 0) {
+      // Touring cars have the factory low spoiler, track cars the tall aero wing.
+      car.children.forEach(part => {
+        if ([sharedTrafficWingGeo,sharedTrafficWingEndplateGeo,sharedTrafficWingStrutGeo].includes(part.geometry)) part.position.y -= .08;
+      });
+    }
+    return car;
+  };
+})();
+
+
+// =========================================================================
 // MODULE: taxi.js
 // =========================================================================
 // Hidden city passenger sandbox. Its session and score never enter ranked scoring.
@@ -6605,6 +7283,12 @@ if (container) {
   const picker = $('paint-picker');
   const physicsSelect = $('start-physics');
   const trafficSelect = $('start-traffic');
+  const modelSelect = $('start-model');
+  const cockpitSelect = $('start-cockpit');
+  // The vehicle module owns persistence and the live meshes. These local defaults
+  // also keep the optional entry UI usable in stripped-down/offline previews.
+  let selectedModel = 'reference';
+  let selectedCockpit = 'reference';
   const historyKey = 'roadsterFinishPicker';
   const historyToken = `finish-${Date.now()}`;
   let ownsHistory = false;
@@ -6614,12 +7298,27 @@ if (container) {
   let preview = null;
   let previewFailed = false;
   const copy = {
-    en: { badge: 'SPACEX COLD-GAS PACKAGE', title: 'Your Roadster', sub: 'Choose your setup and drive.', car: 'YOUR ROADSTER', change: 'Change finish ↗', choose: 'Choose your finish', collection: '12 EXTERIOR FINISHES', done: 'Done', note: 'Select a finish to preview it on your Roadster. Your choice is saved in this browser.', worlds: 'World', highway: 'Elevated Highway', city: 'Cyber City', highwaySpec: '6 lanes · traffic', citySpec: 'Roam · rooftop refills', weather: 'Weather & time', driving: 'Driving mode', modes: ['Realistic', 'Plaid', 'Fantasy'], traffic: 'Traffic', densities: ['Normal · 20', 'Heavy · 36', 'Insane · 52'], launch: 'Launch simulation', audio: 'Audio settings', language: 'Switch to Chinese', unavailable: '3D preview unavailable' },
-    zh: { badge: 'SPACEX 冷气推进版', title: '我的 Roadster', sub: '选好车辆、地图和天气，开始驾驶。', car: '我的 ROADSTER', change: '更换涂装 ↗', choose: '选择车漆涂装', collection: '12 款专属涂装', done: '完成', note: '点选涂装即可预览效果，此浏览器会记住你的选择。', worlds: '驾驶地图', highway: '高架高速', city: '赛博都市', highwaySpec: '6 车道 · 车流', citySpec: '开放都市 · 补气', weather: '天气与时间', driving: '驾驶模式', modes: ['常规物理', '狂暴 Plaid', '幻想极速'], traffic: '车流密度', densities: ['普通 · 20 辆', '密集 · 36 辆', '疯狂 · 52 辆'], launch: '进入游戏', audio: '声音设置', language: 'Switch to English', unavailable: '3D 预览暂不可用' }
+    en: { badge: 'SPACEX COLD-GAS PACKAGE', title: 'Your Roadster', sub: 'Choose your setup and drive.', car: 'YOUR ROADSTER', change: 'Change finish ↗', choose: 'Choose your finish', collection: '12 EXTERIOR FINISHES', done: 'Done', note: 'Select a finish to preview it on your Roadster. Your choice is saved in this browser.', vehicle: 'Vehicle configuration', model: 'Vehicle model', cockpit: 'Cockpit', models: ['Roadster 2 · Reference', 'Classic Roadster'], cockpits: ['Reference cockpit', 'Classic cockpit'], worlds: 'World', highway: 'Elevated Highway', city: 'Cyber City', highwaySpec: '6 lanes · traffic', citySpec: 'Roam · rooftop refills', weather: 'Weather & time', driving: 'Driving mode', modes: ['Realistic', 'Plaid', 'Fantasy'], traffic: 'Traffic', densities: ['Normal · 20', 'Heavy · 36', 'Insane · 52'], launch: 'Launch simulation', audio: 'Audio settings', language: 'Switch to Chinese', unavailable: '3D preview unavailable' },
+    zh: { badge: 'SPACEX 冷气推进版', title: '我的 Roadster', sub: '选好车辆、地图和天气，开始驾驶。', car: '我的 ROADSTER', change: '更换涂装 ↗', choose: '选择车漆涂装', collection: '12 款专属涂装', done: '完成', note: '点选涂装即可预览效果，此浏览器会记住你的选择。', vehicle: '车辆配置', model: '车身车型', cockpit: '驾驶舱', models: ['Roadster 2 · 参考款', '经典 Roadster'], cockpits: ['参考驾驶舱', '经典驾驶舱'], worlds: '驾驶地图', highway: '高架高速', city: '赛博都市', highwaySpec: '6 车道 · 车流', citySpec: '开放都市 · 补气', weather: '天气与时间', driving: '驾驶模式', modes: ['常规物理', '狂暴 Plaid', '幻想极速'], traffic: '车流密度', densities: ['普通 · 20 辆', '密集 · 36 辆', '疯狂 · 52 辆'], launch: '进入游戏', audio: '声音设置', language: 'Switch to English', unavailable: '3D 预览暂不可用' }
   };
   const menuVisible = () => !menu.classList.contains('hidden');
+  const validChoice = value => value === 'reference' || value === 'classic';
+  function vehicleChoices() {
+    const model = window.RoadsterVehicle?.getModel?.();
+    const cockpit = window.RoadsterVehicle?.getCockpit?.();
+    return {
+      model: validChoice(model) ? model : selectedModel,
+      cockpit: validChoice(cockpit) ? cockpit : selectedCockpit
+    };
+  }
+  function showPreviewUnavailable() {
+    const message = copy[currentLang].unavailable;
+    $('start-car-preview').textContent = message;
+    $('paint-picker-preview').textContent = message;
+  }
   function renderPreview() {
-    if ((!menuVisible() && !picker.open) || previewFailed) return;
+    if (previewFailed) { showPreviewUnavailable(); return; }
+    if (!menuVisible() && !picker.open) return;
     const host = picker.open ? $('paint-picker-preview') : $('start-car-preview');
     const width = host.clientWidth;
     const height = host.clientHeight;
@@ -6631,25 +7330,39 @@ if (container) {
         const camera = new THREE.OrthographicCamera(-4, 4, 2, -2, .1, 50);
         camera.position.set(6, 2.7, -8);
         camera.lookAt(0, .65, 0);
-        const model = carMeshGroup.clone(true);
-        model.position.set(0, 0, 0);
-        model.rotation.set(0, 0, 0);
-        model.scale.set(1, 1, 1);
-        model.visible = true;
-        scene.add(model);
-        scene.add(new THREE.AmbientLight(0xe2edff, 1.8));
-        const key = new THREE.DirectionalLight(0xffffff, 2.4);
-        key.position.set(5, 8, -4);
-        scene.add(key);
-        const rim = new THREE.DirectionalLight(0x80dfff, 1.2);
-        rim.position.set(-5, 3, 4);
-        scene.add(rim);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setClearColor(0x000000, 0);
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.domElement.setAttribute('aria-hidden', 'true');
-        preview = { renderer, scene, camera };
+        preview = { renderer, scene, camera, model: null, source: null, modelKey: null };
+      }
+      const source = window.RoadsterVehicle?.getPreviewModel?.() || carMeshGroup;
+      const choices = vehicleChoices();
+      const modelKey = `${choices.model}:${choices.cockpit}`;
+      if (preview.source !== source || preview.modelKey !== modelKey) {
+        const model = source.clone(true);
+        model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
+        model.scale.set(1, 1, 1);
+        model.visible = true;
+        // Clones share gameplay geometry and materials. Detach only: disposing
+        // either would corrupt the live car, NPCs, and the other studio view.
+        if (preview.model) preview.scene.remove(preview.model);
+        preview.scene.add(model);
+        preview.model = model;
+        preview.source = source;
+        preview.modelKey = modelKey;
+      }
+      if (!preview.lit) {
+        preview.scene.add(new THREE.AmbientLight(0xe2edff, 1.8));
+        const key = new THREE.DirectionalLight(0xffffff, 2.4);
+        key.position.set(5, 8, -4);
+        preview.scene.add(key);
+        const rim = new THREE.DirectionalLight(0x80dfff, 1.2);
+        rim.position.set(-5, 3, 4);
+        preview.scene.add(rim);
+        preview.lit = true;
       }
       if (preview.renderer.domElement.parentNode !== host) host.appendChild(preview.renderer.domElement);
       const aspect = width / height;
@@ -6665,19 +7378,27 @@ if (container) {
       preview?.renderer.dispose();
       preview = null;
       previewFailed = true;
-      host.textContent = copy[currentLang].unavailable;
+      showPreviewUnavailable();
       // A failed optional preview must not block configuration or the game.
     }
   }
   function render() {
     const t = copy[currentLang];
-    const text = { 'map-modal-badge': t.badge, 'map-modal-title': t.title, 'map-modal-sub': t.sub, 'ui-modal-paint-step': t.car, 'start-paint-action': t.change, 'ui-modal-paint-title': t.choose, 'paint-picker-eyebrow': t.collection, 'paint-picker-close': t.done, 'paint-picker-note': t.note, 'ui-modal-map-title': t.worlds, 'card-hwy-title': t.highway, 'card-city-title': t.city, 'card-hwy-spec': t.highwaySpec, 'card-city-spec': t.citySpec, 'ui-modal-weather-title': t.weather, 'start-physics-label': t.driving, 'start-traffic-label': t.traffic, 'ui-btn-launch-map': t.launch };
+    const text = { 'map-modal-badge': t.badge, 'map-modal-title': t.title, 'map-modal-sub': t.sub, 'ui-modal-paint-step': t.car, 'start-paint-action': t.change, 'ui-modal-paint-title': t.choose, 'paint-picker-eyebrow': t.collection, 'paint-picker-close': t.done, 'paint-picker-note': t.note, 'ui-modal-map-title': t.worlds, 'card-hwy-title': t.highway, 'card-city-title': t.city, 'card-hwy-spec': t.highwaySpec, 'card-city-spec': t.citySpec, 'ui-modal-weather-title': t.weather, 'start-physics-label': t.driving, 'start-traffic-label': t.traffic, 'start-model-label': t.model, 'start-cockpit-label': t.cockpit, 'ui-btn-launch-map': t.launch };
     Object.entries(text).forEach(([id, value]) => { $(id).textContent = value; });
     $('btn-map-audio-settings').setAttribute('aria-label', t.audio);
     $('btn-map-modal-lang').setAttribute('aria-label', t.language);
     $('btn-map-modal-lang').setAttribute('title', t.language);
     physicsSelect.value = state.physicsMode === 'fantasy' ? 'fantasy' : state.insaneMode ? 'plaid' : 'realistic';
     trafficSelect.value = String(trafficLevelIndex);
+    const choices = vehicleChoices();
+    modelSelect.value = choices.model;
+    cockpitSelect.value = choices.cockpit;
+    $('start-vehicle-options').setAttribute('aria-label', t.vehicle);
+    Array.from(modelSelect.options).forEach((option, idx) => { option.textContent = t.models[idx]; });
+    Array.from(cockpitSelect.options).forEach((option, idx) => { option.textContent = t.cockpits[idx]; });
+    $('summary-model-chip').textContent = t.models[choices.model === 'classic' ? 1 : 0];
+    $('summary-cockpit-chip').textContent = t.cockpits[choices.cockpit === 'classic' ? 1 : 0];
     Array.from(physicsSelect.options).forEach((option, idx) => { option.textContent = t.modes[idx]; });
     Array.from(trafficSelect.options).forEach((option, idx) => { option.textContent = t.densities[idx]; });
     const paint = PAINT_PRESETS[paintIndex];
@@ -6734,6 +7455,19 @@ if (container) {
     }
   });
   vehicleButton.addEventListener('click', openPaint);
+  modelSelect.addEventListener('change', () => {
+    if (!validChoice(modelSelect.value)) { render(); return; }
+    selectedModel = modelSelect.value;
+    window.RoadsterVehicle?.setModel?.(selectedModel);
+    render();
+  });
+  cockpitSelect.addEventListener('change', () => {
+    if (!validChoice(cockpitSelect.value)) { render(); return; }
+    selectedCockpit = cockpitSelect.value;
+    window.RoadsterVehicle?.setCockpit?.(selectedCockpit);
+    render();
+  });
+  window.addEventListener('roadster-vehicle-change', render);
   physicsSelect.addEventListener('change', () => {
     const selected = physicsSelect.value;
     if (selected === 'plaid') {

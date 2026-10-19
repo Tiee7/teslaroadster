@@ -34,7 +34,7 @@ class Element {
   querySelectorAll() { return this.controls || []; }
   closest(selector) { return selector.includes(this.tagName.toLowerCase()) && this.tagName ? this : null; }
 }
-function harness({ saved = null, storageBlocked = false, failPreview = false, asyncHistory = false } = {}) {
+function harness({ saved = null, storageBlocked = false, failPreview = false, asyncHistory = false, withVehicle = false, initialModel = 'reference', initialCockpit = 'reference' } = {}) {
   const document = { activeElement: null };
   const els = Object.fromEntries([...html.matchAll(/<(\w+)\b[^>]*\bid="([^"]+)"/g)].map(([, tag, id]) => [id, new Element(id, tag.toUpperCase())]));
   document.getElementById = id => els[id] || null;
@@ -42,11 +42,13 @@ function harness({ saved = null, storageBlocked = false, failPreview = false, as
   Object.values(els).forEach(element => { element.ownerDocument = document; });
   els['start-physics'].options = ['realistic', 'plaid', 'fantasy'].map(value => ({ value }));
   els['start-traffic'].options = ['0', '1', '2'].map(value => ({ value }));
-  els['modal-map-select'].controls = ['btn-map-audio-settings', 'btn-map-modal-lang', 'btn-start-paint', 'card-map-highway', 'card-map-city', 'start-physics', 'start-traffic', 'btn-launch-selected-map'].map(id => els[id]);
+  els['start-model'].options = ['reference', 'classic'].map(value => ({ value }));
+  els['start-cockpit'].options = ['reference', 'classic'].map(value => ({ value }));
+  els['modal-map-select'].controls = ['btn-map-audio-settings', 'btn-map-modal-lang', 'btn-start-paint', 'start-model', 'start-cockpit', 'card-map-highway', 'card-map-city', 'start-physics', 'start-traffic', 'btn-launch-selected-map'].map(id => els[id]);
   const window = new Element('window'); window.devicePixelRatio = 3;
   const writes = []; const storage = new Map(saved ? [['roadster-paint-finish', saved]] : []);
   const renders = []; const created = [];
-  class Group { constructor() { this.children = []; } add(node) { this.children.push(node); } }
+  class Group { constructor() { this.children = []; } add(node) { this.children.push(node); } remove(node) { this.children = this.children.filter(child => child !== node); } }
   class Camera {
     constructor(...args) { this.args = args; this.position = { set() {} }; }
     lookAt(...args) { this.target = args; }
@@ -58,10 +60,27 @@ function harness({ saved = null, storageBlocked = false, failPreview = false, as
     setPixelRatio(value) { this.pixelRatio = value; }
     setClearColor() {}
     setSize(width, height, updateStyle) { this.size = [width, height, updateStyle]; }
-    render(scene, camera) { renders.push({ scene, camera, size: this.size }); }
+    render(scene, camera) { if (this.failRender) throw Error('context lost'); renders.push({ scene, camera, size: this.size }); }
     dispose() { this.disposed = true; }
   }
-  const model = { cloneCount: 0, clone() { this.cloneCount++; return { visible: false, position: { set() {} }, rotation: { set() {} }, scale: { set() {} }, sharedPaint: bodyMaterial }; } };
+  const vehicleState = { model: initialModel, cockpit: initialCockpit };
+  const vehicleCalls = [];
+  const sharedGeometry = { dispose() { assert.fail('the preview must never dispose shared geometry'); } };
+  const makeSource = () => ({ cloneCount: 0, clone(deep) {
+    assert.equal(deep, true);
+    this.cloneCount++;
+    return { visible: false, position: { set() {} }, rotation: { set() {} }, scale: { set() {} }, sharedPaint: bodyMaterial,
+      geometry: sharedGeometry, modelId: vehicleState.model, cockpitId: vehicleState.cockpit };
+  } });
+  const model = makeSource();
+  let previewSource = model;
+  if (withVehicle) window.RoadsterVehicle = {
+    getModel: () => vehicleState.model,
+    getCockpit: () => vehicleState.cockpit,
+    setModel(id) { vehicleCalls.push(['model', id]); vehicleState.model = id; window.emit('roadster-vehicle-change'); },
+    setCockpit(id) { vehicleCalls.push(['cockpit', id]); vehicleState.cockpit = id; window.emit('roadster-vehicle-change'); },
+    getPreviewModel: () => previewSource
+  };
   const bodyMaterial = { color: { setHex(value) { this.value = value; } } };
   const state = { physicsMode: 'realistic', insaneMode: false };
   let context;
@@ -94,7 +113,8 @@ function harness({ saved = null, storageBlocked = false, failPreview = false, as
   vm.runInContext(moduleSource, context);
   const inputStart = ui.indexOf("window.addEventListener('keydown',");
   vm.runInContext(ui.slice(inputStart, ui.indexOf("window.addEventListener('keyup',", inputStart)), context);
-  return { context, els, window, state, document, model, bodyMaterial, history, renders, created, writes, storage,
+  return { context, els, window, state, document, model, bodyMaterial, history, renders, created, writes, storage, vehicleState, vehicleCalls, sharedGeometry,
+    replacePreviewSource() { previewSource = makeSource(); window.emit('roadster-vehicle-change'); return previewSource; },
     flushHistory() { pendingHistory.shift()?.(); }, clears: () => clears, launched: () => launched, traffic: () => traffic,
     click: id => els[id].emit('click'),
     select(id, value) { els[id].value = value; els[id].emit('change'); },
@@ -159,7 +179,7 @@ test('finish picker closes by Done/Escape/outside/Back, returns focus, and suppo
 
 test('menu and picker keyboard interactions never trigger gameplay or an accidental launch', () => {
   const h = harness();
-  for (const id of ['btn-start-paint', 'card-map-city', 'btn-map-modal-lang']) {
+  for (const id of ['btn-start-paint', 'start-model', 'start-cockpit', 'card-map-city', 'btn-map-modal-lang']) {
     for (const code of ['Enter', 'Space', 'KeyW', 'KeyF']) h.key(h.els[id], code);
   }
   assert.equal(h.launched(), 0); assert.equal(h.state.physicsMode, 'realistic');
@@ -220,4 +240,114 @@ test('an immediate reopen waits for asynchronous Back rather than closing the ne
   assert.equal(h.els['paint-picker'].open, true); assert.equal(h.history.length, 2); assert.equal(h.history.cursor, 1);
   h.click('paint-picker-close'); h.flushHistory();
   assert.equal(h.els['paint-picker'].open, false); assert.equal(h.history.cursor, 0);
+});
+
+
+test('independent entry choices use the vehicle API and refresh one shared-resource model without new renderers', () => {
+  const h = harness({ withVehicle: true });
+  const scene = h.renders.at(-1).scene;
+  const currentModel = () => scene.children.find(child => child.sharedPaint);
+  assert.equal(h.els['start-model'].value, 'reference');
+  assert.equal(h.els['start-cockpit'].value, 'reference');
+  assert.equal(currentModel().modelId, 'reference');
+  assert.equal(currentModel().cockpitId, 'reference');
+  const originalClone = currentModel();
+  h.els['start-model'].focus();
+  h.select('start-model', 'classic');
+  assert.deepEqual(h.vehicleCalls, [['model', 'classic']]);
+  assert.equal(h.vehicleState.cockpit, 'reference', 'exterior selection leaves cockpit alone');
+  assert.equal(h.document.activeElement, h.els['start-model']);
+  assert.equal(currentModel().modelId, 'classic');
+  assert.equal(currentModel().cockpitId, 'reference');
+  assert.notEqual(currentModel(), originalClone);
+  assert.equal(scene.children.includes(originalClone), false, 'old preview is detached');
+  assert.equal(h.created.length, 1);
+  assert.equal(h.model.cloneCount, 2, 'synchronous API event and direct UI refresh share one clone');
+  h.select('start-cockpit', 'classic');
+  assert.deepEqual(h.vehicleCalls, [['model', 'classic'], ['cockpit', 'classic']]);
+  assert.equal(h.vehicleState.model, 'classic', 'cockpit selection leaves exterior alone');
+  assert.equal(currentModel().cockpitId, 'classic');
+  assert.equal(scene.children.length, 4, 'model replacement never accumulates duplicate models or lights');
+  assert.equal(currentModel().sharedPaint, h.bodyMaterial);
+  assert.equal(currentModel().geometry, h.sharedGeometry);
+  assert.equal(h.created[0].disposed, undefined);
+  h.window.RoadsterStart.render(); h.window.emit('resize');
+  assert.equal(h.model.cloneCount, 3, 'ordinary refresh and resize reuse the current clone');
+  assert.equal(h.writes.some(write => /model|cockpit/.test(write.key)), false, 'vehicle persistence belongs to its module');
+});
+
+test('saved mixed choices, external changes, translated copy, and source replacement stay synchronized', () => {
+  const h = harness({ withVehicle: true, initialModel: 'classic', initialCockpit: 'reference' });
+  assert.equal(h.els['start-model'].value, 'classic');
+  assert.equal(h.els['start-cockpit'].value, 'reference');
+  assert.equal(h.vehicleCalls.length, 0, 'entry must not overwrite restored choices');
+  h.context.currentLang = 'zh'; h.window.RoadsterStart.render();
+  assert.equal(h.els['start-model-label'].textContent, '车身车型');
+  assert.equal(h.els['start-cockpit-label'].textContent, '驾驶舱');
+  assert.equal(h.els['start-model'].options[1].textContent, '经典 Roadster');
+  assert.equal(h.els['start-cockpit'].options[0].textContent, '参考驾驶舱');
+  assert.equal(h.els['summary-model-chip'].textContent, '经典 Roadster');
+  assert.equal(h.els['start-vehicle-options'].getAttribute('aria-label'), '车辆配置');
+  h.window.RoadsterVehicle.setCockpit('classic');
+  assert.equal(h.els['start-cockpit'].value, 'classic');
+  assert.equal(h.els['summary-cockpit-chip'].textContent, '经典驾驶舱');
+  const previousModel = h.renders.at(-1).scene.children.find(child => child.sharedPaint);
+  const newSource = h.replacePreviewSource();
+  assert.equal(newSource.cloneCount, 1, 'updated live source is cloned even when choice IDs are unchanged');
+  assert.equal(h.renders.at(-1).scene.children.includes(previousModel), false);
+  assert.equal(h.created.length, 1);
+  h.select('start-model', 'invalid'); h.select('start-cockpit', 'invalid');
+  assert.equal(h.els['start-model'].value, 'classic');
+  assert.equal(h.els['start-cockpit'].value, 'classic');
+  assert.equal(h.vehicleCalls.length, 1, 'unrecognized values never reach the vehicle API');
+});
+
+test('choice changes move the same live-configured preview between entry and paint dialog, and defer hidden work', () => {
+  const h = harness({ withVehicle: true });
+  h.click('btn-start-paint');
+  h.window.RoadsterVehicle.setModel('classic');
+  assert.equal(h.created[0].domElement.parentNode, h.els['paint-picker-preview']);
+  assert.equal(h.renders.at(-1).scene.children.find(child => child.sharedPaint).modelId, 'classic');
+  h.click('paint-picker-close');
+  assert.equal(h.created[0].domElement.parentNode, h.els['start-car-preview']);
+  h.els['modal-map-select'].classList.add('hidden');
+  const before = h.renders.length; const clones = h.model.cloneCount;
+  h.window.RoadsterVehicle.setCockpit('classic');
+  assert.equal(h.renders.length, before);
+  assert.equal(h.model.cloneCount, clones, 'hidden entry does not allocate model clones');
+  h.els['modal-map-select'].classList.remove('hidden'); h.window.RoadsterStart.onOpen();
+  assert.equal(h.model.cloneCount, clones + 1);
+  assert.equal(h.renders.at(-1).scene.children.find(child => child.sharedPaint).cockpitId, 'classic');
+  assert.equal(h.created.length, 1);
+});
+
+test('vehicle selectors remain usable without the optional module or WebGL and expose explicit production defaults', () => {
+  const fallback = harness();
+  assert.doesNotThrow(() => { fallback.select('start-model', 'classic'); fallback.select('start-cockpit', 'classic'); });
+  assert.equal(fallback.els['start-model'].value, 'classic');
+  assert.equal(fallback.els['start-cockpit'].value, 'classic');
+  const h = harness({ withVehicle: true, failPreview: true });
+  h.select('start-model', 'classic'); h.select('start-cockpit', 'classic');
+  assert.equal(h.vehicleState.model, 'classic'); assert.equal(h.vehicleState.cockpit, 'classic');
+  h.context.currentLang = 'zh'; h.window.RoadsterStart.render(); h.click('btn-start-paint');
+  assert.equal(h.els['start-car-preview'].textContent, '3D 预览暂不可用');
+  assert.equal(h.els['paint-picker-preview'].textContent, '3D 预览暂不可用');
+  for (const id of ['start-model', 'start-cockpit']) {
+    assert.match(html, new RegExp('<label for="' + id + '">'));
+    assert.match(html, new RegExp('<select id="' + id + '"><option value="reference" selected>'));
+  }
+  assert.match(css, /\.start-vehicle-options select \{[^}]*min-height: 44px/s);
+  assert.match(css, /@media \(max-width: 370px\)[\s\S]*\.start-vehicle-options \{ grid-template-columns: minmax\(0, 1fr\)/);
+});
+
+test('a lost preview context is released once while configuration and launch remain available', () => {
+  const h = harness({ withVehicle: true });
+  h.created[0].failRender = true;
+  h.select('start-model', 'classic');
+  assert.equal(h.created[0].disposed, true);
+  h.select('start-cockpit', 'classic'); h.window.emit('resize'); h.window.RoadsterStart.render();
+  assert.equal(h.created.length, 1, 'a failed optional preview never spins up replacement WebGL contexts');
+  assert.equal(h.vehicleState.cockpit, 'classic');
+  assert.match(h.els['start-car-preview'].textContent, /unavailable/);
+  h.key(h.els['modal-map-select'], 'Enter'); assert.equal(h.launched(), 1);
 });

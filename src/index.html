@@ -476,6 +476,10 @@
           </span>
         </button>
         <div class="start-choices">
+          <div id="start-vehicle-options" class="start-vehicle-options" role="group" aria-label="Vehicle configuration">
+            <label for="start-model"><span id="start-model-label">Vehicle model</span><select id="start-model"><option value="reference" selected>Roadster 2 · Reference</option><option value="classic">Classic Roadster</option></select></label>
+            <label for="start-cockpit"><span id="start-cockpit-label">Cockpit</span><select id="start-cockpit"><option value="reference" selected>Reference cockpit</option><option value="classic">Classic cockpit</option></select></label>
+          </div>
           <section class="start-worlds" aria-labelledby="ui-modal-map-title">
             <h2 id="ui-modal-map-title" class="start-section-title">World</h2>
             <div class="start-world-grid">
@@ -504,7 +508,7 @@
       <footer class="start-footer">
         <div id="modal-config-summary" class="start-screen-reader" aria-live="polite">
           <span id="ui-ready-prefix">Ready to launch with:</span>
-          <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
+          <span id="summary-model-chip">Roadster 2 · Reference</span>, <span id="summary-cockpit-chip">Reference cockpit</span>, <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
         </div>
         <button id="btn-launch-selected-map" type="button" class="start-launch"><span id="ui-btn-launch-map">Launch simulation</span><span aria-hidden="true">→</span></button>
       </footer>
@@ -701,6 +705,9 @@
   <script src="music.js"></script>
   <script src="world.js"></script>
   <script src="vehicles.js"></script>
+  <script src="reference-exterior.js"></script>
+  <script src="reference-cockpit.js"></script>
+  <script src="reference-traffic.js"></script>
   <script src="taxi.js"></script>
   <script src="ui-hud.js"></script>
   <script src="leaderboard.js"></script>

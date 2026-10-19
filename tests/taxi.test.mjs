@@ -440,7 +440,8 @@ test('integration has no discoverable entry, retains zoom brackets and keeps tax
   assert.match(physics, /state\.isDestroyed = true;\s*state\.score = 0;\s*state\.carsCleared = 0;\s*state\.blastedCarsCount = 0;\s*window\.RoadsterTaxi\?\.onDestroyed\(\)/);
   assert.match(physics, /updateSimulation\(dt\);\s*window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*renderer\.render/);
   const bundler = readFileSync(new URL('../bundle_app.py', import.meta.url), 'utf8');
-  assert.match(bundler, /'vehicles\.js', 'taxi\.js', 'ui-hud\.js'/);
+  assert.ok(bundler.indexOf("'vehicles.js'") < bundler.indexOf("'taxi.js'"));
+  assert.match(bundler, /'taxi\.js', 'ui-hud\.js'/);
 });
 
 test('stop clearance rejects the entire column footprint, trim margin and city boundary', () => {

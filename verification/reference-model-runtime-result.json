@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-10-19T09:00:13.943Z",
+  "pass": true,
+  "runtimeRevision": "128",
+  "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+  "sources": {
+    "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+    "reference-exterior.js": "02d58352cae8ec33ac454318c9825ae3423f89c34bcd36f77a562a9b8215a0ac",
+    "reference-cockpit.js": "5e51df4480409e3a2822c95f078dc823a15914046c8442765dbcc38368bdf83c",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "viewports": [
+    [
+      2048,
+      1163
+    ],
+    [
+      2048,
+      1123
+    ],
+    [
+      1440,
+      900
+    ],
+    [
+      844,
+      390
+    ],
+    [
+      667,
+      320
+    ],
+    [
+      1024,
+      1024
+    ],
+    [
+      780,
+      900
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      360,
+      800
+    ],
+    [
+      320,
+      900
+    ]
+  ],
+  "configurationCount": 4,
+  "steeringAngles": 49,
+  "steeringRangeRadians": [
+    -1.009,
+    1.009
+  ],
+  "instrumentRays": 117600,
+  "instrumentBlockCount": 0,
+  "roadRays": 39200,
+  "roadBlockCount": 0,
+  "wheelEnvelopeCases": 1960,
+  "wheelEnvelopeViolations": 0,
+  "rearDirectRays": 90,
+  "rearQuarterRays": 48,
+  "rearGaps": 0,
+  "npcModels": {
+    "classic-roadster": 12,
+    "sculpted-track": 12,
+    "sculpted-touring": 12
+  },
+  "npcMaterialCount": 20,
+  "assertions": [
+    "All original car and yoke objects retained.",
+    "Repeated four-way configuration and camera transitions preserve lights, canopy and independent choices.",
+    "NPC mix, shared classic body geometry, collision dimensions and four wheel handles retained."
+  ],
+  "limits": "CPU scene-graph, projection and exact production-mesh ray intersections only. No WebGL/browser screenshot, GPU shading, actual text rasterization or touch interaction verification."
+}
