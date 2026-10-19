@@ -7,16 +7,16 @@ const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..'), runtime = process.argv[2];
 if (!runtime) throw Error('Pass the official production Three.js r128 runtime path.');
 const events = {};
-const c = vm.createContext({ console, Math, Float32Array, Uint16Array, Uint32Array,
+const c = vm.createContext({ console, Math, Float32Array, Uint16Array, Uint32Array, atob:text=>Buffer.from(text,'base64').toString('binary'),
   Event: class { constructor(type) { this.type = type; } },
   window: { innerWidth:1440,innerHeight:900,addEventListener(t,fn){(events[t] ||= []).push(fn);},dispatchEvent(e){events[e.type]?.forEach(fn=>fn(e));} },
   localStorage:{getItem(){return null;},setItem(){}},
   document:{createElement(){return {getContext(){return {};}};}} });
 vm.runInContext(fs.readFileSync(runtime,'utf8'),c);
 assert.equal(c.THREE.REVISION,'128');
-const files = ['world.js','vehicles.js','reference-exterior.js','reference-cockpit.js','reference-traffic.js'];
+const files = ['world.js','highway-traffic.js','vehicles.js','reference-exterior.js','reference-cockpit.js','npc-traffic-assets.js','reference-traffic.js'];
 const world = fs.readFileSync(path.join(root,'src/world.js'),'utf8');
-vm.runInContext(`const scene=new THREE.Scene();const currentMap='highway';${world.slice(world.indexOf('const bodyMaterial ='),world.indexOf('const highwayEnvGroup'))}`,c);
+vm.runInContext(`const scene=new THREE.Scene();const currentMap='highway';const WORLD_SPEED_SCALE=${Number(fs.readFileSync(path.join(root,'src/config.js'),'utf8').match(/const WORLD_SPEED_SCALE = ([\d.]+)/)[1])};${world.slice(world.indexOf('const bodyMaterial ='),world.indexOf('const highwayEnvGroup'))}`,c);
 for (const file of files.slice(1)) vm.runInContext(fs.readFileSync(path.join(root,'src',file),'utf8'),c,{filename:file});
 vm.runInContext('this.p={scene,carMeshGroup,roadsterCanopyMesh,screenDisplay,screenBezel,hudCombinerMesh,setCockpitPerspective,setCockpitExteriorDetailsVisible,resizeCockpitDisplay};',c);
 const p=c.p,T=c.THREE,api=c.window.RoadsterVehicle;

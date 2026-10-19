@@ -1,0 +1,1904 @@
+{
+  "format": "roadster-vehicle-variants-v1",
+  "immutable": true,
+  "scope": "Local optional authored-model archive and derived static NPC LOD library. No production activation.",
+  "runtime": {
+    "revision": "128",
+    "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "source": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+    "included": false
+  },
+  "captureTools": {
+    "capture": "c49f1cd224c081c8c1d44ed3afee89e1dc5a87357d5fd28e9914271dbb855099",
+    "archiveAndLod": "6b7f55af70d4b8f5507c1d35aa937dd71e5ed31f34dc1309dbf4a7de6ba11dc8",
+    "previewExporter": "ecac18126cbbb2963d3756507ebddb31bd29f583d29fd955517704603df03254",
+    "appendFrozen": "ab18fe0290d2924a0ea6c77ac7d233dcc24586ca99af29212c37909a6e6da75a",
+    "appendCommittedFrozen": "d5728a9264465d6f45de24b4a730175b103f5a0ca31ea1663d5c5a254fe85972"
+  },
+  "preservation": {
+    "sources": "Exact original authored source bytes, content addressed. Every available source snapshot is retained.",
+    "preview": "Exact original opaque neutral-preview JSON bytes, including normals, indices, matrices, groups, materials and metadata; lossless array-object decomposition deduplicates repeated geometry.",
+    "exclusions": "Original exporter omits transparent effects and invisible shadow proxies. Those are preserved in original sources when available. NPC LODs deliberately simplify geometry and replace the original material set with six shared opaque materials.",
+    "lineage": "Git entries record exact parents and full commits. Frozen entries retain their original source hashes and path; matching hashes link source snapshots. Geometry signatures exclude normals and materials; appearance signatures include them."
+  },
+  "entries": [
+    {
+      "id": "released-reference-20f6117",
+      "origin": {
+        "type": "git-commit",
+        "commit": "20f61175027d5786071de99c4a6f93923d7e7f4c",
+        "ref": "20f6117",
+        "label": "Original released reference model"
+      },
+      "parentCommit": "cab98f99a471dd4223481c0cd7d0a95d983a9894",
+      "originalSources": {
+        "treeSha256": "c1bab867410420525e799a345ef4e184f635209b3f4470f9b4658659c6181042",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "5e51df4480409e3a2822c95f078dc823a15914046c8442765dbcc38368bdf83c",
+            "bytes": 12397,
+            "object": "objects/5e/5e51df4480409e3a2822c95f078dc823a15914046c8442765dbcc38368bdf83c.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "02d58352cae8ec33ac454318c9825ae3423f89c34bcd36f77a562a9b8215a0ac",
+            "bytes": 28237,
+            "object": "objects/02/02d58352cae8ec33ac454318c9825ae3423f89c34bcd36f77a562a9b8215a0ac.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "02d58352cae8ec33ac454318c9825ae3423f89c34bcd36f77a562a9b8215a0ac",
+        "reference-cockpit.js": "5e51df4480409e3a2822c95f078dc823a15914046c8442765dbcc38368bdf83c",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "9a70d6c6d045ed244ff45293f840627555bb32f6c36b81c7903c2cf487a213f1",
+        "rawBytes": 8562071,
+        "template": {
+          "sha256": "ff85f6740c29a07fba8683635c8d4a58986824f475b065a1e76be8d965bb0404",
+          "bytes": 311205,
+          "object": "objects/ff/ff85f6740c29a07fba8683635c8d4a58986824f475b065a1e76be8d965bb0404.gz"
+        }
+      },
+      "geometrySha256": "7cebd25eb1b855fc78c708369878766f6a924bb6d7716791beff94b81b96c86d",
+      "appearanceSha256": "aca91c1337df2edfa1258b0167508dabc0928785a803f1885f9ff623b37d9aca",
+      "meshCount": 307,
+      "triangleCount": 103283,
+      "bounds": {
+        "min": [
+          -1.0199989080429077,
+          -0.0006999909877777322,
+          -2.3580000400543213
+        ],
+        "max": [
+          1.0199989080429077,
+          1.1489856243133545,
+          2.372
+        ]
+      },
+      "geometryVariant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "id": "first-visual-e3ba317",
+      "origin": {
+        "type": "git-commit",
+        "commit": "e3ba31703916fe16aa6a571b3d09cf9ade7d96fc",
+        "ref": "e3ba317",
+        "label": "First visual revision before rebase"
+      },
+      "parentCommit": "39525a73fced4b0f881f11f607bc82208f9f1860",
+      "originalSources": {
+        "treeSha256": "cacc29ba040b55cd7735c8fb15bd66cf6d9c2790ed675f69407998e904a47e8e",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+            "bytes": 18023,
+            "object": "objects/eb/eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+            "bytes": 35137,
+            "object": "objects/80/80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+        "reference-cockpit.js": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "abad69395c0315afd9c5aca1246a44365995d99017c6246411a886ac4d7c12dd",
+        "rawBytes": 9851323,
+        "template": {
+          "sha256": "55b4aca7f613c2717993707820a2be98916cf8c944c327a5a74bbf913f2ea1f5",
+          "bytes": 364136,
+          "object": "objects/55/55b4aca7f613c2717993707820a2be98916cf8c944c327a5a74bbf913f2ea1f5.gz"
+        }
+      },
+      "geometrySha256": "57bb28b4444fe141e625dbd7065ec44f32ebc93091ac45aba8220fb93decf217",
+      "appearanceSha256": "48b05073278d9ef3bf94c5bcabcb39f997f0823b93758c45a242f19a3b499e47",
+      "meshCount": 387,
+      "triangleCount": 119320,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-57bb28b4444fe141"
+    },
+    {
+      "id": "first-visual-rebased-e4313dc",
+      "origin": {
+        "type": "git-commit",
+        "commit": "e4313dc5b4df8cb3be2f42949012010554c8cc79",
+        "ref": "e4313dc",
+        "label": "Rebased first visual revision"
+      },
+      "parentCommit": "a9690717613d92441c5eefffe65207c954d35b54",
+      "originalSources": {
+        "treeSha256": "e279891ed4a6a428d447ce91e5947d9204da308b2f4e91eb9c4b24817eee0c17",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+            "bytes": 18023,
+            "object": "objects/eb/eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+            "bytes": 35137,
+            "object": "objects/80/80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+        "reference-cockpit.js": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "9f1aee0a972a518d80c3dee509ba43c083f78ec28c99100b65cf977ea38d927e",
+        "rawBytes": 9851323,
+        "template": {
+          "sha256": "c7c7d84d306ae412745b03d341e0db2a8aae91953fc69ba8a97a766273af663a",
+          "bytes": 364136,
+          "object": "objects/c7/c7c7d84d306ae412745b03d341e0db2a8aae91953fc69ba8a97a766273af663a.gz"
+        }
+      },
+      "geometrySha256": "57bb28b4444fe141e625dbd7065ec44f32ebc93091ac45aba8220fb93decf217",
+      "appearanceSha256": "48b05073278d9ef3bf94c5bcabcb39f997f0823b93758c45a242f19a3b499e47",
+      "meshCount": 387,
+      "triangleCount": 119320,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-57bb28b4444fe141"
+    },
+    {
+      "id": "stage2-8c4dd7c",
+      "origin": {
+        "type": "git-commit",
+        "commit": "8c4dd7c3e9f8f313b79ccd952eb12321a9e1108d",
+        "ref": "8c4dd7c",
+        "label": "Flush optics and sculpted-aero revision"
+      },
+      "parentCommit": "a8cc33a7eb7ab07c6de63c30a5880c41517031e5",
+      "originalSources": {
+        "treeSha256": "8ffdd2bd7402e41ceca8cfab4f2c99b210c4c938f31a982ffc48219ad9385ff2",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "39ec6e76c4b44a661af10822ea37b28201910a2f1b86c45b5438475d4928473a",
+            "bytes": 39525,
+            "object": "objects/39/39ec6e76c4b44a661af10822ea37b28201910a2f1b86c45b5438475d4928473a.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "39ec6e76c4b44a661af10822ea37b28201910a2f1b86c45b5438475d4928473a",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "2d6ce484d8d2878de31e838f1d18309b3a0d6c20f6c0ba426502fe5bfac5350b",
+        "rawBytes": 10168899,
+        "template": {
+          "sha256": "f4f4ea6c9c0860b774bb83fbb1ab80bc07507df8a4400c8cc51ed6ed146eb2f8",
+          "bytes": 244620,
+          "object": "objects/f4/f4f4ea6c9c0860b774bb83fbb1ab80bc07507df8a4400c8cc51ed6ed146eb2f8.gz"
+        }
+      },
+      "geometrySha256": "2a6a57bb617ec7ae2e90744378f113ed9946d71194dde5702ba0de72929c8fda",
+      "appearanceSha256": "62a4c15fa240e7f77b374f1c730dd674a788dcd1ae3e6fe9c19cd39b1fc5783f",
+      "meshCount": 251,
+      "triangleCount": 122510,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-2a6a57bb617ec7ae"
+    },
+    {
+      "id": "folded-front-1bf6034",
+      "origin": {
+        "type": "git-commit",
+        "commit": "1bf6034f6089f4ffe8f4c105ff9ad803a0cea6de",
+        "ref": "1bf6034",
+        "label": "Latest rejected folded-front revision, retained before window revision"
+      },
+      "parentCommit": "8c4dd7c3e9f8f313b79ccd952eb12321a9e1108d",
+      "originalSources": {
+        "treeSha256": "c72d36f1f7ed64aa35d78815068a0fa65edc82b29f26a79e0c1a61917061793d",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+            "bytes": 21712,
+            "object": "objects/7e/7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+            "bytes": 43055,
+            "object": "objects/3d/3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+        "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "3ac13430dc2a0c92ce358fc14c19b79f7f629f94bfdee87123da82ba73ed7fe7",
+        "rawBytes": 10940210,
+        "template": {
+          "sha256": "e5c034690b01e308339984ba9c0f79ddd06a4821da3eb65bd707b76fa98bcfd9",
+          "bytes": 248029,
+          "object": "objects/e5/e5c034690b01e308339984ba9c0f79ddd06a4821da3eb65bd707b76fa98bcfd9.gz"
+        }
+      },
+      "geometrySha256": "5e3b285ce5ba2af3dc415a037468f5542cecb8fd8503554c918aebd741a14145",
+      "appearanceSha256": "214fd0e325d1dbfd58e6202ad0a1494631b4e63d5b64f84d37714e3aefab4b74",
+      "meshCount": 255,
+      "triangleCount": 125578,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-5e3b285ce5ba2af3"
+    },
+    {
+      "id": "frozen-stage2-direct-check",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-direct-check"
+      },
+      "originalSources": {
+        "treeSha256": "4fcaeb7c28baeed953a1965e6ef8aae1d7504310da5107d1eb17a045cfc46d5c",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "f854ba7ca26fab6026a1ff914dc3357d663b6f36616a473f7a2345ffbd59a885",
+            "bytes": 38472,
+            "object": "objects/f8/f854ba7ca26fab6026a1ff914dc3357d663b6f36616a473f7a2345ffbd59a885.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "f854ba7ca26fab6026a1ff914dc3357d663b6f36616a473f7a2345ffbd59a885",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "a308144bf6ebe530c07d318bed17cfbebfaa9d96cc808fc43ee5e7df56c9d9bd",
+        "rawBytes": 10182928,
+        "template": {
+          "sha256": "37468f083dbc43bb2b7ff62da38d48c15c1606ae69927c63a3514daf99b4b389",
+          "bytes": 251341,
+          "object": "objects/37/37468f083dbc43bb2b7ff62da38d48c15c1606ae69927c63a3514daf99b4b389.gz"
+        }
+      },
+      "geometrySha256": "d4f50372d73a06a069f267729ef5137450f2c499971a668f243884f4b6699ead",
+      "appearanceSha256": "1dff9d7fdf8d570dbb20f88c86d491363c9ec452d32b834c62f711c44aba10f4",
+      "meshCount": 251,
+      "triangleCount": 122546,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-d4f50372d73a06a0"
+    },
+    {
+      "id": "frozen-stage2-iteration",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-iteration"
+      },
+      "originalSources": {
+        "treeSha256": "d75ebdde3cb02cc90fde461ce6b50fa5657b91c9b77bbbc46594356273f2ec6c",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "b34fff2ab7d5604935a00f44cfc83e5ce8254bd7aa8de90a1770c2771b51d864",
+            "bytes": 38089,
+            "object": "objects/b3/b34fff2ab7d5604935a00f44cfc83e5ce8254bd7aa8de90a1770c2771b51d864.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "b34fff2ab7d5604935a00f44cfc83e5ce8254bd7aa8de90a1770c2771b51d864",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "457fbd5fef3c02d58ba0000a975165c2697ba8ec54105b306f2512d962b4b691",
+        "rawBytes": 10183374,
+        "template": {
+          "sha256": "b2bfed82183ee18a28b10b309e589fe3709a8eeb10e7a67a1f468661fc56db31",
+          "bytes": 251341,
+          "object": "objects/b2/b2bfed82183ee18a28b10b309e589fe3709a8eeb10e7a67a1f468661fc56db31.gz"
+        }
+      },
+      "geometrySha256": "cf79c62dc51eda5056e46343f794beff077a264a4db9e92b344a3c06707af451",
+      "appearanceSha256": "9144293ef9a364b9619950bfc4f7f84c9ed910484e6cd83f9bec1138b5d1af8a",
+      "meshCount": 251,
+      "triangleCount": 122546,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-cf79c62dc51eda50"
+    },
+    {
+      "id": "frozen-stage2-lamp-clear-check",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-lamp-clear-check"
+      },
+      "originalSources": {
+        "treeSha256": "4bb9a27d10ba4797200560326a0ab96dd9a951de1e6c00dca444d5f5bcdb4eaf",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "bd8191242029f988c9f65bedcfea969a0f396ab1c2a37d0bbba11e5fac98975f",
+            "bytes": 39523,
+            "object": "objects/bd/bd8191242029f988c9f65bedcfea969a0f396ab1c2a37d0bbba11e5fac98975f.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "bd8191242029f988c9f65bedcfea969a0f396ab1c2a37d0bbba11e5fac98975f",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "d14c017a33491fabf54a7b1fe90cfb62479b5257d6c560de160df631543178a7",
+        "rawBytes": 10175620,
+        "template": {
+          "sha256": "180355d66c212f301e51b402a25b2db291f849769100586ae431e090c80ef712",
+          "bytes": 251341,
+          "object": "objects/18/180355d66c212f301e51b402a25b2db291f849769100586ae431e090c80ef712.gz"
+        }
+      },
+      "geometrySha256": "2a6a57bb617ec7ae2e90744378f113ed9946d71194dde5702ba0de72929c8fda",
+      "appearanceSha256": "62a4c15fa240e7f77b374f1c730dd674a788dcd1ae3e6fe9c19cd39b1fc5783f",
+      "meshCount": 251,
+      "triangleCount": 122510,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-2a6a57bb617ec7ae"
+    },
+    {
+      "id": "frozen-stage2-lamp-final-check",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-lamp-final-check"
+      },
+      "originalSources": {
+        "treeSha256": "0d280dd43bebe0e8b98eb5bf4f73c03a5623dcd9b772542ff825d68ccfcd9476",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "955e579cfe21c0d730afaccad7b77d322866149efab8e805cac255ccd07dc5c6",
+            "bytes": 38472,
+            "object": "objects/95/955e579cfe21c0d730afaccad7b77d322866149efab8e805cac255ccd07dc5c6.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "955e579cfe21c0d730afaccad7b77d322866149efab8e805cac255ccd07dc5c6",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "0c8609c8a671a0d8bb1b04ce62897d7e24f73ee203519991484850b219ac52ed",
+        "rawBytes": 10181462,
+        "template": {
+          "sha256": "084dc8af078f053fe269b86f78bec11bf6e22ded16e34f1b4ef486ecc26959ac",
+          "bytes": 251341,
+          "object": "objects/08/084dc8af078f053fe269b86f78bec11bf6e22ded16e34f1b4ef486ecc26959ac.gz"
+        }
+      },
+      "geometrySha256": "2392a5ad4099381d925bd5509e5653ec5de9beb3274079fc31a35af537be9401",
+      "appearanceSha256": "a27f1fce916e178adb2089bced174082ae20e6fd10bcb1d8ca4a6bb374166b9b",
+      "meshCount": 251,
+      "triangleCount": 122530,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-2392a5ad4099381d"
+    },
+    {
+      "id": "frozen-stage2-reference-front-check",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-check"
+      },
+      "originalSources": {
+        "treeSha256": "8ffdd2bd7402e41ceca8cfab4f2c99b210c4c938f31a982ffc48219ad9385ff2",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "39ec6e76c4b44a661af10822ea37b28201910a2f1b86c45b5438475d4928473a",
+            "bytes": 39525,
+            "object": "objects/39/39ec6e76c4b44a661af10822ea37b28201910a2f1b86c45b5438475d4928473a.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "39ec6e76c4b44a661af10822ea37b28201910a2f1b86c45b5438475d4928473a",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "b50d805ead6d8d40d57a20a0b53fd564a776120d8cdaa78fdc4adc486764cfbc",
+        "rawBytes": 10175620,
+        "template": {
+          "sha256": "fab575fa0d8b6b3afd205b23d54ea6d6f7e44acf1d5fec440428c8db5191eb15",
+          "bytes": 251341,
+          "object": "objects/fa/fab575fa0d8b6b3afd205b23d54ea6d6f7e44acf1d5fec440428c8db5191eb15.gz"
+        }
+      },
+      "geometrySha256": "2a6a57bb617ec7ae2e90744378f113ed9946d71194dde5702ba0de72929c8fda",
+      "appearanceSha256": "62a4c15fa240e7f77b374f1c730dd674a788dcd1ae3e6fe9c19cd39b1fc5783f",
+      "meshCount": 251,
+      "triangleCount": 122510,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-2a6a57bb617ec7ae"
+    },
+    {
+      "id": "frozen-stage2-reference-front-cleanup",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-cleanup"
+      },
+      "originalSources": {
+        "treeSha256": "4b45612db8e12efb0934fe682b5392b13cfabd725b45312d230f0637afb9a307",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+            "bytes": 43055,
+            "object": "objects/3d/3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "f9ac22ef4d7e0e08eb8fdb030775953ef016f85ca8c607739c5862ba0d51e42c",
+        "rawBytes": 10947027,
+        "template": {
+          "sha256": "30e9e1958d2f7d78cb1fd5c1bf1c2494f19930ddce4b31de393b95a753b2aa1c",
+          "bytes": 254846,
+          "object": "objects/30/30e9e1958d2f7d78cb1fd5c1bf1c2494f19930ddce4b31de393b95a753b2aa1c.gz"
+        }
+      },
+      "geometrySha256": "5e3b285ce5ba2af3dc415a037468f5542cecb8fd8503554c918aebd741a14145",
+      "appearanceSha256": "214fd0e325d1dbfd58e6202ad0a1494631b4e63d5b64f84d37714e3aefab4b74",
+      "meshCount": 255,
+      "triangleCount": 125578,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-5e3b285ce5ba2af3"
+    },
+    {
+      "id": "frozen-stage2-reference-front-cleanup--current-source-export",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-cleanup/current-source-export"
+      },
+      "originalSources": {
+        "treeSha256": "c72d36f1f7ed64aa35d78815068a0fa65edc82b29f26a79e0c1a61917061793d",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+            "bytes": 21712,
+            "object": "objects/7e/7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+            "bytes": 43055,
+            "object": "objects/3d/3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+        "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "f9aa04217cf55f0aacac6bd9cd52a4ee8150bed80e38c78f30d571c3cb60ce8c",
+        "rawBytes": 10947027,
+        "template": {
+          "sha256": "fb1b76afafbebfc754979c10ffbf8a7d1b66da96b9bf89d3e2721e5538fcad1f",
+          "bytes": 254846,
+          "object": "objects/fb/fb1b76afafbebfc754979c10ffbf8a7d1b66da96b9bf89d3e2721e5538fcad1f.gz"
+        }
+      },
+      "geometrySha256": "5e3b285ce5ba2af3dc415a037468f5542cecb8fd8503554c918aebd741a14145",
+      "appearanceSha256": "214fd0e325d1dbfd58e6202ad0a1494631b4e63d5b64f84d37714e3aefab4b74",
+      "meshCount": 255,
+      "triangleCount": 125578,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-5e3b285ce5ba2af3"
+    },
+    {
+      "id": "frozen-stage2-reference-front-final",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-final"
+      },
+      "originalSources": null,
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "15b8c4f2be82333ae96d700f1748ed5dfde39c472a80cd307ef21a1dc2490922",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "52b5c962a1f7e7bf1c178c187d798a3c233c69210b467781533661478b9d8cf0",
+        "rawBytes": 10931523,
+        "template": {
+          "sha256": "e787af91bdb07eb849acd499b4cd68190b7e15747affbc30899bd4a3b2104ed8",
+          "bytes": 254846,
+          "object": "objects/e7/e787af91bdb07eb849acd499b4cd68190b7e15747affbc30899bd4a3b2104ed8.gz"
+        }
+      },
+      "geometrySha256": "552a05c475bebda0fe94f5f43082413ec778b27f1229a20346894a02ca05abf3",
+      "appearanceSha256": "a1e26009f87c09229b2cf93ffd2badbd5d8cde7f96cec3a58d7e9bd7b1972b69",
+      "meshCount": 255,
+      "triangleCount": 125578,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "sourceSnapshotStatus": "Original tessellated preview preserved losslessly; exact generating source unavailable. Declared original hashes retained without relabeling.",
+      "geometryVariant": "roadster-552a05c475bebda0"
+    },
+    {
+      "id": "frozen-stage2-reference-front-planar-check",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-planar-check"
+      },
+      "originalSources": {
+        "treeSha256": "318e4097be932c943516e40769b2ded629c3b992711324c224c61dd026e7242c",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "a065e5dc707de11f450f18482240518828b6c3bf73de745966ce7ad50981c8f3",
+            "bytes": 41757,
+            "object": "objects/a0/a065e5dc707de11f450f18482240518828b6c3bf73de745966ce7ad50981c8f3.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "a065e5dc707de11f450f18482240518828b6c3bf73de745966ce7ad50981c8f3",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "a1c13392cbd0377f1bece156aade61fd25c9cf9cfef02afb3073dfab083fbd57",
+        "rawBytes": 10875591,
+        "template": {
+          "sha256": "8b6b1fef5d88f4fe96df68829fb8406bd1bed4a1958d274068adfb648f6cfd23",
+          "bytes": 254843,
+          "object": "objects/8b/8b6b1fef5d88f4fe96df68829fb8406bd1bed4a1958d274068adfb648f6cfd23.gz"
+        }
+      },
+      "geometrySha256": "499feb3a905a9b82b67da229dde8270c4bd2a9fc4a8269b6755906b863d273cf",
+      "appearanceSha256": "0be236be4aae01b55abb8a548422784f725d27434ee0906d13adcd889d81ede0",
+      "meshCount": 255,
+      "triangleCount": 124876,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-499feb3a905a9b82"
+    },
+    {
+      "id": "frozen-stage2-reference-front-revised-check",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-revised-check"
+      },
+      "originalSources": {
+        "treeSha256": "cbe6401a45bcf08d0c92ec02646a33fd6f2142ed0976f31d0d2d4f538ddd2f2c",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "216e68e517fd903c6744897e2c3c60f21aef20bd25148a1d8623c9109eea4816",
+            "bytes": 39540,
+            "object": "objects/21/216e68e517fd903c6744897e2c3c60f21aef20bd25148a1d8623c9109eea4816.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "216e68e517fd903c6744897e2c3c60f21aef20bd25148a1d8623c9109eea4816",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "e42654401a0a7e445e16e84897e6ed560c9f938807f5d80f9da4f2c94a95aee5",
+        "rawBytes": 10378640,
+        "template": {
+          "sha256": "12c31cb51d0072e8d47610ec86f460581d7892930aacaaf61328a520190e691d",
+          "bytes": 251341,
+          "object": "objects/12/12c31cb51d0072e8d47610ec86f460581d7892930aacaaf61328a520190e691d.gz"
+        }
+      },
+      "geometrySha256": "98c9c96b8637ce33dda084e4afba7702efd31602fe7ca47018cf50ad0f3cc13d",
+      "appearanceSha256": "8da542aab753664e23c12c2a5df5964e4ac522081dc1e0e5c05f260adb27ef97",
+      "meshCount": 251,
+      "triangleCount": 123120,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-98c9c96b8637ce33"
+    },
+    {
+      "id": "frozen-stage2-reference-front-verified",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/stage2-reference-front-verified"
+      },
+      "originalSources": {
+        "treeSha256": "ce919bbb9c5f9f27eff0917362edc99e628d69899611cfa11400ce51c940af7a",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+            "bytes": 21575,
+            "object": "objects/a0/a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "98060e0e49161127742671e677b2a5e62438b4f1490c1222b5992739f1986723",
+            "bytes": 43136,
+            "object": "objects/98/98060e0e49161127742671e677b2a5e62438b4f1490c1222b5992739f1986723.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "98060e0e49161127742671e677b2a5e62438b4f1490c1222b5992739f1986723",
+        "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "6de062fe361a61443bdd6c103a417e76751bb14ba5b7470999b9c184e60440a2",
+        "rawBytes": 10947919,
+        "template": {
+          "sha256": "dcce2fcb218f2e8cfb62ae70c4b4550fbb91ff75af0ec39894608736b80d8cfc",
+          "bytes": 254846,
+          "object": "objects/dc/dcce2fcb218f2e8cfb62ae70c4b4550fbb91ff75af0ec39894608736b80d8cfc.gz"
+        }
+      },
+      "geometrySha256": "552a05c475bebda0fe94f5f43082413ec778b27f1229a20346894a02ca05abf3",
+      "appearanceSha256": "ac4cdbbdf921117562ac6f260daab11ebf4b4c92f1496268c89384c77e9e99aa",
+      "meshCount": 255,
+      "triangleCount": 125578,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-552a05c475bebda0"
+    },
+    {
+      "id": "frozen-visual-baseline",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/visual-baseline"
+      },
+      "originalSources": {
+        "treeSha256": "f7318446a845572fbd5a817a497a7ed6289a5b431b53524d98a21ef7b8e32611",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "57972cda078029f190745d64708fca44a6fa2c3fd049f95ab2574eda95d543c2",
+            "bytes": 13062,
+            "object": "objects/57/57972cda078029f190745d64708fca44a6fa2c3fd049f95ab2574eda95d543c2.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "4c73e373d22161d17aba0ed74c42cd0ee2f1f32c4afd41e277ad754b735ee4b6",
+            "bytes": 31948,
+            "object": "objects/4c/4c73e373d22161d17aba0ed74c42cd0ee2f1f32c4afd41e277ad754b735ee4b6.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "4c73e373d22161d17aba0ed74c42cd0ee2f1f32c4afd41e277ad754b735ee4b6",
+        "reference-cockpit.js": "57972cda078029f190745d64708fca44a6fa2c3fd049f95ab2574eda95d543c2",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "335bd5e639f4dbf4b9aa3528fefdcadc7e2267cd028dbe2176168c7163ab51f8",
+        "rawBytes": 8570496,
+        "template": {
+          "sha256": "b56a483eb3b875d21bd23f1eda746ef2b92378dcb8b60a3614040c736dc67615",
+          "bytes": 319630,
+          "object": "objects/b5/b56a483eb3b875d21bd23f1eda746ef2b92378dcb8b60a3614040c736dc67615.gz"
+        }
+      },
+      "geometrySha256": "7cebd25eb1b855fc78c708369878766f6a924bb6d7716791beff94b81b96c86d",
+      "appearanceSha256": "aca91c1337df2edfa1258b0167508dabc0928785a803f1885f9ff623b37d9aca",
+      "meshCount": 307,
+      "triangleCount": 103283,
+      "bounds": {
+        "min": [
+          -1.0199989080429077,
+          -0.0006999909877777322,
+          -2.3580000400543213
+        ],
+        "max": [
+          1.0199989080429077,
+          1.1489856243133545,
+          2.372
+        ]
+      },
+      "geometryVariant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "id": "frozen-visual-candidate",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/visual-candidate"
+      },
+      "originalSources": {
+        "treeSha256": "cacc29ba040b55cd7735c8fb15bd66cf6d9c2790ed675f69407998e904a47e8e",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+            "bytes": 18023,
+            "object": "objects/eb/eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+            "bytes": 35137,
+            "object": "objects/80/80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+            "bytes": 81953,
+            "object": "objects/af/af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+        "reference-exterior.js": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+        "reference-cockpit.js": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "d718c507c4e007cda5703f3ca3930f3e5c30c619743366420ec9214a2c231a4e",
+        "rawBytes": 9861308,
+        "template": {
+          "sha256": "0038f11a58d0eb882382192bc9eae205a4f9b09113882b5924adf8c42ed7263d",
+          "bytes": 374121,
+          "object": "objects/00/0038f11a58d0eb882382192bc9eae205a4f9b09113882b5924adf8c42ed7263d.gz"
+        }
+      },
+      "geometrySha256": "57bb28b4444fe141e625dbd7065ec44f32ebc93091ac45aba8220fb93decf217",
+      "appearanceSha256": "48b05073278d9ef3bf94c5bcabcb39f997f0823b93758c45a242f19a3b499e47",
+      "meshCount": 387,
+      "triangleCount": 119320,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3440001010894775
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-57bb28b4444fe141"
+    },
+    {
+      "id": "frozen-window-flat-roof-prototype",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/window-candidate-check",
+        "label": "Experimental flat-roof window prototype; no production use"
+      },
+      "status": "experimental-rejected-prototype-no-production-use",
+      "originalSources": {
+        "treeSha256": "5b17146fe405bfaf2235a16b13cd92a4006079f4d5b3e9568e95a65d4f5c6467",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+            "bytes": 21712,
+            "object": "objects/7e/7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "f63f80192fc6d39c94120b370d2e93bfc2bfa17ab8d1cc21f622618be692b03f",
+            "bytes": 45696,
+            "object": "objects/f6/f63f80192fc6d39c94120b370d2e93bfc2bfa17ab8d1cc21f622618be692b03f.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "f63f80192fc6d39c94120b370d2e93bfc2bfa17ab8d1cc21f622618be692b03f",
+        "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "31645f8375aad7755c036a6bb8c18921e3a646e48e0173161c33eaae94a4ee15",
+        "rawBytes": 10212180,
+        "template": {
+          "sha256": "787b83b33cf39b892841607249852b8b119a17bac74e6c80f3c22f97163041f3",
+          "bytes": 254812,
+          "object": "objects/78/787b83b33cf39b892841607249852b8b119a17bac74e6c80f3c22f97163041f3.gz"
+        }
+      },
+      "geometrySha256": "ac741fe21d27692fa43bd7ef19626c84111ebc4707f43a638e0c1d1c7ee60181",
+      "appearanceSha256": "76fb9350e82a3d4cec6ae2023e8ac681822946cc6e44bfe4dd4e4a864a884547",
+      "meshCount": 255,
+      "triangleCount": 115796,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144994497299194,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-ac741fe21d27692f"
+    },
+    {
+      "id": "crowned-window-2d4bbf7",
+      "origin": {
+        "type": "frozen-preview",
+        "path": "verification/window-candidate-crown-check",
+        "label": "Rejected gently crowned window candidate; preserved for clean NPC adaptation",
+        "commit": "2d4bbf7d691c68a42a91ebab272499989a28df6c",
+        "ref": "2d4bbf7"
+      },
+      "parentCommit": "1bf6034f6089f4ffe8f4c105ff9ad803a0cea6de",
+      "commitLineage": {
+        "commit": "2d4bbf7d691c68a42a91ebab272499989a28df6c",
+        "parentCommit": "1bf6034f6089f4ffe8f4c105ff9ad803a0cea6de",
+        "sourceMatch": "All archived frozen source bytes exactly match this commit"
+      },
+      "status": "rejected-player-candidate-preserved-for-clean-npc-adaptation",
+      "originalSources": {
+        "treeSha256": "63628240902896d1d3cb81db56963b6698209dc1dd1d4638d3758c3ea4a90b8a",
+        "files": {
+          "reference-cockpit.js": {
+            "sha256": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+            "bytes": 21712,
+            "object": "objects/7e/7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04.gz"
+          },
+          "reference-exterior.js": {
+            "sha256": "1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d",
+            "bytes": 46096,
+            "object": "objects/1e/1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d.gz"
+          },
+          "reference-traffic.js": {
+            "sha256": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb",
+            "bytes": 3303,
+            "object": "objects/12/12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb.gz"
+          },
+          "vehicles.js": {
+            "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+            "bytes": 82053,
+            "object": "objects/ab/ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8.gz"
+          },
+          "world.js": {
+            "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+            "bytes": 25736,
+            "object": "objects/bf/bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1.gz"
+          }
+        }
+      },
+      "declaredExportSourceHashes": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+        "reference-exterior.js": "1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d",
+        "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+        "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+      },
+      "originalPreview": {
+        "encoding": "array-objects-v1",
+        "rawSha256": "d15b58f58918160e5cce6baed5e197cc65a96ba37c4e681302b462c506050f64",
+        "rawBytes": 10462458,
+        "template": {
+          "sha256": "248572aba62d9170104f80a74f08ff029036f52329a23b35b385da6a51d35c9b",
+          "bytes": 254826,
+          "object": "objects/24/248572aba62d9170104f80a74f08ff029036f52329a23b35b385da6a51d35c9b.gz"
+        }
+      },
+      "geometrySha256": "482991b20d0c798339f1184214cc735b8d0e6880d6db7b1a85dc82755d0b8189",
+      "appearanceSha256": "1c0f4463a02aced592413e9c56c23ebed3df08be6e00a32e53e2131427348813",
+      "meshCount": 255,
+      "triangleCount": 119024,
+      "bounds": {
+        "min": [
+          -1.0179985761642456,
+          -0.0012000143527984841,
+          -2.3480000495910645
+        ],
+        "max": [
+          1.0179985761642456,
+          1.1144949197769165,
+          2.3170000000474973
+        ]
+      },
+      "geometryVariant": "roadster-482991b20d0c7983"
+    }
+  ],
+  "geometryVariants": [
+    {
+      "id": "roadster-7cebd25eb1b855fc",
+      "geometrySha256": "7cebd25eb1b855fc78c708369878766f6a924bb6d7716791beff94b81b96c86d",
+      "representativeEntry": "released-reference-20f6117",
+      "entries": [
+        "released-reference-20f6117",
+        "frozen-visual-baseline"
+      ],
+      "lods": [
+        {
+          "id": "roadster-7cebd25eb1b855fc-near",
+          "level": "near",
+          "derivedFrom": "released-reference-20f6117",
+          "payload": {
+            "sha256": "103d0275e9756bc7f66c3b2208ac691a2b48c7915b3c3485d19fc012ead143d0",
+            "bytes": 516592,
+            "object": "objects/10/103d0275e9756bc7f66c3b2208ac691a2b48c7915b3c3485d19fc012ead143d0.gz"
+          },
+          "triangleCount": 10150,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.064636
+        },
+        {
+          "id": "roadster-7cebd25eb1b855fc-far",
+          "level": "far",
+          "derivedFrom": "released-reference-20f6117",
+          "payload": {
+            "sha256": "0753b6dc756a640754a52370d2cc50471b21a927788b7e011acc7bf988920c88",
+            "bytes": 243782,
+            "object": "objects/07/0753b6dc756a640754a52370d2cc50471b21a927788b7e011acc7bf988920c88.gz"
+          },
+          "triangleCount": 4546,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1037346
+        }
+      ]
+    },
+    {
+      "id": "roadster-57bb28b4444fe141",
+      "geometrySha256": "57bb28b4444fe141e625dbd7065ec44f32ebc93091ac45aba8220fb93decf217",
+      "representativeEntry": "first-visual-e3ba317",
+      "entries": [
+        "first-visual-e3ba317",
+        "first-visual-rebased-e4313dc",
+        "frozen-visual-candidate"
+      ],
+      "lods": [
+        {
+          "id": "roadster-57bb28b4444fe141-near",
+          "level": "near",
+          "derivedFrom": "first-visual-e3ba317",
+          "payload": {
+            "sha256": "6d222e50b1c7963ba0a59b3c4d672ac185e6e55165006aea8b46f0b6e2b6ea1f",
+            "bytes": 569885,
+            "object": "objects/6d/6d222e50b1c7963ba0a59b3c4d672ac185e6e55165006aea8b46f0b6e2b6ea1f.gz"
+          },
+          "triangleCount": 10597,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.071413
+        },
+        {
+          "id": "roadster-57bb28b4444fe141-far",
+          "level": "far",
+          "derivedFrom": "first-visual-e3ba317",
+          "payload": {
+            "sha256": "e0ee05e6a6855344213b9a361a90d09718e892b3ad2201c42bc6ac005fc9f1c6",
+            "bytes": 267045,
+            "object": "objects/e0/e0ee05e6a6855344213b9a361a90d09718e892b3ad2201c42bc6ac005fc9f1c6.gz"
+          },
+          "triangleCount": 4528,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1021768
+        }
+      ]
+    },
+    {
+      "id": "roadster-2a6a57bb617ec7ae",
+      "geometrySha256": "2a6a57bb617ec7ae2e90744378f113ed9946d71194dde5702ba0de72929c8fda",
+      "representativeEntry": "stage2-8c4dd7c",
+      "entries": [
+        "stage2-8c4dd7c",
+        "frozen-stage2-lamp-clear-check",
+        "frozen-stage2-reference-front-check"
+      ],
+      "lods": [
+        {
+          "id": "roadster-2a6a57bb617ec7ae-near",
+          "level": "near",
+          "derivedFrom": "stage2-8c4dd7c",
+          "payload": {
+            "sha256": "3a4f4bc08ce3987503a9e4cedeb8ebc18fabae025f2cfd9fe33637df4525ea9a",
+            "bytes": 581508,
+            "object": "objects/3a/3a4f4bc08ce3987503a9e4cedeb8ebc18fabae025f2cfd9fe33637df4525ea9a.gz"
+          },
+          "triangleCount": 10951,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-2a6a57bb617ec7ae-far",
+          "level": "far",
+          "derivedFrom": "stage2-8c4dd7c",
+          "payload": {
+            "sha256": "ec5e12ea0a10b198b82eaadb6ad455c353f7d76d535c3f2dbd62d5e94c9acec8",
+            "bytes": 260409,
+            "object": "objects/ec/ec5e12ea0a10b198b82eaadb6ad455c353f7d76d535c3f2dbd62d5e94c9acec8.gz"
+          },
+          "triangleCount": 4576,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1039955
+        }
+      ]
+    },
+    {
+      "id": "roadster-5e3b285ce5ba2af3",
+      "geometrySha256": "5e3b285ce5ba2af3dc415a037468f5542cecb8fd8503554c918aebd741a14145",
+      "representativeEntry": "folded-front-1bf6034",
+      "entries": [
+        "folded-front-1bf6034",
+        "frozen-stage2-reference-front-cleanup",
+        "frozen-stage2-reference-front-cleanup--current-source-export"
+      ],
+      "lods": [
+        {
+          "id": "roadster-5e3b285ce5ba2af3-near",
+          "level": "near",
+          "derivedFrom": "folded-front-1bf6034",
+          "payload": {
+            "sha256": "9228203146d0b7414debef96a47d4d59d85bbafab4c64dff2cc0063cd5f3d4f5",
+            "bytes": 590225,
+            "object": "objects/92/9228203146d0b7414debef96a47d4d59d85bbafab4c64dff2cc0063cd5f3d4f5.gz"
+          },
+          "triangleCount": 11107,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-5e3b285ce5ba2af3-far",
+          "level": "far",
+          "derivedFrom": "folded-front-1bf6034",
+          "payload": {
+            "sha256": "e85563560ec297613dc6e4e8ac843b37c7fc8c4cb169ee5344e503f908d85e05",
+            "bytes": 265100,
+            "object": "objects/e8/e85563560ec297613dc6e4e8ac843b37c7fc8c4cb169ee5344e503f908d85e05.gz"
+          },
+          "triangleCount": 4646,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1140888
+        }
+      ]
+    },
+    {
+      "id": "roadster-d4f50372d73a06a0",
+      "geometrySha256": "d4f50372d73a06a069f267729ef5137450f2c499971a668f243884f4b6699ead",
+      "representativeEntry": "frozen-stage2-direct-check",
+      "entries": [
+        "frozen-stage2-direct-check"
+      ],
+      "lods": [
+        {
+          "id": "roadster-d4f50372d73a06a0-near",
+          "level": "near",
+          "derivedFrom": "frozen-stage2-direct-check",
+          "payload": {
+            "sha256": "092d02b9fad8afe32c441ecec6a1b95516c21a8abe1e5d513dba33dd06880afe",
+            "bytes": 581902,
+            "object": "objects/09/092d02b9fad8afe32c441ecec6a1b95516c21a8abe1e5d513dba33dd06880afe.gz"
+          },
+          "triangleCount": 10953,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-d4f50372d73a06a0-far",
+          "level": "far",
+          "derivedFrom": "frozen-stage2-direct-check",
+          "payload": {
+            "sha256": "22c94ba1d5eb5d9f607594b2d4c465739a5e0e0578d8190e5fcc95f6a6747a48",
+            "bytes": 260733,
+            "object": "objects/22/22c94ba1d5eb5d9f607594b2d4c465739a5e0e0578d8190e5fcc95f6a6747a48.gz"
+          },
+          "triangleCount": 4580,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1039955
+        }
+      ]
+    },
+    {
+      "id": "roadster-cf79c62dc51eda50",
+      "geometrySha256": "cf79c62dc51eda5056e46343f794beff077a264a4db9e92b344a3c06707af451",
+      "representativeEntry": "frozen-stage2-iteration",
+      "entries": [
+        "frozen-stage2-iteration"
+      ],
+      "lods": [
+        {
+          "id": "roadster-cf79c62dc51eda50-near",
+          "level": "near",
+          "derivedFrom": "frozen-stage2-iteration",
+          "payload": {
+            "sha256": "0750205ba881fa6b50d2ad7f81670a6a026059382b02d7174c3d48b33e14f660",
+            "bytes": 581364,
+            "object": "objects/07/0750205ba881fa6b50d2ad7f81670a6a026059382b02d7174c3d48b33e14f660.gz"
+          },
+          "triangleCount": 10943,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-cf79c62dc51eda50-far",
+          "level": "far",
+          "derivedFrom": "frozen-stage2-iteration",
+          "payload": {
+            "sha256": "eacf78c7efa546047577d528f1b7232c37768b83a0018e54caf50e4a4f6cc14d",
+            "bytes": 260733,
+            "object": "objects/ea/eacf78c7efa546047577d528f1b7232c37768b83a0018e54caf50e4a4f6cc14d.gz"
+          },
+          "triangleCount": 4580,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1039955
+        }
+      ]
+    },
+    {
+      "id": "roadster-2392a5ad4099381d",
+      "geometrySha256": "2392a5ad4099381d925bd5509e5653ec5de9beb3274079fc31a35af537be9401",
+      "representativeEntry": "frozen-stage2-lamp-final-check",
+      "entries": [
+        "frozen-stage2-lamp-final-check"
+      ],
+      "lods": [
+        {
+          "id": "roadster-2392a5ad4099381d-near",
+          "level": "near",
+          "derivedFrom": "frozen-stage2-lamp-final-check",
+          "payload": {
+            "sha256": "9bfd0268a2764ccea918a49c1175d9bca0d4b739570aae8dcd6cafae255b07d2",
+            "bytes": 581518,
+            "object": "objects/9b/9bfd0268a2764ccea918a49c1175d9bca0d4b739570aae8dcd6cafae255b07d2.gz"
+          },
+          "triangleCount": 10953,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-2392a5ad4099381d-far",
+          "level": "far",
+          "derivedFrom": "frozen-stage2-lamp-final-check",
+          "payload": {
+            "sha256": "a5d77617a12000b8fc95f7e6e88e2c0bd3b99aa5750fd1656fdda3835b5267fd",
+            "bytes": 259861,
+            "object": "objects/a5/a5d77617a12000b8fc95f7e6e88e2c0bd3b99aa5750fd1656fdda3835b5267fd.gz"
+          },
+          "triangleCount": 4572,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1039955
+        }
+      ]
+    },
+    {
+      "id": "roadster-552a05c475bebda0",
+      "geometrySha256": "552a05c475bebda0fe94f5f43082413ec778b27f1229a20346894a02ca05abf3",
+      "representativeEntry": "frozen-stage2-reference-front-final",
+      "entries": [
+        "frozen-stage2-reference-front-final",
+        "frozen-stage2-reference-front-verified"
+      ],
+      "lods": [
+        {
+          "id": "roadster-552a05c475bebda0-near",
+          "level": "near",
+          "derivedFrom": "frozen-stage2-reference-front-final",
+          "payload": {
+            "sha256": "446b0f0865ef86416070832c43a85361f9b89352b1923a63ec8bffd9772f9d20",
+            "bytes": 592875,
+            "object": "objects/44/446b0f0865ef86416070832c43a85361f9b89352b1923a63ec8bffd9772f9d20.gz"
+          },
+          "triangleCount": 11129,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-552a05c475bebda0-far",
+          "level": "far",
+          "derivedFrom": "frozen-stage2-reference-front-final",
+          "payload": {
+            "sha256": "df133e56426da389cc380e37c16ebf7a1cd675e3a7d04084049bf5a823c4465f",
+            "bytes": 265417,
+            "object": "objects/df/df133e56426da389cc380e37c16ebf7a1cd675e3a7d04084049bf5a823c4465f.gz"
+          },
+          "triangleCount": 4650,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1140888
+        }
+      ]
+    },
+    {
+      "id": "roadster-499feb3a905a9b82",
+      "geometrySha256": "499feb3a905a9b82b67da229dde8270c4bd2a9fc4a8269b6755906b863d273cf",
+      "representativeEntry": "frozen-stage2-reference-front-planar-check",
+      "entries": [
+        "frozen-stage2-reference-front-planar-check"
+      ],
+      "lods": [
+        {
+          "id": "roadster-499feb3a905a9b82-near",
+          "level": "near",
+          "derivedFrom": "frozen-stage2-reference-front-planar-check",
+          "payload": {
+            "sha256": "1b114088e2c38024669375f1667aa83ad91c8114de36db3db2edf02755c83e69",
+            "bytes": 585044,
+            "object": "objects/1b/1b114088e2c38024669375f1667aa83ad91c8114de36db3db2edf02755c83e69.gz"
+          },
+          "triangleCount": 10985,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-499feb3a905a9b82-far",
+          "level": "far",
+          "derivedFrom": "frozen-stage2-reference-front-planar-check",
+          "payload": {
+            "sha256": "2a8652536bf2bb15e7b1877d5fe5f29467401ff0dc8606c2d3f50e0f8051d321",
+            "bytes": 261506,
+            "object": "objects/2a/2a8652536bf2bb15e7b1877d5fe5f29467401ff0dc8606c2d3f50e0f8051d321.gz"
+          },
+          "triangleCount": 4592,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1140888
+        }
+      ]
+    },
+    {
+      "id": "roadster-98c9c96b8637ce33",
+      "geometrySha256": "98c9c96b8637ce33dda084e4afba7702efd31602fe7ca47018cf50ad0f3cc13d",
+      "representativeEntry": "frozen-stage2-reference-front-revised-check",
+      "entries": [
+        "frozen-stage2-reference-front-revised-check"
+      ],
+      "lods": [
+        {
+          "id": "roadster-98c9c96b8637ce33-near",
+          "level": "near",
+          "derivedFrom": "frozen-stage2-reference-front-revised-check",
+          "payload": {
+            "sha256": "5f617b7ea6b60aeddc2e284e9b63b431724cf005a998b2314f152ef5d87bf87c",
+            "bytes": 584443,
+            "object": "objects/5f/5f617b7ea6b60aeddc2e284e9b63b431724cf005a998b2314f152ef5d87bf87c.gz"
+          },
+          "triangleCount": 11015,
+          "drawSubmissions": 6,
+          "maxTriangles": 12000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.0826949,
+          "maxSourceVertexDisplacement": 0.0733612
+        },
+        {
+          "id": "roadster-98c9c96b8637ce33-far",
+          "level": "far",
+          "derivedFrom": "frozen-stage2-reference-front-revised-check",
+          "payload": {
+            "sha256": "88b62181c3181f4db7d2a93652767d6a1071c3c1e22aa5f61403f116a29341af",
+            "bytes": 260857,
+            "object": "objects/88/88b62181c3181f4db7d2a93652767d6a1071c3c1e22aa5f61403f116a29341af.gz"
+          },
+          "triangleCount": 4582,
+          "drawSubmissions": 6,
+          "maxTriangles": 6000,
+          "maxDrawSubmissions": 6,
+          "cellSize": 0.13587037,
+          "maxSourceVertexDisplacement": 0.1039955
+        }
+      ]
+    },
+    {
+      "id": "roadster-ac741fe21d27692f",
+      "geometrySha256": "ac741fe21d27692fa43bd7ef19626c84111ebc4707f43a638e0c1d1c7ee60181",
+      "representativeEntry": "frozen-window-flat-roof-prototype",
+      "entries": [
+        "frozen-window-flat-roof-prototype"
+      ],
+      "lods": [],
+      "lodStatus": "Not generated. Preserve this rejected flat-roof prototype only; no production use."
+    },
+    {
+      "id": "roadster-482991b20d0c7983",
+      "geometrySha256": "482991b20d0c798339f1184214cc735b8d0e6880d6db7b1a85dc82755d0b8189",
+      "representativeEntry": "crowned-window-2d4bbf7",
+      "entries": [
+        "crowned-window-2d4bbf7"
+      ],
+      "lods": [],
+      "lodStatus": "Not generated by archival work. Clean NPC adaptation is a separate authorized task."
+    }
+  ],
+  "previousCatalog": {
+    "filename": "catalog-v2.json",
+    "sha256": "0dcf735de237660211f7020a00ee8c50edb126004f9a84ad00d2adc89d41230a",
+    "object": {
+      "sha256": "0dcf735de237660211f7020a00ee8c50edb126004f9a84ad00d2adc89d41230a",
+      "bytes": 78643,
+      "object": "objects/0d/0dcf735de237660211f7020a00ee8c50edb126004f9a84ad00d2adc89d41230a.gz"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "pass": true,
+  "comparison": "Compact candidate and full local source mirror working-tree runtime files",
+  "baseCommit": "683f6fd15331d619866b8433520b25d36a75d216",
+  "files": [
+    {
+      "path": "src/npc-traffic-assets.js",
+      "bytes": 3720350,
+      "sha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5"
+    },
+    {
+      "path": "src/reference-traffic.js",
+      "bytes": 6413,
+      "sha256": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+    },
+    {
+      "path": "src/physics-main.js",
+      "bytes": 102951,
+      "sha256": "a0293c26aad0425acc31ba7305a03b89f0aa8a8bf54dd3b17aab9d0977459fc0"
+    },
+    {
+      "path": "src/index.html",
+      "bytes": 51240,
+      "sha256": "a235b95ff990e3f671b5dd5487f27ad417d02dd221341527579110dc6f72fd88"
+    },
+    {
+      "path": "bundle_app.py",
+      "bytes": 1815,
+      "sha256": "2f665086717304f04937d0485112de5e23f9dc0863f2db0e4be85b014c52c2e7"
+    },
+    {
+      "path": "index.html",
+      "bytes": 4263901,
+      "sha256": "dbdcec28e0cf2219c75ddeae0a082a1446e3f749d271c56b97a35ca90334cba4"
+    },
+    {
+      "path": "src/reference-cockpit.js",
+      "bytes": 14659,
+      "sha256": "98bceb8683a2a39e2b68bc39539081c1c9359199117b7228a6cc9b2b6610a744"
+    },
+    {
+      "path": "src/reference-exterior.js",
+      "bytes": 31948,
+      "sha256": "4c73e373d22161d17aba0ed74c42cd0ee2f1f32c4afd41e277ad754b735ee4b6"
+    },
+    {
+      "path": "src/vehicles.js",
+      "bytes": 82053,
+      "sha256": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8"
+    },
+    {
+      "path": "src/world.js",
+      "bytes": 25736,
+      "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1"
+    },
+    {
+      "path": "src/highway-traffic.js",
+      "bytes": 12856,
+      "sha256": "432882d6ea8be129f1d2901fb281bb83fc588729c29d699d3ab38d6ca6d71981"
+    },
+    {
+      "path": "src/config.js",
+      "bytes": 34024,
+      "sha256": "d830f09d40defe77859a50759f97452c6f04a38ddb788b505211917016ffd4f0"
+    },
+    {
+      "path": "src/ui-hud.js",
+      "bytes": 54470,
+      "sha256": "92fec919c86ab016f5e3ea896cac2d1f7b3e1cedbf6e31d3912e94b460a36ef2"
+    },
+    {
+      "path": "src/leaderboard.js",
+      "bytes": 24934,
+      "sha256": "037d2f05baeec24fd7539a1fb59957e63c1f36c622d79eb6e78e0f307b408659"
+    },
+    {
+      "path": "src/mobile-controls.js",
+      "bytes": 10448,
+      "sha256": "7361933967e40563c2a5de836b4488643f2820f1c893b970ea78b729b3f8eb20"
+    },
+    {
+      "path": "src/audio.js",
+      "bytes": 13230,
+      "sha256": "d56cf64cb9f4711399eaab29ed5c89ddc67e35b03bab825adcc1420b3b091925"
+    }
+  ],
+  "candidateCommit": "4141bf0c0093aad5227efba9f41e87963d772ef3",
+  "scope": "Historical pre-integration compact/full source-mirror QA; later traffic/scoring changes are intentional"
+}

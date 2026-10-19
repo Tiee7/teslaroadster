@@ -13,18 +13,19 @@ const root = path.resolve(__dirname, '..');
 const runtime = process.argv[2];
 if (!runtime) throw Error('Pass the official Three.js r128 runtime path.');
 const events = {};
-const context = vm.createContext({ console, Math, Float32Array, Uint16Array, Uint32Array,
+const context = vm.createContext({ console, Math, Float32Array, Uint16Array, Uint32Array, atob:text=>Buffer.from(text,'base64').toString('binary'),
   Event: class { constructor(type) { this.type = type; } },
   window: { innerWidth: 1440, innerHeight: 900, addEventListener(type, fn) { (events[type] ||= []).push(fn); }, dispatchEvent(e) { events[e.type]?.forEach(fn => fn(e)); } },
   localStorage: { getItem() { return null; }, setItem() {} },
   document: { createElement() { return { width: 0, height: 0, getContext() { return {}; } }; } }
 });
 vm.runInContext(fs.readFileSync(runtime, 'utf8'), context, { filename: path.basename(runtime) });
-vm.runInContext(`const scene=new THREE.Scene();const currentMap='highway';${['whiteLeatherMat', 'cockpitMat', 'bodyMaterial', 'goldCanopyMaterial', 'carbonMaterial', 'titaniumMaterial'].map(name => `const ${name}=new THREE.MeshStandardMaterial();`).join('')}`, context);
+vm.runInContext(`const scene=new THREE.Scene();const currentMap='highway';const WORLD_SPEED_SCALE=${Number(fs.readFileSync(path.join(root,'src/config.js'),'utf8').match(/const WORLD_SPEED_SCALE = ([\d.]+)/)[1])};${['whiteLeatherMat', 'cockpitMat', 'bodyMaterial', 'goldCanopyMaterial', 'carbonMaterial', 'titaniumMaterial'].map(name => `const ${name}=new THREE.MeshStandardMaterial();`).join('')}`, context);
 const load = file => vm.runInContext(fs.readFileSync(path.join(root, 'src', file), 'utf8'), context, { filename: file });
+load('highway-traffic.js');
 load('vehicles.js');
 vm.runInContext('this.originalChildren=carMeshGroup.children.slice();this.originalYokeParts=yokeWheelGroup.children.slice();', context);
-for (const file of ['reference-exterior.js', 'reference-cockpit.js', 'reference-traffic.js']) load(file);
+for (const file of ['reference-exterior.js', 'reference-cockpit.js', 'npc-traffic-assets.js', 'reference-traffic.js']) load(file);
 vm.runInContext('this.parts={scene,carMeshGroup,COCKPIT_VIEW,yokeWheelGroup,screenDisplay,screenBezel,resizeCockpitDisplay,setCockpitPerspective,setCockpitExteriorDetailsVisible,headlightSpotL,headlightSpotR,activeWingGroup,rearNozzlesGimbalGroup,rearPlumes,liftPlumes,descendPlumes,frontRetroPlumes,rcsPlumes,createTrafficVehicleMesh};hudCombinerMesh.visible=false;', context);
 const p = context.parts, T = context.THREE, api = context.window.RoadsterVehicle;
 assert.equal(T.REVISION, '128', 'Use the same Three.js revision as the production application.');
@@ -65,18 +66,17 @@ for (let cycle = 0; cycle < 3; cycle++) for (const model of ['reference', 'class
   }
 }
 output.assertions.push('Repeated four-way configuration and camera transitions preserve lights, canopy and independent choices.');
-const counts = {}, classicBodies = [], materialIds = new Set();
+// The combined release uses compact archived NPCs. Exhaustive per-style/tail/resource
+// checks live in npc-traffic/runtime-check.cjs; validate integration handles here.
+const counts = {};
 for (let i = 0; i < 36; i++) {
   const car = p.createTrafficVehicleMesh(i); counts[car.userData.model] = (counts[car.userData.model] || 0) + 1;
-  check(car.userData.length === 4.62 && car.userData.height === 1.25 && car.userData.wheels.length === 4, 'NPC gameplay dimensions or wheel handles changed.');
-  if (car.userData.model === 'classic-roadster') classicBodies.push(car.children[0].geometry);
-  car.traverse(o => { if (o.material) materialIds.add(o.material.uuid); });
+  check(car.userData.length === 4.62 && car.userData.height === 1.25 && car.userData.wheels.length === 0, 'Compact NPC collision dimensions or fixed wheel policy changed.');
+  check(context.window.RoadsterTrafficAssets.variants.some(v=>v.id===car.userData.model), 'NPC model missing from compact registry.');
+  check(car.children.length <= 6 && car.children.every(o=>!o.castShadow), 'NPC render cost changed.');
 }
-check(classicBodies.every(g => g === classicBodies[0]), 'NPC classic body geometry is not shared.');
-check(classicBodies[0].attributes.position.count === 41 * 41, 'Unexpected traffic body detail budget.');
-assert.deepEqual(counts, { 'classic-roadster': 12, 'sculpted-track': 12, 'sculpted-touring': 12 });
-output.npcModels = counts; output.npcMaterialCount = materialIds.size;
-output.assertions.push('NPC mix, shared classic body geometry, collision dimensions and four wheel handles retained.');
+output.npcModels = counts; output.npcResources = context.window.RoadsterTrafficAssets.stats();
+output.assertions.push('Compact NPC factory retains collision bounds, bounded batches and no player wheel dependency.');
 const ray = new T.Raycaster();
 const eye = new T.Vector3(0, p.COCKPIT_VIEW.eyeHeight, p.COCKPIT_VIEW.eyeZ);
 const angles = Array.from({ length: 49 }, (_, i) => -1.009 + 2.018 * i / 48);
@@ -137,10 +137,26 @@ for (const model of ['reference', 'classic']) for (const cockpit of ['reference'
 }
 api.setModel('reference'); p.setCockpitPerspective(false); p.setCockpitExteriorDetailsVisible(true); p.scene.updateMatrixWorld(true);
 const rearMeshes = meshes();
+// The new diffuser throats intentionally recess beyond the old flat plate's
+// z>=2.10 assumption. Prove that the replacement is a bounded closed manifold,
+// then require its front skin rather than its deeper back cap or the road.
+const throatBacking=named('referenceClosedDiffuserBacking'),throatGeometry=throatBacking.geometry;
+const throatEdges=new Map(),throatPositions=throatGeometry.attributes.position,throatIndex=throatGeometry.index.array;
+const throatKey=i=>JSON.stringify([throatPositions.getX(i),throatPositions.getY(i),throatPositions.getZ(i)]);
+for(let i=0;i<throatIndex.length;i+=3)for(let k=0;k<3;k++){
+  const a=throatKey(throatIndex[i+k]),b=throatKey(throatIndex[i+(k+1)%3]),key=a<b?a+'|'+b:b+'|'+a,edge=throatEdges.get(key)||{count:0,winding:0};
+  edge.count++;edge.winding+=a<b?1:-1;throatEdges.set(key,edge);
+}
+assert.ok([...throatEdges.values()].every(edge=>edge.count===2&&edge.winding===0),'Recessed diffuser bulkhead has an open/unpaired surface edge.');
+const throatBounds=new T.Box3().setFromObject(throatBacking);
+assert.ok(throatBounds.min.z>=1.92999&&throatBounds.max.z<=2.14751&&throatBounds.max.z>=2.14749,'Diffuser recess exceeds its calibrated depth envelope.');
+output.rearClosedBulkhead={triangles:throatIndex.length/3,pairedEdges:throatEdges.size,unpairedEdges:0,bounds:{min:throatBounds.min.toArray(),max:throatBounds.max.toArray()},minimumPermittedFrontSkinZ:2.00,frontSkinTriangles:throatBacking.userData.surfaceRows*throatBacking.userData.surfaceColumns*2,acceptedDeepFrontSkinHits:[]};
 function rearRay(origin, target, kind, metadata) {
-  ray.set(origin, target.clone().sub(origin).normalize()); ray.near = .01; ray.far = 30;
-  const hit = ray.intersectObjects(rearMeshes, false)[0]; output[kind]++;
-  if (!hit || hit.point.z < 2.1) output.rearGaps.push({ ...metadata, first: hit && label(hit.object), point: hit?.point.toArray() });
+  ray.set(origin, target.clone().sub(origin).normalize()); ray.near=.01; ray.far=30;
+  const hit=ray.intersectObjects(rearMeshes,false)[0]; output[kind]++;
+  const intendedThroat=hit?.object===throatBacking&&hit.point.z>=2.00-1e-5&&Number.isInteger(hit.faceIndex)&&hit.faceIndex<output.rearClosedBulkhead.frontSkinTriangles;
+  if(intendedThroat&&hit.point.z<2.1)output.rearClosedBulkhead.acceptedDeepFrontSkinHits.push({...metadata,faceIndex:hit.faceIndex,point:hit.point.toArray()});
+  if(!hit||(hit.point.z<2.1&&!intendedThroat))output.rearGaps.push({...metadata,first:hit&&label(hit.object),point:hit?.point.toArray()});
 }
 for (const x of [-.78,-.74,-.68,-.60,-.54,-.40,-.32,-.28,-.12,.12,.28,.32,.40,.54,.60,.68,.74,.78]) for (const y of [.215,.23,.26,.3,.34]) rearRay(new T.Vector3(x,y,5),new T.Vector3(x,y,2),'rearDirectRays',{x,y});
 for (const side of [-1,1]) for (const y of [.23,.26,.3,.34]) for (const x of [-.5,-.3,-.1,.1,.3,.5]) rearRay(new T.Vector3(side*3,1.15,8),new T.Vector3(x,y,2.25),'rearQuarterRays',{side,x,y});

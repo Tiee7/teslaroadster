@@ -1,0 +1,160 @@
+{
+  "meshCount": 255,
+  "triangleCount": 119024,
+  "negativeDeterminants": [],
+  "missingNormals": [],
+  "normalWindingDisagreements": [
+    {
+      "name": "reference-yoke-padded-rim",
+      "triangles": 8
+    }
+  ],
+  "sourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "samples": 16,
+  "colorConversion": "Source hex/Color channels sRGB to Blender linear; exposure 0; world strength .2; half-energy softboxes",
+  "exactGeometry": true,
+  "renderedViews": [
+    {
+      "name": "top",
+      "cameraPositionBlender": [
+        0,
+        0,
+        10
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0
+      ],
+      "projection": "ORTHO",
+      "focalLengthMm": null,
+      "orthographicScale": 5.65,
+      "file": "top-raw.png",
+      "label": "Actual mesh top inspection; front points right",
+      "resolution": [
+        1200,
+        760
+      ],
+      "rollDegrees": 90,
+      "shiftX": 0.0,
+      "shiftY": 0.0,
+      "frontPointsRight": true,
+      "projectedLandmarks": {
+        "origin": [
+          600.0,
+          380.0
+        ],
+        "front": [
+          1098.6902475357056,
+          380.000022649765
+        ],
+        "rear": [
+          107.89383351802826,
+          380.0
+        ]
+      },
+      "projectedBodyBounds": {
+        "min": [
+          107.89383351802826,
+          163.78787994384766
+        ],
+        "max": [
+          1098.6902475357056,
+          596.2121087312698
+        ],
+        "size": [
+          990.7964140176773,
+          432.4242287874222
+        ],
+        "center": [
+          603.2920405268669,
+          379.99999433755875
+        ]
+      }
+    },
+    {
+      "name": "side",
+      "cameraPositionBlender": [
+        10,
+        0,
+        1.55
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "ORTHO",
+      "focalLengthMm": null,
+      "orthographicScale": 5.65,
+      "file": "side-raw.png"
+    },
+    {
+      "name": "rear-three-quarter",
+      "cameraPositionBlender": [
+        6.3,
+        -8.8,
+        3.3
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "PERSP",
+      "focalLengthMm": 65.0,
+      "orthographicScale": null,
+      "file": "rear-three-quarter-raw.png"
+    },
+    {
+      "name": "reference-front",
+      "cameraPositionBlender": [
+        0,
+        6,
+        0.8509439655
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.8509439655
+      ],
+      "projection": "PERSP",
+      "focalLengthMm": 56.741477966308594,
+      "orthographicScale": null,
+      "file": "reference-front-raw.png",
+      "label": "Approximate matched reference-front camera; actual photograph camera unknown",
+      "resolution": [
+        1040,
+        585
+      ],
+      "horizontalSensorMm": 36,
+      "shiftY": -0.08041650801897049,
+      "shiftX": -0.015384615398943424,
+      "projectedLandmarks": {
+        "roofCenter": [
+          535.9999990463257,
+          138.1145703792572
+        ],
+        "splitterCenter": [
+          536.0000610351562,
+          530.3148242086172
+        ],
+        "noseLeft": [
+          945.7996654510498,
+          521.3475839048624
+        ],
+        "noseRight": [
+          126.20051085948944,
+          521.3477190211415
+        ]
+      }
+    }
+  ]
+}

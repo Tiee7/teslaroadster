@@ -1,0 +1,43 @@
+{
+  "status": "Local serial integration ready for independent final review; remote writes on hold pending approval",
+  "baseCommit": "683f6fd15331d619866b8433520b25d36a75d216",
+  "payloadSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+  "nodeTests": 370,
+  "luaTests": 24,
+  "check": "pass",
+  "build": "pass",
+  "actualThreeRevision": "128",
+  "actualRuntimeCheck": true,
+  "cpuViews": 90,
+  "styles": 15,
+  "historicalEntries": 20,
+  "geometries": 12,
+  "geometryCacheMaximum": 85,
+  "sharedMaterials": 14,
+  "maximumNearCars": 8,
+  "maximumCars": 52,
+  "shadowMeshesPerCar": 0,
+  "archivalPublication": "Not uploaded; whole-ZIP create_blob failed HTTP400 over16MiB; no remote SHA/tree/commit/ref returned or updated",
+  "archiveZipSha256": "87a846d5708c44c4a957ebb5efda5ff4e0bab2497322c341a2f70951dd58a259",
+  "multipartPlan": "Two local8,839,887-byte binary parts; uploads not attempted pending existing approval",
+  "npcBaseCommit": "4141bf0c0093aad5227efba9f41e87963d772ef3",
+  "gameplayInputCommit": "631dd07312db1abed968df66ac77f8fa3bb1af47",
+  "gameplayCherryPickCommit": "960b327",
+  "canonicalSourceHashFormat": "position-topology-pose-v1",
+  "twoCompleteRegenerationsByteIdentical": true,
+  "all15Style30LodGeometryByteIdenticalAfterFingerprintFix": true,
+  "integratedRealFactoryScenes": {
+    "counts": [
+      20,
+      36,
+      52
+    ],
+    "secondsPerScene": 10,
+    "framesPerSecond": 30,
+    "activeNpcOverlaps": 0,
+    "queuedSpawnCarsAssertHidden": true
+  },
+  "remoteRefsChangedByTask": false,
+  "successfulArchiveUploads": 0,
+  "successfulNpcPushes": 0
+}

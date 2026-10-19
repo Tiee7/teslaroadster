@@ -1,0 +1,123 @@
+{
+  "matchedActualCamerasVerified": [
+    "top",
+    "side",
+    "rear-three-quarter"
+  ],
+  "samples": 16,
+  "originalPhotographsUnretouched": true,
+  "transforms": "Disclosed rectangular crops and uniform Lanczos resize only; no warp, redraw, color adjustment or reconstruction. Native side render pixels copied directly.",
+  "photographCameraLimit": "Photograph cameras, perspective, scale and lighting differ from actual mesh inspection cameras.",
+  "topBodyLengthPx": 720,
+  "sourceTopBodyLengthBasisPx": 294,
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "sourceFilename": "../image(20261019-084438).png",
+      "sourceSha256": "60c90cf00caf9ea3923a84f564a8fa8800fc96e2faa9fefc6908ed4672617ffb",
+      "cropBox": [
+        197,
+        225,
+        511,
+        373
+      ],
+      "uniformScale": 2.4489795918367347,
+      "resizedDimensions": [
+        769,
+        362
+      ],
+      "retouching": false
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "sourceFilename": "verification/window-baseline/top-raw.png",
+      "sourceSha256": "c5162f54967d63b5a61afdf9a5f8fc3310eac8b14518a6d9676ae7eef7265af2",
+      "cropBox": [
+        87,
+        143,
+        1119,
+        617
+      ],
+      "uniformScale": 0.7266881367489024,
+      "resizedDimensions": [
+        750,
+        344
+      ],
+      "retouching": false
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "sourceFilename": "verification/window-candidate-crown-check/top-raw.png",
+      "sourceSha256": "4b7ff13b28639bc728ae63bc2ad91614f9558ff2bfe4726887536d00aca23ee8",
+      "cropBox": [
+        87,
+        143,
+        1119,
+        617
+      ],
+      "uniformScale": 0.7266881367489024,
+      "resizedDimensions": [
+        750,
+        344
+      ],
+      "retouching": false
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "sourceFilename": "../image(20261019-084441).png",
+      "sourceSha256": "a8144848a84b6ad9ffe0a0819708c403a3cbcd959c4dab6af8a7e047ca0ee180",
+      "cropBox": [
+        335,
+        145,
+        1155,
+        365
+      ],
+      "uniformScale": 0.8780487804878049,
+      "resizedDimensions": [
+        720,
+        193
+      ],
+      "retouching": false
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "sourceFilename": "verification/window-baseline/rear-three-quarter-raw.png",
+      "sourceSha256": "aaeb6d32291d5c5aa87b5cca6b79b4904dd5553d55bc4059fe4268a77cc4e9db",
+      "cropBox": [
+        313,
+        237,
+        841,
+        422
+      ],
+      "uniformScale": 1.3636363636363635,
+      "resizedDimensions": [
+        720,
+        252
+      ],
+      "retouching": false
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "sourceFilename": "verification/window-candidate-crown-check/rear-three-quarter-raw.png",
+      "sourceSha256": "2030dac27602b12f61af660f2039d7b7d1767656cf3d3ca0e79f02f7d361daa9",
+      "cropBox": [
+        313,
+        237,
+        841,
+        422
+      ],
+      "uniformScale": 1.3636363636363635,
+      "resizedDimensions": [
+        720,
+        252
+      ],
+      "retouching": false
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> tesla-roadster-simulator@1.1.0 check
+> node scripts/check.mjs
+
+JavaScript syntax, inline bundle, unique DOM IDs, deterministic bundler, and deployment config passed.

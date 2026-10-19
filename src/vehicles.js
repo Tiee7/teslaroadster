@@ -1560,18 +1560,21 @@ function populateTraffic(count) {
   trafficCars = [];
 
   if (currentMap === 'highway') {
+    const drivers = highwayTraffic.createDrivers(count);
+    const player = typeof state === 'object' ? { x: state.x, y: state.y, z: 0, vz: state.vz } : null;
     for (let i = 0; i < count; i++) {
       const laneIdx = i % LANE_COUNT;
       const laneX = LANE_CENTERS[laneIdx];
       const zPos = -420 + (i / count) * 760 + (Math.random() * 14 - 7);
-      const safeZ = (Math.abs(zPos) < 22 && Math.abs(laneX - 2.5) < 4) ? zPos - 40 : zPos;
+      const safeZ = (Math.abs(zPos) < 22 && (!player || player.y < 4) && Math.abs(laneX - (player?.x ?? 2.5)) < 4) ? zPos - 40 : zPos;
 
       const mesh = createTrafficVehicleMesh(i);
       mesh.position.set(laneX, 0, safeZ);
       mesh.rotation.y = 0;
       trafficGroup.add(mesh);
 
-      const spd = 16 + Math.random() * 14; // One cruise speed per driver, retained across wraps.
+      const driver = drivers[i];
+      const spd = driver.desiredSpeed; // Personal band/cruise target survives braking and wraps.
       trafficCars.push({
         mesh,
         mode: 'highway',
@@ -1579,6 +1582,8 @@ function populateTraffic(count) {
         targetX: laneX,
         speed: spd,
         desiredSpeed: spd,
+        driverType: driver.driverType,
+        speedBand: driver.speedBand,
         laneChange: null,
         laneChangeCooldown: 0,
         blockedTime: 0,
@@ -1596,6 +1601,7 @@ function populateTraffic(count) {
         height: mesh.userData.height
       });
     }
+    highwayTraffic.initializeSpeeds(trafficCars, LANE_CENTERS, WORLD_SPEED_SCALE, player);
   } else {
     for (let i = 0; i < count; i++) {
       const isNS = (i % 2 === 0);

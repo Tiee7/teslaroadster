@@ -53,18 +53,19 @@ test('studio sources stay neutral and independent of FPV visibility, steering an
   f.api.setModel('classic');const classic=f.api.getPreviewModel();assert.notEqual(classic,preview);
   f.api.setModel('reference');assert.equal(f.api.getPreviewModel(),preview);
 });
-test('NPC mix reuses the preserved classic and touring/track detail without changing gameplay bounds or wheel handles',()=>{
-  const f=fixture();const counts={};let previousGeometry;
-  for(let i=0;i<36;i++){
-    const car=f.createTrafficVehicleMesh(i);counts[car.userData.model]=(counts[car.userData.model]||0)+1;
-    assert.equal(car.userData.length,4.62);assert.equal(car.userData.height,1.25);assert.equal(car.userData.wheels.length,4);
-    if(car.userData.model==='classic-roadster'){
-      const body=car.children[0];if(previousGeometry)assert.equal(body.geometry,previousGeometry);previousGeometry=body.geometry;
-      assert.equal(body.geometry.attributes.position.count,41*41,'traffic shares a bounded 3200-triangle classic body');
-    }
+test('NPC inventory retains classic/touring/track and every archived geometry with unchanged collision bounds',()=>{
+  const f=fixture(),inventory=f.window.RoadsterTrafficAssets.variants;
+  assert.ok(inventory.length>=15);
+  for(const variant of inventory){
+    const car=f.createTrafficVehicleMesh(0,variant.id);
+    assert.equal(car.userData.model,variant.id);
+    assert.equal(car.userData.length,4.62);assert.equal(car.userData.height,1.25);
+    assert.equal(car.userData.wheels.length,0,'circular baked NPC wheels need no per-frame spin work');
+    assert.equal(car.children.length,6,'shared material roles stay in six batches');
+    assert.ok(car.children.every(part=>!part.castShadow&&!part.receiveShadow));
   }
-  assert.deepEqual(counts,{'classic-roadster':12,'sculpted-track':12,'sculpted-touring':12});
 });
+
 
 
 test('stable frame view synchronization does no recursive scene lookups or repeated cabin copies',()=>{

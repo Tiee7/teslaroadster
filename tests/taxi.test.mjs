@@ -437,8 +437,9 @@ test('integration has no discoverable entry, retains zoom brackets and keeps tax
   assert.match(ranked, /normalizing = true;\s*window\.RoadsterTaxi\?\.stop\(\);\s*resetCar\(\)/);
   assert.doesNotMatch(source, /state\.score\s*[+\-*/]?=|\/api\/|fetch\(/);
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
-  assert.match(physics, /state\.isDestroyed = true;\s*state\.score = 0;\s*state\.carsCleared = 0;\s*state\.blastedCarsCount = 0;\s*window\.RoadsterTaxi\?\.onDestroyed\(\)/);
-  assert.match(physics, /updateSimulation\(dt\);\s*window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*renderer\.render/);
+  assert.match(physics, /state\.isDestroyed = true;\s*RoadsterDrivingScore\.reset\(state\);\s*state\.carsCleared = 0;\s*state\.blastedCarsCount = 0;\s*window\.RoadsterTaxi\?\.onDestroyed\(\)/);
+  assert.match(physics, /updateSimulation\(dt\);\s*window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/);
+
   const bundler = readFileSync(new URL('../bundle_app.py', import.meta.url), 'utf8');
   assert.ok(bundler.indexOf("'vehicles.js'") < bundler.indexOf("'taxi.js'"));
   assert.match(bundler, /'taxi\.js', 'ui-hud\.js'/);

@@ -117,7 +117,7 @@ tesla_roadster_simulator_package/
 ---
 *Generated for 2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulation Deliverable Suite.*
 
-## Persistent leaderboard v1 / 持久排行榜
+## Persistent leaderboard / 持久排行榜
 
 新增自愿参加的 60 秒积分挑战，按地图与物理模式分为四个榜单，每个匿名浏览器身份仅保留各榜最高成绩，公开前 100 名。昵称和成绩会公开，请使用化名。排行榜需要 Vercel Node.js API 和已配置的 Upstash Redis；直接打开单文件仍可进行沙盒模拟，但不能使用在线排行榜。服务端会过滤并验证昵称、请求结构、范围、身份、单次挑战编号、时间及频率，之后才写入榜单。浏览器端游戏无法完全防作弊。
 
@@ -151,7 +151,7 @@ HUD 的中等档保留两侧面板、相机入口、语言/设置/排行榜入�
 
 车内仪表重排为速度、清晰横向剩余气量槽（20% 警戒线、秒数、升数、质量）及接客信息。实体屏和转向舵盘位置微调，适配竖屏宽度，防止仪表被视场边缘、仪表台或转动舵盘遮挡。移除中央后视镜及支架；外部侧镜保持原状。
 
-每次真正撞毁后，本局驾驶积分（含清车分）和接客积分立即清零，撞毁弹窗、右侧遥测与座舱同步显示 0；已提交的历史排行榜成绩保留，正在进行的 60 秒挑战立即取消且不提交。轻微非致毁碰撞不清零；手动重置载客车辆仍按原规则扣除双倍该趟奖励。弹窗在小屏可滚动，修复/换地图按钮可达。
+每次真正撞毁后，本局里程积分和接客积分立即清零，撞毁弹窗、右侧遥测与座舱同步显示 0；已提交的历史排行榜成绩保留，正在进行的 60 秒挑战立即取消且不提交。轻微非致毁碰撞不清零；手动重置载客车辆仍按原规则扣除双倍该趟奖励。弹窗在小屏可滚动，修复/换地图按钮可达。
 
 ## High-speed retro braking / 高速逆喷制动
 
@@ -254,3 +254,11 @@ silence at rest and keeps its separate engine/SFX/music controls. Detailed visib
 reference meshes remain unchanged; two bounded silhouette batches replace 108
 individual shadow casters. Camera/model visibility updates are cached rather than
 repeated on every frame. See [investigation and verification limits](docs/audio-input-latency.md).
+
+## Mixed highway drivers and distance scoring / 高架速度分组与里程积分
+
+Highway drivers now have a stable, randomly sampled personal cruise target: 10% racers at 160–180 km/h, 40% at 70–80, 30% at 80–90 and 20% at 90–120. Small traffic pools use largest-remainder rounding (20 cars: 2/8/6/4, 36 cars: 4/14/11/7, 52 cars: 5/21/16/10), shuffled independently of lane and appearance. Drivers brake for slower vehicles, actively consider useful adjacent gaps, and resume their personal target when clear. Racers react sooner, use shorter but continuous lane changes and shorter cooldowns. Simultaneous merges reserve both lanes; the player and low wrecks retain conservative rear-closing protection. Initial traffic is balanced across all six lanes, with birth speeds reduced when necessary to fit the front braking gap while preserving desired cruise targets, and out-of-view wraps prefer safely available, less-occupied lanes. No in-view lane teleporting or random per-frame speed rerolls are used. City traffic speeds are unchanged.
+
+Both maps now use distance-only driving points: ceil(sum of each forward-travel segment's physical horizontal metres ÷ 10 × its speed multiplier). The highest applicable multiplier is 1.2 at 180 km/h, 1.3 at 200, 1.4 at 240, 1.6 at 300 and 1.8 at 350; bonuses never stack or upgrade earlier distance. Acceleration/braking segments split at exact thresholds; fractional points accumulate before a single display ceiling, avoiding frame-rate inflation. Metres use physical horizontal m/s capped by the calibrated speedometer source (so highway lateral handling cannot inflate mileage), excluding the 1.65 optical/world venue multiplier. Idle, reverse, pure lateral sliding and vertical hovering add no distance. Passing counts remain statistics, while old pass/blast/stunt/helipad/sonic point awards are removed. Passenger fares remain separate. Manual reset, map reset and destruction clear all driving mileage and score; passenger loss/reset rules are unchanged.
+
+The optional 60-second leaderboard uses the explicit distance-v2 protocol and separate versioned board/name keys. Old-rule records are retained untouched and are not mixed with new scores. Reloaded clients submit six cumulative speed-band metre totals; the server recomputes the final score, enforces category-specific maximum-distance/time plausibility, and preserves the existing signed browser identity, server timing, ownership, cancellation, replay and rate-limit checks. Old clients/runs are rejected safely. Client telemetry remains forgeable, so these checks do not make the casual leaderboard cheat-proof. No storage migration or credential changes are required.

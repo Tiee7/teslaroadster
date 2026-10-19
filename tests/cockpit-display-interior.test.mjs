@@ -10,9 +10,12 @@ test('all four exterior/cockpit choices separate the in-cabin screen from the re
   const housing = physical.getObjectByName('interior-screen-housing');
   assert.equal(display.material, f.screenDisplay.material, 'both views share the actual live speed/air/taxi texture');
   assert.notEqual(housing.material, f.screenBezel.material, 'outside housing has a dark cabin finish');
-  const fixedPose = pose(physical);
+  const initialPose = pose(physical);
   for (let cycle = 0; cycle < 3; cycle++) for (const model of ['classic','reference']) for (const cockpit of ['classic','reference']) {
     f.api.setModel(model); f.api.setCockpit(cockpit);
+    const fixedPose = pose(physical);
+    assert.equal(fixedPose[1],model==='reference'?.705:.725);
+    for(const axis of [0,2,3,4,5,6])assert.equal(fixedPose[axis],initialPose[axis]);
     for (const active of [true,false,true,false]) {
       f.setCockpitPerspective(active); f.setCockpitExteriorDetailsVisible(!active);
       assert.equal(visible(f.screenDisplay), active);

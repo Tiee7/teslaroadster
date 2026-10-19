@@ -181,7 +181,6 @@ function applyExplosionBlastToTraffic(bx, by, bz, blastRadius, blastStrength) {
   if (affected > 0 && !state.isDestroyed) {
     state.blastedCarsCount += affected;
     state.carsCleared += affected;
-    state.score += affected * 150;
   }
   return affected;
 }
@@ -270,7 +269,7 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
 function destroyVehicle(reasonKey) {
   if (state.isDestroyed) return;
   state.isDestroyed = true;
-  state.score = 0;
+  RoadsterDrivingScore.reset(state);
   state.carsCleared = 0;
   state.blastedCarsCount = 0;
   window.RoadsterTaxi?.onDestroyed();
@@ -296,7 +295,7 @@ function updateDestroyedScores() {
   // Crash effects and a collision callback may finish after destruction. They
   // must never leave points on the current car or in its visible summary.
   if (state.isDestroyed) {
-    state.score = 0;
+    RoadsterDrivingScore.reset(state);
     state.carsCleared = 0;
     state.blastedCarsCount = 0;
   }
@@ -306,7 +305,7 @@ function updateDestroyedScores() {
     const element = document.getElementById(id), text = String(value);
     if (element.textContent !== text) element.textContent = text;
   };
-  const drivingScore = Math.round(state.score + state.carsCleared * 10);
+  const drivingScore = state.score;
   put('crash-lbl-score', t.crashLblScore);
   put('crash-val-score', drivingScore);
   const passenger = window.RoadsterTaxi?.snapshot();
@@ -599,6 +598,7 @@ function updateSimulation(dt) {
   }
 
   
+  const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
   const isRealMode = (state.physicsMode === 'realistic');
   state.gasMassKg = Number((144.0 * (state.airRemaining / MAX_AIR_SECONDS)).toFixed(1));
   const currentVehicleMass = VEHICLE_MASS_KG + (state.gasMassKg || 0);
@@ -1392,7 +1392,6 @@ function updateSimulation(dt) {
     state.accumulatedRoll += Math.abs(state.vRoll * dt);
     if (state.accumulatedRoll >= Math.PI * 1.85) {
       state.accumulatedRoll = 0;
-      if (!state.isDestroyed) state.score += 500;
       showBanner('stunt', 2.2);
       sound.beep(880, 0.18);
     }
@@ -1439,7 +1438,6 @@ function updateSimulation(dt) {
           }
           if (b.isHelipad && !state.hasTriggeredHelipad) {
             state.hasTriggeredHelipad = true;
-            if (!state.isDestroyed) state.score += 300;
             showBanner('helipad', 2.8);
             sound.speakAlert('helipad', 'Helipad touchdown. Release thrusters to recharge the tank.', '停机坪降落成功，松开喷气后补充高压气瓶。');
           }
@@ -1641,7 +1639,6 @@ function updateSimulation(dt) {
       if (car.highwayPassedThisFrame) {
         if (!state.isDestroyed) {
           state.carsCleared += 1;
-          state.score += state.y > 1.5 ? 25 : 10;
         }
       }
     } else {
@@ -1717,6 +1714,8 @@ function updateSimulation(dt) {
   const bodyRollTilt = !isAirborne ? (-state.steerInput * 0.032) : 0.0;
   roadsterAttitudeGroup.rotation.set(state.pitch + pitchSquat, state.yaw, state.roll + bodyRollTilt);
 
+  RoadsterDrivingScore.segment(state, dt, scoreMotionStart, RoadsterDrivingScore.motion(state, currentMap, isAirborne));
+
   // Calculate Real-Time G-Forces, Tire Screech, Sonic Boom & Yoke Rotation
   const accelMs2 = (state.speed - (state.prevSpeed || state.speed)) / Math.max(0.001, dt);
   state.prevSpeed = state.speed;
@@ -1730,7 +1729,7 @@ function updateSimulation(dt) {
     yokeWheelGroup.rotation.z += (targetYokeRot - yokeWheelGroup.rotation.z) * 14 * dt;
   }
 
-  const totalAirSpeedMs = isAirborne ? Math.hypot(state.speed, state.vy * 0.45) : Math.abs(state.speed);
+  const totalAirSpeedMs = RoadsterDrivingScore.displayedSpeed(state, isAirborne);
   const mph = Math.round(totalAirSpeedMs * 2.23694);
   const kmh = Math.round(totalAirSpeedMs * 3.6);
   const isSupersonic = mph >= 230;
@@ -1827,7 +1826,6 @@ function updateSimulation(dt) {
     // Trigger Supersonic Sonic Boom & Mach Vapor Cone when crossing 230 MPH!
   if (isSupersonic && !state.wasSupersonic) {
     state.wasSupersonic = true;
-    if (!state.isDestroyed) state.score += 400;
     state.cameraShake = Math.max(state.cameraShake, 0.38);
     sound.playSonicBoom();
     sound.speakAlert('sonicboom', 'Supersonic velocity reached. Mach shock cone active.', '已突破超音速音障，激波云环已激活。');
@@ -2164,7 +2162,7 @@ function updateSimulation(dt) {
   document.getElementById('val-vspeed').textContent = `${state.vy >= 0 ? '+' : ''}${state.vy.toFixed(1)} m/s`;
   document.getElementById('val-coords').textContent = `${Math.round(state.x)}, ${Math.round(state.z)}`;
   document.getElementById('val-passed').textContent = state.carsCleared;
-  document.getElementById('val-score').textContent = Math.round(state.score + state.carsCleared * 10);
+  document.getElementById('val-score').textContent = state.score;
   const downforceEl = document.getElementById('val-downforce');
   if (downforceEl) downforceEl.textContent = `${state.downforceN || 0} N`;
   const tireTempEl = document.getElementById('val-tire-temp');
@@ -2180,6 +2178,7 @@ function animate(now) {
   updateSimulation(dt);
   window.RoadsterTaxi?.tick();
   if (state.isDestroyed) updateDestroyedScores();
+  window.RoadsterTrafficAssets?.updateLods(trafficCars, camera.position);
   renderer.render(scene, camera);
 }
 

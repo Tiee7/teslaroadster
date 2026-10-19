@@ -1,0 +1,157 @@
+{
+  "pass": true,
+  "baseMain": "683f6fd15331d619866b8433520b25d36a75d216",
+  "npcAndTrafficInput": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+  "playerInput": "d08aafa936eddd24ecc45f78185d751298b8d22c",
+  "productionFileComparisons": [
+    {
+      "file": "api/end.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "61c176d607c3e6578a9118b782626e108186a2dabc26065e093fa6725fb006f8",
+      "byteIdentical": true
+    },
+    {
+      "file": "api/leaderboard.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "3fd0fe6db6b88ba90d38f95218e99bdcef94c78ad4ca84a284633a009852d1cd",
+      "byteIdentical": true
+    },
+    {
+      "file": "api/run.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "ef51f9f90fd57ee54ec4bb60c13799e4afd63e3afffc6d850260f7bf9e3e5d0e",
+      "byteIdentical": true
+    },
+    {
+      "file": "api/score.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "ed87bfb0a6a4ff6037002fce2d98e3eef9453f9d9a8a970139a9497034402534",
+      "byteIdentical": true
+    },
+    {
+      "file": "lib/leaderboard.mjs",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "47d3c15f04b9a0e0c5807636df61f515c6dd0da52586eb056f345cd7d89e5774",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/audio.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "d56cf64cb9f4711399eaab29ed5c89ddc67e35b03bab825adcc1420b3b091925",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/config.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "b47b479936bc77f31a6a6ec4550d6c78443748892ab4654e85ee280de58eed8f",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/driving-score.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "eb8505724f70f4e7d57e3f2cd90dafe385cb680ebff110649a9485ef18e48b52",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/highway-traffic.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/index.html",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "e53dc124d33b034751ab06bc57e933f26da85e4bff58a72ed661ccac8453c8dd",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/leaderboard.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "b8e421a1c5f766ec2a6432c098997a151276127b29daadf21f83e4ab9d4b64dd",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/mobile-controls.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "7361933967e40563c2a5de836b4488643f2820f1c893b970ea78b729b3f8eb20",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/music.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "45f45db8d9a6c9fd8cfc90164298bd4f5d0c041ad9ec160c3c2b29ae80cf4318",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/npc-traffic-assets.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/physics-main.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "aee35a44f5af9473301acf88723e775722186fc8adf15bb809551ac472071b3c",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/reference-cockpit.js",
+      "input": "d08aafa936eddd24ecc45f78185d751298b8d22c",
+      "sha256": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/reference-exterior.js",
+      "input": "d08aafa936eddd24ecc45f78185d751298b8d22c",
+      "sha256": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/reference-traffic.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/start-screen.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "c6ec9aac19a1e2052da0a39b1a5a90b903f775d3542202084ded140eee003c9b",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/styles.css",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "119dae45d919e686297cfc0c649c14da927dff740253a8e99fb34b3ff924c7e1",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/taxi.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "b0139281ef71c873b1737f1bb08e41bf92d5abe9411ff363d87363bd1e5aab98",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/ui-hud.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "2aaeae96925c718ef5656cafbe7bc6f64b2a2ea15ec9f5c886750a356f56d76b",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/vehicles.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "537415811139200c3c49eea1d216b862e205a1a4e7c41d62b01777f14e80f9ca",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/world.js",
+      "input": "68198cd54b2fe67eaeb3771d740527b8672832fd",
+      "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "byteIdentical": true
+    }
+  ],
+  "npcAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+  "bundleSha256": "8d19c9ecd31bcef30049178547524a405fca21db220b1cb043c9fd96d0e65c39",
+  "publicBundleMatches": true,
+  "historicalQaNote": "Original player frozen audits remain unchanged and describe the standalone player branch. Combined release uses fresh combined-release runtime results; no historical NPC or683-only scope assertion was treated as a combined pass.",
+  "archive": "Immutable original ZIP and two parts preserved locally. No archive uploads succeeded or are included in runtime publication."
+}

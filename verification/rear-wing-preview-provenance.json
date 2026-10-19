@@ -1,0 +1,2850 @@
+{
+  "manifest.json": {
+    "generatedAt": "2026-10-19T12:32:32.147Z",
+    "label": "Actual model preview",
+    "renderer": "Offline Blender Cycles CPU studio; exact exported canonical Three.js preview geometry, not a browser/WebGL screenshot",
+    "runtimeRevision": "128",
+    "model": "reference",
+    "cockpit": "reference",
+    "sources": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y); front is Three -Z",
+    "boundsThree": {
+      "min": [
+        -1.0179975032806396,
+        -0.0012000143527984841,
+        -2.187999963760376
+      ],
+      "max": [
+        1.0179975032806396,
+        1.1144949197769165,
+        2.3249999964237213
+      ]
+    },
+    "meshCount": 255,
+    "triangleCount": 121376,
+    "materials": [
+      {
+        "id": "D0A1FEB0-F186-4EBF-8B9B-488AAFC165ED",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.06666666666666667,
+          0.08235294117647059,
+          0.09411764705882353
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.12,
+        "roughness": 0.72,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "356F15D6-7E6D-42AC-865E-3579B2095C0C",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.7764705882352941,
+          0.8,
+          0.807843137254902
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.68,
+        "roughness": 0.28,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "A0E99EB7-5BCE-4A77-9178-6A8873E21AC5",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.1411764705882353,
+          0.1568627450980392,
+          0.16470588235294117
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.03,
+        "roughness": 0.84,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "46A05D50-B646-420A-B2CF-F2A31AAD4B24",
+        "name": "MeshPhysicalMaterial",
+        "type": "MeshPhysicalMaterial",
+        "color": [
+          0.9333333333333333,
+          0.9490196078431372,
+          0.9686274509803922
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.55,
+        "roughness": 0.15,
+        "clearcoat": 1,
+        "clearcoatRoughness": 0.16,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "1C0165AA-5BE9-46AC-A278-19779475DB11",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.047058823529411764,
+          0.058823529411764705,
+          0.08627450980392157
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.55,
+        "roughness": 0.32,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "14F91A37-EC23-44D3-9D89-A96A8546BCFA",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.9372549019607843,
+          0.26666666666666666,
+          0.26666666666666666
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.6,
+        "roughness": 0.3,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "5E7A0D9D-1AC3-42B6-AC25-FFFDBD1A2D15",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          1,
+          1,
+          1
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "D1750479-741B-4739-BBC8-BA7EA720A414",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.5803921568627451,
+          0.6392156862745098,
+          0.7215686274509804
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0.85,
+        "roughness": 0.35,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "05711DF8-EBB6-4802-A936-5CAF7EAB0A12",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.058823529411764705,
+          0.09019607843137255,
+          0.16470588235294117
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.5,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "55AF162D-1C57-4487-8C7E-468C450B98A8",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.5803921568627451,
+          0.6392156862745098,
+          0.7215686274509804
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.95,
+        "roughness": 0.14,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "E91BC56B-D801-46DB-BFB3-452FBC754E2A",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.06666666666666667,
+          0.09411764705882353,
+          0.15294117647058825
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "1465A125-A247-4853-90C3-819E224B7D5C",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.08235294117647059,
+          0.09019607843137255,
+          0.09803921568627451
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.03,
+        "roughness": 0.82,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "06BC83E5-C455-4D65-89E3-5224E1868331",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.12549019607843137,
+          0.13725490196078433,
+          0.14901960784313725
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.65,
+        "roughness": 0.32,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "DF15142D-FBE1-418F-8CEE-DD84D16ABA62",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.788235294117647,
+          0.807843137254902,
+          0.8156862745098039
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.88,
+        "roughness": 0.24,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "DA84CC02-7AC3-42A1-A18F-0733E4358260",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.7254901960784313,
+          0.11372549019607843,
+          0.1411764705882353
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.48,
+        "roughness": 0.29,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "860F20A2-72FB-435F-986B-F211BBC3EF93",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.06666666666666667,
+          0.09411764705882353,
+          0.15294117647058825
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "10915407-180E-43DF-A70A-44EC1340D93A",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.06666666666666667,
+          0.09411764705882353,
+          0.15294117647058825
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "167DC26E-6246-4212-84C9-8BFE960CCCA7",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.06666666666666667,
+          0.09411764705882353,
+          0.15294117647058825
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "D34DAA88-D8DF-4CEB-84ED-BBE14DBAEB2C",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.6392156862745098,
+          0.6588235294117647,
+          0.6666666666666666
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.91,
+        "roughness": 0.26,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "597F9661-F0C3-4FB5-BA68-DCE950FA8E74",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.20392156862745098,
+          0.2196078431372549,
+          0.22745098039215686
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.58,
+        "roughness": 0.4,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "7159C36A-FF3E-4BE0-84D4-0AA836488553",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.058823529411764705,
+          0.09019607843137255,
+          0.16470588235294117
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.55,
+        "roughness": 0.45,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "083067B9-87E0-40FA-93BE-976A7802F2AC",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          1,
+          1,
+          1
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "8A37F143-43BD-44BD-94D8-DCF4EC12493F",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.011764705882352941,
+          0.0196078431372549,
+          0.027450980392156862
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.08,
+        "roughness": 0.58,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "1666A07E-0C06-4141-8EF9-C4983FB68EC6",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.10588235294117647,
+          0.13725490196078433,
+          0.1568627450980392
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "EADDB311-DB46-46BD-B551-FE764EA8B5EC",
+        "name": "MeshStandardMaterial",
+        "type": "MeshStandardMaterial",
+        "color": [
+          0.03137254901960784,
+          0.047058823529411764,
+          0.06274509803921569
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.38,
+        "roughness": 0.28,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "9EFCD384-33EB-4A22-85AA-8BC5E17A0397",
+        "name": "MeshPhysicalMaterial",
+        "type": "MeshPhysicalMaterial",
+        "color": [
+          0.03137254901960784,
+          0.054901960784313725,
+          0.07450980392156863
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.37,
+        "roughness": 0.12,
+        "clearcoat": 1,
+        "clearcoatRoughness": 0.08,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "76A149E9-19A2-4273-AC5B-B94C0CCA8939",
+        "name": "MeshPhysicalMaterial",
+        "type": "MeshPhysicalMaterial",
+        "color": [
+          0.06274509803921569,
+          0.09803921568627451,
+          0.12156862745098039
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.4,
+        "roughness": 0.15,
+        "clearcoat": 1,
+        "clearcoatRoughness": 0.09,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "D316B262-5BC7-47E9-B43C-66B128C168CC",
+        "name": "MeshPhysicalMaterial",
+        "type": "MeshPhysicalMaterial",
+        "color": [
+          0.08235294117647059,
+          0.13725490196078433,
+          0.17254901960784313
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.35,
+        "roughness": 0.17,
+        "clearcoat": 1,
+        "clearcoatRoughness": 0,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "BC0C6700-8F8C-4581-B8E6-0D9DAB482B4A",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.9725490196078431,
+          0.9882352941176471,
+          1
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "599D8584-A053-4A4E-B3F9-6F536CCA3F2B",
+        "name": "MeshPhysicalMaterial",
+        "type": "MeshPhysicalMaterial",
+        "color": [
+          0.08235294117647059,
+          0.13725490196078433,
+          0.17254901960784313
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "metalness": 0.35,
+        "roughness": 0.17,
+        "clearcoat": 1,
+        "clearcoatRoughness": 0,
+        "side": 0,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "2869DAF4-F747-467C-8BDF-BA0D97F20D3D",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.8,
+          0.0784313725490196,
+          0.21176470588235294
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      },
+      {
+        "id": "551E8A67-CEFA-431F-84E9-5FBA15218F2F",
+        "name": "MeshBasicMaterial",
+        "type": "MeshBasicMaterial",
+        "color": [
+          0.23137254901960785,
+          0.0196078431372549,
+          0.050980392156862744
+        ],
+        "emissiveIntensity": 0,
+        "metalness": 0,
+        "roughness": 0.5,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.1,
+        "side": 2,
+        "transparent": false,
+        "opacity": 1,
+        "blending": 1,
+        "colorWrite": true,
+        "depthWrite": true
+      }
+    ],
+    "skipped": [
+      {
+        "name": "referenceFrontIndicator-1",
+        "reason": "transparent effects excluded from neutral preview"
+      },
+      {
+        "name": "referenceFrontIndicator1",
+        "reason": "transparent effects excluded from neutral preview"
+      },
+      {
+        "name": "referenceRearIndicator-1",
+        "reason": "transparent effects excluded from neutral preview"
+      },
+      {
+        "name": "referenceReverseLamp-1",
+        "reason": "transparent effects excluded from neutral preview"
+      },
+      {
+        "name": "referenceRearIndicator1",
+        "reason": "transparent effects excluded from neutral preview"
+      },
+      {
+        "name": "referenceReverseLamp1",
+        "reason": "transparent effects excluded from neutral preview"
+      }
+    ]
+  },
+  "render-audit.json": {
+    "meshCount": 255,
+    "triangleCount": 121376,
+    "negativeDeterminants": [],
+    "missingNormals": [],
+    "normalWindingDisagreements": [
+      {
+        "name": "reference-yoke-padded-rim",
+        "triangles": 8
+      }
+    ],
+    "sourceHashes": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "renderer": "Blender 4.3.2 Cycles CPU",
+    "samples": 16,
+    "colorConversion": "Source hex/Color channels sRGB to Blender linear; exposure 0; world strength .2; half-energy softboxes",
+    "exactGeometry": true,
+    "renderedViews": [
+      {
+        "name": "rear-inspection-three-quarter",
+        "cameraPositionBlender": [
+          4.6,
+          -7,
+          1.65
+        ],
+        "targetBlender": [
+          0,
+          -0.65,
+          0.54
+        ],
+        "projection": "PERSP",
+        "focalLengthMm": 65.0,
+        "orthographicScale": null,
+        "file": "rear-inspection-three-quarter-raw.png",
+        "label": "Optional actual-mesh inspection camera; not a photograph camera match",
+        "resolution": [
+          1200,
+          760
+        ],
+        "shiftX": 0.0,
+        "shiftY": 0.0
+      },
+      {
+        "name": "windshield-inspection",
+        "cameraPositionBlender": [
+          -3.8,
+          5.8,
+          2.7
+        ],
+        "targetBlender": [
+          0,
+          0.65,
+          0.8
+        ],
+        "projection": "PERSP",
+        "focalLengthMm": 85.0,
+        "orthographicScale": null,
+        "file": "windshield-inspection-raw.png",
+        "label": "Optional actual-mesh inspection camera; not a photograph camera match",
+        "resolution": [
+          1200,
+          760
+        ],
+        "shiftX": 0.0,
+        "shiftY": 0.0
+      },
+      {
+        "name": "rear-inspection-direct",
+        "cameraPositionBlender": [
+          0,
+          -7,
+          0.75
+        ],
+        "targetBlender": [
+          0,
+          -1.4,
+          0.5
+        ],
+        "projection": "PERSP",
+        "focalLengthMm": 65.0,
+        "orthographicScale": null,
+        "file": "rear-inspection-direct-raw.png",
+        "label": "Optional actual-mesh inspection camera; not a photograph camera match",
+        "resolution": [
+          1200,
+          760
+        ],
+        "shiftX": 0.0,
+        "shiftY": 0.0
+      }
+    ],
+    "inspectionLighting": {
+      "enabled": true,
+      "name": "Optional gentle low rear inspection fill",
+      "positionBlender": [
+        2.2,
+        -5.5,
+        0.9
+      ],
+      "targetBlender": [
+        0,
+        -2.1,
+        0.25
+      ],
+      "energyWatts": 85,
+      "sizeMeters": 2,
+      "sizeYMeters": 1
+    }
+  },
+  "inspection-comparison-provenance.json": {
+    "matchedActualCamerasVerified": true,
+    "matchedInspectionLighting": {
+      "enabled": true,
+      "name": "Optional gentle low rear inspection fill",
+      "positionBlender": [
+        2.2,
+        -5.5,
+        0.9
+      ],
+      "targetBlender": [
+        0,
+        -2.1,
+        0.25
+      ],
+      "energyWatts": 85,
+      "sizeMeters": 2,
+      "sizeYMeters": 1
+    },
+    "samples": 16,
+    "nativeBeforeAfterPixelsResizedOrRetouched": false,
+    "referenceContextTransforms": [
+      {
+        "row": 0,
+        "column": 0,
+        "file": "/workspace/scratch/cb38b7731a0f/image(20261019-084440).png",
+        "sha256": "b68a7b04c864346dcde49fdb7e6a112ab82d860213ac76bf1b4c7d627453b44c",
+        "originalDimensions": [
+          1688,
+          1060
+        ],
+        "crop": null,
+        "uniformScale": 0.4265402843601896,
+        "resizedDimensions": [
+          720,
+          452
+        ]
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "file": "verification/rear-wing-baseline-check/rear-inspection-direct-raw.png",
+        "sha256": "9f27ecca9232ad2ac7f64d476151197311aa7801838857880477b21ee21a381b",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "file": "verification/rear-wing-candidate-final/rear-inspection-direct-raw.png",
+        "sha256": "19d160fcb64ea00294e7ee553cb9551dedcf53d1cc8af3e915a10b8cb8c4fe0d",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "file": "/workspace/scratch/cb38b7731a0f/image(20261019-084441).png",
+        "sha256": "a8144848a84b6ad9ffe0a0819708c403a3cbcd959c4dab6af8a7e047ca0ee180",
+        "originalDimensions": [
+          1277,
+          756
+        ],
+        "crop": null,
+        "uniformScale": 0.5638214565387627,
+        "resizedDimensions": [
+          720,
+          426
+        ]
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "file": "verification/rear-wing-baseline-check/rear-inspection-three-quarter-raw.png",
+        "sha256": "3b36dcf5e223b145fec1b4ecfc4c1607a3712c117d50ac6009e316e1f375da39",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "file": "verification/rear-wing-candidate-final/rear-inspection-three-quarter-raw.png",
+        "sha256": "150eb36c81dbca010aed1ceef7d02ef27f0e95b84fdac64879ab777b6f33b573",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "file": "/workspace/scratch/cb38b7731a0f/image(20261019-113143).png",
+        "sha256": "b34e21b396ada3a38ea61b342d46eb8d9b27bb6c3cc5cc59b2d8c99c869574e1",
+        "originalDimensions": [
+          550,
+          688
+        ],
+        "crop": null,
+        "uniformScale": 0.6627906976744186,
+        "resizedDimensions": [
+          365,
+          456
+        ]
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "file": "verification/rear-wing-baseline-check/rear-inspection-direct-raw.png",
+        "sha256": "9f27ecca9232ad2ac7f64d476151197311aa7801838857880477b21ee21a381b",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "file": "verification/rear-wing-candidate-final/rear-inspection-direct-raw.png",
+        "sha256": "19d160fcb64ea00294e7ee553cb9551dedcf53d1cc8af3e915a10b8cb8c4fe0d",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "file": "/workspace/scratch/cb38b7731a0f/image(20261019-113142).png",
+        "sha256": "5266913724d50d595bf3393d3d06f44cb8d34b5ace48b19344c498179190c3b9",
+        "originalDimensions": [
+          550,
+          688
+        ],
+        "crop": [
+          44,
+          296,
+          500,
+          432
+        ],
+        "uniformScale": 1.5789473684210527,
+        "resizedDimensions": [
+          720,
+          215
+        ]
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "file": "verification/rear-wing-baseline-check/windshield-inspection-raw.png",
+        "sha256": "f3b893b05e908e67e33006eb433f54fa67f9d1b6cea5a5f26c474382f71f70b9",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "file": "verification/rear-wing-candidate-final/windshield-inspection-raw.png",
+        "sha256": "3128ca662a9254bf322789a02c49b3a1c7ff96282d7c8cac49e667af56fdc398",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": null,
+        "uniformScale": 0.6,
+        "resizedDimensions": [
+          720,
+          456
+        ]
+      }
+    ],
+    "photosMirroredReshapedOrRetouched": false,
+    "constructionPose": {
+      "groupY": 0.85,
+      "groupRotationX": 0
+    },
+    "baselineSourceHashes": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "886178971f527fa1e12a88e9391e84bee571211c75c1ee5633485732dd57a489",
+      "reference-cockpit.js": "9dc593f32e3eb60f9bcce6971ff7b362b27b4414e6c7d27d4cb27c270e5c3ac0",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "candidateSourceHashes": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    }
+  },
+  "user-sheets-crop-projection-provenance.json": {
+    "rearSheetTransforms": [
+      {
+        "label": "\u53c2\u8003",
+        "file": "/workspace/scratch/cb38b7731a0f/image(20261019-084441).png",
+        "sha256": "a8144848a84b6ad9ffe0a0819708c403a3cbcd959c4dab6af8a7e047ca0ee180",
+        "originalDimensions": [
+          1277,
+          756
+        ],
+        "crop": [
+          0,
+          160,
+          1205,
+          720
+        ],
+        "uniformScaleXY": 0.5726141078838174,
+        "pasteTranslation": [
+          15,
+          131.33609958506224
+        ],
+        "inverseAffine": [
+          1.746376811594203,
+          0,
+          -26.195652173913047,
+          0,
+          1.746376811594203,
+          -229.36231884057972
+        ]
+      },
+      {
+        "label": "\u4e0a\u4e00\u7248",
+        "file": "verification/rear-wing-baseline-check/rear-inspection-three-quarter-raw.png",
+        "sha256": "3b36dcf5e223b145fec1b4ecfc4c1607a3712c117d50ac6009e316e1f375da39",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": [
+          70,
+          190,
+          1155,
+          640
+        ],
+        "uniformScaleXY": 0.6359447004608295,
+        "pasteTranslation": [
+          735,
+          165.82488479262673
+        ],
+        "inverseAffine": [
+          1.572463768115942,
+          0,
+          -1155.7608695652173,
+          0,
+          1.572463768115942,
+          -260.7536231884058
+        ]
+      },
+      {
+        "label": "\u65b0\u5019\u9009",
+        "file": "verification/rear-wing-candidate-final/rear-inspection-three-quarter-raw.png",
+        "sha256": "150eb36c81dbca010aed1ceef7d02ef27f0e95b84fdac64879ab777b6f33b573",
+        "originalDimensions": [
+          1200,
+          760
+        ],
+        "crop": [
+          70,
+          190,
+          1155,
+          640
+        ],
+        "uniformScaleXY": 0.6359447004608295,
+        "pasteTranslation": [
+          1455,
+          165.82488479262673
+        ],
+        "inverseAffine": [
+          1.572463768115942,
+          0,
+          -2287.9347826086955,
+          0,
+          1.572463768115942,
+          -260.7536231884058
+        ]
+      }
+    ],
+    "rearPhotoMirroredReshapedOrRetouched": false,
+    "paneCropBoth": [
+      255,
+      180,
+      910,
+      555
+    ],
+    "paneUniformScaleXY": 1.4,
+    "paneProjectionSource": "front-pane-boundary-projection.json",
+    "paneAnnotation": "Blue line on candidate sheet only traces the full exact actual front-pane boundary mesh vertices projected through the unchanged inspection camera.",
+    "frontPaneScope": "Front windshield only; roof/side-window design retained. No whole-canopy flattening claim.",
+    "rawRenderPixelsPreservedSeparately": true,
+    "samples": 16,
+    "cameraAndLightingEqualityProof": "inspection-comparison-provenance.json"
+  },
+  "front-pane-boundary-projection.json": {
+    "scope": "Exact FRONT pane full perimeter samples from actual final mesh. Roof/rear and side panes excluded.",
+    "cameraPositionThree": [
+      -3.8,
+      2.7,
+      -5.8
+    ],
+    "cameraTargetThree": [
+      0,
+      0.8,
+      -0.65
+    ],
+    "lensMm": 85,
+    "horizontalSensorMm": 36,
+    "resolution": [
+      1200,
+      760
+    ],
+    "frontPaneRows": [
+      0,
+      26
+    ],
+    "frontPaneColumns": [
+      0,
+      24
+    ],
+    "corners": [
+      {
+        "vertexIndex": 0,
+        "pointThree": [
+          -0.6150000095367432,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          716.6717908973875,
+          517.5345257708184
+        ]
+      },
+      {
+        "vertexIndex": 24,
+        "pointThree": [
+          0.6150000095367432,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          288.115203800958,
+          415.7909797838656
+        ]
+      },
+      {
+        "vertexIndex": 674,
+        "pointThree": [
+          0.49300000071525574,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          510.4691986510226,
+          218.9943382988789
+        ]
+      },
+      {
+        "vertexIndex": 650,
+        "pointThree": [
+          -0.49300000071525574,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          846.3085871503511,
+          277.32131309602033
+        ]
+      }
+    ],
+    "boundarySamples": [
+      {
+        "vertexIndex": 0,
+        "pointThree": [
+          -0.6150000095367432,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          716.6717908973875,
+          517.5345257708184
+        ]
+      },
+      {
+        "vertexIndex": 1,
+        "pointThree": [
+          -0.5637500286102295,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          696.839349681697,
+          512.8261092965008
+        ]
+      },
+      {
+        "vertexIndex": 2,
+        "pointThree": [
+          -0.512499988079071,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          677.1968041694129,
+          508.16277592862474
+        ]
+      },
+      {
+        "vertexIndex": 3,
+        "pointThree": [
+          -0.4612500071525574,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          657.7414850156399,
+          503.5438919384753
+        ]
+      },
+      {
+        "vertexIndex": 4,
+        "pointThree": [
+          -0.4099999964237213,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          638.4706945873065,
+          498.96881688144697
+        ]
+      },
+      {
+        "vertexIndex": 5,
+        "pointThree": [
+          -0.35874998569488525,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          619.3818310121676,
+          494.43693304749524
+        ]
+      },
+      {
+        "vertexIndex": 6,
+        "pointThree": [
+          -0.3075000047683716,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          600.4723411037758,
+          489.94763428506286
+        ]
+      },
+      {
+        "vertexIndex": 7,
+        "pointThree": [
+          -0.2562499940395355,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          581.7396867012695,
+          485.50031800981395
+        ]
+      },
+      {
+        "vertexIndex": 8,
+        "pointThree": [
+          -0.20499999821186066,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          563.1814148980517,
+          481.09440187761317
+        ]
+      },
+      {
+        "vertexIndex": 9,
+        "pointThree": [
+          -0.1537500023841858,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          544.7950966583032,
+          476.72930921148253
+        ]
+      },
+      {
+        "vertexIndex": 10,
+        "pointThree": [
+          -0.10249999910593033,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          526.5783504867529,
+          472.4044746210373
+        ]
+      },
+      {
+        "vertexIndex": 11,
+        "pointThree": [
+          -0.051249999552965164,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          508.5288451929828,
+          468.11934465875953
+        ]
+      },
+      {
+        "vertexIndex": 12,
+        "pointThree": [
+          0,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          490.6442869459716,
+          463.8733747466189
+        ]
+      },
+      {
+        "vertexIndex": 13,
+        "pointThree": [
+          0.051249999552965164,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          472.92242495485067,
+          459.6660305247405
+        ]
+      },
+      {
+        "vertexIndex": 14,
+        "pointThree": [
+          0.10249999910593033,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          455.3610491943259,
+          455.4967873113978
+        ]
+      },
+      {
+        "vertexIndex": 15,
+        "pointThree": [
+          0.1537500023841858,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          437.95798822662,
+          451.36512958591965
+        ]
+      },
+      {
+        "vertexIndex": 16,
+        "pointThree": [
+          0.20499999821186066,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          420.7111146039631,
+          447.2705522712951
+        ]
+      },
+      {
+        "vertexIndex": 17,
+        "pointThree": [
+          0.2562499940395355,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          403.618332642417,
+          443.2125578315591
+        ]
+      },
+      {
+        "vertexIndex": 18,
+        "pointThree": [
+          0.3075000047683716,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          386.67758153170865,
+          439.19065701009765
+        ]
+      },
+      {
+        "vertexIndex": 19,
+        "pointThree": [
+          0.35874998569488525,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          369.88685648787737,
+          435.20437385149364
+        ]
+      },
+      {
+        "vertexIndex": 20,
+        "pointThree": [
+          0.4099999964237213,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          353.2441540962241,
+          431.25323272540624
+        ]
+      },
+      {
+        "vertexIndex": 21,
+        "pointThree": [
+          0.4612500071525574,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          336.747535104018,
+          427.3367732341767
+        ]
+      },
+      {
+        "vertexIndex": 22,
+        "pointThree": [
+          0.512499988079071,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          320.3950939854117,
+          423.4545429872396
+        ]
+      },
+      {
+        "vertexIndex": 23,
+        "pointThree": [
+          0.5637500286102295,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          304.1849206700671,
+          419.6060885151231
+        ]
+      },
+      {
+        "vertexIndex": 24,
+        "pointThree": [
+          0.6150000095367432,
+          0.7020000219345093,
+          -1.065000057220459
+        ],
+        "pixel": [
+          288.115203800958,
+          415.7909797838656
+        ]
+      },
+      {
+        "vertexIndex": 49,
+        "pointThree": [
+          0.6120531558990479,
+          0.7157387733459473,
+          -1.038317322731018
+        ],
+        "pixel": [
+          296.45444787698636,
+          407.8261300561396
+        ]
+      },
+      {
+        "vertexIndex": 74,
+        "pointThree": [
+          0.6089762449264526,
+          0.7294775247573853,
+          -1.0116345882415771
+        ],
+        "pixel": [
+          304.79732271200123,
+          399.9060187280975
+        ]
+      },
+      {
+        "vertexIndex": 99,
+        "pointThree": [
+          0.6057685613632202,
+          0.7432162165641785,
+          -0.984951913356781
+        ],
+        "pixel": [
+          313.1442849571256,
+          392.0301717746755
+        ]
+      },
+      {
+        "vertexIndex": 124,
+        "pointThree": [
+          0.6024296283721924,
+          0.7569549679756165,
+          -0.9582692384719849
+        ],
+        "pixel": [
+          321.495746427432,
+          384.1980204198218
+        ]
+      },
+      {
+        "vertexIndex": 149,
+        "pointThree": [
+          0.5989586710929871,
+          0.7706937193870544,
+          -0.9315865635871887
+        ],
+        "pixel": [
+          329.8521954581069,
+          376.4091004047091
+        ]
+      },
+      {
+        "vertexIndex": 174,
+        "pointThree": [
+          0.595355212688446,
+          0.7844324707984924,
+          -0.9049038290977478
+        ],
+        "pixel": [
+          338.2140413058064,
+          368.66290241791467
+        ]
+      },
+      {
+        "vertexIndex": 199,
+        "pointThree": [
+          0.591618537902832,
+          0.7981712222099304,
+          -0.8782211542129517
+        ],
+        "pixel": [
+          346.5817165388082,
+          360.9589562170008
+        ]
+      },
+      {
+        "vertexIndex": 224,
+        "pointThree": [
+          0.587748110294342,
+          0.8119099736213684,
+          -0.8515384793281555
+        ],
+        "pixel": [
+          354.9556458433129,
+          353.29676762734664
+        ]
+      },
+      {
+        "vertexIndex": 249,
+        "pointThree": [
+          0.5837433338165283,
+          0.8256487250328064,
+          -0.8248557448387146
+        ],
+        "pixel": [
+          363.3362706186546,
+          345.6758522542323
+        ]
+      },
+      {
+        "vertexIndex": 274,
+        "pointThree": [
+          0.5795097351074219,
+          0.8393874764442444,
+          -0.7981730699539185
+        ],
+        "pixel": [
+          371.75331553049057,
+          338.1019537610484
+        ]
+      },
+      {
+        "vertexIndex": 299,
+        "pointThree": [
+          0.5748939514160156,
+          0.8531262278556824,
+          -0.7714903950691223
+        ],
+        "pixel": [
+          380.2549780150141,
+          330.584369126034
+        ]
+      },
+      {
+        "vertexIndex": 324,
+        "pointThree": [
+          0.5699431896209717,
+          0.8668649792671204,
+          -0.7448077201843262
+        ],
+        "pixel": [
+          388.82678755080946,
+          323.11899458538375
+        ]
+      },
+      {
+        "vertexIndex": 349,
+        "pointThree": [
+          0.564709484577179,
+          0.8806037306785583,
+          -0.7181249856948853
+        ],
+        "pixel": [
+          397.4527755325755,
+          315.7015708881445
+        ]
+      },
+      {
+        "vertexIndex": 374,
+        "pointThree": [
+          0.5592449307441711,
+          0.8943424820899963,
+          -0.6914423108100891
+        ],
+        "pixel": [
+          406.11689491650685,
+          308.3280181756193
+        ]
+      },
+      {
+        "vertexIndex": 399,
+        "pointThree": [
+          0.5536016821861267,
+          0.9080812335014343,
+          -0.664759635925293
+        ],
+        "pixel": [
+          414.80311022453293,
+          300.994400588857
+        ]
+      },
+      {
+        "vertexIndex": 424,
+        "pointThree": [
+          0.5478317737579346,
+          0.9218199849128723,
+          -0.638076901435852
+        ],
+        "pixel": [
+          423.4954016651554,
+          293.69694931258243
+        ]
+      },
+      {
+        "vertexIndex": 449,
+        "pointThree": [
+          0.5419873595237732,
+          0.9355587363243103,
+          -0.6113942265510559
+        ],
+        "pixel": [
+          432.1776417151118,
+          286.43205875499217
+        ]
+      },
+      {
+        "vertexIndex": 474,
+        "pointThree": [
+          0.5361204743385315,
+          0.9492974877357483,
+          -0.5847115516662598
+        ],
+        "pixel": [
+          440.83376239174726,
+          279.1962680178482
+        ]
+      },
+      {
+        "vertexIndex": 499,
+        "pointThree": [
+          0.5302832126617432,
+          0.9630362391471863,
+          -0.5580288171768188
+        ],
+        "pixel": [
+          449.4476524320414,
+          271.9862622211461
+        ]
+      },
+      {
+        "vertexIndex": 524,
+        "pointThree": [
+          0.5245276689529419,
+          0.9767749309539795,
+          -0.5313461422920227
+        ],
+        "pixel": [
+          458.00313234905667,
+          264.798911271179
+        ]
+      },
+      {
+        "vertexIndex": 549,
+        "pointThree": [
+          0.5189059376716614,
+          0.9905136823654175,
+          -0.5046634674072266
+        ],
+        "pixel": [
+          466.4840482031417,
+          257.63114509112194
+        ]
+      },
+      {
+        "vertexIndex": 574,
+        "pointThree": [
+          0.5134701132774353,
+          1.0042524337768555,
+          -0.47798076272010803
+        ],
+        "pixel": [
+          474.8742241585064,
+          250.48010892128292
+        ]
+      },
+      {
+        "vertexIndex": 599,
+        "pointThree": [
+          0.5082723498344421,
+          1.0179911851882935,
+          -0.4512980878353119
+        ],
+        "pixel": [
+          483.15743329997014,
+          243.34306912657524
+        ]
+      },
+      {
+        "vertexIndex": 624,
+        "pointThree": [
+          0.503364622592926,
+          1.0317299365997314,
+          -0.42461538314819336
+        ],
+        "pixel": [
+          491.31753250313176,
+          236.21743234472441
+        ]
+      },
+      {
+        "vertexIndex": 649,
+        "pointThree": [
+          0.4987991452217102,
+          1.0454686880111694,
+          -0.39793267846107483
+        ],
+        "pixel": [
+          499.33828720160466,
+          229.10073663683346
+        ]
+      },
+      {
+        "vertexIndex": 674,
+        "pointThree": [
+          0.49300000071525574,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          510.4691986510226,
+          218.9943382988789
+        ]
+      },
+      {
+        "vertexIndex": 673,
+        "pointThree": [
+          0.4519166648387909,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          523.3997795438115,
+          221.24005959207264
+        ]
+      },
+      {
+        "vertexIndex": 672,
+        "pointThree": [
+          0.41083332896232605,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          536.4160362535868,
+          223.50066065038382
+        ]
+      },
+      {
+        "vertexIndex": 671,
+        "pointThree": [
+          0.3697499930858612,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          549.5188231206653,
+          225.77628985154269
+        ]
+      },
+      {
+        "vertexIndex": 670,
+        "pointThree": [
+          0.32866665720939636,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          562.7090058823036,
+          228.0670975526451
+        ]
+      },
+      {
+        "vertexIndex": 669,
+        "pointThree": [
+          0.2875833213329315,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          575.9874618633785,
+          230.37323612326918
+        ]
+      },
+      {
+        "vertexIndex": 668,
+        "pointThree": [
+          0.24650000035762787,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          589.3550753061189,
+          232.69485913436574
+        ]
+      },
+      {
+        "vertexIndex": 667,
+        "pointThree": [
+          0.20541666448116302,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          602.8127569948881,
+          235.0321247665963
+        ]
+      },
+      {
+        "vertexIndex": 666,
+        "pointThree": [
+          0.16433332860469818,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          616.3614153680817,
+          237.3851907931857
+        ]
+      },
+      {
+        "vertexIndex": 665,
+        "pointThree": [
+          0.12325000017881393,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          630.001973603911,
+          239.75421754729953
+        ]
+      },
+      {
+        "vertexIndex": 664,
+        "pointThree": [
+          0.08216666430234909,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          643.7353749105869,
+          242.13936884081772
+        ]
+      },
+      {
+        "vertexIndex": 663,
+        "pointThree": [
+          0.041083332151174545,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          657.5625666411021,
+          244.54080920546573
+        ]
+      },
+      {
+        "vertexIndex": 662,
+        "pointThree": [
+          0,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          671.4845141479184,
+          246.95870629903084
+        ]
+      },
+      {
+        "vertexIndex": 661,
+        "pointThree": [
+          -0.041083332151174545,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          685.502194801693,
+          249.39322986656265
+        ]
+      },
+      {
+        "vertexIndex": 660,
+        "pointThree": [
+          -0.08216666430234909,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          699.6165994610784,
+          251.8445519956412
+        ]
+      },
+      {
+        "vertexIndex": 659,
+        "pointThree": [
+          -0.12325000017881393,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          713.828733999368,
+          254.31284738151754
+        ]
+      },
+      {
+        "vertexIndex": 658,
+        "pointThree": [
+          -0.16433332860469818,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          728.1396130770049,
+          256.7982922455524
+        ]
+      },
+      {
+        "vertexIndex": 657,
+        "pointThree": [
+          -0.20541666448116302,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          742.5502746278469,
+          259.30106685112185
+        ]
+      },
+      {
+        "vertexIndex": 656,
+        "pointThree": [
+          -0.24650000035762787,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          757.0617632605249,
+          261.8213526208445
+        ]
+      },
+      {
+        "vertexIndex": 655,
+        "pointThree": [
+          -0.2875833213329315,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          771.675135556305,
+          264.3593330566888
+        ]
+      },
+      {
+        "vertexIndex": 654,
+        "pointThree": [
+          -0.32866665720939636,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          786.3914789800951,
+          266.915197024346
+        ]
+      },
+      {
+        "vertexIndex": 653,
+        "pointThree": [
+          -0.3697499930858612,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          801.2118803434258,
+          269.4891332760321
+        ]
+      },
+      {
+        "vertexIndex": 652,
+        "pointThree": [
+          -0.41083332896232605,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          816.1374472386242,
+          272.081334173072
+        ]
+      },
+      {
+        "vertexIndex": 651,
+        "pointThree": [
+          -0.4519166648387909,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          831.1693030329317,
+          274.69199481650213
+        ]
+      },
+      {
+        "vertexIndex": 650,
+        "pointThree": [
+          -0.49300000071525574,
+          1.065000057220459,
+          -0.36000001430511475
+        ],
+        "pixel": [
+          846.3085871503511,
+          277.32131309602033
+        ]
+      },
+      {
+        "vertexIndex": 625,
+        "pointThree": [
+          -0.4987991452217102,
+          1.0454686880111694,
+          -0.39793267846107483
+        ],
+        "pixel": [
+          839.5662525805994,
+          289.2388916158724
+        ]
+      },
+      {
+        "vertexIndex": 600,
+        "pointThree": [
+          -0.503364622592926,
+          1.0317299365997314,
+          -0.42461538314819336
+        ],
+        "pixel": [
+          834.9705733525194,
+          297.7136251482135
+        ]
+      },
+      {
+        "vertexIndex": 575,
+        "pointThree": [
+          -0.5082723498344421,
+          1.0179911851882935,
+          -0.4512980878353119
+        ],
+        "pixel": [
+          830.474927255556,
+          306.26185337667465
+        ]
+      },
+      {
+        "vertexIndex": 550,
+        "pointThree": [
+          -0.5134701132774353,
+          1.0042524337768555,
+          -0.47798076272010803
+        ],
+        "pixel": [
+          826.0603472172596,
+          314.8814408026086
+        ]
+      },
+      {
+        "vertexIndex": 525,
+        "pointThree": [
+          -0.5189059376716614,
+          0.9905136823654175,
+          -0.5046634674072266
+        ],
+        "pixel": [
+          821.7077988912771,
+          323.5701033292982
+        ]
+      },
+      {
+        "vertexIndex": 500,
+        "pointThree": [
+          -0.5245276689529419,
+          0.9767749309539795,
+          -0.5313461422920227
+        ],
+        "pixel": [
+          817.3980641612889,
+          332.3253543540622
+        ]
+      },
+      {
+        "vertexIndex": 475,
+        "pointThree": [
+          -0.5302832126617432,
+          0.9630362391471863,
+          -0.5580288171768188
+        ],
+        "pixel": [
+          813.1117734552076,
+          341.14450849579174
+        ]
+      },
+      {
+        "vertexIndex": 450,
+        "pointThree": [
+          -0.5361204743385315,
+          0.9492974877357483,
+          -0.5847115516662598
+        ],
+        "pixel": [
+          808.829388260868,
+          350.0247675907312
+        ]
+      },
+      {
+        "vertexIndex": 425,
+        "pointThree": [
+          -0.5419873595237732,
+          0.9355587363243103,
+          -0.6113942265510559
+        ],
+        "pixel": [
+          804.5312493378942,
+          358.9630417019271
+        ]
+      },
+      {
+        "vertexIndex": 400,
+        "pointThree": [
+          -0.5478317737579346,
+          0.9218199849128723,
+          -0.638076901435852
+        ],
+        "pixel": [
+          800.1974860694002,
+          367.95607933681765
+        ]
+      },
+      {
+        "vertexIndex": 375,
+        "pointThree": [
+          -0.5536016821861267,
+          0.9080812335014343,
+          -0.664759635925293
+        ],
+        "pixel": [
+          795.8080802581655,
+          377.0004236720289
+        ]
+      },
+      {
+        "vertexIndex": 350,
+        "pointThree": [
+          -0.5592449307441711,
+          0.8943424820899963,
+          -0.6914423108100891
+        ],
+        "pixel": [
+          791.3428424419533,
+          386.09237496177127
+        ]
+      },
+      {
+        "vertexIndex": 325,
+        "pointThree": [
+          -0.564709484577179,
+          0.8806037306785583,
+          -0.7181249856948853
+        ],
+        "pixel": [
+          786.7814178542648,
+          395.22803932242084
+        ]
+      },
+      {
+        "vertexIndex": 300,
+        "pointThree": [
+          -0.5699431896209717,
+          0.8668649792671204,
+          -0.7448077201843262
+        ],
+        "pixel": [
+          782.1032432135239,
+          404.4032876953643
+        ]
+      },
+      {
+        "vertexIndex": 275,
+        "pointThree": [
+          -0.5748939514160156,
+          0.8531262278556824,
+          -0.7714903950691223
+        ],
+        "pixel": [
+          777.287665076496,
+          413.61374535268567
+        ]
+      },
+      {
+        "vertexIndex": 250,
+        "pointThree": [
+          -0.5795097351074219,
+          0.8393874764442444,
+          -0.7981730699539185
+        ],
+        "pixel": [
+          772.313860672089,
+          422.85482569678345
+        ]
+      },
+      {
+        "vertexIndex": 225,
+        "pointThree": [
+          -0.5837433338165283,
+          0.8256487250328064,
+          -0.8248557448387146
+        ],
+        "pixel": [
+          767.1627333148946,
+          432.1220923576198
+        ]
+      },
+      {
+        "vertexIndex": 200,
+        "pointThree": [
+          -0.587748110294342,
+          0.8119099736213684,
+          -0.8515384793281555
+        ],
+        "pixel": [
+          761.8920057623512,
+          441.4275585408939
+        ]
+      },
+      {
+        "vertexIndex": 175,
+        "pointThree": [
+          -0.591618537902832,
+          0.7981712222099304,
+          -0.8782211542129517
+        ],
+        "pixel": [
+          756.5372471240837,
+          450.7789283465606
+        ]
+      },
+      {
+        "vertexIndex": 150,
+        "pointThree": [
+          -0.595355212688446,
+          0.7844324707984924,
+          -0.9049038290977478
+        ],
+        "pixel": [
+          751.0980973705639,
+          460.17633322121554
+        ]
+      },
+      {
+        "vertexIndex": 125,
+        "pointThree": [
+          -0.5989586710929871,
+          0.7706937193870544,
+          -0.9315865635871887
+        ],
+        "pixel": [
+          745.5741739915768,
+          469.6198999997117
+        ]
+      },
+      {
+        "vertexIndex": 100,
+        "pointThree": [
+          -0.6024296283721924,
+          0.7569549679756165,
+          -0.9582692384719849
+        ],
+        "pixel": [
+          739.9652099935554,
+          479.1097502403501
+        ]
+      },
+      {
+        "vertexIndex": 75,
+        "pointThree": [
+          -0.6057685613632202,
+          0.7432162165641785,
+          -0.984951913356781
+        ],
+        "pixel": [
+          734.270801659655,
+          488.64600586000466
+        ]
+      },
+      {
+        "vertexIndex": 50,
+        "pointThree": [
+          -0.6089762449264526,
+          0.7294775247573853,
+          -1.0116345882415771
+        ],
+        "pixel": [
+          728.490676902256,
+          498.22878201581455
+        ]
+      },
+      {
+        "vertexIndex": 25,
+        "pointThree": [
+          -0.6120531558990479,
+          0.7157387733459473,
+          -1.038317322731018
+        ],
+        "pixel": [
+          722.6244325434965,
+          507.85825410161084
+        ]
+      }
+    ],
+    "frontPaneMaximumActualVertexPlaneDeviationMeters": 8.486968461340894e-08
+  },
+  "final-backing-only-scope-proof.json": {
+    "pass": true,
+    "scope": "Exact semantic comparison of first-pass and final actual exports, excluding random material UUIDs and sequential mesh IDs.",
+    "sourceHashesBefore": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "a06ad2c5d75f17fb3f560311c7c92d9dd96f0063d00ee6d98d0a674f3cc1923c",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "sourceHashesFinal": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "changedMeshes": [
+      {
+        "name": "referenceClosedDiffuserBacking",
+        "trianglesBefore": 12,
+        "trianglesAfter": 1512
+      }
+    ],
+    "unchangedMeshes": 254,
+    "wingMeshCount": 10,
+    "wingCanonicalSha256Before": "82564acea7a986153078eaea3002c08d878f1ee8f2b6c0715f6552319a1c0698",
+    "wingCanonicalSha256Final": "82564acea7a986153078eaea3002c08d878f1ee8f2b6c0715f6552319a1c0698",
+    "wingGeometryNormalsTopologyMaterialsPoseExactlyUnchanged": true,
+    "priorFourPoseEvidence": "../rear-wing-functional-poses/functional-wing-pose-proof.json",
+    "physicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+    "priorFourPoseImagesRemainFirstPassWholeScene": true,
+    "note": "Wing-only proof transfers exactly to final wing. Whole-car four-pose images retain the first-pass diffuser and are not relabeled as final whole-scene renders."
+  },
+  "functionalWingPoseProof": {
+    "pass": true,
+    "scope": "Exact target expressions evaluated from physics-main.js; only actual cloned activeWingGroup transforms change. No wing angle baked into source vertices and no physics edited.",
+    "sourceExport": "verification/rear-wing-candidate-check",
+    "sourceHashes": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "a06ad2c5d75f17fb3f560311c7c92d9dd96f0063d00ee6d98d0a674f3cc1923c",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "sourcePhysicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+    "poses": [
+      {
+        "name": "rest",
+        "targets": {
+          "y": 0.79,
+          "angle": -0.05
+        },
+        "physicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+        "actualGroupMatrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9987502603949663,
+          -0.04997916927067833,
+          0,
+          0,
+          0.04997916927067833,
+          0.9987502603949663,
+          0,
+          0,
+          0.79,
+          2.04,
+          1
+        ],
+        "transformedMeshes": [
+          "referenceWhiteWingBlade",
+          "referenceWingCarbonUnderside",
+          "referenceWingLeadingEdge",
+          "referenceWingTrailingEdge",
+          "referenceWhiteWingEndplate-1",
+          "referenceWingSupport-1",
+          "referenceWingBaseMount-1",
+          "referenceWhiteWingEndplate1",
+          "referenceWingSupport1",
+          "referenceWingBaseMount1"
+        ],
+        "geometryNormalsTopologyMaterialsUnchanged": true,
+        "nonWingWorldMatricesUnchanged": true
+      },
+      {
+        "name": "deployed",
+        "targets": {
+          "y": 0.94,
+          "angle": -0.05
+        },
+        "physicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+        "actualGroupMatrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9987502603949663,
+          -0.04997916927067833,
+          0,
+          0,
+          0.04997916927067833,
+          0.9987502603949663,
+          0,
+          0,
+          0.94,
+          2.04,
+          1
+        ],
+        "transformedMeshes": [
+          "referenceWhiteWingBlade",
+          "referenceWingCarbonUnderside",
+          "referenceWingLeadingEdge",
+          "referenceWingTrailingEdge",
+          "referenceWhiteWingEndplate-1",
+          "referenceWingSupport-1",
+          "referenceWingBaseMount-1",
+          "referenceWhiteWingEndplate1",
+          "referenceWingSupport1",
+          "referenceWingBaseMount1"
+        ],
+        "geometryNormalsTopologyMaterialsUnchanged": true,
+        "nonWingWorldMatricesUnchanged": true
+      },
+      {
+        "name": "flight",
+        "targets": {
+          "y": 0.94,
+          "angle": -0.28
+        },
+        "physicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+        "actualGroupMatrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9610554383107709,
+          -0.27635564856411376,
+          0,
+          0,
+          0.27635564856411376,
+          0.9610554383107709,
+          0,
+          0,
+          0.94,
+          2.04,
+          1
+        ],
+        "transformedMeshes": [
+          "referenceWhiteWingBlade",
+          "referenceWingCarbonUnderside",
+          "referenceWingLeadingEdge",
+          "referenceWingTrailingEdge",
+          "referenceWhiteWingEndplate-1",
+          "referenceWingSupport-1",
+          "referenceWingBaseMount-1",
+          "referenceWhiteWingEndplate1",
+          "referenceWingSupport1",
+          "referenceWingBaseMount1"
+        ],
+        "geometryNormalsTopologyMaterialsUnchanged": true,
+        "nonWingWorldMatricesUnchanged": true
+      },
+      {
+        "name": "airbrake",
+        "targets": {
+          "y": 0.96,
+          "angle": -0.72
+        },
+        "physicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+        "actualGroupMatrixWorld": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.751805729140895,
+          -0.6593846719714731,
+          0,
+          0,
+          0.6593846719714731,
+          0.751805729140895,
+          0,
+          0,
+          0.96,
+          2.04,
+          1
+        ],
+        "transformedMeshes": [
+          "referenceWhiteWingBlade",
+          "referenceWingCarbonUnderside",
+          "referenceWingLeadingEdge",
+          "referenceWingTrailingEdge",
+          "referenceWhiteWingEndplate-1",
+          "referenceWingSupport-1",
+          "referenceWingBaseMount-1",
+          "referenceWhiteWingEndplate1",
+          "referenceWingSupport1",
+          "referenceWingBaseMount1"
+        ],
+        "geometryNormalsTopologyMaterialsUnchanged": true,
+        "nonWingWorldMatricesUnchanged": true
+      }
+    ]
+  },
+  "functionalWingPoseSheetProvenance": {
+    "fixedCrop": [
+      65,
+      190,
+      610,
+      430
+    ],
+    "uniformScale": 2,
+    "nativeFramesResizedOrRetouched": false,
+    "tightSheetMirroredOrReshaped": false,
+    "samples": 16,
+    "sameCameraAndLightingVerified": true
+  },
+  "files": {
+    "windshield-inspection-raw.png": {
+      "sha256": "3128ca662a9254bf322789a02c49b3a1c7ff96282d7c8cac49e667af56fdc398",
+      "bytes": 1385831
+    },
+    "rear-wing-originals-baseline-candidate.png": {
+      "sha256": "49d64a6fad07772cb6f7388c2570d4ddcba6103dd87a95c25e5bfa04f923b13b",
+      "bytes": 3524348
+    },
+    "rear-inspection-direct-before-after.png": {
+      "sha256": "6f1e4d80541d35562ed9c143d13edd29375406ff980a95aec41507e5c18b8d46",
+      "bytes": 1878914
+    },
+    "front-windshield-tight-user-comparison.png": {
+      "sha256": "6f4cf1afd6d6beebaa7329b616cc76488ff14baa8c8582390884146e89617876",
+      "bytes": 1133317
+    },
+    "rear-wing-compact-original-baseline-candidate.png": {
+      "sha256": "cb10ac4605a63f77a73e3945007e2471cf5c10eb9a69d96e5525fa859b877029",
+      "bytes": 1913211
+    },
+    "rear-three-quarter-tight-user-comparison.png": {
+      "sha256": "b3a62e1c033f08ecc681f1889773543e519fdc656d3b8465e87a6666237f02ca",
+      "bytes": 863031
+    },
+    "rear-inspection-three-quarter-before-after.png": {
+      "sha256": "55639a1ba2edd5af424458ba2a9b2c040d55e48fe410e72fcc1f0cd445c3028b",
+      "bytes": 1758628
+    },
+    "windshield-inspection-before-after.png": {
+      "sha256": "a39cd7804036b8d773a74765c6409fe334678b8048de2faa4c288726e82752f5",
+      "bytes": 1828040
+    },
+    "rear-wing-before-after-inspections.png": {
+      "sha256": "5deb45f213797a80d6c28140b5905cc8e4b7205d51116ad848b93b2fa228e32f",
+      "bytes": 5498979
+    },
+    "rear-inspection-direct-raw.png": {
+      "sha256": "19d160fcb64ea00294e7ee553cb9551dedcf53d1cc8af3e915a10b8cb8c4fe0d",
+      "bytes": 1134291
+    },
+    "rear-inspection-three-quarter-raw.png": {
+      "sha256": "150eb36c81dbca010aed1ceef7d02ef27f0e95b84fdac64879ab777b6f33b573",
+      "bytes": 1268014
+    }
+  },
+  "nativeLibraryAttachments": {
+    "rear-three-quarter-tight-user-comparison.png": "libfile_0693edc93dcc8191a2d6947444b8f0ef",
+    "front-windshield-tight-user-comparison.png": "libfile_3fd08536012481918fa9f247fb87eac5"
+  }
+}

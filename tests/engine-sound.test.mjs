@@ -156,6 +156,7 @@ test('production map switches and repeated vehicle or challenge resets retain th
   const h = harness(); h.sound.setSimulatedEngineEnabled(false); h.sound.init();
   Object.assign(h.context, { state: {}, currentMap: 'highway', MAX_AIR_SECONDS: 10, carMeshGroup: {}, highwayEnvGroup: {}, cityEnvGroup: {}, trafficLevelIndex: 1,
     clearDebris() {}, renderBannerText() {}, populateTraffic() {}, applyTranslations() {} });
+  vm.runInContext(readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8'), h.context);
   vm.runInContext(hud.slice(hud.indexOf('function switchMap('), hud.indexOf('function applyTranslations(')), h.context);
   for (const command of ['resetCar()', "switchMap('city')", 'resetCar()', "switchMap('highway')", 'resetCar()']) {
     vm.runInContext(command, h.context); h.sound.update(.8, true, false, false, .5);

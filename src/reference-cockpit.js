@@ -14,19 +14,131 @@
   const referenceJets = new THREE.Group();
   referenceJets.name = 'reference-four-rear-jets';
   const jetMetal = new THREE.MeshStandardMaterial({color:0xa3a8aa,metalness:.91,roughness:.26});
-  const jetInner = new THREE.MeshStandardMaterial({color:0x101315,metalness:.24,roughness:.64});
+  const jetInner = new THREE.MeshStandardMaterial({color:0x34383a,metalness:.58,roughness:.40});
   for (const x of [-.45,-.15,.15,.45]) {
-    const sleeve = new THREE.Mesh(new THREE.CylinderGeometry(.094,.065,.15,32,1,true).rotateX(Math.PI/2),jetMetal);
-    sleeve.position.set(x,0,.065);
-    const lip = new THREE.Mesh(new THREE.RingGeometry(.080,.096,40),jetMetal);
-    lip.position.set(x,0,.142);
-    const inner = new THREE.Mesh(new THREE.CylinderGeometry(.079,.060,.11,32,1,true).rotateX(Math.PI/2),jetInner);
-    inner.position.set(x,0,.074);
-    const back = new THREE.Mesh(new THREE.CircleGeometry(.063,32),jetInner);
-    back.position.set(x,0,.015);
+    const sleeve = new THREE.Mesh(new THREE.CylinderGeometry(.080,.051,.170,48,1,true).rotateX(Math.PI/2),jetMetal);
+    sleeve.position.set(x,-.060,-.048);
+    const lip = new THREE.Mesh(new THREE.RingGeometry(.067,.081,48),jetMetal);
+    lip.position.set(x,-.060,.037);
+    const inner = new THREE.Mesh(new THREE.CylinderGeometry(.067,.043,.142,48,1,true).rotateX(Math.PI/2),jetInner);
+    inner.position.set(x,-.060,-.036);
+    const back = new THREE.Mesh(new THREE.CircleGeometry(.055,48),jetInner);
+    back.position.set(x,-.060,-.122);
+    sleeve.name = `reference-jet-sleeve-${x}`; lip.name = `reference-jet-flush-lip-${x}`;
+    inner.name = `reference-jet-inner-${x}`; back.name = `reference-jet-back-${x}`;
     referenceJets.add(sleeve,lip,inner,back);
   }
   rearNozzlesGimbalGroup.add(referenceJets);
+  // Preserve every classic wheel, axle and animation handle. The new model has
+  // rounded tire shoulders, open twin swept spokes and inset red aero blades.
+  const classicWheelParts = wheels.map(wheel => wheel.children.slice());
+  const referenceWheelParts = [];
+  const rubber = new THREE.MeshStandardMaterial({color:0x151719,roughness:.82,metalness:.03});
+  const wheelAlloy = new THREE.MeshStandardMaterial({color:0xc9ced0,roughness:.24,metalness:.88});
+  const wheelGraphite = new THREE.MeshStandardMaterial({color:0x202326,roughness:.32,metalness:.65});
+  const wheelAeroRed = new THREE.MeshStandardMaterial({color:0xb91d24,roughness:.29,metalness:.48});
+  const wheelFace = (name, points, mat, parent, side) => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(points.flat(),3));
+    const ids=[]; for(let i=1;i<points.length-1;i++) ids.push(...(side>0?[0,i,i+1]:[0,i+1,i]));
+    geo.setIndex(ids); geo.computeVertexNormals();
+    const part = new THREE.Mesh(geo,mat);part.name=name;parent.add(part);return part;
+  };
+  // All wheel detail is static inside the existing spin/steer group. Concatenate
+  // its original indexed triangles by material; never weld or rebuild normals.
+  // The deliberately small scene-graph test fixture has no matrix/attribute
+  // implementation, so leave its source meshes intact rather than fake a batch.
+  const batchReferenceWheel = (group, wheelIndex) => {
+    if (typeof THREE.Matrix3?.prototype.getNormalMatrix !== 'function' ||
+        typeof THREE.BufferGeometry?.prototype.applyMatrix4 !== 'function') return;
+    const byMaterial = new Map();
+    group.children.forEach(part => {
+      const parts = byMaterial.get(part.material) || [];
+      parts.push(part);byMaterial.set(part.material,parts);
+    });
+    for (const [material,parts] of byMaterial) {
+      const geometry = new THREE.BufferGeometry(), indices = [];
+      const attributes = new Map();let vertexCount = 0;
+      parts.forEach(part => {
+        part.updateMatrix();vertexCount += part.geometry.attributes.position.count;
+        Object.entries(part.geometry.attributes).forEach(([name,attribute]) => {
+          if (!attributes.has(name)) attributes.set(name,attribute);
+        });
+      });
+      const arrays = new Map([...attributes].map(([name,attribute]) =>
+        [name,new attribute.array.constructor(vertexCount*attribute.itemSize)]));
+      let vertexOffset = 0;
+      parts.forEach(part => {
+        const source = part.geometry,p = source.attributes.position;
+        const translatedOnly = part.rotation.x===0 && part.rotation.y===0 && part.rotation.z===0 &&
+          part.scale.x===1 && part.scale.y===1 && part.scale.z===1;
+        const normalMatrix = translatedOnly ? null : new THREE.Matrix3().getNormalMatrix(part.matrix);
+        for (const [name,attribute] of Object.entries(source.attributes)) {
+          const target = arrays.get(name),offset = vertexOffset*attribute.itemSize;
+          // UVs, and the existing normals on these translation-only parts, are
+          // copied bit for bit. Unused UV slots on untextured faces stay zero.
+          target.set(attribute.array,offset);
+          if (name==='position' || (name==='normal' && normalMatrix)) {
+            const v = new THREE.Vector3();
+            for (let j=0;j<attribute.count;j++) {
+              v.fromBufferAttribute(attribute,j);
+              if (name==='position') v.applyMatrix4(part.matrix);else v.applyNormalMatrix(normalMatrix);
+              target[offset+j*3]=v.x;target[offset+j*3+1]=v.y;target[offset+j*3+2]=v.z;
+            }
+          }
+        }
+        const sourceIndices = source.index?.array;
+        for (let j=0;j<(sourceIndices?.length ?? p.count);j++) indices.push(vertexOffset+(sourceIndices ? sourceIndices[j] : j));
+        vertexOffset += p.count;
+      });
+      for (const [name,attribute] of attributes) geometry.setAttribute(name,
+        new THREE.BufferAttribute(arrays.get(name),attribute.itemSize,attribute.normalized));
+      geometry.setIndex(indices);geometry.computeBoundingBox();geometry.computeBoundingSphere();
+      const batch = new THREE.Mesh(geometry,material);
+      const label = material===rubber ? 'rubber' : material===wheelAlloy ? 'alloy' : material===wheelGraphite ? 'graphite' : 'red';
+      batch.name = label==='rubber' ? `reference-rounded-tire-${wheelIndex}` : `reference-wheel-${label}-batch-${wheelIndex}`;
+      batch.userData.referenceWheelBatch = {material:label,sourceMeshes:parts.length};
+      parts.forEach(part => group.remove(part));group.add(batch);
+    }
+  };
+  wheels.forEach((wheel,i)=>{
+    const ws=wheelSpecs[i],side=ws.x>0?1:-1,r=ws.radius,half=ws.width/2;
+    const group=new THREE.Group();group.name=`reference-wheel-${i}`;
+    const tireProfile = [[.77,-1],[.88,-1.01],[.95,-.84],[.994,-.56],[1,-.32],[1,.32],[.994,.56],[.95,.84],[.88,1.01],[.77,1]].map(([radius,width])=>new THREE.Vector2(radius*r,width*half));
+    const tire=new THREE.Mesh(new THREE.LatheGeometry(tireProfile,48).rotateZ(Math.PI/2),rubber);
+    tire.name=`reference-rounded-tire-${i}`;group.add(tire);
+    const barrel=new THREE.Mesh(new THREE.CylinderGeometry(.775*r,.775*r,ws.width*.90,48,1,true).rotateZ(Math.PI/2),wheelGraphite);group.add(barrel);
+    for(const radius of [.785,.745]) {
+      const lip=new THREE.Mesh(new THREE.TorusGeometry(radius*r,.0055,4,48).rotateY(Math.PI/2),wheelAlloy);
+      lip.position.x=side*(half+.001);group.add(lip);
+    }
+    // Recessed aero inserts leave real dark gaps through to the brake rotor.
+    const point=(angle,radius,depth)=>[side*depth,Math.cos(angle)*radius*r,Math.sin(angle)*radius*r];
+    for(let k=0;k<5;k++) {
+      const a=k*Math.PI*2/5+.13;
+      wheelFace(`reference-red-aero-${i}-${k}`,[point(a+.35,.26,half-.012),point(a+.42,.71,half-.014),point(a+.91,.71,half-.014),point(a+.85,.26,half-.012)],wheelAeroRed,group,side);
+      for(const offset of [0,.15]) {
+        const angle=a+offset;
+        const p=[point(angle-.06,.18,half+.010),point(angle+.11,.75,half+.001),point(angle+.18,.76,half+.001),point(angle+.04,.18,half+.010)];
+        wheelFace(`reference-swept-spoke-${i}-${k}-${offset}`,p,wheelAlloy,group,side);
+        // A physical inner side gives the spokes depth from oblique angles.
+        wheelFace(`reference-spoke-depth-${i}-${k}-${offset}`,[p[0],p[1],[p[1][0]-side*.020,p[1][1],p[1][2]],[p[0][0]-side*.020,p[0][1],p[0][2]]],wheelGraphite,group,side);
+      }
+    }
+    const cap=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,.012,32).rotateZ(Math.PI/2),wheelGraphite);cap.position.x=side*(half+.011);group.add(cap);
+    for(let k=0;k<5;k++) {
+      const a=k*Math.PI*2/5;
+      const lug=new THREE.Mesh(new THREE.CylinderGeometry(.0065,.0065,.009,6).rotateZ(Math.PI/2),wheelAlloy);
+      lug.position.set(side*(half+.019),Math.cos(a)*.030,Math.sin(a)*.030);group.add(lug);
+    }
+    // Shallow circumferential relief stays inside the tread silhouette.
+    for(const width of [-.36,.36]) {
+      const groove=new THREE.Mesh(new THREE.TorusGeometry(r-.001,.0022,3,48).rotateY(Math.PI/2),wheelGraphite);groove.position.x=width*ws.width;group.add(groove);
+    }
+    batchReferenceWheel(group,i);
+    wheel.add(group);referenceWheelParts.push(group);
+  });
+
   const referenceWing = referenceExterior.getObjectByName('reference-active-wing');
   if (referenceWing) activeWingGroup.add(referenceWing);
 
@@ -141,8 +253,7 @@
   const basePerspective = setCockpitPerspective;
   const baseExteriorDetails = setCockpitExteriorDetailsVisible;
   function resizeReferenceCabin() {
-    // The original resize listener restores the neutral exterior yoke pose.
-    // Reapply the chosen cabin's driver offset here; stable frame sync is idle.
+    // Reapply the selected driver offset after the base exterior resize.
     if (!cockpitPerspectiveActive) {
       yokeWheelGroup.position.x = cockpit === 'reference' ? -.34 : 0;
       return;
@@ -174,7 +285,10 @@
   const referenceCanopy = referenceExterior.getObjectByName('reference-canopy');
   const referenceRails = referenceExterior.getObjectByName('reference-canopy-rails');
   const referenceFrontLights = referenceExterior.getObjectByName('reference-front-lights');
-  const referenceShoulders = ['referenceShoulder-1','referenceShoulder1'].map(name => referenceExterior.getObjectByName(name));
+  const referenceShoulders = [-1,1].flatMap(side => [
+    `referenceShoulder${side}`, `referenceLampShoulderBridge${side}`,
+    `referenceFrontWingInnerReturn${side}`, `referenceFrontWingRearReturn${side}`
+  ]).map(name => referenceExterior.getObjectByName(name));
   let appliedView = null;
   let appliedExteriorDetails = null;
   function syncView(active = cockpitPerspectiveActive) {
@@ -193,9 +307,18 @@
     oldWingParts.forEach(part => { part.visible = model === 'classic'; });
     oldRearJetParts.forEach(part => { part.visible = model === 'classic'; });
     referenceJets.visible = model === 'reference';
+    // Preserve the functional reverse plumes, without the legacy blue disks
+    // interrupting the reference car's uninterrupted black front intake.
+    frontRetroNozzles.forEach(part => { part.visible = model === 'classic'; });
+    rearPlumes.forEach(plume => { plume.position.y = model === 'reference' ? -.060 : 0; });
+    classicWheelParts.forEach(parts => parts.forEach(part => { part.visible = model === 'classic'; }));
+    referenceWheelParts.forEach(part => { part.visible = model === 'reference'; });
     if (referenceWing) referenceWing.visible = model === 'reference';
     screenBezel.visible = screenDisplay.visible = active;
     interiorScreen.visible = !active;
+    // The revised reference windshield is a lower raked plane; its physical
+    // screen mounts 20mm lower. The classic body and readable FPV pod stay put.
+    interiorScreen.position.y = model === 'reference' ? .705 : .725;
     // The obsolete translucent combiner is already disabled by the frame loop;
     // keep canonical previews consistent, including before the first frame.
     hudCombinerMesh.visible = false;

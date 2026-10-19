@@ -1,0 +1,163 @@
+{
+  "reviewedAt": "2026-10-19T12:38:00Z",
+  "verdict": "pass_with_likeness_and_validation_limits",
+  "scope": "Read-only independent inspection of the exact final exported mesh and source snapshot, supplied reference photographs, CPU comparison images, and static functional-wing-pose evidence. No source changes or new render jobs.",
+  "sourceExport": "verification/rear-wing-candidate-final/actual-preview-meshes.json",
+  "exteriorSha256": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+  "sourceSnapshotHashesMatchExport": true,
+  "referenceImages": [
+    "image(20261019-084440).png",
+    "image(20261019-084441).png",
+    "image(20261019-113142).png",
+    "image(20261019-113143).png",
+    "image(20261019-113144).png"
+  ],
+  "visualEvidence": [
+    "verification/rear-wing-candidate-final/rear-wing-compact-original-baseline-candidate.png",
+    "verification/rear-wing-candidate-final/rear-inspection-three-quarter-raw.png",
+    "verification/rear-wing-candidate-final/windshield-inspection-before-after.png",
+    "verification/rear-wing-functional-poses/functional-wing-poses-tight.png"
+  ],
+  "improvements": [
+    "The four-jet carrier is a shallow straight-run shelf rather than the previous thick oval.",
+    "The white rear bridge has genuine outboard depth concavity plus a carbon underside return.",
+    "The wing has swept/tapered chord, thin closed endplates, and curved carbon supports without the old detached box towers.",
+    "The front central windshield is a genuine single raked plane; roof and outboard glass retain their separate outlines.",
+    "The closed diffuser backing now has real per-channel depth rather than one flat door."
+  ],
+  "independentNumericalChecks": {
+    "windshield": {
+      "vertexCount": 675,
+      "rakeDegreesFromHorizontal": 27.243649659345923,
+      "maxPlaneResidualM": 6.45860713799351e-08,
+      "expectedOutwardNormal": [
+        0.0,
+        0.8890678841843309,
+        -0.4577753786651235
+      ],
+      "uniqueStoredNormalCount": 1,
+      "maxStoredNormalError": 5.522574841876349e-09,
+      "invertedFrontTriangles": 0
+    },
+    "supportCapTriangulation": {
+      "capTrianglesEach": 6,
+      "polygonAreaM2": 0.007377,
+      "maxCapAreaResidualM2": 2.2277609097731688e-10,
+      "note": "Concave outline is ear-clipped, not filled with an unsafe vertex-zero fan. Each side cap area equals the polygon area and outward face normals agree."
+    },
+    "closedSolids": [
+      {
+        "name": "referenceWhiteWingEndplate-1",
+        "triangles": 28,
+        "degenerateTriangles": 0,
+        "badWeldedEdges": 0,
+        "signedVolumeM3": 0.00047231232924604673,
+        "faceNormalDisagreements": 0
+      },
+      {
+        "name": "referenceWhiteWingEndplate1",
+        "triangles": 28,
+        "degenerateTriangles": 0,
+        "badWeldedEdges": 0,
+        "signedVolumeM3": 0.00047231232924604673,
+        "faceNormalDisagreements": 0
+      },
+      {
+        "name": "referenceWingSupport-1",
+        "triangles": 28,
+        "degenerateTriangles": 0,
+        "badWeldedEdges": 0,
+        "signedVolumeM3": 0.00018442504953975,
+        "faceNormalDisagreements": 0
+      },
+      {
+        "name": "referenceWingSupport1",
+        "triangles": 28,
+        "degenerateTriangles": 0,
+        "badWeldedEdges": 0,
+        "signedVolumeM3": 0.00018442504953975,
+        "faceNormalDisagreements": 0
+      },
+      {
+        "name": "referenceClosedDiffuserBacking",
+        "triangles": 1512,
+        "degenerateTriangles": 0,
+        "badWeldedEdges": 0,
+        "signedVolumeM3": 0.048084822125030464,
+        "faceNormalDisagreements": 0
+      }
+    ],
+    "allExportedMeshes": {
+      "meshCount": 255,
+      "nonfinitePositions": 0,
+      "editedExteriorFaceNormalDisagreements": 0,
+      "preExistingYokeFaceNormalDisagreements": 8,
+      "globalWatertightCarClaim": false,
+      "note": "The car uses intentional surface assemblies. Closed edited solids were checked as manifolds; that is not a claim that every exterior skin forms one global watertight solid."
+    },
+    "focusedNodeTests": {
+      "command": "node --test tests/reference-flat-windshield-rear-wing.test.mjs",
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "rearRaySemanticReview": {
+    "verdict": "accept_changed_depth_semantics_for_the_closed_backing_only",
+    "reason": "The old first-hit z>=2.1 assertion described the old flat bulkhead. The intentional new channel front skin ranges z=2.0025..2.1475, so a hit between2.00 and2.10 is not a daylight hole.",
+    "frontSkinWorldZRangeM": [
+      2.0025,
+      2.1475
+    ],
+    "backCapWorldZM": 1.93,
+    "minimumFrontHitBoundM": 2.0,
+    "requiredCompanionChecks": [
+      "All welded backing edges have two opposite incident triangle edges.",
+      "Zero degenerate triangles and positive bounded volume.",
+      "The nearest hit is the intended channel skin, not the back cap.",
+      "All other ray-target meshes keep the prior2.1 depth requirement."
+    ],
+    "recommendedExtraDiscriminator": "For interior channel rays, faceIndex<1152 identifies the original12x48x2 front grid triangles. Boundary side-wall hits should be identified separately."
+  },
+  "functionalPoseEvidence": {
+    "physicsSha256": "309d95ebf0deb6dd460cb7c639f8d401b5f09a1114c991fe54942afd9c4a6fc5",
+    "currentPhysicsHashMatchesProof": true,
+    "exactFirstPassToFinalComparison": "Only referenceClosedDiffuserBacking differs; all other exported meshes are semantically equal after material UUID normalization, including all ten active wing meshes.",
+    "targets": [
+      {
+        "name": "rest",
+        "y": 0.79,
+        "rotationX": -0.05
+      },
+      {
+        "name": "deployed",
+        "y": 0.94,
+        "rotationX": -0.05
+      },
+      {
+        "name": "flight",
+        "y": 0.94,
+        "rotationX": -0.28
+      },
+      {
+        "name": "airbrake",
+        "y": 0.96,
+        "rotationX": -0.72
+      }
+    ],
+    "limit": "These are exact static target-transform checks. They do not by themselves verify live driving interpolation, mechanical support anchoring through every intermediate pose, or browser/GPU rendering. First-pass whole-car pose images retain the first-pass diffuser backing."
+  },
+  "reviewedRuntimeEvidence": {
+    "file": "verification/rear-wing-screen-runtime.json",
+    "pass": true,
+    "minimumReferenceGlassClearanceM": 0.1235999440249893,
+    "note": "Reviewed existing production-scene ray result and matching source hashes; not independently rerun as part of this review."
+  },
+  "remainingLikenessLimits": [
+    "Reference photograph cameras, exposure and lighting are unknown. No exact silhouette or dimensional-match claim is justified from these uncalibrated views.",
+    "The candidate carrier remains a regular rounded rectangle, and the tail lamp surround/registration pad remain comparatively rectilinear. The reference has subtler tapered/chamfered transitions.",
+    "The white bridge shows stronger localized studio highlights and the diffuser remains visually dark at16CPU samples. Material translation and lighting account for part of the apparent difference; those images cannot establish material identity.",
+    "The side-photo wing is in a raised, pitched state, while the canonical comparisons use the construction pose. Compare it with the separate air-brake evidence, not by baking a permanent pitch into the mesh.",
+    "No obvious daylight hole or inverted edited surface is visible in the inspected CPU views, but that observation is bounded to these cameras and supported closed-solid checks rather than a universal visibility proof."
+  ],
+  "action": "No further redesign requested or performed. Candidate is suitable for parent review with the stated caveats."
+}

@@ -1,0 +1,83 @@
+{
+  "status": "Unpublished local candidate; visual edits frozen for user feedback",
+  "functionalBase": "a9690717613d92441c5eefffe65207c954d35b54",
+  "functionalFilesUnchangedFromBase": true,
+  "currentSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "renderedSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "canonicalVisibleEqualitySha256": "214fd0e325d1dbfd58e6202ad0a1494631b4e63d5b64f84d37714e3aefab4b74",
+  "preview": {
+    "meshCount": 255,
+    "triangleCount": 125578,
+    "renderer": "Blender 4.3.2 Cycles CPU",
+    "samples": 48,
+    "rawImageSha256": "2a3300ba2a66bc950b8cb54aac574df90d51100af72dd387e350cdff2532b3c4",
+    "comparisonImageSha256": "21d2ed482cd1a7d50a31105434802699028e07818d98c1c39616b118f4d30e35",
+    "sourcePhotoUntouched": true,
+    "approximateCameraMatch": true,
+    "localArtifactDirectory": "verification/stage2-reference-front-cleanup"
+  },
+  "checks": {
+    "nodeTests": 345,
+    "nodePass": 345,
+    "luaTests": 24,
+    "luaPass": 24,
+    "syntaxBundleBuild": "pass",
+    "instrumentRays": 117600,
+    "roadRays": 39200,
+    "instrumentBlocks": [],
+    "roadBlocks": [],
+    "rearDirectRays": 90,
+    "rearQuarterRays": 48,
+    "rearGaps": [],
+    "opticalRays": 16,
+    "visibleOpticalRays": 16,
+    "lowerFrontCleanupRays": 16,
+    "playerSceneBefore": {
+      "visibleMeshes": 316,
+      "colorMeshes": 314,
+      "colorTriangles": 103297,
+      "shadowMeshes": 2,
+      "shadowTriangles": 13211,
+      "extraNoWriteTriangles": 13211,
+      "visibleAppearanceHash": "2096efbcd1bf261ab690ef72ea4a022207297bbfe14d9d0f623b04ff2ed0628c"
+    },
+    "playerSceneAfter": {
+      "visibleMeshes": 263,
+      "colorMeshes": 261,
+      "colorTriangles": 125590,
+      "shadowMeshes": 2,
+      "shadowTriangles": 14548,
+      "extraNoWriteTriangles": 14548,
+      "visibleAppearanceHash": "6a3b0e4d7147821bc5d7457fcfd5ad4f596ab05b49d0f5ef22646bf0d0fbf09f"
+    },
+    "maximumSampledShadowDeviationMetres": 0.011587966795474827,
+    "stableViewRecursiveLookups": 0,
+    "classicAndNpcAppearance": "exact hashes preserved",
+    "wheelBatching": "148 to16meshes; identical oriented triangle/normal/UV fingerprints in3poses; maximum Float32 world-position difference5.001347559613344e-9m"
+  },
+  "independentFrontReview": "Clearly closer in broad planar wing/inward lamp/shorter cheek relationships. Cleanup removes sill spikes and accurately attaches lamp liners. No new obvious front mesh defect; suitable to freeze for user feedback.",
+  "remainingLikenessGaps": [
+    "Thick strongly bowed splitter instead of integrated thin lower lip",
+    "Simple flat lower fascia",
+    "Glass appearance/outline and sharper outer corners"
+  ],
+  "limits": [
+    "Actual exported Three.js r128 geometry rendered with Blender Cycles CPU, not an in-game screenshot",
+    "Photograph camera and lighting are unknown; match and material translation are approximate",
+    "Mesh/triangle counts are not measured GPU draw calls, FPS or input latency",
+    "No WebGL/device visual gameplay verification or publication performed"
+  ],
+  "rootBundleSha256": "98fbe49b8661ced9062ad5849aea5fbb1283f4f6cf73cf1d9b1f4a33b457b189"
+}

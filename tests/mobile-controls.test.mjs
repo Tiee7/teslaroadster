@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 
 const source = name => readFileSync(new URL(`../src/${name}`, import.meta.url), 'utf8');
 const controls = source('mobile-controls.js');
@@ -147,7 +148,7 @@ function harness(overrides = {}, { map = 'highway', coarse = true, legacyMedia =
     showBanner: (...args) => banners.push(args), renderBannerText() {}, clearDebris() {},
     destroyVehicle() { context.gameState.isDestroyed = true; }
   });
-  vm.runInContext(`${config}\n${keyboard}\n${helpers}\n${reset}\n${clearAll}\n${actions}\n${collision}
+  vm.runInContext(`${scoreRules}\n${config}\n${keyboard}\n${helpers}\n${reset}\n${clearAll}\n${actions}\n${collision}
     function frame(dt) { const t = I18N[currentLang]; ${motion}
       return { airConsumedThisFrame, isRearThrusterFiring, isRetroBrakeFiring, isLiftFiring, isDescendFiring,
         retroBrakeDemand, driveInput, rawRollInput, rawPitchInput, rawYawInput, stabilizerDt };

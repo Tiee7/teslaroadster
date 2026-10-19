@@ -36,7 +36,7 @@ function buildReferenceRoadsterExterior() {
   const mix = (a, b, t) => a + (b - a) * t;
   const addMesh = (name, geometry, material, parent = body) => {
     const mesh = new THREE.Mesh(geometry, material); mesh.name = name;
-    mesh.castShadow = material !== lampWhite && material !== lampRed;
+    mesh.castShadow = material !== lampWhite && material !== lampRed && material !== seamMaterial;
     mesh.receiveShadow = true; parent.add(mesh); return mesh;
   };
   // Shared derivatives at every control station, shape-preserving PCHIP.
@@ -90,7 +90,17 @@ function buildReferenceRoadsterExterior() {
       const p0 = grid[Math.max(0, i - 1)][j], p1 = grid[Math.min(rows, i + 1)][j];
       const q0 = grid[i][Math.max(0, j - 1)], q1 = grid[i][Math.min(columns, j + 1)];
       const a = p1.map((v, k) => v - p0[k]), b = q1.map((v, k) => v - q0[k]);
-      const n = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+      let n = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+      // A collapsed UV pole still needs its one-sided limiting face normal.
+      // Reuse the nearest noncollapsed row, without changing any positions.
+      if(Math.hypot(...n)<1e-12)for(let d=1;d<=rows;d++){
+        const r=Math.max(0,Math.min(rows,i+(i<rows?d:-d)));
+        const v0=grid[Math.max(0,r-1)][j],v1=grid[Math.min(rows,r+1)][j];
+        const w0=grid[r][Math.max(0,j-1)],w1=grid[r][Math.min(columns,j+1)];
+        const v=v1.map((x,k)=>x-v0[k]),w=w1.map((x,k)=>x-w0[k]);
+        n=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]];
+        if(Math.hypot(...n)>1e-12)break;
+      }
       const length = Math.hypot(...n) || 1; normals.push(...n.map(v => v / length * (flip ? -1 : 1)));
     }
     const geometry = new THREE.BufferGeometry();
@@ -127,20 +137,22 @@ function buildReferenceRoadsterExterior() {
     }, segments, 1, material, parent, false);
   }
 
+  // Wide wheel shoulders and a visibly pinched door waist. These stations
+  // describe the silhouette, independently of trim and material highlights.
   const shape = profile([
-    { z: -2.32, innerX: .680, innerY: .505, crestX: .870, crestY: .620, edgeX: .954, edgeY: .560, waistX: .951, waistY: .355, sillY: .155 },
-    { z: -2.10, innerX: .615, innerY: .680, crestX: .855, crestY: .738, edgeX: .981, edgeY: .636, waistX: .986, waistY: .420, sillY: .158 },
-    { z: -1.85, innerX: .628, innerY: .700, crestX: .860, crestY: .775, edgeX: 1.000, edgeY: .706, waistX: 1.013, waistY: .482, sillY: .160 },
-    { z: -1.36, innerX: .654, innerY: .715, crestX: .866, crestY: .791, edgeX: 1.005, edgeY: .747, waistX: 1.020, waistY: .522, sillY: .165 },
-    { z: -1.06, innerX: .668, innerY: .710, crestX: .858, crestY: .775, edgeX: .992, edgeY: .731, waistX: 1.005, waistY: .520, sillY: .168 },
-    { z: -.72, innerX: .830, innerY: .738, crestX: .886, crestY: .770, edgeX: .973, edgeY: .725, waistX: .994, waistY: .492, sillY: .176 },
-    { z: -.10, innerX: .802, innerY: .772, crestX: .864, crestY: .788, edgeX: .963, edgeY: .746, waistX: .990, waistY: .501, sillY: .190 },
-    { z: .42, innerX: .748, innerY: .810, crestX: .852, crestY: .832, edgeX: .979, edgeY: .785, waistX: 1.000, waistY: .534, sillY: .207 },
-    { z: .90, innerX: .602, innerY: .851, crestX: .841, crestY: .881, edgeX: 1.000, edgeY: .832, waistX: 1.017, waistY: .587, sillY: .210 },
-    { z: 1.38, innerX: .375, innerY: .863, crestX: .820, crestY: .906, edgeX: 1.005, edgeY: .854, waistX: 1.020, waistY: .620, sillY: .208 },
-    { z: 1.72, innerX: .215, innerY: .860, crestX: .792, crestY: .897, edgeX: .986, edgeY: .852, waistX: .997, waistY: .612, sillY: .207 },
-    { z: 2.03, innerX: .205, innerY: .862, crestX: .754, crestY: .882, edgeX: .950, edgeY: .838, waistX: .958, waistY: .598, sillY: .208 },
-    { z: 2.26, innerX: .205, innerY: .860, crestX: .715, crestY: .869, edgeX: .910, edgeY: .823, waistX: .918, waistY: .571, sillY: .210 }
+    { z: -2.16, innerX: .680, innerY: .480, crestX: .817, crestY: .483, edgeX: .898, edgeY: .490, waistX: .888, waistY: .345, sillY: .155 },
+    { z: -1.98, innerX: .615, innerY: .540, crestX: .840, crestY: .559, edgeX: .964, edgeY: .555, waistX: .954, waistY: .411, sillY: .158 },
+    { z: -1.75, innerX: .628, innerY: .605, crestX: .864, crestY: .644, edgeX: .995, edgeY: .640, waistX: .989, waistY: .480, sillY: .160 },
+    { z: -1.36, innerX: .654, innerY: .665, crestX: .865, crestY: .760, edgeX: 1.005, edgeY: .710, waistX: 1.008, waistY: .522, sillY: .165 },
+    { z: -1.06, innerX: .668, innerY: .695, crestX: .851, crestY: .765, edgeX: .983, edgeY: .700, waistX: .985, waistY: .488, sillY: .168 },
+    { z: -.72, innerX: .802, innerY: .724, crestX: .855, crestY: .754, edgeX: .947, edgeY: .710, waistX: .931, waistY: .420, sillY: .176 },
+    { z: -.10, innerX: .775, innerY: .754, crestX: .846, crestY: .774, edgeX: .938, edgeY: .732, waistX: .866, waistY: .390, sillY: .182 },
+    { z: .42, innerX: .725, innerY: .792, crestX: .854, crestY: .816, edgeX: .963, edgeY: .769, waistX: .903, waistY: .420, sillY: .190 },
+    { z: .90, innerX: .602, innerY: .836, crestX: .865, crestY: .863, edgeX: .995, edgeY: .816, waistX: .993, waistY: .555, sillY: .204 },
+    { z: 1.38, innerX: .398, innerY: .850, crestX: .847, crestY: .886, edgeX: 1.015, edgeY: .839, waistX: 1.018, waistY: .600, sillY: .208 },
+    { z: 1.72, innerX: .275, innerY: .846, crestX: .817, crestY: .878, edgeX: .990, edgeY: .832, waistX: .996, waistY: .592, sillY: .207 },
+    { z: 2.03, innerX: .255, innerY: .843, crestX: .776, crestY: .865, edgeX: .957, edgeY: .819, waistX: .952, waistY: .563, sillY: .208 },
+    { z: 2.26, innerX: .255, innerY: .840, crestX: .746, crestY: .848, edgeX: .917, edgeY: .798, waistX: .920, waistY: .540, sillY: .210 }
   ]);
   const openingY = z => {
     const s = shape(z); let y = s.sillY;
@@ -149,75 +161,209 @@ function buildReferenceRoadsterExterior() {
     if (Math.abs(dr) < .430) y = Math.max(y, .160 + 1.420 * Math.sqrt(Math.max(0, .430 ** 2 - dr ** 2)));
     return y;
   };
-  function shoulderPoint(z, u, side) {
+  function mainShoulderPoint(z, u, side) {
     const s = shape(z);
-    // Two cubic arcs share a horizontal tangent across each fender crown.
+    // A broad ruled inner wing meets the rounded outer shoulder at a clear crest.
     let x, y;
     if (u < .55) {
       const t = u / .55; x = mix(s.innerX, s.crestX, t);
-      y = mix(s.innerY, s.crestY, Math.sin(t * Math.PI / 2));
+      y = mix(s.innerY,s.crestY,t);
     } else {
       const t = (u - .55) / .45; x = mix(s.crestX, s.edgeX, t);
       y = s.crestY - (s.crestY - s.edgeY) * (1 - Math.cos(t * Math.PI / 2));
     }
     return [side * x, y, z];
   }
+  // The side reference resolves the high fold above the front axle, rather
+  // than ahead of it. The nose-to-arch envelope now rises continuously aft.
+  // Front and side views jointly constrain this genuinely planar white wing.
+  const frontWingA=[.840,.760,-1.400];
+  const frontWingB=[.59670636,.75711891,-1.06];
+  const frontWingC=[.68697000,.47500000,-2.16];
+  function frontShoulderPoint(z,u,side) {
+    const lerpPoint=(a,b,t)=>a.map((v,k)=>mix(v,b[k],t));
+    const inner=lerpPoint(frontWingC,frontWingB,(z-frontWingC[2])/(frontWingB[2]-frontWingC[2]));
+    const crease=z<frontWingA[2]
+      ?lerpPoint(frontWingC,frontWingA,(z-frontWingC[2])/(frontWingA[2]-frontWingC[2]))
+      :lerpPoint(frontWingA,frontWingB,(z-frontWingA[2])/(frontWingB[2]-frontWingA[2]));
+    if(u<=.55){const p=lerpPoint(inner,crease,u/.55);p[0]*=side;return p;}
+    const t=(u-.55)/.45,s=shape(z);let x,y;
+    if(t<.55){const q=t/.55;x=mix(crease[0],s.crestX,q);y=mix(crease[1],s.crestY,q);}
+    else{const q=(t-.55)/.45;x=mix(s.crestX,s.edgeX,q);y=s.crestY-(s.crestY-s.edgeY)*(1-Math.cos(q*Math.PI/2));}
+    return [side*x,y,z];
+  }
+  const shoulderPoint=(z,u,side=1)=>z<=frontWingB[2]?frontShoulderPoint(z,u,side):mainShoulderPoint(z,u,side);
   function sidePoint(z, u, side) {
     const s = shape(z), bottom = openingY(z), waist = Math.max(s.waistY, bottom + .013);
     if (u < .48) {
       const t = u / .48;
-      return [side * mix(s.edgeX, s.waistX, t), mix(s.edgeY, waist, t), z];
+      return [side * (mix(s.edgeX,s.waistX,t)+.014*Math.sin(Math.PI*t)*Math.exp(-Math.pow(z/.85,4))),mix(s.edgeY,waist,t),z];
     }
     const t = (u - .48) / .52;
-    return [side * (mix(s.waistX, s.waistX - .052, t) - .009 * Math.sin(Math.PI * t)), mix(waist, bottom, t), z];
+    const rockerX = Math.max(s.waistX - .030, s.edgeX - .040);
+    return [side * (mix(s.waistX, rockerX, t) - .025 * Math.sin(Math.PI * t)), mix(waist, bottom, t), z];
+  }
+
+  // Subtract a true triangular aperture from the smooth forward fender.
+  // The aperture is a straight front-projected triangle evaluated on the same
+  // shoulder skin. Parametric clipping alone can fold paint over its own optic.
+  function frontSkinAtXY(x,y,side) {
+    // Invert the actual planar wing, not the superseded station cross-section.
+    // Every aperture edge lies in this plane, so its return attaches exactly.
+    const a=frontWingB.map((v,k)=>v-frontWingA[k]),b=frontWingC.map((v,k)=>v-frontWingA[k]);
+    const n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+    const z=frontWingA[2]-(n[0]*(x-frontWingA[0])+n[1]*(y-frontWingA[1]))/n[2];
+    return [side*x,y,z];
+  }
+  function cutFrontFender(side,aperture) {
+    const positions=[],normals=[],indices=[];
+    const cross=(a,b,p)=>(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);
+    const hole=aperture.map(([z,u])=>{const p=shoulderPoint(z,u,side);return [Math.abs(p[0]),p[1]];});
+    const orientation=Math.sign(cross(hole[0],hole[1],hole[2]));
+    const distance=(a,b,p)=>{const q=shoulderPoint(p[0],p[1],side);return orientation*cross(a,b,[Math.abs(q[0]),q[1]]);};
+    function clip(poly,a,b,inside) {
+      const out=[];
+      for(let i=0;i<poly.length;i++){
+        const previous=poly[(i+poly.length-1)%poly.length],current=poly[i];
+        const vp=distance(a,b,previous),vc=distance(a,b,current);
+        const kp=inside?vp>=-1e-12:vp<=1e-12,kc=inside?vc>=-1e-12:vc<=1e-12;
+        if(kp!==kc){const t=vp/(vp-vc);out.push([mix(previous[0],current[0],t),mix(previous[1],current[1],t)]);}
+        if(kc)out.push(current);
+      }
+      return out;
+    }
+    function emit(poly) {
+      if(poly.length<3)return;
+      const offset=positions.length/3;
+      for(const [z,u] of poly){
+        positions.push(...shoulderPoint(z,u,side));
+        const a=frontShoulderPoint(Math.max(-2.16,z-.00001),u,side),b=frontShoulderPoint(Math.min(-1.06,z+.00001),u,side);
+        const c=shoulderPoint(z,Math.max(0,u-.00001),side),d=shoulderPoint(z,Math.min(1,u+.00001),side);
+        const v=b.map((x,k)=>x-a[k]),w=d.map((x,k)=>x-c[k]);
+        let n=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]];
+        if(Math.hypot(...n)<1e-12){
+          // Both tips of the planar triangular strip collapse to one point.
+          // Its analytic plane normal is the correct limiting surface normal.
+          const a=frontWingB.map((x,k)=>x-frontWingA[k]),b=frontWingC.map((x,k)=>x-frontWingA[k]);
+          n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]].map(x=>-x);
+          n[0]*=side;
+          if(side<0)n=n.map(x=>-x);
+        }
+        const length=Math.hypot(...n)||1;normals.push(...n.map(x=>x/length*(side<0?-1:1)));
+      }
+      for(let i=1;i<poly.length-1;i++){
+        const a=poly[0],b=poly[i],c=poly[i+1];
+        if(Math.abs(cross(a,b,c))<1e-13)continue;
+        // Both UV boundary tips collapse in 3D. Omit zero-area triangles in
+        // the actual Float32 geometry, rather than leaving unraycastable fans.
+        const point=j=>positions.slice(j*3,j*3+3).map(Math.fround);
+        const p=point(offset),q=point(offset+i),r=point(offset+i+1);
+        const v=q.map((x,k)=>x-p[k]),w=r.map((x,k)=>x-p[k]);
+        if(Math.hypot(v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0])<1e-12)continue;
+        indices.push(...(side<0?[offset,offset+i+1,offset+i]:[offset,offset+i,offset+i+1]));
+      }
+    }
+    function subtract(poly) {
+      for(let edge=0;edge<3&&poly.length>=3;edge++){
+        const a=hole[edge],b=hole[(edge+1)%3];
+        emit(clip(poly,a,b,false));poly=clip(poly,a,b,true);
+      }
+    }
+    const rows=[...new Set([...Array.from({length:25},(_,i)=>mix(-2.16,-1.06,i/24)),-1.98,-1.75,frontWingA[2],-1.36])].sort((a,b)=>a-b);
+    const columns=[...new Set([...Array.from({length:17},(_,i)=>i/16),.55,.7975])].sort((a,b)=>a-b);
+    for(let row=0;row<rows.length-1;row++)for(let column=0;column<columns.length-1;column++){
+      const z0=rows[row],z1=rows[row+1],u0=columns[column],u1=columns[column+1];
+      subtract([[z0,u0],[z1,u0],[z1,u1]]);subtract([[z0,u0],[z1,u1],[z0,u1]]);
+    }
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+    geo.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));geo.setIndex(indices);geo.computeBoundingBox();geo.computeBoundingSphere();
+    return addMesh(`referenceLampShoulderBridge${side}`,geo,paint);
   }
 
   // Broad, almost planar hood. Its width stays substantial at the nose.
   surface('referenceFlatWedgeHood', (t, u) => {
-    const z = mix(-2.32, -1.06, t), s = shape(z), x = (u * 2 - 1) * s.innerX;
+    const z = mix(-2.16, -1.06, t), s = shape(z), x = (u * 2 - 1) * s.innerX;
     return [x, s.innerY + .0045 * (1 - (u * 2 - 1) ** 2), z];
   }, 96, 32, paint);
   for (const side of [-1, 1]) {
-    surface(`referenceShoulder${side}`, (t, u) => shoulderPoint(mix(-2.10, 2.26, t), u, side), 176, 32, paint, body, side < 0);
+    surface(`referenceShoulder${side}`, (t, u) => mainShoulderPoint(mix(-1.06, 2.26, t), u, side), 176, 32, paint, body, side < 0);
     // The shoulder-to-door break is deliberately separate from the crown.
-    surface(`referenceUpperFlank${side}`, (t, u) => sidePoint(mix(-2.32, 2.26, t), u * .48, side), 240, 8, paint, body, side < 0);
-    surface(`referenceSculptedDoor${side}`, (t, u) => sidePoint(mix(-2.32, 2.26, t), .48 + u * .52, side), 240, 16, paint, body, side < 0);
+    surface(`referenceUpperFlank${side}`, (t, u) => sidePoint(mix(-2.16, 2.26, t), u * .48, side), 240, 8, paint, body, side < 0);
+    surface(`referenceSculptedDoor${side}`, (t, u) => sidePoint(mix(-2.16, 2.26, t), .48 + u * .52, side), 240, 16, paint, body, side < 0);
     // Painted arch return/lip, nested behind the body edge, without faceted rings.
     surface(`referenceArchReturn${side}`, (t, u) => {
-      const z = mix(-2.32, 2.26, t), s = shape(z), y = openingY(z);
-      return [side * (s.waistX - .052 - u * .035), y - u * .014, z];
+      const z = mix(-1.94, 2.26, t), s = shape(z), y = openingY(z);
+      return [side * (Math.max(s.waistX - .030, s.edgeX - .040) - u * .035), y - u * .014, z];
     }, 240, 3, paint, body, side < 0);
-    // A narrow black sill undercuts the white body between the two wheel holes.
+    // A narrow black sill undercuts the white body between the wheel holes.
+    // Its leading return terminates behind the bumper, above the front lip's
+    // projected lower contour; no exposed pointed strip hangs beneath it.
     surface(`referenceCarbonSill${side}`, (t, u) => {
-      const z = mix(-2.30, 2.24, t), s = shape(z), top = openingY(z);
-      return [side * (s.waistX - .054 + u * .008), mix(top - .008, Math.max(.12, top - .044), u), z];
+      const z = mix(-1.94, 2.24, t), s = shape(z), top = openingY(z);
+      return [side * (Math.max(s.waistX - .030, s.edgeX - .040) - .002 + u * .008), mix(top - .008, Math.max(.12, top - .044), u), z];
     }, 224, 3, carbon, body, side < 0);
 
-    // The forward fender is folded around an actual triangular recessed lamp,
-    // rather than a luminous triangle pasted onto the windshield-facing hood.
-    const p = (x, y, z) => [side * x, y, z];
-    const lampTip = p(.680, .511, -2.327), lampInner = p(.616, .669, -2.126), lampOuter = p(.850, .670, -2.126);
-    facet(`referenceFrontShoulderTop${side}`, [p(.615, .680, -2.10), p(.855, .738, -2.10), lampOuter, lampInner], paint, body, [0, 1, -.3]);
-    facet(`referenceFrontCheek${side}`, [lampTip, lampOuter, p(.982, .637, -2.10), p(.954, .560, -2.32), p(.951, .280, -2.32), p(.708, .280, -2.32)], paint, body, [side * .2, .15, -1]);
-    facet(`referenceLampPocket${side}`, [lampTip, lampInner, lampOuter], recess, frontLights, [0, .25, -1]);
-    // Deep charcoal liner: the small luminous face is always -Z-facing.
-    const triangle = [p(.687, .531, -2.327), p(.630, .654, -2.141), p(.829, .655, -2.141)];
-    const lens = facet(`referenceTriangleHeadlamp${side}`, triangle, lampWhite, frontLights, [0, .25, -1]);
-    lens.userData.forwardOnly = true;
-    // A restrained dark upper eyebrow makes the triangular inset read in sun.
-    facet(`referenceHeadlightEyebrow${side}`, [p(.622, .667, -2.132), p(.846, .668, -2.132), p(.839, .655, -2.148), p(.628, .654, -2.148)], dark, frontLights, [0, .3, -1]);
-    const indicator = facet(`referenceFrontIndicator${side}`, [p(.640, .650, -2.148), p(.826, .651, -2.148), p(.816, .642, -2.161), p(.644, .641, -2.161)], side < 0 ? amberL : amberR, frontLights, [0, .3, -1]);
-    indicator.userData.forwardOnly = true;
+    // A dark optical pocket cut into the continuous fender, not a folded
+    // triangular pod. Lens and walls sit inside the skin by only 12–18 mm.
+    const p=(x,y,z)=>[side*x,y,z];
+    const apertureUV=(x,y)=>{
+      const point=frontSkinAtXY(x,y,1),z=point[2];
+      const inner=frontShoulderPoint(z,0,1),crease=frontShoulderPoint(z,.55,1);
+      return [z,.55*(x-inner[0])/(crease[0]-inner[0])];
+    };
+    // Keep the optical upper edge broad and shallow in front projection while
+    // the physical wing slopes toward the shortened nose in side elevation.
+    const aperture=[[frontWingC[2],0],apertureUV(.655,.635),apertureUV(.770,.650)];
+    cutFrontFender(side,aperture);
+    // Close the folded wing into the hood edge and the original rear shoulder;
+    // no overlapping cosmetic plane or detached floating fin is left behind.
+    const innerReturn=surface(`referenceFrontWingInnerReturn${side}`,(t,u)=>{
+      const z=mix(-2.16,-1.06,t),a=frontShoulderPoint(z,0,side),q=shape(z),b=[side*q.innerX,q.innerY,z];
+      return a.map((v,k)=>mix(v,b[k],u));
+    },24,2,paint,body,side>0);innerReturn.castShadow=false;
+    const rearReturn=facet(`referenceFrontWingRearReturn${side}`,[frontShoulderPoint(-1.06,0,side),mainShoulderPoint(-1.06,0,side),mainShoulderPoint(-1.06,.55,side)],paint,body,[0,0,1]);
+    rearReturn.castShadow=false;
+    const skin=aperture.map(([z,u])=>shoulderPoint(z,u,side));
+    const inset=skin.map(([x,y,z])=>[x,y-.012,z+.014]);
+    const lensMaterial=new THREE.MeshPhysicalMaterial({color:0x15232c,metalness:.35,roughness:.17,clearcoat:1,side:THREE.FrontSide});
+    facet(`referenceTriangleHeadlamp${side}`,inset,lensMaterial,frontLights,[0,.4,-1]);
+    for(let edge=0;edge<3;edge++){
+      const next=(edge+1)%3;
+      const va=skin[edge],vb=skin[next],delta=vb.map((v,k)=>v-va[k]),depth=[0,-.012,.014];
+      const normal=[delta[1]*depth[2]-delta[2]*depth[1],delta[2]*depth[0]-delta[0]*depth[2],delta[0]*depth[1]-delta[1]*depth[0]];
+      const center=skin[0].map((v,k)=>(v+skin[1][k]+skin[2][k])/3-(va[k]+vb[k])/2);
+      const inwardFlip=normal.reduce((sum,v,k)=>sum+v*center[k],0)<0;
+      // Follow the curved aperture edge with an actual dark internal liner.
+      const pocketWall=surface(`referenceLampPocketWall${side}_${edge}`,(t,u)=>{
+        const x=mix(Math.abs(skin[edge][0]),Math.abs(skin[next][0]),t),y=mix(skin[edge][1],skin[next][1],t);
+        const a=frontSkinAtXY(x,y,side),b=inset[edge].map((v,k)=>mix(v,inset[next][k],t));
+        return a.map((v,k)=>mix(v,b[k],u));
+      },12,2,dark,frontLights,inwardFlip);
+      pocketWall.castShadow=false; // enclosed optical liner, not silhouette
+    }
+    const bary=(a,b,c)=>inset[0].map((v,k)=>v*a+inset[1][k]*b+inset[2][k]*c);
+    const lens=facet(`referenceHeadlightProjector${side}`,[bary(.90,.05,.05),bary(.05,.90,.05),bary(.05,.05,.90)].map(v=>[v[0],v[1]+.001,v[2]-.002]),lampWhite,frontLights,[0,.4,-1]);
+    lens.userData.forwardOnly=true;
+    const indicator=facet(`referenceFrontIndicator${side}`,[bary(.11,.78,.11),bary(.11,.11,.78),bary(.16,.105,.735),bary(.16,.735,.105)].map(v=>[v[0],v[1]+.001,v[2]-.002]),side<0?amberL:amberR,frontLights,[0,.4,-1]);
+    indicator.userData.forwardOnly=true;
+    // Rounded/swept outer nose cheeks close into the dark lower splitter.
+    surface(`referenceFrontCheek${side}`,(t,u)=>{
+      const top=shoulderPoint(-2.16,u,side);
+      const x=mix(Math.abs(top[0]),mix(.710,.889,u),t),y=mix(top[1],mix(.335,.345,u),t);
+      return [side*x,y,mix(-2.161,-2.151,t*t)];
+    },28,20,paint,body,side>0);
+    facet(`referenceFrontCarbonCorner${side}`,[p(.710,.335,-2.152),p(.889,.345,-2.152),p(.868,.155,-2.152),p(.730,.155,-2.152)],carbon,body,[0,0,-1]);
 
     // Side intake aft of the front wheel, plus the white knife-edge that borders it.
-    facet(`referenceSideBladeRecess${side}`, [p(.999, .617, -.932), p(.998, .624, -.783), p(.983, .278, -.738), p(.967, .232, -.887)], recess, body, [side, 0, 0]);
-    facet(`referenceSideBlade${side}`, [p(1.001, .625, -.766), p(.996, .625, -.730), p(.950, .222, -.686), p(.969, .224, -.737)], paint, body, [side, 0, 0]);
+    facet(`referenceSideBladeRecess${side}`, [[-.932,.20],[-.783,.20],[-.738,.91],[-.887,.94]].map(([z,u])=>{const a=sidePoint(z,u,side);a[0]+=side*.002;return a;}),recess,body,[side,0,0]);
+    facet(`referenceSideBlade${side}`, [[-.766,.18],[-.730,.18],[-.686,.96],[-.737,.95]].map(([z,u])=>{const a=sidePoint(z,u,side);a[0]+=side*.004;return a;}),paint,body,[side,0,0]);
 
     // Narrow, surface-following door shutlines. They are not raised black bars.
     for (const z of [-.650, .780]) ribbon(`referenceDoorSeam${side}_${z}`, t => {
       const a = sidePoint(z + .018 * Math.sin(Math.PI * t), mix(.02, .97, t), side); a[0] += side * .0012; return a;
     }, .0028, seamMaterial, body, [side, 0, 0], 48);
-    const handle = box(`referenceFlushDoorHandle${side}`, [.003, .010, .094], [side * .990, .659, .35], dark);
+    ribbon(`referenceDoorLowerSeam${side}`,t=>{const z=mix(-.65,.78,t),a=sidePoint(z,.89+.045*Math.sin(Math.PI*t),side);a[0]+=side*.0015;return a;},.0025,seamMaterial,body,[side,0,0],64);
+    const handle = box(`referenceFlushDoorHandle${side}`, [.003, .010, .094], [side * .955, .660, .35], dark);
     handle.rotation.x = -.08;
     // Small mirror camera fairings stay inside the original overall width.
     box(`referenceMirrorStalk${side}`, [.075, .012, .032], [side * .895, .756, -.745], carbon);
@@ -228,60 +374,146 @@ function buildReferenceRoadsterExterior() {
 
   // Front mask: broad painted corners surround a black recessed, continuous
   // center fascia. The thin cross-nose white light has a single emitting face.
-  facet('referenceFrontFasciaRecess', [[-.704, .487, -2.307], [.704, .487, -2.307], [.732, .257, -2.307], [-.732, .257, -2.307]], dark, body, [0, 0, -1]);
-  facet('referenceFrontLowerIntake', [[-.701, .285, -2.316], [.701, .285, -2.316], [.754, .188, -2.316], [-.754, .188, -2.316]], recess, body, [0, 0, -1]);
-  facet('referenceFrontBarHousing', [[-.690, .512, -2.329], [.690, .512, -2.329], [.695, .483, -2.329], [-.695, .483, -2.329]], dark, frontLights, [0, 0, -1]);
-  const noseBar = facet('referenceCrossNoseLight', [[-.684, .504, -2.331], [.684, .504, -2.331], [.688, .493, -2.331], [-.688, .493, -2.331]], lampWhite, frontLights, [0, 0, -1]);
+  facet('referenceFrontFasciaRecess', [[-.704, .460, -2.150], [.704, .460, -2.150], [.732, .257, -2.147], [-.732, .257, -2.147]], dark, body, [0, 0, -1]);
+  facet('referenceFrontLowerIntake', [[-.701, .385, -2.156], [.701, .385, -2.156], [.754, .235, -2.156], [-.754, .235, -2.156]], recess, body, [0, 0, -1]);
+  facet('referenceFrontBarHousing', [[-.690, .483, -2.169], [.690, .483, -2.169], [.695, .458, -2.169], [-.695, .458, -2.169]], dark, frontLights, [0, 0, -1]);
+  const noseBar = facet('referenceCrossNoseLight', [[-.684, .476, -2.171], [.684, .476, -2.171], [.688, .467, -2.171], [-.688, .467, -2.171]], lampWhite, frontLights, [0, 0, -1]);
   noseBar.userData.forwardOnly = true;
-  facet('referenceGrilleHorizontalBlade', [[-.715, .341, -2.319], [.715, .341, -2.319], [.717, .328, -2.319], [-.717, .328, -2.319]], carbon, body, [0, 0, -1]);
-  facet('referenceFrontSplitterTop', [[-.970, .154, -2.358], [.970, .154, -2.358], [.972, .154, -2.170], [-.972, .154, -2.170]], carbon, body, [0, 1, 0]);
-  facet('referenceFrontSplitterEdge', [[-.970, .154, -2.358], [.970, .154, -2.358], [.970, .126, -2.358], [-.970, .126, -2.358]], dark, body, [0, 0, -1]);
+  facet('referenceGrilleHorizontalBlade', [[-.715, .405, -2.159], [.715, .405, -2.159], [.717, .391, -2.159], [-.717, .391, -2.159]], carbon, body, [0, 0, -1]);
+  // The lower nose has a raised central undercut and angled outer returns,
+  // rather than one deep vertical black wall ending on a straight plank.
+  const frontSplitterSection=u=>{
+    const q=Math.max(0,(Math.abs(u*2-1)-.55)/.45),s=q*q*(3-2*q);
+    return {top:.285-.065*s,bottom:.215-.060*s};
+  };
+  surface('referenceFrontSplitterTop',(t,u)=>{
+    const s=frontSplitterSection(u);
+    return [(u*2-1)*mix(.914,.954,t),s.top-.020*t,mix(-2.184,-1.940,t)];
+  },8,40,carbon,body);
+  surface('referenceFrontSplitterEdge',(t,u)=>{
+    const s=frontSplitterSection(u);
+    return [(u*2-1)*.914,mix(s.top,s.bottom,t),-2.184-.004*Math.sin(Math.PI*t)];
+  },4,40,carbon,body,true);
   // A tiny, non-luminous nose badge, with no oversized logo on the hood.
-  facet('referenceNoseBadgeTop', [[-.023, .391, -2.323], [.023, .391, -2.323], [.017, .386, -2.323], [-.017, .386, -2.323]], metal, body, [0, 0, -1]);
-  facet('referenceNoseBadgeStem', [[-.004, .387, -2.324], [.004, .387, -2.324], [.002, .370, -2.324], [-.002, .370, -2.324]], metal, body, [0, 0, -1]);
+  facet('referenceNoseBadgeTop', [[-.023, .391, -2.163], [.023, .391, -2.163], [.017, .386, -2.163], [-.017, .386, -2.163]], metal, body, [0, 0, -1]);
+  facet('referenceNoseBadgeStem', [[-.004, .387, -2.164], [.004, .387, -2.164], [.002, .370, -2.164], [-.002, .370, -2.164]], metal, body, [0, 0, -1]);
   ribbon('referenceHoodRearShutline', t => {
-    const x = mix(-.665, .665, t); return [x, .713 + .0045 * (1 - (x / .668) ** 2), -1.063];
+    const x = mix(-.665, .665, t); return [x, .698 + .0045 * (1 - (x / .668) ** 2), -1.063];
   }, .0025, seamMaterial, body, [0, 1, 0], 48);
 
-  // The black canopy is one long tapered teardrop. White structural rails live
-  // between its roof and side windows, and all three are individually hideable.
+  // A broad raked windshield, a low nearly planar roof and substantial white
+  // flying buttresses. Side windows terminate before the rear wheel shoulders.
   const canopyProfile = profile([
-    { z: -1.065, w: .642, y: .719, bw: .669, by: .712 },
-    { z: -.820, w: .615, y: .913, bw: .832, by: .741 },
-    { z: -.360, w: .550, y: 1.096, bw: .820, by: .764 },
-    { z: .025, w: .516, y: 1.137, bw: .792, by: .782 },
-    { z: .450, w: .451, y: 1.094, bw: .734, by: .813 },
-    { z: .900, w: .343, y: .997, bw: .599, by: .850 },
-    { z: 1.330, w: .248, y: .914, bw: .390, by: .865 },
-    { z: 1.710, w: .198, y: .865, bw: .214, by: .861 }
+    { z: -1.065, w: .642, y: .702, bw: .669, by: .696 },
+    { z: -.820, w: .610, y: .863, bw: .800, by: .725 },
+    { z: -.360, w: .520, y: 1.065, bw: .790, by: .745 },
+    { z: .025, w: .477, y: 1.111, bw: .770, by: .763 },
+    { z: .450, w: .445, y: 1.074, bw: .716, by: .793 },
+    { z: .900, w: .393, y: .971, bw: .605, by: .835 },
+    { z: 1.330, w: .312, y: .885, bw: .414, by: .852 },
+    { z: 1.710, w: .270, y: .847, bw: .275, by: .847 }
   ]);
-  const canopyStart = -1.065, canopyEnd = 1.710;
-  surface('referencePanoramicCanopy', (t, u) => {
-    const z = mix(canopyStart, canopyEnd, t), s = canopyProfile(z), q = 2 * u - 1;
-    return [q * (s.w - .027), s.y + .012 * (1 - q * q), z];
-  }, 128, 40, glass, canopy);
-  for (const side of [-1, 1]) {
-    surface(`referenceWhiteRoofRail${side}`, (t, u) => {
-      const z = mix(canopyStart, canopyEnd, t), s = canopyProfile(z);
-      const rearFlare = .045 * Math.sin(Math.PI * Math.max(0, Math.min(1, (z - .55) / 1.15)));
-      return [side * (s.w - .027 + u * (.062 + rearFlare)), s.y - .006 * u + .002 * Math.sin(Math.PI * u), z];
-    }, 120, 6, paint, rails, side < 0);
-    surface(`referenceSideWindow${side}`, (t, u) => {
-      const z = mix(canopyStart, canopyEnd, t), s = canopyProfile(z);
-      const rearFlare = .045 * Math.sin(Math.PI * Math.max(0, Math.min(1, (z - .55) / 1.15)));
-      const inner = Math.min(s.bw - .003, s.w + .035 + rearFlare);
-      return [side * mix(inner, s.bw, u), mix(Math.max(s.by + .002, s.y - .008), s.by, u) - .0004 * Math.sin(Math.PI * u), z];
-    }, 120, 18, sideGlass, canopy, side < 0);
-    // Narrow painted sill at the base of the side glass, terminating into the
-    // broad white rear buttress. It follows the same shared station profile.
-    surface(`referenceWindowSill${side}`, (t, u) => {
-      const z = mix(-.925, 1.710, t), s = canopyProfile(z);
-      return [side * (s.bw + u * .022), s.by - u * .014, z];
-    }, 100, 3, paint, rails, side < 0);
+  const canopyStart = -1.065, canopyEnd = 1.710, windshieldTopZ = -.360;
+  const windshieldSlope = (1.065-.702)/(windshieldTopZ-canopyStart);
+  const windshieldY = z => .702+windshieldSlope*(z-canopyStart);
+  const canopyEdgeY = z => z<=windshieldTopZ?windshieldY(z):canopyProfile(z).y;
+  // Only the front windshield is a flat, raked pane. Its cowl and roof-edge
+  // endpoints stay fixed; side glazing and the rear roof keep their own shape.
+  const canopyStations=Array.from({length:105},(_,i)=>mix(canopyStart,canopyEnd,i/104));
+  const windshieldTopRow=Math.round((windshieldTopZ-canopyStart)/(canopyEnd-canopyStart)*104);
+  canopyStations[windshieldTopRow]=windshieldTopZ;
+  const centralCanopy=surface('referencePanoramicCanopy', (t, u) => {
+    const z=canopyStations[Math.round(t*104)],s=canopyProfile(z),q=2*u-1;
+    const blend=Math.min(1,Math.max(0,(z-windshieldTopZ)/.385));
+    const crown=.0035*(1-q*q)*blend*blend*(3-2*blend);
+    return [q*(s.w-.027),z<=windshieldTopZ?windshieldY(z):s.y+crown,z];
+  }, 104, 24, glass, canopy);
+  // A real pane has one limiting normal, including its roof seam. Do not let
+  // finite differences average the curved rear roof into its front edge rows.
+  const paneNormal=[0,1,-windshieldSlope],paneNormalLength=Math.hypot(...paneNormal);
+  const canopyNormals=centralCanopy.geometry.attributes.normal.array;
+  for(let row=0;row<=windshieldTopRow;row++)for(let column=0;column<=24;column++)for(let axis=0;axis<3;axis++){
+    canopyNormals[(row*25+column)*3+axis]=paneNormal[axis]/paneNormalLength;
   }
+  exterior.userData.frontWindshield={mesh:'referencePanoramicCanopy',startZ:canopyStart,endZ:windshieldTopZ,startY:.702,endY:1.065,slope:windshieldSlope,lastPlanarRow:windshieldTopRow,columns:24};
+  // The reference has separate outboard side panes and a pointed rear glass
+  // corner, not one continuously pinched leaf ending on a vertical cutoff.
+  // The central pane retains its front-wide / rear-narrow plan taper.
+  const windowTip=[.664,.696,-1.065];
+  const windowLowerFront=[.820,.752,-.820];
+  const windowRoofFront=[.543,1.054,-.360];
+  const windowRoofRear=[.540,1.063,.450];
+  const windowRearPoint=[.660,.858,.945];
+  const buttressTail=[.275,.847,1.710];
+  const planeY=(x,z,a,b,c)=>{
+    const v=b.map((q,k)=>q-a[k]),w=c.map((q,k)=>q-a[k]);
+    const n=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]];
+    return a[1]-(n[0]*(x-a[0])+n[2]*(z-a[2]))/n[1];
+  };
+  const windowLowerRear=[.770,planeY(.770,.450,windowLowerFront,windowRoofFront,windowRoofRear),.450];
+  const pointAlong=(points,z)=>{
+    if(z<=points[0][2])return points[0];
+    for(let i=1;i<points.length;i++)if(z<=points[i][2]){
+      const a=points[i-1],b=points[i],t=(z-a[2])/(b[2]-a[2]);return a.map((v,k)=>mix(v,b[k],t));
+    }
+    return points[points.length-1];
+  };
+  const frontWindowUpper=profile([{z:-1.065,x:.664},{z:-.820,x:.633},{z:-.360,x:.543}]);
+  const planeX=(y,z,a,b,c)=>{
+    const v=b.map((q,k)=>q-a[k]),w=c.map((q,k)=>q-a[k]);
+    const n=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]];
+    return a[0]-(n[1]*(y-a[1])+n[2]*(z-a[2]))/n[0];
+  };
+  const windowUpper=z=>{
+    if(z<windowRoofFront[2]){
+      const t=(z-windowTip[2])/(windowRoofFront[2]-windowTip[2]);
+      return[frontWindowUpper(z).x,canopyProfile(z).y-.011+.005*(1-t),z];
+    }
+    if(z<=windowRoofRear[2]){const y=canopyProfile(z).y-.011;return[planeX(y,z,windowLowerFront,windowRoofFront,windowRoofRear),y,z];}
+    return pointAlong([windowRoofRear,windowRearPoint],z);
+  };
+  const windowLower=z=>{
+    if(z<=windowRoofRear[2])return pointAlong([windowTip,windowLowerFront,windowLowerRear],z);
+    if(z>=windowRearPoint[2])return pointAlong([windowRearPoint,buttressTail],z);
+    // A small geometric blend softens the quarter-pane transition while the
+    // top boundary still closes exactly against the planar white buttress.
+    const a=windowLowerRear,b=windowRearPoint,h=b[2]-a[2],t=(z-a[2])/h,t2=t*t,t3=t2*t;
+    const d0=a.map((v,k)=>(v-windowLowerFront[k])/(a[2]-windowLowerFront[2]));
+    const d1=b.map((v,k)=>(v-a[k])/h);
+    return a.map((v,k)=>(2*t3-3*t2+1)*v+(t3-2*t2+t)*h*d0[k]+(-2*t3+3*t2)*b[k]+(t3-t2)*h*d1[k]);
+  };
+  const railOuter=z=>z<=windowRoofRear[2]?windowUpper(z):pointAlong([windowRoofRear,buttressTail],z);
+  const railStations=[...new Set([...Array.from({length:105},(_,i)=>mix(canopyStart,canopyEnd,i/104)),...[-.820,-.360,.025,.450,.945]])].sort((a,b)=>a-b);
+  const atStation=(t)=>railStations[Math.round(t*(railStations.length-1))];
+  // One continuous glass mesh retains a planar main region with a gently
+  // crowned outline and softened front/quarter transitions, not a flat cap.
+  const glassStations=[...new Set([...Array.from({length:97},(_,i)=>mix(canopyStart,.945,i/96)),...[-.820,-.360,.025,.450]])].sort((a,b)=>a-b);
+  for (const side of [-1,1]) {
+    surface(`referenceWhiteRoofRail${side}`, (t,u) => {
+      const z=atStation(t),s=canopyProfile(z),a=[s.w-.027,canopyEdgeY(z),z],b=railOuter(z);
+      return [side*mix(a[0],b[0],u),mix(a[1],b[1],u),z];
+    },railStations.length-1,6,paint,rails,side<0);
+    surface(`referenceSideWindow${side}`,(t,u)=>{
+      const z=glassStations[Math.round(t*(glassStations.length-1))],a=windowUpper(z),b=windowLower(z);
+      return[side*mix(a[0],b[0],u),mix(a[1],b[1],u),z];
+    },glassStations.length-1,8,sideGlass,canopy,side<0);
+    // A separate planar white triangle spreads outward toward the aft glass
+    // point, then merges into the rear shoulder. The inner rail adapts to glass.
+    facet(`referenceRearButtress${side}`,[windowRoofRear,windowRearPoint,buttressTail].map(p=>[side*p[0],p[1],p[2]]),paint,rails,[side,1,0]);
+    surface(`referenceWindowSill${side}`, (t,u) => {
+      const z=atStation(t),p=windowLower(z);
+      return [side*(p[0]+u*.019),p[1]-u*.013,z];
+    },railStations.length-1,3,paint,rails,side<0);
+    ribbon(`referenceWindowSeal${side}`,t=>{const p=windowLower(mix(canopyStart,.945,t));return[side*(p[0]+.001),p[1]+.002,p[2]];},.004,dark,canopy,[side,1,0],64);
+  }
+  exterior.userData.windowStructure={
+    tip:windowTip,lowerFront:windowLowerFront,roofFront:windowRoofFront,roofRear:windowRoofRear,
+    lowerRear:windowLowerRear,rearPoint:windowRearPoint,buttressTail,
+    note:'Multi-view inferred landmarks; central taper retained, planar main side glass and acute aft point.'
+  };
   // Front cowl has an opaque dark reverse face. Nothing luminous faces the cabin.
-  facet('referenceWindshieldCowl', [[-.668, .714, -1.067], [.668, .714, -1.067], [.650, .731, -1.040], [-.650, .731, -1.040]], dark, canopy, [0, 1, -.3]);
-  ribbon('referenceWindshieldWiper', t => [mix(-.37, .28, t), .741 + .018 * Math.sin(Math.PI * t), -1.018], .004, dark, canopy, [0, 1, -.3], 48);
+  facet('referenceWindshieldCowl', [[-.668, .697, -1.067], [.668, .697, -1.067], [.650, .714, -1.040], [-.650, .714, -1.040]], dark, canopy, [0, 1, -.3]);
+  ribbon('referenceWindshieldWiper', t => [mix(-.37, .28, t), .720 + .012 * Math.sin(Math.PI * t), -1.018], .004, dark, canopy, [0, 1, -.3], 48);
 
   // Closed upper rear deck and transom. The black lamp slot is recessed inside
   // an actual painted surround, with walls, back panel and a lower white beam.
@@ -309,49 +541,179 @@ function buildReferenceRoadsterExterior() {
     const x = side * .330;
     facet(`referenceReverseLamp${side}`, [atRear(x - .053, .740, 2.267), atRear(x + .053, .740, 2.267), atRear(x + .053, .728, 2.267), atRear(x - .053, .728, 2.267)], lampReverse, rearLights, [0, 0, 1]);
   }
-  facet('referenceRearPaintedBumper', [atRear(-.903, .666, 2.273), atRear(.903, .666, 2.273), atRear(.713, .638, 2.279), atRear(-.713, .638, 2.279)], paint, body, [0, 0, 1]);
-  // Broad black lower fascia is closed behind the four existing nozzles, whose
-  // local positions stay x=[-.45,-.15,.15,.45], y=.50 and z=2.23.
-  facet('referenceRearJetRecess', [[-.714, .636, 2.231], [.714, .636, 2.231], [.714, .351, 2.231], [-.714, .351, 2.231]], recess, body, [0, 0, 1]);
-  for (const side of [-1, 1]) {
-    facet(`referenceDiffuserOuterCheek${side}`, [[side * .924, .579, 2.263], [side * .714, .636, 2.278], [side * .714, .351, 2.278], [side * .764, .202, 2.292], [side * .919, .221, 2.268]], carbon, body, [side * .1, 0, 1]);
-    facet(`referenceJetPocketSide${side}`, [[side * .714, .636, 2.278], [side * .714, .636, 2.231], [side * .714, .351, 2.231], [side * .714, .351, 2.278]], dark, body, [-side, 0, 0]);
+  // The painted rear bridge rolls underneath into a recessed dark jet pocket.
+  // Its central plate pad is molded into the bridge, not a separate giant slab.
+  surface('referenceRearPaintedBumper',(t,u)=>{
+    const x=mix(-.903,.903,u),q=Math.abs(x)/.903;
+    const outer=Math.max(0,(q-.35)/.65),rise=outer*outer*(3-2*outer);
+    const outboard=Math.min(1,Math.max(0,(q-.18)/.40)),hollow=outboard*outboard*(3-2*outboard);
+    return [x,mix(.667,.562+.080*rise,t),2.278+(.028-.145*hollow)*Math.sin(Math.PI*t)-(.008+.030*q*q)*t];
+  },24,64,paint,body,false);
+  box('referenceRearPlatePad',[.315,.135,.014],[0,.603,2.307],paint);
+  const plateMark = new THREE.MeshStandardMaterial({color:0x90989b,metalness:.1,roughness:.5});
+  // Discreet registration-panel relief and reversing camera.
+  box('referenceRearCamera',[.024,.013,.014],[0,.664,2.294],dark);
+  for (const x of [-.13,.13]) box(`referencePlateFastener${x}`,[.008,.005,.002],[x,.628,2.316],metal);
+  facet('referenceRearJetRecess',[[-.714,.570,2.040],[.714,.570,2.040],[.714,.310,2.040],[-.714,.310,2.040]],recess,body,[0,0,1]);
+  // A shallow rounded rectangular shelf surrounds the four separate mouths.
+  // Straight top/bottom runs and small corner fillets replace the fat oval rim.
+  const carrier=(angle,width,height)=>{
+    const r=.045,k=((1-angle/(Math.PI*2))*8%8+8)%8,segment=Math.floor(k),t=k-segment;
+    let x,y,a;
+    if(segment===0){x=mix(-width+r,width-r,t);y=height;}
+    else if(segment===1){a=mix(Math.PI/2,0,t);x=width-r+r*Math.cos(a);y=height-r+r*Math.sin(a);}
+    else if(segment===2){x=width;y=mix(height-r,-height+r,t);}
+    else if(segment===3){a=mix(0,-Math.PI/2,t);x=width-r+r*Math.cos(a);y=-height+r+r*Math.sin(a);}
+    else if(segment===4){x=mix(width-r,-width+r,t);y=-height;}
+    else if(segment===5){a=mix(-Math.PI/2,-Math.PI,t);x=-width+r+r*Math.cos(a);y=-height+r+r*Math.sin(a);}
+    else if(segment===6){x=-width;y=mix(-height+r,height-r,t);}
+    else{a=mix(Math.PI,Math.PI/2,t);x=-width+r+r*Math.cos(a);y=height-r+r*Math.sin(a);}
+    return[x,.440+y];
+  };
+  surface('referenceSculptedJetCarrierRim',(t,u)=>{const a=t*Math.PI*2,inner=carrier(a,.707,.094),outer=carrier(a,.765,.126);return [mix(inner[0],outer[0],u),mix(inner[1],outer[1],u),2.245+.030*u+.005*Math.sin(Math.PI*u)];},96,8,carbon,body,true);
+  const carrierWall=surface('referenceJetCarrierDeepWall',(t,u)=>{const p=carrier(t*Math.PI*2,.707,.094);return [p[0],p[1],mix(2.040,2.245,u)];},96,4,dark,body,true);
+  carrierWall.castShadow=false; // entirely inside the closed carrier silhouette
+  for(const side of [-1,1]) {
+    surface(`referenceDiffuserOuterCheek${side}`,(t,u)=>{
+      const x=side*mix(.710,.920,u),y=mix(.592-.006*u,.210+.010*u,t);
+      return [x,y,2.270-.075*Math.sin(Math.PI*u)-.030*Math.sin(Math.PI*t)];
+    },32,16,carbon,body,side<0);
+    facet(`referenceJetPocketSide${side}`,[[side*.714,.530,2.270],[side*.714,.510,2.190],[side*.714,.350,2.190],[side*.714,.350,2.275]],dark,body,[-side,0,0]);
+    facet(`referenceRearReflector${side}`,[[side*.815,.570,2.277],[side*.905,.607,2.251],[side*.905,.581,2.251],[side*.815,.548,2.277]],lampRed,rearLights,[side*.2,0,1]);
   }
-  facet('referenceJetPocketHeader', [[-.714, .636, 2.278], [.714, .636, 2.278], [.714, .636, 2.231], [-.714, .636, 2.231]], carbon, body, [0, -1, 0]);
-  facet('referenceJetPocketLowerLip', [[-.714, .351, 2.231], [.714, .351, 2.231], [.714, .351, 2.292], [-.714, .351, 2.292]], carbon, body, [0, 1, 0]);
+  surface('referenceJetPocketHeader',(t,u)=>{
+    const x=mix(-.903,.903,u),q=Math.abs(x)/.903,outer=Math.max(0,(q-.35)/.65),rise=outer*outer*(3-2*outer);
+    // Real underside return: close the recessed white bridge to the dark frame.
+    return [x,mix(.562+.080*rise,.545-.045*q*q,t),mix(2.278-(.008+.030*q*q),2.245,t)];
+  },8,32,carbon,body,false);
+  surface('referenceJetPocketLowerLip',(t,u)=>{
+    const x=mix(-.714,.714,u),q=x/.714;
+    return [x,mix(.310,.290,t)+.018*q*q,mix(2.190,2.285,t)];
+  },8,32,carbon,body,false);
   // Continuous undertray and deep diffuser keep road/sky from showing through.
   surface('referenceClosedUndertray', (t, u) => {
-    const z = mix(-2.22, 2.29, t), x = mix(-.745, .745, u);
+    const z = mix(-2.06, 2.29, t), x = mix(-.745, .745, u);
     const rise = Math.max(0, (z - 1.65) / .64);
     return [x, .129 + .074 * rise * rise + .012 * Math.cos((u - .5) * Math.PI), z];
   }, 100, 32, carbon);
-  box('referenceClosedDiffuserBacking', [1.60,.17,.035], [0,.275,2.13], recess);
-  facet('referenceDiffuserTrailingFace', [[-.748, .205, 2.292], [.748, .205, 2.292], [.748, .130, 2.292], [-.748, .130, 2.292]], dark, body, [0, 0, 1]);
-  for (const x of [-.710, -.473, -.237, 0, .237, .473, .710]) {
-    const fin = facet(`referenceDiffuserFin${x}`, [[x, .135, 1.82], [x, .143, 2.292], [x, .350, 2.292], [x, .275, 2.10], [x, .166, 1.82]], carbon, body, [x < 0 ? -1 : 1, 0, 0]);
-    // Closed small fin thickness, rather than double-sided paper-thin black fins.
-    const edge = box(`referenceDiffuserFinEdge${x}`, [.010, .206, .025], [x, .247, 2.280], carbon); edge.rotation.x = -.06;
-    fin.userData.diffuser = true;
+  // A closed, recessed multi-channel bulkhead keeps the original opaque
+  // coverage but gives each diffuser throat real bowl depth instead of a door.
+  const diffuserDividers=[-.710,-.473,-.237,0,.237,.473,.710];
+  const diffuserBacking=surface('referenceClosedDiffuserBacking',(t,u)=>{
+    const x=mix(-.80,.80,u);let channel=0;
+    for(let i=0;i<diffuserDividers.length-1;i++)if(x>=diffuserDividers[i]&&x<=diffuserDividers[i+1]){
+      const q=(x-diffuserDividers[i])/(diffuserDividers[i+1]-diffuserDividers[i]);channel=Math.sin(Math.PI*q)**2;break;
+    }
+    return[x,mix(-.085,.085,t),.0175-.145*channel*Math.sin(Math.PI*t)];
+  },12,48,carbon,body,true);
+  diffuserBacking.position.set(0,.275,2.13);
+  diffuserBacking.castShadow=false; // enclosed internal bulkhead, not silhouette
+  {
+    const g=diffuserBacking.geometry,positions=Array.from(g.attributes.position.array),normals=Array.from(g.attributes.normal.array),indices=Array.from(g.index.array);
+    const at=i=>positions.slice(i*3,i*3+3),back=p=>[p[0],p[1],-.20];
+    const face=(points,toward)=>{
+      const a=points[0],v=points[1].map((x,k)=>x-a[k]),w=points[2].map((x,k)=>x-a[k]);
+      let n=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]];
+      const reverse=n.reduce((sum,x,k)=>sum+x*toward[k],0)<0,length=Math.hypot(...n);
+      n=n.map(x=>x/length*(reverse?-1:1));const offset=positions.length/3;
+      points.forEach(p=>{positions.push(...p);normals.push(...n);});
+      for(let i=1;i<points.length-1;i++)indices.push(...(reverse?[offset,offset+i+1,offset+i]:[offset,offset+i,offset+i+1]));
+    };
+    // Match every boundary sample on both skins; no clustering/T-junction seam.
+    const boundary=[...Array.from({length:48},(_,c)=>c),...Array.from({length:12},(_,r)=>r*49+48),...Array.from({length:48},(_,c)=>12*49+48-c),...Array.from({length:12},(_,r)=>(12-r)*49)];
+    for(let i=0;i<boundary.length;i++){
+      const a=at(boundary[i]),b=at(boundary[(i+1)%boundary.length]),ba=back(a),bb=back(b);
+      face([a,ba,bb,b],[b[1]-a[1],a[0]-b[0],0]);
+      face([[0,0,-.20],ba,bb],[0,0,-1]);
+    }
+    g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));g.setIndex(indices);g.computeBoundingBox();g.computeBoundingSphere();
+  }
+  // Curved diffuser ramps and thin swept vertical fences. Their trailing
+  // edge stays open between channels instead of reading as a rectangular tray.
+  surface('referenceDiffuserBowl',(t,u)=>{
+    const x=mix(-.730,.730,u),z=mix(1.68,2.292,t);
+    const channels=.026*(.5+.5*Math.cos(x/.242*Math.PI*2))*t*t;
+    return [x,.132+.064*t*t+channels,z];
+  },32,48,carbon,body,false);
+  facet('referenceDiffuserTrailingFace',[[-.748,.197,2.292],[.748,.197,2.292],[.748,.182,2.292],[-.748,.182,2.292]],dark,body,[0,0,1]);
+  for(const x of [-.710,-.473,-.237,0,.237,.473,.710]) {
+    for(const face of [-1,1]) {
+      const fin=surface(`referenceDiffuserFin${x}_${face}`,(t,u)=>{
+        const z=mix(1.76,2.292,t)-.045*Math.sin(Math.PI*t)*u,base=.135+.047*t*t;
+        const sweep=Math.sign(x)*(.030*t*t-.026*Math.sin(Math.PI*t))*u;
+        const belly=Math.sin(Math.PI*u)*t*t;
+        return [x+sweep+Math.sign(x)*.012*belly+face*.004,base+u*(.008+.146*t*t*t),z-.035*belly];
+      },16,4,carbon,body,face>0);
+      fin.userData.diffuser=true;
+      fin.userData.shadowExact=true;
+      // The proxy is double-sided; one face casts this 8 mm-thick fence.
+      fin.castShadow=face>0&&Math.abs(x)>.70; // inner fences are enclosed by the body silhouette
+    }
+    surface(`referenceDiffuserFinEdge${x}`,(t,u)=>{
+      const sweep=Math.sign(x)*(.030*t*t-.026*Math.sin(Math.PI*t)),base=.135+.047*t*t;
+      return [x+sweep+mix(-.004,.004,u),base+.008+.146*t*t*t,mix(1.76,2.292,t)-.045*Math.sin(Math.PI*t)];
+    },16,1,carbon,body,false);
   }
 
-  // Raised active white wing. The blade and endplates are all local to the
-  // existing animation pivot, so braking/deployment never creates two spoilers.
-  const wingProfile = (x, z) => .102 + .014 * (1 - (x / .855) ** 2) + .011 * Math.sin((z + .145) / .280 * Math.PI);
-  surface('referenceWhiteWingBlade', (t, u) => {
-    const z = mix(-.145, .135, t), x = mix(-.855, .855, u); return [x, wingProfile(x, z), z];
-  }, 18, 56, paint, activeWing);
-  surface('referenceWingCarbonUnderside', (t, u) => {
-    const z = mix(-.145, .135, t), x = mix(-.855, .855, u); return [x, wingProfile(x, z) - .024, z];
-  }, 18, 56, carbon, activeWing, true);
-  facet('referenceWingLeadingEdge', [[-.855, .102, -.145], [.855, .102, -.145], [.855, .078, -.145], [-.855, .078, -.145]], paint, activeWing, [0, 0, -1]);
-  facet('referenceWingTrailingEdge', [[-.855, .102, .135], [.855, .102, .135], [.855, .078, .135], [-.855, .078, .135]], carbon, activeWing, [0, 0, 1]);
-  for (const side of [-1, 1]) {
-    const x = side * .855;
-    facet(`referenceWhiteWingEndplate${side}`, [[x, .111, -.145], [x, .111, .140], [x, -.065, .148], [x, -.032, -.130]], paint, activeWing, [side, 0, 0]);
-    box(`referenceWingEndplateThickness${side}`, [.015, .146, .270], [x - side * .0075, .023, .002], paint, activeWing);
-    const strut = box(`referenceWingSupport${side}`, [.025, .136, .043], [side * .460, .015, -.027], metal, activeWing); strut.rotation.x = -.24;
-    box(`referenceWingBaseMount${side}`, [.076, .019, .095], [side * .460, -.052, -.044], carbon, activeWing);
+  // Sculpted active white wing. All geometry remains local to the existing
+  // animated pivot; normal/flight/air-brake angles still come from physics.
+  const wingLeading=x=>-.205+.050*(x/.855)**2;
+  const wingTrailing=x=>.285-.030*(x/.855)**2;
+  const wingSection=(x,t)=>{
+    const y=.095+.012*(1-(x/.855)**2)+.025*Math.sin(Math.PI*t);
+    const thickness=.004+.020*Math.sin(Math.PI*t)**.7;
+    return {y,thickness,z:mix(wingLeading(x),wingTrailing(x),t)};
+  };
+  surface('referenceWhiteWingBlade',(t,u)=>{const x=mix(-.855,.855,u),s=wingSection(x,t);return[x,s.y,s.z];},18,56,paint,activeWing);
+  surface('referenceWingCarbonUnderside',(t,u)=>{const x=mix(-.855,.855,u),s=wingSection(x,t);return[x,s.y-s.thickness,s.z];},18,56,carbon,activeWing,true);
+  surface('referenceWingLeadingEdge',(t,u)=>{const x=mix(-.855,.855,u),s=wingSection(x,0);return[x,s.y-t*s.thickness,s.z];},1,56,paint,activeWing,true);
+  surface('referenceWingTrailingEdge',(t,u)=>{const x=mix(-.855,.855,u),s=wingSection(x,1);return[x,s.y-t*s.thickness,s.z];},1,56,carbon,activeWing,false);
+  // Closed thin extrusions replace the detached rectangular endplate boxes.
+  // Individual planar faces have independent limiting normals at hard edges.
+  function wingPanel(name,outline,side,x,thickness,material){
+    const positions=[],indices=[];
+    const area=outline.reduce((sum,p,i)=>{const q=outline[(i+1)%outline.length];return sum+p[0]*q[1]-q[0]*p[1];},0),orientation=Math.sign(area);
+    const cross=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+    const remaining=outline.map((_,i)=>i),cap=[];
+    while(remaining.length>3){
+      let clipped=false;
+      for(let i=0;i<remaining.length;i++){
+        const a=remaining[(i+remaining.length-1)%remaining.length],b=remaining[i],c=remaining[(i+1)%remaining.length];
+        if(orientation*cross(outline[a],outline[b],outline[c])<=1e-12)continue;
+        const contains=remaining.some(j=>j!==a&&j!==b&&j!==c&&[cross(outline[a],outline[b],outline[j]),cross(outline[b],outline[c],outline[j]),cross(outline[c],outline[a],outline[j])].every(v=>orientation*v>=-1e-12));
+        if(contains)continue;
+        cap.push(a,b,c);remaining.splice(i,1);clipped=true;break;
+      }
+      if(!clipped)throw Error(`Invalid wing panel outline: ${name}`);
+    }
+    cap.push(...remaining);
+    const face=(points,toward,triangles=null)=>{
+      const first=triangles?triangles.slice(0,3):[0,1,2];
+      const a=points[first[0]],b=points[first[1]],c=points[first[2]],v=b.map((q,k)=>q-a[k]),w=c.map((q,k)=>q-a[k]);
+      const n=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]];
+      const reverse=n.reduce((sum,q,k)=>sum+q*toward[k],0)<0,offset=positions.length/3;
+      points.forEach(p=>positions.push(...p));
+      const local=triangles||Array.from({length:points.length-2},(_,i)=>[0,i+1,i+2]).flat();
+      for(let i=0;i<local.length;i+=3){const a=offset+local[i],b=offset+local[i+1],c=offset+local[i+2];indices.push(...(reverse?[a,c,b]:[a,b,c]));}
+    };
+    const outside=outline.map(([y,z])=>[side*x,y,z]),inside=outline.map(([y,z])=>[side*(x-thickness),y,z]);
+    face(outside,[side,0,0],cap);face(inside,[-side,0,0],cap);
+    for(let i=0;i<outline.length;i++){
+      const j=(i+1)%outline.length,dy=outline[j][0]-outline[i][0],dz=outline[j][1]-outline[i][1];
+      face([outside[i],inside[i],inside[j],outside[j]],[0,orientation*dz,-orientation*dy]);
+    }
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();
+    return addMesh(name,g,material,activeWing);
   }
+  for(const side of [-1,1]){
+    const edge=[0,.25,.5,.75,1].map(t=>{const s=wingSection(.855,t);return[s.y,s.z];});
+    const outline=[...edge,[-.035,.255],[-.045,.180],[-.018,-.160]];
+    wingPanel(`referenceWhiteWingEndplate${side}`,outline,side,.855,.008,paint);
+    const arm=[[-.100,-.090],[-.075,-.065],[-.025,.005],[.086,.058],[.112,.040],[.088,.013],[-.010,-.028],[-.065,-.080]];
+    wingPanel(`referenceWingSupport${side}`,arm,side,.4725,.025,carbon);
+    box(`referenceWingBaseMount${side}`,[.076,.019,.095],[side*.460,-.100,-.080],carbon,activeWing);
+  }
+  exterior.userData.wingProfile={span:1.710,centerChord:.490,tipChord:.410,constructionPivot:[0,.85,2.04],poseSource:'Existing physics-main.js activeWingGroup targets, unchanged.'};
 
   // Render the exact detailed exterior once, rather than drawing every trim
   // panel again into the 2048² shadow map. Two shared-material silhouette
@@ -375,7 +737,7 @@ function buildReferenceRoadsterExterior() {
         positions.push(point.x, point.y, point.z);
       };
       const rows = part.userData.surfaceRows, columns = part.userData.surfaceColumns;
-      if (rows && columns) {
+      if (rows && columns && !part.userData.shadowExact) {
         // Retain extra source rows at tight wheel openings and sill creases.
         // Uniform decimation alone can bridge those sharp profile transitions.
         const samples = (last, step, across, rowAxis) => {
@@ -395,7 +757,7 @@ function buildReferenceRoadsterExterior() {
           for (let first=0; first<last; first+=step) refine(first,Math.min(last,first+step));
           out.push(last); return out;
         };
-        const rs = samples(rows,4,columns,true), cs = samples(columns,2,rows,false);
+        const rs = samples(rows,5,columns,true), cs = samples(columns,2,rows,false);
         part.userData.shadowGridRows = rs;
         part.userData.shadowGridColumns = cs;
         rs.forEach(r => cs.forEach(c => push(r * (columns + 1) + c)));
@@ -434,6 +796,8 @@ function buildReferenceRoadsterExterior() {
   exterior.userData.materials = { paint, glass, sideGlass, lampWhite, lampRed, lampStop, lampReverse, amberL, amberR };
   exterior.userData.axles = { front: { z: -1.36, y: .32, radius: .32 }, rear: { z: 1.38, y: .35, radius: .35 } };
   exterior.userData.rearNozzleClearance = { x: [-.61, .61], y: [.39, .63], z: 2.23 };
+  exterior.userData.frontWingLandmarks={nose:frontWingC,axleFold:frontWingA,cowl:frontWingB};
+  exterior.userData.likenessRevision = 'planar-front-glass-concave-rear-sculpted-wing-v6';
   exterior.userData.wingPivot = [0, .85, 2.04];
   // Public numeric samplers support runtime geometry tests and future matching.
   exterior.userData.sampleShoulder = (z, u, side = 1) => shoulderPoint(z, u, side);

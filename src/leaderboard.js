@@ -2,6 +2,7 @@
 (() => {
   'use strict';
   const DURATION = 60000;
+  const SCORE_VERSION = RoadsterDrivingScore.version;
   const categories = ['highway-realistic', 'highway-fantasy', 'city-realistic', 'city-fantasy'];
   const $ = (id) => document.getElementById(id);
   const dialog = $('ranked-dialog');
@@ -12,8 +13,8 @@
       language: '中文', category: 'Public leaderboard', current: 'Challenge category',
       nickname: 'Public nickname', nicknameHint: '1–20 letters/numbers, spaces, _ or -; start with a letter/number. This name is public. Don’t use private information.',
       privacy: 'No account needed. An anonymous cookie identifies this browser. Your best score per category stays on this browser identity; clearing cookies or changing browsers creates a new identity. Only the nickname and score are shown publicly.',
-      rules: '60 real-time seconds. Score = HUD score (points + vehicles cleared × 10). Each run resets the car, score, tires and gas, with 36 vehicles, Cyber Night, Plaid OFF and stabilizer ON. Your map and physics mode set the category. Reset, map/mode, weather, traffic, Plaid or stabilizer changes cancel a running challenge. Leaving the tab or window also cancels it. A crash immediately cancels the run without publishing a score; you can restart once the server confirms it has ended.',
-      trust: 'Casual v1: server-issued timed runs and basic checks. Scores come from the browser; this leaderboard is not cheat-proof.',
+      rules: '60 real-time seconds. Score = total forward metres ÷ 10, rounded up once. Speed bonuses: 180/200/240/300/350 km/h give +20/30/40/60/80% on that segment only; the highest band applies. Passenger fares stay separate. Each run resets the car, score, tires and gas, with 36 vehicles, Cyber Night, Plaid OFF and stabilizer ON. Your map and physics mode set the category. Reset, map/mode, weather, traffic, Plaid or stabilizer changes cancel a running challenge. Leaving the tab or window also cancels it. A crash immediately cancels the run without publishing a score; you can restart once the server confirms it has ended.',
+      trust: 'Distance v2 board: previous-rule records are retained separately. Server-issued timed runs and distance/speed plausibility checks use browser telemetry; this leaderboard is not cheat-proof.',
       baseline: 'Starts fresh: 36 vehicles · Cyber Night · Plaid OFF · Stabilizer ON. Crashes and cancellations end the server run before your next challenge.',
       activeError: 'A run is already reserved for this browser. Wait 65 seconds after the last start, then try again.',
       start: 'Start 60-second challenge', starting: 'Starting…', abort: 'Cancel challenge', refresh: 'Refresh board',
@@ -43,8 +44,8 @@
       language: 'EN', category: '公开排行榜', current: '挑战分组',
       nickname: '公开昵称', nicknameHint: '1–20 个文字、数字、空格、_ 或 -，以文字或数字开头。昵称公开，请勿填写隐私信息。',
       privacy: '无需注册。匿名 Cookie 用于识别本浏览器，每个分组保存你的最高分。清除 Cookie 或更换浏览器会成为新的身份。公开榜单只显示昵称与分数。',
-      rules: '挑战持续真实时间 60 秒。分数＝HUD 得分（积分＋超越车辆数 × 10）。每次重置车辆、得分、轮胎与气体，统一为 36 辆车、星际暗夜、狂暴关闭、自动回正开启。地图与物理模式决定分组。挑战中重置车辆、更改地图、模式、天气、车流、狂暴或自动回正都会取消挑战；离开标签页或窗口也会取消。撞毁后立即向服务器取消挑战，不提交分数；服务器确认结束后即可重开。',
-      trust: '休闲版 v1：服务器签发限时挑战并做基础校验。得分由浏览器上报，无法完全防作弊。',
+      rules: '挑战持续真实时间 60 秒。分数＝累计向前行驶米数÷10，最后向上取整。180/200/240/300/350 km/h 档分别加成20/30/40/60/80%，只计算该路段且不叠加；接客分单独保留。每次重置车辆、得分、轮胎与气体，统一为 36 辆车、星际暗夜、狂暴关闭、自动回正开启。地图与物理模式决定分组。挑战中重置车辆、更改地图、模式、天气、车流、狂暴或自动回正都会取消挑战；离开标签页或窗口也会取消。撞毁后立即向服务器取消挑战，不提交分数；服务器确认结束后即可重开。',
+      trust: '里程版 v2 榜单：旧规则记录独立保留。服务器签发限时挑战并校验里程与速度合理性；数据由浏览器上报，无法完全防作弊。',
       baseline: '统一重开：36 辆车 · 星际暗夜 · 狂暴关闭 · 自动回正开启。撞毁或取消会结束服务器挑战，确认后即可重开。',
       activeError: '此浏览器已有预留挑战，请在上次启动后等待 65 秒再重试。',
       start: '开始 60 秒挑战', starting: '启动中…', abort: '取消挑战', refresh: '刷新榜单',
@@ -92,7 +93,7 @@
   let hudDismissed = false;
   const t = () => copy[currentLang === 'zh' ? 'zh' : 'en'];
   const category = () => `${currentMap}-${state.physicsMode}`;
-  const score = () => Math.max(0, Math.round(state.score + state.carsCleared * 10));
+  const score = () => RoadsterDrivingScore.points(state.distanceBySpeed);
   const categoryName = (value) => value.split('-').map((key) => t()[key] || key).join(' · ');
   const isInFlight = () => phase === 'starting' || phase === 'running';
   const isSaved = () => phase === 'complete' || phase === 'submitting';
@@ -211,7 +212,7 @@
     if (!compatible()) { abort('invalid'); return; }
     if (state.isDestroyed) { abort('crash'); return; }
     if (now >= deadline) {
-      result = Object.freeze({ runId: run.runId, nickname: run.nickname, score: score(), elapsedMs: DURATION, category: run.category });
+      result = Object.freeze({ runId: run.runId, nickname: run.nickname, score: score(), elapsedMs: DURATION, category: run.category, scoreVersion: SCORE_VERSION, distanceBySpeed: Object.freeze([...state.distanceBySpeed]) });
       phase = 'complete';
       clearAllInputKeys();
       render();
@@ -303,7 +304,7 @@
       if (version !== requestVersion || phase !== 'starting') return;
       const issuance = api('/api/run', {
         method: 'POST', credentials: 'same-origin', cache: 'no-store',
-        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category: chosen }),
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category: chosen, scoreVersion: SCORE_VERSION }),
       }).then((data) => {
         if (typeof data.runId === 'string' && data.runId && data.runId.length <= 100) {
           issuedRunId = data.runId;
@@ -318,11 +319,12 @@
         if (issuedRunId) queueEnd(issuedRunId);
         abort(document.hidden ? 'hidden' : 'invalid'); return;
       }
-      if (!issuedRunId || data.durationMs !== DURATION) throw new Error('invalid_run');
+      if (!issuedRunId || data.durationMs !== DURATION || data.scoreVersion !== SCORE_VERSION) throw new Error('invalid_run');
       // Baseline only after the server has issued a run. No elapsed sandbox score can carry over.
       normalizing = true;
       window.RoadsterTaxi?.stop();
       resetCar();
+      RoadsterDrivingScore.reset(state);
       clearAllInputKeys();
       trafficLevelIndex = 1;
       selectWeatherMode(0, false);
@@ -366,7 +368,7 @@
       const data = await api('/api/score', {
         method: 'POST', credentials: 'same-origin', cache: 'no-store',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ runId: payload.runId, nickname: payload.nickname, score: payload.score, elapsedMs: payload.elapsedMs }),
+        body: JSON.stringify({ runId: payload.runId, nickname: payload.nickname, score: payload.score, elapsedMs: payload.elapsedMs, scoreVersion: payload.scoreVersion, distanceBySpeed: payload.distanceBySpeed }),
       });
       if (data.accepted !== true || !Number.isSafeInteger(data.bestScore) || (data.rank !== null && (!Number.isInteger(data.rank) || data.rank < 1))) throw new Error('invalid_response');
       savedReply = data;
@@ -387,7 +389,7 @@
     const version = ++boardVersion;
     boardState = 'loading'; boardRows = []; renderBoard();
     try {
-      const data = await api(`/api/leaderboard?category=${encodeURIComponent(chosen)}`, { credentials: 'omit', cache: 'default' });
+      const data = await api(`/api/leaderboard?category=${encodeURIComponent(chosen)}&scoreVersion=${encodeURIComponent(SCORE_VERSION)}`, { credentials: 'omit', cache: 'default' });
       if (version !== boardVersion) return;
       if (data.category !== chosen || !Array.isArray(data.entries)) throw new Error('invalid_response');
       boardRows = data.entries.slice(0, 100).filter((entry) => entry && Number.isInteger(entry.rank) && entry.rank > 0 && typeof entry.nickname === 'string' && Number.isSafeInteger(entry.score) && entry.score >= 0).map((entry) => ({ rank: entry.rank, nickname: Array.from(entry.nickname).slice(0, 20).join(''), score: entry.score }));

@@ -1,0 +1,36 @@
+{
+  "pass": true,
+  "scope": "Exact production-export geometry, normals, indices, material properties/groups and world matrices; window/canopy meshes alone may change. No new visible meshes.",
+  "baselineSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "candidateSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "unchangedOutsideWindowMeshes": 244,
+  "changedMeshes": [
+    "referencePanoramicCanopy",
+    "referenceSideWindow-1",
+    "referenceWindowSeal-1",
+    "referenceSideWindow1",
+    "referenceWindowSeal1",
+    "referenceWhiteRoofRail-1",
+    "referenceRearButtress-1",
+    "referenceWindowSill-1",
+    "referenceWhiteRoofRail1",
+    "referenceRearButtress1",
+    "referenceWindowSill1"
+  ],
+  "baselineTriangles": 125578,
+  "candidateTriangles": 119024,
+  "meshCount": 255,
+  "nonWindowSha256": "56b0604237961034d7a8a6aac397f7b3deb1ba9594005cd3305f0fd13f30091e"
+}

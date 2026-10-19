@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
 const reset = hud.slice(hud.indexOf('function resetCar('), hud.indexOf('function applyTranslations('));
 const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
@@ -31,7 +32,7 @@ function harness(map = 'city') {
     window: {}, clearDebris() {}, carMeshGroup: {}, MAX_AIR_SECONDS: 10, renderBannerText() {},
     document: { getElementById: () => ({ classList: { add() {}, remove() {} } }) },
   });
-  vm.runInContext(`${helpers}\n${reset}
+  vm.runInContext(`${scoreRules}\n${helpers}\n${reset}
     function stepCamera(dt) {
       const isLiftFiring = false, rearActive = false, isFrontRetroFiring = false, isSupersonic = false;
       const isCockpitFpv = cameraModeIndex === 3;
@@ -39,6 +40,7 @@ function harness(map = 'city') {
       ${cameraStep}
     }
     function stepContact(dt) {
+      const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
       const playerWorldZ = currentMap === 'highway' ? 0 : state.z, groundElevation = 0;
       const isAirborne = true, isAccelerating = false, isRearThrusterFiring = false, isFootBraking = false, isReversing = false;
       ${trafficAndPose}

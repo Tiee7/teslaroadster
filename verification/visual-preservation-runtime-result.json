@@ -1,0 +1,397 @@
+{
+  "generatedAt": "2026-10-19T09:55:25.020Z",
+  "pass": true,
+  "runtimeRevision": "128",
+  "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+  "limits": "CPU-only exact production scene-graph, geometry/material/pose hashes and view-sync microbenchmark. Counts are before frustum culling and material-group expansion, not measured GPU draw calls, browser input latency or FPS.",
+  "findings": [
+    "Input handlers synchronously update key state; the RAF performs simulation before one render, without a new key debounce.",
+    "Reference-model release expanded player shadow casters from 1 to 108; two lower-detail silhouette batches now replace those detailed shadow passes.",
+    "All four classic model/cockpit/camera geometry, material and pose hashes match the integration baseline; reference visual geometry is intentionally revised.",
+    "All six NPC variants are unchanged; unchanged-view recursive lookups drop from 548 to zero."
+  ],
+  "maximumShadowSampleDeviationMetres": 0.008172357227105876,
+  "paintBridgeRays": 30,
+  "plateNozzleGapMetres": 0.01449999707937244,
+  "baseline": {
+    "revision": "cab98f9",
+    "vehicle": {
+      "classic:classic:external": {
+        "visibleMeshes": 387,
+        "colorMeshes": 387,
+        "colorTriangles": 45160,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "7dcaf3ab0e7d1091b66bedfc38c65b7bf708353eda9698badd7dd835dd760d68"
+      },
+      "classic:classic:fpv": {
+        "visibleMeshes": 346,
+        "colorMeshes": 346,
+        "colorTriangles": 44584,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "8d86dccf6b584fc46178d227c4ee8c5460e4b4ce3eea2b0a9c9cc50eca940a4f"
+      }
+    },
+    "traffic": {
+      "0": {
+        "visibleMeshes": 55,
+        "colorMeshes": 55,
+        "colorTriangles": 4676,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "f95132e7db22274a293636485dccab524fe73c28a62dc1a079e2495ba1d9af09"
+      },
+      "1": {
+        "visibleMeshes": 55,
+        "colorMeshes": 55,
+        "colorTriangles": 4676,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "59c0e384b617d445535bf75f8ea22005ca4f1fb680e9c5dbeaccf21568e3fe5d"
+      },
+      "2": {
+        "visibleMeshes": 55,
+        "colorMeshes": 55,
+        "colorTriangles": 4676,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "dac7addd8f14d10438925ed878898e241b294b17f48a94d88bf618c1b0f3b122"
+      },
+      "3": {
+        "visibleMeshes": 55,
+        "colorMeshes": 55,
+        "colorTriangles": 4676,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "53f0545239fab5be09af5ae7ee27a4eba063ebed29876af7b7ff4c1941140e27"
+      },
+      "4": {
+        "visibleMeshes": 55,
+        "colorMeshes": 55,
+        "colorTriangles": 4676,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "1244e02d2ad43b66c78e22430ae6408193d8cefe724965831cdea94a6c800035"
+      },
+      "5": {
+        "visibleMeshes": 55,
+        "colorMeshes": 55,
+        "colorTriangles": 4676,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "fa10a2db0cc404ba1eb83c66f34deee34bb57c1732dd4feb12ef4127c3310a7b"
+      }
+    },
+    "viewSync": {
+      "external": {
+        "iterations": 20000,
+        "elapsedMs": 2.373165,
+        "recursiveLookupVisitsPerFrame": 0
+      },
+      "fpv": {
+        "iterations": 20000,
+        "elapsedMs": 1.1589759999999956,
+        "recursiveLookupVisitsPerFrame": 0
+      }
+    }
+  },
+  "before": {
+    "revision": "39525a7",
+    "vehicle": {
+      "reference:reference:external": {
+        "visibleMeshes": 316,
+        "colorMeshes": 314,
+        "colorTriangles": 103297,
+        "shadowMeshes": 2,
+        "shadowTriangles": 13211,
+        "extraNoWriteTriangles": 13211,
+        "visibleAppearanceHash": "2096efbcd1bf261ab690ef72ea4a022207297bbfe14d9d0f623b04ff2ed0628c"
+      },
+      "reference:reference:fpv": {
+        "visibleMeshes": 295,
+        "colorMeshes": 293,
+        "colorTriangles": 58391,
+        "shadowMeshes": 2,
+        "shadowTriangles": 13211,
+        "extraNoWriteTriangles": 13211,
+        "visibleAppearanceHash": "e7f9f933dd3c9694036402ec7f0cc6665b6d490103f1d6202628104334c3c644"
+      },
+      "reference:classic:external": {
+        "visibleMeshes": 330,
+        "colorMeshes": 328,
+        "colorTriangles": 101021,
+        "shadowMeshes": 2,
+        "shadowTriangles": 13211,
+        "extraNoWriteTriangles": 13211,
+        "visibleAppearanceHash": "8df940ed464b3afc997aa6a5c0e3b0b3d9978f58b82d1e910634ff4e8f2ee258"
+      },
+      "reference:classic:fpv": {
+        "visibleMeshes": 311,
+        "colorMeshes": 309,
+        "colorTriangles": 55443,
+        "shadowMeshes": 2,
+        "shadowTriangles": 13211,
+        "extraNoWriteTriangles": 13211,
+        "visibleAppearanceHash": "39e174e9797180859c97e85f1b96b6ef84aef344dcac9c5237d7ea3a37fc7fbd"
+      },
+      "classic:reference:external": {
+        "visibleMeshes": 373,
+        "colorMeshes": 373,
+        "colorTriangles": 47436,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "99a7236485f59891da89296771de74f9707d2c8e2b1fb45968fb7310c72c54b8"
+      },
+      "classic:reference:fpv": {
+        "visibleMeshes": 330,
+        "colorMeshes": 330,
+        "colorTriangles": 47532,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "bae36df1d208603a47af6204ffe14230acdff7fd0bf170028241ce92f6a207f6"
+      },
+      "classic:classic:external": {
+        "visibleMeshes": 387,
+        "colorMeshes": 387,
+        "colorTriangles": 45160,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "756f5e5e99cd5b1684262b78367354684884e0edd7db71629ea77d2c9fd91132"
+      },
+      "classic:classic:fpv": {
+        "visibleMeshes": 346,
+        "colorMeshes": 346,
+        "colorTriangles": 44584,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "6b9989918aa1fd0db0ad7b82ab1d92fe3ef217cc3afbcb01c174ecec998406dd"
+      }
+    },
+    "traffic": {
+      "0": {
+        "visibleMeshes": 64,
+        "colorMeshes": 64,
+        "colorTriangles": 5704,
+        "shadowMeshes": 1,
+        "shadowTriangles": 3200,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "b74a349cca56a123fdbf98de54906f86a1c603c8b49cc24b218f022ff33478c6"
+      },
+      "1": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "b73f42fbd0a4cc557a60b923ff315084613c5289b696b579130bbe7442f0b2a4"
+      },
+      "2": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "729d94ccc9d161844740324ea6209a6ca585045a3b4161ee0d3d2ab101cbdbcc"
+      },
+      "3": {
+        "visibleMeshes": 64,
+        "colorMeshes": 64,
+        "colorTriangles": 5704,
+        "shadowMeshes": 1,
+        "shadowTriangles": 3200,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "b6f42bb51babefd651d8be3478889388e5f443c95ae4834ce2f5fc8062d5597c"
+      },
+      "4": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "c0443608a022c78ed75feefa0a78d5814d5e67524de49e3d84b90a5fe3420a47"
+      },
+      "5": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "8a6a5e1342e96f0235ce2e3590289fe6e83bc52f7d8dc656529c80cbc56a6cab"
+      }
+    },
+    "viewSync": {
+      "external": {
+        "iterations": 20000,
+        "elapsedMs": 14.18714399999999,
+        "recursiveLookupVisitsPerFrame": 0
+      },
+      "fpv": {
+        "iterations": 20000,
+        "elapsedMs": 15.939104000000043,
+        "recursiveLookupVisitsPerFrame": 0
+      }
+    }
+  },
+  "after": {
+    "revision": "worktree",
+    "vehicle": {
+      "reference:reference:external": {
+        "visibleMeshes": 395,
+        "colorMeshes": 393,
+        "colorTriangles": 119332,
+        "shadowMeshes": 2,
+        "shadowTriangles": 14630,
+        "extraNoWriteTriangles": 14630,
+        "visibleAppearanceHash": "93b430866cfdc2947b335cbfd382039986f9c2931511ce1a4a6de8690b62d893"
+      },
+      "reference:reference:fpv": {
+        "visibleMeshes": 364,
+        "colorMeshes": 362,
+        "colorTriangles": 78458,
+        "shadowMeshes": 2,
+        "shadowTriangles": 14630,
+        "extraNoWriteTriangles": 14630,
+        "visibleAppearanceHash": "21cd8c6bcdd96f9de0c3ddb4abb79c7132af7b5a878a0a957111192f1b2f69e8"
+      },
+      "reference:classic:external": {
+        "visibleMeshes": 409,
+        "colorMeshes": 407,
+        "colorTriangles": 117056,
+        "shadowMeshes": 2,
+        "shadowTriangles": 14630,
+        "extraNoWriteTriangles": 14630,
+        "visibleAppearanceHash": "3188c6a6629ce0c844c3763b419b3e06e55ee44f068fd282e5504613372b7a5b"
+      },
+      "reference:classic:fpv": {
+        "visibleMeshes": 380,
+        "colorMeshes": 378,
+        "colorTriangles": 75510,
+        "shadowMeshes": 2,
+        "shadowTriangles": 14630,
+        "extraNoWriteTriangles": 14630,
+        "visibleAppearanceHash": "f7f3c378b7301062bdea005be26438080e1788a2c0cd766a120bfd15e3b3ed5f"
+      },
+      "classic:reference:external": {
+        "visibleMeshes": 373,
+        "colorMeshes": 373,
+        "colorTriangles": 47436,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "99a7236485f59891da89296771de74f9707d2c8e2b1fb45968fb7310c72c54b8"
+      },
+      "classic:reference:fpv": {
+        "visibleMeshes": 330,
+        "colorMeshes": 330,
+        "colorTriangles": 47532,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "bae36df1d208603a47af6204ffe14230acdff7fd0bf170028241ce92f6a207f6"
+      },
+      "classic:classic:external": {
+        "visibleMeshes": 387,
+        "colorMeshes": 387,
+        "colorTriangles": 45160,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "756f5e5e99cd5b1684262b78367354684884e0edd7db71629ea77d2c9fd91132"
+      },
+      "classic:classic:fpv": {
+        "visibleMeshes": 346,
+        "colorMeshes": 346,
+        "colorTriangles": 44584,
+        "shadowMeshes": 1,
+        "shadowTriangles": 25600,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "6b9989918aa1fd0db0ad7b82ab1d92fe3ef217cc3afbcb01c174ecec998406dd"
+      }
+    },
+    "traffic": {
+      "0": {
+        "visibleMeshes": 64,
+        "colorMeshes": 64,
+        "colorTriangles": 5704,
+        "shadowMeshes": 1,
+        "shadowTriangles": 3200,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "b74a349cca56a123fdbf98de54906f86a1c603c8b49cc24b218f022ff33478c6"
+      },
+      "1": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "b73f42fbd0a4cc557a60b923ff315084613c5289b696b579130bbe7442f0b2a4"
+      },
+      "2": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "729d94ccc9d161844740324ea6209a6ca585045a3b4161ee0d3d2ab101cbdbcc"
+      },
+      "3": {
+        "visibleMeshes": 64,
+        "colorMeshes": 64,
+        "colorTriangles": 5704,
+        "shadowMeshes": 1,
+        "shadowTriangles": 3200,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "b6f42bb51babefd651d8be3478889388e5f443c95ae4834ce2f5fc8062d5597c"
+      },
+      "4": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "c0443608a022c78ed75feefa0a78d5814d5e67524de49e3d84b90a5fe3420a47"
+      },
+      "5": {
+        "visibleMeshes": 59,
+        "colorMeshes": 59,
+        "colorTriangles": 4724,
+        "shadowMeshes": 1,
+        "shadowTriangles": 2352,
+        "extraNoWriteTriangles": 0,
+        "visibleAppearanceHash": "8a6a5e1342e96f0235ce2e3590289fe6e83bc52f7d8dc656529c80cbc56a6cab"
+      }
+    },
+    "viewSync": {
+      "external": {
+        "iterations": 20000,
+        "elapsedMs": 11.309508999999935,
+        "recursiveLookupVisitsPerFrame": 0
+      },
+      "fpv": {
+        "iterations": 20000,
+        "elapsedMs": 10.032555000000002,
+        "recursiveLookupVisitsPerFrame": 0
+      }
+    }
+  }
+}

@@ -200,7 +200,7 @@ test('actual continuous consumption, depletion and reset immediately update the 
     showBanner() {}, sound: { speakAlert() {}, beep() {} }, window: {}, clearDebris() {}, carMeshGroup: {},
     currentMap: 'city', renderBannerText() {}, document: { getElementById: () => ({ classList: { add() {}, remove() {} } }) },
   });
-  vm.runInContext(`${consume}\n${reset}`, context);
+  vm.runInContext(readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8') + `\n${consume}\n${reset}`, context);
   for (let frame = 0; frame <= 50; frame++) {
     const reading = getAirTankReadout(state.airRemaining);
     const { text, rects } = drawCockpitTank({ ...state, gasMassKg: 144 });

@@ -3,9 +3,9 @@
 // array entry cannot cut into a later car's already-reserved merge.
 const highwayTraffic = (() => {
   const MIN_GAP = 7;
-  const SPEED_ADVANTAGE = 1.6;
+  const SPEED_ADVANTAGE = 0.6;
   const MERGE_SECONDS = 2.6;
-  const COOLDOWN_SECONDS = 6;
+  const COOLDOWN_SECONDS = 3.0;
   const MAX_BRAKE = 8.5;
   // A car between lane centers can intersect either lane's swept merge path.
   const FOOTPRINT_RADIUS = 4.35; // half a 5 m lane plus the collision envelope
@@ -22,6 +22,19 @@ const highwayTraffic = (() => {
   }
   const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
   const closestLane = (x, lanes) => lanes.reduce((best, center, i) => Math.abs(center - x) < Math.abs(lanes[best] - x) ? i : best, 0);
+  const racerProfile = Object.freeze({ merge: 1.85, cooldown: 1.35, reaction: 0.12, advantage: 0.35, headway: 0.68, acceleration: 3.2 });
+  const cruiseProfile = Object.freeze({ merge: MERGE_SECONDS, cooldown: COOLDOWN_SECONDS, reaction: 0.24, advantage: SPEED_ADVANTAGE, headway: 0.95, acceleration: 2.1 });
+  const profile = car => car?.driverType === 'racer' ? racerProfile : cruiseProfile;
+  function createDrivers(count, random = Math.random) {
+    const bands = [{ type: 'racer', share: 0.1, min: 160, max: 180 }, { type: 'cruise', share: 0.4, min: 70, max: 80 }, { type: 'cruise', share: 0.3, min: 80, max: 90 }, { type: 'cruise', share: 0.2, min: 90, max: 120 }];
+    const sizes = bands.map(b => Math.floor(count * b.share));
+    const remainder = bands.map((b, i) => ({ i, remainder: count * b.share - sizes[i] })).sort((a, b) => b.remainder - a.remainder || a.i - b.i);
+    const extra = count - sizes.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < extra; i++) sizes[remainder[i].i]++;
+    const drivers = bands.flatMap((band, i) => Array.from({ length: sizes[i] }, () => ({ driverType: band.type, speedBand: i, desiredSpeed: (band.min + random() * (band.max - band.min)) / 3.6 })));
+    for (let i = drivers.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [drivers[i], drivers[j]] = [drivers[j], drivers[i]]; }
+    return drivers;
+  }
   const occupiedLanes = car => car.laneChange ? [car.laneChange.from, car.laneChange.to] : [car.laneIdx];
 
   function reset(car, lane, lanes) {
@@ -34,7 +47,7 @@ const highwayTraffic = (() => {
     car.laneChange = null;
     delete car.recoverHighwayLane;
     car.blockedTime = 0;
-    car.laneChangeCooldown = COOLDOWN_SECONDS;
+    car.laneChangeCooldown = profile(car).cooldown;
     car.vx = 0;
     car.vz = -car.speed;
     car.y = car.blastTimer = car.blastVx = car.blastVy = car.blastVz = 0;
@@ -57,6 +70,27 @@ const highwayTraffic = (() => {
     return leader;
   }
 
+  function initializeSpeeds(cars, lanes, scale, player) {
+    // Birth placement is balanced, not a safety promise: a 180 km/h racer can
+    // otherwise start behind a 70 km/h car inside its braking distance.
+    // Resolve ahead-to-rear once, retaining every personal cruise target.
+    const initial = cars.filter(car => car.mode === 'highway' && !car.highwaySpeedInitialized)
+      .sort((a, b) => a.mesh.position.z - b.mesh.position.z);
+    for (const car of initial) {
+      const own = snapshot(car, lanes);
+      const traffic = cars.filter(other => other.mode === 'highway' && other !== car && other.highwayWaitingToSpawn === undefined).map(other => snapshot(other, lanes));
+      if (player && player.y < 4) traffic.push({ z: player.z || 0, speed: Math.max(0, -player.vz), length: 4.62, lanes: footprint(player.x, lanes) });
+      for (const lane of own.lanes) {
+        const leader = leaderFor(own, lane, traffic);
+        if (!leader) continue;
+        const safeSpeed = Math.sqrt(Math.max(0, leader.speed) ** 2 + 2 * MAX_BRAKE * Math.max(0, leader.gap - MIN_GAP - 2) / scale);
+        car.speed = Math.min(car.speed, safeSpeed);
+      }
+      car.vz = -car.speed;
+      car.highwaySpeedInitialized = true;
+    }
+  }
+
   function lookAhead(own, scale) {
     return Math.max(38, own.speed * scale * 2.5);
   }
@@ -73,11 +107,18 @@ const highwayTraffic = (() => {
       // The merging car may still brake for its source-lane leader. A rear
       // player or wreck cannot be assumed to brake in response to our merge.
       // Bound our travel under maximum braking, rather than freezing our speed.
-      const horizon = MERGE_SECONDS + 0.35;
-      const brakingTime = Math.min(horizon, Math.max(0, own.speed) / MAX_BRAKE);
-      const minimumTravel = Math.max(0, own.speed) * brakingTime - 0.5 * MAX_BRAKE * brakingTime * brakingTime;
+      const horizon = profile(own.car).merge + 0.25;
+      // Responsive NPC followers brake for reservations. For the player or a
+      // wreck retain the full maximum-braking bound: they may never react.
+      const responsiveNpc = other.car && !(other.car.blastTimer > 0) && !other.car.recoverHighwayLane;
+      const responsiveRear = behind && responsiveNpc;
+      const brakingHorizon = responsiveRear ? profile(own.car).merge * 0.45 : horizon;
+      const brakingTime = Math.min(brakingHorizon, Math.max(0, own.speed) / MAX_BRAKE);
+      const minimumSpeed = Math.max(0, own.speed - MAX_BRAKE * brakingTime);
+      const minimumTravel = Math.max(0, own.speed) * brakingTime - 0.5 * MAX_BRAKE * brakingTime * brakingTime + minimumSpeed * (horizon - brakingTime);
       const closingTravel = behind ? Math.max(0, obstacleSpeed * horizon - minimumTravel) : closing * horizon;
-      const needed = Math.max(13, followingSpeed * scale * 0.85) + closingTravel * scale;
+      const headway = responsiveNpc ? (profile(own.car).headway * 0.55) : 0.85;
+      const needed = Math.max(responsiveNpc ? 9 : 13, followingSpeed * scale * headway) + closingTravel * scale;
       if (gap < needed) return false;
     }
     return true;
@@ -85,10 +126,11 @@ const highwayTraffic = (() => {
 
   function respawn(car, cars, lanes, ahead, player, scale) {
     const candidates = ahead ? [-452, -470, -434, -416] : [55, 39, 23];
-    const order = lanes.map((_, i) => i).sort((a, b) => Math.abs(a - car.laneIdx) - Math.abs(b - car.laneIdx));
+    const occupancy = lanes.map((_, lane) => cars.filter(other => other !== car && other.mode === 'highway' && other.highwayWaitingToSpawn === undefined && occupiedLanes(other).includes(lane)).length);
+    const order = lanes.map((_, i) => i).sort((a, b) => occupancy[a] - occupancy[b] || Math.abs(a - car.laneIdx) - Math.abs(b - car.laneIdx));
     const neighbors = cars.filter(other => other !== car && other.mode === 'highway' && other.highwayWaitingToSpawn === undefined)
       .map(other => ({
-        z: other.mesh.position.z,
+        car: other, z: other.mesh.position.z,
         speed: other.blastTimer > 0 ? blastSpeed(other, player, scale) : other.speed,
         ...(other.blastTimer > 0 ? blastSafetyBounds(other, player, scale) : {}),
         length: other.length || 4.62,
@@ -106,7 +148,7 @@ const highwayTraffic = (() => {
           if (!occupiedLanes(other).includes(lane) && Math.abs(other.mesh.position.x - lanes[lane]) > 2.3) continue;
           gap = Math.min(gap, Math.abs(z - other.mesh.position.z) - ((car.length || 4.62) + (other.length || 4.62)) / 2);
         }
-        const atSpawn = { z, speed: car.speed, length: car.length || 4.62 };
+        const atSpawn = { car, z, speed: car.speed, length: car.length || 4.62 };
         if (gap >= 24 && safeAdjacentGap(atSpawn, lane, neighbors, scale)) {
           reset(car, lane, lanes);
           car.mesh.position.z = z;
@@ -125,6 +167,7 @@ const highwayTraffic = (() => {
   function step(cars, player, dt, lanes, scale) {
     for (const car of cars) car.highwayPassedThisFrame = false;
     if (!(dt > 0)) return;
+    initializeSpeeds(cars, lanes, scale, player);
     // Bound braking/decisions to 60 Hz or finer, including a slow render frame.
     const count = Math.max(1, Math.ceil(dt / (1 / 60) - 1e-8));
     const h = dt / count;
@@ -135,7 +178,7 @@ const highwayTraffic = (() => {
         if (car.blastTimer > 0) {
           car.laneChange = null;
           car.blockedTime = 0;
-          car.laneChangeCooldown = COOLDOWN_SECONDS;
+          car.laneChangeCooldown = profile(car).cooldown;
           car.recoverHighwayLane = true;
           continue;
         }
@@ -179,9 +222,9 @@ const highwayTraffic = (() => {
       for (const own of live) {
         const car = own.car;
         const leader = leaderFor(own, car.laneIdx, traffic);
-        const blocked = leader && leader.gap > MIN_GAP && leader.gap < lookAhead(own, scale) && own.desiredSpeed - leader.speed >= SPEED_ADVANTAGE;
+        const blocked = leader && leader.gap > MIN_GAP && leader.gap < lookAhead(own, scale) && own.desiredSpeed - leader.speed >= profile(car).advantage;
         car.blockedTime = blocked ? (car.blockedTime || 0) + h : 0;
-        if (blocked && !car.recoverHighwayLane && !car.laneChange && car.laneChangeCooldown === 0 && car.blockedTime >= 0.35) requests.push({ own, leader });
+        if (blocked && !car.recoverHighwayLane && !car.laneChange && car.laneChangeCooldown === 0 && car.blockedTime >= profile(car).reaction) requests.push({ own, leader });
       }
       requests.sort((a, b) => a.leader.gap - b.leader.gap);
       for (const { own, leader } of requests) {
@@ -189,9 +232,11 @@ const highwayTraffic = (() => {
         const options = [car.laneIdx - 1, car.laneIdx + 1].filter(lane => lane >= 0 && lane < lanes.length)
           .map(lane => {
             const targetLeader = leaderFor(own, lane, traffic);
-            const flow = targetLeader && targetLeader.gap < lookAhead(own, scale) ? Math.min(own.desiredSpeed, targetLeader.speed) : own.desiredSpeed;
-            return { lane, flow, gap: targetLeader ? targetLeader.gap : Infinity };
-          }).filter(option => option.flow - leader.speed >= SPEED_ADVANTAGE && safeAdjacentGap(own, option.lane, traffic, scale))
+            const usefulGap = MIN_GAP + own.desiredSpeed * scale * profile(car).headway;
+            const flow = targetLeader ? Math.min(own.desiredSpeed, targetLeader.speed + Math.max(0, targetLeader.gap - usefulGap) / (scale * 3)) : own.desiredSpeed;
+            const useful = !targetLeader || targetLeader.speed - leader.speed >= profile(car).advantage || targetLeader.gap - leader.gap > (car.driverType === 'racer' ? 20 : 30);
+            return { lane, flow, useful, gap: targetLeader ? targetLeader.gap : Infinity };
+          }).filter(option => option.useful && option.flow - leader.speed >= profile(car).advantage && safeAdjacentGap(own, option.lane, traffic, scale))
           .sort((a, b) => b.flow - a.flow || b.gap - a.gap);
         if (!options.length) continue;
         const to = options[0].lane;
@@ -202,16 +247,17 @@ const highwayTraffic = (() => {
       }
 
       const plans = live.map(own => {
-        let acceleration = 2.1 * (1 - Math.pow(own.speed / Math.max(1, own.desiredSpeed), 4));
+        const driver = profile(own.car);
+        let acceleration = driver.acceleration * (1 - Math.pow(own.speed / Math.max(1, own.desiredSpeed), 4));
         for (const lane of own.lanes) {
           const leader = leaderFor(own, lane, traffic);
           if (!leader) continue;
           const v = Math.max(0, own.speed) * scale;
           const closing = (own.speed - leader.speed) * scale;
-          const headway = MIN_GAP + Math.max(0, v * 1.05 + v * closing / (2 * Math.sqrt(2.1 * 4.5) * scale));
-          acceleration = Math.min(acceleration, 2.1 * (1 - Math.pow(own.speed / Math.max(1, own.desiredSpeed), 4) - Math.pow(headway / Math.max(0.1, leader.gap), 2)));
+          const headway = MIN_GAP + Math.max(0, v * driver.headway + v * closing / (2 * Math.sqrt(driver.acceleration * 4.5) * scale));
+          acceleration = Math.min(acceleration, driver.acceleration * (1 - Math.pow(own.speed / Math.max(1, own.desiredSpeed), 4) - Math.pow(headway / Math.max(0.1, leader.gap), 2)));
         }
-        return { own, speed: clamp(own.speed + clamp(acceleration, -MAX_BRAKE, 2.1) * h, 0, own.desiredSpeed) };
+        return { own, speed: clamp(own.speed + clamp(acceleration, -MAX_BRAKE, driver.acceleration) * h, 0, own.desiredSpeed) };
       });
       for (const { own, speed } of plans) {
         const car = own.car;
@@ -221,16 +267,17 @@ const highwayTraffic = (() => {
         let lateralSpeed = 0;
         if (car.laneChange) {
           const change = car.laneChange;
-          change.elapsed = Math.min(MERGE_SECONDS, change.elapsed + h);
-          const t = change.elapsed / MERGE_SECONDS;
+          const mergeSeconds = profile(car).merge;
+          change.elapsed = Math.min(mergeSeconds, change.elapsed + h);
+          const t = change.elapsed / mergeSeconds;
           const blend = t * t * t * (10 + t * (-15 + 6 * t));
           const distance = lanes[change.to] - change.startX;
           car.mesh.position.x = change.startX + distance * blend;
-          lateralSpeed = distance * 30 * t * t * (1 - t) * (1 - t) / MERGE_SECONDS;
+          lateralSpeed = distance * 30 * t * t * (1 - t) * (1 - t) / mergeSeconds;
           if (t >= 1) {
             car.laneIdx = change.to;
             car.laneChange = null;
-            car.laneChangeCooldown = COOLDOWN_SECONDS;
+            car.laneChangeCooldown = profile(car).cooldown;
           }
         }
         car.vx = lateralSpeed; // Highway lateral motion is unscaled, like state.vx.
@@ -243,5 +290,5 @@ const highwayTraffic = (() => {
       }
     }
   }
-  return Object.freeze({ step });
+  return Object.freeze({ step, createDrivers, initializeSpeeds });
 })();

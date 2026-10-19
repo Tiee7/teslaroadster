@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 
 const read = name => readFileSync(new URL(`../src/${name}`, import.meta.url), 'utf8');
 const physics = read('physics-main.js'), html = read('index.html'), css = read('styles.css');
@@ -84,7 +85,7 @@ function harness(map = 'highway', ranked = false) {
     fetch: async (url, options) => {
       calls.push({ url, options });
       let data;
-      if (url === '/api/run') data = { runId: `run-${++runNumber}`, durationMs: 60000 };
+      if (url === '/api/run') data = { runId: `run-${++runNumber}`, durationMs: 60000, scoreVersion: 'distance-v2' };
       else if (url === '/api/end') data = { ended: true, runId: JSON.parse(options.body).runId };
       else if (url === '/api/score') {
         const payload = JSON.parse(options.body);
@@ -95,8 +96,8 @@ function harness(map = 'highway', ranked = false) {
     },
   });
   const run = code => vm.runInContext(code, context);
-  run(config); state = run('state'); run(`currentMap = '${map}'`);
-  Object.assign(state, { score: 12678.4, carsCleared: 24, blastedCarsCount: 7 });
+  run(scoreRules + '\n' + config); state = run('state'); run(`currentMap = '${map}'`);
+  Object.assign(state, { score: 12678.4, distanceMeters: 5000, distanceBySpeed: [5000, 0, 0, 0, 0, 0], carsCleared: 24, blastedCarsCount: 7 });
   run(`${taxiSource}\n${cockpitSource}\n${blastSource}\n${collisionSource}\n${resetSource}`);
   if (ranked) run(rankedSource);
   const move = point => { Object.assign(state, point); window.RoadsterTaxi.tick(); };
@@ -128,7 +129,7 @@ for (const map of ['highway', 'city']) {
       h.state.hullIntegrity = hull;
       h.run(`triggerPhysicsCollision(${deltaV}, '${reason}', 0, 0, 0)`);
       assert.equal(h.state.isDestroyed, true); assert.equal(h.state.destroyReasonKey, reason);
-      assert.equal(h.state.score, 0); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
+      assert.equal(h.state.score, 0); assert.equal(h.state.distanceMeters, 0); assert.deepEqual(Array.from(h.state.distanceBySpeed), [0, 0, 0, 0, 0, 0]); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
       assert.equal(h.elements['val-score'].textContent, '0'); assert.equal(h.elements['val-passed'].textContent, '0');
       assert.equal(h.elements['crash-val-score'].textContent, '0'); assert.equal(h.elements['crash-val-passenger-score'].textContent, '0');
       assert.equal(h.elements['crash-passenger-score'].hidden, map !== 'city');
@@ -145,12 +146,12 @@ for (const map of ['highway', 'city']) {
       for (let i = 0; i < 5; i++) { h.run(`destroyVehicle('${reason}')`); h.window.RoadsterTaxi.tick(); h.run('updateDestroyedScores()'); }
       assert.equal(h.effects.length, effectCount); assert.deepEqual(h.crashSounds, [true]); assert.equal(h.state.score, 0);
       h.run("currentLang = 'zh'; updateDestroyedModalText()");
-      assert.equal(h.elements['crash-lbl-score'].textContent, '驾驶总分');
+      assert.equal(h.elements['crash-lbl-score'].textContent, '里程得分');
       assert.equal(h.elements['crash-val-score'].textContent, '0');
       if (map === 'city') assert.ok(h.draws.some(text => /接客积分 0/.test(text)));
       h.run('resetCar()');
       assert.equal(h.state.isDestroyed, false); assert.equal(h.state.hullIntegrity, 100);
-      assert.equal(h.state.score, 0); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
+      assert.equal(h.state.score, 0); assert.equal(h.state.distanceMeters, 0); assert.deepEqual(Array.from(h.state.distanceBySpeed), [0, 0, 0, 0, 0, 0]); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
       assert.equal(h.window.RoadsterTaxi.snapshot().score, 0);
       assert.equal(h.elements['modal-destroyed'].classList.contains('hidden'), true);
     });
@@ -183,24 +184,19 @@ test('an empty taxi forfeits prior fares, while manual reset retains its double-
 
 test('same-frame stunt, roof, traffic and sonic callbacks cannot repopulate destroyed scores', () => {
   const h = harness(); h.seedTraffic(); h.run("destroyVehicle('crashReasonThreshold')");
-  // Execute each actual production score-award statement after the death callback,
-  // representing the rest of updateSimulation and later forEach traffic callbacks.
-  const fixedRewards = [...physics.matchAll(/if \(!state\.isDestroyed\) state\.score \+= (\d+);/g)].map(match => match[0]);
-  assert.equal(fixedRewards.length, 3, 'stunt, helipad and sonic awards are all guarded');
-  assert.equal([...physics.matchAll(/state\.score \+=/g)].length, 5, 'every production score increment is covered');
-  const trafficReward = physics.match(/if \(!state\.isDestroyed\) \{\s*state\.carsCleared \+= 1;\s*state\.score \+= state\.y > 1\.5 \? 25 : 10;\s*\}/)?.[0];
+  assert.equal([...physics.matchAll(/state\.score \+=/g)].length, 0, 'distance replaces all fixed driving rewards');
+  const trafficReward = physics.match(/if \(!state\.isDestroyed\) \{\s*state\.carsCleared \+= 1;\s*\}/)?.[0];
   assert.ok(trafficReward);
-  h.run(`${fixedRewards.join('\n')}\n${trafficReward}\napplyExplosionBlastToTraffic(state.x, state.y, 0, 55, 46)`);
-  assert.equal(h.state.score, 0); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
-  // The centralized post-simulation refresh additionally repairs a stale award.
+  h.run(`${trafficReward}\napplyExplosionBlastToTraffic(state.x, state.y, 0, 55, 46)`);
+  assert.equal(h.state.score, 0); assert.equal(h.state.distanceMeters, 0); assert.deepEqual(Array.from(h.state.distanceBySpeed), [0, 0, 0, 0, 0, 0]); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
   Object.assign(h.state, { score: 900, carsCleared: 4, blastedCarsCount: 3 });
   h.run('updateDestroyedScores()');
-  assert.equal(h.state.score, 0); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
+  assert.equal(h.state.score, 0); assert.equal(h.state.distanceMeters, 0); assert.deepEqual(Array.from(h.state.distanceBySpeed), [0, 0, 0, 0, 0, 0]); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
   assert.equal(h.elements['val-score'].textContent, '0'); assert.equal(h.elements['crash-val-score'].textContent, '0');
   // Those same production awards still work for surviving cars.
   h.state.isDestroyed = false;
-  h.run(`${fixedRewards.join('\n')}\n${trafficReward}`);
-  assert.equal(h.state.score, 500 + 300 + 400 + 10); assert.equal(h.state.carsCleared, 1);
+  h.run(trafficReward);
+  assert.equal(h.state.score, 0); assert.equal(h.state.carsCleared, 1);
 });
 
 for (const map of ['highway', 'city']) {
@@ -217,8 +213,8 @@ for (const map of ['highway', 'city']) {
     assert.equal(h.calls.filter(call => call.url === '/api/score').length, 0);
     assert.deepEqual(h.history, [{ rank: 1, nickname: 'Earlier driver', score: 8750 }]);
     await h.startRanked(); assert.equal(h.phase(), 'running'); assert.equal(h.state.isDestroyed, false);
-    h.state.score = 300; h.state.carsCleared = 2; h.advance(60000); await h.click('ranked-submit'); await flush();
-    assert.equal(h.phase(), 'submitted'); assert.equal(h.history.at(-1).score, 320);
+    h.state.score = 300; h.state.distanceBySpeed = [3000, 0, 0, 0, 0, 0]; h.state.carsCleared = 2; h.advance(60000); await h.click('ranked-submit'); await flush();
+    assert.equal(h.phase(), 'submitted'); assert.equal(h.history.at(-1).score, 300);
     const saved = structuredClone(h.history);
     h.state.score = 1000; h.run("destroyVehicle('crashReasonGround')"); await flush();
     assert.equal(h.state.score, 0); assert.deepEqual(h.history, saved, 'previously submitted records are never deleted');

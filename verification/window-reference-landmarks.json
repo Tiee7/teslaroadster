@@ -1,0 +1,86 @@
+{
+  "source_images": [
+    "image(20261019-084437).png",
+    "image(20261019-084438).png",
+    "image(20261019-084439).png",
+    "image(20261019-084440).png",
+    "image(20261019-084441).png"
+  ],
+  "image_processing": "Original crops pasted onto neutral sheet, with simple arrows/labels only. Some crops resized uniformly and labelled; no reconstruction or body edits.",
+  "front": {
+    "outer_combined_canopy_points": [
+      [
+        385,
+        138
+      ],
+      [
+        764,
+        141
+      ],
+      [
+        230,
+        227
+      ],
+      [
+        872,
+        232
+      ]
+    ],
+    "visible_central_lower_edge": [
+      [
+        338,
+        250
+      ],
+      [
+        738,
+        250
+      ]
+    ],
+    "caution": "Combined silhouette is not the hidden windshield cowl boundary. White front wing occlusion and slight camera yaw prevent direct single-pane width inference."
+  },
+  "overhead_station_x350": {
+    "central_black_roof_y": [
+      267,
+      326
+    ],
+    "outer_side_glass_y": [
+      245,
+      348
+    ],
+    "body_y": [
+      235,
+      357
+    ],
+    "approx_uncertainty_pixels": 3,
+    "relationships": "Roof width about 48% of body; full outboard side-glass silhouette about 84% of body. Central black pane retains front-wide/rear-narrow plan taper."
+  },
+  "rear_three_quarter": {
+    "acute_side_window_rear_point": [
+      778,
+      229
+    ],
+    "upper_rear_glass_curve": [
+      845,
+      197
+    ],
+    "lower_glass_edge_end": [
+      1052,
+      329
+    ],
+    "caution": "Apparent diagonal lower edge is a 3D perspective projection, not an instruction to slope the beltline by this image angle."
+  },
+  "baselineCommit": "1bf6034f6089f4ffe8f4c105ff9ad803a0cea6de",
+  "baseline_geometry": {
+    "source": "src/reference-exterior.js lines 393-428",
+    "roof_cross_curvature_m": 0.0035,
+    "cross_section_z_0_025": {
+      "roof_glass_halfwidth": 0.491,
+      "side_glass_top_halfwidth": 0.541,
+      "side_glass_lower_halfwidth": 0.77,
+      "side_glass_top_y": 1.1,
+      "side_glass_lower_y": 0.763
+    },
+    "side_window_end": "All u end at z=0.945, leaving finite-height rear edge; white rear buttress starts there.",
+    "interpretation": "Already has about 34 degrees of transverse outboard slope at cabin peak. Strong evidence supports distinct angular rear window termination and broader triangular white C-buttress. Evidence alone does not establish an exact new transverse angle."
+  }
+}

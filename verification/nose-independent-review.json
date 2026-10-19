@@ -1,0 +1,458 @@
+{
+  "reviewedAtUtc": "2026-10-19T11:51:52.320078+00:00",
+  "status": "passed_scoped_geometry_audit_with_visual_limitations",
+  "scope": "Independent read-only audit of final frozen exterior geometry and final actual-mesh CPU renders; source files were not edited; no redesign or complete-likeness claim.",
+  "freeze": {
+    "directory": "verification/nose-candidate-final",
+    "exportFile": "actual-preview-meshes.json",
+    "exportSha256": "081bfbb86c452fb2ad184139b0088147c333a305aca91fc2583d58162988e380",
+    "generatedAtUtc": "2026-10-19T11:47:34.657Z",
+    "meshCount": 257,
+    "triangleCount": 118700,
+    "sourceHashes": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+      "reference-exterior.js": "886178971f527fa1e12a88e9391e84bee571211c75c1ee5633485732dd57a489",
+      "reference-cockpit.js": "9dc593f32e3eb60f9bcce6971ff7b362b27b4414e6c7d27d4cb27c270e5c3ac0",
+      "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+    },
+    "allFiveCurrentSourceHashesMatchFrozenExport": true
+  },
+  "candidateToFinalPreservation": {
+    "previousDirectory": "verification/nose-candidate-check",
+    "previousMeshCount": 255,
+    "commonGeometryInstancesUnchanged": 255,
+    "removedOrChangedPreviousGeometryInstances": 0,
+    "addedMeshNames": [
+      "interior-screen-housing",
+      "interior-live-instruments"
+    ],
+    "comparisonFields": [
+      "position",
+      "normal",
+      "index",
+      "matrixWorld"
+    ],
+    "exteriorSourceUnchanged": true
+  },
+  "independentGeometryAudit": {
+    "checkedMeshCount": 36,
+    "checkedTriangleCount": 6654,
+    "zeroAreaTriangles": 0,
+    "opposedFaceNormalTriangles": 0,
+    "zeroNormals": 0,
+    "minimumFaceNormalDot": 0.884500845713916,
+    "maximumPocketWallOuterEdgeErrorWorldUnits": 6.710477168139438e-08,
+    "diffuserFinTopCapChecks": [
+      {
+        "x": -0.71,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      },
+      {
+        "x": -0.473,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      },
+      {
+        "x": -0.237,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      },
+      {
+        "x": 0.0,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      },
+      {
+        "x": 0.237,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      },
+      {
+        "x": 0.473,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      },
+      {
+        "x": 0.71,
+        "maximumTopCapAttachmentErrorWorldUnits": 0.0
+      }
+    ],
+    "apertureSkinPointsThreeCoordinates": {
+      "-1": [
+        [
+          -0.6869699954986572,
+          0.47499999952316285,
+          -2.1599999084472654
+        ],
+        [
+          -0.6549999713897705,
+          0.6350000257492066,
+          -1.5637946739196777
+        ],
+        [
+          -0.7699999809265137,
+          0.6500000114440918,
+          -1.6776053323745728
+        ]
+      ],
+      "1": [
+        [
+          0.6869699954986572,
+          0.47499999952316285,
+          -2.1599999084472654
+        ],
+        [
+          0.6549999713897705,
+          0.6350000257492066,
+          -1.5637946739196777
+        ],
+        [
+          0.7699999809265137,
+          0.6500000114440918,
+          -1.6776053323745728
+        ]
+      ]
+    },
+    "paintClippingResidual": {
+      "method": "Clip each actual indexed shoulder triangle against the aperture triangle in the front XY projection; area is summed intersection area. Maximum intrusion is the largest in-hole shoulder-vertex distance to the nearest hole edge.",
+      "maximumIntrusionMm": 0.16747387173153916,
+      "summedIntersectionAreaWorldUnitsSquared": 1.4927694430344474e-05,
+      "apertureAreaWorldUnitsSquared": 0.00943977722308631,
+      "fractionOfApertureArea": 0.0015813608814662157,
+      "assessment": "Sub-millimetre UV-clipping residual; no visible opening failure found. It is not mathematically exact clipping."
+    },
+    "meshes": [
+      {
+        "mesh": "referenceLampShoulderBridge-1",
+        "triangles": 989,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9303300203987176
+      },
+      {
+        "mesh": "referenceFrontWingInnerReturn-1",
+        "triangles": 96,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.884500845713916
+      },
+      {
+        "mesh": "referenceFrontWingRearReturn-1",
+        "triangles": 1,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 1.0
+      },
+      {
+        "mesh": "referenceLampShoulderBridge1",
+        "triangles": 989,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9303300203987176
+      },
+      {
+        "mesh": "referenceFrontWingInnerReturn1",
+        "triangles": 96,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.884500845713916
+      },
+      {
+        "mesh": "referenceFrontWingRearReturn1",
+        "triangles": 1,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 1.0
+      },
+      {
+        "mesh": "referenceRearPaintedBumper",
+        "triangles": 3072,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9739368193396689
+      },
+      {
+        "mesh": "referenceDiffuserFin-0.71_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.925160293890061
+      },
+      {
+        "mesh": "referenceDiffuserFin-0.71_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9251603985265536
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge-0.71",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942914
+      },
+      {
+        "mesh": "referenceDiffuserFin-0.473_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.925160293890061
+      },
+      {
+        "mesh": "referenceDiffuserFin-0.473_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.925160293890061
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge-0.473",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942914
+      },
+      {
+        "mesh": "referenceDiffuserFin-0.237_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9251603200496498
+      },
+      {
+        "mesh": "referenceDiffuserFin-0.237_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9251603200496498
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge-0.237",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942914
+      },
+      {
+        "mesh": "referenceDiffuserFin0_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 1.0
+      },
+      {
+        "mesh": "referenceDiffuserFin0_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 1.0
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge0",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942912
+      },
+      {
+        "mesh": "referenceDiffuserFin0.237_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9251603200496498
+      },
+      {
+        "mesh": "referenceDiffuserFin0.237_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9251603200496498
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge0.237",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942914
+      },
+      {
+        "mesh": "referenceDiffuserFin0.473_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.925160293890061
+      },
+      {
+        "mesh": "referenceDiffuserFin0.473_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.925160293890061
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge0.473",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942914
+      },
+      {
+        "mesh": "referenceDiffuserFin0.71_-1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9251603985265536
+      },
+      {
+        "mesh": "referenceDiffuserFin0.71_1",
+        "triangles": 64,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.925160293890061
+      },
+      {
+        "mesh": "referenceDiffuserFinEdge0.71",
+        "triangles": 32,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9996510462942914
+      },
+      {
+        "mesh": "referenceTriangleHeadlamp-1",
+        "triangles": 1,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9999999932357164
+      },
+      {
+        "mesh": "referenceLampPocketWall-1_0",
+        "triangles": 48,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9999999934209044
+      },
+      {
+        "mesh": "referenceLampPocketWall-1_1",
+        "triangles": 48,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 1.0000000121610122
+      },
+      {
+        "mesh": "referenceLampPocketWall-1_2",
+        "triangles": 48,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9999999732773672
+      },
+      {
+        "mesh": "referenceTriangleHeadlamp1",
+        "triangles": 1,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9999999932357164
+      },
+      {
+        "mesh": "referenceLampPocketWall1_0",
+        "triangles": 48,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9999999934209044
+      },
+      {
+        "mesh": "referenceLampPocketWall1_1",
+        "triangles": 48,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 1.0000000121610122
+      },
+      {
+        "mesh": "referenceLampPocketWall1_2",
+        "triangles": 48,
+        "zeroAreaTriangles": 0,
+        "opposedFaceNormalTriangles": 0,
+        "zeroNormals": 0,
+        "minimumFaceNormalDot": 0.9999999732773672
+      }
+    ]
+  },
+  "visualReview": {
+    "viewedFiles": [
+      {
+        "file": "nose-tight-side-comparison.png",
+        "sha256": "5443b5717570baabb970bd2b8d991f5a8a201b0725bf5ba7c5af91cf49aa4a0a"
+      },
+      {
+        "file": "reference-front-raw.png",
+        "sha256": "f45c9422afa9c3884711dcf6652ccad6d183449d7c9728edcba74afe972dcf6a"
+      },
+      {
+        "file": "rear-detail-oblique-raw.png",
+        "sha256": "d0f103f542b4d8d00a6f82c8089a82eaa2520db4088aa17d5e408f267b523c9f"
+      },
+      {
+        "file": "reference-top-rear-raw.png",
+        "sha256": "8a84cb537bde8c9955d403e39188a60fbe92698438d97303de095a5f5c830a8e"
+      }
+    ],
+    "side": {
+      "finding": "The front now descends visibly from the wheel/fender region toward the shortened nose. The old forward high platform is gone. Reference and rendered car point LEFT; the tight sheet uses labelled uniform crop/scale and axle alignment, without mirroring the photograph.",
+      "limitation": "Unknown photograph camera, different studio lighting, 16-sample CPU noise, and remaining body/cabin differences prevent a full-likeness conclusion."
+    },
+    "front": {
+      "finding": "The lamp apertures are open and attached, without a new torn edge or flipped surface.",
+      "remainingDifference": "The rendered front lamps still look relatively tall/narrow; the left visible contour is approximately 48 px wide by 82 px high in the final raw view. The first-front reference has a broader, shallower luminous triangle. This is an appearance/projection gap, not a hole-topology failure.",
+      "pixelMeasurementStatus": "Approximate visual screen-space measurement, not a tolerance target."
+    },
+    "rear": {
+      "finding": "The sculpted white bridge visibly rises toward its outer ends; four nozzle mouths remain inset. No new exterior hole or flipped panel was found.",
+      "remainingDifference": "The curved lower diffuser fins remain difficult to distinguish in both final rear views because of dark material, occlusion, camera and low-sample noise. Their shape and matching detail cannot be judged as fully reference-matched from these images."
+    }
+  },
+  "otherAuditDisclosure": {
+    "scope": "Existing renderer-wide audit, not an independent full cockpit audit.",
+    "source": "verification/nose-candidate-final/render-audit.json",
+    "reportedMissingNormals": [],
+    "reportedNegativeDeterminants": [],
+    "reportedNormalWindingDisagreements": [
+      {
+        "name": "reference-yoke-padded-rim",
+        "triangles": 8
+      }
+    ],
+    "assessment": "This cockpit-only winding report is outside the 36 checked exterior meshes and is not a new exterior defect."
+  },
+  "conclusion": "The requested side-nose direction is demonstrably improved. No blocking defect was found in the checked exterior geometry. Front-lamp proportion and rear-fin visual verification remain limited; no complete-likeness claim is made."
+}

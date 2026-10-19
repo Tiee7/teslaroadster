@@ -1,0 +1,127 @@
+{
+  "meshCount": 387,
+  "triangleCount": 119320,
+  "negativeDeterminants": [],
+  "missingNormals": [],
+  "normalWindingDisagreements": [
+    {
+      "name": "reference-yoke-padded-rim",
+      "triangles": 8
+    }
+  ],
+  "sourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "af63e822ea0644fe2ef237e8f783385febeeb04cfd0602b9f879adae491b0b42",
+    "reference-exterior.js": "80d67768ef05f9185ef71db68383bcc183ddd27fe9f9c3267e22f1fea850be14",
+    "reference-cockpit.js": "eb492d48faa5c09a2b957ee373de5d2480fc54ee815f174c56362f7fb8680544",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "samples": 48,
+  "colorConversion": "Source hex/Color channels sRGB to Blender linear; exposure 0; world strength .2; half-energy softboxes",
+  "exactGeometry": true,
+  "renderedViews": [
+    {
+      "name": "front-three-quarter",
+      "cameraPositionBlender": [
+        6.3,
+        8.8,
+        3.3
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "PERSP",
+      "focalLengthMm": 65,
+      "orthographicScale": null,
+      "file": "front-three-quarter-raw.png"
+    },
+    {
+      "name": "rear-three-quarter",
+      "cameraPositionBlender": [
+        6.3,
+        -8.8,
+        3.3
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "PERSP",
+      "focalLengthMm": 65,
+      "orthographicScale": null,
+      "file": "rear-three-quarter-raw.png"
+    },
+    {
+      "name": "side",
+      "cameraPositionBlender": [
+        10,
+        0,
+        1.55
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "ORTHO",
+      "focalLengthMm": null,
+      "orthographicScale": 5.65,
+      "file": "side-raw.png"
+    },
+    {
+      "name": "front",
+      "cameraPositionBlender": [
+        0,
+        10,
+        1.55
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "ORTHO",
+      "focalLengthMm": null,
+      "orthographicScale": 3.05,
+      "file": "front-raw.png"
+    },
+    {
+      "name": "rear",
+      "cameraPositionBlender": [
+        0,
+        -10,
+        1.55
+      ],
+      "targetBlender": [
+        0,
+        0,
+        0.54
+      ],
+      "projection": "ORTHO",
+      "focalLengthMm": null,
+      "orthographicScale": 3.05,
+      "file": "rear-raw.png"
+    }
+  ],
+  "executionRecovery": {
+    "initialRenderExitCode": 137,
+    "initialCompletedViews": [
+      "front-three-quarter"
+    ],
+    "retryStartedAt": "2026-10-19T09:58:51Z",
+    "retryCompleted": true,
+    "remainingViewsRendered": [
+      "rear-three-quarter",
+      "side",
+      "front",
+      "rear"
+    ],
+    "retryThreads": 4,
+    "completedViewPreserved": true,
+    "note": "One externally killed process; resumed only pending views after five-minute authorized retry interval. No known cause is asserted."
+  }
+}

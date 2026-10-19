@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 
 const traffic = readFileSync(new URL('../src/highway-traffic.js', import.meta.url), 'utf8');
 const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
@@ -70,7 +71,7 @@ function harness(overrides = {}, map = 'highway') {
     showBanner: (...args) => banners.push(args), clearDebris() {}, renderBannerText() {},
     destroyVehicle() { context.gameState.isDestroyed = true; },
   });
-  vm.runInContext(`${traffic}\n${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
+  vm.runInContext(`${traffic}\n${scoreRules}\n${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
     function stepAttitude(dt) {
       const groundElevation = testGroundElevation;
       ${input}

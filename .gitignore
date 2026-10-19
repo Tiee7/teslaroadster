@@ -8,3 +8,14 @@ __pycache__/
 coverage/
 
 public/
+
+# Reproducible local CPU review products; keep compact sheets and audits only.
+verification/npc-traffic/previews/
+
+# Full player CPU preview exports remain local review evidence.
+verification/rear-wing-candidate-check/
+verification/rear-wing-baseline-check/
+verification/rear-wing-poses/
+verification/nose-candidate-check/
+verification/nose-baseline-check/
+verification/window-candidate-crown-check/

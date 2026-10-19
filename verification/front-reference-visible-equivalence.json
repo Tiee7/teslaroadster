@@ -1,0 +1,27 @@
+{
+  "pass": true,
+  "verifiedAt": "2026-10-19T10:50:37.489Z",
+  "scope": "Exact equality of every exported visible source mesh, original vertex normals, triangle indices, material properties, material group assignments, draw ranges and world matrices. Random runtime material UUIDs excluded.",
+  "visibleExportSha256Before": "214fd0e325d1dbfd58e6202ad0a1494631b4e63d5b64f84d37714e3aefab4b74",
+  "visibleExportSha256After": "214fd0e325d1dbfd58e6202ad0a1494631b4e63d5b64f84d37714e3aefab4b74",
+  "meshCount": 255,
+  "triangleCount": 125578,
+  "renderedSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "currentSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "changedSourceFiles": [
+    "reference-cockpit.js"
+  ],
+  "note": "Caller context: reference-cockpit.js expanded cached FPV-hidden shoulder handles. Every exported neutral canonical preview mesh, normal, triangle, material/group and world pose is exactly equal. This verifies canonical visible-export equality only; FPV behavior and other source-side effects require separate runtime checks. Original rendered source hashes are retained and current source is separately exported."
+}

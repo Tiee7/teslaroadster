@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 
 const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
 const source = readFileSync(new URL('../src/leaderboard.js', import.meta.url), 'utf8');
@@ -42,7 +43,7 @@ function harness() {
   let network = async (url, options) => {
     if (url.includes('/leaderboard')) return response({ category: new URL(url, 'https://example.test').searchParams.get('category'), entries: [], limit: 100 });
     if (url === '/api/end') return response({ ended: true, runId: JSON.parse(options.body).runId });
-    if (url === '/api/run') return response({ runId: 'test-run', durationMs: 60000, serverNow: 1, expiresAt: 600001 });
+    if (url === '/api/run') return response({ runId: 'test-run', durationMs: 60000, scoreVersion: 'distance-v2', serverNow: 1, expiresAt: 600001 });
     return response({ accepted: true, improved: true, bestScore: 222, rank: 1 });
   };
   const window = new Element('window');
@@ -61,7 +62,7 @@ function harness() {
     toggleLanguage: () => { context.currentLang = context.currentLang === 'en' ? 'zh' : 'en'; window.RoadsterRanked.render(); },
     fetch: async (url, options) => { calls.push({ url, options }); return network(url, options); },
   });
-  vm.runInContext(source, context);
+  vm.runInContext(scoreRules + '\n' + source, context);
   return {
     context, elements, state, window, document, calls,
     phase: () => elements['ranked-hud'].dataset.phase,
@@ -82,15 +83,15 @@ test('ranked start resets score and normalized gameplay, fixed 60s score is opt-
   assert.equal(h.state.score, 0); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0);
   assert.equal(h.state.tireTemp, 35); assert.equal(h.state.autoStabilizer, true); assert.equal(h.state.insaneMode, false);
   assert.equal(h.context.weatherIndex, 0); assert.equal(h.context.trafficLevelIndex, 1); assert.equal(h.context.trafficCount, 36);
-  h.state.score = 125.4; h.state.carsCleared = 3;
+  h.state.score = 126; h.state.distanceBySpeed = [1254, 0, 0, 0, 0, 0]; h.state.carsCleared = 3;
   h.advance(59999); assert.equal(h.phase(), 'running');
   h.advance(1); assert.equal(h.phase(), 'complete');
-  assert.match(h.elements['ranked-result'].textContent, /155/);
+  assert.match(h.elements['ranked-result'].textContent, /126/);
   assert.equal(h.calls.filter(c => c.url === '/api/score').length, 0);
   h.state.score = 99999;
   await h.click('ranked-submit');
   const sent = JSON.parse(h.calls.find(c => c.url === '/api/score').options.body);
-  assert.deepEqual(sent, { runId: 'test-run', nickname: '测试 Racer', score: 155, elapsedMs: 60000 });
+  assert.deepEqual(sent, { runId: 'test-run', nickname: '测试 Racer', score: 126, elapsedMs: 60000, scoreVersion: 'distance-v2', distanceBySpeed: [1254, 0, 0, 0, 0, 0] });
   assert.equal(h.phase(), 'submitted');
 });
 
@@ -121,7 +122,7 @@ test('double-click does not create duplicate runs or duplicate submissions', asy
   });
   const first = h.start(); await flush();
   await h.start(); assert.equal(h.calls.filter(c => c.url === '/api/run').length, 1);
-  resolveStart(response({ runId: 'one-run', durationMs: 60000 })); await first;
+  resolveStart(response({ runId: 'one-run', durationMs: 60000, scoreVersion: 'distance-v2' })); await first;
   h.advance(60000);
   const submit = h.click('ranked-submit'); await flush();
   await h.click('ranked-submit'); assert.equal(h.calls.filter(c => c.url === '/api/score').length, 1);
@@ -156,7 +157,7 @@ test('cancel/close during pending start cannot unexpectedly start later', async 
   const h = harness(); let resolve;
   h.network(async (url, options) => url === '/api/run' ? new Promise(done => { resolve = done; }) : response({ ended: true, runId: JSON.parse(options.body).runId }));
   const pending = h.start(); await flush(); await h.click('ranked-close');
-  resolve(response({ runId: 'late-run', durationMs: 60000 })); await pending; await flush();
+  resolve(response({ runId: 'late-run', durationMs: 60000, scoreVersion: 'distance-v2' })); await pending; await flush();
   assert.equal(h.phase(), 'aborted'); assert.equal(h.state.score, 899);
   assert.deepEqual(JSON.parse(h.calls.find(c => c.url === '/api/end').options.body), { runId: 'late-run' });
 });
@@ -273,7 +274,7 @@ test('restart waits for end confirmation and does not duplicate pending end requ
   const h = harness(); await h.start(); let finish;
   h.network(async (url, options) => {
     if (url === '/api/end') return new Promise(resolve => { finish = () => resolve(response({ ended: true, runId: JSON.parse(options.body).runId })); });
-    return response({ runId: 'new-run', durationMs: 60000 });
+    return response({ runId: 'new-run', durationMs: 60000, scoreVersion: 'distance-v2' });
   });
   h.window.RoadsterRanked.abort('crash');
   const next = h.start(); await flush();
@@ -290,7 +291,7 @@ test('uncertain end is retried with same run ID before a new start, failures sta
   const h = harness(); await h.start(); let attempts = 0;
   h.network(async (url, options) => {
     if (url === '/api/end') { attempts++; if (attempts <= 2) throw Error('network_down'); return response({ ended: true, runId: JSON.parse(options.body).runId }); }
-    return response({ runId: 'new-run', durationMs: 60000 });
+    return response({ runId: 'new-run', durationMs: 60000, scoreVersion: 'distance-v2' });
   });
   h.window.RoadsterRanked.abort('crash'); await flush();
   assert.match(h.elements['ranked-error'].textContent, /previous challenge ended/);
@@ -307,12 +308,12 @@ test('canceled pending issuance is ended before a newer start, late callbacks ca
   h.network(async (url, options) => {
     if (url === '/api/run' && ++starts === 1) return new Promise(resolve => { finishStart = resolve; });
     if (url === '/api/end') return new Promise(resolve => { finishEnd = () => resolve(response({ ended: true, runId: JSON.parse(options.body).runId })); });
-    return response({ runId: 'new-run', durationMs: 60000 });
+    return response({ runId: 'new-run', durationMs: 60000, scoreVersion: 'distance-v2' });
   });
   const first = h.start(); await flush(); await h.click('ranked-close');
   const second = h.start(); await flush();
   assert.equal(starts, 1);
-  finishStart(response({ runId: 'old-run', durationMs: 60000 })); await first; await flush();
+  finishStart(response({ runId: 'old-run', durationMs: 60000, scoreVersion: 'distance-v2' })); await first; await flush();
   assert.equal(h.phase(), 'starting'); assert.equal(starts, 1);
   assert.equal(h.calls.filter(c => c.url === '/api/end').length, 1);
   finishEnd(); await second;

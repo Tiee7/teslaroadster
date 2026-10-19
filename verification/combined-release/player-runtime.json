@@ -1,0 +1,572 @@
+{
+  "generatedAt": "2026-10-19T13:02:15.722Z",
+  "runtimeRevision": "128",
+  "sources": {
+    "vehicles.js": "537415811139200c3c49eea1d216b862e205a1a4e7c41d62b01777f14e80f9ca",
+    "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+    "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+  },
+  "limits": "CPU scene-graph, projection and exact production-mesh ray intersections only. No WebGL/browser screenshot, GPU shading, actual text rasterization or touch interaction verification.",
+  "viewports": [
+    [
+      2048,
+      1163
+    ],
+    [
+      2048,
+      1123
+    ],
+    [
+      1440,
+      900
+    ],
+    [
+      844,
+      390
+    ],
+    [
+      667,
+      320
+    ],
+    [
+      1024,
+      1024
+    ],
+    [
+      780,
+      900
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      360,
+      800
+    ],
+    [
+      320,
+      900
+    ]
+  ],
+  "steeringAngles": 49,
+  "steeringRangeRadians": [
+    -1.009,
+    1.009
+  ],
+  "configurationCount": 4,
+  "instrumentRays": 117600,
+  "roadRays": 39200,
+  "instrumentBlockCount": 0,
+  "roadBlockCount": 0,
+  "instrumentBlocks": [],
+  "roadBlocks": [],
+  "wheelEnvelopeViolations": [],
+  "displayBounds": [
+    {
+      "viewport": [
+        2048,
+        1163
+      ],
+      "left": 0.40250000122346374,
+      "right": 0.5974999987765363,
+      "top": 0.8458641432373495,
+      "bottom": 0.9800000012166484,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        2048,
+        1123
+      ],
+      "left": 0.40250000122346374,
+      "right": 0.5974999987765363,
+      "top": 0.8410863745191786,
+      "bottom": 0.9800000012599843,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "left": 0.3800000015058016,
+      "right": 0.6199999984941984,
+      "top": 0.8299999986394593,
+      "bottom": 0.9800000013605409,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "left": 0.34834123413055484,
+      "right": 0.6516587658694452,
+      "top": 0.7235897412640327,
+      "bottom": 0.9800000023257106,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        667,
+        320
+      ],
+      "left": 0.3080959544320665,
+      "right": 0.6919040455679335,
+      "top": 0.6674999971655404,
+      "bottom": 0.9800000028344599,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        1024,
+        1024
+      ],
+      "left": 0.34640000192742604,
+      "right": 0.653599998072574,
+      "top": 0.6599999989115671,
+      "bottom": 0.7800000010884325,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        780,
+        900
+      ],
+      "left": 0.32276923299318383,
+      "right": 0.6772307670068162,
+      "top": 0.6599999989115671,
+      "bottom": 0.7800000010884325,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "left": 0.16759385032499363,
+      "right": 0.8324061496750064,
+      "top": 0.6599999989115671,
+      "bottom": 0.7800000010884327,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "left": 0.14444444890607877,
+      "right": 0.8555555510939212,
+      "top": 0.6599999988662159,
+      "bottom": 0.7850000011337839,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        320,
+        900
+      ],
+      "left": 0.11000000489385503,
+      "right": 0.889999995106145,
+      "top": 0.6599999990173874,
+      "bottom": 0.7683333343159462,
+      "minNdcZ": 0.6595811064095323
+    }
+  ],
+  "rearDirectRays": 90,
+  "rearQuarterRays": 48,
+  "rearGaps": [],
+  "assertions": [
+    "All original car and yoke objects retained.",
+    "Repeated four-way configuration and camera transitions preserve lights, canopy and independent choices.",
+    "Compact NPC factory retains collision bounds, bounded batches and no player wheel dependency."
+  ],
+  "npcModels": {
+    "roadster-5e3b285ce5ba2af3": 6,
+    "roadster-2a6a57bb617ec7ae": 5,
+    "roadster-499feb3a905a9b82": 2,
+    "roadster-d4f50372d73a06a0": 2,
+    "legacy-classic-roadster": 2,
+    "legacy-sculpted-touring": 4,
+    "roadster-57bb28b4444fe141": 2,
+    "roadster-cf79c62dc51eda50": 3,
+    "roadster-552a05c475bebda0": 4,
+    "roadster-98c9c96b8637ce33": 2,
+    "roadster-2392a5ad4099381d": 2,
+    "roadster-7cebd25eb1b855fc": 1,
+    "roadster-ac741fe21d27692f": 1
+  },
+  "npcResources": {
+    "cachedGeometries": 42,
+    "maximumGeometries": 85,
+    "sharedMaterials": 14
+  },
+  "rearClosedBulkhead": {
+    "triangles": 1512,
+    "pairedEdges": 2268,
+    "unpairedEdges": 0,
+    "bounds": {
+      "min": [
+        -0.800000011920929,
+        0.18999999910593035,
+        1.9299999970197677
+      ],
+      "max": [
+        0.800000011920929,
+        0.3600000008940697,
+        2.1475000000745057
+      ]
+    },
+    "minimumPermittedFrontSkinZ": 2,
+    "frontSkinTriangles": 1152,
+    "acceptedDeepFrontSkinHits": [
+      {
+        "x": -0.6,
+        "y": 0.215,
+        "faceIndex": 108,
+        "point": [
+          -0.6,
+          0.215,
+          2.084041021800755
+        ]
+      },
+      {
+        "x": -0.6,
+        "y": 0.23,
+        "faceIndex": 204,
+        "point": [
+          -0.6,
+          0.23,
+          2.0514981744237732
+        ]
+      },
+      {
+        "x": -0.6,
+        "y": 0.26,
+        "faceIndex": 396,
+        "point": [
+          -0.6,
+          0.26,
+          2.010052657634343
+        ]
+      },
+      {
+        "x": -0.6,
+        "y": 0.3,
+        "faceIndex": 684,
+        "point": [
+          -0.6,
+          0.3,
+          2.020148496346439
+        ]
+      },
+      {
+        "x": -0.54,
+        "y": 0.23,
+        "faceIndex": 206,
+        "point": [
+          -0.54,
+          0.23,
+          2.0916926335232295
+        ]
+      },
+      {
+        "x": -0.54,
+        "y": 0.26,
+        "faceIndex": 398,
+        "point": [
+          -0.54,
+          0.26,
+          2.0655460449137912
+        ]
+      },
+      {
+        "x": -0.54,
+        "y": 0.3,
+        "faceIndex": 687,
+        "point": [
+          -0.54,
+          0.3,
+          2.070480644665461
+        ]
+      },
+      {
+        "x": -0.4,
+        "y": 0.23,
+        "faceIndex": 216,
+        "point": [
+          -0.4,
+          0.23,
+          2.081180656130287
+        ]
+      },
+      {
+        "x": -0.4,
+        "y": 0.26,
+        "faceIndex": 408,
+        "point": [
+          -0.4,
+          0.26,
+          2.052549535871356
+        ]
+      },
+      {
+        "x": -0.32,
+        "y": 0.215,
+        "faceIndex": 124,
+        "point": [
+          -0.32,
+          0.215,
+          2.0990409706419393
+        ]
+      },
+      {
+        "x": -0.32,
+        "y": 0.23,
+        "faceIndex": 220,
+        "point": [
+          -0.32,
+          0.23,
+          2.0731439263754443
+        ]
+      },
+      {
+        "x": -0.32,
+        "y": 0.26,
+        "faceIndex": 412,
+        "point": [
+          -0.32,
+          0.26,
+          2.040057321452894
+        ]
+      },
+      {
+        "x": -0.12,
+        "y": 0.215,
+        "faceIndex": 136,
+        "point": [
+          -0.12,
+          0.215,
+          2.0862840054627143
+        ]
+      },
+      {
+        "x": -0.12,
+        "y": 0.23,
+        "faceIndex": 232,
+        "point": [
+          -0.12,
+          0.23,
+          2.0548319897028584
+        ]
+      },
+      {
+        "x": -0.12,
+        "y": 0.26,
+        "faceIndex": 424,
+        "point": [
+          -0.12,
+          0.26,
+          2.0147697610618898
+        ]
+      },
+      {
+        "x": 0.12,
+        "y": 0.215,
+        "faceIndex": 150,
+        "point": [
+          0.12,
+          0.215,
+          2.0861130515187316
+        ]
+      },
+      {
+        "x": 0.12,
+        "y": 0.23,
+        "faceIndex": 246,
+        "point": [
+          0.12,
+          0.23,
+          2.054721887025506
+        ]
+      },
+      {
+        "x": 0.12,
+        "y": 0.26,
+        "faceIndex": 438,
+        "point": [
+          0.12,
+          0.26,
+          2.0147520580544565
+        ]
+      },
+      {
+        "x": 0.32,
+        "y": 0.215,
+        "faceIndex": 162,
+        "point": [
+          0.32,
+          0.215,
+          2.0960297700784527
+        ]
+      },
+      {
+        "x": 0.32,
+        "y": 0.23,
+        "faceIndex": 258,
+        "point": [
+          0.32,
+          0.23,
+          2.0712045931564327
+        ]
+      },
+      {
+        "x": 0.32,
+        "y": 0.26,
+        "faceIndex": 450,
+        "point": [
+          0.32,
+          0.26,
+          2.0397455014697274
+        ]
+      },
+      {
+        "x": 0.4,
+        "y": 0.23,
+        "faceIndex": 263,
+        "point": [
+          0.4,
+          0.23,
+          2.0811806577089933
+        ]
+      },
+      {
+        "x": 0.4,
+        "y": 0.26,
+        "faceIndex": 455,
+        "point": [
+          0.4,
+          0.26,
+          2.0525495366328634
+        ]
+      },
+      {
+        "x": 0.54,
+        "y": 0.23,
+        "faceIndex": 272,
+        "point": [
+          0.54,
+          0.23,
+          2.089672792310906
+        ]
+      },
+      {
+        "x": 0.54,
+        "y": 0.26,
+        "faceIndex": 464,
+        "point": [
+          0.54,
+          0.26,
+          2.0652212799926635
+        ]
+      },
+      {
+        "x": 0.54,
+        "y": 0.3,
+        "faceIndex": 752,
+        "point": [
+          0.54,
+          0.3,
+          2.071584842487857
+        ]
+      },
+      {
+        "x": 0.6,
+        "y": 0.215,
+        "faceIndex": 179,
+        "point": [
+          0.6,
+          0.215,
+          2.08404101950299
+        ]
+      },
+      {
+        "x": 0.6,
+        "y": 0.23,
+        "faceIndex": 275,
+        "point": [
+          0.6,
+          0.23,
+          2.051498172450636
+        ]
+      },
+      {
+        "x": 0.6,
+        "y": 0.26,
+        "faceIndex": 467,
+        "point": [
+          0.6,
+          0.26,
+          2.010052656682577
+        ]
+      },
+      {
+        "x": 0.6,
+        "y": 0.3,
+        "faceIndex": 755,
+        "point": [
+          0.6,
+          0.3,
+          2.0201484972982042
+        ]
+      },
+      {
+        "side": -1,
+        "x": 0.1,
+        "y": 0.26,
+        "faceIndex": 347,
+        "point": [
+          0.18138544172414806,
+          0.23663450221468008,
+          2.099043132285855
+        ]
+      },
+      {
+        "side": -1,
+        "x": 0.3,
+        "y": 0.26,
+        "faceIndex": 359,
+        "point": [
+          0.3995858537998451,
+          0.23314199700549632,
+          2.076479194136633
+        ]
+      },
+      {
+        "side": 1,
+        "x": -0.3,
+        "y": 0.26,
+        "faceIndex": 312,
+        "point": [
+          -0.39961258169424685,
+          0.23313478857336978,
+          2.076432622805479
+        ]
+      },
+      {
+        "side": 1,
+        "x": -0.1,
+        "y": 0.26,
+        "faceIndex": 325,
+        "point": [
+          -0.1822082399448952,
+          0.2363982794996914,
+          2.0975169742957593
+        ]
+      }
+    ]
+  },
+  "pass": true
+}

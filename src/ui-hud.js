@@ -375,8 +375,8 @@ function switchMap(targetMap) {
   cityEnvGroup.visible = (currentMap === 'city');
 
   const counts = [20, 36, 52];
-  populateTraffic(counts[trafficLevelIndex]);
   resetCar();
+  populateTraffic(counts[trafficLevelIndex]);
   applyTranslations();
 }
 
@@ -391,6 +391,9 @@ function resetCar() {
 
   if (typeof headlightSpotL !== 'undefined') headlightSpotL.intensity = 2.4;
   if (typeof headlightSpotR !== 'undefined') headlightSpotR.intensity = 2.4;
+  RoadsterDrivingScore.reset(state);
+  state.carsCleared = 0;
+  state.blastedCarsCount = 0;
   state.speedMilestone = 0;
   state.isDestroyed = false;
   state.hullIntegrity = 100.0;

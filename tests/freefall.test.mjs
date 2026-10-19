@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 
 const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
 const config = readFileSync(new URL('../src/config.js', import.meta.url), 'utf8');
@@ -33,7 +34,7 @@ function harness(overrides = {}, map = 'highway', buildings = []) {
     destroyVehicle() { context.gameState.isDestroyed = true; },
     recordImpact: (...args) => impacts.push(args),
   });
-  vm.runInContext(`${config}\nconst keys = {};\n${helpers}\n${collision}\n${jump}
+  vm.runInContext(`${scoreRules}\n${config}\nconst keys = {};\n${helpers}\n${collision}\n${jump}
     const actualCollision = triggerPhysicsCollision;
     triggerPhysicsCollision = (...args) => { recordImpact(...args); actualCollision(...args); };
     function step(dt) { const t = I18N[currentLang]; ${motion}

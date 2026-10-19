@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
+const scoreRules = readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8');
 
 const read = name => readFileSync(new URL(`../src/${name}`, import.meta.url), 'utf8');
 const hud = read('ui-hud.js'), config = read('config.js'), html = read('index.html');
@@ -58,7 +59,7 @@ function harness(map = 'highway') {
   const window = new Element('window'), calls = [], audio = [], draws = [], rects = [], effects = [];
   let now = 1000, state, context, issued = 0;
   let network = async (url, options) => {
-    if (url === '/api/run') return response({ runId: `run-${++issued}`, durationMs: 60000 });
+    if (url === '/api/run') return response({ runId: `run-${++issued}`, durationMs: 60000, scoreVersion: 'distance-v2' });
     if (url === '/api/end') return response({ ended: true, runId: JSON.parse(options.body).runId });
     if (url === '/api/score') return response({ accepted: true, improved: true, bestScore: JSON.parse(options.body).score, rank: 1 });
     return response({ category: `${map}-realistic`, entries: [] });
@@ -82,7 +83,7 @@ function harness(map = 'highway') {
     fetch: async (url, options) => { calls.push({ url, options, airAtCall: state.airRemaining }); return network(url, options); },
   });
   const run = text => vm.runInContext(text, context);
-  run(config); state = run('state'); run(`currentMap = '${map}'`);
+  run(scoreRules + '\n' + config); state = run('state'); run(`currentMap = '${map}'`);
   run(keyboard + '\n' + banner + '\n' + cockpit + '\n' + ranked);
   return { state, elements, window, document, context, calls, audio, effects, draws, rects, run,
     network: fn => { network = fn; },
@@ -150,7 +151,7 @@ for (const code of ['Digit0', 'Numpad0']) {
   test(`${code}: running ranked challenge is ineligible before refill; next run waits for exact cancellation`, async () => {
     const h = harness(); await h.start();
     const end = deferred();
-    h.network(async (url, options) => url === '/api/end' ? end.promise : response({ runId: 'next-run', durationMs: 60000 }));
+    h.network(async (url, options) => url === '/api/end' ? end.promise : response({ runId: 'next-run', durationMs: 60000, scoreVersion: 'distance-v2' }));
     h.state.airRemaining = 0; h.state.score = 5432; h.state.carsCleared = 10;
     void h.key(code);
     assert.equal(h.phase(), 'idle'); assert.equal(h.state.airRemaining, 10);
@@ -171,14 +172,14 @@ for (const code of ['Digit0', 'Numpad0']) {
   test(`${code}: refilling during pending server start releases late issuance before another start`, async () => {
     const h = harness(), issuance = deferred(), end = deferred(); let starts = 0;
     h.network(async (url) => {
-      if (url === '/api/run') return ++starts === 1 ? issuance.promise : response({ runId: 'new-run', durationMs: 60000 });
+      if (url === '/api/run') return ++starts === 1 ? issuance.promise : response({ runId: 'new-run', durationMs: 60000, scoreVersion: 'distance-v2' });
       return end.promise;
     });
     const first = h.start(); await flush(); assert.equal(h.phase(), 'starting');
     h.state.airRemaining = 1; h.state.score = 333;
     await h.key(code); assert.equal(h.state.airRemaining, 10); assert.equal(h.phase(), 'idle'); assert.equal(h.elements['ranked-hud'].hidden, true);
     const second = h.start(); await flush(); assert.equal(starts, 1);
-    issuance.resolve(response({ runId: 'late-run', durationMs: 60000 })); await first; await flush();
+    issuance.resolve(response({ runId: 'late-run', durationMs: 60000, scoreVersion: 'distance-v2' })); await first; await flush();
     assert.equal(h.phase(), 'starting'); assert.equal(starts, 1); assert.equal(h.state.score, 333, 'late run never applies its baseline');
     assert.deepEqual(JSON.parse(h.calls.find(call => call.url === '/api/end').options.body), { runId: 'late-run' });
     end.resolve(response({ ended: true, runId: 'late-run' })); await second;
@@ -193,13 +194,13 @@ test('silent cancellation network failures stay silent and retry the same ID bef
     const h = harness(), issuance = deferred(); let ends = 0;
     if (!pending) await h.start();
     h.network(async (url, options) => {
-      if (url === '/api/run') return pending && h.calls.filter(call => call.url === '/api/run').length === 1 ? issuance.promise : response({ runId: 'new-run', durationMs: 60000 });
+      if (url === '/api/run') return pending && h.calls.filter(call => call.url === '/api/run').length === 1 ? issuance.promise : response({ runId: 'new-run', durationMs: 60000, scoreVersion: 'distance-v2' });
       if (++ends === 1) throw Error('network_down');
       return response({ ended: true, runId: JSON.parse(options.body).runId });
     });
     const first = pending ? h.start() : null; await flush();
     await h.key();
-    if (pending) issuance.resolve(response({ runId: 'late-run', durationMs: 60000 }));
+    if (pending) issuance.resolve(response({ runId: 'late-run', durationMs: 60000, scoreVersion: 'distance-v2' }));
     await first; await flush();
     assert.equal(h.phase(), 'idle'); assert.equal(h.elements['ranked-error'].textContent, ''); assert.equal(h.elements['ranked-hud'].hidden, true);
     h.window.RoadsterRanked.render(); assert.equal(h.elements['ranked-error'].textContent, '');
@@ -219,7 +220,7 @@ test('ordinary cancellation still shows its reason and cancellation transport er
 });
 
 test('completed and submitting snapshots never acquire later sandbox refill scores', async () => {
-  const h = harness(); await h.start(); h.state.score = 100; h.state.carsCleared = 3; h.advance(60000);
+  const h = harness(); await h.start(); h.state.score = 100; h.state.distanceBySpeed = [1000, 0, 0, 0, 0, 0]; h.state.carsCleared = 3; h.advance(60000);
   assert.equal(h.phase(), 'complete');
   h.state.airRemaining = 0; h.state.score = 99999;
   await h.key(); assert.equal(h.state.airRemaining, 0, 'finished-result dialog blocks gameplay input');
@@ -230,7 +231,7 @@ test('completed and submitting snapshots never acquire later sandbox refill scor
   h.state.airRemaining = 0; h.state.score = 999999; await h.key('Numpad0');
   assert.equal(h.state.airRemaining, 10); assert.equal(h.phase(), 'submitting');
   const scores = h.calls.filter(call => call.url === '/api/score');
-  assert.equal(scores.length, 1); assert.equal(JSON.parse(scores[0].options.body).score, 130);
+  assert.equal(scores.length, 1); assert.equal(JSON.parse(scores[0].options.body).score, 100);
   assert.equal(h.calls.filter(call => call.url === '/api/end').length, 0, 'already-finished immutable result is unaffected');
   saving.resolve(response({ accepted: true, improved: true, bestScore: 130, rank: 1 })); await submit;
   assert.equal(h.phase(), 'submitted'); assert.deepEqual(h.audio, []);

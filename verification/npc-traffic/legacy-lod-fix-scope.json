@@ -1,0 +1,204 @@
+{
+  "pass": true,
+  "beforeAssetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+  "afterAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+  "unmodifiedHistoricalStyles": [
+    {
+      "id": "roadster-7cebd25eb1b855fc",
+      "levels": {
+        "near": {
+          "before": "5ec53d32a8a4afbb4fbe689d99b5fb9270943889dcac7e1aad78ddc1ad2eaac2",
+          "after": "5ec53d32a8a4afbb4fbe689d99b5fb9270943889dcac7e1aad78ddc1ad2eaac2"
+        },
+        "far": {
+          "before": "6a6ec4fac24a535562f291eed015cddedf5ef73e19edbf2642be759ab1f632f4",
+          "after": "6a6ec4fac24a535562f291eed015cddedf5ef73e19edbf2642be759ab1f632f4"
+        }
+      }
+    },
+    {
+      "id": "roadster-57bb28b4444fe141",
+      "levels": {
+        "near": {
+          "before": "90be324834579b8539ec37f01f6b2d4a4f3e0b0559526264979ac9b8d80b97e6",
+          "after": "90be324834579b8539ec37f01f6b2d4a4f3e0b0559526264979ac9b8d80b97e6"
+        },
+        "far": {
+          "before": "1e6cf706e943091becfe83d1d6006ec4c7b089b2f715c071fb5a8fc9ccc561ba",
+          "after": "1e6cf706e943091becfe83d1d6006ec4c7b089b2f715c071fb5a8fc9ccc561ba"
+        }
+      }
+    },
+    {
+      "id": "roadster-2a6a57bb617ec7ae",
+      "levels": {
+        "near": {
+          "before": "76d699e1860fceff0d858f2209b534ff17ec9e4d3dc8564e5cdcfa936c6b454e",
+          "after": "76d699e1860fceff0d858f2209b534ff17ec9e4d3dc8564e5cdcfa936c6b454e"
+        },
+        "far": {
+          "before": "6d6811ec1bc80204ea0bda3de91b0c29925b5459119b6d2a37c25650fd9b19a3",
+          "after": "6d6811ec1bc80204ea0bda3de91b0c29925b5459119b6d2a37c25650fd9b19a3"
+        }
+      }
+    },
+    {
+      "id": "roadster-5e3b285ce5ba2af3",
+      "levels": {
+        "near": {
+          "before": "4a3f5e7e013150c7806b2a208effde6ed899b3a8743c44bb25bac6d46ae07d65",
+          "after": "4a3f5e7e013150c7806b2a208effde6ed899b3a8743c44bb25bac6d46ae07d65"
+        },
+        "far": {
+          "before": "a278ac27f1a69e7043991eebc25410156375a2544a4aa3190342af9a63615c2e",
+          "after": "a278ac27f1a69e7043991eebc25410156375a2544a4aa3190342af9a63615c2e"
+        }
+      }
+    },
+    {
+      "id": "roadster-d4f50372d73a06a0",
+      "levels": {
+        "near": {
+          "before": "d1415fcb80406baf75872db433e682ff08a9056f77cee07d94cd762ff8be61f8",
+          "after": "d1415fcb80406baf75872db433e682ff08a9056f77cee07d94cd762ff8be61f8"
+        },
+        "far": {
+          "before": "e39883b3270307df5e9ffecf4eb3f3d3a8270d17c05544ef1284c0c2c43fc988",
+          "after": "e39883b3270307df5e9ffecf4eb3f3d3a8270d17c05544ef1284c0c2c43fc988"
+        }
+      }
+    },
+    {
+      "id": "roadster-cf79c62dc51eda50",
+      "levels": {
+        "near": {
+          "before": "e2247f9195459c6b29b966321f81325f950e8db24e727732af323d5df639ecfc",
+          "after": "e2247f9195459c6b29b966321f81325f950e8db24e727732af323d5df639ecfc"
+        },
+        "far": {
+          "before": "2d8987a64d5d17b88123c04161b5633b698b92cdf0cbb3a8f433c3b3bd7eab3b",
+          "after": "2d8987a64d5d17b88123c04161b5633b698b92cdf0cbb3a8f433c3b3bd7eab3b"
+        }
+      }
+    },
+    {
+      "id": "roadster-2392a5ad4099381d",
+      "levels": {
+        "near": {
+          "before": "e01a147847ae60288d66cad6510d38be251345648e11ec57a25e875042856390",
+          "after": "e01a147847ae60288d66cad6510d38be251345648e11ec57a25e875042856390"
+        },
+        "far": {
+          "before": "6d6811ec1bc80204ea0bda3de91b0c29925b5459119b6d2a37c25650fd9b19a3",
+          "after": "6d6811ec1bc80204ea0bda3de91b0c29925b5459119b6d2a37c25650fd9b19a3"
+        }
+      }
+    },
+    {
+      "id": "roadster-552a05c475bebda0",
+      "levels": {
+        "near": {
+          "before": "bab706fc3638f62f2d4e162bd3901b29bbff5ca1017e388fa55990379de363c3",
+          "after": "bab706fc3638f62f2d4e162bd3901b29bbff5ca1017e388fa55990379de363c3"
+        },
+        "far": {
+          "before": "0fc8004d2869b8538e5056a6bd32cc8a07b80504b9a972b87ba39254e0c0df55",
+          "after": "0fc8004d2869b8538e5056a6bd32cc8a07b80504b9a972b87ba39254e0c0df55"
+        }
+      }
+    },
+    {
+      "id": "roadster-499feb3a905a9b82",
+      "levels": {
+        "near": {
+          "before": "76e386e8c812acd9107ad952824b6d3be9e9e5c9e7d639ab592aacd27507e321",
+          "after": "76e386e8c812acd9107ad952824b6d3be9e9e5c9e7d639ab592aacd27507e321"
+        },
+        "far": {
+          "before": "73867c3e67369ee11d8b12620b9d81c50f33114a20c62943e007df8dd56dcad6",
+          "after": "73867c3e67369ee11d8b12620b9d81c50f33114a20c62943e007df8dd56dcad6"
+        }
+      }
+    },
+    {
+      "id": "roadster-98c9c96b8637ce33",
+      "levels": {
+        "near": {
+          "before": "d429f906cae70220e238590c451a8e2ff865c86b50209cb69a5ef741fd9fc35e",
+          "after": "d429f906cae70220e238590c451a8e2ff865c86b50209cb69a5ef741fd9fc35e"
+        },
+        "far": {
+          "before": "4b954e41367aff5a8504916586e16f4f31751bc7c5d25208a4c3532b54f14e72",
+          "after": "4b954e41367aff5a8504916586e16f4f31751bc7c5d25208a4c3532b54f14e72"
+        }
+      }
+    },
+    {
+      "id": "roadster-ac741fe21d27692f",
+      "levels": {
+        "near": {
+          "before": "d9fc796819ff26a261049cbf75af4700e4ba2b4a3f7ba03db0b67dae9fef4ed4",
+          "after": "d9fc796819ff26a261049cbf75af4700e4ba2b4a3f7ba03db0b67dae9fef4ed4"
+        },
+        "far": {
+          "before": "eac6eddc55943864f0f52843fd44b10faf4dd9117586818fc5f6fefb4da3b211",
+          "after": "eac6eddc55943864f0f52843fd44b10faf4dd9117586818fc5f6fefb4da3b211"
+        }
+      }
+    },
+    {
+      "id": "roadster-482991b20d0c7983",
+      "levels": {
+        "near": {
+          "before": "6db744f6a72ad52ac7e691bfbe69c3825627c7ceb9154ca48a145a0d9983bb23",
+          "after": "6db744f6a72ad52ac7e691bfbe69c3825627c7ceb9154ca48a145a0d9983bb23"
+        },
+        "far": {
+          "before": "ece1509d78d282b4216e2f897b35ac1d4a8389f5151113c0852d1082c4589778",
+          "after": "ece1509d78d282b4216e2f897b35ac1d4a8389f5151113c0852d1082c4589778"
+        }
+      }
+    }
+  ],
+  "modifiedLegacyStyles": [
+    {
+      "id": "legacy-classic-roadster",
+      "levels": {
+        "near": {
+          "before": "915f8bfbc46603d6a9e189e3ac70660579bf8389b6d3a4705de78cb8be9ae960",
+          "after": "916f4211a14e1b9051a8ab2ba2c4f35d96dbc59bca8c81bb927f8d6c5eb5bf60"
+        },
+        "far": {
+          "before": "1ad297947be4f0270452b205edf8039f54623fcce5caeefbf1e7bb64017b45b9",
+          "after": "c48e42f85f6fdfe29425de44514458beee7459b4cfef50b18b0dd8e07d2f5509"
+        }
+      }
+    },
+    {
+      "id": "legacy-sculpted-track",
+      "levels": {
+        "near": {
+          "before": "795d9ba7db4f7a822444703257f1d6d09d8e1736ae54d63cf80ccdb17aa6eb3b",
+          "after": "795d9ba7db4f7a822444703257f1d6d09d8e1736ae54d63cf80ccdb17aa6eb3b"
+        },
+        "far": {
+          "before": "25b2d3ed393303dbd83a0513c4c7ca3d5e017feeeb7d4756c4a124da663c282a",
+          "after": "e5172a22ebe048723810395202c661fe84c5cdbe9e16174dbe08acebaf0e7fe1"
+        }
+      }
+    },
+    {
+      "id": "legacy-sculpted-touring",
+      "levels": {
+        "near": {
+          "before": "113f7f649b8fdd8774626c3696437f3ce7ed02e5f24edad061c68ae0521a9c44",
+          "after": "113f7f649b8fdd8774626c3696437f3ce7ed02e5f24edad061c68ae0521a9c44"
+        },
+        "far": {
+          "before": "30b4dfa763a0ee023ad8721c4a0f8ea23c9059213690f80440aba6fccb0ddf77",
+          "after": "4790508d608b9035f6e409a3d77c3810286b7dcc992a3ddabd58f84f08d2ddaa"
+        }
+      }
+    }
+  ]
+}

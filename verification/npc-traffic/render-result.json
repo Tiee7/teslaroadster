@@ -1,0 +1,2067 @@
+{
+  "pass": true,
+  "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+  "unchangedGeometryProof": "legacy-lod-fix-scope.json",
+  "actualPackedRuntimeGeometry": true,
+  "variants": 15,
+  "lods": 2,
+  "viewsPerLod": 3,
+  "totalCpuRenders": 90,
+  "contactSheets": {
+    "far-contact-sheet.png": {
+      "bytes": 1409257,
+      "sha256": "579dda73e0e9339d26a10d47178645693d3a491e26122296ed3c2ca409c5212b"
+    },
+    "near-contact-sheet.png": {
+      "bytes": 1420474,
+      "sha256": "c07f7f3e9b362c20d7056d1de10b2b508a499875c0c13625ef36070afe625a84"
+    },
+    "rear-closure-contact-sheet.png": {
+      "bytes": 890431,
+      "sha256": "1c2a46581eb7ef695f43f705e21191a750b64fd6fea2a4d3215e3c8d04e80fea"
+    }
+  },
+  "audits": [
+    {
+      "id": "roadster-7cebd25eb1b855fc",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 11919,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-7cebd25eb1b855fc",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2758,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-57bb28b4444fe141",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 14660,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-57bb28b4444fe141",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3168,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-2a6a57bb617ec7ae",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 15910,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-2a6a57bb617ec7ae",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2944,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-5e3b285ce5ba2af3",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 18114,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-5e3b285ce5ba2af3",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3012,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-d4f50372d73a06a0",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 15946,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-d4f50372d73a06a0",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2944,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-cf79c62dc51eda50",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 15946,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-cf79c62dc51eda50",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2944,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-2392a5ad4099381d",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 15930,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-2392a5ad4099381d",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2944,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-552a05c475bebda0",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 18114,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-552a05c475bebda0",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3012,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-499feb3a905a9b82",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 18012,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-499feb3a905a9b82",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2998,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-98c9c96b8637ce33",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 16520,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-98c9c96b8637ce33",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2944,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-ac741fe21d27692f",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 17172,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-ac741fe21d27692f",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2838,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-482991b20d0c7983",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 17668,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "roadster-482991b20d0c7983",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2946,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "28573d48fdb4864165f5e65cdfef7200f2f91741fcd343ce5b0c9aedd06c35da",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "legacy-classic-roadster",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 2966,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "legacy-classic-roadster",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 1970,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "legacy-sculpted-track",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3710,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "legacy-sculpted-track",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3434,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "legacy-sculpted-touring",
+      "level": "near",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3710,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    },
+    {
+      "id": "legacy-sculpted-touring",
+      "level": "far",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "samples": 16,
+      "denoising": false,
+      "meshCount": 6,
+      "triangleCount": 3434,
+      "missingNormals": [],
+      "normalWindingDisagreements": [],
+      "renderedViews": [
+        {
+          "name": "front-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "front-three-quarter-raw.png"
+        },
+        {
+          "name": "rear-three-quarter",
+          "cameraPositionBlender": [
+            6.3,
+            -8.8,
+            3.3
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "PERSP",
+          "focalLengthMm": 65,
+          "orthographicScale": null,
+          "file": "rear-three-quarter-raw.png"
+        },
+        {
+          "name": "rear",
+          "cameraPositionBlender": [
+            0,
+            -10,
+            1.55
+          ],
+          "targetBlender": [
+            0,
+            0,
+            0.54
+          ],
+          "projection": "ORTHO",
+          "focalLengthMm": null,
+          "orthographicScale": 3.05,
+          "file": "rear-raw.png"
+        }
+      ],
+      "assetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+      "liveAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reusedExactUnchangedGeometry": true,
+      "metadataOnlyFingerprintChange": true
+    }
+  ],
+  "metadataOnlyEquivalenceProof": "metadata-fingerprint-equivalence.json"
+}

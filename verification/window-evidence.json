@@ -1,0 +1,93 @@
+{
+  "status": "Unpublished window-only candidate; waiting for user visual feedback",
+  "branch": "visual/window-structure-candidate",
+  "previousCandidate": "1bf6034f6089f4ffe8f4c105ff9ad803a0cea6de",
+  "functionalBase": "a9690717613d92441c5eefffe65207c954d35b54",
+  "functionalFilesUnchanged": [
+    "src/vehicles.js",
+    "src/highway-traffic.js",
+    "src/physics-main.js",
+    "src/ui-hud.js",
+    "src/leaderboard.js",
+    "src/index.html",
+    "bundle_app.py"
+  ],
+  "sourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "actualPreview": {
+    "renderer": "Blender 4.3.2 Cycles CPU",
+    "samples": 16,
+    "meshCount": 255,
+    "triangleCount": 119024,
+    "views": [
+      "top",
+      "side",
+      "rear-three-quarter",
+      "reference-front"
+    ],
+    "localArtifactDirectory": "verification/window-candidate-crown-check",
+    "comparisonSha256": "4c5b5bf9bc375eafc334f073efe32c3ebc60c6556b139bc3cabb1f81cb82ac0c",
+    "rawImageSha256": {
+      "top": "4b7ff13b28639bc728ae63bc2ad91614f9558ff2bfe4726887536d00aca23ee8",
+      "side": "158a4f729ecb034310de004c4888f32b4e13bd9902a280ad7ee5ef0b1970991c",
+      "rear-three-quarter": "2030dac27602b12f61af660f2039d7b7d1767656cf3d3ca0e79f02f7d361daa9",
+      "reference-front": "e44f554c8db7df38ee673c494bac97757cccfa08f3d2b4cf33246a5caf689969"
+    },
+    "exteriorNormalAudit": "pass;8pre-existing yoke winding disagreements recorded"
+  },
+  "scope": {
+    "onlyElevenWindowMeshesChanged": true,
+    "unchangedOtherOpaqueMeshes": 244,
+    "nonWindowGeometryMaterialPoseSha256": "56b0604237961034d7a8a6aac397f7b3deb1ba9594005cd3305f0fd13f30091e"
+  },
+  "checks": {
+    "nodeTests": 356,
+    "nodePass": 356,
+    "luaTests": 24,
+    "luaPass": 24,
+    "syntaxBundleBuild": "pass",
+    "instrumentRays": 117600,
+    "roadRays": 39200,
+    "instrumentBlocks": [],
+    "roadBlocks": [],
+    "rearRays": 138,
+    "rearGaps": [],
+    "classicAndSixNpcVariants": "exact visible appearance hashes match main",
+    "wheelBatching": "preserved; exact oriented triangles/normals/UVs in3poses, documented Float32 storage difference only",
+    "colorMeshes": 261,
+    "colorTriangles": 119036,
+    "previousColorTriangles": 125590,
+    "shadowMeshes": 2,
+    "shadowTriangles": 14030,
+    "maxSampledShadowDeviationMetres": 0.011587966795474827,
+    "recursiveStableViewLookups": 0
+  },
+  "assetPreservation": {
+    "catalog": "assets/vehicle-variants/catalog-v2.json",
+    "catalogSha256": "0dcf735de237660211f7020a00ee8c50edb126004f9a84ad00d2adc89d41230a",
+    "entries": 19,
+    "distinctGeometries": 11,
+    "originalPreviewBytesRestorable": 193944541,
+    "archiveActualFileBytes": 11642231,
+    "earlierCatalogUnchanged": true,
+    "allAvailableOriginalSourcesAndMeshes": "losslessly preserved, immutable objects and catalogs",
+    "npcReady": false,
+    "experimentalLods": "quarantined and blocked; clean NPC retopology pending",
+    "productionActivation": false
+  },
+  "independentReview": "Flat-cap regression gone. Gentle crown, continuous glazing and acute aft point/broad buttress retained; no obvious new window gaps/detached edges/spikes. Ready for user feedback, not a final full-car likeness claim.",
+  "knownLimit": "Far white corner visible in rear3/4 is inherited referenceLampShoulderBridge-1; exact camera rays confirm existing front fender, unchanged outside this window-only pass.",
+  "limits": [
+    "Exact exported Three.js canonical meshes with original normals; CPU studio renderer, not browser/WebGL screenshots",
+    "Reference crops/resize disclosed; photograph camera and lighting differ",
+    "Mesh/triangle counts are not measured GPU draw calls, FPS or input latency",
+    "All previous designs retained; low-detail NPC retopology remains pending and no asset activated",
+    "No push, merge or deployment performed"
+  ],
+  "rootBundleSha256": "51c3eb1bf170d877912ffb95a0923369f70b1432715e62479a31365e4388da06"
+}

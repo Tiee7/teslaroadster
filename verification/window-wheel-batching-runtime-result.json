@@ -1,0 +1,587 @@
+{
+  "generatedAt": "2026-10-19T11:16:12.702Z",
+  "pass": true,
+  "runtimeRevision": "128",
+  "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+  "sources": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "1ea3044926d851befa04d70f1716cba9997bb2ce4525b57694c28a9b5014b63d",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "baseline": "Same production sources with only batchReferenceWheel(group,i) disabled.",
+  "limits": "CPU verification of real r128 geometry, material properties, hierarchy and world-space oriented triangles. Mesh counts are single-material pre-culling draw submissions, not measured GPU frame time or browser FPS.",
+  "fingerprintConvention": "Every oriented triangle, world-space vertex normal, original stored vertex normal and applicable UV, sorted independent of mesh order and UUID. The baseline position is baked once into Float32 wheel-group coordinates, exactly matching GPU buffer storage; no epsilon quantization is used. Raw pre-bake world positions are separately compared and maximum storage error is reported.",
+  "maximumRawWorldPositionErrorMetres": 5.001347559613344e-9,
+  "maximumRawWorldNormalError": 0,
+  "maximumUvError": 0,
+  "poses": [
+    {
+      "name": "neutral",
+      "wheels": [
+        {
+          "wheel": 0,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "a840e8c72859f7b2dcf56b92cbb5c74a18b60d2ed26b6a4c219f9aaced811788",
+              "afterFingerprint": "a840e8c72859f7b2dcf56b92cbb5c74a18b60d2ed26b6a4c219f9aaced811788"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "9e3f8283e85eee9f4245803e7f323a7ce0234dbf2f9c9ed1d0fbe17cfbd693ed",
+              "afterFingerprint": "9e3f8283e85eee9f4245803e7f323a7ce0234dbf2f9c9ed1d0fbe17cfbd693ed"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "20251b4cf2b1fe5efcc84769bbdcd85f17863867e4b1e80e96529bcaa53aa4f5",
+              "afterFingerprint": "20251b4cf2b1fe5efcc84769bbdcd85f17863867e4b1e80e96529bcaa53aa4f5"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "4349a59bf7ef8e82929a92ea733527d7ef74bcada20785fea01b42442aaaadd8",
+              "afterFingerprint": "4349a59bf7ef8e82929a92ea733527d7ef74bcada20785fea01b42442aaaadd8"
+            }
+          ]
+        },
+        {
+          "wheel": 1,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "67cd81e25fed271f99b5a5666ed1a72201443604198f37e4e41880fa18db4af1",
+              "afterFingerprint": "67cd81e25fed271f99b5a5666ed1a72201443604198f37e4e41880fa18db4af1"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "12767ad360bee70649f25008e977c72a600e48a1348726ce5294aa254e30133a",
+              "afterFingerprint": "12767ad360bee70649f25008e977c72a600e48a1348726ce5294aa254e30133a"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "a02fd9c9152457f0209bd383bea812b576f2e259114be03a58768a793648efca",
+              "afterFingerprint": "a02fd9c9152457f0209bd383bea812b576f2e259114be03a58768a793648efca"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "f3a6b6ad2890e2414c7b3eae3c5a8561edc560402894c0e204effa653b6afd52",
+              "afterFingerprint": "f3a6b6ad2890e2414c7b3eae3c5a8561edc560402894c0e204effa653b6afd52"
+            }
+          ]
+        },
+        {
+          "wheel": 2,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "03058a7e2303e931540b792def87ecaa980bb5b74dd3d62b64be3b1949538516",
+              "afterFingerprint": "03058a7e2303e931540b792def87ecaa980bb5b74dd3d62b64be3b1949538516"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "f7ee67ab9e53ba0f3e7cd01ec709311acb46a9069c20cb8febf07b55c367cfc9",
+              "afterFingerprint": "f7ee67ab9e53ba0f3e7cd01ec709311acb46a9069c20cb8febf07b55c367cfc9"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "4177b1bc02e91d9cf7221a96fcd4bc2c1b39920962aa7a77678672fe5b84af44",
+              "afterFingerprint": "4177b1bc02e91d9cf7221a96fcd4bc2c1b39920962aa7a77678672fe5b84af44"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "2690e429494832a11345c77423bb19fafa9528c0eface47c6778eca8f7385d31",
+              "afterFingerprint": "2690e429494832a11345c77423bb19fafa9528c0eface47c6778eca8f7385d31"
+            }
+          ]
+        },
+        {
+          "wheel": 3,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "28b8865e4bab4c99949c28973f1b7229ceb23827b79c0951aee98c9bd53de488",
+              "afterFingerprint": "28b8865e4bab4c99949c28973f1b7229ceb23827b79c0951aee98c9bd53de488"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "55daf39faa4a0ce970f413b8242576a0a91199a0d990a859ec5e8ab1b6ab63a2",
+              "afterFingerprint": "55daf39faa4a0ce970f413b8242576a0a91199a0d990a859ec5e8ab1b6ab63a2"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "dcb9e8e042eef3b91418e6598836eb090f11fe1363eba46b5434be4d44355592",
+              "afterFingerprint": "dcb9e8e042eef3b91418e6598836eb090f11fe1363eba46b5434be4d44355592"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "071503b4a9a9daa55e7dd2414f1c608b2d569dfd9147dc9518fbac1ea09bbb2a",
+              "afterFingerprint": "071503b4a9a9daa55e7dd2414f1c608b2d569dfd9147dc9518fbac1ea09bbb2a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spinning-steering",
+      "wheels": [
+        {
+          "wheel": 0,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "835f8d133f67e34b1d500ddfca9e9c5fe2c78cef1fd2a78db84a74e535515627",
+              "afterFingerprint": "835f8d133f67e34b1d500ddfca9e9c5fe2c78cef1fd2a78db84a74e535515627"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "64a284c57b486be4e760dae624a6f10f486a1e7625ee8ba425c35df1b55eeb75",
+              "afterFingerprint": "64a284c57b486be4e760dae624a6f10f486a1e7625ee8ba425c35df1b55eeb75"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "23bf35ab97b45257d26e8cc79e07dce7a8241631b5c0cdafcdb34bb9d65a0370",
+              "afterFingerprint": "23bf35ab97b45257d26e8cc79e07dce7a8241631b5c0cdafcdb34bb9d65a0370"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "1a48d9939371ce8749244ba9bd53a82e25703de49ffe1f95103a0a21e14bd79d",
+              "afterFingerprint": "1a48d9939371ce8749244ba9bd53a82e25703de49ffe1f95103a0a21e14bd79d"
+            }
+          ]
+        },
+        {
+          "wheel": 1,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "3350e4f5ae00e6c0415d0d8106de756f84d9d4603399efbba1c4eff14ae2a2a4",
+              "afterFingerprint": "3350e4f5ae00e6c0415d0d8106de756f84d9d4603399efbba1c4eff14ae2a2a4"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "6947852578355c3ce6f23bcafd8a7a62c36cf400ef21dbf3ad2ad70d668028fe",
+              "afterFingerprint": "6947852578355c3ce6f23bcafd8a7a62c36cf400ef21dbf3ad2ad70d668028fe"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "35f4260b14b41c5d4675e845aaaf850275a5eafcb338fe4608752c08945f7714",
+              "afterFingerprint": "35f4260b14b41c5d4675e845aaaf850275a5eafcb338fe4608752c08945f7714"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "030fc9e679b87dc6a1f0ead96bb204e03eb82f54a4cd11473abe31911b1061f6",
+              "afterFingerprint": "030fc9e679b87dc6a1f0ead96bb204e03eb82f54a4cd11473abe31911b1061f6"
+            }
+          ]
+        },
+        {
+          "wheel": 2,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "706c32ed598722f5f29c5603b9c776f9c284d674c17f479a5c4f7fa0f2f76772",
+              "afterFingerprint": "706c32ed598722f5f29c5603b9c776f9c284d674c17f479a5c4f7fa0f2f76772"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "d8dc4e3d97850cde13a20a9c698a0e6774c9513fe5ad67a6986a11bc10e5174b",
+              "afterFingerprint": "d8dc4e3d97850cde13a20a9c698a0e6774c9513fe5ad67a6986a11bc10e5174b"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "da2b825501f6bf574530f3c79c5e577946c99061ad1220aef9dcf1a7e2dfc45c",
+              "afterFingerprint": "da2b825501f6bf574530f3c79c5e577946c99061ad1220aef9dcf1a7e2dfc45c"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "2c235b1cd5900670ff3e733870a4ff1af0d1cb66086e158e3accc7b8a184c91b",
+              "afterFingerprint": "2c235b1cd5900670ff3e733870a4ff1af0d1cb66086e158e3accc7b8a184c91b"
+            }
+          ]
+        },
+        {
+          "wheel": 3,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "4dfb7691b80649822afdaec65067c30a7bafb278a5a9496b1dc01cc21dfd5c4e",
+              "afterFingerprint": "4dfb7691b80649822afdaec65067c30a7bafb278a5a9496b1dc01cc21dfd5c4e"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "03eeaf623b63fa5a7f8b4ada3c09ae8f26549f742a172e15f24128d72c0c7572",
+              "afterFingerprint": "03eeaf623b63fa5a7f8b4ada3c09ae8f26549f742a172e15f24128d72c0c7572"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "52af11428efeb27d813a7ff5e0c05d396b21a8cff5ff2828ab60a31c15414ea5",
+              "afterFingerprint": "52af11428efeb27d813a7ff5e0c05d396b21a8cff5ff2828ab60a31c15414ea5"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "18d2968ae1ca1c95f77c2fda2cb86f1e69f65dbfebe6b420f22baf8056361fa5",
+              "afterFingerprint": "18d2968ae1ca1c95f77c2fda2cb86f1e69f65dbfebe6b420f22baf8056361fa5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "moving-car",
+      "wheels": [
+        {
+          "wheel": 0,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "1e2a129cc2708137ecff94580d9c2fbff20ab85b58b414f276b035019f3d89f9",
+              "afterFingerprint": "1e2a129cc2708137ecff94580d9c2fbff20ab85b58b414f276b035019f3d89f9"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "7d75280606b26e60728e76bdae45039ac9c9b541dca8f3dc27ac011080c45d8a",
+              "afterFingerprint": "7d75280606b26e60728e76bdae45039ac9c9b541dca8f3dc27ac011080c45d8a"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "5ffc989f3428b23990b6825732c4b8e85cb3b8308d0ef14a4565d5dc089f0bc0",
+              "afterFingerprint": "5ffc989f3428b23990b6825732c4b8e85cb3b8308d0ef14a4565d5dc089f0bc0"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "1c5af6c0f0d187b2928a13692c8ff2051d4406fab7ba17f3a99a4fb09a015f54",
+              "afterFingerprint": "1c5af6c0f0d187b2928a13692c8ff2051d4406fab7ba17f3a99a4fb09a015f54"
+            }
+          ]
+        },
+        {
+          "wheel": 1,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "7f12077da14ceb85ba2c1732dfa216f818c3ee86ca6bcf765846d564d87f3737",
+              "afterFingerprint": "7f12077da14ceb85ba2c1732dfa216f818c3ee86ca6bcf765846d564d87f3737"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "20076adb0afc1db090ae46319a5c47314938aea9ba6e65f07c3974cb1b7bb945",
+              "afterFingerprint": "20076adb0afc1db090ae46319a5c47314938aea9ba6e65f07c3974cb1b7bb945"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "fd1afd32f6a0b5fcad31a06ef1081e6e2061d8585baaa14364ac17fb5b9e4ea2",
+              "afterFingerprint": "fd1afd32f6a0b5fcad31a06ef1081e6e2061d8585baaa14364ac17fb5b9e4ea2"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "708e136c18c4a458d1b3e102d8efccd4aa316d864289ae9043332fb645b37659",
+              "afterFingerprint": "708e136c18c4a458d1b3e102d8efccd4aa316d864289ae9043332fb645b37659"
+            }
+          ]
+        },
+        {
+          "wheel": 2,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "4fd0736514ee78ff963bbdca417d0330ae2dd5152e4759a6a0b2c861b426f328",
+              "afterFingerprint": "4fd0736514ee78ff963bbdca417d0330ae2dd5152e4759a6a0b2c861b426f328"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "8a7c9900859951d8a3356dda122a06bbf4e2a79d4c13d7651ab10e30eccc1108",
+              "afterFingerprint": "8a7c9900859951d8a3356dda122a06bbf4e2a79d4c13d7651ab10e30eccc1108"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "3f24bdf25aed31a4dfe31e64040723bf995e5cbc7618e7589af1c2c61d9987a1",
+              "afterFingerprint": "3f24bdf25aed31a4dfe31e64040723bf995e5cbc7618e7589af1c2c61d9987a1"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "be15a435097b50693907a2f53cc09fc322f7132e6bb658cd18e2b5579a2da8ea",
+              "afterFingerprint": "be15a435097b50693907a2f53cc09fc322f7132e6bb658cd18e2b5579a2da8ea"
+            }
+          ]
+        },
+        {
+          "wheel": 3,
+          "beforeMeshes": 37,
+          "afterMeshes": 4,
+          "materials": [
+            {
+              "color": 1382169,
+              "sourceMeshes": 1,
+              "batchMeshes": 1,
+              "vertices": 490,
+              "triangles": 864,
+              "beforeFingerprint": "71d2a65221c4b5966481a98d3b7f7e1b1d21a84d961255101768dfd48ca2c882",
+              "afterFingerprint": "71d2a65221c4b5966481a98d3b7f7e1b1d21a84d961255101768dfd48ca2c882"
+            },
+            {
+              "color": 2106150,
+              "sourceMeshes": 14,
+              "batchMeshes": 1,
+              "vertices": 726,
+              "triangles": 820,
+              "beforeFingerprint": "7a096ab701bbb4440fe785b3d5438e7fdff00669579363125a383fcf6d11d740",
+              "afterFingerprint": "7a096ab701bbb4440fe785b3d5438e7fdff00669579363125a383fcf6d11d740"
+            },
+            {
+              "color": 13225680,
+              "sourceMeshes": 17,
+              "batchMeshes": 1,
+              "vertices": 730,
+              "triangles": 908,
+              "beforeFingerprint": "0ca24775677d79522007658d2b7bfa5bd53c6f2ed1de248f2a430f6e52080ae2",
+              "afterFingerprint": "0ca24775677d79522007658d2b7bfa5bd53c6f2ed1de248f2a430f6e52080ae2"
+            },
+            {
+              "color": 12131620,
+              "sourceMeshes": 5,
+              "batchMeshes": 1,
+              "vertices": 20,
+              "triangles": 10,
+              "beforeFingerprint": "f8f8ae7b0bbf48cdd2cbd9e3e1dd48a714a04fbf0528fd29e5df692167367a54",
+              "afterFingerprint": "f8f8ae7b0bbf48cdd2cbd9e3e1dd48a714a04fbf0528fd29e5df692167367a54"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "preservedClassicConfigurations": [
+    {
+      "cockpit": "reference",
+      "fpv": false,
+      "fingerprint": "9943f158dc592ad533b0f40f5c1d7264f782863c0c4ef02e1491cb9f87fe0489"
+    },
+    {
+      "cockpit": "reference",
+      "fpv": true,
+      "fingerprint": "1a2040ba214af671ecde7d78c05d362c51002897e3706b49c11d6df724cc7ccc"
+    },
+    {
+      "cockpit": "classic",
+      "fpv": false,
+      "fingerprint": "6d769761b481f506aba95462808243e4242d8417ea5d1ff48938ad79e5071da5"
+    },
+    {
+      "cockpit": "classic",
+      "fpv": true,
+      "fingerprint": "dcae1cfc128d0ae7c19fa7f109a773ec227990c94f0eaa27e64ff8f4e8a79dcc"
+    }
+  ],
+  "opaqueNeutralPreviewBefore": {
+    "meshes": 401,
+    "triangles": 116748
+  },
+  "opaqueNeutralPreviewAfter": {
+    "meshes": 269,
+    "triangles": 116748
+  },
+  "beforeWheelMeshes": 148,
+  "afterWheelMeshes": 16,
+  "wheelMeshReduction": 132,
+  "wheelMeshReductionPercent": 89.1891891891892,
+  "totalWheelTriangles": 10408
+}

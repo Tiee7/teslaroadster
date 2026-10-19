@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-10-19T11:54:57.084283+00:00",
+  "status": "frozen-unpublished-intermediate-replaced-by-user-rear-wing-request",
+  "node": {
+    "totalPassed": 363,
+    "nonArchivePassed": 355,
+    "archivePassed": 8,
+    "mode": "split serial runs; initial combined run did not finish archive child, exact cause not captured",
+    "logs": [
+      "verification/nose-final-node-tests.log",
+      "verification/nose-archive-node-tests.log"
+    ]
+  },
+  "lua": {
+    "passed": 24
+  },
+  "check": "passed",
+  "build": "passed",
+  "deterministicBundle": "passed",
+  "exactRuntimeChecks": [
+    "nose-scope-runtime.json",
+    "nose-cockpit-display-runtime.json",
+    "nose-model-runtime.json",
+    "nose-preservation-runtime.json",
+    "nose-wheel-batching-runtime.json"
+  ],
+  "sources": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "886178971f527fa1e12a88e9391e84bee571211c75c1ee5633485732dd57a489",
+    "reference-cockpit.js": "9dc593f32e3eb60f9bcce6971ff7b362b27b4414e6c7d27d4cb27c270e5c3ac0",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "userPreviewLibraryFileId": "libfile_c026ce3838e88191b11b722ff4c5a4ab",
+  "noPublish": true,
+  "nextScope": "User requests revised active wing and rear bumper; preserve completed nose and window geometry."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "Local compact runtime candidate ready for independent final review; remote writes on hold for pending approval",
+  "baseCommit": "683f6fd15331d619866b8433520b25d36a75d216",
+  "payloadSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+  "nodeTests": 349,
+  "luaTests": 24,
+  "check": "pass",
+  "build": "pass",
+  "actualThreeRevision": "128",
+  "actualRuntimeCheck": true,
+  "cpuViews": 90,
+  "styles": 15,
+  "historicalEntries": 20,
+  "geometries": 12,
+  "geometryCacheMaximum": 85,
+  "sharedMaterials": 14,
+  "maximumNearCars": 8,
+  "maximumCars": 52,
+  "shadowMeshesPerCar": 0,
+  "archivalPublication": "Not uploaded; whole-ZIP create_blob failed HTTP400 over16MiB; no remote SHA/tree/commit/ref returned or updated",
+  "archiveZipSha256": "87a846d5708c44c4a957ebb5efda5ff4e0bab2497322c341a2f70951dd58a259",
+  "multipartPlan": "Two local8,839,887-byte binary parts; uploads not attempted pending existing approval"
+}

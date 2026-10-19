@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-10-19T12:40:49.710537+00:00",
+  "status": "frozen-unpublished-user-review-pending",
+  "preservedNoseScreenSnapshot": "fad45eaabdea8287c03f66c9a434733b4df87d9d",
+  "functionalBase": "683f6fd15331d619866b8433520b25d36a75d216",
+  "node": {
+    "passed": 369,
+    "failed": 0,
+    "mode": "Full serial suite, including8archive integrity tests"
+  },
+  "lua": {
+    "passed": 24
+  },
+  "check": "passed",
+  "build": "passed",
+  "deterministicBundle": "passed",
+  "runtimeEvidence": [
+    "rear-wing-scope-runtime.json",
+    "rear-wing-preservation-runtime.json",
+    "rear-wing-screen-runtime.json",
+    "rear-wing-model-runtime.json",
+    "rear-wing-wheel-runtime.json"
+  ],
+  "independentReview": "rear-wing-independent-review.json",
+  "sources": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+    "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "opaquePreview": {
+    "meshes": 255,
+    "triangles": 121376
+  },
+  "rearDepthVerification": {
+    "legacyDepthThresholdFlags": 34,
+    "meaning": "All34first-hit the intended concave front skin, not a road/back cap. Closed manifold2268pairededges; explicit first skin faceIndex<1152 andworldz>=2.00 now verified. Allothermeshesretainz>=2.10."
+  },
+  "delivery": {
+    "rear-three-quarter-tight-user-comparison.png": "libfile_0693edc93dcc8191a2d6947444b8f0ef",
+    "front-windshield-tight-user-comparison.png": "libfile_3fd08536012481918fa9f247fb87eac5"
+  },
+  "publish": false,
+  "archive": "Prior catalogs/objects unchanged. fad45ea and this branch are preserved; append future approved retention batch after independent NPC release."
+}

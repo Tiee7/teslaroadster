@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "beforeAssetSha256": "a7646b61510383bb1f3dbe4d804611cc381ee149ed45951be5d7304182ec31b5",
+  "afterAssetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+  "geometryPoolByteIdentical": true,
+  "all15StylesBothLodsByteIdentical": true,
+  "canonicalHashFormat": "position-topology-pose-v1",
+  "twoCompleteRegenerationsByteIdentical": true,
+  "changedFields": [
+    "legacy sourceGeometrySha256",
+    "legacy sourceGeometryHashFormat"
+  ],
+  "styles": [
+    "roadster-7cebd25eb1b855fc",
+    "roadster-57bb28b4444fe141",
+    "roadster-2a6a57bb617ec7ae",
+    "roadster-5e3b285ce5ba2af3",
+    "roadster-d4f50372d73a06a0",
+    "roadster-cf79c62dc51eda50",
+    "roadster-2392a5ad4099381d",
+    "roadster-552a05c475bebda0",
+    "roadster-499feb3a905a9b82",
+    "roadster-98c9c96b8637ce33",
+    "roadster-ac741fe21d27692f",
+    "roadster-482991b20d0c7983",
+    "legacy-classic-roadster",
+    "legacy-sculpted-track",
+    "legacy-sculpted-touring"
+  ]
+}

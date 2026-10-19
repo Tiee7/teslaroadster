@@ -1,0 +1,39 @@
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+THREE.Texture: Unable to serialize Texture.
+{
+  "pass": true,
+  "beforeWheelMeshes": 148,
+  "afterWheelMeshes": 16,
+  "totalWheelTriangles": 10408,
+  "poses": [
+    "neutral",
+    "spinning-steering",
+    "moving-car"
+  ],
+  "maximumRawWorldPositionErrorMetres": 5.001347559613344e-9,
+  "maximumRawWorldNormalError": 0,
+  "maximumUvError": 0,
+  "classicConfigurations": 4,
+  "opaqueNeutralPreviewBefore": {
+    "meshes": 401,
+    "triangles": 119100
+  },
+  "opaqueNeutralPreviewAfter": {
+    "meshes": 269,
+    "triangles": 119100
+  },
+  "fingerprintConvention": "Every oriented triangle, world-space vertex normal, original stored vertex normal and applicable UV, sorted independent of mesh order and UUID. The baseline position is baked once into Float32 wheel-group coordinates, exactly matching GPU buffer storage; no epsilon quantization is used. Raw pre-bake world positions are separately compared and maximum storage error is reported.",
+  "limits": "CPU verification of real r128 geometry, material properties, hierarchy and world-space oriented triangles. Mesh counts are single-material pre-culling draw submissions, not measured GPU frame time or browser FPS."
+}

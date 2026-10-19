@@ -1,0 +1,95 @@
+{
+  "scope": "Compare prior verified front against cleanup export",
+  "meshCountUnchanged": true,
+  "triangleCountUnchanged": true,
+  "boundsUnchanged": true,
+  "materialPropertiesAndGroupsUnchanged": true,
+  "worldPosesUnchanged": true,
+  "changedMeshes": [
+    {
+      "name": "referenceArchReturn-1",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceCarbonSill-1",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceArchReturn1",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceCarbonSill1",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceLampPocketWall-1_0",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceLampPocketWall-1_1",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceLampPocketWall-1_2",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceLampPocketWall1_0",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceLampPocketWall1_1",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    },
+    {
+      "name": "referenceLampPocketWall1_2",
+      "changedFields": [
+        "position",
+        "normal"
+      ]
+    }
+  ],
+  "zeroNormalsAfter": 0,
+  "sourceHashesBefore": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "98060e0e49161127742671e677b2a5e62438b4f1490c1222b5992739f1986723",
+    "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "sourceHashesAfter": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  }
+}

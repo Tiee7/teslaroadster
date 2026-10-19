@@ -140,7 +140,7 @@ test('cooldown and sustained-blockage hysteresis prevent transient/ping-pong cha
   b.mesh.position.z = -250;
   run(h, cars, 0.2); assert.equal(a.blockedTime, 0); assert.ok(!a.laneChange);
   b.mesh.position.z = a.mesh.position.z - 70;
-  run(h, cars, 3); assert.equal(a.laneIdx, 1); assert.ok(!a.laneChange); assert.ok(a.laneChangeCooldown > 5);
+  run(h, cars, 3); assert.equal(a.laneIdx, 1); assert.ok(!a.laneChange); assert.ok(a.laneChangeCooldown > 2);
   const slow = car(1, a.mesh.position.z - 50, 10); cars.push(slow);
   run(h, cars, 1);
   assert.equal(a.laneIdx, 1); assert.ok(!a.laneChange);
@@ -155,7 +155,7 @@ test('both road ends respawn safely, cancel old merge state and retain cruise sp
     a.mesh.position.z = z;
     h.step([a, occupied], { ...away(), vz }, 0.05);
     assert.equal(a.highwayPassedThisFrame, ahead);
-    assert.ok(!a.laneChange); assert.equal(a.desiredSpeed, 25); assert.ok(a.laneChangeCooldown > 5.9);
+    assert.ok(!a.laneChange); assert.equal(a.desiredSpeed, 25); assert.ok(a.laneChangeCooldown > 2.9);
     assert.equal(a.mesh.position.x, lanes[a.laneIdx]);
     assert.ok(Math.abs(a.mesh.position.x - occupied.mesh.position.x) > 1.85 || Math.abs(a.mesh.position.z - occupied.mesh.position.z) > 24);
     assert.ok(a.mesh.position.z >= -480 && a.mesh.position.z <= 65);
@@ -187,7 +187,7 @@ test('blast motion is excluded from driver control and lane recovery is smooth',
   h.step([a], away(), 0.05); assert.equal(a.mesh.position.z, -50); assert.ok(!a.laneChange);
   a.mesh.position.x = -4; a.blastTimer = 0;
   h.step([a], away(), 1 / 60);
-  assert.ok(Math.abs(a.mesh.position.x + 4) < 0.001); assert.ok(a.laneChange); assert.ok(a.laneChangeCooldown > 5);
+  assert.ok(Math.abs(a.mesh.position.x + 4) < 0.001); assert.ok(a.laneChange); assert.ok(a.laneChangeCooldown > 2);
 });
 
 test('blast recovery waits for a safe lane instead of recentering into an adjacent NPC', () => {
@@ -266,7 +266,7 @@ function integrated(cars, overrides = {}, map = 'highway') {
 test('actual runtime traffic block moves once, preserves score/destruction guard and city movement', () => {
   const a = car(2, 0, 22), h = integrated([a]); h.step(0.05); close(a.mesh.position.z, 0);
   const pass = car(2, 64.9, 20), scored = integrated([pass], { vz: -60, y: 10 }); scored.step(0.05);
-  assert.equal(scored.state.carsCleared, 1); assert.equal(scored.state.score, 25);
+  assert.equal(scored.state.carsCleared, 1); assert.equal(scored.state.score, 0);
   scored.step(0); assert.equal(scored.state.carsCleared, 1, 'zero-duration frames cannot award a pass twice');
   scored.step(0.05); assert.equal(scored.state.carsCleared, 1);
   const dead = integrated([car(2, 64.9, 20)], { vz: -60, isDestroyed: true }); dead.step(0.05);
@@ -280,10 +280,10 @@ test('spawn code assigns one personal cruise speed and the controller is bundled
   const spawn = vehicles.slice(vehicles.indexOf('function populateTraffic('), vehicles.indexOf('// =========================================================================', vehicles.indexOf('function populateTraffic(')));
   let seed = 4; const math = Object.create(Math); math.random = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32);
   const context = vm.createContext({ Math: math, currentMap: 'highway', trafficCars: [], trafficGroup: { add() {}, remove() {} },
-    LANE_COUNT: lanes.length, LANE_CENTERS: lanes, createTrafficVehicleMesh: () => ({ position: { set(x, y, z) { Object.assign(this, { x, y, z }); } }, rotation: {}, userData: { length: 4.62, height: 1.25 } }) });
-  vm.runInContext(`${spawn}\npopulateTraffic(52);`, context);
+    LANE_COUNT: lanes.length, LANE_CENTERS: lanes, WORLD_SPEED_SCALE: scale, createTrafficVehicleMesh: () => ({ position: { set(x, y, z) { Object.assign(this, { x, y, z }); } }, rotation: {}, userData: { length: 4.62, height: 1.25 } }) });
+  vm.runInContext(`${source}\n${spawn}\npopulateTraffic(52);`, context);
   assert.equal(context.trafficCars.length, 52); assert.ok(new Set(context.trafficCars.map(c => c.desiredSpeed)).size > 45);
-  for (const a of context.trafficCars) { assert.equal(a.speed, a.desiredSpeed); assert.ok(a.speed >= 16 && a.speed <= 30); assert.equal(a.changeTimer, undefined); }
+  for (const a of context.trafficCars) { assert.ok(a.speed <= a.desiredSpeed && a.speed >= 0); assert.ok(a.desiredSpeed >= 70 / 3.6 && a.desiredSpeed <= 180 / 3.6); assert.equal(a.changeTimer, undefined); }
   const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
   assert.ok(html.indexOf('src="highway-traffic.js"') < html.indexOf('src="physics-main.js"'));
   const bundle = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
@@ -305,4 +305,104 @@ test('dense seeded 52-car runtime remains collision-free through following, over
   }
   assert.ok(wraps > 15); assert.ok(merges > 100); assert.equal(h.impacts.length, 0);
   for (let i = 0; i < cars.length; i++) assert.equal(cars[i].desiredSpeed, 16 + ((i * 137 + 43) % 140) / 10);
+});
+
+function spawned(count, seed = 4, player = { x: 2.5, y: 0, z: 0, vz: -42 }) {
+  const spawn = vehicles.slice(vehicles.indexOf('function populateTraffic('), vehicles.indexOf('// =========================================================================', vehicles.indexOf('function populateTraffic(')));
+  const math = Object.create(Math); math.random = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32);
+  const context = vm.createContext({ Math: math, state: player, currentMap: 'highway', trafficCars: [], trafficGroup: { add() {}, remove() {} },
+    LANE_COUNT: lanes.length, LANE_CENTERS: lanes, WORLD_SPEED_SCALE: scale, createTrafficVehicleMesh: () => ({ position: { set(x, y, z) { Object.assign(this, { x, y, z }); } }, rotation: { x: 0, y: 0, z: 0 }, userData: { length: 4.62, height: 1.25 } }) });
+  vm.runInContext(`${source}\n${spawn}\npopulateTraffic(${count});`, context);
+  return context.trafficCars;
+}
+
+test('all traffic presets keep the four weighted pools within one car, stable random km/h targets, and balanced lanes', () => {
+  const ranges = [[160, 180], [70, 80], [80, 90], [90, 120]], shares = [0.1, 0.4, 0.3, 0.2];
+  for (const count of [20, 36, 52]) for (const seed of [1, 4, 77]) {
+    const cars = spawned(count, seed), counts = [0, 0, 0, 0], laneCounts = lanes.map(() => 0);
+    assert.equal(cars.length, count);
+    for (const a of cars) {
+      counts[a.speedBand]++; laneCounts[a.laneIdx]++;
+      const kmh = a.desiredSpeed * 3.6, [min, max] = ranges[a.speedBand];
+      assert.ok(kmh >= min && kmh <= max); assert.ok(a.speed <= a.desiredSpeed && a.speed >= 0);
+      assert.equal(a.driverType, a.speedBand === 0 ? 'racer' : 'cruise');
+    }
+    for (let i = 0; i < counts.length; i++) assert.ok(Math.abs(counts[i] - count * shares[i]) < 1);
+    assert.ok(Math.max(...laneCounts) - Math.min(...laneCounts) <= 1);
+    assert.equal(new Set(cars.map(a => a.desiredSpeed)).size, count);
+  }
+});
+
+test('racers react faster and merge continuously while ordinary drivers also actively pass', () => {
+  const normal = car(2, 0, 45, { driverType: 'cruise' }), racer = car(2, 0, 45, { driverType: 'racer' });
+  const n = harness(), r = harness(), normalLeader = car(2, -160, 22), racerLeader = car(2, -160, 22);
+  run(n, [normal, normalLeader], 0.2, away()); run(r, [racer, racerLeader], 0.2, away());
+  assert.ok(!normal.laneChange); assert.ok(racer.laneChange); assert.equal(racer.desiredSpeed, 45);
+  run(n, [normal, normalLeader], 3.0, away()); run(r, [racer, racerLeader], 3.0, away());
+  assert.equal(normal.laneIdx, 1); assert.equal(racer.laneIdx, 1); assert.ok(racer.speed > normal.speed);
+  assert.ok(normal.laneChangeCooldown > racer.laneChangeCooldown);
+});
+
+test('new mixed-speed seeded traffic actually overtakes, uses every lane, retains identities, and never overlaps', () => {
+  for (const count of [36, 52]) {
+    const cars = spawned(count, 77), targets = cars.map(a => [a.desiredSpeed, a.speedBand, a.driverType]);
+    const h = integrated(cars, { x: 30, vz: -30 }), laneVisits = lanes.map(() => 0), emptyFrames = lanes.map(() => 0), longestEmpty = lanes.map(() => 0);
+    let merges = 0, racerMerges = 0, wraps = 0, previous = new Set();
+    for (let i = 0; i < 35 * 30; i++) {
+      h.step(1 / 30); const changing = new Set();
+      for (const a of cars) {
+        if (a.highwayPassedThisFrame) wraps++;
+        if (a.highwayWaitingToSpawn !== undefined) continue;
+        laneVisits[a.laneIdx]++;
+        if (a.laneChange) { changing.add(a); if (!previous.has(a)) { merges++; if (a.driverType === 'racer') racerMerges++; } }
+      }
+      previous = changing;
+      for (let lane = 0; lane < lanes.length; lane++) {
+        const occupied = cars.some(a => a.highwayWaitingToSpawn === undefined && a.laneIdx === lane && a.mesh.position.z >= -480 && a.mesh.position.z <= 65);
+        emptyFrames[lane] = occupied ? 0 : emptyFrames[lane] + 1;
+        longestEmpty[lane] = Math.max(longestEmpty[lane], emptyFrames[lane]);
+      }
+      for (let a = 0; a < cars.length; a++) for (let b = a + 1; b < cars.length; b++) {
+        const first = cars[a], second = cars[b];
+        if (first.highwayWaitingToSpawn !== undefined || second.highwayWaitingToSpawn !== undefined) continue;
+        assert.ok(Math.abs(first.mesh.position.x - second.mesh.position.x) >= 1.85 || Math.abs(first.mesh.position.z - second.mesh.position.z) >= 4.62,
+          `new pool NPC overlap: count${count} frame${i} cars${a}/${b}`);
+      }
+    }
+    assert.ok(merges >= 8, `active ordinary/racer overtakes: ${merges}`); assert.ok(racerMerges >= 2); assert.ok(merges > racerMerges, 'ordinary drivers also pass');
+    assert.ok(wraps > 10); assert.ok(laneVisits.every(value => value > 100));
+    assert.ok(longestEmpty.every(value => value <= 3 * 30), `long lane vacancy: ${longestEmpty}`);
+    for (let i = 0; i < cars.length; i++) assert.deepEqual([cars[i].desiredSpeed, cars[i].speedBand, cars[i].driverType], targets[i]);
+    console.log(`mixed traffic ${count}: ${merges} overtakes (${racerMerges} racer), ${wraps} safe wraps, longest lane vacancy ${(Math.max(...longestEmpty) / 30).toFixed(2)}s`);
+  }
+});
+
+
+test('a racer born behind slower traffic starts inside a safe braking envelope without changing its target', () => {
+  const cars = spawned(52, 6), racer = cars[12], front = cars[6];
+  assert.equal(racer.driverType, 'racer'); assert.ok(racer.desiredSpeed > 49); assert.ok(racer.speed < racer.desiredSpeed);
+  const h = integrated(cars, { x: 30, vz: -24 });
+  for (let i = 0; i < 5 * 60; i++) {
+    h.step(1 / 60);
+    for (let a = 0; a < cars.length; a++) for (let b = a + 1; b < cars.length; b++) {
+      const first = cars[a], second = cars[b];
+      if (first.highwayWaitingToSpawn !== undefined || second.highwayWaitingToSpawn !== undefined) continue;
+      assert.ok(Math.abs(first.mesh.position.x - second.mesh.position.x) >= 1.85 || Math.abs(first.mesh.position.z - second.mesh.position.z) >= 4.62, `birth seed6 overlap at${i}: ${a}/${b}`);
+    }
+  }
+  assert.ok(racer.desiredSpeed > 49); assert.ok(front.desiredSpeed > 19);
+});
+
+
+test('traffic refresh at a stopped player uses the live lane and safely slows approaching newborn drivers', () => {
+  for (const x of [2.5, -2.5, -12.5, 10]) {
+    const player = { x, y: 0, z: 0, vx: 0, vz: 0 }, cars = spawned(36, 1, player), h = harness();
+    for (let i = 0; i < 3 * 60; i++) {
+      h.step(cars, player, 1 / 60);
+      for (const a of cars) {
+        if (a.highwayWaitingToSpawn !== undefined) continue;
+        assert.ok(Math.abs(a.mesh.position.x - x) >= 1.85 || Math.abs(a.mesh.position.z) >= 4.62, `stopped player overlap lane${x} frame${i}`);
+      }
+    }
+  }
 });

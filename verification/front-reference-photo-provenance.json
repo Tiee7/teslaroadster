@@ -1,0 +1,31 @@
+{
+  "referenceFilename": "image(20261019-084437).png",
+  "referenceSha256": "33490974d4cfa2a4465327fac30a56a1e2e7391395cd8c08d9b7b1f033d2bfb8",
+  "referenceImagePreserved": true,
+  "renderFilename": "reference-front-raw.png",
+  "label": "Approximate matched front camera, not an exact camera or lighting match",
+  "sourceDimensions": [
+    1040,
+    585
+  ],
+  "renderDimensions": [
+    1040,
+    585
+  ],
+  "renderSamples": 48,
+  "renderedSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "a044ed6491761824d1e0b7b6ae8a809c4a2d00bca19dd72fb1123d9256ab286b",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "currentEquivalentSourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "3dcb832c5e0bdd91d433511bebc6a774416213ce49ffdfbebba845a787f23e09",
+    "reference-cockpit.js": "7e3ef4ece9b5e8c346ea0b682146773d0d7c8ff276174e84a315a82417d59f04",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "currentSourceProof": "current-source-visible-equivalence.json"
+}
