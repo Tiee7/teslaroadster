@@ -115,18 +115,19 @@ function setKeyState(code, isDown) {
 
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
-  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen()) return;
+  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen() || window.RoadsterStart?.isPaintOpen()) return;
   if (window.RoadsterTaxi?.handleKeydown(e)) return;
-  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
-    e.preventDefault();
-  }
   const mapModalEl = document.getElementById('modal-map-select');
-  if (mapModalEl && !mapModalEl.classList.contains('hidden') && (e.code === 'Enter' || e.code === 'Space')) {
-    switchMap(selectedMapInModal);
-    mapModalEl.classList.add('hidden');
-    sound.init();
+  if (mapModalEl && !mapModalEl.classList.contains('hidden')) {
+    // Native buttons/selects handle Enter and Space themselves. Menu keys must
+    // never launch a map while activating a finish, world, or weather control.
+    if (e.code === 'Enter' && !(e.target instanceof Element && e.target.closest('button, select, input, a'))) {
+      e.preventDefault();
+      launchSelectedMap();
+    }
     return;
   }
+  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
   if (e.code === 'KeyZ') {
     if (!e.repeat) toggleHudMode();
     return;
@@ -541,6 +542,7 @@ function applyTranslations() {
 
   updateDestroyedModalText();
   renderBannerText();
+  window.RoadsterStart?.render();
 }
 
 function toggleLanguage() {
@@ -563,6 +565,8 @@ function highlightSelectedMapCard(mapKey) {
   selectedMapInModal = mapKey;
   cardHighwayEl.classList.toggle('selected', mapKey === 'highway');
   cardCityEl.classList.toggle('selected', mapKey === 'city');
+  cardHighwayEl.setAttribute('aria-pressed', String(mapKey === 'highway'));
+  cardCityEl.setAttribute('aria-pressed', String(mapKey === 'city'));
   const isZh = (currentLang === 'zh');
   
   const hwyStatus = document.getElementById('card-hwy-status');
@@ -599,10 +603,14 @@ cardCityEl.addEventListener('click', () => {
   sound.beep(520, 0.06);
 });
 
-document.getElementById('btn-launch-selected-map').addEventListener('click', () => {
+function launchSelectedMap() {
+  clearAllInputKeys();
   switchMap(selectedMapInModal);
   document.getElementById('modal-map-select').classList.add('hidden');
-});
+  window.RoadsterStart?.onLaunch();
+  sound.init();
+}
+document.getElementById('btn-launch-selected-map').addEventListener('click', launchSelectedMap);
 
 function clearAllInputKeys() {
   for (const k in keys) {
@@ -615,6 +623,7 @@ function openMapSelectModal() {
   highlightSelectedMapCard(currentMap);
   document.getElementById('modal-destroyed').classList.add('hidden');
   document.getElementById('modal-map-select').classList.remove('hidden');
+  window.RoadsterStart?.onOpen();
 }
 
 document.getElementById('btn-map-select').addEventListener('click', openMapSelectModal);
@@ -622,7 +631,8 @@ document.getElementById('btn-crash-switch-map').addEventListener('click', openMa
 document.getElementById('btn-crash-respawn').addEventListener('click', resetCar);
 
 function selectPaintFinish(idx, playAudio = true) {
-  paintIndex = THREE.MathUtils.clamp(idx, 0, PAINT_PRESETS.length - 1);
+  paintIndex = THREE.MathUtils.clamp(Number.isFinite(idx) ? Math.trunc(idx) : 0, 0, PAINT_PRESETS.length - 1);
+  try { localStorage.setItem('roadster-paint-finish', PAINT_PRESETS[paintIndex].id); } catch (_) {}
   const preset = PAINT_PRESETS[paintIndex];
   bodyMaterial.color.setHex(preset.color);
   bodyMaterial.metalness = preset.metalness;
@@ -634,7 +644,7 @@ function selectPaintFinish(idx, playAudio = true) {
   if (dot) dot.className = `w-2.5 h-2.5 rounded-full border border-white ${preset.dotClass}`;
   
   const modalDot = document.getElementById('modal-active-dot');
-  if (modalDot) modalDot.className = `w-3 h-3 rounded-full border border-white shadow-[0_0_8px_rgba(255,255,255,0.8)] ${preset.dotClass}`;
+  if (modalDot) { modalDot.className = 'start-paint-dot'; modalDot.style.backgroundColor = preset.hexCode; }
 
   renderModalPaintGrid();
   applyTranslations();
@@ -649,49 +659,29 @@ function cyclePaintFinish(nextIdx) {
 function renderModalPaintGrid() {
   const grid = document.getElementById('modal-paint-grid');
   if (!grid) return;
-  const isZh = (currentLang === 'zh');
-  grid.innerHTML = '';
-
+  const isZh = currentLang === 'zh';
+  // Keep the focused button alive during paint changes and translation refreshes.
   PAINT_PRESETS.forEach((preset, idx) => {
-    const isSelected = (idx === paintIndex);
-    const card = document.createElement('button');
-    card.type = 'button';
-    card.className = `p-2 rounded-xl text-left transition-all duration-150 flex flex-col justify-between cursor-pointer border ${
-      isSelected
-        ? 'bg-cyan-950/70 border-cyan-400 ring-2 ring-cyan-400/60 shadow-[0_0_15px_rgba(56,189,248,0.35)] scale-[1.02]'
-        : 'bg-slate-950/70 border-slate-800 hover:border-slate-600 hover:bg-slate-900/80 active:scale-95'
-    }`;
-    
-    const nameText = isZh ? preset.nameZh : preset.nameEn;
-    const tagText = isZh ? preset.tagZh : preset.tagEn;
-
-    card.innerHTML = `
-      <div class="flex items-center justify-between w-full mb-1.5">
-        <div class="w-5 h-5 rounded-full border-2 ${isSelected ? 'border-white ring-2 ring-cyan-400' : 'border-slate-500'} ${preset.dotClass} shadow-md" style="background-color: ${preset.hexCode};"></div>
-        <span class="text-[9px] mono font-bold px-1 py-0.5 rounded ${isSelected ? 'bg-cyan-500/30 text-cyan-200' : 'bg-slate-800 text-slate-400'}">${tagText}</span>
-      </div>
-      <div class="text-[11px] font-bold text-slate-100 truncate w-full" title="${nameText}">${nameText}</div>
-      <div class="text-[9px] mono mt-0.5 ${isSelected ? 'text-cyan-300 font-bold' : 'text-slate-500'}">${isSelected ? '✓ ' + (isZh ? '当前选定' : 'SELECTED') : (isZh ? '点击应用' : 'CLICK TO APPLY')}</div>
-    `;
-
-    card.addEventListener('click', () => {
-      selectPaintFinish(idx, true);
-    });
-
-    grid.appendChild(card);
+    let card = grid.children[idx];
+    if (!card) {
+      card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'paint-choice';
+      card.addEventListener('click', () => selectPaintFinish(idx, true));
+      grid.appendChild(card);
+    }
+    const selected = idx === paintIndex;
+    const name = isZh ? preset.nameZh : preset.nameEn;
+    card.setAttribute('aria-pressed', String(selected));
+    card.setAttribute('aria-label', name);
+    card.innerHTML = `<span class="paint-swatch" style="background-color:${preset.hexCode}" aria-hidden="true"></span><span class="paint-choice-name">${name}<span class="paint-choice-tag">${selected ? (isZh ? '✓ 当前涂装' : '✓ SELECTED') : (isZh ? preset.tagZh : preset.tagEn)}</span></span>`;
   });
-
-  const activeNameEl = document.getElementById('modal-active-paint-name');
-  if (activeNameEl) {
-    activeNameEl.textContent = isZh ? PAINT_PRESETS[paintIndex].nameZh : PAINT_PRESETS[paintIndex].nameEn;
-  }
-  const summaryPaintEl = document.getElementById('summary-paint-chip');
-  if (summaryPaintEl) {
-    summaryPaintEl.textContent = isZh ? PAINT_PRESETS[paintIndex].nameZh : PAINT_PRESETS[paintIndex].nameEn;
-  }
+  const name = isZh ? PAINT_PRESETS[paintIndex].nameZh : PAINT_PRESETS[paintIndex].nameEn;
+  const active = document.getElementById('modal-active-paint-name');
+  if (active) active.textContent = name;
+  const summary = document.getElementById('summary-paint-chip');
+  if (summary) summary.textContent = name;
 }
-
-
 
 document.getElementById('btn-physics-mode').addEventListener('click', togglePhysicsMode);
 const btnPlaidEl = document.getElementById('btn-plaid-mode');
@@ -759,36 +749,24 @@ function cycleWeatherMode() {
 function renderModalWeatherGrid() {
   const grid = document.getElementById('modal-weather-grid');
   if (!grid) return;
-  const isZh = (currentLang === 'zh');
-  grid.innerHTML = '';
-
+  const isZh = currentLang === 'zh';
+  const shortNames = isZh ? ['星际暗夜', '霓虹雨夜', '火星落日'] : ['Cyber Night', 'Neon Rain', 'Mars Sunset'];
   WEATHER_PRESETS.forEach((wp, idx) => {
-    const isSelected = (idx === weatherIndex);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = `p-2.5 rounded-xl text-left transition-all duration-150 flex flex-col justify-between cursor-pointer border ${
-      isSelected
-        ? 'bg-amber-950/60 border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-        : 'bg-slate-950/70 border-slate-800 hover:border-slate-600 hover:bg-slate-900/80'
-    }`;
-    const title = isZh ? wp.nameZh : wp.nameEn;
-    const desc = isZh ? wp.descZh : wp.descEn;
-    btn.innerHTML = `
-      <div class="flex items-center justify-between w-full mb-1">
-        <span class="text-xs font-extrabold text-white flex items-center gap-1.5"><span>${wp.icon}</span><span>${title}</span></span>
-        <span class="text-[9px] mono font-bold px-1.5 py-0.5 rounded ${isSelected ? 'bg-amber-500/30 text-amber-200' : 'bg-slate-800 text-slate-400'}">${isSelected ? (isZh ? '✓ 已选' : '✓ ACTIVE') : (isZh ? '选择' : 'SELECT')}</span>
-      </div>
-      <p class="text-[10px] text-slate-300 leading-snug">${desc}</p>
-    `;
-    btn.addEventListener('click', () => selectWeatherMode(idx, true));
-    grid.appendChild(btn);
+    let button = grid.children[idx];
+    if (!button) {
+      button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'start-weather-choice';
+      button.addEventListener('click', () => selectWeatherMode(idx, true));
+      grid.appendChild(button);
+    }
+    button.setAttribute('aria-pressed', String(idx === weatherIndex));
+    button.setAttribute('aria-label', isZh ? wp.nameZh : wp.nameEn);
+    button.setAttribute('title', isZh ? wp.descZh : wp.descEn);
+    button.innerHTML = `<span aria-hidden="true">${wp.icon}</span><span>${shortNames[idx]}</span>`;
   });
-
-  const summaryWeatherEl = document.getElementById('summary-weather-chip');
-  if (summaryWeatherEl) {
-    const wp = WEATHER_PRESETS[weatherIndex];
-    summaryWeatherEl.textContent = `${wp.icon} ${isZh ? wp.nameZh : wp.nameEn}`;
-  }
+  const summary = document.getElementById('summary-weather-chip');
+  if (summary) summary.textContent = `${WEATHER_PRESETS[weatherIndex].icon} ${shortNames[weatherIndex]}`;
 }
 
 document.getElementById('btn-weather').addEventListener('click', () => cycleWeatherMode());

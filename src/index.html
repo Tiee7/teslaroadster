@@ -449,119 +449,77 @@
     </div>
   </footer>
 
-  <!-- Entry Paint Customization & Map Selection Modal -->
-  <div id="modal-map-select" class="fixed inset-0 z-40 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-    <div class="glass-panel rounded-2xl max-w-4xl w-full p-4 sm:p-6 md:p-7 border border-cyan-500/40 max-h-[94vh] overflow-y-auto">
-      <div class="flex items-start justify-between gap-4 border-b border-slate-700/80 pb-3 mb-4">
-        <div>
-          <span id="map-modal-badge" class="text-[11px] mono uppercase px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">1:1 OFFICIAL TESLA ROADSTER ROCKET SIMULATOR</span>
-          <h1 id="map-modal-title" class="text-xl md:text-2xl font-extrabold text-white mt-1">Configure 2026 Roadster & Select World</h1>
-          <p id="map-modal-sub" class="text-xs text-slate-300 mt-0.5">Customize your official SpaceX cold-gas rocket exterior finish and simulation world before entering the game.</p>
+  <!-- Compact launch screen: the model opens the full finish collection. -->
+  <div id="modal-map-select" class="start-overlay" role="dialog" aria-modal="true" aria-labelledby="map-modal-title" tabindex="-1">
+    <div class="start-shell">
+      <header class="start-header">
+        <div class="start-brand">
+          <span id="map-modal-badge" class="start-eyebrow">SPACEX COLD-GAS PACKAGE</span>
+          <h1 id="map-modal-title">Your Roadster</h1>
+          <p id="map-modal-sub" class="start-subtitle">Choose your setup and drive.</p>
         </div>
-        <div class="flex flex-wrap items-center justify-end gap-2">
-        <button id="btn-map-audio-settings" type="button" class="ranked-button" aria-haspopup="dialog" aria-controls="audio-settings">⚙ Audio settings</button>
-        <button id="btn-map-modal-lang" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 hover:bg-cyan-500/30 cursor-pointer shrink-0">
-          🌐 中文 / EN
+        <div class="start-tools">
+          <button id="btn-map-audio-settings" type="button" class="start-tool start-audio" aria-haspopup="dialog" aria-controls="audio-settings" aria-label="Audio settings">⚙ Audio settings</button>
+          <button id="btn-map-modal-lang" type="button" class="start-tool start-language" aria-label="Switch language">🌐 中文 / EN</button>
+        </div>
+      </header>
+      <div class="start-main">
+        <button id="btn-start-paint" type="button" class="start-vehicle" aria-haspopup="dialog" aria-controls="paint-picker" aria-expanded="false">
+          <span id="ui-modal-paint-step" class="start-eyebrow">YOUR ROADSTER</span>
+          <span id="start-car-preview" class="start-car-stage" aria-hidden="true"></span>
+          <span class="start-vehicle-caption">
+            <span id="modal-paint-active-badge" class="start-current-paint">
+              <span id="modal-active-dot" class="start-paint-dot"></span>
+              <span id="modal-active-paint-name">Ano White</span>
+            </span>
+            <span id="start-paint-action" class="start-change">Change finish ↗</span>
+          </span>
         </button>
-        </div>
-      </div>
-
-      <!-- STEP 1: Rich Pre-Game Multi-Paint Selection Grid (进游戏前先选择涂装) -->
-      <div class="mb-5 bg-slate-900/60 border border-slate-800 rounded-2xl p-3.5 sm:p-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <div class="flex items-center gap-2">
-            <span id="ui-modal-paint-step" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-cyan-500/25 text-cyan-300 border border-cyan-400/30">STEP 1 • CHOOSE FINISH</span>
-            <h2 id="ui-modal-paint-title" class="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Select 2026 Roadster SpaceX Exterior Finish</h2>
-          </div>
-          <div id="modal-paint-active-badge" class="glass-pill px-2.5 py-1 rounded-lg text-xs mono font-bold flex items-center gap-2 text-cyan-300 border border-cyan-400/40">
-            <span id="modal-active-dot" class="w-3 h-3 rounded-full bg-slate-100 border border-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
-            <span id="modal-active-paint-name">Ano White</span>
-          </div>
-        </div>
-
-        <!-- 12 Paint Finishes Grid -->
-        <div id="modal-paint-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          <!-- Populated by JavaScript with rich cards -->
-        </div>
-      </div>
-
-      <!-- STEP 2: Map Environment Selection -->
-      <div class="mb-5">
-        <div class="flex items-center gap-2 mb-2.5">
-          <span id="ui-modal-map-step" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/25 text-indigo-300 border border-indigo-400/30">STEP 2 • SELECT WORLD</span>
-          <h2 id="ui-modal-map-title" class="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Select Simulation Environment</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          <div id="card-map-highway" class="map-card selected rounded-2xl p-4 border-2 border-slate-700 bg-slate-900/75 cursor-pointer flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span id="card-hwy-tag" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">MAP 01 • HIGH SPEED</span>
-                <span class="text-lg">🛣️</span>
-              </div>
-              <h3 id="card-hwy-title" class="text-base md:text-lg font-extrabold text-white mb-1">Elevated Highway</h3>
-              <p id="card-hwy-desc" class="text-xs text-slate-300 leading-relaxed mb-3">
-                6-lane elevated cyber-expressway packed with dense multi-lane traffic. Weave between vehicles at 230 mph or ignite your 10 SpaceX cold-gas thrusters to fly and barrel-roll over traffic jams.
-              </p>
+        <div class="start-choices">
+          <section class="start-worlds" aria-labelledby="ui-modal-map-title">
+            <h2 id="ui-modal-map-title" class="start-section-title">World</h2>
+            <div class="start-world-grid">
+              <button id="card-map-highway" type="button" class="map-card start-world selected" aria-pressed="true">
+                <span class="start-world-top"><span aria-hidden="true">🛣️</span><span id="card-hwy-status">✓ SELECTED</span></span>
+                <strong id="card-hwy-title">Elevated Highway</strong>
+                <span id="card-hwy-spec">6 lanes · traffic</span>
+              </button>
+              <button id="card-map-city" type="button" class="map-card start-world" aria-pressed="false">
+                <span class="start-world-top"><span aria-hidden="true">🏙️</span><span id="card-city-status">SELECT →</span></span>
+                <strong id="card-city-title">Cyber City</strong>
+                <span id="card-city-spec">Roam · rooftop refills</span>
+              </button>
             </div>
-            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] mono text-cyan-300">
-              <span id="card-hwy-spec">6 Lanes • Endless Loop • Dense Traffic</span>
-              <span id="card-hwy-status" class="font-bold">✓ SELECTED</span>
-            </div>
-          </div>
-
-          <div id="card-map-city" class="map-card rounded-2xl p-4 border-2 border-slate-700 bg-slate-900/75 cursor-pointer flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span id="card-city-tag" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">MAP 02 • FREE ROAM</span>
-                <span class="text-lg">🏙️</span>
-              </div>
-              <h3 id="card-city-title" class="text-base md:text-lg font-extrabold text-white mb-1">Open-World Cyber City</h3>
-              <p id="card-city-desc" class="text-xs text-slate-300 leading-relaxed mb-3">
-                Expanded 2400m × 2400m mega-metropolis with 380m flight ceiling, 260m supertall skyscrapers, high-altitude skybridges, rooftop helipads, and 4-way cross-street traffic!
-              </p>
-            </div>
-            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] mono text-indigo-300">
-              <span id="card-city-spec">2400m×2400m • 380m Ceiling • 260m Towers</span>
-              <span id="card-city-status" class="font-bold">SELECT →</span>
-            </div>
+          </section>
+          <section class="start-weather" aria-labelledby="ui-modal-weather-title">
+            <h2 id="ui-modal-weather-title" class="start-section-title">Weather & time</h2>
+            <div id="modal-weather-grid" class="start-weather-grid"></div>
+          </section>
+          <div class="start-drive-options">
+            <label for="start-physics"><span id="start-physics-label">Driving mode</span><select id="start-physics"><option value="realistic">Realistic</option><option value="plaid">Plaid</option><option value="fantasy">Fantasy</option></select></label>
+            <label for="start-traffic"><span id="start-traffic-label">Traffic</span><select id="start-traffic"><option value="0">Normal · 20</option><option value="1">Heavy · 36</option><option value="2">Insane · 52</option></select></label>
           </div>
         </div>
       </div>
-
-      <!-- STEP 3: Dynamic Weather & Time Selection (动态天气与时间系统) -->
-      <div class="mb-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-3 sm:p-3.5">
-        <div class="flex items-center justify-between gap-2 mb-2.5">
-          <div class="flex items-center gap-2">
-            <span id="ui-modal-weather-step" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-amber-500/25 text-amber-300 border border-amber-400/30">STEP 3 • WEATHER & TIME</span>
-            <h2 id="ui-modal-weather-title" class="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Select Dynamic Weather & Lighting</h2>
-          </div>
-          <span class="text-[11px] mono text-slate-400">Shortcut: <b class="text-amber-300">T</b></span>
+      <footer class="start-footer">
+        <div id="modal-config-summary" class="start-screen-reader" aria-live="polite">
+          <span id="ui-ready-prefix">Ready to launch with:</span>
+          <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
         </div>
-        <div id="modal-weather-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-      <div id="map-modal-highlights" class="text-[11px] text-slate-300 mb-3 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800"></div>
-
-      <!-- Live Selection Summary & Launch Bar -->
-      <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div id="modal-config-summary" class="text-xs text-slate-300 flex flex-wrap items-center gap-2">
-          <span id="ui-ready-prefix">🚀 Ready to launch with:</span>
-          <span id="summary-paint-chip" class="mono font-bold text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-400/30">Ano White</span>
-          <span>•</span>
-          <span id="summary-map-chip" class="mono font-bold text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-400/30">Elevated Highway</span>
-          <span>•</span>
-          <span id="summary-weather-chip" class="mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-400/30">Cyber Night</span>
-        </div>
-        <button id="btn-launch-selected-map" type="button" class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-extrabold text-sm bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 hover:brightness-110 active:scale-95 transition cursor-pointer flex items-center justify-center gap-2">
-          <span id="ui-btn-launch-map">Launch Simulation with Selected Finish</span>
-          <span>→</span>
-        </button>
-      </div>
+        <button id="btn-launch-selected-map" type="button" class="start-launch"><span id="ui-btn-launch-map">Launch simulation</span><span aria-hidden="true">→</span></button>
+      </footer>
+      <!-- Long-form descriptions remain available to assistive technology. -->
+      <div class="start-screen-reader"><span id="ui-modal-map-step"></span><span id="ui-modal-weather-step"></span><span id="card-hwy-tag"></span><span id="card-hwy-desc"></span><span id="card-city-tag"></span><span id="card-city-desc"></span><span id="map-modal-highlights"></span></div>
     </div>
   </div>
+  <dialog id="paint-picker" aria-labelledby="ui-modal-paint-title" aria-describedby="paint-picker-note">
+    <div class="paint-picker-content">
+      <header class="paint-picker-heading"><div><span id="paint-picker-eyebrow" class="start-eyebrow">12 EXTERIOR FINISHES</span><h2 id="ui-modal-paint-title">Choose your finish</h2></div><button id="paint-picker-close" type="button" class="start-tool">Done</button></header>
+      <div id="paint-picker-preview" class="paint-picker-stage" aria-hidden="true"></div>
+      <p id="paint-picker-note">Select a finish to preview it on your Roadster. Your choice is saved.</p>
+      <div id="modal-paint-grid" class="paint-picker-grid"></div>
+    </div>
+  </dialog>
 
   <!-- Vehicle Destroyed / Crash Telemetry Overlay Modal -->
   <div id="modal-destroyed" class="fixed inset-0 z-30 bg-rose-950/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
@@ -746,6 +704,7 @@
   <script src="taxi.js"></script>
   <script src="ui-hud.js"></script>
   <script src="leaderboard.js"></script>
+  <script src="start-screen.js"></script>
   <script src="physics-main.js"></script>
 </body>
 </html>

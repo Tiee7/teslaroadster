@@ -229,6 +229,119 @@ html, body {
   .ranked-nav { min-height: 32px; }
 }
 
+/* Launch layout is self-contained, so controls remain usable if utility CSS is late. */
+.start-overlay { position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); background: rgba(3, 8, 18, .88); backdrop-filter: blur(12px); }
+.start-overlay.hidden { display: none; }
+.start-shell { display: flex; flex-direction: column; width: min(940px, 100%); max-height: 100%; overflow: hidden; padding: 22px; border: 1px solid #284963; border-radius: 22px; background: linear-gradient(135deg, #101f32, #080f1d 70%); box-shadow: 0 24px 100px #0009; }
+.start-header { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; gap: 12px; padding-bottom: 18px; }
+.start-brand { min-width: 0; }
+.start-eyebrow { display: block; color: #7dd3fc; font: 700 10px/16px 'JetBrains Mono', monospace; letter-spacing: .1em; }
+#map-modal-title { margin: 3px 0 0; color: #f8fafc; font-size: 25px; font-weight: 800; line-height: 1.2; letter-spacing: -.03em; }
+.start-subtitle { margin: 5px 0 0; color: #94a3b8; font-size: 12px; line-height: 18px; }
+.start-tools { display: flex; gap: 8px; flex-shrink: 0; }
+.start-tool { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 10px 14px; border: 1px solid #3b5870; border-radius: 10px; color: #d5edfb; background: #15283a; font-family: inherit; font-size: 13px; line-height: 18px; font-weight: 700; cursor: pointer; }
+.start-tools .start-tool { width: 44px; padding: 0; font-size: 0; }
+.start-audio::before { content: '⚙'; font-size: 20px; }
+.start-language::before { content: '🌐'; font-size: 19px; }
+.start-main { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: stretch; gap: 20px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.start-vehicle { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; margin: 0; padding: 14px; border: 1px solid #35516b; border-radius: 16px; color: #e0f2fe; background: radial-gradient(ellipse at 50% 55%, #1d3b52, #0a1524 70%); text-align: left; cursor: pointer; }
+.start-vehicle:hover { border-color: #67e8f9; background-color: #16334a; }
+.start-car-stage { display: block; width: 100%; height: 222px; overflow: hidden; }
+.start-car-stage canvas, .paint-picker-stage canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+.start-vehicle-caption { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; font-size: 13px; line-height: 18px; }
+.start-current-paint { overflow: hidden; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; overflow-wrap: anywhere; }
+.start-current-paint > #modal-active-paint-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.start-paint-dot { display: inline-block; flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; border: 1px solid #d5edfb; background: #e8ecf2; }
+.start-change { color: #67e8f9; font-size: 12px; font-weight: 600; }
+.start-choices { display: flex; flex-direction: column; gap: 15px; min-width: 0; }
+.start-section-title { margin: 0 0 7px; font-size: 13px; font-weight: 700; line-height: 18px; color: #cbd5e1; }
+.start-world-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.start-world { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 0; min-height: 112px; padding: 11px; border: 1px solid #33465e; border-radius: 12px; background: #0c1728; color: #cbd5e1; text-align: left; font: inherit; cursor: pointer; }
+.start-world:hover { transform: none; }
+.start-world.selected { border-color: #38bdf8; background: #0f3045; box-shadow: inset 0 0 0 1px #38bdf850; }
+.start-world-top { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 4px; font-size: 17px; line-height: 20px; }
+.start-world-top span:last-child { color: #7dd3fc; font-size: 9px; font-weight: 700; }
+.start-world strong { font-size: 14px; line-height: 19px; font-weight: 750; }
+.start-world > span:last-child { color: #9db3c7; font-size: 11px; line-height: 16px; }
+.start-weather-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.start-weather-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 0; min-height: 67px; padding: 8px 4px; border: 1px solid #33465e; border-radius: 10px; background: #0c1728; color: #e2e8f0; font: inherit; font-size: 11px; line-height: 15px; text-align: center; cursor: pointer; }
+.start-weather-choice[aria-pressed="true"] { border-color: #fbbf24; background: #392b19; box-shadow: inset 0 0 0 1px #fbbf2430; }
+.start-weather-choice > span:first-child { font-size: 18px; }
+.start-drive-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.start-drive-options label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 12px; line-height: 16px; font-weight: 600; color: #cbd5e1; }
+.start-drive-options select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid #3b5870; border-radius: 9px; color: #f1f5f9; background: #122236; font: inherit; font-size: 16px; }
+.start-footer { flex-shrink: 0; padding-top: 18px; }
+.start-launch { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 50px; padding: 12px 20px; border: 1px solid #7dd3fc; border-radius: 12px; background: linear-gradient(110deg, #087e9d, #1566d3); color: white; font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+.start-launch:hover { filter: brightness(1.12); }
+.start-shell button:focus-visible, .start-shell select:focus-visible, #paint-picker button:focus-visible { outline: 3px solid #e0f2fe; outline-offset: 2px; }
+.start-screen-reader { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+#paint-picker { width: min(700px, calc(100vw - 24px)); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); padding: 0; overflow-y: auto; overscroll-behavior: contain; color: #e8f4fc; border: 1px solid #3a829b; border-radius: 18px; background: #0a1523; box-shadow: 0 25px 100px #000c; }
+#paint-picker::backdrop { background: rgba(2, 6, 15, .86); backdrop-filter: blur(7px); }
+.paint-picker-content { padding: 18px; }
+.paint-picker-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#ui-modal-paint-title { margin: 3px 0 0; font-size: 21px; font-weight: 800; line-height: 26px; }
+.paint-picker-stage { width: 100%; height: 150px; background: radial-gradient(ellipse, #1d3b52, transparent 70%); }
+#paint-picker-note { margin: 0 0 12px; font-size: 12px; line-height: 18px; color: #9db3c7; }
+.paint-picker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.paint-choice { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 64px; padding: 9px; border: 1px solid #33465e; border-radius: 10px; background: #101f31; color: #e2e8f0; text-align: left; font: inherit; font-size: 12px; line-height: 17px; cursor: pointer; }
+.paint-choice[aria-pressed="true"] { border-color: #67e8f9; background: #11374b; box-shadow: inset 0 0 0 1px #67e8f950; }
+.paint-swatch { width: 24px; height: 24px; flex-shrink: 0; border: 1px solid #94a3b8; border-radius: 50%; box-shadow: inset 0 3px 7px #fff6, 0 2px 5px #0008; }
+.paint-choice-name { min-width: 0; overflow-wrap: anywhere; }
+.paint-choice-tag { display: block; color: #91b1c8; font-size: 9px; line-height: 14px; }
+@media (max-width: 650px) {
+  .start-shell { padding: 14px; border-radius: 17px; }
+  .start-header { padding-bottom: 12px; gap: 8px; }
+  #map-modal-title { font-size: 20px; }
+  .start-subtitle { display: none; }
+  .start-brand > .start-eyebrow { font-size: 9px; letter-spacing: .04em; }
+  .start-tools { gap: 5px; }
+  .start-main { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .start-vehicle { padding: 9px 11px; }
+  .start-car-stage { height: 88px; }
+  .start-vehicle-caption { flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 17px; }
+  .start-current-paint { max-width: 65%; }
+  .start-change { flex-shrink: 0; font-size: 11px; }
+  .start-choices { gap: 11px; }
+  .start-section-title { margin-bottom: 5px; font-size: 12px; line-height: 16px; }
+  .start-world { min-height: 88px; gap: 3px; padding: 8px; }
+  .start-world strong { font-size: 13px; line-height: 18px; }
+  .start-world > span:last-child { font-size: 10px; line-height: 14px; }
+  .start-weather-choice { min-height: 56px; gap: 3px; padding: 5px 3px; font-size: 10px; }
+  .start-drive-options label { gap: 4px; font-size: 11px; line-height: 14px; }
+  .start-drive-options select { font-size: 16px; }
+  .start-footer { padding-top: 12px; }
+  .start-launch { min-height: 48px; }
+  .paint-picker-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .paint-picker-stage { height: 100px; }
+  .paint-picker-content { padding: 14px; }
+}
+@media (max-width: 370px) {
+  #map-modal-title { font-size: 18px; }
+  .start-car-stage { height: 74px; }
+  .start-current-paint { max-width: 60%; }
+  .start-world-top span:last-child { font-size: 8px; }
+}
+@media (max-height: 560px) and (min-width: 651px) {
+  .start-shell { padding: 14px; }
+  .start-header { padding-bottom: 10px; }
+  .start-car-stage { height: 135px; }
+  .start-choices { gap: 9px; }
+  .start-world { min-height: 88px; padding: 8px; gap: 2px; }
+  .start-weather-choice { min-height: 48px; flex-direction: row; flex-wrap: wrap; }
+  .start-subtitle { display: none; }
+  .start-footer { padding-top: 10px; }
+}
+
+@media (max-width: 650px) and (max-height: 650px) {
+  .start-shell { padding: 12px; }
+  .start-header { padding-bottom: 10px; }
+  .start-main { gap: 10px; }
+  .start-car-stage { height: 74px; }
+  .start-choices { gap: 9px; }
+  .start-world { min-height: 82px; }
+  .start-footer { padding-top: 10px; }
+}
+
 /* Native audio settings remain usable without the WebGL scene or CDN styles. */
 #audio-settings { padding: 0; width: min(460px, calc(100vw - 24px)); max-height: 85dvh; overflow-y: auto; border: 1px solid #3a829b; border-radius: 18px; color: #e8f4fc; background: #0a1523; box-shadow: 0 25px 100px #000c; }
 #audio-settings::backdrop { background: rgba(2, 6, 15, .82); backdrop-filter: blur(6px); }

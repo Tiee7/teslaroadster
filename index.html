@@ -246,6 +246,119 @@ html, body {
   .ranked-nav { min-height: 32px; }
 }
 
+/* Launch layout is self-contained, so controls remain usable if utility CSS is late. */
+.start-overlay { position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); background: rgba(3, 8, 18, .88); backdrop-filter: blur(12px); }
+.start-overlay.hidden { display: none; }
+.start-shell { display: flex; flex-direction: column; width: min(940px, 100%); max-height: 100%; overflow: hidden; padding: 22px; border: 1px solid #284963; border-radius: 22px; background: linear-gradient(135deg, #101f32, #080f1d 70%); box-shadow: 0 24px 100px #0009; }
+.start-header { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; gap: 12px; padding-bottom: 18px; }
+.start-brand { min-width: 0; }
+.start-eyebrow { display: block; color: #7dd3fc; font: 700 10px/16px 'JetBrains Mono', monospace; letter-spacing: .1em; }
+#map-modal-title { margin: 3px 0 0; color: #f8fafc; font-size: 25px; font-weight: 800; line-height: 1.2; letter-spacing: -.03em; }
+.start-subtitle { margin: 5px 0 0; color: #94a3b8; font-size: 12px; line-height: 18px; }
+.start-tools { display: flex; gap: 8px; flex-shrink: 0; }
+.start-tool { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 10px 14px; border: 1px solid #3b5870; border-radius: 10px; color: #d5edfb; background: #15283a; font-family: inherit; font-size: 13px; line-height: 18px; font-weight: 700; cursor: pointer; }
+.start-tools .start-tool { width: 44px; padding: 0; font-size: 0; }
+.start-audio::before { content: '⚙'; font-size: 20px; }
+.start-language::before { content: '🌐'; font-size: 19px; }
+.start-main { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: stretch; gap: 20px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.start-vehicle { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; margin: 0; padding: 14px; border: 1px solid #35516b; border-radius: 16px; color: #e0f2fe; background: radial-gradient(ellipse at 50% 55%, #1d3b52, #0a1524 70%); text-align: left; cursor: pointer; }
+.start-vehicle:hover { border-color: #67e8f9; background-color: #16334a; }
+.start-car-stage { display: block; width: 100%; height: 222px; overflow: hidden; }
+.start-car-stage canvas, .paint-picker-stage canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+.start-vehicle-caption { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; font-size: 13px; line-height: 18px; }
+.start-current-paint { overflow: hidden; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; overflow-wrap: anywhere; }
+.start-current-paint > #modal-active-paint-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.start-paint-dot { display: inline-block; flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; border: 1px solid #d5edfb; background: #e8ecf2; }
+.start-change { color: #67e8f9; font-size: 12px; font-weight: 600; }
+.start-choices { display: flex; flex-direction: column; gap: 15px; min-width: 0; }
+.start-section-title { margin: 0 0 7px; font-size: 13px; font-weight: 700; line-height: 18px; color: #cbd5e1; }
+.start-world-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.start-world { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 0; min-height: 112px; padding: 11px; border: 1px solid #33465e; border-radius: 12px; background: #0c1728; color: #cbd5e1; text-align: left; font: inherit; cursor: pointer; }
+.start-world:hover { transform: none; }
+.start-world.selected { border-color: #38bdf8; background: #0f3045; box-shadow: inset 0 0 0 1px #38bdf850; }
+.start-world-top { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 4px; font-size: 17px; line-height: 20px; }
+.start-world-top span:last-child { color: #7dd3fc; font-size: 9px; font-weight: 700; }
+.start-world strong { font-size: 14px; line-height: 19px; font-weight: 750; }
+.start-world > span:last-child { color: #9db3c7; font-size: 11px; line-height: 16px; }
+.start-weather-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.start-weather-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 0; min-height: 67px; padding: 8px 4px; border: 1px solid #33465e; border-radius: 10px; background: #0c1728; color: #e2e8f0; font: inherit; font-size: 11px; line-height: 15px; text-align: center; cursor: pointer; }
+.start-weather-choice[aria-pressed="true"] { border-color: #fbbf24; background: #392b19; box-shadow: inset 0 0 0 1px #fbbf2430; }
+.start-weather-choice > span:first-child { font-size: 18px; }
+.start-drive-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.start-drive-options label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 12px; line-height: 16px; font-weight: 600; color: #cbd5e1; }
+.start-drive-options select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid #3b5870; border-radius: 9px; color: #f1f5f9; background: #122236; font: inherit; font-size: 16px; }
+.start-footer { flex-shrink: 0; padding-top: 18px; }
+.start-launch { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 50px; padding: 12px 20px; border: 1px solid #7dd3fc; border-radius: 12px; background: linear-gradient(110deg, #087e9d, #1566d3); color: white; font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+.start-launch:hover { filter: brightness(1.12); }
+.start-shell button:focus-visible, .start-shell select:focus-visible, #paint-picker button:focus-visible { outline: 3px solid #e0f2fe; outline-offset: 2px; }
+.start-screen-reader { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+#paint-picker { width: min(700px, calc(100vw - 24px)); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); padding: 0; overflow-y: auto; overscroll-behavior: contain; color: #e8f4fc; border: 1px solid #3a829b; border-radius: 18px; background: #0a1523; box-shadow: 0 25px 100px #000c; }
+#paint-picker::backdrop { background: rgba(2, 6, 15, .86); backdrop-filter: blur(7px); }
+.paint-picker-content { padding: 18px; }
+.paint-picker-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#ui-modal-paint-title { margin: 3px 0 0; font-size: 21px; font-weight: 800; line-height: 26px; }
+.paint-picker-stage { width: 100%; height: 150px; background: radial-gradient(ellipse, #1d3b52, transparent 70%); }
+#paint-picker-note { margin: 0 0 12px; font-size: 12px; line-height: 18px; color: #9db3c7; }
+.paint-picker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.paint-choice { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 64px; padding: 9px; border: 1px solid #33465e; border-radius: 10px; background: #101f31; color: #e2e8f0; text-align: left; font: inherit; font-size: 12px; line-height: 17px; cursor: pointer; }
+.paint-choice[aria-pressed="true"] { border-color: #67e8f9; background: #11374b; box-shadow: inset 0 0 0 1px #67e8f950; }
+.paint-swatch { width: 24px; height: 24px; flex-shrink: 0; border: 1px solid #94a3b8; border-radius: 50%; box-shadow: inset 0 3px 7px #fff6, 0 2px 5px #0008; }
+.paint-choice-name { min-width: 0; overflow-wrap: anywhere; }
+.paint-choice-tag { display: block; color: #91b1c8; font-size: 9px; line-height: 14px; }
+@media (max-width: 650px) {
+  .start-shell { padding: 14px; border-radius: 17px; }
+  .start-header { padding-bottom: 12px; gap: 8px; }
+  #map-modal-title { font-size: 20px; }
+  .start-subtitle { display: none; }
+  .start-brand > .start-eyebrow { font-size: 9px; letter-spacing: .04em; }
+  .start-tools { gap: 5px; }
+  .start-main { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .start-vehicle { padding: 9px 11px; }
+  .start-car-stage { height: 88px; }
+  .start-vehicle-caption { flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 17px; }
+  .start-current-paint { max-width: 65%; }
+  .start-change { flex-shrink: 0; font-size: 11px; }
+  .start-choices { gap: 11px; }
+  .start-section-title { margin-bottom: 5px; font-size: 12px; line-height: 16px; }
+  .start-world { min-height: 88px; gap: 3px; padding: 8px; }
+  .start-world strong { font-size: 13px; line-height: 18px; }
+  .start-world > span:last-child { font-size: 10px; line-height: 14px; }
+  .start-weather-choice { min-height: 56px; gap: 3px; padding: 5px 3px; font-size: 10px; }
+  .start-drive-options label { gap: 4px; font-size: 11px; line-height: 14px; }
+  .start-drive-options select { font-size: 16px; }
+  .start-footer { padding-top: 12px; }
+  .start-launch { min-height: 48px; }
+  .paint-picker-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .paint-picker-stage { height: 100px; }
+  .paint-picker-content { padding: 14px; }
+}
+@media (max-width: 370px) {
+  #map-modal-title { font-size: 18px; }
+  .start-car-stage { height: 74px; }
+  .start-current-paint { max-width: 60%; }
+  .start-world-top span:last-child { font-size: 8px; }
+}
+@media (max-height: 560px) and (min-width: 651px) {
+  .start-shell { padding: 14px; }
+  .start-header { padding-bottom: 10px; }
+  .start-car-stage { height: 135px; }
+  .start-choices { gap: 9px; }
+  .start-world { min-height: 88px; padding: 8px; gap: 2px; }
+  .start-weather-choice { min-height: 48px; flex-direction: row; flex-wrap: wrap; }
+  .start-subtitle { display: none; }
+  .start-footer { padding-top: 10px; }
+}
+
+@media (max-width: 650px) and (max-height: 650px) {
+  .start-shell { padding: 12px; }
+  .start-header { padding-bottom: 10px; }
+  .start-main { gap: 10px; }
+  .start-car-stage { height: 74px; }
+  .start-choices { gap: 9px; }
+  .start-world { min-height: 82px; }
+  .start-footer { padding-top: 10px; }
+}
+
 /* Native audio settings remain usable without the WebGL scene or CDN styles. */
 #audio-settings { padding: 0; width: min(460px, calc(100vw - 24px)); max-height: 85dvh; overflow-y: auto; border: 1px solid #3a829b; border-radius: 18px; color: #e8f4fc; background: #0a1523; box-shadow: 0 25px 100px #000c; }
 #audio-settings::backdrop { background: rgba(2, 6, 15, .82); backdrop-filter: blur(6px); }
@@ -786,119 +899,77 @@ html, body {
     </div>
   </footer>
 
-  <!-- Entry Paint Customization & Map Selection Modal -->
-  <div id="modal-map-select" class="fixed inset-0 z-40 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-    <div class="glass-panel rounded-2xl max-w-4xl w-full p-4 sm:p-6 md:p-7 border border-cyan-500/40 max-h-[94vh] overflow-y-auto">
-      <div class="flex items-start justify-between gap-4 border-b border-slate-700/80 pb-3 mb-4">
-        <div>
-          <span id="map-modal-badge" class="text-[11px] mono uppercase px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">1:1 OFFICIAL TESLA ROADSTER ROCKET SIMULATOR</span>
-          <h1 id="map-modal-title" class="text-xl md:text-2xl font-extrabold text-white mt-1">Configure 2026 Roadster & Select World</h1>
-          <p id="map-modal-sub" class="text-xs text-slate-300 mt-0.5">Customize your official SpaceX cold-gas rocket exterior finish and simulation world before entering the game.</p>
+  <!-- Compact launch screen: the model opens the full finish collection. -->
+  <div id="modal-map-select" class="start-overlay" role="dialog" aria-modal="true" aria-labelledby="map-modal-title" tabindex="-1">
+    <div class="start-shell">
+      <header class="start-header">
+        <div class="start-brand">
+          <span id="map-modal-badge" class="start-eyebrow">SPACEX COLD-GAS PACKAGE</span>
+          <h1 id="map-modal-title">Your Roadster</h1>
+          <p id="map-modal-sub" class="start-subtitle">Choose your setup and drive.</p>
         </div>
-        <div class="flex flex-wrap items-center justify-end gap-2">
-        <button id="btn-map-audio-settings" type="button" class="ranked-button" aria-haspopup="dialog" aria-controls="audio-settings">⚙ Audio settings</button>
-        <button id="btn-map-modal-lang" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 hover:bg-cyan-500/30 cursor-pointer shrink-0">
-          🌐 中文 / EN
+        <div class="start-tools">
+          <button id="btn-map-audio-settings" type="button" class="start-tool start-audio" aria-haspopup="dialog" aria-controls="audio-settings" aria-label="Audio settings">⚙ Audio settings</button>
+          <button id="btn-map-modal-lang" type="button" class="start-tool start-language" aria-label="Switch language">🌐 中文 / EN</button>
+        </div>
+      </header>
+      <div class="start-main">
+        <button id="btn-start-paint" type="button" class="start-vehicle" aria-haspopup="dialog" aria-controls="paint-picker" aria-expanded="false">
+          <span id="ui-modal-paint-step" class="start-eyebrow">YOUR ROADSTER</span>
+          <span id="start-car-preview" class="start-car-stage" aria-hidden="true"></span>
+          <span class="start-vehicle-caption">
+            <span id="modal-paint-active-badge" class="start-current-paint">
+              <span id="modal-active-dot" class="start-paint-dot"></span>
+              <span id="modal-active-paint-name">Ano White</span>
+            </span>
+            <span id="start-paint-action" class="start-change">Change finish ↗</span>
+          </span>
         </button>
-        </div>
-      </div>
-
-      <!-- STEP 1: Rich Pre-Game Multi-Paint Selection Grid (进游戏前先选择涂装) -->
-      <div class="mb-5 bg-slate-900/60 border border-slate-800 rounded-2xl p-3.5 sm:p-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <div class="flex items-center gap-2">
-            <span id="ui-modal-paint-step" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-cyan-500/25 text-cyan-300 border border-cyan-400/30">STEP 1 • CHOOSE FINISH</span>
-            <h2 id="ui-modal-paint-title" class="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Select 2026 Roadster SpaceX Exterior Finish</h2>
-          </div>
-          <div id="modal-paint-active-badge" class="glass-pill px-2.5 py-1 rounded-lg text-xs mono font-bold flex items-center gap-2 text-cyan-300 border border-cyan-400/40">
-            <span id="modal-active-dot" class="w-3 h-3 rounded-full bg-slate-100 border border-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
-            <span id="modal-active-paint-name">Ano White</span>
-          </div>
-        </div>
-
-        <!-- 12 Paint Finishes Grid -->
-        <div id="modal-paint-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          <!-- Populated by JavaScript with rich cards -->
-        </div>
-      </div>
-
-      <!-- STEP 2: Map Environment Selection -->
-      <div class="mb-5">
-        <div class="flex items-center gap-2 mb-2.5">
-          <span id="ui-modal-map-step" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/25 text-indigo-300 border border-indigo-400/30">STEP 2 • SELECT WORLD</span>
-          <h2 id="ui-modal-map-title" class="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Select Simulation Environment</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          <div id="card-map-highway" class="map-card selected rounded-2xl p-4 border-2 border-slate-700 bg-slate-900/75 cursor-pointer flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span id="card-hwy-tag" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">MAP 01 • HIGH SPEED</span>
-                <span class="text-lg">🛣️</span>
-              </div>
-              <h3 id="card-hwy-title" class="text-base md:text-lg font-extrabold text-white mb-1">Elevated Highway</h3>
-              <p id="card-hwy-desc" class="text-xs text-slate-300 leading-relaxed mb-3">
-                6-lane elevated cyber-expressway packed with dense multi-lane traffic. Weave between vehicles at 230 mph or ignite your 10 SpaceX cold-gas thrusters to fly and barrel-roll over traffic jams.
-              </p>
+        <div class="start-choices">
+          <section class="start-worlds" aria-labelledby="ui-modal-map-title">
+            <h2 id="ui-modal-map-title" class="start-section-title">World</h2>
+            <div class="start-world-grid">
+              <button id="card-map-highway" type="button" class="map-card start-world selected" aria-pressed="true">
+                <span class="start-world-top"><span aria-hidden="true">🛣️</span><span id="card-hwy-status">✓ SELECTED</span></span>
+                <strong id="card-hwy-title">Elevated Highway</strong>
+                <span id="card-hwy-spec">6 lanes · traffic</span>
+              </button>
+              <button id="card-map-city" type="button" class="map-card start-world" aria-pressed="false">
+                <span class="start-world-top"><span aria-hidden="true">🏙️</span><span id="card-city-status">SELECT →</span></span>
+                <strong id="card-city-title">Cyber City</strong>
+                <span id="card-city-spec">Roam · rooftop refills</span>
+              </button>
             </div>
-            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] mono text-cyan-300">
-              <span id="card-hwy-spec">6 Lanes • Endless Loop • Dense Traffic</span>
-              <span id="card-hwy-status" class="font-bold">✓ SELECTED</span>
-            </div>
-          </div>
-
-          <div id="card-map-city" class="map-card rounded-2xl p-4 border-2 border-slate-700 bg-slate-900/75 cursor-pointer flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span id="card-city-tag" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">MAP 02 • FREE ROAM</span>
-                <span class="text-lg">🏙️</span>
-              </div>
-              <h3 id="card-city-title" class="text-base md:text-lg font-extrabold text-white mb-1">Open-World Cyber City</h3>
-              <p id="card-city-desc" class="text-xs text-slate-300 leading-relaxed mb-3">
-                Expanded 2400m × 2400m mega-metropolis with 380m flight ceiling, 260m supertall skyscrapers, high-altitude skybridges, rooftop helipads, and 4-way cross-street traffic!
-              </p>
-            </div>
-            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] mono text-indigo-300">
-              <span id="card-city-spec">2400m×2400m • 380m Ceiling • 260m Towers</span>
-              <span id="card-city-status" class="font-bold">SELECT →</span>
-            </div>
+          </section>
+          <section class="start-weather" aria-labelledby="ui-modal-weather-title">
+            <h2 id="ui-modal-weather-title" class="start-section-title">Weather & time</h2>
+            <div id="modal-weather-grid" class="start-weather-grid"></div>
+          </section>
+          <div class="start-drive-options">
+            <label for="start-physics"><span id="start-physics-label">Driving mode</span><select id="start-physics"><option value="realistic">Realistic</option><option value="plaid">Plaid</option><option value="fantasy">Fantasy</option></select></label>
+            <label for="start-traffic"><span id="start-traffic-label">Traffic</span><select id="start-traffic"><option value="0">Normal · 20</option><option value="1">Heavy · 36</option><option value="2">Insane · 52</option></select></label>
           </div>
         </div>
       </div>
-
-      <!-- STEP 3: Dynamic Weather & Time Selection (动态天气与时间系统) -->
-      <div class="mb-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-3 sm:p-3.5">
-        <div class="flex items-center justify-between gap-2 mb-2.5">
-          <div class="flex items-center gap-2">
-            <span id="ui-modal-weather-step" class="text-[10px] mono font-bold uppercase px-2 py-0.5 rounded bg-amber-500/25 text-amber-300 border border-amber-400/30">STEP 3 • WEATHER & TIME</span>
-            <h2 id="ui-modal-weather-title" class="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Select Dynamic Weather & Lighting</h2>
-          </div>
-          <span class="text-[11px] mono text-slate-400">Shortcut: <b class="text-amber-300">T</b></span>
+      <footer class="start-footer">
+        <div id="modal-config-summary" class="start-screen-reader" aria-live="polite">
+          <span id="ui-ready-prefix">Ready to launch with:</span>
+          <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
         </div>
-        <div id="modal-weather-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-      <div id="map-modal-highlights" class="text-[11px] text-slate-300 mb-3 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800"></div>
-
-      <!-- Live Selection Summary & Launch Bar -->
-      <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div id="modal-config-summary" class="text-xs text-slate-300 flex flex-wrap items-center gap-2">
-          <span id="ui-ready-prefix">🚀 Ready to launch with:</span>
-          <span id="summary-paint-chip" class="mono font-bold text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-400/30">Ano White</span>
-          <span>•</span>
-          <span id="summary-map-chip" class="mono font-bold text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-400/30">Elevated Highway</span>
-          <span>•</span>
-          <span id="summary-weather-chip" class="mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-400/30">Cyber Night</span>
-        </div>
-        <button id="btn-launch-selected-map" type="button" class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-extrabold text-sm bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 hover:brightness-110 active:scale-95 transition cursor-pointer flex items-center justify-center gap-2">
-          <span id="ui-btn-launch-map">Launch Simulation with Selected Finish</span>
-          <span>→</span>
-        </button>
-      </div>
+        <button id="btn-launch-selected-map" type="button" class="start-launch"><span id="ui-btn-launch-map">Launch simulation</span><span aria-hidden="true">→</span></button>
+      </footer>
+      <!-- Long-form descriptions remain available to assistive technology. -->
+      <div class="start-screen-reader"><span id="ui-modal-map-step"></span><span id="ui-modal-weather-step"></span><span id="card-hwy-tag"></span><span id="card-hwy-desc"></span><span id="card-city-tag"></span><span id="card-city-desc"></span><span id="map-modal-highlights"></span></div>
     </div>
   </div>
+  <dialog id="paint-picker" aria-labelledby="ui-modal-paint-title" aria-describedby="paint-picker-note">
+    <div class="paint-picker-content">
+      <header class="paint-picker-heading"><div><span id="paint-picker-eyebrow" class="start-eyebrow">12 EXTERIOR FINISHES</span><h2 id="ui-modal-paint-title">Choose your finish</h2></div><button id="paint-picker-close" type="button" class="start-tool">Done</button></header>
+      <div id="paint-picker-preview" class="paint-picker-stage" aria-hidden="true"></div>
+      <p id="paint-picker-note">Select a finish to preview it on your Roadster. Your choice is saved.</p>
+      <div id="modal-paint-grid" class="paint-picker-grid"></div>
+    </div>
+  </dialog>
 
   <!-- Vehicle Destroyed / Crash Telemetry Overlay Modal -->
   <div id="modal-destroyed" class="fixed inset-0 z-30 bg-rose-950/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
@@ -5005,18 +5076,19 @@ function setKeyState(code, isDown) {
 
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
-  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen()) return;
+  if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen() || window.RoadsterStart?.isPaintOpen()) return;
   if (window.RoadsterTaxi?.handleKeydown(e)) return;
-  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
-    e.preventDefault();
-  }
   const mapModalEl = document.getElementById('modal-map-select');
-  if (mapModalEl && !mapModalEl.classList.contains('hidden') && (e.code === 'Enter' || e.code === 'Space')) {
-    switchMap(selectedMapInModal);
-    mapModalEl.classList.add('hidden');
-    sound.init();
+  if (mapModalEl && !mapModalEl.classList.contains('hidden')) {
+    // Native buttons/selects handle Enter and Space themselves. Menu keys must
+    // never launch a map while activating a finish, world, or weather control.
+    if (e.code === 'Enter' && !(e.target instanceof Element && e.target.closest('button, select, input, a'))) {
+      e.preventDefault();
+      launchSelectedMap();
+    }
     return;
   }
+  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
   if (e.code === 'KeyZ') {
     if (!e.repeat) toggleHudMode();
     return;
@@ -5431,6 +5503,7 @@ function applyTranslations() {
 
   updateDestroyedModalText();
   renderBannerText();
+  window.RoadsterStart?.render();
 }
 
 function toggleLanguage() {
@@ -5453,6 +5526,8 @@ function highlightSelectedMapCard(mapKey) {
   selectedMapInModal = mapKey;
   cardHighwayEl.classList.toggle('selected', mapKey === 'highway');
   cardCityEl.classList.toggle('selected', mapKey === 'city');
+  cardHighwayEl.setAttribute('aria-pressed', String(mapKey === 'highway'));
+  cardCityEl.setAttribute('aria-pressed', String(mapKey === 'city'));
   const isZh = (currentLang === 'zh');
   
   const hwyStatus = document.getElementById('card-hwy-status');
@@ -5489,10 +5564,14 @@ cardCityEl.addEventListener('click', () => {
   sound.beep(520, 0.06);
 });
 
-document.getElementById('btn-launch-selected-map').addEventListener('click', () => {
+function launchSelectedMap() {
+  clearAllInputKeys();
   switchMap(selectedMapInModal);
   document.getElementById('modal-map-select').classList.add('hidden');
-});
+  window.RoadsterStart?.onLaunch();
+  sound.init();
+}
+document.getElementById('btn-launch-selected-map').addEventListener('click', launchSelectedMap);
 
 function clearAllInputKeys() {
   for (const k in keys) {
@@ -5505,6 +5584,7 @@ function openMapSelectModal() {
   highlightSelectedMapCard(currentMap);
   document.getElementById('modal-destroyed').classList.add('hidden');
   document.getElementById('modal-map-select').classList.remove('hidden');
+  window.RoadsterStart?.onOpen();
 }
 
 document.getElementById('btn-map-select').addEventListener('click', openMapSelectModal);
@@ -5512,7 +5592,8 @@ document.getElementById('btn-crash-switch-map').addEventListener('click', openMa
 document.getElementById('btn-crash-respawn').addEventListener('click', resetCar);
 
 function selectPaintFinish(idx, playAudio = true) {
-  paintIndex = THREE.MathUtils.clamp(idx, 0, PAINT_PRESETS.length - 1);
+  paintIndex = THREE.MathUtils.clamp(Number.isFinite(idx) ? Math.trunc(idx) : 0, 0, PAINT_PRESETS.length - 1);
+  try { localStorage.setItem('roadster-paint-finish', PAINT_PRESETS[paintIndex].id); } catch (_) {}
   const preset = PAINT_PRESETS[paintIndex];
   bodyMaterial.color.setHex(preset.color);
   bodyMaterial.metalness = preset.metalness;
@@ -5524,7 +5605,7 @@ function selectPaintFinish(idx, playAudio = true) {
   if (dot) dot.className = `w-2.5 h-2.5 rounded-full border border-white ${preset.dotClass}`;
   
   const modalDot = document.getElementById('modal-active-dot');
-  if (modalDot) modalDot.className = `w-3 h-3 rounded-full border border-white shadow-[0_0_8px_rgba(255,255,255,0.8)] ${preset.dotClass}`;
+  if (modalDot) { modalDot.className = 'start-paint-dot'; modalDot.style.backgroundColor = preset.hexCode; }
 
   renderModalPaintGrid();
   applyTranslations();
@@ -5539,49 +5620,29 @@ function cyclePaintFinish(nextIdx) {
 function renderModalPaintGrid() {
   const grid = document.getElementById('modal-paint-grid');
   if (!grid) return;
-  const isZh = (currentLang === 'zh');
-  grid.innerHTML = '';
-
+  const isZh = currentLang === 'zh';
+  // Keep the focused button alive during paint changes and translation refreshes.
   PAINT_PRESETS.forEach((preset, idx) => {
-    const isSelected = (idx === paintIndex);
-    const card = document.createElement('button');
-    card.type = 'button';
-    card.className = `p-2 rounded-xl text-left transition-all duration-150 flex flex-col justify-between cursor-pointer border ${
-      isSelected
-        ? 'bg-cyan-950/70 border-cyan-400 ring-2 ring-cyan-400/60 shadow-[0_0_15px_rgba(56,189,248,0.35)] scale-[1.02]'
-        : 'bg-slate-950/70 border-slate-800 hover:border-slate-600 hover:bg-slate-900/80 active:scale-95'
-    }`;
-    
-    const nameText = isZh ? preset.nameZh : preset.nameEn;
-    const tagText = isZh ? preset.tagZh : preset.tagEn;
-
-    card.innerHTML = `
-      <div class="flex items-center justify-between w-full mb-1.5">
-        <div class="w-5 h-5 rounded-full border-2 ${isSelected ? 'border-white ring-2 ring-cyan-400' : 'border-slate-500'} ${preset.dotClass} shadow-md" style="background-color: ${preset.hexCode};"></div>
-        <span class="text-[9px] mono font-bold px-1 py-0.5 rounded ${isSelected ? 'bg-cyan-500/30 text-cyan-200' : 'bg-slate-800 text-slate-400'}">${tagText}</span>
-      </div>
-      <div class="text-[11px] font-bold text-slate-100 truncate w-full" title="${nameText}">${nameText}</div>
-      <div class="text-[9px] mono mt-0.5 ${isSelected ? 'text-cyan-300 font-bold' : 'text-slate-500'}">${isSelected ? '✓ ' + (isZh ? '当前选定' : 'SELECTED') : (isZh ? '点击应用' : 'CLICK TO APPLY')}</div>
-    `;
-
-    card.addEventListener('click', () => {
-      selectPaintFinish(idx, true);
-    });
-
-    grid.appendChild(card);
+    let card = grid.children[idx];
+    if (!card) {
+      card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'paint-choice';
+      card.addEventListener('click', () => selectPaintFinish(idx, true));
+      grid.appendChild(card);
+    }
+    const selected = idx === paintIndex;
+    const name = isZh ? preset.nameZh : preset.nameEn;
+    card.setAttribute('aria-pressed', String(selected));
+    card.setAttribute('aria-label', name);
+    card.innerHTML = `<span class="paint-swatch" style="background-color:${preset.hexCode}" aria-hidden="true"></span><span class="paint-choice-name">${name}<span class="paint-choice-tag">${selected ? (isZh ? '✓ 当前涂装' : '✓ SELECTED') : (isZh ? preset.tagZh : preset.tagEn)}</span></span>`;
   });
-
-  const activeNameEl = document.getElementById('modal-active-paint-name');
-  if (activeNameEl) {
-    activeNameEl.textContent = isZh ? PAINT_PRESETS[paintIndex].nameZh : PAINT_PRESETS[paintIndex].nameEn;
-  }
-  const summaryPaintEl = document.getElementById('summary-paint-chip');
-  if (summaryPaintEl) {
-    summaryPaintEl.textContent = isZh ? PAINT_PRESETS[paintIndex].nameZh : PAINT_PRESETS[paintIndex].nameEn;
-  }
+  const name = isZh ? PAINT_PRESETS[paintIndex].nameZh : PAINT_PRESETS[paintIndex].nameEn;
+  const active = document.getElementById('modal-active-paint-name');
+  if (active) active.textContent = name;
+  const summary = document.getElementById('summary-paint-chip');
+  if (summary) summary.textContent = name;
 }
-
-
 
 document.getElementById('btn-physics-mode').addEventListener('click', togglePhysicsMode);
 const btnPlaidEl = document.getElementById('btn-plaid-mode');
@@ -5649,36 +5710,24 @@ function cycleWeatherMode() {
 function renderModalWeatherGrid() {
   const grid = document.getElementById('modal-weather-grid');
   if (!grid) return;
-  const isZh = (currentLang === 'zh');
-  grid.innerHTML = '';
-
+  const isZh = currentLang === 'zh';
+  const shortNames = isZh ? ['星际暗夜', '霓虹雨夜', '火星落日'] : ['Cyber Night', 'Neon Rain', 'Mars Sunset'];
   WEATHER_PRESETS.forEach((wp, idx) => {
-    const isSelected = (idx === weatherIndex);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = `p-2.5 rounded-xl text-left transition-all duration-150 flex flex-col justify-between cursor-pointer border ${
-      isSelected
-        ? 'bg-amber-950/60 border-amber-400 ring-2 ring-amber-400/50 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-        : 'bg-slate-950/70 border-slate-800 hover:border-slate-600 hover:bg-slate-900/80'
-    }`;
-    const title = isZh ? wp.nameZh : wp.nameEn;
-    const desc = isZh ? wp.descZh : wp.descEn;
-    btn.innerHTML = `
-      <div class="flex items-center justify-between w-full mb-1">
-        <span class="text-xs font-extrabold text-white flex items-center gap-1.5"><span>${wp.icon}</span><span>${title}</span></span>
-        <span class="text-[9px] mono font-bold px-1.5 py-0.5 rounded ${isSelected ? 'bg-amber-500/30 text-amber-200' : 'bg-slate-800 text-slate-400'}">${isSelected ? (isZh ? '✓ 已选' : '✓ ACTIVE') : (isZh ? '选择' : 'SELECT')}</span>
-      </div>
-      <p class="text-[10px] text-slate-300 leading-snug">${desc}</p>
-    `;
-    btn.addEventListener('click', () => selectWeatherMode(idx, true));
-    grid.appendChild(btn);
+    let button = grid.children[idx];
+    if (!button) {
+      button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'start-weather-choice';
+      button.addEventListener('click', () => selectWeatherMode(idx, true));
+      grid.appendChild(button);
+    }
+    button.setAttribute('aria-pressed', String(idx === weatherIndex));
+    button.setAttribute('aria-label', isZh ? wp.nameZh : wp.nameEn);
+    button.setAttribute('title', isZh ? wp.descZh : wp.descEn);
+    button.innerHTML = `<span aria-hidden="true">${wp.icon}</span><span>${shortNames[idx]}</span>`;
   });
-
-  const summaryWeatherEl = document.getElementById('summary-weather-chip');
-  if (summaryWeatherEl) {
-    const wp = WEATHER_PRESETS[weatherIndex];
-    summaryWeatherEl.textContent = `${wp.icon} ${isZh ? wp.nameZh : wp.nameEn}`;
-  }
+  const summary = document.getElementById('summary-weather-chip');
+  if (summary) summary.textContent = `${WEATHER_PRESETS[weatherIndex].icon} ${shortNames[weatherIndex]}`;
 }
 
 document.getElementById('btn-weather').addEventListener('click', () => cycleWeatherMode());
@@ -6541,6 +6590,195 @@ if (container) {
   window.RoadsterRanked = { abort, tick, render, isDialogOpen: () => dialog.open };
   setInterval(() => tick(), 200);
   render();
+})();
+
+
+// =========================================================================
+// MODULE: start-screen.js
+// =========================================================================
+// Compact launch configuration. Uses the game's real geometry and shared paint
+// material, with an independent, render-on-change studio preview (no extra loop).
+(() => {
+  const $ = id => document.getElementById(id);
+  const menu = $('modal-map-select');
+  const vehicleButton = $('btn-start-paint');
+  const picker = $('paint-picker');
+  const physicsSelect = $('start-physics');
+  const trafficSelect = $('start-traffic');
+  const historyKey = 'roadsterFinishPicker';
+  const historyToken = `finish-${Date.now()}`;
+  let ownsHistory = false;
+  let pendingBack = false;
+  let deferredOpen = null;
+  let returnFocus = vehicleButton;
+  let preview = null;
+  let previewFailed = false;
+  const copy = {
+    en: { badge: 'SPACEX COLD-GAS PACKAGE', title: 'Your Roadster', sub: 'Choose your setup and drive.', car: 'YOUR ROADSTER', change: 'Change finish ↗', choose: 'Choose your finish', collection: '12 EXTERIOR FINISHES', done: 'Done', note: 'Select a finish to preview it on your Roadster. Your choice is saved in this browser.', worlds: 'World', highway: 'Elevated Highway', city: 'Cyber City', highwaySpec: '6 lanes · traffic', citySpec: 'Roam · rooftop refills', weather: 'Weather & time', driving: 'Driving mode', modes: ['Realistic', 'Plaid', 'Fantasy'], traffic: 'Traffic', densities: ['Normal · 20', 'Heavy · 36', 'Insane · 52'], launch: 'Launch simulation', audio: 'Audio settings', language: 'Switch to Chinese', unavailable: '3D preview unavailable' },
+    zh: { badge: 'SPACEX 冷气推进版', title: '我的 Roadster', sub: '选好车辆、地图和天气，开始驾驶。', car: '我的 ROADSTER', change: '更换涂装 ↗', choose: '选择车漆涂装', collection: '12 款专属涂装', done: '完成', note: '点选涂装即可预览效果，此浏览器会记住你的选择。', worlds: '驾驶地图', highway: '高架高速', city: '赛博都市', highwaySpec: '6 车道 · 车流', citySpec: '开放都市 · 补气', weather: '天气与时间', driving: '驾驶模式', modes: ['常规物理', '狂暴 Plaid', '幻想极速'], traffic: '车流密度', densities: ['普通 · 20 辆', '密集 · 36 辆', '疯狂 · 52 辆'], launch: '进入游戏', audio: '声音设置', language: 'Switch to English', unavailable: '3D 预览暂不可用' }
+  };
+  const menuVisible = () => !menu.classList.contains('hidden');
+  function renderPreview() {
+    if ((!menuVisible() && !picker.open) || previewFailed) return;
+    const host = picker.open ? $('paint-picker-preview') : $('start-car-preview');
+    const width = host.clientWidth;
+    const height = host.clientHeight;
+    if (!width || !height) return;
+    try {
+      if (!preview) {
+        const scene = new THREE.Scene();
+        scene.environment = studioEnvMap;
+        const camera = new THREE.OrthographicCamera(-4, 4, 2, -2, .1, 50);
+        camera.position.set(6, 2.7, -8);
+        camera.lookAt(0, .65, 0);
+        const model = carMeshGroup.clone(true);
+        model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
+        model.scale.set(1, 1, 1);
+        model.visible = true;
+        scene.add(model);
+        scene.add(new THREE.AmbientLight(0xe2edff, 1.8));
+        const key = new THREE.DirectionalLight(0xffffff, 2.4);
+        key.position.set(5, 8, -4);
+        scene.add(key);
+        const rim = new THREE.DirectionalLight(0x80dfff, 1.2);
+        rim.position.set(-5, 3, 4);
+        scene.add(rim);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setClearColor(0x000000, 0);
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.domElement.setAttribute('aria-hidden', 'true');
+        preview = { renderer, scene, camera };
+      }
+      if (preview.renderer.domElement.parentNode !== host) host.appendChild(preview.renderer.domElement);
+      const aspect = width / height;
+      const halfHeight = Math.max(1.15, 3.1 / aspect);
+      preview.camera.left = -halfHeight * aspect;
+      preview.camera.right = halfHeight * aspect;
+      preview.camera.top = halfHeight;
+      preview.camera.bottom = -halfHeight;
+      preview.camera.updateProjectionMatrix();
+      preview.renderer.setSize(width, height, false);
+      preview.renderer.render(preview.scene, preview.camera);
+    } catch (_) {
+      preview?.renderer.dispose();
+      preview = null;
+      previewFailed = true;
+      host.textContent = copy[currentLang].unavailable;
+      // A failed optional preview must not block configuration or the game.
+    }
+  }
+  function render() {
+    const t = copy[currentLang];
+    const text = { 'map-modal-badge': t.badge, 'map-modal-title': t.title, 'map-modal-sub': t.sub, 'ui-modal-paint-step': t.car, 'start-paint-action': t.change, 'ui-modal-paint-title': t.choose, 'paint-picker-eyebrow': t.collection, 'paint-picker-close': t.done, 'paint-picker-note': t.note, 'ui-modal-map-title': t.worlds, 'card-hwy-title': t.highway, 'card-city-title': t.city, 'card-hwy-spec': t.highwaySpec, 'card-city-spec': t.citySpec, 'ui-modal-weather-title': t.weather, 'start-physics-label': t.driving, 'start-traffic-label': t.traffic, 'ui-btn-launch-map': t.launch };
+    Object.entries(text).forEach(([id, value]) => { $(id).textContent = value; });
+    $('btn-map-audio-settings').setAttribute('aria-label', t.audio);
+    $('btn-map-modal-lang').setAttribute('aria-label', t.language);
+    $('btn-map-modal-lang').setAttribute('title', t.language);
+    physicsSelect.value = state.physicsMode === 'fantasy' ? 'fantasy' : state.insaneMode ? 'plaid' : 'realistic';
+    trafficSelect.value = String(trafficLevelIndex);
+    Array.from(physicsSelect.options).forEach((option, idx) => { option.textContent = t.modes[idx]; });
+    Array.from(trafficSelect.options).forEach((option, idx) => { option.textContent = t.densities[idx]; });
+    const paint = PAINT_PRESETS[paintIndex];
+    $('modal-active-dot').style.backgroundColor = paint.hexCode;
+    $('modal-active-paint-name').setAttribute('title', currentLang === 'zh' ? paint.nameZh : paint.nameEn);
+    vehicleButton.setAttribute('aria-label', `${currentLang === 'zh' ? paint.nameZh : paint.nameEn}. ${t.change.replace(' ↗', '')}`);
+    renderPreview();
+  }
+  function openPaint(event, fromHistory = false) {
+    if (picker.open) return;
+    // Back is asynchronous in browsers. Queue an immediate reopen until the
+    // previous picker entry is actually gone, rather than stacking stale entries.
+    if (pendingBack) { deferredOpen = event?.currentTarget || vehicleButton; return; }
+    clearAllInputKeys();
+    returnFocus = event?.currentTarget || (menuVisible() ? vehicleButton : $('btn-paint'));
+    renderModalPaintGrid();
+    picker.showModal();
+    vehicleButton.setAttribute('aria-expanded', 'true');
+    if (!fromHistory) {
+      try {
+        // A same-URL entry lets the phone/browser Back button dismiss the picker.
+        history.pushState({ ...history.state, [historyKey]: historyToken }, '');
+        ownsHistory = true;
+      } catch (_) { ownsHistory = false; }
+    } else ownsHistory = true;
+    renderPreview();
+    $('modal-paint-grid').children[paintIndex]?.focus();
+  }
+  function closePaint() { if (picker.open) picker.close(); }
+  picker.addEventListener('close', () => {
+    vehicleButton.setAttribute('aria-expanded', 'false');
+    if (ownsHistory && history.state?.[historyKey] === historyToken) {
+      ownsHistory = false;
+      pendingBack = true;
+      try { history.back(); } catch (_) { pendingBack = false; }
+    }
+    renderPreview();
+    if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
+  });
+  $('paint-picker-close').addEventListener('click', closePaint);
+  picker.addEventListener('click', event => {
+    if (event.target !== picker) return;
+    const rect = picker.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closePaint();
+  });
+  window.addEventListener('popstate', event => {
+    pendingBack = false;
+    if (event.state?.[historyKey] === historyToken && menuVisible()) openPaint(null, true);
+    else if (picker.open) { ownsHistory = false; picker.close(); }
+    if (deferredOpen && menuVisible()) {
+      const button = deferredOpen;
+      deferredOpen = null;
+      openPaint({ currentTarget: button });
+    }
+  });
+  vehicleButton.addEventListener('click', openPaint);
+  physicsSelect.addEventListener('change', () => {
+    const selected = physicsSelect.value;
+    if (selected === 'plaid') {
+      if (state.physicsMode !== 'realistic' || !state.insaneMode) togglePlaidMode();
+    } else {
+      if (state.insaneMode) togglePlaidMode();
+      if (state.physicsMode !== selected) togglePhysicsMode();
+    }
+    render();
+  });
+  trafficSelect.addEventListener('change', () => {
+    const next = Number(trafficSelect.value);
+    if (!Number.isInteger(next) || next < 0 || next > 2 || next === trafficLevelIndex) return;
+    window.RoadsterRanked?.abort('traffic');
+    trafficLevelIndex = next;
+    populateTraffic([20, 36, 52][next]);
+    applyTranslations();
+    sound.beep(580, .08);
+  });
+  menu.addEventListener('keydown', event => {
+    if (event.key !== 'Tab' || picker.open || window.RoadsterMusic?.isSettingsOpen()) return;
+    const controls = Array.from(menu.querySelectorAll('button, select')).filter(element => !element.disabled && element.getClientRects().length);
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === menu)) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+  });
+  window.addEventListener('resize', renderPreview);
+  if (typeof ResizeObserver !== 'undefined') {
+    const observer = new ResizeObserver(renderPreview);
+    observer.observe($('start-car-preview'));
+    observer.observe($('paint-picker-preview'));
+  }
+  window.RoadsterStart = {
+    render, isPaintOpen: () => picker.open,
+    onOpen() { render(); vehicleButton.focus({ preventScroll: true }); },
+    onLaunch() { closePaint(); $('btn-map-select').focus({ preventScroll: true }); }
+  };
+  // Store stable preset IDs, so reordering the finish collection cannot change it.
+  let saved;
+  try { saved = localStorage.getItem('roadster-paint-finish'); } catch (_) {}
+  const savedIndex = PAINT_PRESETS.findIndex(preset => preset.id === saved);
+  selectPaintFinish(savedIndex >= 0 ? savedIndex : paintIndex, false);
+  render();
+  vehicleButton.focus({ preventScroll: true });
 })();
 
 
