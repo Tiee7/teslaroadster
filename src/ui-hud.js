@@ -629,7 +629,7 @@ function selectPaintFinish(idx, playAudio = true) {
   bodyMaterial.metalness = preset.metalness;
   bodyMaterial.roughness = preset.roughness;
   bodyMaterial.clearcoat = 1.0;
-  bodyMaterial.clearcoatRoughness = 0.03;
+  bodyMaterial.clearcoatRoughness = 0.16;
 
   const dot = document.getElementById('paint-dot');
   if (dot) dot.className = `w-2.5 h-2.5 rounded-full border border-white ${preset.dotClass}`;

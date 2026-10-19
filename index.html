@@ -2250,11 +2250,11 @@ scene.add(marsSunGroup);
 const bodyMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xeef2f7,
   metalness: 0.55,
-  roughness: 0.12,
+  roughness: 0.15,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.03,
+  clearcoatRoughness: 0.16,
   reflectivity: 1.0,
-  envMapIntensity: 1.85,
+  envMapIntensity: 1.2,
   side: THREE.DoubleSide
 });
 
@@ -2280,11 +2280,11 @@ const goldCanopyMaterial = new THREE.MeshPhysicalMaterial({
   emissive: 0x120b08,
   emissiveIntensity: 0.18,
   metalness: 0.92,
-  roughness: 0.04,
+  roughness: 0.10,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.02,
+  clearcoatRoughness: 0.10,
   reflectivity: 1.0,
-  envMapIntensity: 2.1,
+  envMapIntensity: 1.5,
   transparent: true,
   opacity: 0.92,
   side: THREE.DoubleSide
@@ -2725,7 +2725,7 @@ buildOpenWorldCity();
 //    Rebuilt 1:1 from user reference photos (image_ed309d, ed30b9, ed8256)
 // =========================================================================
 // One fixed driver pose is shared by the camera and projection-sized instruments.
-const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.58 });
+const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.58, wheelDepth: 0.40 });
 const playerWrapper = new THREE.Group();
 playerWrapper.position.set(2.5, 0, 0);
 scene.add(playerWrapper);
@@ -2764,22 +2764,69 @@ function sampleStationLinear(stations, z) {
   return stations[0];
 }
 
+// One derivative per control station, shared by both adjoining spans. Unlike
+// per-span smoothstep this carries a moving contour through the stations instead
+// of flattening it at every key. PCHIP's limiter preserves extrema/arch bounds.
+const stationTangentCache = new WeakMap();
+function stationTangents(stations) {
+  if (stationTangentCache.has(stations)) return stationTangentCache.get(stations);
+  const tangents = stations.map(() => ({}));
+  const h = stations.slice(1).map((st, i) => st.z - stations[i].z);
+  for (const key of Object.keys(stations[0]).filter(key => key !== 'z')) {
+    const d = h.map((step, i) => (stations[i + 1][key] - stations[i][key]) / step);
+    if (d.length === 1) {
+      tangents[0][key] = tangents[1][key] = d[0];
+      continue;
+    }
+    const endpoint = (h0, h1, d0, d1) => {
+      let m = ((2 * h0 + h1) * d0 - h0 * d1) / (h0 + h1);
+      if (Math.sign(m) !== Math.sign(d0)) m = 0;
+      else if (Math.sign(d0) !== Math.sign(d1) && Math.abs(m) > 3 * Math.abs(d0)) m = 3 * d0;
+      return m;
+    };
+    tangents[0][key] = endpoint(h[0], h[1], d[0], d[1]);
+    const last = d.length - 1;
+    tangents[stations.length - 1][key] = endpoint(h[last], h[last - 1], d[last], d[last - 1]);
+    for (let i = 1; i < stations.length - 1; i++) {
+      if (d[i - 1] * d[i] <= 0) tangents[i][key] = 0;
+      else {
+        const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1];
+        tangents[i][key] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]);
+      }
+    }
+  }
+  stationTangentCache.set(stations, tangents);
+  return tangents;
+}
 function sampleStationProfile(stations, z) {
   if (z <= stations[0].z) return stations[0];
   if (z >= stations[stations.length - 1].z) return stations[stations.length - 1];
+  const tangents = stationTangents(stations);
   for (let i = 0; i < stations.length - 1; i++) {
-    const s0 = stations[i];
-    const s1 = stations[i + 1];
+    const s0 = stations[i], s1 = stations[i + 1];
     if (z >= s0.z && z <= s1.z) {
-      const t = (z - s0.z) / Math.max(1e-6, s1.z - s0.z);
-      const out = {};
-      for (const k of Object.keys(s0)) {
-        out[k] = hermiteInterp(s0[k], s1[k], t);
+      const h = s1.z - s0.z, t = (z - s0.z) / h, t2 = t * t, t3 = t2 * t;
+      const out = { z };
+      for (const key of Object.keys(s0).filter(key => key !== 'z')) {
+        out[key] = (2 * t3 - 3 * t2 + 1) * s0[key] + (t3 - 2 * t2 + t) * h * tangents[i][key]
+          + (-2 * t3 + 3 * t2) * s1[key] + (t3 - t2) * h * tangents[i + 1][key];
       }
       return out;
     }
   }
   return stations[0];
+}
+
+// Curve between the original sculpting landmarks rather than subdividing their
+// straight edges. Every landmark and the outer wheel-opening edge stays exact.
+function smoothCrossSection(points, subdivisions = 4) {
+  const stations = points.map((p, i) => ({ z: i, x: p[0], y: p[1] }));
+  const row = [];
+  for (let i = 0; i <= (points.length - 1) * subdivisions; i++) {
+    const point = sampleStationProfile(stations, i / subdivisions);
+    row.push([point.x, point.y, points[0][2]]);
+  }
+  return row;
 }
 
 const FRONT_Z = -1.36, FRONT_Y = 0.32, FRONT_R = 0.32;
@@ -2793,7 +2840,7 @@ function wheelArchOpeningY(z) {
   return 0.0;
 }
 
-function createSmoothGridGeometry(gridRows) {
+function createSmoothGridGeometry(gridRows, useSurfaceTangents = false) {
   const nz = gridRows.length - 1;
   const nu = gridRows[0].length - 1;
   const positions = [];
@@ -2819,6 +2866,21 @@ function createSmoothGridGeometry(gridRows) {
   geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geo.setIndex(indices);
   geo.computeVertexNormals();
+  if (useSurfaceTangents) {
+    // Centered surface tangents avoid the diagonal bias of triangle-area
+    // averaging. Mirrored panels receive mirrored normals, including the crown.
+    const normals = [];
+    for (let iz = 0; iz <= nz; iz++) for (let iu = 0; iu <= nu; iu++) {
+      const beforeZ = gridRows[Math.max(0, iz - 1)][iu], afterZ = gridRows[Math.min(nz, iz + 1)][iu];
+      const beforeU = gridRows[iz][Math.max(0, iu - 1)], afterU = gridRows[iz][Math.min(nu, iu + 1)];
+      const dz = afterZ.map((value, axis) => value - beforeZ[axis]);
+      const du = afterU.map((value, axis) => value - beforeU[axis]);
+      const n = [dz[1] * du[2] - dz[2] * du[1], dz[2] * du[0] - dz[0] * du[2], dz[0] * du[1] - dz[1] * du[0]];
+      const length = Math.hypot(...n);
+      normals.push(...(length > 1e-12 ? n.map(value => value / length) : [0, 1, 0]));
+    }
+    geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  }
   return geo;
 }
 
@@ -2836,8 +2898,7 @@ function createQuadMesh(p0, p1, p2, p3, mat) {
   return new THREE.Mesh(geo, mat);
 }
 
-// 1) Faceted Cyber-Wedge Body Shell (Exact match to image_ed309d, image_ed30b9, image_ed8256)
-// 1) 2026 Tesla Roadster SpaceX Rocket - 20-Station Catmull-Rom Sculpted Topology (V12)
+// 1) Smooth, shape-preserving 20-station Roadster shell
 const cyberWedgeStations = [
   { z: -2.36, hoodW: 0.50, centerY: 0.38, hoodValleyY: 0.37, hoodEdgeY: 0.37, pocketX: 0.52, pocketY: 0.37, fenderPeakX: 0.64, fenderPeakY: 0.39, shoulderX: 0.78, shoulderY: 0.32, flankX: 0.82, flankY: 0.19, rockerY: 0.15 },
   { z: -2.28, hoodW: 0.53, centerY: 0.40, hoodValleyY: 0.39, hoodEdgeY: 0.39, pocketX: 0.56, pocketY: 0.40, fenderPeakX: 0.68, fenderPeakY: 0.42, shoulderX: 0.84, shoulderY: 0.34, flankX: 0.88, flankY: 0.21, rockerY: 0.15 },
@@ -2876,7 +2937,7 @@ function buildCyberWedgeBodyV8() {
     let cabinRecess = 0.0;
     if (z > -0.95 && z < 0.48) {
       const tCab = (z - (-0.95)) / (0.48 - (-0.95));
-      cabinRecess = 0.24 * Math.sin(tCab * Math.PI);
+      cabinRecess = 0.24 * Math.sin(tCab * Math.PI) ** 2;
     }
 
     const ptsRight = [
@@ -2896,9 +2957,9 @@ function buildCyberWedgeBodyV8() {
     for (let i = ptsRight.length - 1; i >= 1; i--) {
       ptsLeft.push([-ptsRight[i][0], ptsRight[i][1], ptsRight[i][2]]);
     }
-    grid.push(ptsLeft.concat(ptsRight));
+    grid.push(smoothCrossSection(ptsLeft.concat(ptsRight)));
   }
-  return new THREE.Mesh(createSmoothGridGeometry(grid), bodyMaterial);
+  return new THREE.Mesh(createSmoothGridGeometry(grid, true), bodyMaterial);
 }
 
 function buildCyberRockerSkirtV8() {
@@ -2953,9 +3014,9 @@ function buildCyberCanopyV8() {
     for (let i = ptsR.length - 1; i >= 1; i--) {
       ptsL.push([-ptsR[i][0], ptsR[i][1], ptsR[i][2]]);
     }
-    grid.push(ptsL.concat(ptsR));
+    grid.push(smoothCrossSection(ptsL.concat(ptsR)));
   }
-  return new THREE.Mesh(createSmoothGridGeometry(grid), goldCanopyMaterial);
+  return new THREE.Mesh(createSmoothGridGeometry(grid, true), goldCanopyMaterial);
 }
 
 const roadsterBodyMesh = buildCyberWedgeBodyV8();
@@ -2976,7 +3037,7 @@ const roadsterCanopyRails = [];
   const nz = 36;
   for (let iz = 0; iz <= nz; iz++) {
     const z = -1.20 + (iz / nz) * (1.12 - (-1.20));
-    const st = sampleStationLinear(cyberCanopyStations, z);
+    const st = sampleStationProfile(cyberCanopyStations, z);
     const rx = side * (st.topW + 0.02);
     const ry = st.topY - 0.005;
     railGrid.push([
@@ -3103,9 +3164,19 @@ for (let i = 0; i < 7; i++) {
 
 carMeshGroup.add(seatBack, dashCowling, screenBezel, screenDisplay, hudCombinerMesh, steeringColumn, yokeWheelGroup);
 
-// Only FPV gets the low, compact instrument pod. Exterior/showroom geometry
-// returns to its original pose, including the roof rails and steering wheel.
+// FPV uses the original animated yoke in a camera-sized lower-center pose.
+// Keep its exterior pose independent of the responsive driving instruments.
 let cockpitPerspectiveActive = false;
+function positionCockpitPart(part, screenX, screenY, depth, width, height) {
+  const halfFov = Math.tan(Math.PI / 6);
+  const slope = COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope);
+  const vertical = (1 - 2 * screenY / height) * depth * halfFov;
+  part.position.set(
+    (2 * screenX / width - 1) * depth * halfFov * width / height,
+    COCKPIT_VIEW.eyeHeight + (-slope * depth + vertical) / norm,
+    COCKPIT_VIEW.eyeZ + (-depth - slope * vertical) / norm
+  );
+}
 function resizeCockpitDisplay() {
   if (!cockpitPerspectiveActive) {
     const scale = Math.min(1, window.innerWidth / window.innerHeight / 0.65);
@@ -3114,36 +3185,54 @@ function resizeCockpitDisplay() {
     screenBezel.rotation.x = screenDisplay.rotation.x = -0.26;
     screenBezel.scale.setScalar(scale);
     screenDisplay.scale.setScalar(scale);
+    yokeWheelGroup.position.set(0, 0.625, -0.46);
+    yokeWheelGroup.scale.setScalar(1);
+    steeringColumn.position.set(0, 0.60, -0.58);
+    steeringColumn.scale.setScalar(1);
     return;
   }
   const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight);
-  // The complete screen stays below 78% of the view, with a 2% bottom gap.
-  // Pixel and width caps stop it growing into a giant slab on desktops/phones.
-  const pixels = Math.min(156, Math.max(92, height * 0.15), height * 0.20, width * 0.68 * 200 / 512);
+  const aspect = width / height;
+  // Tall phones put the left-hand pod just above the wheel; wide views place
+  // them side by side. Both layouts leave the upper 70% open to the road.
+  const compact = Math.max(0, Math.min(1, (1.10 - aspect) / 0.35));
+  const pixels = Math.min(156, Math.max(92, height * 0.15), height * (0.20 - compact * 0.085), width * 0.64 * 200 / 512);
   const depth = COCKPIT_VIEW.displayDepth, halfFov = Math.tan(Math.PI / 6);
   const slope = COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope);
   const displayHeight = 2 * depth * halfFov * pixels / height;
   const displayWidth = displayHeight * 512 / 200;
-  const centerNdcY = -0.96 + pixels / height;
-  const vertical = centerNdcY * depth * halfFov;
-  const y = COCKPIT_VIEW.eyeHeight + (-slope * depth + vertical) / norm;
-  const z = COCKPIT_VIEW.eyeZ + (-depth - slope * vertical) / norm;
-  const angle = -Math.atan(slope);
-  screenDisplay.position.set(0, y, z);
-  screenDisplay.rotation.x = angle;
+  const displayPixelsWide = pixels * 512 / 200;
+  const screenX = width * 0.035 + displayPixelsWide / 2;
+  const screenY = height * (0.965 - compact * 0.12) - pixels / 2;
+  positionCockpitPart(screenDisplay, screenX, screenY, depth, width, height);
+  screenDisplay.rotation.x = -Math.atan(slope);
   screenDisplay.scale.set(displayWidth / 0.38, displayHeight / 0.23, 1);
   // Keep the bezel behind the face along its normal, including its thickness.
-  screenBezel.position.set(0, y - slope * 0.012 / norm, z - 0.012 / norm);
-  screenBezel.rotation.x = angle;
-  screenBezel.scale.set((displayWidth + 0.010) / 0.40, (displayHeight + 0.010) / 0.25, 0.5);
+  screenBezel.position.set(screenDisplay.position.x, screenDisplay.position.y - slope * 0.012 / norm, screenDisplay.position.z - 0.012 / norm);
+  screenBezel.rotation.x = screenDisplay.rotation.x;
+  const bezelPadding = 2 * depth * halfFov * Math.min(6, width * 0.016) / height;
+  screenBezel.scale.set((displayWidth + bezelPadding) / 0.40, (displayHeight + bezelPadding) / 0.25, 0.5);
+
+  // Bound the entire original wheel through its full +/-1.009-radian turn,
+  // rather than hiding it below the raised driver's frustum. Its 0.20m local
+  // radius includes the grips, horn tips, depth and lower bridge at any angle.
+  const wheelRadiusPixels = Math.min(height * (0.12 - compact * 0.051), width * 0.20);
+  const wheelScale = 2 * COCKPIT_VIEW.wheelDepth * halfFov * wheelRadiusPixels / height / 0.20;
+  const wheelX = compact === 1 ? width * 0.58 : Math.max(
+    width * (0.50 + compact * 0.08),
+    width * 0.035 + displayPixelsWide + wheelRadiusPixels * 1.03 + 8
+  );
+  const wheelY = height * (0.855 + compact * 0.068);
+  positionCockpitPart(yokeWheelGroup, wheelX, wheelY, COCKPIT_VIEW.wheelDepth, width, height);
+  yokeWheelGroup.scale.setScalar(wheelScale);
+  steeringColumn.position.set(yokeWheelGroup.position.x, yokeWheelGroup.position.y - 0.025 * wheelScale, yokeWheelGroup.position.z - 0.12 * wheelScale);
+  steeringColumn.scale.setScalar(wheelScale);
 }
 function setCockpitPerspective(active) {
   if (cockpitPerspectiveActive === active) return;
   cockpitPerspectiveActive = active;
   roadsterCanopyRails.forEach(rail => { rail.visible = !active; });
   dashCowling.position.y = active ? 0.50 : 0.62;
-  steeringColumn.position.y = active ? 0.50 : 0.60;
-  yokeWheelGroup.position.y = active ? 0.52 : 0.625;
   dashPipe.visible = !active;
   resizeCockpitDisplay();
 }
@@ -5274,7 +5363,7 @@ function selectPaintFinish(idx, playAudio = true) {
   bodyMaterial.metalness = preset.metalness;
   bodyMaterial.roughness = preset.roughness;
   bodyMaterial.clearcoat = 1.0;
-  bodyMaterial.clearcoatRoughness = 0.03;
+  bodyMaterial.clearcoatRoughness = 0.16;
 
   const dot = document.getElementById('paint-dot');
   if (dot) dot.className = `w-2.5 h-2.5 rounded-full border border-white ${preset.dotClass}`;

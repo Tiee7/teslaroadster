@@ -196,11 +196,11 @@ scene.add(marsSunGroup);
 const bodyMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xeef2f7,
   metalness: 0.55,
-  roughness: 0.12,
+  roughness: 0.15,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.03,
+  clearcoatRoughness: 0.16,
   reflectivity: 1.0,
-  envMapIntensity: 1.85,
+  envMapIntensity: 1.2,
   side: THREE.DoubleSide
 });
 
@@ -226,11 +226,11 @@ const goldCanopyMaterial = new THREE.MeshPhysicalMaterial({
   emissive: 0x120b08,
   emissiveIntensity: 0.18,
   metalness: 0.92,
-  roughness: 0.04,
+  roughness: 0.10,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.02,
+  clearcoatRoughness: 0.10,
   reflectivity: 1.0,
-  envMapIntensity: 2.1,
+  envMapIntensity: 1.5,
   transparent: true,
   opacity: 0.92,
   side: THREE.DoubleSide
