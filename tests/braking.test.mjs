@@ -396,3 +396,148 @@ test('complete airborne control retains passive drag when empty and finite gravi
     }
   }
 });
+
+test('normal-mode boost release keeps 250/300 km/h momentum with or without W held', () => {
+  for (const map of ['highway', 'city']) {
+    for (const kmh of [250, 300]) {
+      for (const keepW of [false, true]) {
+        for (const dt of [0, 1 / 144, 1 / 60, 1 / 30, 0.05]) {
+          const h = moving(kmh / 3.6, map, { physicsMode: 'realistic' });
+          Object.assign(h.keys, { Semicolon: true, KeyW: keepW });
+          assert.equal(h.frame(1 / 60).isRearThrusterFiring, true);
+          const speedBefore = h.state.speed, airBefore = h.state.airRemaining;
+          h.keys.Semicolon = false;
+          const result = h.frame(dt);
+          const baselineDecel = 0.35 + 0.00012 * speedBefore ** 2;
+          close(h.state.speed, speedBefore - baselineDecel * 1.3 * dt, 1e-10);
+          assert.ok(h.state.speed > 200 / 3.6, `${map}/${kmh}/W=${keepW}: no cap snap`);
+          assert.equal(result.isRearThrusterFiring, false);
+          assert.equal(result.isRetroBrakeFiring, false);
+          close(result.airConsumedThisFrame, 0);
+          // Ordinary ground refill may resume, but release cannot debit gas.
+          assert.ok(h.state.airRemaining >= airBefore);
+        }
+      }
+    }
+  }
+});
+
+test('normal overspeed coast uses exactly 1.3 times the existing aero-plus-roll baseline', () => {
+  for (const map of ['highway', 'city']) {
+    for (const kmh of [100, 199, 200, 201, 250, 300, 370]) {
+      const speed = kmh / 3.6, dt = 1 / 60;
+      const h = moving(speed, map, { physicsMode: 'realistic' });
+      const baseline = 0.35 + 0.00012 * speed ** 2;
+      h.move(dt);
+      close(speed - h.state.speed, baseline * (kmh > 200 ? 1.3 : 1) * dt);
+      close(h.state.airRemaining, 10);
+    }
+  }
+});
+
+test('coasting crosses 200 continuously and W returns to its electric-drive ceiling without a jump', () => {
+  const limit = 200 / 3.6;
+  for (const map of ['highway', 'city']) {
+    for (const dt of [1 / 144, 1 / 60, 1 / 30, 0.05]) {
+      for (const keepW of [false, true]) {
+        const before = limit + 0.0001;
+        const h = moving(before, map, { physicsMode: 'realistic' });
+        h.keys.KeyW = keepW;
+        h.move(dt);
+        const aboveDt = (before - limit) / ((0.35 + 0.00012 * before ** 2) * 1.3);
+        const expected = keepW ? limit : limit - (0.35 + 0.00012 * limit ** 2) * (dt - aboveDt);
+        close(h.state.speed, expected);
+        assert.ok(h.state.speed <= before && before - h.state.speed < 0.05);
+        const after = h.state.speed;
+        h.move(dt);
+        if (keepW) close(h.state.speed, limit);
+        else close(h.state.speed, after - (0.35 + 0.00012 * after ** 2) * dt);
+      }
+    }
+  }
+});
+
+test('boost release coasting stays consistent at 30/60/144 Hz and variable frame times', () => {
+  for (const map of ['highway', 'city']) {
+    for (const keepW of [false, true]) {
+      const speeds = [];
+      for (const frameTimes of [[1 / 30], [1 / 60], [1 / 144], [0.007, 0.019, 0.033, 0.011, 0.05]]) {
+        const h = moving(250 / 3.6, map, { physicsMode: 'realistic' });
+        h.keys.KeyW = keepW;
+        let elapsed = 0, index = 0;
+        while (elapsed < 20 - 1e-10) {
+          const dt = Math.min(frameTimes[index++ % frameTimes.length], 20 - elapsed);
+          const before = h.state.speed;
+          h.move(dt);
+          assert.ok(h.state.speed <= before + 1e-10);
+          assert.ok(before - h.state.speed < 0.1, 'no discontinuity in any frame');
+          // Keep this straight-road physics test away from the unrelated city wall.
+          h.state.x = 0; h.state.z = 0;
+          elapsed += dt;
+        }
+        speeds.push(h.state.speed);
+        if (keepW) close(h.state.speed, 200 / 3.6, 1e-8);
+        else assert.ok(h.state.speed < 200 / 3.6);
+      }
+      assert.ok(Math.max(...speeds) - Math.min(...speeds) < 0.01, `${map}/W=${keepW}: <0.036 km/h frame-rate variation: ${speeds}`);
+    }
+  }
+});
+
+test('normal overspeed retains active H/S retro braking, empty-tank brakes and throttle priority', () => {
+  for (const map of ['highway', 'city']) {
+    for (const key of ['KeyH', 'KeyS']) {
+      for (const airRemaining of [0, 5]) {
+        const h = moving(300 / 3.6, map, { physicsMode: 'realistic', airRemaining, isFreefalling: airRemaining === 0 });
+        const coast = moving(300 / 3.6, map, { physicsMode: 'realistic', airRemaining, isFreefalling: airRemaining === 0 });
+        h.keys[key] = true;
+        const result = h.move(1 / 60);
+        coast.move(1 / 60);
+        assert.ok(h.state.speed < coast.state.speed);
+        assert.ok(h.state.speed > 200 / 3.6, 'active braking also preserves momentum');
+        assert.equal(result.isRetroBrakeFiring, airRemaining > 0);
+        close(result.airConsumedThisFrame, airRemaining > 0 ? 0.55 / 60 : 0);
+        const overlap = moving(300 / 3.6, map, { physicsMode: 'realistic' });
+        Object.assign(overlap.keys, { KeyW: true, [key]: true });
+        assert.equal(overlap.move(1 / 60).isRetroBrakeFiring, false);
+        close(overlap.state.speed, coast.state.speed);
+      }
+    }
+  }
+});
+
+test('boost release while W and handbrake are held cannot snap existing overspeed to the drift limit', () => {
+  for (const map of ['highway', 'city']) {
+    const h = moving(300 / 3.6, map, { physicsMode: 'realistic' });
+    Object.assign(h.keys, { KeyW: true, KeyU: true, Semicolon: true });
+    h.move(1 / 60);
+    h.keys.Semicolon = false;
+    const before = h.state.speed;
+    h.move(1 / 60);
+    close(h.state.speed, before - (0.35 + 0.00012 * before ** 2) * 1.3 / 60);
+    assert.ok(h.state.speed > 200 / 3.6);
+  }
+});
+
+test('Plaid, Fantasy, normal EV acceleration and airborne passive drag keep their established behavior', () => {
+  for (const map of ['highway', 'city']) {
+    for (const mode of [{ physicsMode: 'realistic', insaneMode: true }, { physicsMode: 'fantasy' }]) {
+      const h = moving(250 / 3.6, map, mode);
+      const before = h.state.speed;
+      h.move(1 / 60);
+      close(h.state.speed, before - (0.35 + 0.00012 * before ** 2) / 60);
+      h.keys.KeyW = true;
+      const coast = h.state.speed;
+      h.move(1 / 60);
+      assert.ok(h.state.speed > coast);
+    }
+    const electric = moving(199.9 / 3.6, map, { physicsMode: 'realistic' });
+    electric.keys.KeyW = true;
+    electric.move(1 / 60);
+    close(electric.state.speed, 200 / 3.6);
+    const air = moving(300 / 3.6, map, { y: 100, physicsMode: 'realistic' });
+    const before = air.state.speed, dt = 1 / 60;
+    air.move(dt);
+    close(air.state.speed, before * Math.pow(0.45, dt) - (15.5 + 0.0085 * before ** 2) * dt);
+  }
+});

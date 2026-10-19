@@ -340,6 +340,36 @@ const RETRO_BRAKE_FULL_MPS = 240 / 3.6;
 const RETRO_BRAKE_FORCE_N = 80000;
 const RETRO_BRAKE_BURN_PER_SECOND = 0.55;
 
+const STANDARD_EV_MAX_MPS = 200 / 3.6;
+const STANDARD_EV_OVERSPEED_COAST_FACTOR = 1.3;
+
+function getGroundCoastSpeed(speedMps, dt, isStandardEVMode) {
+  let magnitude = Math.abs(speedMps);
+  if (magnitude <= 0.1) return 0;
+  let remainingDt = dt;
+  // Keep the existing aero + rolling resistance curve. Normal EV overrun is
+  // only 30% stronger; changing the powered speed limit cannot erase momentum.
+  if (isStandardEVMode && magnitude > STANDARD_EV_MAX_MPS) {
+    const overspeedDecel = (0.00012 * magnitude * magnitude + 0.35) * STANDARD_EV_OVERSPEED_COAST_FACTOR;
+    const aboveLimitDt = Math.min(remainingDt, (magnitude - STANDARD_EV_MAX_MPS) / overspeedDecel);
+    magnitude = Math.max(STANDARD_EV_MAX_MPS, magnitude - overspeedDecel * aboveLimitDt);
+    remainingDt -= aboveLimitDt;
+  }
+  // Split a threshold-crossing frame so the remainder uses ordinary coasting.
+  // This never snaps to 200, nor carries the 1.3 multiplier below the threshold.
+  magnitude = Math.max(0, magnitude - (0.00012 * magnitude * magnitude + 0.35) * remainingDt);
+  return Math.sign(speedMps) * magnitude;
+}
+
+function accelerateGroundSpeed(speedMps, acceleration, speedLimit, dt, isStandardEVMode) {
+  if (isStandardEVMode && speedMps > speedLimit) {
+    // W still caps electric propulsion, while excess jet momentum coasts away.
+    // Once it reaches the drive ceiling, W can maintain that speed normally.
+    return Math.max(speedLimit, getGroundCoastSpeed(speedMps, dt, true));
+  }
+  return Math.min(speedLimit, speedMps + acceleration * dt);
+}
+
 function getRetroBrakeDemand(speedMps, isAirborne) {
   const blend = Math.max(0, Math.min(1,
     (speedMps - RETRO_BRAKE_START_MPS) / (RETRO_BRAKE_FULL_MPS - RETRO_BRAKE_START_MPS)));
@@ -538,8 +568,8 @@ function updateSimulation(dt) {
       state.airMaxSpeed = 52.0;
       currentAirAccel = 24.0;
     } else {
-      // Standard EV mode: 0-100 km/h 1.9s pure electric drive, capped at 200 km/h (= 55.56 m/s)
-      state.maxSpeed = 200.0 / 3.6;
+      // Standard EV propulsion reaches 200 km/h; existing boosted momentum coasts down.
+      state.maxSpeed = STANDARD_EV_MAX_MPS;
       currentGroundAccel = 16.5;
       state.airMaxSpeed = 31.5;
       currentAirAccel = 9.5;
@@ -557,6 +587,7 @@ function updateSimulation(dt) {
     currentLiftAccel = 48.0 * 1.3;
     currentMaxClimbVy = 36.0 * 1.3;
   }
+  const isStandardEVMode = isRealMode && !state.insaneMode && state.maxSpeed === STANDARD_EV_MAX_MPS;
 
   // Requirement 1 & 2:
   // • When throttle (W or ;) and foot brake (H) / reverse (S) are pressed simultaneously, execute throttle and ignore foot brake/reverse.
@@ -708,7 +739,7 @@ function updateSimulation(dt) {
         if (state.speed < -0.5) {
           state.speed = Math.min(0.0, state.speed + 38.0 * dt);
         } else {
-          state.speed = Math.min(state.maxSpeed, state.speed + effAccel * dt);
+          state.speed = accelerateGroundSpeed(state.speed, effAccel, state.maxSpeed, dt, isStandardEVMode);
         }
       } else if (isFootBraking) {
         if (state.speed > 0.1) {
@@ -729,18 +760,8 @@ function updateSimulation(dt) {
           state.speed = Math.max(-15.0, state.speed - 16.0 * dt);
         }
       } else if (!isHandbraking) {
-        // Gentle coasting resistance (releasing handbrake immediately stops handbrake deceleration)
-        const cdEff = isAirBrakingActive ? 0.65 : 0.34;
-        const aeroDecel = 0.00012 * (cdEff / 0.34) * (state.speed * state.speed);
-        const rollDecel = 0.35;
-        const coastDecel = (aeroDecel + rollDecel) * (state.speed >= 0 ? 1 : -1);
-        if (state.speed > 0.1) {
-          state.speed = Math.max(0.0, state.speed - coastDecel * dt);
-        } else if (state.speed < -0.1) {
-          state.speed = Math.min(0.0, state.speed - coastDecel * dt);
-        } else {
-          state.speed = 0.0;
-        }
+        // Gentle coasting, including a continuous 30%-stronger normal EV overrun.
+        state.speed = getGroundCoastSpeed(state.speed, dt, isStandardEVMode);
       }
 
       const speedFactor = THREE.MathUtils.clamp(Math.abs(state.speed) / 14.0, 0.0, 1.25);
@@ -838,10 +859,10 @@ function updateSimulation(dt) {
         state.driftAngle += (targetSlip - state.driftAngle) * 7.5 * dt;
 
         if (isRearThrusterFiring) {
-          signedSpd = Math.min(state.maxSpeed, signedSpd + (isRealMode ? 38.0 : 120.0) * dt);
+          signedSpd = accelerateGroundSpeed(signedSpd, isRealMode ? 38.0 : 120.0, state.maxSpeed, dt, isStandardEVMode);
           state.driftAngle *= Math.pow(0.15, dt);
         } else if (isAccelerating) {
-          signedSpd = Math.min(state.maxSpeed * 0.94, signedSpd + currentGroundAccel * 0.85 * dt);
+          signedSpd = accelerateGroundSpeed(signedSpd, currentGroundAccel * 0.85, state.maxSpeed * 0.94, dt, isStandardEVMode);
         } else if (isFootBraking) {
           signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * dt);
         } else {
@@ -886,13 +907,13 @@ function updateSimulation(dt) {
         const newRightZ = -Math.sin(state.yaw);
 
         if (isRearThrusterFiring) {
-          vForward = Math.min(state.maxSpeed, vForward + (isRealMode ? 38.0 : 120.0) * dt);
+          vForward = accelerateGroundSpeed(vForward, isRealMode ? 38.0 : 120.0, state.maxSpeed, dt, isStandardEVMode);
           vLateral *= Math.pow(0.002, dt);
         } else if (isAccelerating) {
           if (vForward < -0.5) {
             vForward = Math.min(0.0, vForward + 38.0 * dt);
           } else {
-            vForward = Math.min(state.maxSpeed, vForward + currentGroundAccel * dt);
+            vForward = accelerateGroundSpeed(vForward, currentGroundAccel, state.maxSpeed, dt, isStandardEVMode);
           }
           vLateral *= Math.pow(0.004, dt);
         } else if (isFootBraking) {
@@ -914,18 +935,8 @@ function updateSimulation(dt) {
           }
           vLateral *= Math.pow(0.004, dt);
         } else {
-          // Gentle coasting resistance in open-world city
-          const cdEff = isAirBrakingActive ? 0.65 : 0.34;
-          const aeroDecel = 0.00012 * (cdEff / 0.34) * (vForward * vForward);
-          const rollDecel = 0.35;
-          const coastDecel = (aeroDecel + rollDecel) * (vForward >= 0 ? 1 : -1);
-          if (vForward > 0.1) {
-            vForward = Math.max(0.0, vForward - coastDecel * dt);
-          } else if (vForward < -0.1) {
-            vForward = Math.min(0.0, vForward - coastDecel * dt);
-          } else {
-            vForward = 0.0;
-          }
+          // Match the highway's continuous normal EV overspeed coasting.
+          vForward = getGroundCoastSpeed(vForward, dt, isStandardEVMode);
           const wetFriction = (weatherIndex === 1 ? 0.65 : 0.004);
           vLateral *= Math.pow(wetFriction, dt);
         }

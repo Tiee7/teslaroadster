@@ -35,7 +35,7 @@ tesla_roadster_simulator_package/
 
 ### 2. 物理引擎真实化与动力学重构 (Physics Engine Rationalization)
 - **常规物理 vs 幻想模式双轨动力学**：
-  - *常规物理模式 (Realistic)*：地面遵循 0-100 km/h 1.9s 实测电驱特性，极速 200 km/h；按下 `;` 键或开启狂暴模式 (Plaid) 解锁 370 km/h 超音速音障（38 m/s² 强悍推力）。空中限速并受空气动力阻力与重力影响。
+  - *常规物理模式 (Realistic)*：地面遵循 0-100 km/h 1.9s 实测电驱特性，电驱极速 200 km/h；按下 `;` 键或开启狂暴模式 (Plaid) 解锁 370 km/h 超音速音障（38 m/s² 强悍推力）。普通模式松开喷气后保留超过 200 km/h 的余速，按自然滑行阻力的 1.3 倍连续缓慢回落；空中限速并受空气动力阻力与重力影响。
   - *幻想极速模式 (Fantasy)*：超频推力上限达 576+ km/h，全功率无限制高空自由翱翔。
 - **真实 10 秒 600L COPV 气瓶压力衰减**：
   - `0.0s ~ 8.0s`：全功率冷气推力爆发。
@@ -154,6 +154,12 @@ HUD 的中等档保留两侧面板、相机入口、语言/设置/排行榜入�
 撞毁弹窗显示与右侧遥测一致的驾驶总分；已开启城市接客时另显示扣分后的独立接客积分，保留排行榜状态。弹窗在小屏可滚动，修复/换地图按钮可达。
 
 ## High-speed retro braking / 高速逆喷制动
+
+### Continuous normal-mode boost release / 普通模式喷气余速连续回落
+
+The 200 km/h normal EV ceiling limits electric propulsion, rather than instantly clipping existing jet-boosted speed. On both highway and city ground paths, releasing the rear jet above 200 km/h preserves momentum even with W held. Passive deceleration uses the existing aero-plus-roll resistance curve, multiplied by exactly 1.3 above 200; a crossing frame uses ordinary resistance for its below-200 remainder. With W released, the car coasts continuously through 200. With W held, excess speed coasts down to the electric ceiling and W then maintains it. Normal below-200 coast, handbrake tire scrub, active H/S retro braking, Plaid/Fantasy limits and airborne drag retain their established behavior. W plus handbrake also preserves existing overspeed instead of snapping to its lower drift-drive limit.
+
+Regression checks execute production movement/altitude code for 250/300 km/h jet-release transitions with and without W, zero and variable frame time, 30/60/144 Hz, exact 1.3× resistance, 200 km/h crossings, empty tanks, H/S throttle overlap and handbrake overlap. These deterministic checks do not constitute real WebGL playtesting.
 
 H foot braking automatically adds cold-gas retro thrust above 200 km/h on both maps. The demand feathers smoothly from zero at 200 to full thrust at 240 km/h, and tapers back to normal braking below the threshold. S also shares this high-speed assist while keeping its reverse-drive function; airborne H/S retain the existing low-speed manual retro control. Keyboard and touch buttons use the same controls. The established W/semicolon throttle priority remains: release the accelerator to engage H/S braking. U continues to be the momentum-preserving handbrake.
 
