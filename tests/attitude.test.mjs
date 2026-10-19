@@ -339,7 +339,7 @@ test('air braking and Q/E strafe remain responsive in either travel direction wi
       for (const direction of [1, -1]) {
         const h = harness({ pitch: Math.PI, vz: direction * 20, speed: 20 }, map);
         h.keys[code] = true; h.move(1 / 60);
-        const passiveSpeed = 20 * Math.pow(0.45, 1 / 60) - (15.5 + 0.0085 * 20 * 20) / 60;
+        const passiveSpeed = 20 / (1 + 0.00012 * 20 / 60);
         close(h.state.vz, direction * (passiveSpeed - (80000 / (1850 + 144)) / 60));
         close(h.state.speed, Math.abs(h.state.vz));
       }

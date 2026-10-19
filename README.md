@@ -35,13 +35,13 @@ tesla_roadster_simulator_package/
 
 ### 2. 物理引擎真实化与动力学重构 (Physics Engine Rationalization)
 - **常规物理 vs 幻想模式双轨动力学**：
-  - *常规物理模式 (Realistic)*：地面遵循 0-100 km/h 1.9s 实测电驱特性，电驱极速 200 km/h；按下 `;` 键或开启狂暴模式 (Plaid) 解锁 370 km/h 超音速音障（38 m/s² 强悍推力）。普通模式松开喷气后保留超过 200 km/h 的余速，按自然滑行阻力的 1.3 倍连续缓慢回落；空中限速并受空气动力阻力与重力影响。
+  - *常规物理模式 (Realistic)*：地面遵循 0-100 km/h 1.9s 实测电驱特性，电驱极速 200 km/h；按下 `;` 键或开启狂暴模式 (Plaid) 解锁 370 km/h 超音速音障（38 m/s² 强悍推力）。普通模式松开喷气后保留超过 200 km/h 的余速，按自然滑行阻力的 1.3 倍连续缓慢回落；空中推进器只限制新增推力，不截断起跳或喷气前的惯性速度，并受空气动力阻力与重力影响。
   - *幻想极速模式 (Fantasy)*：超频推力上限达 576+ km/h，全功率无限制高空自由翱翔。
 - **真实 10 秒 600L COPV 气瓶压力衰减**：
   - `0.0s ~ 8.0s`：全功率冷气推力爆发。
   - `第 8.0 秒 (剩余 20% / 2.0s)`：气压跌落至浮空阈值以下，强制触发自动下降 (Auto-Descent)。
   - `第 10.0 秒 (0% 耗尽)`：推进器彻底断气，车辆立即进入重力自由落体。
-- **真实自由落体下坠力学 (重构修复)**：将断气自由落体下坠加速度提升至物理标准的 $24.5\,\text{m/s}^2$（与横向场景光流渲染倍率严格对齐），终端下坠速度可达 $-65.0\,\text{m/s}$（约 $234\,\text{km/h}$），赋予断气瞬间真实的下坠初速度。
+- **地球重力自由落体**：无升力喷气时按 $9.81\,\text{m/s}^2$ 计算垂直重力，保留松开喷气或耗尽气瓶瞬间的升降速度；不再注入下坠速度、不再套用横向光流倍率或人为终端速度。垂直位移使用解析积分，不随帧率变化。未引入未经测量的垂直空气阻力模型。
 - **连续 360° 俯仰与延迟自动回正**：空中长按 I/K 或上下键可连续向前、向后翻滚；触控也有独立 Pitch/Roll 按钮。玩家进行姿态操作时不介入回正，松开所有姿态控制满 2 秒后平滑回正；再次操作会重新计时。采用最短等效角度回正，避免翻越 180° 或完成一圈后反向绕圈；近地仍保留触地姿态保护。
 - **手刹动量守恒漂移 (U 键)**：拉起手刹切断后轮横向抓地力，车辆沿航向角与滑移角平滑甩尾，松开手刹瞬时将总速度无缝导回前进动力，彻底根除减速死停。
 - **触地防坠毁自动制动 (Hoverslam Save)**：近地高速坠落时在极限刹车高度自动喷气点火减速并回正姿态，防止坠毁。
@@ -151,7 +151,7 @@ HUD 的中等档保留两侧面板、相机入口、语言/设置/排行榜入�
 
 车内仪表重排为速度、清晰横向剩余气量槽（20% 警戒线、秒数、升数、质量）及接客信息。实体屏和转向舵盘位置微调，适配竖屏宽度，防止仪表被视场边缘、仪表台或转动舵盘遮挡。移除中央后视镜及支架；外部侧镜保持原状。
 
-撞毁弹窗显示与右侧遥测一致的驾驶总分；已开启城市接客时另显示扣分后的独立接客积分，保留排行榜状态。弹窗在小屏可滚动，修复/换地图按钮可达。
+每次真正撞毁后，本局驾驶积分（含清车分）和接客积分立即清零，撞毁弹窗、右侧遥测与座舱同步显示 0；已提交的历史排行榜成绩保留，正在进行的 60 秒挑战立即取消且不提交。轻微非致毁碰撞不清零；手动重置载客车辆仍按原规则扣除双倍该趟奖励。弹窗在小屏可滚动，修复/换地图按钮可达。
 
 ## High-speed retro braking / 高速逆喷制动
 
@@ -192,3 +192,20 @@ The shared traffic-car body now has exact front/rear silhouette caps with separa
 ## Compact exterior air gauge / 简洁车外空气槽
 
 The exterior gauge is labeled “空气槽” / “AIR TANK” and shows only the remaining seconds beside the live air bar. It omits the total-time denominator, capacity suffix and entire used-jet-time row. Status, flow, the descent warning and real gas consumption/refill calculations stay unchanged. The separate in-cockpit readout is unaffected by this exterior-panel copy change.
+
+
+## Earth-gravity unpowered flight / 无喷气地球重力
+
+Altitude `state.y` is in meters and `state.vy` is in m/s. Unpowered vertical motion uses constant Earth gravity, **9.81 m/s²**, independently of remaining air, Realistic/Fantasy mode, attitude, and the horizontal optical-flow multiplier. Release and depletion retain the current vertical velocity. From rest, the ideal ballistic reference is 4.905 / 19.620 / 44.145 meters fallen and 9.81 / 19.62 / 29.43 m/s downward after 1 / 2 / 3 seconds. Existing lift, hover, jump, active descent, retro braking, horizontal drag, landing assistance, damage and refill controls remain separate.
+
+This is a near-Earth, ideal ballistic vertical model; the package has no measured vertical drag area, so there is no claimed measured terminal speed or invented vertical drag coefficient. Analytic position integration avoids FPS-dependent falling distances, and crossing a road or supporting rooftop retains contact-time impact velocity for the existing landing/damage rules instead of integrating through the surface. Test with `node --test tests/freefall.test.mjs`, then run the full checks above.
+
+
+## Inertial jump and flight / 起跳与空中惯性
+
+The O jump retains the complete pre-launch horizontal velocity vector on both maps, including backward travel and drifting. Its vertical impulse immediately switches horizontal motion out of tire-grip control. Unpowered air coasting uses the existing ground aerodynamic term, `dv/dt = -0.00012 v²`, without rolling resistance or an artificial stall brake. The exact drag solution preserves direction and produces matching speeds at different frame rates; merely pitching/yawing/banking an unpowered vehicle does not turn its travel vector. Powered rear-jet limits constrain the additional impulse instead of clipping existing momentum. City ground and air movement both use the existing `WORLD_SPEED_SCALE = 1.65`, eliminating the takeoff-only optical-flow slowdown. Mechanical/retro braking and actual lateral RCS remain available.
+
+
+## Crash score forfeiture / 撞毁积分清零
+
+Any actual vehicle destruction on either map resets current driving points, vehicle-clearance score counters and active passenger points to zero immediately. Crash-blast effects and later callbacks cannot award fresh points to a destroyed car. The crash summary, side HUD and cockpit refresh synchronously. Passenger loss is processed once; repairing after a crash starts from zero. Nonfatal collisions do not clear points, and manual resets retain the separate existing occupied-passenger penalty. Ranked crash cancellation still ends the current server run without publishing it; already submitted historical leaderboard records are untouched.

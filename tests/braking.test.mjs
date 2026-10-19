@@ -389,7 +389,7 @@ test('complete airborne control retains passive drag when empty and finite gravi
       h.keys.KeyH = true;
       const step = h.frame(1 / 60);
       assert.ok(h.state.speed < 160, 'empty tank cannot remove aerodynamic braking');
-      assert.ok(h.state.vy >= -24.5 / 60 - 1e-9, 'retro depletion adds no arbitrary downward impulse');
+      close(h.state.vy, -9.81 / 60, 1e-9, 'retro depletion transitions directly to Earth gravity');
       assert.ok(Number.isFinite(h.state.speed) && Number.isFinite(h.state.vy));
       assert.ok(h.state.airRemaining >= 0);
       close(airRemaining - h.state.airRemaining, step.airConsumedThisFrame);
@@ -519,7 +519,7 @@ test('boost release while W and handbrake are held cannot snap existing overspee
   }
 });
 
-test('Plaid, Fantasy, normal EV acceleration and airborne passive drag keep their established behavior', () => {
+test('Plaid, Fantasy and normal EV acceleration stay unchanged; air coasts with aerodynamic drag', () => {
   for (const map of ['highway', 'city']) {
     for (const mode of [{ physicsMode: 'realistic', insaneMode: true }, { physicsMode: 'fantasy' }]) {
       const h = moving(250 / 3.6, map, mode);
@@ -538,6 +538,6 @@ test('Plaid, Fantasy, normal EV acceleration and airborne passive drag keep thei
     const air = moving(300 / 3.6, map, { y: 100, physicsMode: 'realistic' });
     const before = air.state.speed, dt = 1 / 60;
     air.move(dt);
-    close(air.state.speed, before * Math.pow(0.45, dt) - (15.5 + 0.0085 * before ** 2) * dt);
+    close(air.state.speed, before / (1 + 0.00012 * before * dt));
   }
 });

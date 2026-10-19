@@ -362,9 +362,12 @@ test('bottom-right HUD renders only the original passenger score through deliver
   }
   const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); check();
   h.state.isDestroyed = true; h.taxi.onDestroyed();
-  expected = Math.max(0, expected - trip.fare * 2); assert.ok(expected > 0); check();
+  expected = 0; check();
   for (let i = 0; i < 3; i++) { h.taxi.onDestroyed(); h.taxi.tick(); check(); }
   Object.assign(h.state, origin, { isDestroyed: false }); h.taxi.onReset(); check();
+  for (let i = 0; i < 6; i++) {
+    const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination); expected += trip.fare; check();
+  }
   while (expected > 0) {
     const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup); check();
     h.taxi.onReset(); expected = Math.max(0, expected - next.fare * 2); check();
@@ -434,7 +437,7 @@ test('integration has no discoverable entry, retains zoom brackets and keeps tax
   assert.match(ranked, /normalizing = true;\s*window\.RoadsterTaxi\?\.stop\(\);\s*resetCar\(\)/);
   assert.doesNotMatch(source, /state\.score\s*[+\-*/]?=|\/api\/|fetch\(/);
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
-  assert.match(physics, /state\.isDestroyed = true;\s*window\.RoadsterTaxi\?\.onDestroyed\(\)/);
+  assert.match(physics, /state\.isDestroyed = true;\s*state\.score = 0;\s*state\.carsCleared = 0;\s*state\.blastedCarsCount = 0;\s*window\.RoadsterTaxi\?\.onDestroyed\(\)/);
   assert.match(physics, /updateSimulation\(dt\);\s*window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*renderer\.render/);
   const bundler = readFileSync(new URL('../bundle_app.py', import.meta.url), 'utf8');
   assert.match(bundler, /'vehicles\.js', 'taxi\.js', 'ui-hud\.js'/);
@@ -471,29 +474,50 @@ test('landing and low altitude flight never sweep a pickup or destination', () =
   h.state.wasAirborne = false; h.move(next.pickup); assert.equal(h.taxi.snapshot().passenger.id, next.id);
 });
 
-test('passenger death charges exactly double fare once, including crash-to-reset and zero floor', () => {
+test('crashes clear passenger points once while manual occupied resets retain double-fare penalties', () => {
   const h = harness(); h.key();
-  for (let i = 0; i < 10; i++) {
-    const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination);
-  }
+  const earn = count => {
+    for (let i = 0; i < count; i++) {
+      const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination);
+    }
+  };
+  earn(10);
   const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
   const before = h.taxi.snapshot();
   h.state.hullIntegrity = 80; h.taxi.tick();
   assert.equal(h.taxi.snapshot().passenger.id, trip.id, 'surviving damage keeps the passenger');
+  assert.equal(h.taxi.snapshot().score, before.score);
   h.state.isDestroyed = true; h.taxi.onDestroyed();
-  assert.equal(h.taxi.snapshot().score, before.score - trip.fare * 2);
-  assert.ok(h.taxi.snapshot().score > 0); assert.equal(h.taxi.snapshot().delivered, before.delivered);
+  assert.equal(h.taxi.snapshot().score, 0);
+  assert.equal(h.taxi.snapshot().delivered, before.delivered);
   assert.equal(h.taxi.snapshot().passenger, null);
   assert.equal(h.group.children[0].children.filter(marker => marker.visible).length, 5);
   for (let i = 0; i < 10; i++) { h.taxi.onDestroyed(); h.taxi.tick(); }
   Object.assign(h.state, origin, { isDestroyed: false }); h.taxi.onReset(); h.taxi.onReset();
-  assert.equal(h.taxi.snapshot().score, before.score - trip.fare * 2, 'repair after crash cannot charge twice');
-  const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup); h.taxi.onReset();
-  const expected = Math.max(0, before.score - trip.fare * 2 - next.fare * 2);
+  assert.equal(h.taxi.snapshot().score, 0, 'repair after crash cannot restore points');
+  earn(10);
+  const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup);
+  const expected = Math.max(0, h.taxi.snapshot().score - next.fare * 2);
+  assert.ok(expected > 0);
+  h.taxi.onReset();
   assert.equal(h.taxi.snapshot().score, expected); h.taxi.onReset(); assert.equal(h.taxi.snapshot().score, expected);
   const session = makeSession(); session.start(origin); const first = session.snapshot().waiting[0]; at(session, first.pickup);
   assert.equal(session.losePassenger(first.pickup).deducted, 0); assert.equal(session.snapshot().score, 0);
   assert.equal(session.losePassenger(first.pickup), null);
+});
+
+test('empty-car destruction clears accrued passenger points and refreshes HUD and cockpit immediately', () => {
+  const h = harness(); h.key();
+  const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination);
+  assert.equal(h.taxi.snapshot().score, trip.fare);
+  const hud = h.elements['hud-footer'].children.at(-1);
+  h.state.isDestroyed = true; h.taxi.onDestroyed();
+  assert.equal(h.taxi.snapshot().score, 0); assert.equal(hud.children[0].textContent, '0');
+  const draws = [];
+  h.taxi.drawCockpit({ save() {}, restore() {}, fillRect() {}, fillText: text => draws.push(text) });
+  assert.match(draws[0], /^0 PTS/);
+  for (let i = 0; i < 3; i++) { h.taxi.onDestroyed(); h.taxi.tick(); }
+  assert.equal(h.taxi.snapshot().score, 0);
 });
 
 test('bottom-right passenger HUD participates in footer bounds and releases its active layout', () => {

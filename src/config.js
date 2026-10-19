@@ -361,6 +361,9 @@ const MAX_FLIGHT_ALTITUDE = 380.0;
 const CITY_ROAD_COORDS = [-900, -600, -300, 0, 300, 600, 900];
 const CITY_ROAD_WIDTH = 32;
 const WORLD_SPEED_SCALE = 1.65; // Calibrates 3D venue traversal speed to match speedometer optical flow
+// Vertical coordinates are meters and vertical velocity is m/s. The horizontal
+// optical-flow multiplier must never multiply gravity or the altitude display.
+const EARTH_GRAVITY_MPS2 = 9.81;
 
 const MAX_AIR_SECONDS = 10.0;
 const AUTO_DESCENT_USED_SECONDS = 8.0;

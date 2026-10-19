@@ -178,7 +178,7 @@ function applyExplosionBlastToTraffic(bx, by, bz, blastRadius, blastStrength) {
       affected++;
     }
   });
-  if (affected > 0) {
+  if (affected > 0 && !state.isDestroyed) {
     state.blastedCarsCount += affected;
     state.carsCleared += affected;
     state.score += affected * 150;
@@ -270,6 +270,9 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
 function destroyVehicle(reasonKey) {
   if (state.isDestroyed) return;
   state.isDestroyed = true;
+  state.score = 0;
+  state.carsCleared = 0;
+  state.blastedCarsCount = 0;
   window.RoadsterTaxi?.onDestroyed();
   window.RoadsterRanked?.abort('crash');
   state.hullIntegrity = 0;
@@ -290,6 +293,13 @@ function destroyVehicle(reasonKey) {
 }
 
 function updateDestroyedScores() {
+  // Crash effects and a collision callback may finish after destruction. They
+  // must never leave points on the current car or in its visible summary.
+  if (state.isDestroyed) {
+    state.score = 0;
+    state.carsCleared = 0;
+    state.blastedCarsCount = 0;
+  }
   const t = I18N[currentLang];
   // The summary is aria-live: unchanged frames must not announce it again.
   const put = (id, value) => {
@@ -304,6 +314,15 @@ function updateDestroyedScores() {
   if (passengerRow.hidden !== !passenger?.active) passengerRow.hidden = !passenger?.active;
   put('crash-lbl-passenger-score', t.crashLblPassengerScore);
   put('crash-val-passenger-score', passenger?.active ? passenger.score : 0);
+  if (state.isDestroyed) {
+    put('val-score', 0);
+    put('val-passed', 0);
+    // Fatal collision paths can return before the normal instrument refresh.
+    if (typeof updateCockpitHudScreen === 'function') {
+      const speed = state.wasAirborne ? Math.hypot(state.speed, state.vy * 0.45) : Math.abs(state.speed);
+      updateCockpitHudScreen(Math.round(speed * 2.23694), Math.round(speed * 3.6), false, false, false, false, false);
+    }
+  }
 }
 
 function updateDestroyedModalText() {
@@ -342,6 +361,24 @@ const RETRO_BRAKE_BURN_PER_SECOND = 0.55;
 
 const STANDARD_EV_MAX_MPS = 200 / 3.6;
 const STANDARD_EV_OVERSPEED_COAST_FACTOR = 1.3;
+const PASSIVE_AERO_DRAG_PER_METER = 0.00012;
+
+function getAirCoastSpeed(speedMps, dt) {
+  // Keep the existing ground aerodynamic curve, without tire rolling drag.
+  // Exact solution of dv/dt = -k*v²: no stall brake and no render-FPS bias.
+  return speedMps / (1 + PASSIVE_AERO_DRAG_PER_METER * speedMps * dt);
+}
+
+function addAirThrust(vx, vz, impulseX, impulseZ, propulsionLimit) {
+  const impulse = Math.hypot(impulseX, impulseZ);
+  if (impulse === 0) return { vx, vz };
+  // Govern only propulsion along its actual thrust axis. Inherited orthogonal
+  // momentum remains untouched, and a turned nose can still add sideways
+  // thrust even when total travel speed exceeds this propulsion limit.
+  const alongThrust = (vx * impulseX + vz * impulseZ) / impulse;
+  const fraction = Math.min(1, Math.max(0, propulsionLimit - alongThrust) / impulse);
+  return { vx: vx + impulseX * fraction, vz: vz + impulseZ * fraction };
+}
 
 function getGroundCoastSpeed(speedMps, dt, isStandardEVMode) {
   let magnitude = Math.abs(speedMps);
@@ -377,6 +414,21 @@ function getRetroBrakeDemand(speedMps, isAirborne) {
   // Preserve the existing airborne H/S manual retro control at low speeds.
   // Feather it near rest so a stopped vehicle cannot spend fuel indefinitely.
   return isAirborne ? Math.max(highSpeedDemand, Math.min(1, speedMps)) : highSpeedDemand;
+}
+
+// Exact constant-gravity integration keeps unpowered flight independent of
+// render FPS. There is no measured vertical CdA for this fictional package, so
+// do not invent drag or a terminal-speed clamp. Existing horizontal drag stays
+// in its own movement path. Stop at the first support surface and retain the
+// velocity at contact for the existing damage/landing controller.
+function integrateFreefall(y, vy, dt, surfaceY) {
+  const nextY = y + vy * dt - 0.5 * EARTH_GRAVITY_MPS2 * dt * dt;
+  const nextVy = vy - EARTH_GRAVITY_MPS2 * dt;
+  if (y >= surfaceY && nextY <= surfaceY && nextVy <= 0) {
+    const impactSpeed = Math.sqrt(vy * vy + 2 * EARTH_GRAVITY_MPS2 * (y - surfaceY));
+    return { y: surfaceY, vy: -impactSpeed };
+  }
+  return { y: nextY, vy: nextVy };
 }
 
 function readAttitudeInput(isAirborne) {
@@ -514,13 +566,15 @@ function updateSimulation(dt) {
       }
     }
   }
-  const isAirborne = (state.y - groundElevation) > 0.15;
+  // O has already supplied vertical launch velocity, even before this frame's
+  // altitude integration. Do not run another tire-grip/drive frame on takeoff.
+  const isAirborne = (state.y - groundElevation) > 0.15 || (state.isJumping6m && state.vy > 0);
   const { rawRollInput, rawPitchInput, rawYawInput, hasManualAttitudeInput } = readAttitudeInput(isAirborne);
   const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
   // Unified COPV Air Tank Consumption Helper (Requirement 3: ALL airborne thrusters & ';' rear boost consume tank)
   let airConsumedThisFrame = 0;
-  function consumeAirTank(amount, airborneNow, depletionImpulse = true) {
+  function consumeAirTank(amount, airborneNow) {
     if (amount <= 0 || state.isFreefalling || state.airRemaining <= 0) return false;
     const airBefore = state.airRemaining;
     state.airRemaining = Math.max(0.0, state.airRemaining - amount);
@@ -532,11 +586,7 @@ function updateSimulation(dt) {
       state.isAutoDescending8s = false;
       state.isAltitudeHold = false;
       state.isJumping6m = false;
-      // Retro depletion must not inject a downward impulse into the velocity
-      // it is braking. Gravity still takes over in the altitude controller.
-      if (airborneNow && depletionImpulse) {
-        state.vy = Math.min(-12.0, state.vy - 10.0);
-      }
+      // Losing thrust changes acceleration, never the current velocity.
       showBanner('freefall', 3.5);
       sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
       airConsumedThisFrame += airBefore - state.airRemaining;
@@ -624,7 +674,7 @@ function updateSimulation(dt) {
   if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
     const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
     const airBefore = state.airRemaining;
-    consumeAirTank(Math.min(airBefore, requestedAir), isAirborne, false);
+    consumeAirTank(Math.min(airBefore, requestedAir), isAirborne);
     // The final fraction of a nearly empty tank supplies only its proportional
     // impulse, even when consumeAirTank returns false on depletion.
     retroImpulseSeconds = Math.min(requestedAir, airBefore - state.airRemaining) / RETRO_BRAKE_BURN_PER_SECOND;
@@ -673,29 +723,26 @@ function updateSimulation(dt) {
     // Preserve world-space momentum throughout flips; only thrust changes its direction.
     if (isRearThrusterFiring) {
       const boostAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
-      state.vx += noseHorizX * nosePitchCos * boostAirAccel * dt;
-      state.vz += noseHorizZ * nosePitchCos * boostAirAccel * dt;
+      const thrust = addAirThrust(state.vx, state.vz,
+        noseHorizX * nosePitchCos * boostAirAccel * dt,
+        noseHorizZ * nosePitchCos * boostAirAccel * dt, state.airMaxSpeed);
+      state.vx = thrust.vx;
+      state.vz = thrust.vz;
       const maxAirVy = currentMaxClimbVy * 1.35;
-      state.vy = Math.min(maxAirVy, state.vy + boostAirAccel * nosePitchSin * 0.55 * dt);
-      const horizMag = Math.hypot(state.vx, state.vz);
-      if (horizMag > state.airMaxSpeed) {
-        state.vx *= state.airMaxSpeed / horizMag;
-        state.vz *= state.airMaxSpeed / horizMag;
-      }
+      const verticalImpulse = boostAirAccel * nosePitchSin * 0.55 * dt;
+      state.vy += verticalImpulse > 0 ? Math.min(verticalImpulse, Math.max(0, maxAirVy - state.vy)) : verticalImpulse;
     } else {
       const horizMag = Math.hypot(state.vx, state.vz);
-      const airStallDecel = 15.5 + 0.0085 * horizMag * horizMag;
-      // Braking must retain passive air resistance. Previously H/S replaced
-      // this drag with a weaker 38 m/s² and removed all braking when empty.
-      const nextMag = Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
+      const nextMag = getAirCoastSpeed(horizMag, dt);
       const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
       state.vx *= coastScale;
       state.vz *= coastScale;
     }
 
-    // Q/E and roll drift retain their responsive lateral assist without rebuilding forward momentum.
+    // Only explicit Q/E side jets request lateral assist. Rotating the body
+    // around its thrust axis cannot erase inherited sideways momentum.
     const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
-    const targetStrafe = jetDir * 18.0 + Math.sin(state.roll) * (currentMap === 'highway' ? 12.0 : 10.0);
+    const targetStrafe = jetDir * 18.0;
     const strafeRate = currentMap === 'highway' ? (isRearThrusterFiring ? 10.0 : 6.5) : 6.0;
     const lateralSpeed = state.vx * rightHorizX + state.vz * rightHorizZ;
     const strafeChange = Math.abs(targetStrafe) > 0.001
@@ -948,7 +995,7 @@ function updateSimulation(dt) {
     }
 
     // Calibrate world traversal displacement to match venue scale (2400m city / 300m blocks)
-    const moveScale = isAirborne ? 1.35 : WORLD_SPEED_SCALE;
+    const moveScale = WORLD_SPEED_SCALE;
     state.x += state.vx * moveScale * dt;
     state.z += state.vz * moveScale * dt;
 
@@ -971,6 +1018,7 @@ function updateSimulation(dt) {
   const wantsDescend = Boolean(keys['ShiftLeft'] || keys['ShiftRight']);
   let isLiftFiring = false;
   let isDescendFiring = false;
+  let freefallStartVy = null;
 
   // Recompute surface elevation after horizontal (x, z) movement
   groundElevation = 0.0;
@@ -1013,10 +1061,11 @@ function updateSimulation(dt) {
       showBanner('autoland', 2.2);
       sound.speakAlert('autoland', 'Minimum braking altitude. Auto-landing thrusters engaged.', '已达极限安全高度，防坠毁自动喷气已启动。');
     }
-    isLiftFiring = true;
-    consumeAirTank(dt, true);
-    // Smooth upward deceleration towards soft touchdown speed (-1.5 m/s)
-    state.vy = Math.min(-1.5, state.vy + AUTO_BRAKE_ACCEL * dt);
+    isLiftFiring = consumeAirTank(dt, true);
+    // Smooth upward deceleration towards soft touchdown speed (-1.5 m/s).
+    // An exhausted tank cannot supply a final frame of free braking.
+    if (isLiftFiring) state.vy = Math.min(-1.5, state.vy + AUTO_BRAKE_ACCEL * dt);
+    else state.isAutoLandingSave = false;
 
     // Emergency braking still protects descent; attitude assist respects manual control and its grace period.
     if (stabilizerDt > 0) {
@@ -1056,7 +1105,7 @@ function updateSimulation(dt) {
         ? Math.max(0.0, (state.jumpTargetY - state.y) / Math.max(0.1, nextVy))
         : dt;
 
-      if (consumeAirTank(jumpBurnRatePerSec * stepDt, true)) {
+      if (stepDt === 0 || consumeAirTank(jumpBurnRatePerSec * stepDt, true)) {
         if (state.isAutoDescending8s) {
           state.isJumping6m = false;
           isLiftFiring = true;
@@ -1104,21 +1153,6 @@ function updateSimulation(dt) {
       } else {
         state.isAltitudeHold = false;
       }
-    } else {
-      // Requirement 2: Realistic heavy sports car Earth gravity with true aerodynamic terminal velocity
-      if (state.isFreefalling && agl > 0.01) {
-        // True physical gravitational acceleration matching world visual speed scale
-        const freefallG = 24.5;
-        const dragAcc = 0.0025 * (state.vy * state.vy);
-        state.vy -= (freefallG - dragAcc) * dt;
-        state.vy = Math.max(-65.0, state.vy); // Terminal downward velocity ~234 km/h
-      } else if (agl > 0.01) {
-        // Normal unpowered descent when hover key is not pressed
-        const normalG = 16.5;
-        const dragAcc = 0.0035 * (state.vy * state.vy);
-        state.vy -= (normalG - dragAcc) * dt;
-        state.vy = Math.max(-42.0, state.vy);
-      }
     }
 
     if (wantsDescend && agl > 0.02) {
@@ -1129,15 +1163,28 @@ function updateSimulation(dt) {
     }
   }
 
+  // Tank contents and physics mode do not change Earth gravity. This also
+  // runs if a lift/hold/jump/save request depleted its tank in this frame.
+  if (!isLiftFiring && (agl > 0 || state.vy > 0)) {
+    freefallStartVy = state.vy;
+    state.vy -= EARTH_GRAVITY_MPS2 * dt;
+  }
+
   const prevY = state.y;
+  if (freefallStartVy !== null && !isDescendFiring) {
+    const next = integrateFreefall(state.y, freefallStartVy, dt, groundElevation);
+    state.y = next.y;
+    state.vy = next.vy;
+  } else {
+    state.y += state.vy * dt;
+  }
   const prevVy = state.vy;
-  state.y += state.vy * dt;
   if (state.y > MAX_FLIGHT_ALTITUDE) {
     state.y = MAX_FLIGHT_ALTITUDE;
     state.vy = Math.min(0, state.vy);
   }
 
-  if (state.y <= 0.0) {
+  if (state.y <= 0.0 && state.vy <= 0) {
     state.y = 0.0;
     const downImpactSpeed = -prevVy;
     if (downImpactSpeed > 0.8) {
@@ -1260,7 +1307,7 @@ function updateSimulation(dt) {
     state.accumulatedRoll += Math.abs(state.vRoll * dt);
     if (state.accumulatedRoll >= Math.PI * 1.85) {
       state.accumulatedRoll = 0;
-      state.score += 500;
+      if (!state.isDestroyed) state.score += 500;
       showBanner('stunt', 2.2);
       sound.beep(880, 0.18);
     }
@@ -1273,7 +1320,7 @@ function updateSimulation(dt) {
         if (state.y > b.height + 0.08) {
           // Flying freely in the air above the building roof — do NOT teleport or snap down!
           continue;
-        } else if (prevY >= b.height - 0.55 && state.y <= b.height + 0.08 && state.vy <= 0) {
+        } else if (prevY >= b.height - 0.55 && state.y <= b.height && state.vy <= 0) {
           // Actually touching down onto or resting on the building roof
           const downImpactSpeed = -prevVy;
           if (downImpactSpeed > 0.8) {
@@ -1307,7 +1354,7 @@ function updateSimulation(dt) {
           }
           if (b.isHelipad && !state.hasTriggeredHelipad) {
             state.hasTriggeredHelipad = true;
-            state.score += 300;
+            if (!state.isDestroyed) state.score += 300;
             showBanner('helipad', 2.8);
             sound.speakAlert('helipad', 'Helipad touchdown. Release thrusters to recharge the tank.', '停机坪降落成功，松开喷气后补充高压气瓶。');
           }
@@ -1532,8 +1579,10 @@ function updateSimulation(dt) {
         car.mesh.rotation.x = 0;
         car.mesh.rotation.y = 0;
         car.mesh.rotation.z = 0;
-        state.carsCleared += 1;
-        state.score += state.y > 1.5 ? 25 : 10;
+        if (!state.isDestroyed) {
+          state.carsCleared += 1;
+          state.score += state.y > 1.5 ? 25 : 10;
+        }
       } else if (car.mesh.position.z < -480) {
         car.mesh.position.z = 55;
       }
@@ -1720,7 +1769,7 @@ function updateSimulation(dt) {
     // Trigger Supersonic Sonic Boom & Mach Vapor Cone when crossing 230 MPH!
   if (isSupersonic && !state.wasSupersonic) {
     state.wasSupersonic = true;
-    state.score += 400;
+    if (!state.isDestroyed) state.score += 400;
     state.cameraShake = Math.max(state.cameraShake, 0.38);
     sound.playSonicBoom();
     sound.speakAlert('sonicboom', 'Supersonic velocity reached. Mach shock cone active.', '已突破超音速音障，激波云环已激活。');

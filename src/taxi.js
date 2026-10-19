@@ -133,6 +133,14 @@ const CityTaxiModel = (() => {
       pause(position); refill(validPosition(position) ? position : trip.pickup);
       return { type: 'passenger-lost', trip, penalty, deducted: before - score, reason };
     }
+    function destroy(position) {
+      if (!active) return null;
+      const event = losePassenger(position, 'destroyed');
+      // A crash forfeits the entire current session score, even in an empty car.
+      // Do this after passenger loss so its ordinary penalty cannot leave points.
+      score = 0; pause(position);
+      return event;
+    }
     function reset(position) {
       if (!active || !validPosition(position)) return null;
       const event = losePassenger(position, 'reset');
@@ -157,7 +165,7 @@ const CityTaxiModel = (() => {
       return { type: 'picked-up', trip: passenger };
     }
     const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered });
-    return { start, stop, reset, pause, advance, losePassenger, snapshot };
+    return { start, stop, reset, destroy, pause, advance, losePassenger, snapshot };
   }
   return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, PICKUP_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
     MIN_ROUTE_METERS, MAX_ROUTE_METERS, MIN_DIRECT_METERS, PICKUP_SPACING_METERS,
@@ -295,8 +303,11 @@ const CityTaxiModel = (() => {
       ? (isZh() ? `载客中 · 绿色目的地 ${remaining} 米 · 送达 +${data.passenger.fare}`
         : `ON BOARD · ${remaining}m · +${data.passenger.fare}`)
       : lastEvent?.type === 'passenger-lost'
-        ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 白柱等待 ${data.waiting.length} 位`
-          : `PASSENGER LOST · -${lastEvent.penalty} · ${data.waiting.length} WAITING`)
+        ? (lastEvent.reason === 'destroyed'
+          ? (isZh() ? `乘客遇难 · 积分清零 · 白柱等待 ${data.waiting.length} 位`
+            : `PASSENGER LOST · SCORE RESET · ${data.waiting.length} WAITING`)
+          : (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 白柱等待 ${data.waiting.length} 位`
+            : `PASSENGER LOST · -${lastEvent.penalty} · ${data.waiting.length} WAITING`))
         : (isZh() ? `空车 · ${data.waiting.length} 位乘客等待 · 前往白色光柱`
           : `EMPTY · ${data.waiting.length} WAITING`);
     ctx.fillStyle = '#dcfce7'; ctx.fillText(detail, 22, 194, 468);
@@ -337,9 +348,9 @@ const CityTaxiModel = (() => {
   }
   function onDestroyed() {
     if (!snapshot().active) return;
-    const event = session.losePassenger(position(), 'destroyed');
-    if (event) { lastEvent = event; syncMarkers(); render(); }
-    session.pause(position());
+    const event = session.destroy(position());
+    if (event) lastEvent = event;
+    syncMarkers(); render();
   }
   function handleKeydown(event) {
     const equals = (event.code === 'Equal' || event.code === 'NumpadEqual' || event.key === '=') &&
@@ -350,8 +361,8 @@ const CityTaxiModel = (() => {
     if (event.repeat || currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || snapshot().active) return true;
     clearAllInputKeys();
     const approved = window.confirm(isZh()
-      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n载客时撞毁或重置将失去乘客，并扣除该趟奖励的双倍积分，最低为 0。接客积分独立计算，不计入排行榜。`
-      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nDestroying or resetting the occupied car loses the passenger and deducts twice that fare, with a minimum score of zero. Passenger points are separate from the leaderboard.`);
+      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n每次撞毁后驾驶积分和接客积分清零，车内乘客遇难。载客时手动重置将失去乘客，并扣除该趟奖励的双倍积分，最低为 0。接客积分独立计算，不计入排行榜。`
+      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nEvery crash clears all current driving and passenger points and loses any passenger on board. Manually resetting an occupied car loses the passenger and deducts twice that fare, with a minimum score of zero. Passenger points are separate from the leaderboard.`);
     // A native confirmation may be open for minutes. Never replay held controls or elapsed time.
     clearAllInputKeys(); lastTime = performance.now();
     if (approved && currentMap === 'city' && !state.isDestroyed && !blockedByUi()) start();
