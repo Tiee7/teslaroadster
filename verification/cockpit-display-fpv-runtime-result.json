@@ -1,0 +1,193 @@
+{
+  "generatedAt": "2026-10-19T11:36:57.577Z",
+  "runtimeRevision": "128",
+  "sources": {
+    "vehicles.js": "ab7b722e05b9502570ad55be08434ce4b4bce69c5525859760c15131dd2dd7e8",
+    "reference-exterior.js": "4c73e373d22161d17aba0ed74c42cd0ee2f1f32c4afd41e277ad754b735ee4b6",
+    "reference-cockpit.js": "98bceb8683a2a39e2b68bc39539081c1c9359199117b7228a6cc9b2b6610a744",
+    "reference-traffic.js": "12b9bf36c778c4dc2ec04e0a86fc70fd02d457f89f61d6b9f92e4fb42605c3bb"
+  },
+  "limits": "CPU scene-graph, projection and exact production-mesh ray intersections only. No WebGL/browser screenshot, GPU shading, actual text rasterization or touch interaction verification.",
+  "viewports": [
+    [
+      2048,
+      1163
+    ],
+    [
+      2048,
+      1123
+    ],
+    [
+      1440,
+      900
+    ],
+    [
+      844,
+      390
+    ],
+    [
+      667,
+      320
+    ],
+    [
+      1024,
+      1024
+    ],
+    [
+      780,
+      900
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      360,
+      800
+    ],
+    [
+      320,
+      900
+    ]
+  ],
+  "steeringAngles": 49,
+  "steeringRangeRadians": [
+    -1.009,
+    1.009
+  ],
+  "configurationCount": 4,
+  "instrumentRays": 117600,
+  "roadRays": 39200,
+  "instrumentBlockCount": 0,
+  "roadBlockCount": 0,
+  "instrumentBlocks": [],
+  "roadBlocks": [],
+  "wheelEnvelopeViolations": [],
+  "displayBounds": [
+    {
+      "viewport": [
+        2048,
+        1163
+      ],
+      "left": 0.40250000122346374,
+      "right": 0.5974999987765363,
+      "top": 0.8458641432373495,
+      "bottom": 0.9800000012166484,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        2048,
+        1123
+      ],
+      "left": 0.40250000122346374,
+      "right": 0.5974999987765363,
+      "top": 0.8410863745191786,
+      "bottom": 0.9800000012599843,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "left": 0.3800000015058016,
+      "right": 0.6199999984941984,
+      "top": 0.8299999986394593,
+      "bottom": 0.9800000013605409,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "left": 0.34834123413055484,
+      "right": 0.6516587658694452,
+      "top": 0.7235897412640327,
+      "bottom": 0.9800000023257106,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        667,
+        320
+      ],
+      "left": 0.3080959544320665,
+      "right": 0.6919040455679335,
+      "top": 0.6674999971655404,
+      "bottom": 0.9800000028344599,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        1024,
+        1024
+      ],
+      "left": 0.34640000192742604,
+      "right": 0.653599998072574,
+      "top": 0.6599999989115671,
+      "bottom": 0.7800000010884325,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        780,
+        900
+      ],
+      "left": 0.32276923299318383,
+      "right": 0.6772307670068162,
+      "top": 0.6599999989115671,
+      "bottom": 0.7800000010884325,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "left": 0.16759385032499363,
+      "right": 0.8324061496750064,
+      "top": 0.6599999989115671,
+      "bottom": 0.7800000010884327,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "left": 0.14444444890607877,
+      "right": 0.8555555510939212,
+      "top": 0.6599999988662159,
+      "bottom": 0.7850000011337839,
+      "minNdcZ": 0.6595811064095323
+    },
+    {
+      "viewport": [
+        320,
+        900
+      ],
+      "left": 0.11000000489385503,
+      "right": 0.889999995106145,
+      "top": 0.6599999990173874,
+      "bottom": 0.7683333343159462,
+      "minNdcZ": 0.6595811064095323
+    }
+  ],
+  "rearDirectRays": 90,
+  "rearQuarterRays": 48,
+  "rearGaps": [],
+  "assertions": [
+    "All original car and yoke objects retained.",
+    "Repeated four-way configuration and camera transitions preserve lights, canopy and independent choices.",
+    "NPC mix, shared classic body geometry, collision dimensions and four wheel handles retained."
+  ],
+  "npcModels": {
+    "classic-roadster": 12,
+    "sculpted-track": 12,
+    "sculpted-touring": 12
+  },
+  "npcMaterialCount": 20,
+  "pass": true
+}

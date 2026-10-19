@@ -32,8 +32,25 @@
 
   const ambientPipes = carMeshGroup.children.filter(part => part.material === ambientLightMat);
   const classicInteriorParts = [seatBack, dashCowling, consoleTunnel, gearStrip, hazardBtn, steeringColumn, dashPipe, ...ambientPipes];
+  // The responsive FPV pod is projection-sized for readable telemetry. Its old
+  // exterior pose pierced the raked windshield. Give outside/studio views a
+  // separate, fixed-size physical screen mounted in the cabin instead; both
+  // displays share the same live texture, without duplicating telemetry state.
+  screenBezel.name = 'fpv-instrument-bezel';
+  screenDisplay.name = 'fpv-live-instruments';
+  const interiorScreen = new THREE.Group();
+  interiorScreen.name = 'interior-center-screen';
+  interiorScreen.position.set(0,.725,-.64);
+  interiorScreen.rotation.x = -.26;
+  const interiorScreenBezel = new THREE.Mesh(new THREE.BoxGeometry(.38,.16,.016), cockpitMat);
+  interiorScreenBezel.name = 'interior-screen-housing';
+  interiorScreenBezel.position.z = -.010;
+  const interiorScreenDisplay = new THREE.Mesh(new THREE.PlaneGeometry(.36,.140625), screenGlowMat);
+  interiorScreenDisplay.name = 'interior-live-instruments';
+  interiorScreen.add(interiorScreenBezel,interiorScreenDisplay);
+  carMeshGroup.add(interiorScreen);
   const sharedParts = new Set([
-    ...classicInteriorParts, screenBezel, screenDisplay, hudCombinerMesh, yokeWheelGroup, fpvDashboardGroup,
+    ...classicInteriorParts, screenBezel, screenDisplay, interiorScreen, hudCombinerMesh, yokeWheelGroup, fpvDashboardGroup,
     ...wheels.map(wheel => wheel.parent), activeWingGroup, rearNozzlesGimbalGroup,
     headlightSpotL, headlightSpotR, headlightTargetL, headlightTargetR,
     ...rearPlumes, ...liftPlumes, ...descendPlumes, ...frontRetroNozzles, ...frontRetroPlumes,
@@ -177,6 +194,11 @@
     oldRearJetParts.forEach(part => { part.visible = model === 'classic'; });
     referenceJets.visible = model === 'reference';
     if (referenceWing) referenceWing.visible = model === 'reference';
+    screenBezel.visible = screenDisplay.visible = active;
+    interiorScreen.visible = !active;
+    // The obsolete translucent combiner is already disabled by the frame loop;
+    // keep canonical previews consistent, including before the first frame.
+    hudCombinerMesh.visible = false;
     oldYokeParts.forEach(part => { part.visible = cockpit === 'classic'; });
     referenceYoke.visible = cockpit === 'reference';
     if (!active) yokeWheelGroup.position.x = cockpit === 'reference' ? -.34 : 0;
