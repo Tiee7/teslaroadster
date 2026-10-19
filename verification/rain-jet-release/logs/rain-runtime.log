@@ -1,0 +1,665 @@
+{
+  "generatedAt": "2026-10-19T14:34:31.171Z",
+  "runtimeRevision": "128",
+  "sources": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "physics-main.js": "0df21f02627429e077d37831169efcf65ad4cae815a2c5ec770c9e8b0641f70d",
+    "ui-hud.js": "f0b8660948eff156a4f549e8eb5a08b201f125ebd02845e14eca0529a4b289dd",
+    "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+    "weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0"
+  },
+  "limits": "Production scene graph, actual triangle sampling, transforms and rays on CPU. Browser launch was blocked by socket permissions; no browser, WebGL, FPS or real-device pass is claimed.",
+  "configurations": [
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496655916458433,
+      "maximumBeadWidthPixels": 3.4340758714571518,
+      "maximumTrailPixels": 12.020458657306143,
+      "screenBounds": [
+        0.3798342041918221,
+        0.8155875301016802,
+        0.6201657958081779,
+        0.9757417101036823
+      ],
+      "yokeBounds": [
+        0.059218282952477774,
+        0.7800165305393149,
+        0.3595056482832748,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496655916458433,
+      "maximumBeadWidthPixels": 3.4340758714571518,
+      "maximumTrailPixels": 12.020458657306143,
+      "screenBounds": [
+        0.3798342041918221,
+        0.8155875301016802,
+        0.6201657958081779,
+        0.9757417101036823
+      ],
+      "yokeBounds": [
+        0.07644071870487451,
+        0.7865547171905457,
+        0.3524031406296424,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0012447576112946113,
+      "maximumBeadWidthPixels": 3.434826621248366,
+      "maximumTrailPixels": 10.578814492893985,
+      "screenBounds": [
+        0.3798342041918221,
+        0.8155875301016802,
+        0.6201657958081779,
+        0.9757417101036823
+      ],
+      "yokeBounds": [
+        0.059218282952477774,
+        0.7800165305393149,
+        0.3595056482832748,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0012447576112946113,
+      "maximumBeadWidthPixels": 3.434826621248366,
+      "maximumTrailPixels": 10.578814492893985,
+      "screenBounds": [
+        0.3798342041918221,
+        0.8155875301016802,
+        0.6201657958081779,
+        0.9757417101036823
+      ],
+      "yokeBounds": [
+        0.07644071870487451,
+        0.7865547171905457,
+        0.3524031406296424,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496627188729349,
+      "maximumBeadWidthPixels": 3.447257962539441,
+      "maximumTrailPixels": 12.02323439991364,
+      "screenBounds": [
+        0.16524339426151913,
+        0.6511395352837286,
+        0.8347566057384809,
+        0.7791007666171268
+      ],
+      "yokeBounds": [
+        0.0013561986724173747,
+        0.8625580272279363,
+        0.651487977074451,
+        1.023212744253424
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496627188729349,
+      "maximumBeadWidthPixels": 3.447257962539441,
+      "maximumTrailPixels": 12.02323439991364,
+      "screenBounds": [
+        0.16524339426151913,
+        0.6511395352837286,
+        0.8347566057384809,
+        0.7791007666171268
+      ],
+      "yokeBounds": [
+        0.036773035456626524,
+        0.8655532156477559,
+        0.6196266296408371,
+        1.0047959374496043
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0012448858944711372,
+      "maximumBeadWidthPixels": 3.4253011172686554,
+      "maximumTrailPixels": 10.664677266808035,
+      "screenBounds": [
+        0.16524339426151913,
+        0.6511395352837286,
+        0.8347566057384809,
+        0.7791007666171268
+      ],
+      "yokeBounds": [
+        0.0013561986724173747,
+        0.8625580272279363,
+        0.651487977074451,
+        1.023212744253424
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0012448858944711372,
+      "maximumBeadWidthPixels": 3.4253011172686554,
+      "maximumTrailPixels": 10.664677266808035,
+      "screenBounds": [
+        0.16524339426151913,
+        0.6511395352837286,
+        0.8347566057384809,
+        0.7791007666171268
+      ],
+      "yokeBounds": [
+        0.036773035456626524,
+        0.8655532156477559,
+        0.6196266296408371,
+        1.0047959374496043
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496670573245328,
+      "maximumBeadWidthPixels": 3.483331899728549,
+      "maximumTrailPixels": 8.190600938570872,
+      "screenBounds": [
+        0.34722463240989954,
+        0.7085751180106863,
+        0.6527753675901005,
+        0.9800322188950681
+      ],
+      "yokeBounds": [
+        0.10202591060162308,
+        0.7800165305393149,
+        0.3268931825672551,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496670573245328,
+      "maximumBeadWidthPixels": 3.483331899728549,
+      "maximumTrailPixels": 8.190600938570872,
+      "screenBounds": [
+        0.34722463240989954,
+        0.7085751180106863,
+        0.6527753675901005,
+        0.9800322188950681
+      ],
+      "yokeBounds": [
+        0.11502333535748976,
+        0.7865547171905457,
+        0.32444880953699234,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0012316546059092381,
+      "maximumBeadWidthPixels": 3.4394194746949127,
+      "maximumTrailPixels": 4.60000847053135,
+      "screenBounds": [
+        0.34722463240989954,
+        0.7085751180106863,
+        0.6527753675901005,
+        0.9800322188950681
+      ],
+      "yokeBounds": [
+        0.10202591060162308,
+        0.7800165305393149,
+        0.3268931825672551,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0012316546059092381,
+      "maximumBeadWidthPixels": 3.4394194746949127,
+      "maximumTrailPixels": 4.60000847053135,
+      "screenBounds": [
+        0.34722463240989954,
+        0.7085751180106863,
+        0.6527753675901005,
+        0.9800322188950681
+      ],
+      "yokeBounds": [
+        0.11502333535748976,
+        0.7865547171905457,
+        0.32444880953699234,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496646119968148,
+      "maximumBeadWidthPixels": 3.4533158820501564,
+      "maximumTrailPixels": 12.025271219787115,
+      "screenBounds": [
+        0.14215473594142625,
+        0.6510955807384782,
+        0.8578452640585738,
+        0.7840670155915643
+      ],
+      "yokeBounds": [
+        -0.007370745061454631,
+        0.8625580272279365,
+        0.6602179835251996,
+        1.0232127442534242
+      ]
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496646119968148,
+      "maximumBeadWidthPixels": 3.4533158820501564,
+      "maximumTrailPixels": 12.025271219787115,
+      "screenBounds": [
+        0.14215473594142625,
+        0.6510955807384782,
+        0.8578452640585738,
+        0.7840670155915643
+      ],
+      "yokeBounds": [
+        0.028946407414658315,
+        0.8655532156477566,
+        0.6274532576828052,
+        1.0047959374496047
+      ]
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0012448903770494457,
+      "maximumBeadWidthPixels": 3.4252543028264526,
+      "maximumTrailPixels": 10.115922999780214,
+      "screenBounds": [
+        0.14215473594142625,
+        0.6510955807384782,
+        0.8578452640585738,
+        0.7840670155915643
+      ],
+      "yokeBounds": [
+        -0.007370745061454631,
+        0.8625580272279365,
+        0.6602179835251996,
+        1.0232127442534242
+      ]
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0012448903770494457,
+      "maximumBeadWidthPixels": 3.4252543028264526,
+      "maximumTrailPixels": 10.115922999780214,
+      "screenBounds": [
+        0.14215473594142625,
+        0.6510955807384782,
+        0.8578452640585738,
+        0.7840670155915643
+      ],
+      "yokeBounds": [
+        0.028946407414658315,
+        0.8655532156477566,
+        0.6274532576828052,
+        1.0047959374496047
+      ]
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496655916458433,
+      "maximumBeadWidthPixels": 3.4207110027829657,
+      "maximumTrailPixels": 12.014900880249648,
+      "screenBounds": [
+        0.3960955482320755,
+        0.8214913784539226,
+        0.6039044517679245,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.10704206680559475,
+        0.7800165305393149,
+        0.37717669273459503,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496655916458433,
+      "maximumBeadWidthPixels": 3.4207110027829657,
+      "maximumTrailPixels": 12.014900880249648,
+      "screenBounds": [
+        0.3960955482320755,
+        0.8214913784539226,
+        0.6039044517679245,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.12254899144823544,
+        0.7865547171905457,
+        0.37063324391732266,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0012447584220960373,
+      "maximumBeadWidthPixels": 3.4643579083358134,
+      "maximumTrailPixels": 12.083363107628028,
+      "screenBounds": [
+        0.3960955482320755,
+        0.8214913784539226,
+        0.6039044517679245,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.10704206680559475,
+        0.7800165305393149,
+        0.37717669273459503,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0012447584220960373,
+      "maximumBeadWidthPixels": 3.4643579083358134,
+      "maximumTrailPixels": 12.083363107628028,
+      "screenBounds": [
+        0.3960955482320755,
+        0.8214913784539226,
+        0.6039044517679245,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.12254899144823544,
+        0.7865547171905457,
+        0.37063324391732266,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        2560,
+        1080
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496655916458433,
+      "maximumBeadWidthPixels": 3.4180662434309284,
+      "maximumTrailPixels": 12.014900880249648,
+      "screenBounds": [
+        0.42207166117405664,
+        0.8214913784539226,
+        0.5779283388259434,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.1393475118318251,
+        0.7800165305393149,
+        0.3445304275256752,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        2560,
+        1080
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496655916458433,
+      "maximumBeadWidthPixels": 3.4180662434309284,
+      "maximumTrailPixels": 12.014900880249648,
+      "screenBounds": [
+        0.42207166117405664,
+        0.8214913784539226,
+        0.5779283388259434,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.15119642635590624,
+        0.7865547171905457,
+        0.3421970458864244,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        2560,
+        1080
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.001231701743590774,
+      "maximumBeadWidthPixels": 3.4456858547079605,
+      "maximumTrailPixels": 12.004022638076197,
+      "screenBounds": [
+        0.42207166117405664,
+        0.8214913784539226,
+        0.5779283388259434,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.1393475118318251,
+        0.7800165305393149,
+        0.3445304275256752,
+        1.0306892780995034
+      ]
+    },
+    {
+      "viewport": [
+        2560,
+        1080
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.001231701743590774,
+      "maximumBeadWidthPixels": 3.4456858547079605,
+      "maximumTrailPixels": 12.004022638076197,
+      "screenBounds": [
+        0.42207166117405664,
+        0.8214913784539226,
+        0.5779283388259434,
+        0.9751948805518391
+      ],
+      "yokeBounds": [
+        0.15119642635590624,
+        0.7865547171905457,
+        0.3421970458864244,
+        1.0014408571641504
+      ]
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "model": "reference",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0013496736931180031,
+      "maximumBeadWidthPixels": 3.420442383877713,
+      "maximumTrailPixels": 12.016265492792286,
+      "screenBounds": [
+        0.294571855660965,
+        0.6517431591046141,
+        0.705428144339035,
+        0.7784857655938284
+      ],
+      "yokeBounds": [
+        0.05445997338898673,
+        0.8625580272279363,
+        0.4557103830858272,
+        1.023212744253424
+      ]
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "model": "reference",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0013496736931180031,
+      "maximumBeadWidthPixels": 3.420442383877713,
+      "maximumTrailPixels": 12.016265492792286,
+      "screenBounds": [
+        0.294571855660965,
+        0.6517431591046141,
+        0.705428144339035,
+        0.7784857655938284
+      ],
+      "yokeBounds": [
+        0.07790653204717735,
+        0.8655532156477559,
+        0.43878220687609926,
+        1.0047959374496043
+      ]
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "model": "classic",
+      "cockpit": "reference",
+      "minimumGlassClearance": 0.0012448580876871507,
+      "maximumBeadWidthPixels": 3.427002880007336,
+      "maximumTrailPixels": 12.348921732736017,
+      "screenBounds": [
+        0.294571855660965,
+        0.6517431591046141,
+        0.705428144339035,
+        0.7784857655938284
+      ],
+      "yokeBounds": [
+        0.05445997338898673,
+        0.8625580272279363,
+        0.4557103830858272,
+        1.023212744253424
+      ]
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "model": "classic",
+      "cockpit": "classic",
+      "minimumGlassClearance": 0.0012448580876871507,
+      "maximumBeadWidthPixels": 3.427002880007336,
+      "maximumTrailPixels": 12.348921732736017,
+      "screenBounds": [
+        0.294571855660965,
+        0.6517431591046141,
+        0.705428144339035,
+        0.7784857655938284
+      ],
+      "yokeBounds": [
+        0.07790653204717735,
+        0.8655532156477559,
+        0.43878220687609926,
+        1.0047959374496043
+      ]
+    }
+  ],
+  "cabinSegments": 107926,
+  "restoredSegments": 1,
+  "pass": true
+}

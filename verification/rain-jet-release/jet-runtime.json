@@ -1,0 +1,290 @@
+{
+  "runtime": "128",
+  "sourceHashes": {
+    "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "physics-main.js": "0df21f02627429e077d37831169efcf65ad4cae815a2c5ec770c9e8b0641f70d",
+    "ui-hud.js": "f0b8660948eff156a4f549e8eb5a08b201f125ebd02845e14eca0529a4b289dd",
+    "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+  },
+  "noWebGL": true,
+  "limits": "CPU actual geometry, ray/normal/direction/power checks. No browser/FPS evidence. Blender images approximate GLSL alpha; they do not validate real GPU blending.",
+  "geometry": {
+    "coldGasEnvelope": {
+      "vertices": 169,
+      "triangles": 288,
+      "degenerate": 0,
+      "inward": 0,
+      "maxNormalError": 4.055388647117297e-8
+    },
+    "condensation": {
+      "vertices": 363,
+      "triangles": 640,
+      "degenerate": 0,
+      "inward": 0,
+      "maxNormalError": 3.983572971488769e-8
+    }
+  },
+  "portAudit": [
+    {
+      "model": "reference",
+      "cabin": "reference",
+      "rays": 2592,
+      "obstacleMeshes": 239,
+      "blocked": []
+    },
+    {
+      "model": "reference",
+      "cabin": "classic",
+      "rays": 2592,
+      "obstacleMeshes": 253,
+      "blocked": []
+    },
+    {
+      "model": "classic",
+      "cabin": "reference",
+      "rays": 2592,
+      "obstacleMeshes": 324,
+      "blocked": []
+    },
+    {
+      "model": "classic",
+      "cabin": "classic",
+      "rays": 2592,
+      "obstacleMeshes": 338,
+      "blocked": []
+    }
+  ],
+  "motionAudit": [
+    {
+      "command": "roll+",
+      "force": [
+        0,
+        0,
+        -8.881784197001252e-16
+      ],
+      "torque": [
+        -4.440892098500626e-16,
+        -6.66133814775094e-17,
+        2.9
+      ]
+    },
+    {
+      "command": "roll-",
+      "force": [
+        0,
+        0,
+        -8.881784197001252e-16
+      ],
+      "torque": [
+        -4.440892098500626e-16,
+        6.66133814775094e-17,
+        -2.9000000000000004
+      ]
+    },
+    {
+      "command": "pitch+",
+      "force": [
+        0,
+        0,
+        -8.881784197001252e-16
+      ],
+      "torque": [
+        3.6399999999999997,
+        0,
+        0
+      ]
+    },
+    {
+      "command": "pitch-",
+      "force": [
+        0,
+        0,
+        -8.881784197001252e-16
+      ],
+      "torque": [
+        -3.6400000000000006,
+        0,
+        0
+      ]
+    },
+    {
+      "command": "yaw+",
+      "force": [
+        0,
+        0,
+        -4.440892098500626e-16
+      ],
+      "torque": [
+        -1.9984014443252818e-16,
+        1.4,
+        0
+      ]
+    },
+    {
+      "command": "yaw-",
+      "force": [
+        0,
+        0,
+        -4.440892098500626e-16
+      ],
+      "torque": [
+        -1.9984014443252818e-16,
+        -1.4,
+        0
+      ]
+    },
+    {
+      "command": "strafe-left",
+      "force": [
+        -2,
+        0,
+        -4.440892098500626e-16
+      ],
+      "torque": [
+        -1.9984014443252818e-16,
+        4.440892098500626e-16,
+        0.9
+      ]
+    },
+    {
+      "command": "strafe-right",
+      "force": [
+        2,
+        0,
+        -4.440892098500626e-16
+      ],
+      "torque": [
+        -1.9984014443252818e-16,
+        -4.440892098500626e-16,
+        -0.9
+      ]
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        0,
+        0,
+        -80
+      ],
+      "exhaust": [
+        2.4492935982947064e-16,
+        0,
+        -2
+      ],
+      "alignment": 1
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        0,
+        0,
+        80
+      ],
+      "exhaust": [
+        0,
+        0,
+        4
+      ],
+      "alignment": 1
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        80,
+        0,
+        0
+      ],
+      "exhaust": [
+        2,
+        0,
+        4.440892098500626e-16
+      ],
+      "alignment": 1
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        -80,
+        0,
+        0
+      ],
+      "exhaust": [
+        -2,
+        0,
+        4.440892098500626e-16
+      ],
+      "alignment": 1
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        0,
+        -80,
+        0
+      ],
+      "exhaust": [
+        0,
+        -4,
+        8.881784197001252e-16
+      ],
+      "alignment": 1
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        0,
+        80,
+        0
+      ],
+      "exhaust": [
+        0,
+        4,
+        8.881784197001252e-16
+      ],
+      "alignment": 1
+    },
+    {
+      "command": "paid-retro",
+      "velocity": [
+        40,
+        -30,
+        -50
+      ],
+      "exhaust": [
+        1.1313708498984762,
+        -1.697056274847714,
+        -1.414213562373094
+      ],
+      "alignment": 0.9508710975499488
+    }
+  ],
+  "pulseAudit": [
+    {
+      "hz": 30,
+      "elapsed": 0.8999999999999999,
+      "alignment": 1.0000000000000002,
+      "peakOpacity": 0.16,
+      "fpvHidden": true
+    },
+    {
+      "hz": 60,
+      "elapsed": 0.9000000000000011,
+      "alignment": 1.0000000000000002,
+      "peakOpacity": 0.16,
+      "fpvHidden": true
+    },
+    {
+      "hz": 144,
+      "elapsed": 0.9027777777777756,
+      "alignment": 1.0000000000000002,
+      "peakOpacity": 0.16,
+      "fpvHidden": true
+    }
+  ],
+  "physicsPreserved": {
+    "equal": true,
+    "sha256": "0c1adec6c2bfe49a5cbacd2d56ab2b773fe5d340555ff00334261c6e12bb34c0"
+  },
+  "passed": true
+}

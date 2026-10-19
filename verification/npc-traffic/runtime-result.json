@@ -291,7 +291,7 @@
   "populationCycles": 60,
   "normalWindingDisagreements": 0,
   "rearOcclusionMisses": [],
-  "populationCpuMs": 125,
+  "populationCpuMs": 149,
   "stats": {
     "cachedGeometries": 85,
     "maximumGeometries": 85,

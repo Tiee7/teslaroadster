@@ -357,7 +357,7 @@ function renderBannerText() {
     bannerEl.className = 'glass-panel rounded-xl px-4 py-2 text-center border-2 border-cyan-300 bg-sky-950/85 warning-pulse';
     titleEl.className = 'text-xs md:text-sm font-extrabold tracking-wider uppercase text-cyan-200';
     titleEl.textContent = t.banner370Kmh;
-    subEl.textContent = currentLang === 'zh' ? '超音速 370 km/h 音障突破，马赫激波锥全开！' : 'Supersonic 370 km/h Mach 1 barrier broken!';
+    subEl.textContent = currentLang === 'zh' ? '370 km/h 游戏高速阈值，短暂凝结气流脉冲。' : '370 km/h game speed threshold; brief condensation pulse.';
   } else if (state.bannerType === 'jump6m') {
     bannerEl.className = 'glass-panel rounded-xl px-4 py-2 text-center border-2 border-emerald-400 bg-emerald-950/85 warning-pulse';
     titleEl.className = 'text-xs md:text-sm font-extrabold tracking-wider uppercase text-emerald-300';
@@ -383,6 +383,7 @@ function switchMap(targetMap) {
 function resetCar() {
   window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
+  if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
   clearDebris();
   carMeshGroup.visible = true;
@@ -1014,12 +1015,6 @@ const speedLinesPool = Array.from({ length: 68 }, () => ({
   speedMul: 0.7 + Math.random() * 0.8,
   lenMul: 0.6 + Math.random() * 0.9
 }));
-const windshieldDrops = Array.from({ length: 42 }, () => ({
-  x: Math.random(),
-  y: Math.random(),
-  len: 0.02 + Math.random() * 0.04,
-  spd: 0.35 + Math.random() * 0.65
-}));
 
 function resizeVfxCanvas() {
   if (!vfxCanvas) return;
@@ -1122,29 +1117,6 @@ function updateSpeedAndWeatherOverlay(dt, mph, isThrusting, isSupersonic) {
   if (state.lightningFlash > 0.01) {
     vfxCtx.fillStyle = `rgba(224, 242, 254, ${state.lightningFlash * 0.35})`;
     vfxCtx.fillRect(0, 0, W, H);
-  }
-
-  // 2. Windshield Rain Streaks when in Cyber Neon Rain (weatherIndex === 1)
-  if (weatherIndex === 1) {
-    vfxCtx.strokeStyle = 'rgba(125, 211, 252, 0.38)';
-    vfxCtx.lineWidth = 1.5;
-    const speedFactor = 1.0 + (mph / 120.0) * 2.2;
-    windshieldDrops.forEach((d) => {
-      d.y += d.spd * speedFactor * dt;
-      d.x += (d.x - 0.5) * 0.45 * speedFactor * dt;
-      if (d.y > 1.05 || d.x < -0.05 || d.x > 1.05) {
-        d.x = 0.15 + Math.random() * 0.70;
-        d.y = Math.random() * 0.35;
-      }
-      const sx = d.x * W;
-      const sy = d.y * H;
-      const ex = sx + (d.x - 0.5) * 28 * speedFactor;
-      const ey = sy + d.len * H * speedFactor;
-      vfxCtx.beginPath();
-      vfxCtx.moveTo(sx, sy);
-      vfxCtx.lineTo(ex, ey);
-      vfxCtx.stroke();
-    });
   }
 
   // 3. Radial Speed Lines & Supersonic Vignette (Disabled in Cockpit FPV cameraModeIndex === 3 to prevent screen flicker)

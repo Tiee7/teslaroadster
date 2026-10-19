@@ -166,7 +166,7 @@
     ...wheels.map(wheel => wheel.parent), activeWingGroup, rearNozzlesGimbalGroup,
     headlightSpotL, headlightSpotR, headlightTargetL, headlightTargetR,
     ...rearPlumes, ...liftPlumes, ...descendPlumes, ...frontRetroNozzles, ...frontRetroPlumes,
-    ...Object.values(rcsPlumes), sonicBoomConeGroup
+    ...Object.values(rcsPlumes), sonicBoomConeGroup, coldGasNozzlesGroup
   ]);
   carMeshGroup.children.slice().forEach(part => { if (!sharedParts.has(part)) classicExterior.add(part); });
   carMeshGroup.add(classicExterior, referenceExterior);
@@ -307,10 +307,10 @@
     oldWingParts.forEach(part => { part.visible = model === 'classic'; });
     oldRearJetParts.forEach(part => { part.visible = model === 'classic'; });
     referenceJets.visible = model === 'reference';
-    // Preserve the functional reverse plumes, without the legacy blue disks
-    // interrupting the reference car's uninterrupted black front intake.
-    frontRetroNozzles.forEach(part => { part.visible = model === 'classic'; });
-    rearPlumes.forEach(plume => { plume.position.y = model === 'reference' ? -.060 : 0; });
+    // Each body uses its actual outlet mouths, including the shallower reference
+    // rear sleeves. The small unlit auxiliary rims remain shared by both bodies.
+    frontRetroNozzles.forEach(part => { part.visible = true; });
+    configureThrusterLayout(model);
     classicWheelParts.forEach(parts => parts.forEach(part => { part.visible = model === 'classic'; }));
     referenceWheelParts.forEach(part => { part.visible = model === 'reference'; });
     if (referenceWing) referenceWing.visible = model === 'reference';

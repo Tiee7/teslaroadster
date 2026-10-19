@@ -1,0 +1,194 @@
+{
+  "pass": true,
+  "baseMain": "f16643ef9eaad8a52932f18086162c03e9912dd0",
+  "rainInput": "a0efac27185ece1d0adc5c369dab3cc1c98b4ca2",
+  "jetInput": "1785c27c61d74faa285175da5ef1399bf05558c5",
+  "onlyManualConflict": "README.md: retain both appended feature sections",
+  "productionFiles": [
+    {
+      "file": "api/end.js",
+      "input": "published base",
+      "sha256": "61c176d607c3e6578a9118b782626e108186a2dabc26065e093fa6725fb006f8",
+      "byteIdentical": true
+    },
+    {
+      "file": "api/leaderboard.js",
+      "input": "published base",
+      "sha256": "3fd0fe6db6b88ba90d38f95218e99bdcef94c78ad4ca84a284633a009852d1cd",
+      "byteIdentical": true
+    },
+    {
+      "file": "api/run.js",
+      "input": "published base",
+      "sha256": "ef51f9f90fd57ee54ec4bb60c13799e4afd63e3afffc6d850260f7bf9e3e5d0e",
+      "byteIdentical": true
+    },
+    {
+      "file": "api/score.js",
+      "input": "published base",
+      "sha256": "ed87bfb0a6a4ff6037002fce2d98e3eef9453f9d9a8a970139a9497034402534",
+      "byteIdentical": true
+    },
+    {
+      "file": "assets/Ludicrous_Velocity_bgm.mp3",
+      "input": "published base",
+      "sha256": "49b5e5b6520a2e05eaaba2f3ff49af68837177a69626de96cfb605fe9be10f77",
+      "byteIdentical": true
+    },
+    {
+      "file": "assets/vehicle-variants/README.md",
+      "input": "published base",
+      "sha256": "e62ca981b3e4994dbe405a79624d48310c5760b2e1fa9b43be6265012ed29cac",
+      "byteIdentical": true
+    },
+    {
+      "file": "assets/vehicle-variants/catalog-v3.json",
+      "input": "published base",
+      "sha256": "18aeb35f529f6005ea28d099e59f1a43a41f5606a00897565aeca2883cd34f5b",
+      "byteIdentical": true
+    },
+    {
+      "file": "assets/vehicle-variants/roadster-vehicle-originals-v3-manifest.json",
+      "input": "published base",
+      "sha256": "53f7219c4eb529d1aaf856f6b014ad5a4c50ba6ec113ab2b37d6f84bce005bc4",
+      "byteIdentical": true
+    },
+    {
+      "file": "lib/leaderboard.mjs",
+      "input": "published base",
+      "sha256": "47d3c15f04b9a0e0c5807636df61f515c6dd0da52586eb056f345cd7d89e5774",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/audio.js",
+      "input": "published base",
+      "sha256": "d56cf64cb9f4711399eaab29ed5c89ddc67e35b03bab825adcc1420b3b091925",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/config.js",
+      "input": "jet input",
+      "sha256": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/driving-score.js",
+      "input": "published base",
+      "sha256": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/highway-traffic.js",
+      "input": "published base",
+      "sha256": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/index.html",
+      "input": "rain input",
+      "sha256": "3d6e7f8d2c28929cb616cc00c1f9ef7b6ea0854839223c1d0dd578ca68e0f94f",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/leaderboard.js",
+      "input": "published base",
+      "sha256": "b8e421a1c5f766ec2a6432c098997a151276127b29daadf21f83e4ab9d4b64dd",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/mobile-controls.js",
+      "input": "published base",
+      "sha256": "7361933967e40563c2a5de836b4488643f2820f1c893b970ea78b729b3f8eb20",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/music.js",
+      "input": "published base",
+      "sha256": "45f45db8d9a6c9fd8cfc90164298bd4f5d0c041ad9ec160c3c2b29ae80cf4318",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/npc-traffic-assets.js",
+      "input": "published base",
+      "sha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/physics-main.js",
+      "input": "non-conflicting three-way union",
+      "sha256": "0df21f02627429e077d37831169efcf65ad4cae815a2c5ec770c9e8b0641f70d",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/reference-cockpit.js",
+      "input": "jet input",
+      "sha256": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/reference-exterior.js",
+      "input": "published base",
+      "sha256": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/reference-traffic.js",
+      "input": "published base",
+      "sha256": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/start-screen.js",
+      "input": "published base",
+      "sha256": "c6ec9aac19a1e2052da0a39b1a5a90b903f775d3542202084ded140eee003c9b",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/styles.css",
+      "input": "published base",
+      "sha256": "119dae45d919e686297cfc0c649c14da927dff740253a8e99fb34b3ff924c7e1",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/taxi.js",
+      "input": "published base",
+      "sha256": "47408b3c3c61d0453ea6f31c7b68a18400a222bf9dc6c96cc6f16307a9aec229",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/ui-hud.js",
+      "input": "non-conflicting three-way union",
+      "sha256": "f0b8660948eff156a4f549e8eb5a08b201f125ebd02845e14eca0529a4b289dd",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/vehicles.js",
+      "input": "jet input",
+      "sha256": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/weather-rain.js",
+      "input": "rain input",
+      "sha256": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+      "byteIdentical": true
+    },
+    {
+      "file": "src/world.js",
+      "input": "published base",
+      "sha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "byteIdentical": true
+    },
+    {
+      "file": "bundle_app.py",
+      "input": "rain input",
+      "sha256": "70004bbc4e0d35dc598d62844f8a8d10bbc12e7e940dddc1d6e10620c23be584",
+      "byteIdentical": true
+    }
+  ],
+  "rainAndJetCallbacksRetained": true,
+  "legacyFullscreenRainRemoved": true,
+  "originalNpcAndArchiveFilesUnchanged": true,
+  "bundleRegenerated": true,
+  "historicalRenderAuditNote": "Jet geometry/material source modules remain exact frozen input; merged physics adds the independently requested rain callbacks only. Standalone image/rain audits remain historical; fresh combined ray and segment checks are stored separately."
+}

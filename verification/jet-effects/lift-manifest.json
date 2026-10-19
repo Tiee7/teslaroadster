@@ -1,0 +1,1050 @@
+{
+  "generatedAt": "2026-10-19T14:25:38.099Z",
+  "label": "Production geometry effect comparison",
+  "renderer": "Offline Blender Cycles CPU; exact live Three r128 geometry/poses with sampled GLSL alpha approximation, not browser/WebGL",
+  "runtimeRevision": "128",
+  "model": "reference",
+  "cockpit": "reference",
+  "scenario": "lift",
+  "studioHeight": 1.6,
+  "effectImplementation": "candidate",
+  "shaderBoundary": "CPU renderer samples production GLSL alpha functions at source vertices and approximates interpolation/transparent compositing. This is not a WebGL screenshot or GPU performance evidence.",
+  "sources": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+    "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+    "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y); front is Three -Z",
+  "boundsThree": {
+    "min": [
+      -1.0179975032806396,
+      0.5690000000000002,
+      -2.205
+    ],
+    "max": [
+      1.0179975032806396,
+      2.7144949197769166,
+      2.3249999964237213
+    ]
+  },
+  "meshCount": 287,
+  "triangleCount": 123200,
+  "materials": [
+    {
+      "id": "CA3906A4-CC7F-44E2-B2D4-EF5F6B389588",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.06666666666666667,
+        0.08235294117647059,
+        0.09411764705882353
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.12,
+      "roughness": 0.72,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "B02C18A3-A9C4-41A2-89BE-A165F6C0BCBC",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.7764705882352941,
+        0.8,
+        0.807843137254902
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.68,
+      "roughness": 0.28,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "1FAD5A47-ACAF-4F19-A20F-C6AFC5CD5354",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.1411764705882353,
+        0.1568627450980392,
+        0.16470588235294117
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.03,
+      "roughness": 0.84,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "0B8A10A1-414D-4BD2-884A-B2378BB63FA3",
+      "name": "MeshPhysicalMaterial",
+      "type": "MeshPhysicalMaterial",
+      "color": [
+        0.9333333333333333,
+        0.9490196078431372,
+        0.9686274509803922
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.55,
+      "roughness": 0.15,
+      "clearcoat": 1,
+      "clearcoatRoughness": 0.16,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "0F75D2AB-162E-4E04-893D-5F6A25F43B7C",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.047058823529411764,
+        0.058823529411764705,
+        0.08627450980392157
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.55,
+      "roughness": 0.32,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9F80C0B8-B37E-4AF9-9B85-588F005729F6",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.9372549019607843,
+        0.26666666666666666,
+        0.26666666666666666
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.6,
+      "roughness": 0.3,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "28E37F54-6D1A-4846-844D-B1F0274D7D25",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "A28EF628-0BE1-4558-9974-CD1C5718C76F",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.5803921568627451,
+        0.6392156862745098,
+        0.7215686274509804
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0.85,
+      "roughness": 0.35,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9CA66DC9-AF7D-4524-BB6A-A9F398AD681B",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.058823529411764705,
+        0.09019607843137255,
+        0.16470588235294117
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.5,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "C16D3174-DAB0-42BA-9164-CE8731631CA4",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.5803921568627451,
+        0.6392156862745098,
+        0.7215686274509804
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.95,
+      "roughness": 0.14,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "3BF18F86-1EB8-48F9-920B-83D6B12539F6",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.06666666666666667,
+        0.09411764705882353,
+        0.15294117647058825
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "655BA2F1-4308-4AC9-95DE-7312677F1C6F",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.08235294117647059,
+        0.09019607843137255,
+        0.09803921568627451
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.03,
+      "roughness": 0.82,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "E8C500D7-4408-4C0B-A086-4EEC5197C94E",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.12549019607843137,
+        0.13725490196078433,
+        0.14901960784313725
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.65,
+      "roughness": 0.32,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "91835C8A-9314-4885-A311-E8DD4CBB93FE",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.788235294117647,
+        0.807843137254902,
+        0.8156862745098039
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.88,
+      "roughness": 0.24,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "4DE57004-FB14-4737-A426-3E215CC8F138",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.7254901960784313,
+        0.11372549019607843,
+        0.1411764705882353
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.48,
+      "roughness": 0.29,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9C0824EE-EE6B-4184-BBE6-B2745B71175E",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.06666666666666667,
+        0.09411764705882353,
+        0.15294117647058825
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9816AD31-37B0-4DDE-AA52-88DA69B6C630",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.06666666666666667,
+        0.09411764705882353,
+        0.15294117647058825
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9E9EA942-037D-4286-9BEA-0C893756FB14",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.06666666666666667,
+        0.09411764705882353,
+        0.15294117647058825
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "F51064DC-13AF-4EC1-A411-53AF36400475",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.39215686274509803,
+        0.4549019607843137,
+        0.5450980392156862
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.92,
+      "roughness": 0.18,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "248439C8-9334-4DF7-A49A-0C2D0BA5DC5F",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.2,
+        0.2549019607843137,
+        0.3333333333333333
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.85,
+      "roughness": 0.3,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9AF3BDB8-8C2A-40BE-B799-9EBA80AD7BC4",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.6392156862745098,
+        0.6588235294117647,
+        0.6666666666666666
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.91,
+      "roughness": 0.26,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "838FEBBC-002F-4CF8-898A-7D60FAB14365",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.20392156862745098,
+        0.2196078431372549,
+        0.22745098039215686
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.58,
+      "roughness": 0.4,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "8DEBF4D9-C59F-4346-B05E-61A75ED9F94E",
+      "name": "ShaderMaterial",
+      "type": "ShaderMaterial",
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": true,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": false,
+      "shader": {
+        "kind": "cold-gas",
+        "power": 1,
+        "tint": [
+          0.82,
+          0.92,
+          0.98
+        ],
+        "opacity": 0.3,
+        "time": 0.3
+      }
+    },
+    {
+      "id": "105BAE5A-170D-4F34-8540-A64CEE47D28F",
+      "name": "ShaderMaterial",
+      "type": "ShaderMaterial",
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": true,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": false,
+      "shader": {
+        "kind": "cold-gas",
+        "power": 1,
+        "tint": [
+          0.82,
+          0.92,
+          0.98
+        ],
+        "opacity": 0.3,
+        "time": 0.3
+      }
+    },
+    {
+      "id": "2858B6EF-A333-42BB-B182-452CECE2EAE1",
+      "name": "ShaderMaterial",
+      "type": "ShaderMaterial",
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": true,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": false,
+      "shader": {
+        "kind": "cold-gas",
+        "power": 1,
+        "tint": [
+          0.82,
+          0.92,
+          0.98
+        ],
+        "opacity": 0.3,
+        "time": 0.3
+      }
+    },
+    {
+      "id": "BDA641EE-11D3-44F0-90F0-C536086F2F42",
+      "name": "ShaderMaterial",
+      "type": "ShaderMaterial",
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": true,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": false,
+      "shader": {
+        "kind": "cold-gas",
+        "power": 1,
+        "tint": [
+          0.82,
+          0.92,
+          0.98
+        ],
+        "opacity": 0.3,
+        "time": 0.3
+      }
+    },
+    {
+      "id": "C3320DC5-6B76-4455-B5CF-1D2A163D69F4",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.058823529411764705,
+        0.09019607843137255,
+        0.16470588235294117
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.55,
+      "roughness": 0.45,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "DDBA211F-F92B-493F-9B55-5D8D2B3E15A7",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "DF826667-51BF-4633-98C8-7E78F513FCB1",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.011764705882352941,
+        0.0196078431372549,
+        0.027450980392156862
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.08,
+      "roughness": 0.58,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "F3DD9B0D-F47F-424A-BBF2-617928422A27",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.10588235294117647,
+        0.13725490196078433,
+        0.1568627450980392
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "9FD3BB4E-BD83-4E83-8C9C-ECEB2853A9FC",
+      "name": "MeshStandardMaterial",
+      "type": "MeshStandardMaterial",
+      "color": [
+        0.03137254901960784,
+        0.047058823529411764,
+        0.06274509803921569
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.38,
+      "roughness": 0.28,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "B0B3C211-25FC-47B3-BC59-DE5C2314DAFD",
+      "name": "MeshPhysicalMaterial",
+      "type": "MeshPhysicalMaterial",
+      "color": [
+        0.03137254901960784,
+        0.054901960784313725,
+        0.07450980392156863
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.37,
+      "roughness": 0.12,
+      "clearcoat": 1,
+      "clearcoatRoughness": 0.08,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "92873D68-B962-46C8-928F-2B4978F028BD",
+      "name": "MeshPhysicalMaterial",
+      "type": "MeshPhysicalMaterial",
+      "color": [
+        0.06274509803921569,
+        0.09803921568627451,
+        0.12156862745098039
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.4,
+      "roughness": 0.15,
+      "clearcoat": 1,
+      "clearcoatRoughness": 0.09,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "17003F51-CA91-41AC-91EC-65B4A763CFCB",
+      "name": "MeshPhysicalMaterial",
+      "type": "MeshPhysicalMaterial",
+      "color": [
+        0.08235294117647059,
+        0.13725490196078433,
+        0.17254901960784313
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.35,
+      "roughness": 0.17,
+      "clearcoat": 1,
+      "clearcoatRoughness": 0,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "CD6C4539-2D9E-4208-84B1-62B33CB9A825",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.9725490196078431,
+        0.9882352941176471,
+        1
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "608B576B-69D1-4CEC-99C9-F62BD9A9542B",
+      "name": "MeshPhysicalMaterial",
+      "type": "MeshPhysicalMaterial",
+      "color": [
+        0.08235294117647059,
+        0.13725490196078433,
+        0.17254901960784313
+      ],
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 1,
+      "metalness": 0.35,
+      "roughness": 0.17,
+      "clearcoat": 1,
+      "clearcoatRoughness": 0,
+      "side": 0,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "ECDCDC10-A291-40E1-94A6-6FDB08FB2FBE",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.8,
+        0.0784313725490196,
+        0.21176470588235294
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    },
+    {
+      "id": "A1EF262A-DDE4-4F69-A8A2-0A37EADF67AB",
+      "name": "MeshBasicMaterial",
+      "type": "MeshBasicMaterial",
+      "color": [
+        0.23137254901960785,
+        0.0196078431372549,
+        0.050980392156862744
+      ],
+      "emissiveIntensity": 0,
+      "metalness": 0,
+      "roughness": 0.5,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0.1,
+      "side": 2,
+      "transparent": false,
+      "opacity": 1,
+      "blending": 1,
+      "colorWrite": true,
+      "depthWrite": true,
+      "shader": null
+    }
+  ],
+  "skipped": [
+    {
+      "name": "reference-wing-shadow",
+      "reason": "invisible shadow-only proxy"
+    },
+    {
+      "name": "referenceFrontIndicator-1",
+      "reason": "zero-opacity inactive material"
+    },
+    {
+      "name": "referenceFrontIndicator1",
+      "reason": "zero-opacity inactive material"
+    },
+    {
+      "name": "referenceRearIndicator-1",
+      "reason": "zero-opacity inactive material"
+    },
+    {
+      "name": "referenceReverseLamp-1",
+      "reason": "zero-opacity inactive material"
+    },
+    {
+      "name": "referenceRearIndicator1",
+      "reason": "zero-opacity inactive material"
+    },
+    {
+      "name": "referenceReverseLamp1",
+      "reason": "zero-opacity inactive material"
+    },
+    {
+      "name": "reference-body-shadow",
+      "reason": "invisible shadow-only proxy"
+    }
+  ]
+}

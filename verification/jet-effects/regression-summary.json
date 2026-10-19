@@ -1,0 +1,54 @@
+{
+  "baseline": "f16643ef9eaad8a52932f18086162c03e9912dd0",
+  "nodeTests": 418,
+  "nodeFailures": 0,
+  "luaTests": 24,
+  "caseMatrix": 6720,
+  "maps": [
+    "highway",
+    "city"
+  ],
+  "physicsModes": [
+    "realistic",
+    "fantasy"
+  ],
+  "exteriors": [
+    "reference",
+    "classic"
+  ],
+  "cabins": [
+    "reference",
+    "classic"
+  ],
+  "frameStepsSeconds": [
+    0.03333333333333333,
+    0.016666666666666666,
+    0.006944444444444444,
+    0.023
+  ],
+  "tankSeconds": [
+    0,
+    0.001,
+    0.006,
+    2,
+    10
+  ],
+  "checks": [
+    "python3 bundle_app.py",
+    "npm test",
+    "python3 tests/lua_runtime.py",
+    "npm run check",
+    "npm run build",
+    "node verification/verify-jet-effects.cjs /tmp/roadster-three.min.js src ../teslaroadster_crash_tail_release/src"
+  ],
+  "allPassed": true,
+  "bundleSha256": "b34fa01c8f0e349d512193381b31aee8c15850a4257b65675a69aade9aee525b",
+  "sourceHashes": {
+    "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+    "ui-hud.js": "c35131956f5f55697b2b4116390149838701d60c340b48263a155ae8eef0db06"
+  },
+  "browserLimits": "WebGL initialization unavailable in cloud browser; explicitly denied local socket/DevTools path was not retried. No real GPU FPS or shader compilation claim."
+}

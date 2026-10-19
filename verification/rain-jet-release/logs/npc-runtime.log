@@ -1,0 +1,301 @@
+{
+  "runtime": "128",
+  "assetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+  "variants": [
+    {
+      "id": "roadster-7cebd25eb1b855fc",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 11919,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2758,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-57bb28b4444fe141",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 14660,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 3168,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-2a6a57bb617ec7ae",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 15910,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2944,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-5e3b285ce5ba2af3",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 18114,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 3012,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-d4f50372d73a06a0",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 15946,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2944,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-cf79c62dc51eda50",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 15946,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2944,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-2392a5ad4099381d",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 15930,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2944,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-552a05c475bebda0",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 18114,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 3012,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-499feb3a905a9b82",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 18012,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2998,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-98c9c96b8637ce33",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 16520,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2944,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-ac741fe21d27692f",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 17172,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2838,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "roadster-482991b20d0c7983",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 17668,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 2946,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "legacy-classic-roadster",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 2966,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 1970,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "legacy-sculpted-track",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 3710,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 3434,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    },
+    {
+      "id": "legacy-sculpted-touring",
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 3710,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        },
+        {
+          "level": "far",
+          "triangles": 3434,
+          "draws": 6,
+          "rearTestHits": 104,
+          "rearTestMisses": 0
+        }
+      ]
+    }
+  ],
+  "populationCycles": 60,
+  "normalWindingDisagreements": 0,
+  "rearOcclusionMisses": [],
+  "populationCpuMs": 149,
+  "stats": {
+    "cachedGeometries": 85,
+    "maximumGeometries": 85,
+    "sharedMaterials": 14
+  },
+  "pass": true
+}

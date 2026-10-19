@@ -89,7 +89,7 @@ test('reference nozzles are recessed, and projection-sized instruments stay insi
     assert.ok(plateBottom-(f.rearNozzlesGimbalGroup.position.y+lip.position.y+.081)>.014,'registration pad clears the center nozzle lips');
   }
   assert.equal(visible(f.screenDisplay),false);assert.equal(visible(f.screenBezel),false);
-  assert.ok(vm.runInContext('frontRetroNozzles.every(part => !part.visible)',f.context));
+  assert.ok(vm.runInContext('frontRetroNozzles.every(part => part.visible)',f.context));
   f.setCockpitPerspective(true);assert.ok(visible(f.screenDisplay)&&visible(f.screenBezel));
   f.setCockpitPerspective(false);f.api.setModel('classic');
   assert.ok(!visible(f.screenDisplay)&&!visible(f.screenBezel));

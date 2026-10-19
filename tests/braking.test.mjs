@@ -313,7 +313,7 @@ test('mobile brake and reverse buttons share demand/consumption, release/cancel 
     }
   }
   assert.match(hud, /window.addEventListener\('blur'[\s\S]*?setKeyState\(k, false\)/);
-  const render = section(physics, '  // Rendering reads the already-paid brake request.', '  rcsPlumes.rollLeft.visible');
+  const render = section(physics, '  // Rendering reads the already-paid brake request.', '  // Paid attitude and strafe');
   assert.doesNotMatch(render, /consumeAirTank/, 'rendering cannot charge the tank again');
   const flow = section(physics, "  const flowEl = document.getElementById('val-air-flow');", '  if (mph > 225)');
   assert.match(flow, /airConsumedThisFrame \* 60 \/ dt/);

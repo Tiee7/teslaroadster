@@ -1283,7 +1283,7 @@ const I18N = {
     banner0to100: "⚡ 0-100 KM/H RECORD: 1.88s!",
     banner200Kmh: "🚀 200 KM/H EV CRUISING RECORD!",
     banner300Kmh: "🔥 300 KM/H HYPER TRACK VELOCITY!",
-    banner370Kmh: "🔊 370 KM/H SUPERSONIC MACH 1 REACHED!",
+    banner370Kmh: "🔊 370 KM/H GAME SPEED THRESHOLD!",
     lblDownforce: "Aero Downforce:",
     lblTireTemp: "Tire Temp:",
     lblDragCoeff: "Drag Coeff (Cd):",
@@ -1310,8 +1310,8 @@ const I18N = {
     ctrlFpvWeather: "Cockpit FPV • Sky",
     ctrlZoom: "Camera Zoom",
     ctrlSignals: "Turn Signals (A/D auto)",
-    bannerSonicTitle: "🔊 SUPERSONIC MACH BARRIER BROKEN! (>230 MPH)",
-    bannerSonicSub: "Prandtl-Glauert Shock Cone & 80kN De Laval Mach Diamonds Active!",
+    bannerSonicTitle: "🔊 HIGH-SPEED CONDENSATION PULSE (>230 MPH)",
+    bannerSonicSub: "Brief stylized condensation wisps; gameplay threshold, not real Mach 1.",
     modalWeatherStep: "STEP 3 • WEATHER & TIME",
     modalWeatherTitle: "Select Dynamic Weather & Lighting",
     soundOn: "🔊 SFX: ON",
@@ -1449,7 +1449,7 @@ const I18N = {
     banner0to100: "⚡ 0-100 加速达成：1.88秒！",
     banner200Kmh: "🚀 突破 200 KM/H 纯电极速！",
     banner300Kmh: "🔥 突破 300 KM/H 狂暴超跑极速！",
-    banner370Kmh: "🔊 突破 370 KM/H 超音速音障！",
+    banner370Kmh: "🔊 达到 370 KM/H 游戏高速阈值！",
     lblDownforce: "下压力 Downforce:",
     lblTireTemp: "胎温 Tire Temp:",
     lblDragCoeff: "风阻系数 (Cd):",
@@ -1476,8 +1476,8 @@ const I18N = {
     ctrlFpvWeather: "座舱视角 • 天气",
     ctrlZoom: "镜头远近 ([ / ] 或滚轮)",
     ctrlSignals: "转向灯 (A/D 自动频闪)",
-    bannerSonicTitle: "🔊 突破超音速音障 (>230 MPH) — 音爆云环激活！",
-    bannerSonicSub: "普朗特-格劳厄脱激波锥与 80kN 马赫环折射特效全功率开启！",
+    bannerSonicTitle: "🔊 高速凝结气流脉冲 (>230 MPH)",
+    bannerSonicSub: "短暂凝结气流视觉提示；这是游戏阈值，并非真实音速。",
     modalWeatherStep: "步骤 03 • 动态天气",
     modalWeatherTitle: "选择动态天气与光照环境",
     soundOn: "🔊 音效: 开启",
@@ -4607,43 +4607,104 @@ wheelSpecs.forEach((ws) => {
 const nozzleMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.92, roughness: 0.18, side: THREE.DoubleSide });
 const flangeMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.85, roughness: 0.3, side: THREE.DoubleSide });
 const heatTintMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-const plumeMatMain = new THREE.MeshBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
-const plumeMatLift = new THREE.MeshBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
-const plumeMatRCS = new THREE.MeshBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.90, side: THREE.DoubleSide });
+// Cold gas is represented by one short, open, fading envelope per physical
+// outlet. It is a readable gameplay cue, not luminous combustion or measured CFD.
+const plumeMatMain = { tint: [0.87, 0.95, 1.0], opacity: 0.34 };
+const plumeMatLift = { tint: [0.82, 0.92, 0.98], opacity: 0.30 };
+const plumeMatRCS = { tint: [0.88, 0.95, 1.0], opacity: 0.28 };
+const coldGasTime = { value: 0 };
+const thrusterPlumeState = new WeakMap();
+const allThrusterPlumes = [];
+const coldGasNozzlesGroup = new THREE.Group();
+coldGasNozzlesGroup.name = 'shared-cold-gas-outlets';
+carMeshGroup.add(coldGasNozzlesGroup);
 
-const machDiamondMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
-const heatShimmerMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.45, side: THREE.DoubleSide });
-
-function createThrusterPlume(radius, length, mat, dirVec) {
-  const group = new THREE.Group();
-  const coneGeo = new THREE.ConeGeometry(radius, length, 14);
-  coneGeo.translate(0, -length / 2, 0);
-  const dx = dirVec.x, dy = dirVec.y, dz = dirVec.z;
-  if (Math.abs(dz) > 0.8) {
-    coneGeo.rotateX(dz > 0 ? -Math.PI / 2 : Math.PI / 2);
-  } else if (Math.abs(dx) > 0.5) {
-    coneGeo.rotateZ(dx > 0 ? Math.PI / 2 : -Math.PI / 2);
-  } else if (dy > 0.5) {
-    coneGeo.rotateX(Math.PI);
-  }
-  const mesh = new THREE.Mesh(coneGeo, mat);
-  group.add(mesh);
-
-  // Add Supersonic Mach Shockwave Diamonds & Heat Shimmer Refraction Rings inside Plume
-  if (Math.abs(dz) > 0.8) {
-    const sgn = dz > 0 ? 1 : -1;
-    for (let m = 1; m <= 3; m++) {
-      const ringR = radius * (1.05 - m * 0.22);
-      const mRing = new THREE.Mesh(new THREE.RingGeometry(ringR * 0.45, ringR, 16), machDiamondMat);
-      mRing.position.set(0, 0, sgn * (m * length * 0.22));
-      const shimmerRing = new THREE.Mesh(new THREE.RingGeometry(ringR * 1.1, ringR * 1.65, 16), heatShimmerMat);
-      shimmerRing.position.set(0, 0, sgn * (m * length * 0.24));
-      group.add(mRing, shimmerRing);
+// Shared topology, no caps, no stacked disks, no per-frame particle allocation.
+function createColdGasEnvelopeGeometry() {
+  const positions = [], uvs = [], indices = [], rows = 12, sides = 12;
+  for (let row = 0; row <= rows; row++) {
+    const v = row / rows;
+    const r = 0.56 + 0.66 * Math.sin(Math.min(1, v * 1.5) * Math.PI * 0.5);
+    for (let side = 0; side <= sides; side++) {
+      const u = side / sides, angle = u * Math.PI * 2;
+      positions.push(Math.cos(angle) * r, Math.sin(angle) * r, v);
+      uvs.push(u, v);
+      if (row < rows && side < sides) {
+        const a = row * (sides + 1) + side, b = a + sides + 1;
+        indices.push(a, a + 1, b + 1, a, b + 1, b);
+      }
     }
   }
-
-  group.visible = false;
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices); geometry.computeVertexNormals();
+  geometry.computeBoundingBox(); geometry.computeBoundingSphere();
+  return geometry;
+}
+const coldGasEnvelopeGeometry = createColdGasEnvelopeGeometry();
+const coldGasVertexShader = `
+  varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+  void main() {
+    vUv = uv; vNormal = normalize(normalMatrix * normal);
+    vec4 view = modelViewMatrix * vec4(position, 1.0); vView = -view.xyz;
+    gl_Position = projectionMatrix * view;
+  }
+`;
+const coldGasFragmentShader = `
+  uniform vec3 uTint; uniform float uOpacity; uniform float uPower; uniform float uTime;
+  varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+  void main() {
+    float axial = smoothstep(0.0, 0.035, vUv.y) * (1.0 - smoothstep(0.12, 1.0, vUv.y));
+    float facing = 0.20 + 0.80 * pow(abs(dot(normalize(vNormal), normalize(vView))), 0.65);
+    float wisps = 0.78 + 0.22 * sin(vUv.y * 30.0 - uTime * 17.0 + sin(vUv.x * 37.0));
+    float alpha = uOpacity * uPower * axial * facing * wisps;
+    if (alpha < 0.002) discard;
+    gl_FragColor = vec4(uTint, alpha);
+  }
+`;
+function orientColdGasOutlet(group, dirVec) {
+  // Every envelope is authored from mouth (z=0) outward along local +Z.
+  if (Math.abs(dirVec.x) > 0.5) group.rotation.y = dirVec.x > 0 ? Math.PI / 2 : -Math.PI / 2;
+  else if (Math.abs(dirVec.y) > 0.5) group.rotation.x = dirVec.y > 0 ? -Math.PI / 2 : Math.PI / 2;
+  else if (dirVec.z < 0) group.rotation.y = Math.PI;
+}
+function createThrusterPlume(radius, length, style, dirVec) {
+  const group = new THREE.Group();
+  const material = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, depthTest: true, side: THREE.DoubleSide,
+    uniforms: { uTint: { value: new THREE.Vector3(...style.tint) }, uOpacity: { value: style.opacity },
+      uPower: { value: 0 }, uTime: coldGasTime },
+    vertexShader: coldGasVertexShader, fragmentShader: coldGasFragmentShader
+  });
+  const mesh = new THREE.Mesh(coldGasEnvelopeGeometry, material);
+  mesh.name = 'fading-cold-gas-envelope';
+  mesh.scale.set(radius, radius, length); mesh.castShadow = mesh.receiveShadow = false;
+  group.add(mesh); orientColdGasOutlet(group, dirVec); group.visible = false;
+  thrusterPlumeState.set(group, { mesh, radius, length, port: null, power: 0 });
+  allThrusterPlumes.push(group);
   return group;
+}
+function addColdGasOutlet(plume, radius) {
+  const port = new THREE.Group(); port.name = 'cold-gas-outlet';
+  const lip = new THREE.Mesh(new THREE.RingGeometry(radius * 0.78, radius, 16), nozzleMat);
+  const bore = new THREE.Mesh(new THREE.CircleGeometry(radius * 0.77, 16), flangeMat);
+  bore.position.z = -0.003; port.add(lip, bore);
+  port.position.copy(plume.position); port.rotation.copy(plume.rotation);
+  coldGasNozzlesGroup.add(port); thrusterPlumeState.get(plume).port = port;
+  return port;
+}
+function setThrusterPlumePower(plume, power, hidden = false) {
+  const data = thrusterPlumeState.get(plume);
+  const p = Math.max(0, Math.min(1, Number.isFinite(power) ? power : 0));
+  data.power = p; plume.visible = p > 0.001 && !hidden;
+  data.mesh.material.uniforms.uPower.value = p;
+  const extent = Math.sqrt(p);
+  data.mesh.scale.set(data.radius * (0.66 + 0.34 * extent), data.radius * (0.66 + 0.34 * extent), data.length * (0.25 + 0.75 * extent));
+}
+function clearThrusterVisuals() {
+  for (const plume of allThrusterPlumes) setThrusterPlumePower(plume, 0);
+  sonicBoomConeGroup.visible = false; sonicCondensationAge = 1;
 }
 
 const rearNozzlesGimbalGroup = new THREE.Group();
@@ -4682,96 +4743,148 @@ const rearPlumes = [];
   propellantLine.position.set(rx, 0.12, -0.06);
   rearNozzlesGimbalGroup.add(flange, gimbalBall, noz, lipRing, innerBell, pintle, propellantLine);
 
-  const plume = createThrusterPlume(0.12, 1.95, plumeMatMain, new THREE.Vector3(0, 0, 1));
+  const plume = createThrusterPlume(0.092, 1.35, plumeMatMain, new THREE.Vector3(0, 0, 1));
   plume.position.set(rx, 0, 0.17);
   rearNozzlesGimbalGroup.add(plume);
   rearPlumes.push(plume);
 });
 
-// 3D Supersonic Prandtl-Glauert Mach Vapor Shock Cone around Fuselage (>230 MPH)
+// Brief, aft-opening condensation wisps at the existing game speed threshold.
+// 230 mph is a stylized game threshold, not the real speed of sound.
 const sonicBoomConeGroup = new THREE.Group();
-const machConeMat = new THREE.MeshBasicMaterial({
-  color: 0xe0f2fe,
-  transparent: true,
-  opacity: 0.28,
-  side: THREE.DoubleSide
+sonicBoomConeGroup.name = 'transient-condensation-wisps';
+const sonicPositions = [], sonicUvs = [], sonicIndices = [];
+for (let row = 0; row <= 10; row++) for (let side = 0; side <= 32; side++) {
+  const v = row / 10, u = side / 32, angle = u * Math.PI * 2;
+  sonicPositions.push(Math.cos(angle) * (1.10 + 0.48 * v), 0.55 + Math.sin(angle) * (0.66 + 0.32 * v), -0.25 + 2.7 * v);
+  sonicUvs.push(u, v);
+  if (row < 10 && side < 32) { const a = row * 33 + side, b = a + 33; sonicIndices.push(a,a+1,b+1,a,b+1,b); }
+}
+const sonicCondensationGeometry = new THREE.BufferGeometry();
+sonicCondensationGeometry.setAttribute('position', new THREE.Float32BufferAttribute(sonicPositions, 3));
+sonicCondensationGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(sonicUvs, 2));
+sonicCondensationGeometry.setIndex(sonicIndices); sonicCondensationGeometry.computeVertexNormals();
+const sonicCondensationMaterial = new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, depthTest: true, side: THREE.DoubleSide,
+  uniforms: { uOpacity: { value: 0 }, uTime: coldGasTime },
+  vertexShader: coldGasVertexShader,
+  fragmentShader: `
+    uniform float uOpacity; uniform float uTime;
+    varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+    void main() {
+      float band = exp(-pow((vUv.y - 0.42) / 0.25, 2.0));
+      float gaps = smoothstep(0.18, 0.82, 0.5 + 0.5 * sin(vUv.x * 43.9823 + sin(vUv.y * 13.0) + uTime * 2.0));
+      float facing = pow(abs(dot(normalize(vNormal), normalize(vView))), 0.5);
+      float alpha = uOpacity * band * gaps * facing;
+      if (alpha < 0.002) discard;
+      gl_FragColor = vec4(0.86, 0.94, 0.98, alpha);
+    }
+  `
 });
-const machConeMesh = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.35, 1.85, 2.2, 28, 1, true).rotateX(Math.PI / 2),
-  machConeMat
-);
-machConeMesh.position.set(0, 0.55, 0.35);
-const machVaporRing = new THREE.Mesh(
-  new THREE.RingGeometry(1.15, 1.92, 32),
-  new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.42, side: THREE.DoubleSide })
-);
-machVaporRing.position.set(0, 0.55, 1.25);
-sonicBoomConeGroup.add(machConeMesh, machVaporRing);
-sonicBoomConeGroup.visible = false;
+const sonicCondensationMesh = new THREE.Mesh(sonicCondensationGeometry, sonicCondensationMaterial);
+sonicBoomConeGroup.add(sonicCondensationMesh); sonicBoomConeGroup.visible = false;
 carMeshGroup.add(sonicBoomConeGroup);
+let sonicCondensationAge = 1;
+const sonicTrailingDirection = new THREE.Vector3(), sonicLocalQuaternion = new THREE.Quaternion();
+const sonicAxis = new THREE.Vector3(0, 0, 1);
+function updateSonicCondensation(dt, crossedThreshold, isCockpitFpv) {
+  if (crossedThreshold) sonicCondensationAge = 0;
+  else sonicCondensationAge = Math.min(1, sonicCondensationAge + dt / 0.8);
+  if (sonicCondensationAge >= 1 - 1e-8) sonicCondensationAge = 1;
+  const pulse = Math.sin(Math.PI * sonicCondensationAge);
+  sonicBoomConeGroup.visible = sonicCondensationAge < 1 && !isCockpitFpv && !state.isDestroyed;
+  sonicCondensationMaterial.uniforms.uOpacity.value = Math.max(0, pulse) * 0.16;
+  if (!sonicBoomConeGroup.visible) return;
+  // Follow actual travel, including sideways/backward flight, using reusable scratch values.
+  carMeshGroup.getWorldQuaternion(sonicLocalQuaternion).invert();
+  sonicTrailingDirection.set(-state.vx, -state.vy, -state.vz);
+  if (sonicTrailingDirection.lengthSq() < 0.01) sonicTrailingDirection.set(0, 0, 1);
+  else sonicTrailingDirection.normalize().applyQuaternion(sonicLocalQuaternion);
+  sonicBoomConeGroup.quaternion.setFromUnitVectors(sonicAxis, sonicTrailingDirection);
+}
 
-const liftPlumes = [];
-[
-  [-0.78, 0.16, -1.25],
-  [0.78, 0.16, -1.25],
-  [-0.78, 0.16, 1.25],
-  [0.78, 0.16, 1.25]
-].forEach(([lx, ly, lz]) => {
-  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.03, 16), flangeMat);
-  collar.position.set(lx, ly - 0.01, lz);
-  carMeshGroup.add(collar);
+// Four underside lift ports and four matching top-deck attitude/descent ports.
+// Attitude commands reuse these real outlets, rather than inventing mid-air jets.
+const liftPlumes = [], descendPlumes = [];
+for (const z of [-1.1, 1.1]) for (const x of [-0.8, 0.8]) {
+  const lift = createThrusterPlume(0.095, 1.15, plumeMatLift, new THREE.Vector3(0, -1, 0));
+  lift.position.set(x < 0 ? -0.65 : 0.65, 0.119, z < 0 ? -0.72 : 0.72); carMeshGroup.add(lift); addColdGasOutlet(lift, 0.069); liftPlumes.push(lift);
+  const top = createThrusterPlume(0.058, 0.65, plumeMatRCS, new THREE.Vector3(0, 1, 0));
+  top.position.set(x, z < 0 ? 0.79 : 0.90, z); carMeshGroup.add(top); addColdGasOutlet(top, 0.043); descendPlumes.push(top);
+}
 
-  const plume = createThrusterPlume(0.24, 1.7, plumeMatLift, new THREE.Vector3(0, -1, 0));
-  plume.position.set(lx, ly, lz);
-  carMeshGroup.add(plume);
-  liftPlumes.push(plume);
-});
-
-const descendPlumes = [];
-[
-  [-0.76, 0.72, -1.1],
-  [0.76, 0.72, -1.1],
-  [-0.76, 0.84, 1.1],
-  [0.76, 0.84, 1.1]
-].forEach(([dx, dy, dz]) => {
-  const plume = createThrusterPlume(0.15, 1.25, plumeMatRCS, new THREE.Vector3(0, 1, 0));
-  plume.position.set(dx, dy, dz);
-  carMeshGroup.add(plume);
-  descendPlumes.push(plume);
-});
-
-// 2 Stealth Front Nose Supersonic Cold-Gas Retro-Thrusters inside lower front grille
-const frontRetroNozzles = [];
-const frontRetroPlumes = [];
-[-0.34, 0.34].forEach((fx) => {
-  const noz = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.068, 0.12, 16).rotateX(Math.PI / 2), nozzleMat);
-  noz.position.set(fx, 0.24, -2.25);
-  const lipRing = new THREE.Mesh(new THREE.RingGeometry(0.055, 0.070, 16), heatTintMat);
-  lipRing.position.set(fx, 0.24, -2.312);
-  carMeshGroup.add(noz, lipRing);
-  frontRetroNozzles.push(noz);
-
-  const plume = createThrusterPlume(0.14, 1.65, plumeMatRCS, new THREE.Vector3(0, 0, -1));
-  plume.position.set(fx, 0.24, -2.32);
-  carMeshGroup.add(plume);
-  frontRetroPlumes.push(plume);
-});
-
-const rcsPlumes = {
-  rollLeft: createThrusterPlume(0.14, 1.2, plumeMatRCS, new THREE.Vector3(1, 0, 0)),
-  rollRight: createThrusterPlume(0.14, 1.2, plumeMatRCS, new THREE.Vector3(-1, 0, 0)),
-  pitchUp: createThrusterPlume(0.14, 1.2, plumeMatRCS, new THREE.Vector3(0, -1, 0)),
-  pitchDown: createThrusterPlume(0.14, 1.2, plumeMatRCS, new THREE.Vector3(0, 1, 0)),
-  yawLeft: createThrusterPlume(0.14, 1.2, plumeMatRCS, new THREE.Vector3(1, 0, 0)),
-  yawRight: createThrusterPlume(0.14, 1.2, plumeMatRCS, new THREE.Vector3(-1, 0, 0))
-};
-rcsPlumes.rollLeft.position.set(1.00, 0.55, 0);
-rcsPlumes.rollRight.position.set(-1.00, 0.55, 0);
-rcsPlumes.pitchUp.position.set(0, 0.30, -2.20);
-rcsPlumes.pitchDown.position.set(0, 0.62, -2.20);
-rcsPlumes.yawLeft.position.set(0.95, 0.48, -2.0);
-rcsPlumes.yawRight.position.set(-0.95, 0.48, -2.0);
-Object.values(rcsPlumes).forEach(p => carMeshGroup.add(p));
+const frontRetroNozzles = [], frontRetroPlumes = [];
+for (const x of [-0.34, 0.34]) {
+  const plume = createThrusterPlume(0.060, 1.05, plumeMatRCS, new THREE.Vector3(0, 0, -1));
+  plume.position.set(x, 0.24, -2.32); carMeshGroup.add(plume);
+  frontRetroNozzles.push(addColdGasOutlet(plume, 0.043)); frontRetroPlumes.push(plume);
+}
+// Four flush side outlets. A yaw couple and a pure strafe share these mouths.
+const rcsPlumes = {};
+for (const z of [-0.7, 0.7]) for (const side of [-1, 1]) {
+  const name = (z < 0 ? 'front' : 'rear') + (side < 0 ? 'Left' : 'Right');
+  const plume = createThrusterPlume(0.050, 0.58, plumeMatRCS, new THREE.Vector3(side, 0, 0));
+  plume.name = 'side-rcs-' + name; plume.position.set(side * 1.01, 0.45, z);
+  carMeshGroup.add(plume); addColdGasOutlet(plume, 0.036); rcsPlumes[name] = plume;
+}
+// Purely presentational: powers below are accepted/paid production requests.
+// Combining commands once per outlet avoids duplicate transparent envelopes.
+const sideRcsPlumes = Object.values(rcsPlumes);
+function updateColdGasVisuals(dt, hidden, rearPower, retroPower, retroRear, liftPower, descendPower, roll, pitch, yaw, strafe, retroVx, retroVy, retroVz) {
+  coldGasTime.value = (coldGasTime.value + Math.max(0, dt)) % 3600;
+  let retroX = 0, retroY = 0, retroZ = retroRear ? retroPower : -retroPower;
+  if (retroPower > 0 && typeof state !== 'undefined') {
+    // Exhaust follows paid pre-brake travel, so vertical/sideways braking uses
+    // the corresponding ports as well. This has no force or fuel side effects.
+    const vx = Number.isFinite(retroVx) ? retroVx : state.vx;
+    const vy = Number.isFinite(retroVy) ? retroVy : state.vy;
+    const vz = Number.isFinite(retroVz) ? retroVz : state.vz;
+    const mag = Math.hypot(vx, vy, vz);
+    if (mag > 0.001) {
+      const cy = Math.cos(state.yaw || 0), sy = Math.sin(state.yaw || 0);
+      const cp = Math.cos(state.pitch || 0), sp = Math.sin(state.pitch || 0);
+      const cr = Math.cos(state.roll || 0), sr = Math.sin(state.roll || 0);
+      const x = cy * vx - sy * vz, z = sy * vx + cy * vz;
+      const y = cp * vy + sp * z;
+      retroX = (cr * x + sr * y) / mag * retroPower;
+      retroY = (-sr * x + cr * y) / mag * retroPower;
+      retroZ = (-sp * vy + cp * z) / mag * retroPower;
+    }
+  }
+  for (const plume of rearPlumes) setThrusterPlumePower(plume, Math.max(rearPower, retroZ, 0), hidden);
+  for (const plume of frontRetroPlumes) setThrusterPlumePower(plume, Math.max(-retroZ, 0), hidden);
+  for (let i = 0; i < 4; i++) {
+    const side = i % 2 ? 1 : -1, fore = i < 2 ? 1 : -1;
+    setThrusterPlumePower(liftPlumes[i], Math.max(liftPower, side * roll, fore * pitch, -retroY, 0), hidden);
+    setThrusterPlumePower(descendPlumes[i], Math.max(descendPower, -side * roll, -fore * pitch, retroY, 0), hidden);
+  }
+  for (let i = 0; i < sideRcsPlumes.length; i++) {
+    const side = i % 2 ? 1 : -1, fore = i < 2 ? 1 : -1;
+    setThrusterPlumePower(sideRcsPlumes[i], Math.max(0, -side * strafe, side * fore * yaw, side * retroX), hidden);
+  }
+}
+function configureThrusterLayout(model) {
+  const reference = model === 'reference';
+  for (const plume of rearPlumes) {
+    plume.position.y = reference ? -0.060 : 0;
+    plume.position.z = reference ? 0.047 : 0.17;
+    const data = thrusterPlumeState.get(plume); data.radius = reference ? 0.068 : 0.092;
+  }
+  for (let i = 0; i < liftPlumes.length; i++) liftPlumes[i].position.y = reference ? 0.119 : i < 2 ? 0.151 : 0.203;
+  for (let i = 0; i < descendPlumes.length; i++) {
+    const plume = descendPlumes[i];
+    plume.position.y = i < 2 ? (reference ? 0.79 : 0.73) : 0.90;
+  }
+  for (const plume of frontRetroPlumes) plume.position.z = reference ? -2.205 : -2.32;
+  for (const name of Object.keys(rcsPlumes)) {
+    const plume = rcsPlumes[name], front = name.startsWith('front'), side = name.endsWith('Left') ? -1 : 1;
+    plume.position.x = side * (reference ? (front ? 0.953 : 0.964) : (front ? 0.999 : 1.011));
+  }
+  for (const plume of allThrusterPlumes) {
+    const data = thrusterPlumeState.get(plume);
+    if (data.port) data.port.position.copy(plume.position);
+  }
+}
 
 const hoverRingGeo = new THREE.RingGeometry(0.9, 2.3, 32);
 hoverRingGeo.rotateX(-Math.PI / 2);
@@ -6318,7 +6431,7 @@ function buildReferenceRoadsterExterior() {
     ...wheels.map(wheel => wheel.parent), activeWingGroup, rearNozzlesGimbalGroup,
     headlightSpotL, headlightSpotR, headlightTargetL, headlightTargetR,
     ...rearPlumes, ...liftPlumes, ...descendPlumes, ...frontRetroNozzles, ...frontRetroPlumes,
-    ...Object.values(rcsPlumes), sonicBoomConeGroup
+    ...Object.values(rcsPlumes), sonicBoomConeGroup, coldGasNozzlesGroup
   ]);
   carMeshGroup.children.slice().forEach(part => { if (!sharedParts.has(part)) classicExterior.add(part); });
   carMeshGroup.add(classicExterior, referenceExterior);
@@ -6459,10 +6572,10 @@ function buildReferenceRoadsterExterior() {
     oldWingParts.forEach(part => { part.visible = model === 'classic'; });
     oldRearJetParts.forEach(part => { part.visible = model === 'classic'; });
     referenceJets.visible = model === 'reference';
-    // Preserve the functional reverse plumes, without the legacy blue disks
-    // interrupting the reference car's uninterrupted black front intake.
-    frontRetroNozzles.forEach(part => { part.visible = model === 'classic'; });
-    rearPlumes.forEach(plume => { plume.position.y = model === 'reference' ? -.060 : 0; });
+    // Each body uses its actual outlet mouths, including the shallower reference
+    // rear sleeves. The small unlit auxiliary rims remain shared by both bodies.
+    frontRetroNozzles.forEach(part => { part.visible = true; });
+    configureThrusterLayout(model);
     classicWheelParts.forEach(parts => parts.forEach(part => { part.visible = model === 'classic'; }));
     referenceWheelParts.forEach(part => { part.visible = model === 'reference'; });
     if (referenceWing) referenceWing.visible = model === 'reference';
@@ -6668,6 +6781,213 @@ function unpackArchivedTrafficGeometry(record) {
       sharedMaterials: materialPool.size + paintMaterials.length })
   });
 })();
+
+
+// =========================================================================
+// MODULE: weather-rain.js
+// =========================================================================
+// Rain belongs outside the closed cabin. These are conservative bounds around
+// both preserved cabins, including the fixed FPV eye, dashboard and side glass.
+// Test whole streaks, not just endpoints: a long/slanted line can cross the cabin
+// with both endpoints outside it. All buffers and scratch vectors are reused.
+const RAIN_CABIN = Object.freeze({ minX: -.96, maxX: .96, minY: .20, maxY: 1.36, minZ: -1.32, maxZ: 1.76 });
+function rainSegmentIntersectsCabin(ax, ay, az, bx, by, bz) {
+  let near = 0, far = 1;
+  const dx = bx - ax, dy = by - ay, dz = bz - az;
+  if (Math.abs(dx) < 1e-10) { if (ax < RAIN_CABIN.minX || ax > RAIN_CABIN.maxX) return false; }
+  else {
+    const a = (RAIN_CABIN.minX - ax) / dx, b = (RAIN_CABIN.maxX - ax) / dx;
+    near = Math.max(near, Math.min(a, b)); far = Math.min(far, Math.max(a, b));
+    if (near > far) return false;
+  }
+  if (Math.abs(dy) < 1e-10) { if (ay < RAIN_CABIN.minY || ay > RAIN_CABIN.maxY) return false; }
+  else {
+    const a = (RAIN_CABIN.minY - ay) / dy, b = (RAIN_CABIN.maxY - ay) / dy;
+    near = Math.max(near, Math.min(a, b)); far = Math.min(far, Math.max(a, b));
+    if (near > far) return false;
+  }
+  if (Math.abs(dz) < 1e-10) { if (az < RAIN_CABIN.minZ || az > RAIN_CABIN.maxZ) return false; }
+  else {
+    const a = (RAIN_CABIN.minZ - az) / dz, b = (RAIN_CABIN.maxZ - az) / dz;
+    near = Math.max(near, Math.min(a, b)); far = Math.min(far, Math.max(a, b));
+    if (near > far) return false;
+  }
+  return true;
+}
+const rainCabinInverse = new THREE.Matrix4();
+const rainCabinCenter = new THREE.Vector3();
+const rainCabinHead = new THREE.Vector3(), rainCabinTail = new THREE.Vector3();
+function updateExteriorRain(dt) {
+  if (weatherIndex !== 1 || !rainLinesMesh.visible) return;
+  rainLinesMesh.position.set(state.x, Math.max(0, state.y - 20), currentMap === 'highway' ? 0 : state.z);
+  roadsterAttitudeGroup.updateWorldMatrix(true, false);
+  rainCabinInverse.copy(roadsterAttitudeGroup.matrixWorld).invert();
+  rainCabinCenter.set(0, .78, .22).applyMatrix4(roadsterAttitudeGroup.matrixWorld);
+  const offset = rainLinesMesh.position, arr = rainPositions;
+  const slantZ = (currentMap === 'highway' ? -state.vz : state.vz) * .04;
+  for (let i = 0; i < rainCount; i++) {
+    const p = i * 6;
+    const y = ((arr[p + 1] - 62 * dt) % 90 + 90) % 90;
+    arr[p + 1] = y; arr[p + 3] = arr[p]; arr[p + 4] = y - 2.8; arr[p + 5] = arr[p + 2] + slantZ;
+    const x = arr[p] + offset.x, headY = y + offset.y, z = arr[p + 2] + offset.z;
+    // A radius enclosing the cabin rejects the distant 1500-line field cheaply.
+    if (Math.abs(x - rainCabinCenter.x) > 2.2 || headY < rainCabinCenter.y - 2.2 || headY - 2.8 > rainCabinCenter.y + 2.2
+      || Math.min(z, z + slantZ) > rainCabinCenter.z + 2.2 || Math.max(z, z + slantZ) < rainCabinCenter.z - 2.2) continue;
+    rainCabinHead.set(x, headY, z).applyMatrix4(rainCabinInverse);
+    rainCabinTail.set(x, headY - 2.8, z + slantZ).applyMatrix4(rainCabinInverse);
+    if (rainSegmentIntersectsCabin(rainCabinHead.x, rainCabinHead.y, rainCabinHead.z, rainCabinTail.x, rainCabinTail.y, rainCabinTail.z)) {
+      // Degenerate just this frame's crossing streak; the next frame rebuilds
+      // its tail from its retained particle head. No respawn/allocation churn.
+      arr[p + 3] = arr[p]; arr[p + 4] = y; arr[p + 5] = arr[p + 2];
+    }
+  }
+  rainLinesMesh.geometry.attributes.position.needsUpdate = true;
+}
+
+// Eight small beads/trails, one 32-vertex draw. The vertices are sampled from
+// the selected production glass triangles, not a camera overlay or cabin volume.
+// The reference pane remains the original flat raked windshield; the classic
+// pane follows its preserved curved canopy. No textures or per-frame allocations.
+function createRainPane(mesh) {
+  const position = mesh.geometry.attributes.position, normal = mesh.geometry.attributes.normal;
+  let stride = 1;
+  while (stride < position.count && Math.abs(position.getZ(stride) - position.getZ(0)) < 1e-6) stride++;
+  return { position, normal, stride, rows: position.count / stride };
+}
+const rainPanes = {
+  reference: createRainPane(carMeshGroup.getObjectByName('referencePanoramicCanopy')),
+  classic: createRainPane(roadsterCanopyMesh)
+};
+function sampleRainPane(pane, u, z, output, offset) {
+  const p = pane.position, n = pane.normal, stride = pane.stride;
+  let low = 0, high = pane.rows - 1;
+  while (high - low > 1) {
+    const middle = (low + high) >> 1;
+    if (p.getZ(middle * stride) <= z) low = middle; else high = middle;
+  }
+  const tz = Math.max(0, Math.min(1, (z - p.getZ(low * stride)) / (p.getZ(high * stride) - p.getZ(low * stride))));
+  const column = Math.max(0, Math.min(stride - 1.000001, u * (stride - 1))), cell = Math.floor(column), tx = column - cell;
+  const a = low * stride + cell, d = high * stride + cell + 1;
+  // Production grids split each cell along a--d. Triangle interpolation keeps
+  // the water exactly outside the visible surface even on the curved classic.
+  const b = tx <= tz ? high * stride + cell : low * stride + cell + 1;
+  const wa = 1 - Math.max(tx, tz), wd = Math.min(tx, tz), wb = Math.abs(tz - tx);
+  let nx = n.getX(a) * wa + n.getX(d) * wd + n.getX(b) * wb;
+  let ny = n.getY(a) * wa + n.getY(d) * wd + n.getY(b) * wb;
+  let nz = n.getZ(a) * wa + n.getZ(d) * wd + n.getZ(b) * wb;
+  const lift = .0012 / Math.hypot(nx, ny, nz);
+  output[offset] = p.getX(a) * wa + p.getX(d) * wd + p.getX(b) * wb + nx * lift;
+  output[offset + 1] = p.getY(a) * wa + p.getY(d) * wd + p.getY(b) * wb + ny * lift;
+  output[offset + 2] = p.getZ(a) * wa + p.getZ(d) * wd + p.getZ(b) * wb + nz * lift;
+}
+const glassRainCount = 8;
+const glassRainPositions = new Float32Array(glassRainCount * 12);
+const glassRainOpacities = new Float32Array(glassRainCount * 4);
+const glassRainUvs = new Float32Array(glassRainCount * 8);
+const glassRainIndices = [];
+const glassRainDrops = [];
+for (let i = 0; i < glassRainCount; i++) {
+  glassRainUvs.set([0, 1, 1, 1, 0, 0, 1, 0], i * 8);
+  const a = i * 4; glassRainIndices.push(a, a + 2, a + 3, a, a + 3, a + 1);
+  glassRainDrops.push({ phase: (i + .5) / glassRainCount, startU: .5, endU: .5, startZ: -.4, endZ: -.5, speed: .10 + (i % 3) * .018 });
+}
+const glassRainGeometry = new THREE.BufferGeometry();
+glassRainGeometry.setAttribute('position', new THREE.BufferAttribute(glassRainPositions, 3).setUsage(THREE.DynamicDrawUsage));
+glassRainGeometry.setAttribute('uv', new THREE.BufferAttribute(glassRainUvs, 2));
+glassRainGeometry.setAttribute('waterOpacity', new THREE.BufferAttribute(glassRainOpacities, 1).setUsage(THREE.DynamicDrawUsage));
+glassRainGeometry.setIndex(glassRainIndices);
+const glassRainMaterial = new THREE.ShaderMaterial({
+  transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide,
+  vertexShader: `attribute float waterOpacity; varying vec2 waterUv; varying float waterAlpha;
+    void main() { waterUv = uv; waterAlpha = waterOpacity;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `varying vec2 waterUv; varying float waterAlpha;
+    void main() {
+      float distanceFromBead = length((waterUv - vec2(.5, .19)) / vec2(.47, .18));
+      float bead = 1.0 - smoothstep(.64, 1.0, distanceFromBead);
+      float rim = bead * smoothstep(.25, .78, distanceFromBead);
+      float trail = (1.0 - smoothstep(.035, .16, abs(waterUv.x - .5)))
+        * smoothstep(.15, .3, waterUv.y) * (1.0 - smoothstep(.6, 1.0, waterUv.y));
+      float alpha = (bead * .07 + rim * .20 + trail * .13) * waterAlpha;
+      if (alpha < .003) discard;
+      gl_FragColor = vec4(.68, .85, .94, alpha);
+    }`
+});
+const glassRainMesh = new THREE.Mesh(glassRainGeometry, glassRainMaterial);
+glassRainMesh.name = 'exterior-windshield-water';
+glassRainMesh.frustumCulled = false;
+glassRainMesh.visible = false;
+carMeshGroup.add(glassRainMesh);
+let glassRainActive = false, glassRainModel = '', glassRainWidth = 0, glassRainHeight = 0;
+const glassRainSample = new Float32Array(3);
+function rainGlassScreenX(point, aspect) {
+  const depth = (COCKPIT_VIEW.eyeZ - point[2] - (point[1] - COCKPIT_VIEW.eyeHeight) * COCKPIT_VIEW.downwardSlope) / Math.hypot(1, COCKPIT_VIEW.downwardSlope);
+  return .5 + point[0] / (2 * depth * Math.tan(Math.PI / 6) * aspect);
+}
+function rainGlassScreenY(point) {
+  const dy = point[1] - COCKPIT_VIEW.eyeHeight, dz = point[2] - COCKPIT_VIEW.eyeZ, slope = COCKPIT_VIEW.downwardSlope;
+  return .5 - (dy - slope * dz) / (2 * (-dz - slope * dy) * Math.tan(Math.PI / 6));
+}
+function findRainGlassPoint(pane, aspect, screenX, screenY, drop, start) {
+  let nearZ = -.365, farZ = -1.10, u = .5, z = -.5;
+  for (let step = 0; step < 18; step++) {
+    z = (nearZ + farZ) * .5;
+    let low = .03, high = .97;
+    for (let j = 0; j < 16; j++) {
+      u = (low + high) * .5;
+      sampleRainPane(pane, u, z, glassRainSample, 0);
+      if (rainGlassScreenX(glassRainSample, aspect) < screenX) low = u; else high = u;
+    }
+    if (rainGlassScreenY(glassRainSample) > screenY) farZ = z; else nearZ = z;
+  }
+  if (start) { drop.startU = u; drop.startZ = z; }
+  else { drop.endU = u; drop.endZ = z; }
+}
+function positionRainDrop(drop, index, pane, aspect, model) {
+  // The original FPV eye stays fixed. Reference glass is visible below the road
+  // focus, while the classic canopy reaches higher. Both use true glass in the
+  // empty side bands, clear of the centered pod and left wheel on tall screens.
+  const side = .060 + (Math.floor(index / 2) % 2) * .040;
+  const screenX = index % 2 ? 1 - side : side;
+  findRainGlassPoint(pane, aspect, screenX, model === 'reference' ? .704 : .555, drop, true);
+  findRainGlassPoint(pane, aspect, screenX, model === 'reference' ? .738 : .630, drop, false);
+}
+function updateWindshieldRain(dt) {
+  const active = weatherIndex === 1 && cameraModeIndex === 3 && !state.isDestroyed;
+  glassRainMesh.visible = active;
+  if (!active) { glassRainActive = false; return; }
+  const model = window.RoadsterVehicle.getModel(), pane = rainPanes[model];
+  const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight), aspect = width / height;
+  const reset = !glassRainActive || glassRainModel !== model || glassRainWidth !== width || glassRainHeight !== height;
+  glassRainActive = true; glassRainModel = model; glassRainWidth = width; glassRainHeight = height;
+  const speedFactor = 1 + Math.min(1, Math.abs(state.speed || 0) / 90) * .35;
+  for (let i = 0; i < glassRainCount; i++) {
+    const drop = glassRainDrops[i];
+    if (reset) { drop.phase = (i + .5) / glassRainCount; positionRainDrop(drop, i, pane, aspect, model); }
+    drop.phase += Math.max(0, dt) * drop.speed * speedFactor;
+    if (drop.phase >= 1) { drop.phase %= 1; positionRainDrop(drop, i, pane, aspect, model); }
+    const z = drop.startZ + (drop.endZ - drop.startZ) * drop.phase;
+    const u = drop.startU + (drop.endU - drop.startU) * drop.phase;
+    // Pixel-sized beads stay subtle on both desktop and portrait phones.
+    sampleRainPane(pane, u - .001, z, glassRainSample, 0);
+    const left = rainGlassScreenX(glassRainSample, aspect);
+    sampleRainPane(pane, u + .001, z, glassRainSample, 0);
+    const du = Math.min(.003, ((1.25 + (i % 3) * .2) / width) * .002 / (rainGlassScreenX(glassRainSample, aspect) - left));
+    sampleRainPane(pane, u, z - .001, glassRainSample, 0);
+    const bottom = rainGlassScreenY(glassRainSample);
+    sampleRainPane(pane, u, z + .001, glassRainSample, 0);
+    const halfLength = Math.min(.012, ((4 + i % 3) / height) * .002 / Math.abs(rainGlassScreenY(glassRainSample) - bottom));
+    const p = i * 12;
+    sampleRainPane(pane, u - du, z + halfLength, glassRainPositions, p);
+    sampleRainPane(pane, u + du, z + halfLength, glassRainPositions, p + 3);
+    sampleRainPane(pane, u - du, z - halfLength, glassRainPositions, p + 6);
+    sampleRainPane(pane, u + du, z - halfLength, glassRainPositions, p + 9);
+    const fade = Math.min(1, drop.phase * 10, (1 - drop.phase) * 7);
+    glassRainOpacities.fill(fade, i * 4, i * 4 + 4);
+  }
+  glassRainGeometry.attributes.position.needsUpdate = true;
+  glassRainGeometry.attributes.waterOpacity.needsUpdate = true;
+}
 
 
 // =========================================================================
@@ -7424,7 +7744,7 @@ function renderBannerText() {
     bannerEl.className = 'glass-panel rounded-xl px-4 py-2 text-center border-2 border-cyan-300 bg-sky-950/85 warning-pulse';
     titleEl.className = 'text-xs md:text-sm font-extrabold tracking-wider uppercase text-cyan-200';
     titleEl.textContent = t.banner370Kmh;
-    subEl.textContent = currentLang === 'zh' ? '超音速 370 km/h 音障突破，马赫激波锥全开！' : 'Supersonic 370 km/h Mach 1 barrier broken!';
+    subEl.textContent = currentLang === 'zh' ? '370 km/h 游戏高速阈值，短暂凝结气流脉冲。' : '370 km/h game speed threshold; brief condensation pulse.';
   } else if (state.bannerType === 'jump6m') {
     bannerEl.className = 'glass-panel rounded-xl px-4 py-2 text-center border-2 border-emerald-400 bg-emerald-950/85 warning-pulse';
     titleEl.className = 'text-xs md:text-sm font-extrabold tracking-wider uppercase text-emerald-300';
@@ -7450,6 +7770,7 @@ function switchMap(targetMap) {
 function resetCar() {
   window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
+  if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
   clearDebris();
   carMeshGroup.visible = true;
@@ -8081,12 +8402,6 @@ const speedLinesPool = Array.from({ length: 68 }, () => ({
   speedMul: 0.7 + Math.random() * 0.8,
   lenMul: 0.6 + Math.random() * 0.9
 }));
-const windshieldDrops = Array.from({ length: 42 }, () => ({
-  x: Math.random(),
-  y: Math.random(),
-  len: 0.02 + Math.random() * 0.04,
-  spd: 0.35 + Math.random() * 0.65
-}));
 
 function resizeVfxCanvas() {
   if (!vfxCanvas) return;
@@ -8189,29 +8504,6 @@ function updateSpeedAndWeatherOverlay(dt, mph, isThrusting, isSupersonic) {
   if (state.lightningFlash > 0.01) {
     vfxCtx.fillStyle = `rgba(224, 242, 254, ${state.lightningFlash * 0.35})`;
     vfxCtx.fillRect(0, 0, W, H);
-  }
-
-  // 2. Windshield Rain Streaks when in Cyber Neon Rain (weatherIndex === 1)
-  if (weatherIndex === 1) {
-    vfxCtx.strokeStyle = 'rgba(125, 211, 252, 0.38)';
-    vfxCtx.lineWidth = 1.5;
-    const speedFactor = 1.0 + (mph / 120.0) * 2.2;
-    windshieldDrops.forEach((d) => {
-      d.y += d.spd * speedFactor * dt;
-      d.x += (d.x - 0.5) * 0.45 * speedFactor * dt;
-      if (d.y > 1.05 || d.x < -0.05 || d.x > 1.05) {
-        d.x = 0.15 + Math.random() * 0.70;
-        d.y = Math.random() * 0.35;
-      }
-      const sx = d.x * W;
-      const sy = d.y * H;
-      const ex = sx + (d.x - 0.5) * 28 * speedFactor;
-      const ey = sy + d.len * H * speedFactor;
-      vfxCtx.beginPath();
-      vfxCtx.moveTo(sx, sy);
-      vfxCtx.lineTo(ex, ey);
-      vfxCtx.stroke();
-    });
   }
 
   // 3. Radial Speed Lines & Supersonic Vignette (Disabled in Cockpit FPV cameraModeIndex === 3 to prevent screen flicker)
@@ -9544,6 +9836,7 @@ function updateSimulation(dt) {
   }
 
   if (state.isDestroyed) {
+    if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
     debrisPieces.forEach((p) => {
       p.vy -= 22.0 * dt;
       p.mesh.position.x += p.vx * dt;
@@ -9843,6 +10136,8 @@ function updateSimulation(dt) {
   const retroUsesRearNozzles = isAirborne
     ? (state.vx * noseHorizX * nosePitchCos + state.vy * nosePitchSin + state.vz * noseHorizZ * nosePitchCos) < 0
     : (state.vx * noseHorizX + state.vz * noseHorizZ) < 0;
+  // Snapshot only for rendering the already-paid brake impulse in its travel direction.
+  const retroVisualVx = state.vx, retroVisualVy = isAirborne ? state.vy : 0, retroVisualVz = state.vz;
   if (isRetroBrakeFiring) {
     state.vx *= retroScale;
     state.vz *= retroScale;
@@ -10522,35 +10817,20 @@ function updateSimulation(dt) {
   wheels.forEach(w => { w.rotation.x -= wheelSpinSpeed * dt; });
 
   const isCockpitFpv = (cameraModeIndex === 3);
-  const flicker = 0.82 + Math.random() * 0.36;
   const rearActive = isRearThrusterFiring || (isRetroBrakeFiring && retroUsesRearNozzles);
-  rearPlumes.forEach(p => {
-    p.visible = rearActive && !isCockpitFpv;
-    p.scale.set(1, flicker, 1);
-  });
-  liftPlumes.forEach(p => {
-    p.visible = isLiftFiring && !isCockpitFpv;
-    const powerScale = state.isAutoDescending8s ? 0.45 * flicker : 1.05 * flicker;
-    p.scale.set(1, powerScale, 1);
-  });
-  descendPlumes.forEach(p => {
-    p.visible = isDescendFiring && !isCockpitFpv;
-    p.scale.set(1, flicker, 1);
-  });
+  const rearVisualPower = isRearThrusterFiring ? Math.max(driveInput.boost, isAirborne ? driveInput.throttle : 0) : 0;
+  const liftVisualPower = isLiftFiring
+    ? (state.isAutoLandingSave ? 1 : (state.isAutoDescending8s ? 0.45 : 1) * (wantsHover ? driveInput.lift : state.isAltitudeHold ? 0.22 : 1))
+    : 0;
 
   // Rendering reads the already-paid brake request. It never consumes fuel.
   const isFrontRetroFiring = isRetroBrakeFiring && !retroUsesRearNozzles;
-  frontRetroPlumes.forEach(p => {
-    p.visible = isFrontRetroFiring && !isCockpitFpv;
-    p.scale.set(1, flicker, 1);
-  });
-
-  rcsPlumes.rollLeft.visible = !isCockpitFpv && canUseRCS && (rollInput > 0 || airJetLeft);
-  rcsPlumes.rollRight.visible = !isCockpitFpv && canUseRCS && (rollInput < 0 || airJetRight);
-  rcsPlumes.pitchUp.visible = !isCockpitFpv && canUseRCS && pitchInput > 0;
-  rcsPlumes.pitchDown.visible = !isCockpitFpv && canUseRCS && pitchInput < 0;
-  rcsPlumes.yawLeft.visible = !isCockpitFpv && canUseRCS && (yawInput > 0 || airJetLeft);
-  rcsPlumes.yawRight.visible = !isCockpitFpv && canUseRCS && (yawInput < 0 || airJetRight);
+  const retroVisualPower = dt > 0 ? Math.min(1, retroImpulseSeconds / dt) : 0;
+  // Paid attitude and strafe inputs share physical outlets; no inferred idle firing.
+  const strafeVisualPower = airJetLeft || airJetRight ? driveInput.strafe : 0;
+  updateColdGasVisuals(dt, isCockpitFpv, rearVisualPower, retroVisualPower, retroUsesRearNozzles,
+    liftVisualPower, isDescendFiring ? driveInput.descend : 0,
+    rollInput, pitchInput, yawInput, strafeVisualPower, retroVisualVx, retroVisualVy, retroVisualVz);
 
   let activeCount = 0;
   for (let i = 1; i <= 4; i++) {
@@ -10813,42 +11093,28 @@ function updateSimulation(dt) {
   const groundEffectN = (Math.abs(state.speed) > 4.0) ? (4200.0 * groundProximity) : 0.0;
   state.downforceN = Math.round(wingDownforce + groundEffectN);
 
-    // Trigger Supersonic Sonic Boom & Mach Vapor Cone when crossing 230 MPH!
-  if (isSupersonic && !state.wasSupersonic) {
+  // Existing gameplay threshold and sound stay intact. The visual is a brief,
+  // stylized condensation pulse; 230 mph does not represent real Mach 1.
+  const crossedSonicThreshold = isSupersonic && !state.wasSupersonic;
+  if (crossedSonicThreshold) {
     state.wasSupersonic = true;
     state.cameraShake = Math.max(state.cameraShake, 0.38);
     sound.playSonicBoom();
-    sound.speakAlert('sonicboom', 'Supersonic velocity reached. Mach shock cone active.', '已突破超音速音障，激波云环已激活。');
+    sound.speakAlert('sonicboom', 'High-speed threshold reached. Condensation pulse.', '已达到高速阈值，凝结气流脉冲。');
     showBanner('sonic', 2.8);
   } else if (mph < 215) {
     state.wasSupersonic = false;
   }
-
-  if (typeof sonicBoomConeGroup !== 'undefined') {
-    sonicBoomConeGroup.visible = isSupersonic && !isCockpitFpv;
-    if (isSupersonic && !isCockpitFpv) {
-      const pulse = 0.92 + Math.sin(performance.now() * 0.025) * 0.14;
-      sonicBoomConeGroup.scale.set(pulse, pulse, 1.0 + Math.random() * 0.15);
-    }
-  }
+  updateSonicCondensation(dt, crossedSonicThreshold, isCockpitFpv);
 
   // Requirement 5: Left/right ground steering sound removed completely
   tireScreechIntensity = 0.0;
 
+  updateWindshieldRain(dt);
+
   // Update 3D Rain Particles & Lightning Thunder in Cyber Neon Rain (weatherIndex === 1)
   if (weatherIndex === 1 && rainLinesMesh.visible) {
-    rainLinesMesh.position.set(state.x, Math.max(0, state.y - 20), playerWorldZ);
-    const posAttr = rainLinesMesh.geometry.attributes.position;
-    const arr = posAttr.array;
-    const slantZ = (currentMap === 'highway' ? -state.vz : state.vz) * 0.04;
-    for (let i = 0; i < rainCount; i++) {
-      let ry = arr[i * 6 + 1] - 62.0 * dt;
-      if (ry < 0) ry += 90.0;
-      arr[i * 6 + 1] = ry;
-      arr[i * 6 + 4] = ry - 2.8;
-      arr[i * 6 + 5] = arr[i * 6 + 2] + slantZ;
-    }
-    posAttr.needsUpdate = true;
+    updateExteriorRain(dt);
 
     state.lightningTimer -= dt;
     if (state.lightningTimer <= 0) {

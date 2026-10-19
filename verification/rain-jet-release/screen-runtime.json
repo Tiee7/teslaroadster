@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-10-19T14:35:12.177Z",
+  "runtimeRevision": "128",
+  "sources": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+  },
+  "limits": "CPU production scene graph, world transforms and exact triangle rays; CPU studio renders are separate from browser/GPU verification.",
+  "configurations": [
+    {
+      "model": "reference",
+      "cockpit": "reference",
+      "bounds": {
+        "min": [
+          -0.1899999976158142,
+          0.6230613534455347,
+          -0.6779614636653064
+        ],
+        "max": [
+          0.1899999976158142,
+          0.7817970355166222,
+          -0.621366335897384
+        ]
+      },
+      "minimumGlassClearance": 0.1235999440249893,
+      "exteriorFirstHits": {
+        "referencePanoramicCanopy": 138,
+        "referenceFlatWedgeHood": 19,
+        "referenceWindshieldWiper": 2
+      }
+    },
+    {
+      "model": "reference",
+      "cockpit": "classic",
+      "bounds": {
+        "min": [
+          -0.1899999976158142,
+          0.6230613534455347,
+          -0.6779614636653064
+        ],
+        "max": [
+          0.1899999976158142,
+          0.7817970355166222,
+          -0.621366335897384
+        ]
+      },
+      "minimumGlassClearance": 0.1235999440249893,
+      "exteriorFirstHits": {
+        "referencePanoramicCanopy": 138,
+        "referenceFlatWedgeHood": 19,
+        "referenceWindshieldWiper": 2
+      }
+    },
+    {
+      "model": "classic",
+      "cockpit": "reference",
+      "bounds": {
+        "min": [
+          -0.1899999976158142,
+          0.6430613534455347,
+          -0.6779614636653064
+        ],
+        "max": [
+          0.1899999976158142,
+          0.8017970355166222,
+          -0.621366335897384
+        ]
+      },
+      "minimumGlassClearance": 0.20965867423510187,
+      "exteriorFirstHits": {
+        "BufferGeometry": 159
+      }
+    },
+    {
+      "model": "classic",
+      "cockpit": "classic",
+      "bounds": {
+        "min": [
+          -0.1899999976158142,
+          0.6430613534455347,
+          -0.6779614636653064
+        ],
+        "max": [
+          0.1899999976158142,
+          0.8017970355166222,
+          -0.621366335897384
+        ]
+      },
+      "minimumGlassClearance": 0.20965867423510187,
+      "exteriorFirstHits": {
+        "BufferGeometry": 159
+      }
+    }
+  ],
+  "canopyClearanceRays": 212,
+  "exteriorOcclusionRays": 636,
+  "pass": true
+}

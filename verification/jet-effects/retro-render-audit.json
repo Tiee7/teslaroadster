@@ -1,0 +1,53 @@
+{
+  "meshCount": 285,
+  "triangleCount": 122624,
+  "negativeDeterminants": [],
+  "missingNormals": [],
+  "normalWindingDisagreements": [
+    {
+      "name": "reference-yoke-padded-rim",
+      "triangles": 8
+    }
+  ],
+  "sourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+    "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+    "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+  },
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "samples": 24,
+  "colorConversion": "Source hex/Color channels sRGB to Blender linear; exposure 0; world strength .2; half-energy softboxes",
+  "exactGeometry": true,
+  "shaderApproximation": "CPU renderer samples production GLSL alpha functions at source vertices and approximates interpolation/transparent compositing. This is not a WebGL screenshot or GPU performance evidence.",
+  "effectImplementation": "candidate",
+  "scenario": "retro",
+  "model": "reference",
+  "renderedViews": [
+    {
+      "name": "effects-side",
+      "cameraPositionBlender": [
+        10,
+        0,
+        1.3
+      ],
+      "targetBlender": [
+        0,
+        0.5,
+        0.65
+      ],
+      "projection": "ORTHO",
+      "focalLengthMm": null,
+      "orthographicScale": 7.5,
+      "file": "effects-side-raw.png"
+    }
+  ],
+  "inspectionLighting": {
+    "enabled": false
+  }
+}

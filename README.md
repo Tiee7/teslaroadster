@@ -31,7 +31,7 @@ tesla_roadster_simulator_package/
 - **1:1 官方样条放样曲面 (Spline Lofting)**：基于 2026 McGregor 实车演示细节，严格采用 20 组截面 Catmull-Rom 放样算法，重塑隆起轮拱、侧向负压进气道、C 柱飞扶壁与后扰流扩散器。
 - **5 晶体矩阵 LED 大灯与贯穿式尾灯**：内嵌 5 组独立投射晶体、反光碗与赛博蓝日行灯眉，车尾配备贯穿式深红 LED 尾灯与高位刹车灯 (CHMSL)。
 - **F1 战机级座舱与交互 HUD**：全景深色防眩镀金座舱盖、碳纤维包覆内饰、带换挡提示灯的 3D 转向 Yoke 舵盘（支持随转向角与空中滚转实时转动）、中心 17 寸触控屏动态仪表。
-- **10 个 SpaceX 超音速冷气推进喷口**：包含 4 个尾部主推喷口（带 De Laval 喷管、中心柱塞与实时双轴云台推力矢量偏转）、4 个车底垂直升力喷口、2 个车身侧向姿态喷口与前鼻锥反推喷口，配备普朗特-格劳厄脱超音速激波锥与马赫环折射光效。
+- **共享冷气主推与姿态喷口**：4 个尾部主推口、4 个底部升力口、4 个顶部下降/姿态口、4 个侧向平移/偏航口和 2 个前部逆喷口。喷流沿各车型真实出口向外渐隐，不使用实心白锥或叠层蓝环。既有 230 MPH 游戏阈值只触发短暂凝结气流视觉提示，不能视作真实音速或流体仿真。
 
 ### 2. 物理引擎真实化与动力学重构 (Physics Engine Rationalization)
 - **常规物理 vs 幻想模式双轨动力学**：
@@ -263,3 +263,18 @@ Highway drivers now have a stable, randomly sampled personal cruise target: 10% 
 Both maps now use distance-only driving points: ceil(sum of each forward-travel segment's physical horizontal metres ÷ 10 × its speed multiplier). The highest applicable multiplier is 1.2 at 180 km/h, 1.3 at 200, 1.4 at 240, 1.6 at 300 and 1.8 at 350; bonuses never stack or upgrade earlier distance. Acceleration/braking segments split at exact thresholds; fractional points accumulate before a single display ceiling, avoiding frame-rate inflation. Metres use physical horizontal m/s capped by the calibrated speedometer source (so highway lateral handling cannot inflate mileage), excluding the 1.65 optical/world venue multiplier. Idle, reverse, pure lateral sliding and vertical hovering add no distance. Passing counts remain statistics, while old pass/blast/stunt/helipad/sonic point awards are removed. Passenger fares remain separate. Destruction freezes the final score after passenger-loss settlement; manual/map reset or respawn clears all driving and passenger round totals for the next round.
 
 The optional 60-second leaderboard uses the explicit distance-v2 protocol and separate versioned board/name keys. Old-rule records are retained untouched and are not mixed with new scores. Reloaded clients submit six cumulative speed-band metre totals; the server recomputes the final score, enforces category-specific maximum-distance/time plausibility, and preserves the existing signed browser identity, server timing, ownership, cancellation, replay and rate-limit checks. Old clients/runs are rejected safely. Client telemetry remains forgeable, so these checks do not make the casual leaderboard cheat-proof. No storage migration or credential changes are required.
+
+## Exterior windshield water / 玻璃外侧雨滴
+
+Cockpit rain now uses eight tiny, slowly sliding beads attached 1.2 mm outside
+the selected model's actual glass triangles. Reference and classic glass use
+their own visible side bands; the camera and existing instrument layout stay
+unchanged. The former all-view, full-screen rain overlay is removed. Exterior
+rain checks complete streaks against the moving, rotating cabin enclosure, so
+particles cannot fall through the driver or dashboard. Dry weather, outside
+views and destruction hide the glass effect, and switches reuse the same mesh
+and buffers. See [implementation and verification limits](docs/cockpit-rain.md).
+
+## Cold-gas and condensation visuals / 冷气喷流与凝结视觉
+
+All propulsion/attitude outlets now use one soft, outward-only, depth-tested cold-gas envelope per active mouth. Actual paid input controls visual power, including analog controls, low-air states, hover and three-dimensional retro braking. Roll/pitch/strafe/yaw share their physical outlets rather than layering duplicate plumes. Classic and reference mouths are aligned independently, and FPV hides all plumes. The existing high-speed gameplay threshold creates a brief, travel-aligned condensation pulse instead of a persistent opaque cone/ring. Physics, gas burn, overspeed settling, retro impulse and scoring are unchanged. See [verification and CPU-render boundaries](docs/jet-effects.md); real WebGL appearance and FPS still require a working GPU browser.

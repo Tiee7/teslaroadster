@@ -390,7 +390,9 @@ test('highway road, traffic and blast scrolling follow actual vz rather than pos
     close(car.mesh.position.z, (-vz - 10 + 5) * 0.1);
   }
   assert.match(physics, /const scrollDz = \(currentMap === 'highway' \? \(-state\.vz\)/, 'tire smoke follows actual highway travel');
-  assert.match(physics, /const slantZ = \(currentMap === 'highway' \? -state\.vz/, 'rain follows reverse travel');
+  const rain = readFileSync(new URL('../src/weather-rain.js', import.meta.url), 'utf8');
+  assert.match(physics, /updateExteriorRain\(dt\)/, 'the frame delegates rain to the cabin-safe particle update');
+  assert.match(rain, /const slantZ = \(currentMap === 'highway' \? -state\.vz/, 'rain follows reverse travel');
 });
 
 test('real airborne traffic collision slowdown/rebound survives the next movement frame on both maps', () => {

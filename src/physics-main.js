@@ -548,6 +548,7 @@ function updateSimulation(dt) {
   }
 
   if (state.isDestroyed) {
+    if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
     debrisPieces.forEach((p) => {
       p.vy -= 22.0 * dt;
       p.mesh.position.x += p.vx * dt;
@@ -847,6 +848,8 @@ function updateSimulation(dt) {
   const retroUsesRearNozzles = isAirborne
     ? (state.vx * noseHorizX * nosePitchCos + state.vy * nosePitchSin + state.vz * noseHorizZ * nosePitchCos) < 0
     : (state.vx * noseHorizX + state.vz * noseHorizZ) < 0;
+  // Snapshot only for rendering the already-paid brake impulse in its travel direction.
+  const retroVisualVx = state.vx, retroVisualVy = isAirborne ? state.vy : 0, retroVisualVz = state.vz;
   if (isRetroBrakeFiring) {
     state.vx *= retroScale;
     state.vz *= retroScale;
@@ -1526,35 +1529,20 @@ function updateSimulation(dt) {
   wheels.forEach(w => { w.rotation.x -= wheelSpinSpeed * dt; });
 
   const isCockpitFpv = (cameraModeIndex === 3);
-  const flicker = 0.82 + Math.random() * 0.36;
   const rearActive = isRearThrusterFiring || (isRetroBrakeFiring && retroUsesRearNozzles);
-  rearPlumes.forEach(p => {
-    p.visible = rearActive && !isCockpitFpv;
-    p.scale.set(1, flicker, 1);
-  });
-  liftPlumes.forEach(p => {
-    p.visible = isLiftFiring && !isCockpitFpv;
-    const powerScale = state.isAutoDescending8s ? 0.45 * flicker : 1.05 * flicker;
-    p.scale.set(1, powerScale, 1);
-  });
-  descendPlumes.forEach(p => {
-    p.visible = isDescendFiring && !isCockpitFpv;
-    p.scale.set(1, flicker, 1);
-  });
+  const rearVisualPower = isRearThrusterFiring ? Math.max(driveInput.boost, isAirborne ? driveInput.throttle : 0) : 0;
+  const liftVisualPower = isLiftFiring
+    ? (state.isAutoLandingSave ? 1 : (state.isAutoDescending8s ? 0.45 : 1) * (wantsHover ? driveInput.lift : state.isAltitudeHold ? 0.22 : 1))
+    : 0;
 
   // Rendering reads the already-paid brake request. It never consumes fuel.
   const isFrontRetroFiring = isRetroBrakeFiring && !retroUsesRearNozzles;
-  frontRetroPlumes.forEach(p => {
-    p.visible = isFrontRetroFiring && !isCockpitFpv;
-    p.scale.set(1, flicker, 1);
-  });
-
-  rcsPlumes.rollLeft.visible = !isCockpitFpv && canUseRCS && (rollInput > 0 || airJetLeft);
-  rcsPlumes.rollRight.visible = !isCockpitFpv && canUseRCS && (rollInput < 0 || airJetRight);
-  rcsPlumes.pitchUp.visible = !isCockpitFpv && canUseRCS && pitchInput > 0;
-  rcsPlumes.pitchDown.visible = !isCockpitFpv && canUseRCS && pitchInput < 0;
-  rcsPlumes.yawLeft.visible = !isCockpitFpv && canUseRCS && (yawInput > 0 || airJetLeft);
-  rcsPlumes.yawRight.visible = !isCockpitFpv && canUseRCS && (yawInput < 0 || airJetRight);
+  const retroVisualPower = dt > 0 ? Math.min(1, retroImpulseSeconds / dt) : 0;
+  // Paid attitude and strafe inputs share physical outlets; no inferred idle firing.
+  const strafeVisualPower = airJetLeft || airJetRight ? driveInput.strafe : 0;
+  updateColdGasVisuals(dt, isCockpitFpv, rearVisualPower, retroVisualPower, retroUsesRearNozzles,
+    liftVisualPower, isDescendFiring ? driveInput.descend : 0,
+    rollInput, pitchInput, yawInput, strafeVisualPower, retroVisualVx, retroVisualVy, retroVisualVz);
 
   let activeCount = 0;
   for (let i = 1; i <= 4; i++) {
@@ -1817,42 +1805,28 @@ function updateSimulation(dt) {
   const groundEffectN = (Math.abs(state.speed) > 4.0) ? (4200.0 * groundProximity) : 0.0;
   state.downforceN = Math.round(wingDownforce + groundEffectN);
 
-    // Trigger Supersonic Sonic Boom & Mach Vapor Cone when crossing 230 MPH!
-  if (isSupersonic && !state.wasSupersonic) {
+  // Existing gameplay threshold and sound stay intact. The visual is a brief,
+  // stylized condensation pulse; 230 mph does not represent real Mach 1.
+  const crossedSonicThreshold = isSupersonic && !state.wasSupersonic;
+  if (crossedSonicThreshold) {
     state.wasSupersonic = true;
     state.cameraShake = Math.max(state.cameraShake, 0.38);
     sound.playSonicBoom();
-    sound.speakAlert('sonicboom', 'Supersonic velocity reached. Mach shock cone active.', '已突破超音速音障，激波云环已激活。');
+    sound.speakAlert('sonicboom', 'High-speed threshold reached. Condensation pulse.', '已达到高速阈值，凝结气流脉冲。');
     showBanner('sonic', 2.8);
   } else if (mph < 215) {
     state.wasSupersonic = false;
   }
-
-  if (typeof sonicBoomConeGroup !== 'undefined') {
-    sonicBoomConeGroup.visible = isSupersonic && !isCockpitFpv;
-    if (isSupersonic && !isCockpitFpv) {
-      const pulse = 0.92 + Math.sin(performance.now() * 0.025) * 0.14;
-      sonicBoomConeGroup.scale.set(pulse, pulse, 1.0 + Math.random() * 0.15);
-    }
-  }
+  updateSonicCondensation(dt, crossedSonicThreshold, isCockpitFpv);
 
   // Requirement 5: Left/right ground steering sound removed completely
   tireScreechIntensity = 0.0;
 
+  updateWindshieldRain(dt);
+
   // Update 3D Rain Particles & Lightning Thunder in Cyber Neon Rain (weatherIndex === 1)
   if (weatherIndex === 1 && rainLinesMesh.visible) {
-    rainLinesMesh.position.set(state.x, Math.max(0, state.y - 20), playerWorldZ);
-    const posAttr = rainLinesMesh.geometry.attributes.position;
-    const arr = posAttr.array;
-    const slantZ = (currentMap === 'highway' ? -state.vz : state.vz) * 0.04;
-    for (let i = 0; i < rainCount; i++) {
-      let ry = arr[i * 6 + 1] - 62.0 * dt;
-      if (ry < 0) ry += 90.0;
-      arr[i * 6 + 1] = ry;
-      arr[i * 6 + 4] = ry - 2.8;
-      arr[i * 6 + 5] = arr[i * 6 + 2] + slantZ;
-    }
-    posAttr.needsUpdate = true;
+    updateExteriorRain(dt);
 
     state.lightningTimer -= dt;
     if (state.lightningTimer <= 0) {

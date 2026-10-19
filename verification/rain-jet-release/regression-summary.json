@@ -1,0 +1,52 @@
+{
+  "pass": true,
+  "generatedAt": "2026-10-19T14:36:27.559834+00:00",
+  "baseMain": "f16643ef9eaad8a52932f18086162c03e9912dd0",
+  "rainInput": "a0efac27185ece1d0adc5c369dab3cc1c98b4ca2",
+  "jetInput": "1785c27c61d74faa285175da5ef1399bf05558c5",
+  "nodePassed": 423,
+  "nodeFailed": 0,
+  "nodeSkipped": 0,
+  "luaPassed": 24,
+  "check": "passed",
+  "build": "passed",
+  "bundleSha256": "0cabee07b40bc57f5e22ee42aa5f90b11f542871ed66efa3c634347d61095fd8",
+  "publicMatchesBundle": true,
+  "rain": {
+    "configurations": 28,
+    "survivingWorldSegments": 107926,
+    "restoredSegments": 1,
+    "allGlassProjectionAndProtectedInstrumentChecksPassed": true
+  },
+  "jets": {
+    "portRays": 10368,
+    "blockedPortRays": 0,
+    "commandAudits": 15,
+    "pulseFrameRates": 3,
+    "productionInputCases": 6720,
+    "purePhysicsSourcePreserved": true,
+    "geometryShaderModulesMatchFrozenRenderInputs": true
+  },
+  "player": {
+    "instrumentRays": 117600,
+    "roadRays": 39200,
+    "instrumentBlocks": 0,
+    "roadBlocks": 0,
+    "rearRays": 138,
+    "rearGaps": 0,
+    "canopyClearanceRays": 212,
+    "exteriorOcclusionRays": 636
+  },
+  "npc": {
+    "styles": 15,
+    "populationRounds": 60,
+    "geometryPool": 85,
+    "sharedMaterials": 14,
+    "normalWindingDisagreements": 0,
+    "rearMisses": 0,
+    "assetSha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c"
+  },
+  "independentReview": "Awaiting final combined read-only review; frozen inputs already reviewed",
+  "remoteWrites": false,
+  "limitations": "CPU actual geometry/projection and ray audits; studio jet GLSL alpha is approximated. No browser/WebGL shader compilation, FPS, real-device or live ranked-service claim. Original archive ZIP publication remains separate."
+}

@@ -1,0 +1,12 @@
+{
+  "pass": true,
+  "instrumentRays": 117600,
+  "roadRays": 39200,
+  "instrumentBlocks": 0,
+  "roadBlocks": 0,
+  "wheelEnvelopeViolations": 0,
+  "rearDirectRays": 90,
+  "rearQuarterRays": 48,
+  "rearGaps": 0,
+  "limits": "CPU scene-graph, projection and exact production-mesh ray intersections only. No WebGL/browser screenshot, GPU shading, actual text rasterization or touch interaction verification."
+}

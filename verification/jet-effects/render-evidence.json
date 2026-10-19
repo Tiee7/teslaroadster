@@ -1,0 +1,371 @@
+{
+  "method": "Exact Three r128 live mesh export, Blender Cycles CPU, vertex-sampled GLSL alpha approximation. Labels, layout and downsampling only; no generated/retouched imagery.",
+  "limits": "Not WebGL screenshots, shader compilation verification or rendering-FPS evidence.",
+  "photos": [
+    {
+      "implementation": "baseline",
+      "model": "reference",
+      "scenario": "rear-sonic",
+      "studioHeight": 0,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "537415811139200c3c49eea1d216b862e205a1a4e7c41d62b01777f14e80f9ca",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "4df9cf6436a9749bad1b049c89e0b7e1b8aa6fe12f6bb7aeb958b31644707400",
+        "config.js": "80d5e18df24666adf157aa75c58cb42196a2c8a62670d6db83c351ef1c9b8a05"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "928ac5397109ba35520d5cd759deb07c0a6703bb6db7f54de442ed8a3c4966ae",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              1.3
+            ],
+            "targetBlender": [
+              0,
+              -0.7,
+              0.65
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "rear-sonic",
+      "studioHeight": 0,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "ceb44bc1855e9537303cc62f343bdaeff80f1db2d8b2bca93231cbd01fe18147",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              1.3
+            ],
+            "targetBlender": [
+              0,
+              -0.7,
+              0.65
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "lift",
+      "studioHeight": 1.6,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "3010c2ce2bfa9db2a97dfb2435b7c1727f9e5330690bc5e190613dba22329599",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              2.9000000000000004
+            ],
+            "targetBlender": [
+              0,
+              -0.7,
+              2.25
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "descent",
+      "studioHeight": 1.6,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "5d49288048d11a108533346b6424a699b3285f35349241e1b789b4aee51c3f5f",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              2.9000000000000004
+            ],
+            "targetBlender": [
+              0,
+              -0.7,
+              2.25
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "retro",
+      "studioHeight": 0,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "68c03dffa3e2d48e3fa70eb1841f9c08913adb64c71f301f4c79528fbd91b476",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              1.3
+            ],
+            "targetBlender": [
+              0,
+              0.5,
+              0.65
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "roll",
+      "studioHeight": 1.6,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "c7be8f54f3ed076bb3d03c8522f13ea47ee15c2f436965c168dce3e74b7cd82e",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              2.9000000000000004
+            ],
+            "targetBlender": [
+              0,
+              -0.7,
+              2.25
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "yaw",
+      "studioHeight": 1.6,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-three-quarter-raw.png",
+          "sha256": "dbcab005098114ea5c1c5161a61fae4ffd5141d4129a5f5c75c20bcea5e8ee1f",
+          "camera": {
+            "name": "effects-three-quarter",
+            "cameraPositionBlender": [
+              7,
+              -8,
+              4.800000000000001
+            ],
+            "targetBlender": [
+              0,
+              0,
+              2.25
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-three-quarter-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "reference",
+      "scenario": "strafe",
+      "studioHeight": 1.6,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-three-quarter-raw.png",
+          "sha256": "53d15c27b398354a73a205e209fa58d39a2015c6205d1aa98cc2fbfa25dc9c89",
+          "camera": {
+            "name": "effects-three-quarter",
+            "cameraPositionBlender": [
+              7,
+              -8,
+              4.800000000000001
+            ],
+            "targetBlender": [
+              0,
+              0,
+              2.25
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-three-quarter-raw.png"
+          }
+        }
+      ]
+    },
+    {
+      "implementation": "candidate",
+      "model": "classic",
+      "scenario": "rear-sonic",
+      "studioHeight": 0,
+      "sources": {
+        "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+        "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+        "vehicles.js": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+        "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+        "reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+        "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+        "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+        "physics-main.js": "a94851974a549427bf2b4a6a01b3126a68bd28282897b2f6a41ed8bb9ffd81e8",
+        "config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f"
+      },
+      "renders": [
+        {
+          "file": "effects-side-raw.png",
+          "sha256": "deb8bc21f274810ee1f9f782cc3d91099bb1e2f1425d2facfd9531cf28a89473",
+          "camera": {
+            "name": "effects-side",
+            "cameraPositionBlender": [
+              10,
+              0,
+              1.3
+            ],
+            "targetBlender": [
+              0,
+              -0.7,
+              0.65
+            ],
+            "projection": "ORTHO",
+            "focalLengthMm": null,
+            "orthographicScale": 7.5,
+            "file": "effects-side-raw.png"
+          }
+        }
+      ]
+    }
+  ],
+  "sheets": {
+    "cold-gas-before-after.png": "9fa87d6bfd88539d738c66d697b137793dbf1ef409bb4c34e70f5fcdbe6b8508",
+    "cold-gas-classic.png": "155c7812a41ee39eb79ef8eeca34f95c5888665cd0e85dddcd27afdff9cb075e",
+    "cold-gas-mode-sheet.png": "685bdff80ab2613c8370433f316b7f651778f61379095f6ebaa413d50e77228f"
+  }
+}
