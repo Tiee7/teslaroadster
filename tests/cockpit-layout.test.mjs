@@ -142,7 +142,7 @@ function bounds(points) {
     bottom: (1 - Math.min(...points.map(c => c.y))) / 2
   };
 }
-test('FPV instrument pod shifts left, stays below the road and remains fully in frame across resize', () => {
+test('FPV instruments stay exactly centered while the left-hand-drive wheel remains visibly left across resize', () => {
   const p = fixture(2048, 1123);
   assert.match(physics, /new THREE.Vector3\(0\.0, COCKPIT_VIEW\.eyeHeight, COCKPIT_VIEW\.eyeZ\)/);
   assert.match(physics, /new THREE.Vector3\(0\.0, -COCKPIT_VIEW\.downwardSlope, -1\.0\)/);
@@ -154,14 +154,17 @@ test('FPV instrument pod shifts left, stays below the road and remains fully in 
       const top = (1 - Math.max(...corners.map(c => c.y))) / 2, bottom = (1 - Math.min(...corners.map(c => c.y))) / 2;
       const box = bounds(corners);
       assert.ok(top >= 0.65 && bottom <= 0.99, `${width}×${height}: pod ${top}..${bottom} enters road or clips`);
-      assert.ok(box.left >= 0.02 && box.right <= 0.69, `${width}×${height}: left pod clips or takes wheel space`);
-      assert.ok((box.left + box.right) / 2 <= 0.36, 'instruments must visibly move left of the driver center');
-      assert.ok(box.right - box.left <= 0.66, 'pod exceeds phone width budget');
+      assert.ok(box.left >= 0.02 && box.right <= 0.98, `${width}×${height}: centered pod clips`);
+      assert.ok(Math.abs((box.left + box.right) / 2 - 0.5) < 1e-9, 'live instrument panel must be exactly centered');
+      assert.ok(box.right - box.left <= 0.80, 'pod exceeds phone width budget');
       if (part === p.screenDisplay) {
         assert.ok((bottom - top) * height <= 156.000001);
+        assert.ok(20 * (box.right - box.left) * width / 512 >= 9.5, `${width}×${height}: 20px telemetry text projects below the readable-size floor`);
         assert.ok(Math.abs((box.right - box.left) * width / ((bottom - top) * height) - 512 / 200) < 1e-9, 'live HUD texture must preserve its complete aspect ratio');
       }
     }
+    const hub = project(localToWorld(vec(), p.yokeHub), p.COCKPIT_VIEW, width, height);
+    assert.ok((hub.x + 1) / 2 <= 0.36, `${width}×${height}: steering hub must be visibly left of center`);
     assert.ok(p.roadsterCanopyRails.every(rail => !rail.visible));
   }
 });
@@ -176,7 +179,7 @@ test('all speed, air and passenger readouts clear real generated body triangles,
           const point = localToWorld(vec((x / 512 - 0.5) * 0.38, (0.5 - y / 200) * 0.23, 0), p.screenDisplay);
           const ndc = project(point, p.COCKPIT_VIEW, width, height);
           assert.ok(Math.abs(ndc.x) < 0.98 && Math.abs(ndc.y) < 0.98, 'essential text clips');
-          assert.ok(obstacles.every(mesh => !intersects(eye, point, mesh)), `yoke/cowling covers ${x},${y}`);
+          assert.ok(obstacles.every(mesh => !intersects(eye, point, mesh)), `${width}×${height} at ${angle}: yoke/cowling covers ${x},${y}`);
           if (i === 0) assert.ok(!intersects(eye, point, p.roadsterBodyMesh), `actual body covers ${x},${y}`);
         }
       }
@@ -210,29 +213,31 @@ test('the close driver yoke is materially larger, with the live hub and LEDs vis
     assert.equal(p.yokeWheelGroup.children.length, 18, 'retain hub, grips, rollers, horn tips, bridge, spokes, badge and seven LEDs');
     assert.equal(p.yokeShiftLeds.length, 7);
     assert.equal(p.yokeWheelGroup.rotation.x, -0.20, 'retain the original driver-facing yoke tilt');
-    const pod = bounds(projectedVertices(p.screenBezel, p, width, height));
     const neutral = bounds(p.yokeWheelGroup.children.flatMap(part => projectedVertices(part, p, width, height)));
-    if (width / height >= 0.75) {
+    if (width / height >= 1.5) {
       assert.ok(neutral.bottom - neutral.top >= 0.20, `${width}×${height}: neutral wheel height must be at least 20% of view`);
       assert.ok((neutral.right - neutral.left) * width >= height * 0.40, 'desktop yoke must be at least 40% of viewport height wide');
       assert.ok(Math.min(1, neutral.bottom) - neutral.top >= 0.185, 'most of the large neutral yoke must remain visible');
+    } else if (width / height >= 0.75) {
+      assert.ok(neutral.bottom - neutral.top >= 0.135, 'square/transition views retain a substantial driver-sized wheel');
+      assert.ok((neutral.right - neutral.left) * width >= height * 0.27, 'stacked wheel must remain wide enough to feel close');
     } else {
-      assert.ok((neutral.right - neutral.left) >= 0.68, 'phone yoke must span over two thirds of the view width');
-      assert.ok((Math.min(1, neutral.bottom) - neutral.top) * height >= width * 0.29, 'phone yoke must have a substantial visible neutral height');
+      assert.ok((neutral.right - neutral.left) >= 0.58, 'phone yoke must retain at least 58% of the view width');
+      assert.ok((Math.min(1, neutral.bottom) - neutral.top) * height >= width * 0.27, 'phone yoke must have a substantial visible neutral height');
     }
     for (const angle of steeringAngles) {
       p.yokeWheelGroup.rotation.z = angle;
       const projected = p.yokeWheelGroup.children.flatMap(part => projectedVertices(part, p, width, height));
       const box = bounds(projected);
       assert.ok(projected.every(c => c.depth > 0.08), 'restored yoke crosses the cockpit near plane');
-      assert.ok(box.left >= 0.02 && box.right <= 0.98 && box.top >= 0.65 && box.bottom <= 1.17, `${width}×${height}: yoke ${JSON.stringify(box)} clips or blocks road at ${angle}`);
+      assert.ok(box.left >= (width / height < 0.75 ? -0.025 : 0.02) && box.right <= 0.98 && box.top >= 0.65 && box.bottom <= 1.17, `${width}×${height}: yoke ${JSON.stringify(box)} clips or blocks road at ${angle}`);
       // A near wheel may naturally crop its lower grip/bridge at full lock.
       // The horn-pad center and all shift-light centers must still be visible.
       for (const part of [p.yokeHub, ...p.yokeShiftLeds]) {
         const point = project(localToWorld(vec(0, 0, part.geometry.size[2] / 2), part), p.COCKPIT_VIEW, width, height);
         assert.ok(point.x > -0.98 && point.x < 0.98 && point.y > -0.99 && point.y < -0.30, `${width}×${height}: live hub/shift light center clips at ${angle}`);
       }
-      assert.ok(pod.right + 0.01 < box.left || pod.bottom + 0.002 < box.top, `${width}×${height}: display and turned wheel overlap`);
+      // Exact readout rays, rather than overlapping empty yoke bounds, decide clearance.
       // The front faces of the center hub and both grips must actually be
       // visible through the production shell, not merely project into frame.
       for (const part of [p.yokeHub, p.yokeWheelGroup.children[0], p.yokeWheelGroup.children[3]]) {
@@ -269,6 +274,9 @@ test('the dark 3D cockpit masks the white hood and physically mounts the steerin
     const p = fixture(width, height), eye = vec(0, p.COCKPIT_VIEW.eyeHeight, p.COCKPIT_VIEW.eyeZ);
     const slope = p.COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope), halfFov = Math.tan(Math.PI / 6);
     assert.ok(p.fpvDashboardGroup.visible, 'an actual interior dashboard must render in FPV');
+    assert.equal(p.fpvSteeringColumn.scale.x, p.yokeWheelGroup.scale.x, 'shaft thickness stays proportional to the driver wheel');
+    assert.equal(p.fpvSteeringColumn.scale.y, p.yokeWheelGroup.scale.y);
+    assert.equal(p.fpvColumnMount.scale.x, p.yokeWheelGroup.scale.x, 'socket size stays proportional to the hub');
     assert.ok(p.fpvDashFascia.geometry.size[2] >= 0.10 && p.fpvDashLedge.geometry.size[2] >= 0.10, 'dashboard requires real depth and a visible upper ledge');
     let maskedBodySamples = 0;
     for (const x of [-0.95, -0.65, -0.30, 0, 0.30, 0.65, 0.95]) for (const y of [-0.45, -0.65, -0.80, -0.96]) {
@@ -288,5 +296,75 @@ test('the dark 3D cockpit masks the white hood and physically mounts the steerin
     const mount = project(localToWorld(vec(), p.fpvColumnMount), p.COCKPIT_VIEW, width, height);
     assert.ok((1 - mount.y) / 2 >= 0.70 && (1 - mount.y) / 2 < 0.90, 'column socket should be visible within the dark dashboard');
     assert.ok(intersects(eye, localToWorld(vec(0, 0, -0.15), p.fpvColumnMount), p.fpvDashFascia), 'column socket must sit in front of and intersect the dashboard, not float ahead of the hood');
+  }
+});
+
+function triangleAreaInRectangle(triangle, rect) {
+  let polygon = triangle;
+  for (const [axis, boundary, sign] of [['x', rect.left * 2 - 1, 1], ['x', rect.right * 2 - 1, -1], ['y', 1 - rect.bottom * 2, 1], ['y', 1 - rect.top * 2, -1]]) {
+    const result = [];
+    for (let i = 0; i < polygon.length; i++) {
+      const a = polygon[i], b = polygon[(i + 1) % polygon.length];
+      const aInside = sign * (a[axis] - boundary) >= 0, bInside = sign * (b[axis] - boundary) >= 0;
+      if (aInside) result.push(a);
+      if (aInside !== bInside) {
+        const t = (boundary - a[axis]) / (b[axis] - a[axis]);
+        result.push({ x: a.x + t * (b.x - a.x), y: a.y + t * (b.y - a.y) });
+      }
+    }
+    polygon = result;
+    if (polygon.length < 3) return 0;
+  }
+  return Math.abs(polygon.reduce((sum, p, i) => { const q = polygon[(i + 1) % polygon.length]; return sum + p.x * q.y - p.y * q.x; }, 0)) / 2;
+}
+test('no projected yoke triangle can cover any part of the complete centered live display at full steering', () => {
+  for (const [width, height] of viewports) {
+    const p = fixture(width, height), rect = bounds(projectedVertices(p.screenDisplay, p, width, height));
+    for (const angle of steeringAngles) {
+      p.yokeWheelGroup.rotation.z = angle;
+      for (const part of [p.yokeHub, ...p.yokeShiftLeds]) {
+        const c = project(localToWorld(vec(0, 0, part.geometry.size[2] / 2), part), p.COCKPIT_VIEW, width, height);
+        assert.ok(Math.abs(c.x) < 0.98 && c.y > -0.99 && c.y < -0.30, 'hub and live LED centers remain in frame');
+      }
+      for (const part of p.yokeWheelGroup.children) {
+        const points = projectedVertices(part, p, width, height);
+        assert.ok(points.every(point => point.depth < p.COCKPIT_VIEW.displayDepth), 'wheel/display physical depth ordering must remain stable');
+        for (let i = 0; i < part.geometry.indices.length; i += 3) {
+          const triangle = part.geometry.indices.slice(i, i + 3).map(index => points[index]);
+          const pixels = triangleAreaInRectangle(triangle, rect) * width * height / 4;
+          assert.ok(pixels < 0.01, `${width}×${height}: left yoke overlaps ${pixels.toFixed(3)} display pixels at ${angle}`);
+        }
+      }
+    }
+  }
+});
+
+test('constrained portrait and square windows keep legible central telemetry without wheel overlap', () => {
+  for (const [width, height] of [[320, 568], [390, 650], [400, 700], [390, 700], [360, 700], [412, 732], [375, 667], [600, 600], [700, 700], [1024, 768]]) {
+    const p = fixture(width, height), rect = bounds(projectedVertices(p.screenDisplay, p, width, height));
+    assert.ok(20 * (rect.right - rect.left) * width / 512 >= 9.5, 'small windows retain legible telemetry labels');
+    assert.ok(Math.abs((rect.left + rect.right) / 2 - 0.5) < 1e-9, 'small-window pod stays centered');
+    assert.ok(bounds(projectedVertices(p.screenBezel, p, width, height)).top >= 0.65, 'small-window bezel clears the upper 65% road view');
+    const eye = vec(0, p.COCKPIT_VIEW.eyeHeight, p.COCKPIT_VIEW.eyeZ);
+    for (const y of [26, 66, 75, 82, 104, 110, 134, 156, 176, 194]) for (const x of [16, 80, 140, 178, 330, 494]) {
+      const point = localToWorld(vec((x / 512 - 0.5) * 0.38, (0.5 - y / 200) * 0.23, 0), p.screenDisplay);
+      assert.ok([...p.fpvDashboardGroup.children, p.roadsterBodyMesh].every(part => !intersects(eye, point, part)), `${width}×${height}: column/dashboard covers real telemetry at ${x},${y}`);
+    }
+    const neutral = bounds(p.yokeWheelGroup.children.flatMap(part => projectedVertices(part, p, width, height)));
+    assert.ok((neutral.right - neutral.left) * width >= Math.min(width * 0.35, height * 0.20), 'constrained wheel still has a meaningful driver-sized width');
+    for (const angle of steeringAngles) {
+      p.yokeWheelGroup.rotation.z = angle;
+      for (const part of [p.yokeHub, ...p.yokeShiftLeds]) {
+        const c = project(localToWorld(vec(0, 0, part.geometry.size[2] / 2), part), p.COCKPIT_VIEW, width, height);
+        assert.ok(Math.abs(c.x) < 0.98 && c.y > -0.99 && c.y < -0.30, 'hub and live LED centers remain in frame');
+      }
+      for (const part of p.yokeWheelGroup.children) {
+        const points = projectedVertices(part, p, width, height);
+        for (let i = 0; i < part.geometry.indices.length; i += 3) {
+          const triangle = part.geometry.indices.slice(i, i + 3).map(index => points[index]);
+          assert.ok(triangleAreaInRectangle(triangle, rect) * width * height / 4 < 0.01, `${width}×${height}: constrained window wheel crosses centered telemetry`);
+        }
+      }
+    }
   }
 });

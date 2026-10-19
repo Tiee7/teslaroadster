@@ -3241,18 +3241,18 @@ function resizeCockpitDisplay() {
     return;
   }
   const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight);
-  const aspect = width / height, portrait = aspect < 0.75;
+  const aspect = width / height, portrait = aspect < 0.75, stacked = aspect < 1.5;
   const halfFov = Math.tan(Math.PI / 6);
   const slope = COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope);
-  // On wide views the instruments sit left of the steering column. A tall
-  // phone puts the complete left pod above the wheel, retaining every readout.
-  const pixels = Math.min(156, Math.max(92, height * 0.15), height * (portrait ? 0.075 : 0.20), width * (portrait ? 0.64 : 0.30) * 200 / 512);
+  // A left-hand-drive wheel sits beside the centered instrument pod on wide
+  // views. Square/tall screens stack the centered pod above the left wheel.
+  const pixels = Math.min(156, Math.max(100, height * (stacked ? 0.12 : 0.15)), (stacked ? Infinity : height * 0.315), width * 0.78 * 200 / 512);
   const depth = COCKPIT_VIEW.displayDepth;
   const displayHeight = 2 * depth * halfFov * pixels / height;
   const displayWidth = displayHeight * 512 / 200;
   const displayPixelsWide = pixels * 512 / 200;
-  const screenX = width * 0.035 + displayPixelsWide / 2;
-  const screenY = height * (portrait ? 0.735 : 0.965) - pixels / 2;
+  const screenX = width / 2;
+  const screenY = stacked ? Math.max(height * 0.66, height * 0.65 + 8) + pixels / 2 : height * 0.98 - pixels / 2;
   positionCockpitPart(screenDisplay, screenX, screenY, depth, width, height);
   screenDisplay.rotation.x = -Math.atan(slope);
   screenDisplay.scale.set(displayWidth / 0.38, displayHeight / 0.23, 1);
@@ -3261,13 +3261,20 @@ function resizeCockpitDisplay() {
   const bezelPadding = 2 * depth * halfFov * Math.min(6, width * 0.016) / height;
   screenBezel.scale.set((displayWidth + bezelPadding) / 0.40, (displayHeight + bezelPadding) / 0.25, 0.5);
 
-  // The close yoke is roughly twice the previous apparent size. Let its lower
-  // bridge leave the frame naturally; the hub, shift lights and both grips are
-  // prominent at neutral, rather than shrinking the entire wheel to fit a box.
-  const wheelRadiusPixels = Math.min(height * 0.245, width * 0.41);
+  // Wide views retain the close, driver-sized yoke. Its lower bridge can crop
+  // naturally; the hub, shift lights and useful grip surfaces remain visible.
+  const podBottom = screenY + pixels / 2;
+  const constrainedStack = stacked && podBottom > height * 0.785;
+  // Short portrait/tablet windows keep readable text first. Fit the wheel's
+  // complete turning envelope below the pod instead of shrinking the canvas.
+  const stackRadiusLimit = constrainedStack ? Math.max(1, (height * 0.995 - podBottom - 2) / 1.35) : Infinity;
+  const wheelRadiusPixels = Math.min(height * (stacked ? 0.157 : 0.245), width * (stacked ? 0.35 : 0.41), stackRadiusLimit);
   const wheelScale = 2 * COCKPIT_VIEW.wheelDepth * halfFov * wheelRadiusPixels / height / 0.20;
-  const wheelX = portrait ? width * 0.56 : Math.max(width * 0.52, width * 0.035 + displayPixelsWide + wheelRadiusPixels * 1.02 + 8);
-  const wheelY = height * (portrait ? 0.922 : 0.895);
+  const wheelX = stacked ? width * (portrait ? 0.33 : 0.26) : Math.min(
+    width * 0.25,
+    screenX - displayPixelsWide / 2 - wheelRadiusPixels * 1.02 - 8
+  );
+  const wheelY = constrainedStack ? height * 0.995 - wheelRadiusPixels * 0.373 : height * (stacked ? 0.9365 : 0.895);
   positionCockpitPart(yokeWheelGroup, wheelX, wheelY, COCKPIT_VIEW.wheelDepth, width, height);
   yokeWheelGroup.scale.setScalar(wheelScale);
 
@@ -3288,15 +3295,17 @@ function resizeCockpitDisplay() {
   // The column physically bridges the wheel hub and a socket in the fascia.
   // Give its rear socket a higher screen position so the carbon shroud is visible
   // above the horn pad, instead of looking like a disconnected floating prop.
-  positionCockpitPart(fpvColumnMount, wheelX, wheelY - height * 0.095, COCKPIT_VIEW.dashDepth - 0.10, width, height);
+  const mountY = stacked ? Math.max(wheelY - height * 0.095, podBottom + height * 0.08) : wheelY - height * 0.095;
+  positionCockpitPart(fpvColumnMount, wheelX, mountY, COCKPIT_VIEW.dashDepth - 0.07, width, height);
   fpvColumnMount.rotation.x = -Math.atan(slope);
+  fpvColumnMount.scale.setScalar(wheelScale);
   const dx = yokeWheelGroup.position.x - fpvColumnMount.position.x;
   const dy = yokeWheelGroup.position.y - fpvColumnMount.position.y;
   const dz = yokeWheelGroup.position.z - fpvColumnMount.position.z;
   const length = Math.hypot(dx, dy, dz);
   fpvSteeringColumn.position.set((yokeWheelGroup.position.x + fpvColumnMount.position.x) / 2, (yokeWheelGroup.position.y + fpvColumnMount.position.y) / 2, (yokeWheelGroup.position.z + fpvColumnMount.position.z) / 2);
   fpvSteeringColumn.rotation.set(-Math.atan2(dy, dz), Math.asin(dx / length), 0);
-  fpvSteeringColumn.scale.set(1, 1, length);
+  fpvSteeringColumn.scale.set(wheelScale, wheelScale, length);
 }
 function setCockpitPerspective(active) {
   if (cockpitPerspectiveActive === active) return;
