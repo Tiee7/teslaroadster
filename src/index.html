@@ -422,14 +422,12 @@
       <div id="hud-cluster-tank" class="flex-1 w-full">
         <div class="flex items-center justify-between text-xs mb-1">
           <div class="flex items-center gap-2">
-            <span id="ui-tank-title" class="font-bold uppercase tracking-wider text-cyan-300">SPACE-X COPV AIR TANK (600L)</span>
+            <span id="ui-tank-title" class="font-bold uppercase tracking-wider text-cyan-300">AIR TANK</span>
             <span id="ui-tank-state-badge" class="text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">READY</span>
           </div>
           <div class="mono font-bold text-xs flex items-center gap-2">
             <span id="val-air-flow" class="text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">FLOW: 0 L/s</span>
             <span id="val-air-sec" class="text-white">10.0s</span>
-            <span class="text-slate-400"> / 10.0s</span>
-            <span id="val-air-liters" class="text-cyan-400 ml-1">(600L)</span>
           </div>
         </div>
 
@@ -443,9 +441,8 @@
           <div id="air-bar-fill" class="h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75" style="width: 100%;"></div>
         </div>
 
-        <!-- Timer Sub-caption -->
+        <!-- Auto-descent / depletion warning -->
         <div class="flex justify-between text-[10px] text-slate-400 mt-1 mono">
-          <span id="ui-tank-burn-time">Burn Time Used: <b id="val-burn-used" class="text-slate-200">0.0s</b> / 10.0s</span>
           <span id="ui-tank-hint">8.0s used → Auto-Descend | 10.0s used → Freefall</span>
         </div>
       </div>

@@ -59,8 +59,9 @@ function worldToLocal(v, object) {
 }
 const subtract = (a, b) => vec(a.x - b.x, a.y - b.y, a.z - b.z);
 const geometryBounds = new WeakMap();
-function intersects(eye, target, mesh) {
-  if (mesh.visible === false) return false;
+function intersects(eye, target, mesh, nearest = false) {
+  const miss = nearest ? Infinity : false;
+  for (let ancestor = mesh; ancestor; ancestor = ancestor.parent) if (ancestor.visible === false) return miss;
   const o = rotate(worldToLocal(eye, mesh), mesh.geometry.rotation, true);
   const end = rotate(worldToLocal(target, mesh), mesh.geometry.rotation, true);
   const direction = subtract(end, o), g = mesh.geometry;
@@ -76,17 +77,18 @@ function intersects(eye, target, mesh) {
   let near = 0, far = 1 - 1e-7;
   for (const axis of ['x', 'y', 'z']) {
     if (Math.abs(direction[axis]) < 1e-12) {
-      if (o[axis] < box[axis][0] || o[axis] > box[axis][1]) return false;
+      if (o[axis] < box[axis][0] || o[axis] > box[axis][1]) return miss;
       continue;
     }
     const a = (box[axis][0] - o[axis]) / direction[axis], b = (box[axis][1] - o[axis]) / direction[axis];
     near = Math.max(near, Math.min(a, b)); far = Math.min(far, Math.max(a, b));
-    if (near > far) return false;
+    if (near > far) return miss;
   }
   // Exact Moller-Trumbore intersections after a broad-phase box rejection.
   // Primitive fixtures carry the same box/plane/cylinder triangles as THREE,
   // and the body uses the production generated positions and index buffer.
   const v = g.vertices, indices = g.indices, d = direction;
+  let closest = Infinity;
   for (let i = 0; i < indices.length; i += 3) {
     const a = indices[i] * 3, b = indices[i + 1] * 3, c = indices[i + 2] * 3;
     const e1x = v[b] - v[a], e1y = v[b + 1] - v[a + 1], e1z = v[b + 2] - v[a + 2];
@@ -101,9 +103,9 @@ function intersects(eye, target, mesh) {
     const baryV = (d.x * qx + d.y * qy + d.z * qz) / determinant;
     if (baryV < 0 || u + baryV > 1) continue;
     const t = (e2x * qx + e2y * qy + e2z * qz) / determinant;
-    if (t >= 0 && t < 1 - 1e-7) return true;
+    if (t >= 0 && t < 1 - 1e-7) { if (!nearest) return true; closest = Math.min(closest, t); }
   }
-  return false;
+  return nearest ? closest : false;
 }
 function fixture(width, height) {
   const events = {};
@@ -113,7 +115,7 @@ function fixture(width, height) {
     THREE: { Mesh: Object3D, Group: Object3D, BoxGeometry: Shape, PlaneGeometry: Shape, CylinderGeometry: Cylinder, BufferGeometry: BufferShape,
       Float32BufferAttribute: class { constructor(array) { this.array = array; } }, CanvasTexture: class {}, MeshBasicMaterial: class {} },
   });
-  vm.runInContext(vehicles.slice(0, vehicles.indexOf('// 3) Front Fascia')) + '\nthis.parts = { COCKPIT_VIEW, playerWrapper, yokeHub, yokeBottomBar, yokeShiftLeds, screenDisplay, screenBezel, dashCowling, yokeWheelGroup, steeringColumn, roadsterBodyMesh, roadsterRockerMesh, roadsterCanopyRails, dashPipe, resizeCockpitDisplay, setCockpitPerspective };', c);
+  vm.runInContext(vehicles.slice(0, vehicles.indexOf('// 3) Front Fascia')) + '\nthis.parts = { COCKPIT_VIEW, playerWrapper, fpvDashboardGroup, fpvDashFascia, fpvDashLedge, fpvDashTrim, fpvColumnMount, fpvSteeringColumn, yokeHub, yokeBottomBar, yokeShiftLeds, screenDisplay, screenBezel, dashCowling, yokeWheelGroup, steeringColumn, roadsterBodyMesh, roadsterRockerMesh, roadsterCanopyRails, dashPipe, resizeCockpitDisplay, setCockpitPerspective };', c);
   const p = c.parts; p.playerWrapper.position.set(0, 0, 0); p.setCockpitPerspective(true);
   return { ...p, window, resize(w, h) { window.innerWidth = w; window.innerHeight = h; events.resize(); } };
 }
@@ -122,7 +124,7 @@ function project(point, view, width, height) {
   const depth = (-view.downwardSlope * d.y - d.z) / norm;
   return { x: d.x / (depth * t * width / height), y: (d.y - view.downwardSlope * d.z) / norm / (depth * t), depth };
 }
-const viewports = [[2048, 1123], [1440, 900], [844, 390], [667, 320], [1024, 1024], [780, 900], [390, 844], [360, 800], [320, 900]];
+const viewports = [[2048, 1163], [2048, 1123], [1440, 900], [844, 390], [667, 320], [1024, 1024], [780, 900], [390, 844], [360, 800], [320, 900]];
 const steeringAngles = Array.from({ length: 49 }, (_, i) => -1.009 + 2.018 * i / 48);
 function projectedVertices(part, p, width, height) {
   const out = [];
@@ -148,10 +150,10 @@ test('FPV instrument pod shifts left, stays below the road and remains fully in 
   for (const [width, height] of [...viewports, ...viewports.toReversed()]) {
     p.resize(width, height);
     for (const part of [p.screenDisplay, p.screenBezel]) {
-      const corners = [-1, 1].flatMap(x => [-1, 1].map(y => project(localToWorld(vec(x * part.geometry.size[0] / 2, y * part.geometry.size[1] / 2, part.geometry.size[2] / 2), part), p.COCKPIT_VIEW, width, height)));
+      const corners = projectedVertices(part, p, width, height);
       const top = (1 - Math.max(...corners.map(c => c.y))) / 2, bottom = (1 - Math.min(...corners.map(c => c.y))) / 2;
       const box = bounds(corners);
-      assert.ok(top >= 0.71 && bottom <= 0.99, `${width}×${height}: pod ${top}..${bottom} enters road or clips`);
+      assert.ok(top >= 0.65 && bottom <= 0.99, `${width}×${height}: pod ${top}..${bottom} enters road or clips`);
       assert.ok(box.left >= 0.02 && box.right <= 0.69, `${width}×${height}: left pod clips or takes wheel space`);
       assert.ok((box.left + box.right) / 2 <= 0.36, 'instruments must visibly move left of the driver center');
       assert.ok(box.right - box.left <= 0.66, 'pod exceeds phone width budget');
@@ -166,7 +168,7 @@ test('FPV instrument pod shifts left, stays below the road and remains fully in 
 test('all speed, air and passenger readouts clear real generated body triangles, cowling and a fully turned yoke', () => {
   for (const [width, height] of viewports) {
     const p = fixture(width, height), eye = vec(0, p.COCKPIT_VIEW.eyeHeight, p.COCKPIT_VIEW.eyeZ);
-    const obstacles = [p.dashCowling, p.steeringColumn, ...p.yokeWheelGroup.children];
+    const obstacles = [p.dashCowling, p.steeringColumn, ...p.fpvDashboardGroup.children, ...p.yokeWheelGroup.children];
     for (const [i, angle] of steeringAngles.entries()) {
       p.yokeWheelGroup.rotation.z = angle;
       for (const y of [26, 66, 75, 82, 104, 110, 134, 156, 176, 194]) {
@@ -185,13 +187,13 @@ test('central forward road rays stay clear of actual body/rocker/cockpit across 
   for (const [width, height] of viewports) {
     const p = fixture(width, height), eye = vec(0, p.COCKPIT_VIEW.eyeHeight, p.COCKPIT_VIEW.eyeZ);
     const slope = p.COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope), halfFov = Math.tan(Math.PI / 6);
-    const obstacles = [p.roadsterBodyMesh, p.roadsterRockerMesh, p.dashCowling, p.screenBezel, p.screenDisplay, p.steeringColumn, ...p.yokeWheelGroup.children];
+    const obstacles = [p.roadsterBodyMesh, p.roadsterRockerMesh, p.dashCowling, p.screenBezel, p.screenDisplay, p.steeringColumn, ...p.fpvDashboardGroup.children, ...p.yokeWheelGroup.children];
     // Body is static for steering. Test its real triangles once, and every
     // cockpit primitive's triangles at each angle, rather than only at neutral.
     for (const [i, angle] of steeringAngles.entries()) {
       p.yokeWheelGroup.rotation.z = angle;
       const tested = i === 0 ? obstacles : obstacles.slice(2);
-      for (const ndcX of [-0.7, -0.35, 0, 0.35, 0.7]) for (const ndcY of [-0.38, -0.1, 0.3, 0.6]) {
+      for (const ndcX of [-0.7, -0.35, 0, 0.35, 0.7]) for (const ndcY of [-0.30, -0.1, 0.3, 0.6]) {
       const up = ndcY * 100 * halfFov;
       const target = vec(ndcX * 100 * halfFov * width / height, eye.y + (-slope * 100 + up) / norm, eye.z + (-100 - slope * up) / norm);
       assert.ok(tested.every(mesh => !intersects(eye, target, mesh)), `${width}×${height}: road ray ${ndcX},${ndcY} blocked at ${angle}`);
@@ -199,7 +201,7 @@ test('central forward road rays stay clear of actual body/rocker/cockpit across 
     }
   }
 });
-test('the original 3D yoke is visibly in frame, centered below the road and clear of the left instruments at every steering angle', () => {
+test('the close driver yoke is materially larger, with the live hub and LEDs visible through its complete steering range', () => {
   assert.match(physics, /targetYokeRot = state\.steerAngle \* 1\.55 - \(isAirborne \? rollInput \* 0\.42 : 0\)/);
   assert.match(physics, /yokeWheelGroup\.rotation\.z \+=/);
   for (const [width, height] of viewports) {
@@ -209,20 +211,33 @@ test('the original 3D yoke is visibly in frame, centered below the road and clea
     assert.equal(p.yokeShiftLeds.length, 7);
     assert.equal(p.yokeWheelGroup.rotation.x, -0.20, 'retain the original driver-facing yoke tilt');
     const pod = bounds(projectedVertices(p.screenBezel, p, width, height));
+    const neutral = bounds(p.yokeWheelGroup.children.flatMap(part => projectedVertices(part, p, width, height)));
+    if (width / height >= 0.75) {
+      assert.ok(neutral.bottom - neutral.top >= 0.20, `${width}×${height}: neutral wheel height must be at least 20% of view`);
+      assert.ok((neutral.right - neutral.left) * width >= height * 0.40, 'desktop yoke must be at least 40% of viewport height wide');
+      assert.ok(Math.min(1, neutral.bottom) - neutral.top >= 0.185, 'most of the large neutral yoke must remain visible');
+    } else {
+      assert.ok((neutral.right - neutral.left) >= 0.68, 'phone yoke must span over two thirds of the view width');
+      assert.ok((Math.min(1, neutral.bottom) - neutral.top) * height >= width * 0.29, 'phone yoke must have a substantial visible neutral height');
+    }
     for (const angle of steeringAngles) {
       p.yokeWheelGroup.rotation.z = angle;
       const projected = p.yokeWheelGroup.children.flatMap(part => projectedVertices(part, p, width, height));
       const box = bounds(projected);
       assert.ok(projected.every(c => c.depth > 0.08), 'restored yoke crosses the cockpit near plane');
-      assert.ok(box.left >= 0.02 && box.right <= 0.98 && box.top >= 0.70 && box.bottom <= 0.99, `${width}×${height}: yoke ${JSON.stringify(box)} clips or blocks road at ${angle}`);
-      assert.ok(box.bottom - box.top >= Math.min(0.06, width / height * 0.13), 'wheel must occupy a tangible visible height');
-      assert.ok(box.right - box.left >= Math.min(0.045, height / width * 0.09), 'wheel must occupy a tangible visible width');
+      assert.ok(box.left >= 0.02 && box.right <= 0.98 && box.top >= 0.65 && box.bottom <= 1.17, `${width}×${height}: yoke ${JSON.stringify(box)} clips or blocks road at ${angle}`);
+      // A near wheel may naturally crop its lower grip/bridge at full lock.
+      // The horn-pad center and all shift-light centers must still be visible.
+      for (const part of [p.yokeHub, ...p.yokeShiftLeds]) {
+        const point = project(localToWorld(vec(0, 0, part.geometry.size[2] / 2), part), p.COCKPIT_VIEW, width, height);
+        assert.ok(point.x > -0.98 && point.x < 0.98 && point.y > -0.99 && point.y < -0.30, `${width}×${height}: live hub/shift light center clips at ${angle}`);
+      }
       assert.ok(pod.right + 0.01 < box.left || pod.bottom + 0.002 < box.top, `${width}×${height}: display and turned wheel overlap`);
       // The front faces of the center hub and both grips must actually be
       // visible through the production shell, not merely project into frame.
       for (const part of [p.yokeHub, p.yokeWheelGroup.children[0], p.yokeWheelGroup.children[3]]) {
         const face = localToWorld(vec(0, 0, part.geometry.size[2] / 2), part);
-        for (const obstacle of [p.roadsterBodyMesh, p.roadsterRockerMesh, p.dashCowling, p.screenDisplay, p.screenBezel]) {
+        for (const obstacle of [p.roadsterBodyMesh, p.roadsterRockerMesh, p.dashCowling, p.fpvDashFascia, p.fpvDashLedge, p.screenDisplay, p.screenBezel]) {
           assert.ok(!intersects(eye, face, obstacle), `${width}×${height}: restored yoke is hidden behind another surface at ${angle}`);
         }
       }
@@ -236,6 +251,7 @@ test('leaving FPV restores exterior geometry repeatedly; resize does not change 
     const steer = i % 2 ? -1.009 : 1.009; p.yokeWheelGroup.rotation.z = steer;
     p.setCockpitPerspective(false); p.resize(390, 844);
     assert.ok(p.roadsterCanopyRails.every(rail => rail.visible)); assert.equal(p.dashPipe.visible, true);
+    assert.equal(p.dashCowling.visible, true); assert.equal(p.steeringColumn.visible, true); assert.equal(p.fpvDashboardGroup.visible, false);
     assert.equal(p.dashCowling.position.y, 0.62); assert.equal(p.yokeWheelGroup.position.y, 0.625); assert.equal(p.steeringColumn.position.y, 0.60);
     assert.equal(p.yokeWheelGroup.position.x, 0); assert.equal(p.yokeWheelGroup.position.z, -0.46);
     assert.equal(p.steeringColumn.position.x, 0); assert.equal(p.steeringColumn.position.z, -0.58);
@@ -243,7 +259,34 @@ test('leaving FPV restores exterior geometry repeatedly; resize does not change 
     assert.equal(p.screenDisplay.position.x, 0);
     assert.equal(p.screenDisplay.position.y, 0.80); assert.equal(p.screenDisplay.position.z, -0.90); assert.equal(p.screenDisplay.rotation.x, -0.26);
     assert.equal(p.screenDisplay.scale.x, Math.min(1, 390 / 844 / 0.65)); assert.equal(p.screenDisplay.scale.x, p.screenDisplay.scale.y);
-    p.setCockpitPerspective(true); assert.equal(p.dashPipe.visible, false); assert.equal(p.dashCowling.position.y, 0.50);
+    p.setCockpitPerspective(true); assert.equal(p.dashPipe.visible, false); assert.equal(p.dashCowling.visible, false); assert.equal(p.fpvDashboardGroup.visible, true); assert.equal(p.steeringColumn.visible, false);
     p.resize(844, 390); assert.equal(p.yokeWheelGroup.rotation.z, steer, 'responsive poses must not reset live steering');
+  }
+});
+
+test('the dark 3D cockpit masks the white hood and physically mounts the steering column', () => {
+  for (const [width, height] of viewports) {
+    const p = fixture(width, height), eye = vec(0, p.COCKPIT_VIEW.eyeHeight, p.COCKPIT_VIEW.eyeZ);
+    const slope = p.COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope), halfFov = Math.tan(Math.PI / 6);
+    assert.ok(p.fpvDashboardGroup.visible, 'an actual interior dashboard must render in FPV');
+    assert.ok(p.fpvDashFascia.geometry.size[2] >= 0.10 && p.fpvDashLedge.geometry.size[2] >= 0.10, 'dashboard requires real depth and a visible upper ledge');
+    let maskedBodySamples = 0;
+    for (const x of [-0.95, -0.65, -0.30, 0, 0.30, 0.65, 0.95]) for (const y of [-0.45, -0.65, -0.80, -0.96]) {
+      const up = y * 100 * halfFov;
+      const target = vec(x * 100 * halfFov * width / height, eye.y + (-slope * 100 + up) / norm, eye.z + (-100 - slope * up) / norm);
+      const dashHit = Math.min(...[p.fpvDashFascia, p.fpvDashLedge].map(part => intersects(eye, target, part, true)));
+      const bodyHit = intersects(eye, target, p.roadsterBodyMesh, true);
+      assert.ok(Number.isFinite(dashHit), `${width}×${height}: lower foreground has no real dark cockpit backing`);
+      assert.ok(dashHit < bodyHit, `${width}×${height}: white hood is visible in front of cockpit backing at ${x},${y}`);
+      if (Number.isFinite(bodyHit)) maskedBodySamples++;
+    }
+    assert.ok(maskedBodySamples >= 3, 'regression must actually exercise rays through the real white body');
+    const ends = [-0.5, 0.5].map(y => localToWorld(rotate(vec(0, y, 0), p.fpvSteeringColumn.geometry.rotation), p.fpvSteeringColumn));
+    const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+    assert.ok(distance(ends[0], localToWorld(vec(), p.fpvColumnMount)) < 1e-9, 'rear steering shaft must enter the dash socket');
+    assert.ok(distance(ends[1], localToWorld(vec(), p.yokeWheelGroup)) < 1e-9, 'front steering shaft must connect to the real yoke hub');
+    const mount = project(localToWorld(vec(), p.fpvColumnMount), p.COCKPIT_VIEW, width, height);
+    assert.ok((1 - mount.y) / 2 >= 0.70 && (1 - mount.y) / 2 < 0.90, 'column socket should be visible within the dark dashboard');
+    assert.ok(intersects(eye, localToWorld(vec(0, 0, -0.15), p.fpvColumnMount), p.fpvDashFascia), 'column socket must sit in front of and intersect the dashboard, not float ahead of the hood');
   }
 });

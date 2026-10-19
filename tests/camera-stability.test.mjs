@@ -25,7 +25,7 @@ function harness(map = 'city') {
     camera, state, currentMap: map, cameraModeIndex: 0, performance: { now: () => 1000 },
     THREE: { MathUtils: { clamp: (v, lo, hi) => Math.max(lo, Math.min(hi, v)), lerp: (a, b, t) => a + (b - a) * t } },
     Math: Object.assign(Object.create(Math), { random: () => 0.5 }),
-    roadsterCanopyMesh: {}, hudCombinerMesh: {}, setCockpitPerspective() {}, playerWrapper: { position: point() }, roadsterAttitudeGroup: { rotation: point() },
+    roadsterCanopyMesh: {}, hudCombinerMesh: {}, setCockpitPerspective() {}, setCockpitExteriorDetailsVisible(visible) { state.exteriorDetailsVisible = visible; }, playerWrapper: { position: point() }, roadsterAttitudeGroup: { rotation: point() },
     trafficCars: [], WORLD_SPEED_SCALE: 1.65, CITY_HALF_BOUND: 1200, sound: { beep() {} },
     triggerPhysicsCollision() { throw new Error('Unexpected collision in focused contact test'); },
     window: {}, clearDebris() {}, carMeshGroup: {}, MAX_AIR_SECONDS: 10, renderBannerText() {},

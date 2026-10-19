@@ -3,7 +3,7 @@
 //    Rebuilt 1:1 from user reference photos (image_ed309d, ed30b9, ed8256)
 // =========================================================================
 // One fixed driver pose is shared by the camera and projection-sized instruments.
-const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.58, wheelDepth: 0.40 });
+const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.47, wheelDepth: 0.30, dashDepth: 0.60 });
 const playerWrapper = new THREE.Group();
 playerWrapper.position.set(2.5, 0, 0);
 scene.add(playerWrapper);
@@ -329,6 +329,14 @@ const roadsterCanopyRails = [];
 });
 
 // =========================================================================
+// External lamp backs, hood vents and raised shutlines are not interior trim.
+// Keep the real forward SpotLights active while excluding their decorative
+// exterior meshes from the cockpit view, restoring them in every outside view.
+const cockpitExteriorDetailMeshes = [];
+function setCockpitExteriorDetailsVisible(visible) {
+  cockpitExteriorDetailMeshes.forEach(mesh => { mesh.visible = visible; });
+}
+
 // FULL-FEATURED FIRST-PERSON COCKPIT (FPV) WITH 3D YOKE & LIVE HUD CANVAS
 
 // Live Dynamic CanvasTexture for Center Touchscreen & Fighter HUD Combiner
@@ -442,8 +450,20 @@ for (let i = 0; i < 7; i++) {
 
 carMeshGroup.add(seatBack, dashCowling, screenBezel, screenDisplay, hudCombinerMesh, steeringColumn, yokeWheelGroup);
 
-// FPV uses the original animated yoke in a camera-sized lower-center pose.
-// Keep its exterior pose independent of the responsive driving instruments.
+// A real FPV-only dashboard sits between the driver and the exterior hood.
+// Its deep fascia, upper ledge and column socket give the wheel a visible
+// interior mounting point without changing the exterior/showroom model.
+const fpvDashboardGroup = new THREE.Group();
+const fpvDashFascia = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 0.14), carbonMaterial);
+const fpvDashLedge = new THREE.Mesh(new THREE.BoxGeometry(1, 0.018, 0.18), cockpitMat);
+const fpvDashTrim = new THREE.Mesh(new THREE.BoxGeometry(1, 0.004, 0.012), new THREE.MeshBasicMaterial({ color: 0x16445a }));
+const fpvColumnMount = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.10, 0.08), cockpitMat);
+const fpvSteeringColumn = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 1, 16).rotateX(Math.PI / 2), carbonMaterial);
+fpvDashboardGroup.add(fpvDashFascia, fpvDashLedge, fpvDashTrim, fpvColumnMount, fpvSteeringColumn);
+fpvDashboardGroup.visible = false;
+carMeshGroup.add(fpvDashboardGroup);
+
+// Keep the original yoke's exterior pose independent of the close driver pose.
 let cockpitPerspectiveActive = false;
 function positionCockpitPart(part, screenX, screenY, depth, width, height) {
   const halfFov = Math.tan(Math.PI / 6);
@@ -470,47 +490,70 @@ function resizeCockpitDisplay() {
     return;
   }
   const width = Math.max(1, window.innerWidth), height = Math.max(1, window.innerHeight);
-  const aspect = width / height;
-  // Tall phones put the left-hand pod just above the wheel; wide views place
-  // them side by side. Both layouts leave the upper 70% open to the road.
-  const compact = Math.max(0, Math.min(1, (1.10 - aspect) / 0.35));
-  const pixels = Math.min(156, Math.max(92, height * 0.15), height * (0.20 - compact * 0.085), width * 0.64 * 200 / 512);
-  const depth = COCKPIT_VIEW.displayDepth, halfFov = Math.tan(Math.PI / 6);
+  const aspect = width / height, portrait = aspect < 0.75;
+  const halfFov = Math.tan(Math.PI / 6);
   const slope = COCKPIT_VIEW.downwardSlope, norm = Math.hypot(1, slope);
+  // On wide views the instruments sit left of the steering column. A tall
+  // phone puts the complete left pod above the wheel, retaining every readout.
+  const pixels = Math.min(156, Math.max(92, height * 0.15), height * (portrait ? 0.075 : 0.20), width * (portrait ? 0.64 : 0.30) * 200 / 512);
+  const depth = COCKPIT_VIEW.displayDepth;
   const displayHeight = 2 * depth * halfFov * pixels / height;
   const displayWidth = displayHeight * 512 / 200;
   const displayPixelsWide = pixels * 512 / 200;
   const screenX = width * 0.035 + displayPixelsWide / 2;
-  const screenY = height * (0.965 - compact * 0.12) - pixels / 2;
+  const screenY = height * (portrait ? 0.735 : 0.965) - pixels / 2;
   positionCockpitPart(screenDisplay, screenX, screenY, depth, width, height);
   screenDisplay.rotation.x = -Math.atan(slope);
   screenDisplay.scale.set(displayWidth / 0.38, displayHeight / 0.23, 1);
-  // Keep the bezel behind the face along its normal, including its thickness.
   screenBezel.position.set(screenDisplay.position.x, screenDisplay.position.y - slope * 0.012 / norm, screenDisplay.position.z - 0.012 / norm);
   screenBezel.rotation.x = screenDisplay.rotation.x;
   const bezelPadding = 2 * depth * halfFov * Math.min(6, width * 0.016) / height;
   screenBezel.scale.set((displayWidth + bezelPadding) / 0.40, (displayHeight + bezelPadding) / 0.25, 0.5);
 
-  // Bound the entire original wheel through its full +/-1.009-radian turn,
-  // rather than hiding it below the raised driver's frustum. Its 0.20m local
-  // radius includes the grips, horn tips, depth and lower bridge at any angle.
-  const wheelRadiusPixels = Math.min(height * (0.12 - compact * 0.051), width * 0.20);
+  // The close yoke is roughly twice the previous apparent size. Let its lower
+  // bridge leave the frame naturally; the hub, shift lights and both grips are
+  // prominent at neutral, rather than shrinking the entire wheel to fit a box.
+  const wheelRadiusPixels = Math.min(height * 0.245, width * 0.41);
   const wheelScale = 2 * COCKPIT_VIEW.wheelDepth * halfFov * wheelRadiusPixels / height / 0.20;
-  const wheelX = compact === 1 ? width * 0.58 : Math.max(
-    width * (0.50 + compact * 0.08),
-    width * 0.035 + displayPixelsWide + wheelRadiusPixels * 1.03 + 8
-  );
-  const wheelY = height * (0.855 + compact * 0.068);
+  const wheelX = portrait ? width * 0.56 : Math.max(width * 0.52, width * 0.035 + displayPixelsWide + wheelRadiusPixels * 1.02 + 8);
+  const wheelY = height * (portrait ? 0.922 : 0.895);
   positionCockpitPart(yokeWheelGroup, wheelX, wheelY, COCKPIT_VIEW.wheelDepth, width, height);
   yokeWheelGroup.scale.setScalar(wheelScale);
-  steeringColumn.position.set(yokeWheelGroup.position.x, yokeWheelGroup.position.y - 0.025 * wheelScale, yokeWheelGroup.position.z - 0.12 * wheelScale);
-  steeringColumn.scale.setScalar(wheelScale);
+
+  // A broad, deep carbon dashboard masks the near hood below the windshield.
+  // Both its top ledge and front fascia are actual depth-tested 3D surfaces.
+  const dashWidth = 2 * COCKPIT_VIEW.dashDepth * halfFov * aspect * 1.10;
+  const dashHeight = 2 * COCKPIT_VIEW.dashDepth * halfFov * 0.60;
+  positionCockpitPart(fpvDashFascia, width / 2, height * 0.985, COCKPIT_VIEW.dashDepth, width, height);
+  fpvDashFascia.rotation.x = -Math.atan(slope);
+  fpvDashFascia.scale.set(dashWidth, dashHeight, 1);
+  fpvDashLedge.position.set(fpvDashFascia.position.x, fpvDashFascia.position.y + dashHeight / 2, fpvDashFascia.position.z);
+  fpvDashLedge.rotation.x = -Math.atan(slope);
+  fpvDashLedge.scale.set(dashWidth, 1, 1);
+  fpvDashTrim.position.set(fpvDashLedge.position.x, fpvDashLedge.position.y - 0.012, fpvDashLedge.position.z + 0.078);
+  fpvDashTrim.rotation.x = -Math.atan(slope);
+  fpvDashTrim.scale.set(dashWidth * 0.96, 1, 1);
+
+  // The column physically bridges the wheel hub and a socket in the fascia.
+  // Give its rear socket a higher screen position so the carbon shroud is visible
+  // above the horn pad, instead of looking like a disconnected floating prop.
+  positionCockpitPart(fpvColumnMount, wheelX, wheelY - height * 0.095, COCKPIT_VIEW.dashDepth - 0.10, width, height);
+  fpvColumnMount.rotation.x = -Math.atan(slope);
+  const dx = yokeWheelGroup.position.x - fpvColumnMount.position.x;
+  const dy = yokeWheelGroup.position.y - fpvColumnMount.position.y;
+  const dz = yokeWheelGroup.position.z - fpvColumnMount.position.z;
+  const length = Math.hypot(dx, dy, dz);
+  fpvSteeringColumn.position.set((yokeWheelGroup.position.x + fpvColumnMount.position.x) / 2, (yokeWheelGroup.position.y + fpvColumnMount.position.y) / 2, (yokeWheelGroup.position.z + fpvColumnMount.position.z) / 2);
+  fpvSteeringColumn.rotation.set(-Math.atan2(dy, dz), Math.asin(dx / length), 0);
+  fpvSteeringColumn.scale.set(1, 1, length);
 }
 function setCockpitPerspective(active) {
   if (cockpitPerspectiveActive === active) return;
   cockpitPerspectiveActive = active;
   roadsterCanopyRails.forEach(rail => { rail.visible = !active; });
-  dashCowling.position.y = active ? 0.50 : 0.62;
+  dashCowling.visible = !active;
+  steeringColumn.visible = !active;
+  fpvDashboardGroup.visible = active;
   dashPipe.visible = !active;
   resizeCockpitDisplay();
 }
@@ -530,16 +573,41 @@ carMeshGroup.add(dashPipe);
 
 
 // 3) Front Fascia: Center Horizontal LED Light Bar, Triangular Matrix Headlights & Recessed Black Grille
-const ledPureWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+const ledPureWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.FrontSide });
 const ledHousingMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.2, side: THREE.DoubleSide });
 const amberRepeaterMat = new THREE.MeshBasicMaterial({ color: 0xf97316 });
+// Box face order is +X,-X,+Y,-Y,+Z,-Z. Only the outward -Z lens emits;
+// the driver-facing rear and the sides are an opaque, non-emissive housing.
+function frontLensBoxMaterials(lens) {
+  return [ledHousingMat, ledHousingMat, ledHousingMat, ledHousingMat, ledHousingMat, lens];
+}
+function frontLensBoxGeometry(width, height, depth) {
+  const geometry = new THREE.BoxGeometry(width, height, depth);
+  // The first five faces share one housing material, so render them together
+  // instead of paying six draw calls for every small projector/light bar.
+  geometry.clearGroups();
+  geometry.addGroup(0, 30, 0);
+  geometry.addGroup(30, 6, 5);
+  return geometry;
+}
+function createFrontLampSurface(points, material) {
+  const mesh = createQuadMesh(...points, material);
+  const [a, b, c] = points;
+  const normalZ = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+  // Mirrored left/right anchors have opposite initial winding. Both lenses
+  // face the road (-Z), without the reverse triangles used by general panels.
+  mesh.geometry.setIndex(normalZ < 0 ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]);
+  mesh.geometry.computeVertexNormals();
+  return mesh;
+}
 
 // Center Horizontal LED Light Bar with Titanium Eyeliner Frame (image_ed309d.png)
 const lightBarFrame = new THREE.Mesh(new THREE.BoxGeometry(1.16, 0.030, 0.022), ledHousingMat);
 lightBarFrame.position.set(0, 0.415, -2.252);
-const centerLightBar = new THREE.Mesh(new THREE.BoxGeometry(1.14, 0.022, 0.024), ledPureWhiteMat);
+const centerLightBar = new THREE.Mesh(frontLensBoxGeometry(1.14, 0.022, 0.024), frontLensBoxMaterials(ledPureWhiteMat));
 centerLightBar.position.set(0, 0.415, -2.256);
 carMeshGroup.add(lightBarFrame, centerLightBar);
+cockpitExteriorDetailMeshes.push(lightBarFrame, centerLightBar);
 
 // Front Fascia Chrome Tesla "T" Apex Emblem
 const emblemMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.98, roughness: 0.12 });
@@ -550,6 +618,7 @@ const emblemStem = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.022, 0.010), em
 emblemStem.position.set(0, 0.418, -2.258);
 emblemStem.rotation.x = 0.22;
 carMeshGroup.add(emblemBar, emblemStem);
+cockpitExteriorDetailMeshes.push(emblemBar, emblemStem);
 
 // Precision Automotive Panel Shutlines & Hood Aerodynamic Extraction Louvers (V10/V11)
 const seamMat = new THREE.MeshBasicMaterial({ color: 0x050811 });
@@ -562,12 +631,14 @@ frunkSeam.position.set(0, 0.655, -1.22);
   ventRecess.position.set(hx, 0.615, -1.55);
   ventRecess.rotation.x = -0.18;
   carMeshGroup.add(ventRecess);
+  cockpitExteriorDetailMeshes.push(ventRecess);
   for (let f = 0; f < 3; f++) {
     const finZ = -1.68 + f * 0.12;
     const louver = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.008, 0.024), titaniumMaterial);
     louver.position.set(hx, 0.625 + f * 0.02, finZ);
     louver.rotation.x = -0.45;
     carMeshGroup.add(louver);
+    cockpitExteriorDetailMeshes.push(louver);
   }
 });
 
@@ -593,6 +664,7 @@ frunkSeam.position.set(0, 0.655, -1.22);
 const hatchSeam = new THREE.Mesh(new THREE.BoxGeometry(1.10, 0.008, 0.012), seamMat);
 hatchSeam.position.set(0, 0.852, 1.82);
 carMeshGroup.add(frunkSeam, hatchSeam);
+cockpitExteriorDetailMeshes.push(frunkSeam);
 
 // Aerodynamic Carbon Aero Side Mirror Stalks & High-Resolution Camera Pods (V12)
 [-1, 1].forEach((side) => {
@@ -635,11 +707,12 @@ carMeshGroup.add(frontGrilleQuad, frontGrilleBar, frontChinSplitter, frontChinCh
     [side * 0.59, 0.50, -2.050],
     ledHousingMat
   );
-  const ledBeamMesh = createQuadMesh(
+  const ledBeamMesh = createFrontLampSurface([
     [side * 0.565, 0.45, -2.180],
     [side * 0.700, 0.46, -2.140],
     [side * 0.805, 0.54, -2.005],
-    [side * 0.590, 0.505, -2.050],
+    [side * 0.590, 0.505, -2.050]
+    ],
     ledPureWhiteMat
   );
   const cheekPanelMesh = createQuadMesh(
@@ -665,7 +738,7 @@ carMeshGroup.add(frontGrilleQuad, frontGrilleBar, frontChinSplitter, frontChinCh
     bowl.position.set(bx - side * 0.006, by, bz + 0.008);
     bowl.rotation.y = -side * 0.32;
     bowl.rotation.z = -side * 0.16;
-    const barMesh = new THREE.Mesh(new THREE.BoxGeometry(0.012, barH, 0.020), crystalLedMat);
+    const barMesh = new THREE.Mesh(frontLensBoxGeometry(0.012, barH, 0.020), frontLensBoxMaterials(crystalLedMat));
     barMesh.position.set(bx, by, bz);
     barMesh.rotation.y = -side * 0.32;
     barMesh.rotation.z = -side * 0.16;
@@ -673,11 +746,12 @@ carMeshGroup.add(frontGrilleQuad, frontGrilleBar, frontChinSplitter, frontChinCh
   }
 
   const eyebrowDrlMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-  const eyebrowDrl = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.012, 0.016), eyebrowDrlMat);
+  const eyebrowDrl = new THREE.Mesh(frontLensBoxGeometry(0.24, 0.012, 0.016), frontLensBoxMaterials(eyebrowDrlMat));
   eyebrowDrl.position.set(side * 0.69, 0.515, -2.10);
   eyebrowDrl.rotation.set(-0.14, -side * 0.36, -side * 0.18);
 
   carMeshGroup.add(pocketMesh, ledBeamMesh, cheekPanelMesh, sideRepeater, crystalBarsGroup, eyebrowDrl);
+  cockpitExteriorDetailMeshes.push(pocketMesh, ledBeamMesh, crystalBarsGroup, eyebrowDrl);
 });
 
 // Dual High-Intensity Matrix LED Road Projection Headlights (Cast dynamic forward illumination pools on asphalt)
@@ -736,6 +810,7 @@ const frontTurnSignalR = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.014, 0.022
 frontTurnSignalR.position.set(0.69, 0.518, -2.105);
 frontTurnSignalR.rotation.set(-0.14, -0.36, -0.18);
 carMeshGroup.add(rearTurnSignalL, rearTurnSignalR, frontTurnSignalL, frontTurnSignalR);
+cockpitExteriorDetailMeshes.push(frontTurnSignalL, frontTurnSignalR);
 
 [-0.66, -0.44, -0.22, 0.0, 0.22, 0.44, 0.66].forEach((fx) => {
   const fin = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.18, 0.34), carbonMaterial);
@@ -1272,7 +1347,31 @@ const legacySupercarBodyGeo = (function() {
     }
     grid.push(row);
   }
-  return createSmoothGridGeometry(grid);
+  const geometry = createSmoothGridGeometry(grid);
+  // The loft is open at both ends. Cap its exact boundary rows so the rear
+  // fascia (and the nose of oncoming traffic) cannot reveal wheels or road.
+  // Separate cap vertices keep the end-panel normals flat instead of pulling
+  // the sculpted shell's shading around a sharp bumper edge.
+  const positions = Array.from(geometry.attributes.position.array);
+  const normals = Array.from(geometry.attributes.normal.array);
+  const indices = Array.from(geometry.index.array);
+  for (const [row, outwardZ] of [[grid[0], -1], [grid[grid.length - 1], 1]]) {
+    const base = positions.length / 3;
+    positions.push(0, row[0][1], row[0][2]);
+    normals.push(0, 0, outwardZ);
+    for (const point of row) {
+      positions.push(...point);
+      normals.push(0, 0, outwardZ);
+    }
+    for (let iu = 0; iu < row.length - 1; iu++) {
+      if (outwardZ > 0) indices.push(base, base + iu + 2, base + iu + 1);
+      else indices.push(base, base + iu + 1, base + iu + 2);
+    }
+  }
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  geometry.setIndex(indices);
+  return geometry;
 })();
 
 const legacySupercarCanopyGeo = (function() {
@@ -1330,6 +1429,7 @@ const sharedTrafficWingStrutGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.14,
 const sharedTrafficUndertrayGeo = new THREE.BoxGeometry(1.74, 0.055, 4.34);
 const sharedTrafficSplitterGeo = new THREE.BoxGeometry(1.68, 0.035, 0.38);
 const sharedTrafficDiffuserFinGeo = new THREE.BoxGeometry(0.024, 0.18, 0.34);
+const sharedTrafficDiffuserBackingGeo = new THREE.BoxGeometry(1.64, 0.16, 0.18);
 const sharedTrafficHeadlightHousingGeo = new THREE.BoxGeometry(0.42, 0.068, 0.12);
 const sharedTrafficHeadlightLensGeo = new THREE.BoxGeometry(0.36, 0.032, 0.04);
 const sharedTrafficDrlGeo = new THREE.BoxGeometry(0.38, 0.016, 0.03);
@@ -1356,7 +1456,11 @@ function createTrafficVehicleMesh(typeIndex) {
   undertray.position.set(0, 0.145, 0);
   const frontLip = new THREE.Mesh(sharedTrafficSplitterGeo, carbonMaterial);
   frontLip.position.set(0, 0.14, -2.14);
-  group.add(bodyMesh, canopyMesh, undertray, frontLip);
+  // A solid recessed diffuser joins the rear cap to the undertray. The fins
+  // remain in front of this backing rather than framing an empty opening.
+  const diffuserBacking = new THREE.Mesh(sharedTrafficDiffuserBackingGeo, carbonMaterial);
+  diffuserBacking.position.set(0, 0.23, 2.20);
+  group.add(bodyMesh, canopyMesh, undertray, frontLip, diffuserBacking);
 
   [-0.56, -0.28, 0.0, 0.28, 0.56].forEach((fx) => {
     const fin = new THREE.Mesh(sharedTrafficDiffuserFinGeo, carbonMaterial);

@@ -82,18 +82,20 @@ test('cockpit tank bounds and gas text stay inside their reserved area without o
   }
 });
 
-test('external telemetry updates gas mass and matches cockpit seconds/liters/mass on the same frame', () => {
+test('external telemetry updates gas mass and matches cockpit remaining seconds and mass on the same frame', () => {
   const footerTank = physics.slice(physics.indexOf('  const tank = getAirTankReadout('), physics.indexOf("  const barFill = document.getElementById('air-bar-fill');"));
   for (const airRemaining of [10, 5, 2, 0.001, 0, 0.5, 10]) {
-    const elements = Object.fromEntries(['val-gas-mass', 'val-air-sec', 'val-air-liters', 'val-burn-used'].map(id => [id, {}]));
+    const elements = Object.fromEntries(['val-gas-mass', 'val-air-sec'].map(id => [id, {}]));
     vm.runInNewContext(footerTank, {
       state: { airRemaining, airUsedContinuous: 10 - airRemaining, gasMassKg: 144 },
       MAX_AIR_SECONDS: 10, getAirTankReadout, document: { getElementById: id => elements[id] },
     });
     const { text } = drawCockpitTank({ airRemaining, gasMassKg: 144 });
     assert.equal(text.find(draw => draw.value.startsWith('GAS:')).value, `GAS: ${elements['val-gas-mass'].textContent}`);
-    assert.ok(text.find(draw => draw.value.endsWith('s / 10.0s')).value.includes(elements['val-air-sec'].textContent));
-    assert.ok(text.some(draw => draw.value === elements['val-air-liters'].textContent.slice(1, -1)));
+    const reading = getAirTankReadout(airRemaining);
+    assert.equal(elements['val-air-sec'].textContent, `${reading.seconds.toFixed(1)}s`);
+    assert.equal(text.find(draw => draw.value.endsWith('s / 10.0s')).value, `${elements['val-air-sec'].textContent} / 10.0s`);
+    assert.ok(text.some(draw => draw.value === `${reading.liters}L`));
   }
 });
 

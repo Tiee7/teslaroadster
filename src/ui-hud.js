@@ -502,7 +502,6 @@ function applyTranslations() {
 
   document.getElementById('ui-tank-title').textContent = t.tankTitle;
   document.getElementById('ui-8s-marker-label').textContent = t.marker8s;
-  document.getElementById('ui-tank-burn-time').innerHTML = `${t.burnTimeLabel} <b id="val-burn-used" class="text-slate-200">${state.airUsedContinuous.toFixed(1)}s</b> / 10.0s`;
   document.getElementById('ui-tank-hint').textContent = t.tankHint;
 
   document.getElementById('map-modal-badge').textContent = t.mapModalBadge;

@@ -1783,6 +1783,7 @@ function updateSimulation(dt) {
   }
   roadsterCanopyMesh.visible = !isCockpitFpv;
   setCockpitPerspective(isCockpitFpv);
+  setCockpitExteriorDetailsVisible(!isCockpitFpv);
   if (typeof hudCombinerMesh !== "undefined") hudCombinerMesh.visible = false;
 
   if (cameraModeIndex !== 0) resetChaseCamera();
@@ -1979,13 +1980,9 @@ function updateSimulation(dt) {
 
   const tank = getAirTankReadout(state.airRemaining);
   const pct = tank.fraction * 100;
-  const liters = tank.liters;
   const gasMassEl = document.getElementById('val-gas-mass');
   if (gasMassEl) gasMassEl.textContent = `${tank.massKg.toFixed(1)} kg`;
   document.getElementById('val-air-sec').textContent = `${tank.seconds.toFixed(1)}s`;
-  document.getElementById('val-air-liters').textContent = `(${liters}L)`;
-  const burnUsedEl = document.getElementById('val-burn-used');
-  if (burnUsedEl) burnUsedEl.textContent = `${state.airUsedContinuous.toFixed(1)}s`;
 
   const barFill = document.getElementById('air-bar-fill');
   barFill.style.width = `${pct}%`;
