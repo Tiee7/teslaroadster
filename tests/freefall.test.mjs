@@ -194,19 +194,22 @@ test('actual O launch preserves the complete prior horizontal vector on both map
   }
 });
 
-test('air coasting preserves world direction through attitude changes and stays FPS independent', () => {
+test('established unpowered flight regains the previous release braking without changing vertical gravity', () => {
+  const outcomes = [];
   for (const map of ['highway', 'city']) for (const fps of [30, 60, 144]) {
     const vx = 2, vz = -300 / 3.6, speed = Math.hypot(vx, vz);
-    const h = harness({ vx, vz, speed, roll: 1.2, pitch: Math.PI, yaw: 0.8 }, map);
-    h.advance(2, fps);
-    const factor = 1 / (1 + 0.00012 * speed * 2);
-    close(h.state.vx, vx * factor); close(h.state.vz, vz * factor); close(h.state.speed, speed * factor);
-    assert.ok(h.state.speed > speed * 0.98, 'only gradual aerodynamic drag is applied');
+    const h = harness({ vx, vz, speed, roll: 1.2, pitch: Math.PI, yaw: 0.8, airRemaining: 0, isFreefalling: true }, map);
+    h.advance(1, fps);
+    assert.ok(h.state.speed < speed * 0.3, 'sustained flight must no longer carry almost all launch speed');
+    close(vx * h.state.vz - vz * h.state.vx, 0);
+    close(h.state.y, 300 - 0.5 * g); close(h.state.vy, -g);
+    outcomes.push(h.state.speed);
     const before = { vx: h.state.vx, vz: h.state.vz };
     h.state.yaw += Math.PI; h.state.roll = -0.8; h.state.pitch += 2 * Math.PI;
     h.step(1 / fps);
     close(before.vx * h.state.vz - before.vz * h.state.vx, 0);
   }
+  for (const speed of outcomes) close(speed, outcomes[0]);
 });
 
 test('W/semicolon and mode changes limit added air thrust without clipping inherited overspeed', () => {
@@ -221,7 +224,7 @@ test('W/semicolon and mode changes limit added air thrust without clipping inher
     }
     const reverse = harness({ vz: 100, speed: 100 }, map); reverse.keys[code] = true;
     reverse.step(1 / 60);
-    assert.ok(reverse.state.vz > 99 && reverse.state.vz < 100, 'opposed thrust changes velocity continuously');
+    assert.ok(reverse.state.vz > reverse.state.airMaxSpeed && reverse.state.vz < 100, 'opposed thrust and the governor change velocity continuously');
   }
 });
 
@@ -256,11 +259,101 @@ test('rear thrust cannot clip an existing upward velocity or inject lift while l
   }
 });
 
-test('perpendicular rear thrust can redirect overspeed flight without erasing the inherited component', () => {
+test('established powered flight promptly removes sideslip toward the aimed nose on both maps', () => {
   for (const map of ['highway', 'city']) for (const yaw of [Math.PI / 2, -Math.PI / 2]) {
-    const h = harness({ vz: -100, speed: 100, yaw }, map); h.keys.KeyW = true;
+    const h = harness({ vz: -50, speed: 50, yaw }, map); h.keys.KeyW = true;
     h.step(1 / 60);
-    close(h.state.vz, -100); close(h.state.vx, -Math.sin(yaw) * 9.5 / 60);
-    assert.ok(h.state.speed >= 100, 'new sideways thrust may add energy to inherited forward momentum');
+    assert.ok(h.state.vz > -50 && h.state.vz < -35, 'first-frame correction is continuous');
+    assert.ok(h.state.vx * -Math.sin(yaw) > 0, 'thrust still follows the nose');
+    h.advance(0.4, 60);
+    assert.ok(Math.abs(h.state.vz) < 0.9, `old forward drift clears rapidly after a flight turn: ${map}/${yaw}: ${h.state.vz}`);
+    assert.ok(h.state.vx * -Math.sin(yaw) > 1, 'travel now follows the selected heading');
+  }
+});
+
+function launchedFlight(overrides = {}, map = 'highway') {
+  const h = harness({ y: 0, ...overrides }, map);
+  h.launch();
+  // Isolate horizontal transition high above support/collision geometry.
+  h.state.y = 100; h.state.isJumping6m = false; h.state.vy = 0;
+  return h;
+}
+
+test('O carries the full inherited vector for 0.25 seconds before smoothly restoring flight release braking', () => {
+  const results = [];
+  for (const map of ['highway', 'city']) for (const fps of [30, 60, 144]) {
+    const speed = 300 / 3.6, h = launchedFlight({ vz: -speed, speed }, map);
+    h.advance(0.25, fps);
+    close(h.state.speed, speed / (1 + 0.00012 * speed * 0.25));
+    const before = h.state.speed;
+    h.step(1 / fps);
+    assert.ok(h.state.speed < before && h.state.speed > before * 0.99, 'transition starts without a braking kick');
+    h.advance(1.2 - 0.25 - 1 / fps, fps);
+    assert.ok(h.state.speed < speed * 0.5, 'sustained coast is responsive again');
+    assert.equal(h.state.jumpInertiaSeconds, null);
+    close(h.state.y, 100 - 0.5 * g * 1.2 ** 2); close(h.state.vy, -g * 1.2);
+    results.push(h.state.speed);
+  }
+  for (const speed of results) close(speed, results[0], 0.03);
+});
+
+test('smoothstep transition integrates frame crossings, zero dt and irregular frame lengths exactly', () => {
+  for (const frames of [[0.25, 0.6, 0.4], [0, 0.13, 0.14, 0.3, 0.05, 0.63], [1.25]]) {
+    const h = harness({ jumpInertiaSeconds: 0 });
+    let handlingSeconds = 0;
+    for (const dt of frames) handlingSeconds += h.context.advanceAirHandling(dt, true);
+    close(handlingSeconds, 0.7);
+    assert.equal(h.state.jumpInertiaSeconds, null);
+  }
+  const h = harness({ jumpInertiaSeconds: 0.2 });
+  close(h.context.advanceAirHandling(0, true), 0); close(h.state.jumpInertiaSeconds, 0.2);
+  close(h.context.advanceAirHandling(0, false), 0); assert.equal(h.state.jumpInertiaSeconds, null);
+});
+
+test('powered O overspeed settles after the launch grace without instantaneous clipping or mode-switch steps', () => {
+  for (const map of ['highway', 'city']) for (const code of ['KeyW', 'Semicolon']) for (const fps of [30, 60, 144]) {
+    const speed = 500 / 3.6, h = launchedFlight({ vz: -speed, speed }, map);
+    h.keys[code] = true; h.advance(0.25, fps); close(h.state.speed, speed);
+    const before = h.state.speed;
+    h.step(1 / fps); assert.ok(h.state.speed < before && h.state.speed > before * 0.99);
+    h.state.insaneMode = true; const plaidBefore = h.state.speed;
+    h.step(0); close(h.state.speed, plaidBefore);
+    h.state.insaneMode = false; h.step(0); close(h.state.speed, plaidBefore);
+    h.advance(1.5, fps);
+    assert.ok(h.state.speed > h.state.airMaxSpeed && h.state.speed < h.state.airMaxSpeed + 5);
+  }
+});
+
+test('midair O cannot restart launch inertia, while a fresh grounded O can', () => {
+  const h = launchedFlight(); h.advance(0.4, 60);
+  const age = h.state.jumpInertiaSeconds;
+  h.launch(); close(h.state.jumpInertiaSeconds, age);
+  h.advance(0.5, 60); assert.equal(h.state.jumpInertiaSeconds, null);
+  h.launch(); assert.equal(h.state.jumpInertiaSeconds, null);
+  Object.assign(h.state, { y: 0, vy: 0, isJumping6m: false });
+  h.launch(); close(h.state.jumpInertiaSeconds, 0);
+});
+
+test('bank assist returns after the hop on both maps and cannot supply empty-tank side jets', () => {
+  for (const map of ['highway', 'city']) {
+    const h = launchedFlight({ roll: Math.PI / 3, vz: -20, speed: 20 }, map);
+    h.advance(0.25, 60); close(h.state.vx, 0);
+    h.advance(0.6, 60); assert.ok(h.state.vx > 5 && h.state.vx < 9);
+    const empty = harness({ roll: Math.PI / 3, vz: -20, speed: 20, airRemaining: 0, isFreefalling: true }, map);
+    empty.advance(0.2, 60); close(empty.state.vx, 0);
+    close(empty.state.vy, -g * 0.2);
+  }
+});
+
+test('actual A/W and D/W flight turns keep the velocity close to the changing heading across FPS and maps', () => {
+  for (const map of ['highway', 'city']) for (const code of ['KeyA', 'KeyD']) for (const fps of [30, 60, 144]) {
+    const h = harness({ y: 100, vz: -30, speed: 30 }, map);
+    h.keys.KeyW = true; h.keys[code] = true;
+    h.advance(0.8, fps);
+    const sideways = h.state.vx * Math.cos(h.state.yaw) - h.state.vz * Math.sin(h.state.yaw);
+    assert.ok(Math.abs(h.state.yaw) > 0.25, 'keyboard yaw still rotates the nose');
+    assert.ok(Math.abs(sideways) < h.state.speed * 0.15, `flight follows the turn instead of carrying old drift: ${map}/${code}/${fps}/${sideways}/${h.state.speed}`);
+    assert.ok(h.state.vx * (code === 'KeyA' ? -1 : 1) > 4, 'travel turns in the requested direction');
+    assert.ok(h.state.airRemaining < 10, 'powered steering uses the shared tank');
   }
 });

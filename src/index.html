@@ -380,6 +380,27 @@
   </div>
   </div>
 
+  <!-- Two independent mobile sticks. The overlay never captures touches between pads. -->
+  <div id="mobile-controls" hidden>
+    <div class="mobile-stick-group mobile-stick-group-left">
+      <span id="mobile-left-label" class="mobile-stick-label">STEER · DRIVE / BRAKE</span>
+      <div id="mobile-stick-left" class="mobile-stick" role="group" aria-label="Steer, drive and brake" aria-describedby="mobile-help-copy">
+        <span class="mobile-stick-cross" aria-hidden="true"></span><span class="mobile-stick-knob" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="mobile-stick-group mobile-stick-group-right">
+      <select id="mobile-stick-mode" aria-label="Right stick mode"><option value="lift">Lift</option><option value="attitude">Attitude</option><option value="boost">Boost</option></select>
+      <div id="mobile-stick-right" class="mobile-stick" role="group" aria-label="Lift and strafe" aria-describedby="mobile-right-hint mobile-help-copy">
+        <span class="mobile-stick-cross" aria-hidden="true"></span><span class="mobile-stick-knob" aria-hidden="true"></span>
+      </div>
+      <span id="mobile-right-hint" class="mobile-stick-hint">↑ Lift · ↓ Descend · ↔ Strafe</span>
+    </div>
+    <div class="mobile-utilities">
+      <button id="mobile-jump" type="button">Jump</button><button id="mobile-hold" type="button">Hold</button>
+      <button id="mobile-camera" type="button">View</button><button id="mobile-reset" type="button">Reset</button>
+    </div>
+  </div>
+
   <!-- Bottom HUD: Speedometer, 10-Second COPV Air Tank Bar & On-Screen Touch/Click Controls -->
   <footer id="hud-footer" class="fixed bottom-0 inset-x-0 z-10 pointer-events-none p-3 md:p-4 flex flex-col items-center gap-2">
     <!-- Touch / Mouse Quick Action Buttons -->
@@ -593,6 +614,7 @@
       </p>
 
       <!-- Control Grid -->
+      <section id="mobile-help" class="mobile-help"><h3 id="mobile-help-title">Mobile dual sticks</h3><p id="mobile-help-copy"></p></section>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
           <h3 id="modal-h-drive" class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2">1. Driving & Vertical Flight</h3>
@@ -703,6 +725,7 @@
   <script src="config.js"></script>
   <script src="audio.js"></script>
   <script src="music.js"></script>
+  <script src="mobile-controls.js"></script>
   <script src="world.js"></script>
   <script src="vehicles.js"></script>
   <script src="reference-exterior.js"></script>

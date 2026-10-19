@@ -339,7 +339,9 @@ test('air braking and Q/E strafe remain responsive in either travel direction wi
       for (const direction of [1, -1]) {
         const h = harness({ pitch: Math.PI, vz: direction * 20, speed: 20 }, map);
         h.keys[code] = true; h.move(1 / 60);
-        const passiveSpeed = 20 / (1 + 0.00012 * 20 / 60);
+        const coast = harness({ pitch: Math.PI, vz: direction * 20, speed: 20 }, map);
+        coast.move(1 / 60);
+        const passiveSpeed = coast.state.speed;
         close(h.state.vz, direction * (passiveSpeed - (80000 / (1850 + 144)) / 60));
         close(h.state.speed, Math.abs(h.state.vz));
       }
@@ -367,8 +369,9 @@ test('backward flight hands signed momentum into ground driving after touchdown'
     assert.ok(h.state.vz > 19, `${map}: touchdown retains backward velocity`);
     assert.ok(h.state.speed < 0, `${map}: existing ground reverse convention restored`);
     assert.equal(h.state.wasAirborne, false);
-    h.state.wasAirborne = true; h.context.resetCar();
+    h.state.wasAirborne = true; h.state.jumpInertiaSeconds = 0.4; h.context.resetCar();
     assert.equal(h.state.wasAirborne, false);
+    assert.equal(h.state.jumpInertiaSeconds, null);
   }
 });
 

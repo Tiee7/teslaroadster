@@ -418,6 +418,7 @@ const state = {
   pitch: 0.0,
   attitudeIdleSeconds: 0.0,
   wasAirborne: false,
+  jumpInertiaSeconds: null, // Ground O-hop launch grace; null means established flight.
   yaw: 0.0,
   vRoll: 0.0,
   vPitch: 0.0,

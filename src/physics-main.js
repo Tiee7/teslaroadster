@@ -369,6 +369,43 @@ function getAirCoastSpeed(speedMps, dt) {
   return speedMps / (1 + PASSIVE_AERO_DRAG_PER_METER * speedMps * dt);
 }
 
+// The tactical O hop keeps its launch vector briefly; established flight then
+// regains the earlier, more responsive handling. Integrate smoothstep exactly
+// across frame boundaries so a low-FPS frame cannot skip the takeoff grace.
+const JUMP_INERTIA_GRACE_SECONDS = 0.25;
+const JUMP_INERTIA_BLEND_SECONDS = 0.60;
+
+function advanceAirHandling(dt, isAirborne) {
+  if (!isAirborne) {
+    state.jumpInertiaSeconds = null;
+    return 0;
+  }
+  if (!Number.isFinite(state.jumpInertiaSeconds)) return dt;
+  const before = state.jumpInertiaSeconds;
+  const after = before + dt;
+  const integratedBlend = seconds => {
+    const u = (seconds - JUMP_INERTIA_GRACE_SECONDS) / JUMP_INERTIA_BLEND_SECONDS;
+    if (u <= 0) return 0;
+    if (u >= 1) return seconds - JUMP_INERTIA_GRACE_SECONDS - JUMP_INERTIA_BLEND_SECONDS / 2;
+    return JUMP_INERTIA_BLEND_SECONDS * (u ** 3 - 0.5 * u ** 4);
+  };
+  state.jumpInertiaSeconds = after >= JUMP_INERTIA_GRACE_SECONDS + JUMP_INERTIA_BLEND_SECONDS ? null : after;
+  return Math.max(0, Math.min(dt, integratedBlend(after) - integratedBlend(before)));
+}
+
+function getResponsiveAirCoastSpeed(speedMps, dt) {
+  // Restore the former flight release curve (55%/s damping plus 15.5 +
+  // 0.0085*v² deceleration), with its continuous-time solution rather than
+  // an FPS-dependent Euler subtraction. This is a horizontal gameplay assist;
+  // vertical velocity and Earth gravity stay in the separate altitude path.
+  const linear = -Math.log(0.45), quadratic = 0.0085, constant = 15.5;
+  const discriminant = Math.sqrt(linear * linear - 4 * quadratic * constant);
+  const nearRoot = (-linear + discriminant) / (2 * quadratic);
+  const farRoot = (-linear - discriminant) / (2 * quadratic);
+  const ratio = (speedMps - nearRoot) / (speedMps - farRoot) * Math.exp(-discriminant * dt);
+  return Math.max(0, (nearRoot - ratio * farRoot) / (1 - ratio));
+}
+
 function addAirThrust(vx, vz, impulseX, impulseZ, propulsionLimit) {
   const impulse = Math.hypot(impulseX, impulseZ);
   if (impulse === 0) return { vx, vz };
@@ -431,8 +468,24 @@ function integrateFreefall(y, vy, dt, surfaceY) {
   return { y: nextY, vy: nextVy };
 }
 
+function readDriveInput() {
+  const touch = globalThis.window?.RoadsterTouch?.readInput() || {};
+  const axis = name => Math.max(-1, Math.min(1, Number.isFinite(touch[name]) ? touch[name] : 0));
+  const amount = (name, ...codes) => Math.max(0, axis(name), ...codes.map(code => Number(Boolean(keys[code]))));
+  return {
+    steer: Math.max(-1, Math.min(1, Number(Boolean(keys.KeyD)) - Number(Boolean(keys.KeyA)) + axis('steer'))),
+    throttle: amount('throttle', 'KeyW'), boost: amount('boost', 'Semicolon'),
+    brake: amount('brake', 'KeyH'), reverse: amount('reverse', 'KeyS'),
+    handbrake: amount('handbrake', 'KeyU'), lift: amount('lift', 'Space'),
+    descend: amount('descend', 'ShiftLeft', 'ShiftRight'),
+    strafe: Math.max(-1, Math.min(1, Number(Boolean(keys.KeyE)) - Number(Boolean(keys.KeyQ)) + axis('strafe'))),
+    roll: axis('roll'), pitch: axis('pitch')
+  };
+}
+
 function readAttitudeInput(isAirborne) {
-  // Touch controls use the same key state as the keyboard and arrow aliases.
+  // Keep keyboard ownership independent: a released thumb cannot release W.
+  const drive = readDriveInput();
   const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
   const rollRight = Boolean(keys['KeyL'] || keys['ArrowRight']);
   const pitchUp = Boolean(keys['KeyI'] || keys['ArrowUp']);
@@ -440,12 +493,13 @@ function readAttitudeInput(isAirborne) {
   const yawLeft = isAirborne && Boolean(keys['KeyA']);
   const yawRight = isAirborne && Boolean(keys['KeyD']);
   return {
-    rawRollInput: Number(rollLeft) - Number(rollRight),
-    rawPitchInput: Number(pitchUp) - Number(pitchDown),
-    rawYawInput: Number(yawLeft) - Number(yawRight),
+    rawRollInput: Math.max(-1, Math.min(1, Number(rollLeft) - Number(rollRight) + drive.roll)),
+    rawPitchInput: Math.max(-1, Math.min(1, Number(pitchUp) - Number(pitchDown) + drive.pitch)),
+    rawYawInput: isAirborne ? -drive.steer : 0,
     // Opposing held controls still count as player input, even if their torques cancel.
     hasManualAttitudeInput: rollLeft || rollRight || pitchUp || pitchDown || yawLeft || yawRight ||
-      (isAirborne && Boolean(keys['KeyQ'] || keys['KeyE']))
+      drive.roll !== 0 || drive.pitch !== 0 ||
+      (isAirborne && (drive.steer !== 0 || drive.strafe !== 0 || Boolean(keys['KeyQ'] || keys['KeyE'])))
   };
 }
 
@@ -605,8 +659,9 @@ function updateSimulation(dt) {
   let canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
 
   // Requirement 4: ';' (Semicolon) triggers Rear Cold-Gas Rocket Boost in Realistic (Standard) mode!
-  const isRearBoostKey = Boolean(keys['Semicolon']);
-  const isThrottleW = Boolean(keys['KeyW']);
+  const driveInput = readDriveInput();
+  const isRearBoostKey = driveInput.boost > 0;
+  const isThrottleW = driveInput.throttle > 0;
   const isAccelerating = isThrottleW || (isRearBoostKey && canUseRCS);
 
   // Set mode-specific dynamic limits (calibrated to 0-100 km/h in 1.9s & venue scale)
@@ -638,15 +693,27 @@ function updateSimulation(dt) {
     currentMaxClimbVy = 36.0 * 1.3;
   }
   const isStandardEVMode = isRealMode && !state.insaneMode && state.maxSpeed === STANDARD_EV_MAX_MPS;
+  const electricGroundAccel = isRealMode ? (state.insaneMode ? 38.0 : 16.5) : 72.0;
+  const electricAirAccel = isRealMode ? (state.insaneMode ? 24.0 : 9.5) : (currentMap === 'city' ? 145.0 : 92.0);
+  const rearJetAccel = isRealMode ? 38.0 : 120.0;
+  const groundDriveAccel = (speed, electricFactor = 1, jetFactor = 1) => {
+    // A small jet request must not turn a held W into full rocket power, or
+    // extend the electric motor past its existing 200 km/h ceiling.
+    const electric = isRealMode && !state.insaneMode && speed >= STANDARD_EV_MAX_MPS
+      ? 0 : electricGroundAccel * driveInput.throttle * electricFactor;
+    const jet = isRearThrusterFiring ? rearJetAccel * driveInput.boost * jetFactor : 0;
+    return Math.max(electric, jet);
+  };
 
   // Requirement 1 & 2:
   // • When throttle (W or ;) and foot brake (H) / reverse (S) are pressed simultaneously, execute throttle and ignore foot brake/reverse.
   // • Handbrake (B) MUST work even when throttle (W) is held ("不松油门的情况下目前手刹无法正常使用")!
-  const isFootBraking = Boolean(keys['KeyH']) && !isAccelerating;
-  const isReversing = Boolean(keys['KeyS']) && !isAccelerating;
-  const isHandbraking = Boolean(keys['KeyU']);
+  const isFootBraking = driveInput.brake > 0 && !isAccelerating;
+  const isReversing = driveInput.reverse > 0 && !isAccelerating;
+  const isHandbraking = driveInput.handbrake > 0;
   const isAirBrakingActive = isFootBraking || (isAirborne && isReversing);
-  state.dragCoeffCd = isAirBrakingActive ? 0.72 : ((state.y > 0.2 || Math.abs(state.speed) > 33.0) ? 0.44 : 0.34);
+  const coastDragCoeff = (state.y > 0.2 || Math.abs(state.speed) > 33.0) ? 0.44 : 0.34;
+  state.dragCoeffCd = isAirBrakingActive ? coastDragCoeff + (0.72 - coastDragCoeff) * Math.max(driveInput.brake, driveInput.reverse) : coastDragCoeff;
 
   // Determine if the 4 Rear SpaceX Cold-Gas Nozzles are firing this frame:
   // 用户要求: "在空中飞行的时候，按W需要喷气，地上的W不喷气"
@@ -655,10 +722,10 @@ function updateSimulation(dt) {
   let isRearThrusterFiring = false;
   if (canUseRCS) {
     if (isAirborne && (isThrottleW || isRearBoostKey)) {
-      const airBurnRate = isRearBoostKey ? 0.85 : 0.65;
+      const airBurnRate = Math.max(0.85 * driveInput.boost, 0.65 * driveInput.throttle);
       isRearThrusterFiring = consumeAirTank(airBurnRate * dt, true);
     } else if (!isAirborne && isRearBoostKey) {
-      isRearThrusterFiring = consumeAirTank(0.85 * dt, false);
+      isRearThrusterFiring = consumeAirTank(0.85 * driveInput.boost * dt, false);
     }
   }
   canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
@@ -669,7 +736,7 @@ function updateSimulation(dt) {
     ? Math.hypot(state.vx, state.vy, state.vz)
     : (currentMap === 'highway' ? Math.abs(state.speed) : Math.hypot(state.vx, state.vz));
   const retroBrakeDemand = (isFootBraking || isReversing)
-    ? getRetroBrakeDemand(brakeTravelSpeed, isAirborne) : 0;
+    ? getRetroBrakeDemand(brakeTravelSpeed, isAirborne) * Math.max(driveInput.brake, driveInput.reverse) : 0;
   let retroImpulseSeconds = 0;
   if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
     const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
@@ -686,7 +753,7 @@ function updateSimulation(dt) {
   // Ground steering uses A / D only (J / L are exclusively Roll!)
   const steerLeft = Boolean(keys['KeyA']);
   const steerRight = Boolean(keys['KeyD']);
-  const lateralInput = isAirborne ? 0 : ((steerRight ? 1 : 0) - (steerLeft ? 1 : 0));
+  const lateralInput = isAirborne ? 0 : driveInput.steer;
 
   // Progressive steering rack smoothing for natural ground steering feel
   const steerRate = lateralInput !== 0 ? 8.0 : 11.0;
@@ -696,12 +763,13 @@ function updateSimulation(dt) {
   frontWheelSteerGroups.forEach(g => { g.rotation.y = state.steerAngle; });
 
   // Requirement 2 & 3: In mid-air, Q / E controls lateral body movement AND consumes COPV air tank!
-  const wantsAirJetLeft = isAirborne && Boolean(keys['KeyQ']);
-  const wantsAirJetRight = isAirborne && Boolean(keys['KeyE']);
+  const wantsAirJetLeft = isAirborne && (Boolean(keys['KeyQ']) || driveInput.strafe < 0);
+  const wantsAirJetRight = isAirborne && (Boolean(keys['KeyE']) || driveInput.strafe > 0);
   let airJetLeft = false;
   let airJetRight = false;
   if ((wantsAirJetLeft || wantsAirJetRight) && canUseRCS) {
-    if (consumeAirTank(0.45 * dt, true)) {
+    const strafePower = Math.max(Math.abs(driveInput.strafe), Number(Boolean(keys.KeyQ || keys.KeyE)));
+    if (consumeAirTank(0.45 * strafePower * dt, true)) {
       airJetLeft = wantsAirJetLeft;
       airJetRight = wantsAirJetRight;
     }
@@ -716,13 +784,16 @@ function updateSimulation(dt) {
   const nosePitchCos = Math.cos(state.pitch);
   const nosePitchSin = Math.sin(state.pitch);
 
+  const airHandlingDt = advanceAirHandling(dt, isAirborne);
   if (isAirborne) {
     state.isDrifting = false;
     state.wasHandbraking = false;
     state.driftAngle = 0.0;
-    // Preserve world-space momentum throughout flips; only thrust changes its direction.
+    // Takeoff retains its inherited vector. Established flight smoothly regains
+    // the controlled speed envelope and nose/bank response used before it.
     if (isRearThrusterFiring) {
-      const boostAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
+      const jetAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
+      const boostAirAccel = Math.max(electricAirAccel * driveInput.throttle, jetAirAccel * driveInput.boost);
       const thrust = addAirThrust(state.vx, state.vz,
         noseHorizX * nosePitchCos * boostAirAccel * dt,
         noseHorizZ * nosePitchCos * boostAirAccel * dt, state.airMaxSpeed);
@@ -731,22 +802,33 @@ function updateSimulation(dt) {
       const maxAirVy = currentMaxClimbVy * 1.35;
       const verticalImpulse = boostAirAccel * nosePitchSin * 0.55 * dt;
       state.vy += verticalImpulse > 0 ? Math.min(verticalImpulse, Math.max(0, maxAirVy - state.vy)) : verticalImpulse;
+      const horizMag = Math.hypot(state.vx, state.vz);
+      if (horizMag > state.airMaxSpeed && airHandlingDt > 0) {
+        // Settle inherited overspeed continuously; never clip the O launch or
+        // jump directly to a new propulsion limit when changing flight modes.
+        const nextMag = state.airMaxSpeed + (horizMag - state.airMaxSpeed) * Math.exp(-3.0 * airHandlingDt);
+        state.vx *= nextMag / horizMag;
+        state.vz *= nextMag / horizMag;
+      }
     } else {
       const horizMag = Math.hypot(state.vx, state.vz);
-      const nextMag = getAirCoastSpeed(horizMag, dt);
+      const launchCoast = getAirCoastSpeed(horizMag, Math.max(0, dt - airHandlingDt));
+      const nextMag = getResponsiveAirCoastSpeed(launchCoast, airHandlingDt);
       const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
       state.vx *= coastScale;
       state.vz *= coastScale;
     }
 
-    // Only explicit Q/E side jets request lateral assist. Rotating the body
-    // around its thrust axis cannot erase inherited sideways momentum.
-    const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
-    const targetStrafe = jetDir * 18.0;
-    const strafeRate = currentMap === 'highway' ? (isRearThrusterFiring ? 10.0 : 6.5) : 6.0;
+    // Explicit side jets keep their proportional input throughout takeoff.
+    // Bank assist and powered sideslip control blend in after the brief carry.
+    const jetDir = airJetLeft || airJetRight ? driveInput.strafe : 0;
+    const bankStrafe = canUseRCS ? Math.sin(state.roll) * 10.0 : 0;
+    const targetStrafe = jetDir * 18.0 + bankStrafe;
+    const strafeRate = isRearThrusterFiring ? 10.0 : 6.5;
     const lateralSpeed = state.vx * rightHorizX + state.vz * rightHorizZ;
-    const strafeChange = Math.abs(targetStrafe) > 0.001
-      ? (targetStrafe - lateralSpeed) * Math.min(1.0, strafeRate * dt)
+    const strafeDt = jetDir !== 0 ? dt : airHandlingDt;
+    const strafeChange = jetDir !== 0 || Math.abs(bankStrafe) > 0.001 || isRearThrusterFiring
+      ? (targetStrafe - lateralSpeed) * (1.0 - Math.exp(-strafeRate * strafeDt))
       : 0;
     state.vx += rightHorizX * strafeChange;
     state.vz += rightHorizZ * strafeChange;
@@ -782,29 +864,29 @@ function updateSimulation(dt) {
     if (!isAirborne) {
       // Ground mode on highway
       if (isAccelerating) {
-        const effAccel = isRearThrusterFiring ? (isRealMode ? 38.0 * fuelBurnThrustFactor : 120.0 * fuelBurnThrustFactor) : (isHandbraking ? currentGroundAccel * 0.88 : currentGroundAccel);
+        const effAccel = groundDriveAccel(state.speed, isHandbraking ? 1 - 0.12 * driveInput.handbrake : 1, fuelBurnThrustFactor);
         if (state.speed < -0.5) {
-          state.speed = Math.min(0.0, state.speed + 38.0 * dt);
+          state.speed = Math.min(0.0, state.speed + 38.0 * Math.max(driveInput.throttle, driveInput.boost) * dt);
         } else {
           state.speed = accelerateGroundSpeed(state.speed, effAccel, state.maxSpeed, dt, isStandardEVMode);
         }
       } else if (isFootBraking) {
         if (state.speed > 0.1) {
-          state.speed = Math.max(0.0, state.speed - 38.0 * dt);
+          state.speed = Math.max(0.0, state.speed - 38.0 * driveInput.brake * dt);
         } else if (state.speed < -0.1) {
-          state.speed = Math.min(0.0, state.speed + 38.0 * dt);
+          state.speed = Math.min(0.0, state.speed + 38.0 * driveInput.brake * dt);
         } else {
           state.speed = 0.0;
         }
       } else if (isReversing) {
         if (state.speed > 0.3) {
-          state.speed *= Math.pow(0.95, dt);
+          state.speed *= Math.pow(0.95, dt * driveInput.reverse);
         } else if (state.speed < -15.0) {
           // A fast backward landing brakes toward reverse cruise; the reverse
           // speed limit must never teleport existing momentum to -15 m/s.
-          state.speed = Math.min(-15.0, state.speed + 38.0 * dt);
+          state.speed = Math.min(-15.0, state.speed + 38.0 * driveInput.reverse * dt);
         } else {
-          state.speed = Math.max(-15.0, state.speed - 16.0 * dt);
+          state.speed = Math.max(-15.0, state.speed - 16.0 * driveInput.reverse * dt);
         }
       } else if (!isHandbraking) {
         // Gentle coasting, including a continuous 30%-stronger normal EV overrun.
@@ -820,22 +902,22 @@ function updateSimulation(dt) {
         state.wasHandbraking = true;
         if (lateralInput !== 0 || Math.abs(state.driftAngle) > 0.04) {
           state.isDrifting = true;
-          const targetSlip = -state.steerInput * 0.58 * turnSign;
+          const targetSlip = -state.steerInput * 0.58 * turnSign * driveInput.handbrake;
           state.driftAngle += (targetSlip - state.driftAngle) * 8.5 * dt;
           state.yaw = state.driftAngle;
           state.vYaw = 0.0;
-          const driftSlideVx = state.steerInput * Math.min(22.0, Math.abs(state.speed) * 0.56);
+          const driftSlideVx = state.steerInput * Math.min(22.0, Math.abs(state.speed) * 0.56) * driveInput.handbrake;
           const noseThrustVx = isRearThrusterFiring ? (noseHorizX * state.speed * 0.85) : (noseHorizX * state.speed * 0.48);
           state.vx += (driftSlideVx + noseThrustVx - state.vx) * 9.5 * dt;
           if (!isAccelerating) {
             // Very light tire-scrub (~1.2 m/s²) so handbrake never locks/stops the car
-            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * driveInput.handbrake * dt);
           }
         } else {
           state.isDrifting = false;
           state.driftAngle *= Math.pow(0.05, dt);
           if (!isAccelerating) {
-            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * driveInput.handbrake * dt);
           }
         }
       } else {
@@ -898,26 +980,26 @@ function updateSimulation(dt) {
         state.isDrifting = Math.abs(state.steerInput) > 0.04 || Math.abs(state.driftAngle) > 0.05;
         const turnDir = forwardSign;
         const pivotSpeedFactor = THREE.MathUtils.clamp(totalGroundSpd / 6.5, 0.35, 1.25);
-        const handbrakeYawRate = state.steerInput * 3.85 * pivotSpeedFactor * turnDir;
+        const handbrakeYawRate = state.steerInput * 3.85 * pivotSpeedFactor * turnDir * driveInput.handbrake;
         state.yaw -= handbrakeYawRate * dt;
         state.vYaw = 0.0;
 
-        const targetSlip = state.steerInput * 0.55 * turnDir;
+        const targetSlip = state.steerInput * 0.55 * turnDir * driveInput.handbrake;
         state.driftAngle += (targetSlip - state.driftAngle) * 7.5 * dt;
 
         if (isRearThrusterFiring) {
-          signedSpd = accelerateGroundSpeed(signedSpd, isRealMode ? 38.0 : 120.0, state.maxSpeed, dt, isStandardEVMode);
+          signedSpd = accelerateGroundSpeed(signedSpd, groundDriveAccel(signedSpd), state.maxSpeed, dt, isStandardEVMode);
           state.driftAngle *= Math.pow(0.15, dt);
         } else if (isAccelerating) {
-          signedSpd = accelerateGroundSpeed(signedSpd, currentGroundAccel * 0.85, state.maxSpeed * 0.94, dt, isStandardEVMode);
+          signedSpd = accelerateGroundSpeed(signedSpd, groundDriveAccel(signedSpd, 1 - 0.15 * driveInput.handbrake), state.maxSpeed * 0.94, dt, isStandardEVMode);
         } else if (isFootBraking) {
-          signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * dt);
+          signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * driveInput.brake * dt);
         } else {
           // Very gentle tire-scrub (~1.2 m/s²) while coasting in handbrake drift
           if (signedSpd > 0) {
-            signedSpd = Math.max(0.0, signedSpd - 1.2 * dt);
+            signedSpd = Math.max(0.0, signedSpd - 1.2 * driveInput.handbrake * dt);
           } else {
-            signedSpd = Math.min(0.0, signedSpd + 1.2 * dt);
+            signedSpd = Math.min(0.0, signedSpd + 1.2 * driveInput.handbrake * dt);
           }
         }
 
@@ -954,33 +1036,33 @@ function updateSimulation(dt) {
         const newRightZ = -Math.sin(state.yaw);
 
         if (isRearThrusterFiring) {
-          vForward = accelerateGroundSpeed(vForward, isRealMode ? 38.0 : 120.0, state.maxSpeed, dt, isStandardEVMode);
+          vForward = accelerateGroundSpeed(vForward, groundDriveAccel(vForward), state.maxSpeed, dt, isStandardEVMode);
           vLateral *= Math.pow(0.002, dt);
         } else if (isAccelerating) {
           if (vForward < -0.5) {
-            vForward = Math.min(0.0, vForward + 38.0 * dt);
+            vForward = Math.min(0.0, vForward + 38.0 * driveInput.throttle * dt);
           } else {
-            vForward = accelerateGroundSpeed(vForward, currentGroundAccel, state.maxSpeed, dt, isStandardEVMode);
+            vForward = accelerateGroundSpeed(vForward, groundDriveAccel(vForward), state.maxSpeed, dt, isStandardEVMode);
           }
           vLateral *= Math.pow(0.004, dt);
         } else if (isFootBraking) {
           if (vForward > 0.1) {
-            vForward = Math.max(0.0, vForward - 38.0 * dt);
+            vForward = Math.max(0.0, vForward - 38.0 * driveInput.brake * dt);
           } else if (vForward < -0.1) {
-            vForward = Math.min(0.0, vForward + 38.0 * dt);
+            vForward = Math.min(0.0, vForward + 38.0 * driveInput.brake * dt);
           } else {
             vForward = 0.0;
           }
-          vLateral *= Math.pow(0.004, dt);
+          vLateral *= Math.pow(0.004, dt * driveInput.brake);
         } else if (isReversing) {
           if (vForward > 0.3) {
-            vForward *= Math.pow(0.95, dt);
+            vForward *= Math.pow(0.95, dt * driveInput.reverse);
           } else if (vForward < -15.0) {
-            vForward = Math.min(-15.0, vForward + 38.0 * dt);
+            vForward = Math.min(-15.0, vForward + 38.0 * driveInput.reverse * dt);
           } else {
-            vForward = Math.max(-15.0, vForward - 16.0 * dt);
+            vForward = Math.max(-15.0, vForward - 16.0 * driveInput.reverse * dt);
           }
-          vLateral *= Math.pow(0.004, dt);
+          vLateral *= Math.pow(0.004, dt * driveInput.reverse);
         } else {
           // Match the highway's continuous normal EV overspeed coasting.
           vForward = getGroundCoastSpeed(vForward, dt, isStandardEVMode);
@@ -1014,8 +1096,8 @@ function updateSimulation(dt) {
     }
   }
 
-  const wantsHover = Boolean(keys['Space']);
-  const wantsDescend = Boolean(keys['ShiftLeft'] || keys['ShiftRight']);
+  const wantsHover = driveInput.lift > 0;
+  const wantsDescend = driveInput.descend > 0;
   let isLiftFiring = false;
   let isDescendFiring = false;
   let freefallStartVy = null;
@@ -1124,7 +1206,7 @@ function updateSimulation(dt) {
       }
     } else if (wantsHover && !state.isFreefalling && state.airRemaining > 0) {
       // Space climb speed & acceleration
-      if (consumeAirTank(dt, true)) {
+      if (consumeAirTank(dt * driveInput.lift, true)) {
         if (state.isAutoDescending8s) {
           isLiftFiring = true;
           state.vy += (-3.2 - state.vy) * 6.0 * dt;
@@ -1132,7 +1214,10 @@ function updateSimulation(dt) {
           state.isAutoDescending8s = false;
           isLiftFiring = true;
           const maxAirVy = currentMaxClimbVy * 1.35;
-          state.vy = Math.min(maxAirVy, state.vy + currentLiftAccel * dt);
+          // Full stick matches Space. Partial thrust pays for and supplies only
+          // its share of lift, including the force that counteracts gravity.
+          const liftAccel = (currentLiftAccel + EARTH_GRAVITY_MPS2) * driveInput.lift - EARTH_GRAVITY_MPS2;
+          state.vy = Math.min(maxAirVy, state.vy + liftAccel * dt);
         }
       }
     } else if ((state.isAltitudeHold || (agl > 0.15 && Boolean(keys['KeyN']))) && !state.isFreefalling && state.airRemaining > 0) {
@@ -1156,9 +1241,9 @@ function updateSimulation(dt) {
     }
 
     if (wantsDescend && agl > 0.02) {
-      if (!state.isFreefalling && state.airRemaining > 0 && consumeAirTank(0.55 * dt, true)) {
+      if (!state.isFreefalling && state.airRemaining > 0 && consumeAirTank(0.55 * driveInput.descend * dt, true)) {
         isDescendFiring = true;
-        state.vy -= 18.5 * dt;
+        state.vy -= 18.5 * driveInput.descend * dt;
       }
     }
   }
@@ -1225,7 +1310,7 @@ function updateSimulation(dt) {
   let pitchInput = 0;
   let yawInput = 0;
   if (canUseRCS && (rawRollInput !== 0 || rawPitchInput !== 0 || rawYawInput !== 0)) {
-    const rcsBurn = (isAirborne ? 0.38 : 0.22) * dt;
+    const rcsBurn = (isAirborne ? 0.38 : 0.22) * Math.max(Math.abs(rawRollInput), Math.abs(rawPitchInput), Math.abs(rawYawInput)) * dt;
     if (consumeAirTank(rcsBurn, isAirborne)) {
       rollInput = rawRollInput;
       pitchInput = rawPitchInput;

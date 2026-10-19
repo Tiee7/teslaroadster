@@ -399,7 +399,7 @@ test('numeric passenger score survives language and HUD/camera changes without a
     }
   }
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
-  const scoreStyle = css.match(/\.city-taxi-hud \{([^}]+)\}/)[1];
+  const scoreStyle = css.match(/^\.city-taxi-hud \{([^}]+)\}/m)[1];
   assert.match(scoreStyle, /max-width: 100%; box-sizing: border-box/);
   assert.doesNotMatch(scoreStyle, /width: min\(21rem|flex-direction: column/);
   assert.match(css, /\.city-taxi-hud strong \{[^}]*font-variant-numeric: tabular-nums;[^}]*overflow-wrap: anywhere;/);
@@ -528,7 +528,8 @@ test('bottom-right passenger HUD participates in footer bounds and releases its 
   assert.deepEqual(footer.children[0].children, [controls, cluster]);
   assert.equal(footer.children.at(-1).id, 'city-taxi-hud'); assert.equal(footer.classList.contains('taxi-active'), true);
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
-  const taxiCss = css.slice(css.indexOf('.city-taxi-hud {'));
+  // Scope the base desktop rule; the mobile joystick override is earlier.
+  const taxiCss = css.slice(css.indexOf('\n.city-taxi-hud {') + 1);
   assert.match(taxiCss, /align-self: flex-end/); assert.match(taxiCss, /text-align: right/);
   assert.doesNotMatch(taxiCss, /left: 50%|translateX|position: fixed/);
   assert.match(taxiCss, /\.taxi-footer-instruments \{[^}]*min-height: 0;[^}]*overflow-y: auto/s);

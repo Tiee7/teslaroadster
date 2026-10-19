@@ -190,6 +190,64 @@ html, body {
   display: none !important;
 }
 
+/* Mobile-only overlay: the centre stays transparent and scrollable menus keep
+   their native touch behaviour. Primary fine-pointer desktop layouts are unchanged. */
+#mobile-controls, .mobile-help { display: none; }
+#mobile-controls[hidden] { display: none !important; }
+@media (pointer: coarse) {
+  body { --mobile-stick-size: clamp(88px, 27vw, 124px); }
+  body[data-mobile-controls="true"] #touch-controls { display: none !important; }
+  #mobile-controls:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 18; pointer-events: none; }
+  .mobile-stick-group { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); width: var(--mobile-stick-size); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .mobile-stick-group-left { left: max(10px, env(safe-area-inset-left)); }
+  .mobile-stick-group-right { right: max(10px, env(safe-area-inset-right)); }
+  .mobile-stick { width: var(--mobile-stick-size); height: var(--mobile-stick-size); flex: 0 0 auto; position: relative; border: 1px solid #81d7ee88; border-radius: 50%; background: radial-gradient(circle, #0b233433 0 30%, #0c203544 31% 100%); box-shadow: inset 0 0 18px #07142388; pointer-events: auto; touch-action: none; -webkit-touch-callout: none; }
+  .mobile-stick.is-held { border-color: #a4efff; background-color: #0b293b33; }
+  .mobile-stick-cross { position: absolute; inset: 12%; border: 1px solid #a2d8f122; border-radius: 50%; pointer-events: none; }
+  .mobile-stick-cross::before, .mobile-stick-cross::after { content: ''; position: absolute; background: #a2d8f133; }
+  .mobile-stick-cross::before { top: 50%; left: 0; width: 100%; height: 1px; }
+  .mobile-stick-cross::after { left: 50%; top: 0; height: 100%; width: 1px; }
+  .mobile-stick-knob { position: absolute; width: 37%; height: 37%; top: 31.5%; left: 31.5%; border-radius: 50%; border: 1px solid #b0f1ffbb; background: radial-gradient(circle at 35% 30%, #7fcae777, #153e56bb); box-shadow: 0 3px 12px #0007; transform: translate(var(--stick-x, 0px), var(--stick-y, 0px)); pointer-events: none; }
+  .mobile-stick-label, .mobile-stick-hint { font-size: 9px; font-weight: 700; line-height: 1.3; color: #d5eef8; white-space: nowrap; text-shadow: 0 1px 3px #000; }
+  .mobile-stick-label { width: 100%; white-space: normal; text-align: center; }
+  .mobile-stick-hint { position: absolute; top: calc(100% + 2px); width: calc(100% + 12px); white-space: normal; text-align: center; font-size: 8px; line-height: 10px; }
+  #mobile-stick-mode { pointer-events: auto; width: 100%; min-height: 32px; border: 1px solid #79cce88c; border-radius: 9px; padding: 2px 8px; background: #0a1d2cec; color: #def7ff; font: inherit; font-size: 11px; touch-action: manipulation; }
+  .mobile-utilities { position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: grid; grid-template-columns: repeat(2, 42px); gap: 4px; pointer-events: auto; }
+  .mobile-utilities button { min-height: 32px; padding: 3px; color: #def6ff; background: #0a1d2cbd; border: 1px solid #79cce866; border-radius: 8px; font: inherit; font-size: 10px; touch-action: manipulation; }
+  .mobile-utilities button:focus-visible, #mobile-stick-mode:focus-visible { outline: 2px solid #a4efff; outline-offset: 2px; }
+  body[data-mobile-controls="true"] #hud-footer { padding: 4px 8px max(84px, calc(env(safe-area-inset-bottom) + 76px)); gap: 3px; overflow: visible; max-height: none; }
+  body[data-mobile-controls="true"] #hud-cluster { width: max(108px, calc(100vw - var(--mobile-stick-size) * 2 - 36px)); max-width: 250px !important; padding: 5px 6px !important; gap: 4px; flex-direction: column; }
+  body[data-mobile-controls="true"] #hud-cluster-speed { min-width: 0; padding: 0; border: 0; gap: 2px; }
+  body[data-mobile-controls="true"] #val-speed { font-size: 25px; }
+  body[data-mobile-controls="true"] #val-speed-unit { font-size: 8px; }
+  body[data-mobile-controls="true"] #val-drive-gear { font-size: 9px; margin-left: 2px; }
+  body[data-mobile-controls="true"] #val-kmh,
+  body[data-mobile-controls="true"] #val-g-force,
+  body[data-mobile-controls="true"] #indicator-turn-l,
+  body[data-mobile-controls="true"] #indicator-turn-r,
+  body[data-mobile-controls="true"] #val-air-flow,
+  body[data-mobile-controls="true"] #ui-8s-marker-label,
+  body[data-mobile-controls="true"] #ui-tank-hint,
+  body[data-mobile-controls="true"] #ui-tank-title { display: none; }
+  body[data-mobile-controls="true"] #hud-cluster-tank { font-size: 9px; }
+  body[data-mobile-controls="true"] #hud-cluster-tank > div { font-size: 9px; margin-top: 0; margin-bottom: 2px; gap: 2px; }
+  body[data-mobile-controls="true"] #hud-cluster-tank > div > div { gap: 2px; }
+  body[data-mobile-controls="true"] .city-taxi-hud { align-self: center; max-width: max(108px, calc(100vw - var(--mobile-stick-size) * 2 - 36px)); padding: 3px 6px; text-align: center; }
+  body[data-mobile-controls="true"] .city-taxi-hud strong { font-size: 12px; }
+  .mobile-help { display: block; padding: 12px; margin-bottom: 12px; border: 1px solid #35718c; border-radius: 12px; background: #0b2431; font-size: 12px; line-height: 1.7; }
+  .mobile-help h3 { margin: 0 0 5px; color: #89e8ff; }
+  .mobile-help p { margin: 0; }
+}
+@media (pointer: coarse) and (max-height: 500px) {
+  body { --mobile-stick-size: clamp(88px, 24vh, 112px); }
+  .mobile-stick-group { bottom: max(16px, env(safe-area-inset-bottom)); }
+  .mobile-stick-label, .mobile-stick-hint { font-size: 8px; }
+  body[data-mobile-controls="true"] #hud-cluster { max-width: 210px !important; }
+  body[data-mobile-controls="true"] #hud-footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .mobile-utilities { bottom: max(12px, env(safe-area-inset-bottom)); left: calc(max(10px, env(safe-area-inset-left)) + var(--mobile-stick-size) + 33px); grid-template-columns: repeat(1, 42px); gap: 3px; }
+  .mobile-utilities button { min-height: 26px; }
+}
+
 /* Ranked runs: independent of utility-CSS loading; native dialog handles focus. */
 .ranked-button {
   min-height: 36px; padding: 7px 12px; border: 1px solid #39718e; border-radius: 9px;
@@ -444,6 +502,7 @@ html, body {
 @media (pointer: coarse) {
   body:not([data-hud-mode="minimal"]) #touch-controls { display: flex; }
 }
+
 /* Medium FPV leaves a clear center/lower instrument zone on phones. Both side
    cards remain present and scrollable rather than covering the physical bar. */
 @media (max-width: 1100px) {
@@ -842,6 +901,27 @@ html, body {
   </div>
   </div>
 
+  <!-- Two independent mobile sticks. The overlay never captures touches between pads. -->
+  <div id="mobile-controls" hidden>
+    <div class="mobile-stick-group mobile-stick-group-left">
+      <span id="mobile-left-label" class="mobile-stick-label">STEER · DRIVE / BRAKE</span>
+      <div id="mobile-stick-left" class="mobile-stick" role="group" aria-label="Steer, drive and brake" aria-describedby="mobile-help-copy">
+        <span class="mobile-stick-cross" aria-hidden="true"></span><span class="mobile-stick-knob" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="mobile-stick-group mobile-stick-group-right">
+      <select id="mobile-stick-mode" aria-label="Right stick mode"><option value="lift">Lift</option><option value="attitude">Attitude</option><option value="boost">Boost</option></select>
+      <div id="mobile-stick-right" class="mobile-stick" role="group" aria-label="Lift and strafe" aria-describedby="mobile-right-hint mobile-help-copy">
+        <span class="mobile-stick-cross" aria-hidden="true"></span><span class="mobile-stick-knob" aria-hidden="true"></span>
+      </div>
+      <span id="mobile-right-hint" class="mobile-stick-hint">↑ Lift · ↓ Descend · ↔ Strafe</span>
+    </div>
+    <div class="mobile-utilities">
+      <button id="mobile-jump" type="button">Jump</button><button id="mobile-hold" type="button">Hold</button>
+      <button id="mobile-camera" type="button">View</button><button id="mobile-reset" type="button">Reset</button>
+    </div>
+  </div>
+
   <!-- Bottom HUD: Speedometer, 10-Second COPV Air Tank Bar & On-Screen Touch/Click Controls -->
   <footer id="hud-footer" class="fixed bottom-0 inset-x-0 z-10 pointer-events-none p-3 md:p-4 flex flex-col items-center gap-2">
     <!-- Touch / Mouse Quick Action Buttons -->
@@ -1055,6 +1135,7 @@ html, body {
       </p>
 
       <!-- Control Grid -->
+      <section id="mobile-help" class="mobile-help"><h3 id="mobile-help-title">Mobile dual sticks</h3><p id="mobile-help-copy"></p></section>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
           <h3 id="modal-h-drive" class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2">1. Driving & Vertical Flight</h3>
@@ -1587,6 +1668,7 @@ const state = {
   pitch: 0.0,
   attitudeIdleSeconds: 0.0,
   wasAirborne: false,
+  jumpInertiaSeconds: null, // Ground O-hop launch grace; null means established flight.
   yaw: 0.0,
   vRoll: 0.0,
   vPitch: 0.0,
@@ -2165,6 +2247,212 @@ const sound = new SoundEngine();
   audio.addEventListener('error', () => { failed = true; pending = null; render(); });
   window.RoadsterMusic = { render, isSettingsOpen: () => dialog.open };
   render();
+})();
+
+
+// =========================================================================
+// MODULE: mobile-controls.js
+// =========================================================================
+// Mobile input owns its pointers separately from keyboard keys. A resting thumb
+// is always neutral; only a deliberate drag outside the dead zone drives.
+(function () {
+  'use strict';
+  const root = document.getElementById('mobile-controls');
+  if (!root || typeof window.matchMedia !== 'function') return;
+  const coarse = window.matchMedia('(pointer: coarse)');
+  const modeSelect = document.getElementById('mobile-stick-mode');
+  const modes = ['lift', 'attitude', 'boost'];
+  const deadzone = 0.14;
+  const sticks = ['left', 'right'].map(side => ({
+    side, element: document.getElementById(`mobile-stick-${side}`),
+    pointerId: null, x: 0, y: 0, reverse: null
+  }));
+  let mode = 'lift';
+
+  function blocked() {
+    return document.hidden || (typeof state !== 'undefined' && state.isDestroyed) ||
+      document.body.dataset.hudMode === 'minimal' ||
+      ['modal-map-select', 'modal-help', 'modal-destroyed'].some(id => {
+        const node = document.getElementById(id);
+        return node && !node.classList.contains('hidden');
+      }) || ['ranked-dialog', 'audio-settings', 'paint-picker'].some(id => document.getElementById(id)?.open);
+  }
+
+  function render(stick) {
+    const radius = Math.max(1, stick.element.getBoundingClientRect().width * 0.32);
+    stick.element.style.setProperty('--stick-x', `${stick.x * radius}px`);
+    stick.element.style.setProperty('--stick-y', `${-stick.y * radius}px`);
+    stick.element.classList.toggle('is-held', stick.pointerId !== null);
+  }
+
+  function release(stick) {
+    const pointer = stick.pointerId;
+    const changed = pointer !== null || stick.x !== 0 || stick.y !== 0 || stick.reverse !== null;
+    // Null ownership before releasePointerCapture, which can synchronously fire
+    // lostpointercapture. Repeated cleanup must be harmless.
+    stick.pointerId = null;
+    stick.x = stick.y = 0;
+    stick.reverse = null;
+    if (pointer !== null) {
+      try { stick.element.releasePointerCapture(pointer); } catch (_) {}
+    }
+    if (changed) render(stick);
+  }
+
+  function clear() { sticks.forEach(release); }
+
+  function sync() {
+    const enabled = coarse.matches && !blocked();
+    if (!enabled) clear();
+    // Physics may read this twice per frame. Avoid repeat attribute writes or
+    // measuring idle pads, especially on fine-pointer desktop devices.
+    if (root.hidden === enabled) root.hidden = !enabled;
+    const capability = coarse.matches ? 'true' : 'false';
+    if (document.body.dataset.mobileControls !== capability) document.body.dataset.mobileControls = capability;
+    return enabled;
+  }
+
+  function update(stick, event) {
+    const box = stick.element.getBoundingClientRect();
+    const radius = Math.max(1, box.width * 0.32);
+    // The down event only claims the pad. The first drag is measured from that
+    // thumb's resting position, so even an off-centre resting touch is neutral.
+    const dx = (event.clientX - stick.originX) / radius;
+    const dy = (stick.originY - event.clientY) / radius;
+    const magnitude = Math.hypot(dx, dy);
+    const normalized = Math.min(1, Math.max(0, (magnitude - deadzone) / (1 - deadzone)));
+    stick.x = magnitude ? dx / magnitude * normalized : 0;
+    stick.y = magnitude ? dy / magnitude * normalized : 0;
+    // Per-axis dead zone also keeps an approximately horizontal steering drag
+    // from requesting a tiny amount of unwanted throttle or braking.
+    if (Math.abs(dx) <= deadzone) stick.x = 0;
+    if (Math.abs(dy) <= deadzone) stick.y = 0;
+    if (stick.side === 'left') {
+      if (stick.y >= 0) stick.reverse = null;
+      else if (stick.reverse === null) {
+        // A forward braking pull never turns into reverse when speed reaches
+        // zero. Centre/release and pull again to deliberately re-arm reverse.
+        stick.reverse = typeof state !== 'undefined' && !state.wasAirborne && !state.isJumping6m &&
+          Math.max(Math.abs(state.speed), Math.hypot(state.vx || 0, state.vy || 0, state.vz || 0)) <= 0.35;
+      }
+    }
+    render(stick);
+  }
+
+  sticks.forEach(stick => {
+    stick.element.addEventListener('pointerdown', event => {
+      if (!sync() || stick.pointerId !== null || event.pointerType === 'mouse' || event.button > 0 ||
+          sticks.some(other => other.pointerId === event.pointerId)) return;
+      event.preventDefault();
+      stick.pointerId = event.pointerId;
+      stick.originX = event.clientX;
+      stick.originY = event.clientY;
+      try { stick.element.setPointerCapture(event.pointerId); } catch (_) { release(stick); return; }
+      render(stick);
+      if (typeof sound !== 'undefined') sound.init();
+    });
+    stick.element.addEventListener('pointermove', event => {
+      if (stick.pointerId !== event.pointerId) return;
+      if (!sync()) return;
+      event.preventDefault();
+      update(stick, event);
+    });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => {
+      stick.element.addEventListener(type, event => {
+        if (stick.pointerId === event.pointerId) release(stick);
+      });
+    });
+    stick.element.addEventListener('contextmenu', event => event.preventDefault());
+  });
+
+  function readInput() {
+    if (!sync()) return {};
+    const [left, right] = sticks;
+    return {
+      steer: left.x, throttle: Math.max(0, left.y),
+      brake: left.reverse ? 0 : Math.max(0, -left.y),
+      reverse: left.reverse ? Math.max(0, -left.y) : 0,
+      lift: mode === 'lift' ? Math.max(0, right.y) : 0,
+      descend: mode === 'lift' ? Math.max(0, -right.y) : 0,
+      strafe: mode !== 'attitude' ? right.x : 0,
+      roll: mode === 'attitude' ? -right.x : 0,
+      pitch: mode === 'attitude' ? right.y : 0,
+      boost: mode === 'boost' ? Math.max(0, right.y) : 0,
+      handbrake: mode === 'boost' ? Math.max(0, -right.y) : 0
+    };
+  }
+
+  function setLanguage() {
+    const zh = typeof currentLang !== 'undefined' && currentLang === 'zh';
+    const text = zh ? {
+      drive: '转向 · 油门 / 刹车', lift: '升降', attitude: '姿态', boost: '喷气',
+      liftHint: '↑ 升空 · ↓ 下降 · ↔ 平移', attitudeHint: '↕ 俯仰 · ↔ 横滚', boostHint: '↑ 喷气 · ↓ 漂移 · ↔ 平移',
+      jump: '跳跃', hold: '定高', camera: '视角', reset: '重置', label: '右摇杆模式',
+      helpTitle: '手机双摇杆',
+      help: '左摇杆：左右转向（空中偏航），上推加速，下拉刹车。停稳后回中再下拉可倒车。右摇杆切换：升降＝上升／下降、左右平移；姿态＝上下俯仰、左右横滚；喷气＝上推尾部喷气、下拉手刹漂移、左右平移。移动幅度控制力度，松手即回中；切换模式后需重新触摸。两根手指可同时独立操作。定高是持续耗气的开关，再点一次取消。'
+    } : {
+      drive: 'STEER · DRIVE / BRAKE', lift: 'Lift', attitude: 'Attitude', boost: 'Boost',
+      liftHint: '↑ Lift · ↓ Descend · ↔ Strafe', attitudeHint: '↕ Pitch · ↔ Roll', boostHint: '↑ Jet · ↓ Drift · ↔ Strafe',
+      jump: 'Jump', hold: 'Hold', camera: 'View', reset: 'Reset', label: 'Right stick mode',
+      helpTitle: 'Mobile dual sticks',
+      help: 'Left: steer (yaw in flight), push up to accelerate, pull down to brake. Once stopped, centre then pull down again to reverse. Right modes: Lift = ascend/descend and sideways strafe; Attitude = pitch and roll; Boost = push up for the rear jet, down for handbrake drift, sideways to strafe. Drag farther for more power. Release to centre; changing modes requires a fresh touch. Use two fingers independently. Hold toggles altitude hold, which keeps using air until tapped again.'
+    };
+    document.getElementById('mobile-left-label').textContent = text.drive;
+    sticks[0].element.setAttribute('aria-label', text.drive);
+    sticks[1].element.setAttribute('aria-label', text[mode] + ': ' + text[mode + 'Hint']);
+    modeSelect.setAttribute('aria-label', text.label);
+    [...modeSelect.options].forEach(option => { option.textContent = text[option.value]; });
+    document.getElementById('mobile-right-hint').textContent = text[mode + 'Hint'];
+    ['jump', 'hold', 'camera', 'reset'].forEach(action => {
+      const button = document.getElementById(`mobile-${action}`);
+      button.textContent = text[action];
+      button.setAttribute('aria-label', text[action]);
+    });
+    document.getElementById('mobile-help-title').textContent = text.helpTitle;
+    document.getElementById('mobile-help-copy').textContent = text.help;
+  }
+
+  modeSelect.addEventListener('pointerdown', clear);
+  modeSelect.addEventListener('focus', clear);
+  modeSelect.addEventListener('change', () => {
+    clear();
+    mode = modes.includes(modeSelect.value) ? modeSelect.value : 'lift';
+    modeSelect.value = mode;
+    setLanguage();
+  });
+  const actions = {
+    jump: () => { if (typeof triggerJump6m === 'function') triggerJump6m(); },
+    hold: () => { if (typeof toggleAltitudeHold === 'function') toggleAltitudeHold(); },
+    camera: () => document.getElementById('btn-camera')?.click(),
+    reset: () => { if (typeof resetCar === 'function') resetCar(); }
+  };
+  Object.entries(actions).forEach(([action, run]) => {
+    document.getElementById(`mobile-${action}`).addEventListener('click', () => {
+      if (!sync()) return;
+      if (action === 'reset') clear();
+      run();
+    });
+  });
+
+  window.addEventListener('blur', clear);
+  window.addEventListener('pagehide', clear);
+  document.addEventListener('visibilitychange', () => { clear(); sync(); });
+  ['resize', 'orientationchange'].forEach(type => window.addEventListener(type, () => { clear(); sync(); }));
+  window.visualViewport?.addEventListener('resize', clear);
+  window.screen?.orientation?.addEventListener('change', clear);
+  if (coarse.addEventListener) coarse.addEventListener('change', () => { clear(); sync(); });
+  else coarse.addListener?.(() => { clear(); sync(); });
+  if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver(sync);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-hud-mode'] });
+    ['modal-map-select', 'modal-help', 'modal-destroyed', 'ranked-dialog', 'audio-settings', 'paint-picker'].forEach(id => {
+      const node = document.getElementById(id);
+      if (node) observer.observe(node, { attributes: true, attributeFilter: ['class', 'hidden', 'open'] });
+    });
+  }
+  window.RoadsterTouch = { readInput, clear, sync, setLanguage };
+  setLanguage();
+  sync();
 })();
 
 
@@ -5997,6 +6285,7 @@ function switchMap(targetMap) {
 }
 
 function resetCar() {
+  window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
   clearDebris();
@@ -6037,6 +6326,7 @@ function resetCar() {
   state.pitch = 0.0;
   state.attitudeIdleSeconds = 0.0;
   state.wasAirborne = false;
+  state.jumpInertiaSeconds = null;
   state.yaw = 0.0;
   state.vRoll = 0.0;
   state.vPitch = 0.0;
@@ -6061,6 +6351,7 @@ function resetCar() {
 
 function applyTranslations() {
   syncHudPerspective();
+  window.RoadsterTouch?.setLanguage();
   window.RoadsterTaxi?.render();
   window.RoadsterMusic?.render();
   window.RoadsterRanked?.render();
@@ -6252,6 +6543,7 @@ function launchSelectedMap() {
 document.getElementById('btn-launch-selected-map').addEventListener('click', launchSelectedMap);
 
 function clearAllInputKeys() {
+  window.RoadsterTouch?.clear();
   for (const k in keys) {
     if (keys[k]) setKeyState(k, false);
   }
@@ -6485,6 +6777,9 @@ function triggerJump6m() {
     }
   }
   const currentAgl = Math.max(0.0, state.y - groundElev);
+  // Only a fresh ground/roof takeoff gets launch grace. Midair O taps cannot
+  // restart it and disable normal flight handling.
+  if (currentAgl <= 0.15) state.jumpInertiaSeconds = 0;
   // Jump to 6.0m above ground/rooftop (or +6.0m if already flying above 5.5m)
   state.jumpStartY = state.y;
   state.jumpTargetY = (currentAgl < 5.5) ? (groundElev + 6.0) : Math.min(MAX_FLIGHT_ALTITUDE, state.y + 6.0);
@@ -7890,6 +8185,43 @@ function getAirCoastSpeed(speedMps, dt) {
   return speedMps / (1 + PASSIVE_AERO_DRAG_PER_METER * speedMps * dt);
 }
 
+// The tactical O hop keeps its launch vector briefly; established flight then
+// regains the earlier, more responsive handling. Integrate smoothstep exactly
+// across frame boundaries so a low-FPS frame cannot skip the takeoff grace.
+const JUMP_INERTIA_GRACE_SECONDS = 0.25;
+const JUMP_INERTIA_BLEND_SECONDS = 0.60;
+
+function advanceAirHandling(dt, isAirborne) {
+  if (!isAirborne) {
+    state.jumpInertiaSeconds = null;
+    return 0;
+  }
+  if (!Number.isFinite(state.jumpInertiaSeconds)) return dt;
+  const before = state.jumpInertiaSeconds;
+  const after = before + dt;
+  const integratedBlend = seconds => {
+    const u = (seconds - JUMP_INERTIA_GRACE_SECONDS) / JUMP_INERTIA_BLEND_SECONDS;
+    if (u <= 0) return 0;
+    if (u >= 1) return seconds - JUMP_INERTIA_GRACE_SECONDS - JUMP_INERTIA_BLEND_SECONDS / 2;
+    return JUMP_INERTIA_BLEND_SECONDS * (u ** 3 - 0.5 * u ** 4);
+  };
+  state.jumpInertiaSeconds = after >= JUMP_INERTIA_GRACE_SECONDS + JUMP_INERTIA_BLEND_SECONDS ? null : after;
+  return Math.max(0, Math.min(dt, integratedBlend(after) - integratedBlend(before)));
+}
+
+function getResponsiveAirCoastSpeed(speedMps, dt) {
+  // Restore the former flight release curve (55%/s damping plus 15.5 +
+  // 0.0085*v² deceleration), with its continuous-time solution rather than
+  // an FPS-dependent Euler subtraction. This is a horizontal gameplay assist;
+  // vertical velocity and Earth gravity stay in the separate altitude path.
+  const linear = -Math.log(0.45), quadratic = 0.0085, constant = 15.5;
+  const discriminant = Math.sqrt(linear * linear - 4 * quadratic * constant);
+  const nearRoot = (-linear + discriminant) / (2 * quadratic);
+  const farRoot = (-linear - discriminant) / (2 * quadratic);
+  const ratio = (speedMps - nearRoot) / (speedMps - farRoot) * Math.exp(-discriminant * dt);
+  return Math.max(0, (nearRoot - ratio * farRoot) / (1 - ratio));
+}
+
 function addAirThrust(vx, vz, impulseX, impulseZ, propulsionLimit) {
   const impulse = Math.hypot(impulseX, impulseZ);
   if (impulse === 0) return { vx, vz };
@@ -7952,8 +8284,24 @@ function integrateFreefall(y, vy, dt, surfaceY) {
   return { y: nextY, vy: nextVy };
 }
 
+function readDriveInput() {
+  const touch = globalThis.window?.RoadsterTouch?.readInput() || {};
+  const axis = name => Math.max(-1, Math.min(1, Number.isFinite(touch[name]) ? touch[name] : 0));
+  const amount = (name, ...codes) => Math.max(0, axis(name), ...codes.map(code => Number(Boolean(keys[code]))));
+  return {
+    steer: Math.max(-1, Math.min(1, Number(Boolean(keys.KeyD)) - Number(Boolean(keys.KeyA)) + axis('steer'))),
+    throttle: amount('throttle', 'KeyW'), boost: amount('boost', 'Semicolon'),
+    brake: amount('brake', 'KeyH'), reverse: amount('reverse', 'KeyS'),
+    handbrake: amount('handbrake', 'KeyU'), lift: amount('lift', 'Space'),
+    descend: amount('descend', 'ShiftLeft', 'ShiftRight'),
+    strafe: Math.max(-1, Math.min(1, Number(Boolean(keys.KeyE)) - Number(Boolean(keys.KeyQ)) + axis('strafe'))),
+    roll: axis('roll'), pitch: axis('pitch')
+  };
+}
+
 function readAttitudeInput(isAirborne) {
-  // Touch controls use the same key state as the keyboard and arrow aliases.
+  // Keep keyboard ownership independent: a released thumb cannot release W.
+  const drive = readDriveInput();
   const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
   const rollRight = Boolean(keys['KeyL'] || keys['ArrowRight']);
   const pitchUp = Boolean(keys['KeyI'] || keys['ArrowUp']);
@@ -7961,12 +8309,13 @@ function readAttitudeInput(isAirborne) {
   const yawLeft = isAirborne && Boolean(keys['KeyA']);
   const yawRight = isAirborne && Boolean(keys['KeyD']);
   return {
-    rawRollInput: Number(rollLeft) - Number(rollRight),
-    rawPitchInput: Number(pitchUp) - Number(pitchDown),
-    rawYawInput: Number(yawLeft) - Number(yawRight),
+    rawRollInput: Math.max(-1, Math.min(1, Number(rollLeft) - Number(rollRight) + drive.roll)),
+    rawPitchInput: Math.max(-1, Math.min(1, Number(pitchUp) - Number(pitchDown) + drive.pitch)),
+    rawYawInput: isAirborne ? -drive.steer : 0,
     // Opposing held controls still count as player input, even if their torques cancel.
     hasManualAttitudeInput: rollLeft || rollRight || pitchUp || pitchDown || yawLeft || yawRight ||
-      (isAirborne && Boolean(keys['KeyQ'] || keys['KeyE']))
+      drive.roll !== 0 || drive.pitch !== 0 ||
+      (isAirborne && (drive.steer !== 0 || drive.strafe !== 0 || Boolean(keys['KeyQ'] || keys['KeyE'])))
   };
 }
 
@@ -8126,8 +8475,9 @@ function updateSimulation(dt) {
   let canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
 
   // Requirement 4: ';' (Semicolon) triggers Rear Cold-Gas Rocket Boost in Realistic (Standard) mode!
-  const isRearBoostKey = Boolean(keys['Semicolon']);
-  const isThrottleW = Boolean(keys['KeyW']);
+  const driveInput = readDriveInput();
+  const isRearBoostKey = driveInput.boost > 0;
+  const isThrottleW = driveInput.throttle > 0;
   const isAccelerating = isThrottleW || (isRearBoostKey && canUseRCS);
 
   // Set mode-specific dynamic limits (calibrated to 0-100 km/h in 1.9s & venue scale)
@@ -8159,15 +8509,27 @@ function updateSimulation(dt) {
     currentMaxClimbVy = 36.0 * 1.3;
   }
   const isStandardEVMode = isRealMode && !state.insaneMode && state.maxSpeed === STANDARD_EV_MAX_MPS;
+  const electricGroundAccel = isRealMode ? (state.insaneMode ? 38.0 : 16.5) : 72.0;
+  const electricAirAccel = isRealMode ? (state.insaneMode ? 24.0 : 9.5) : (currentMap === 'city' ? 145.0 : 92.0);
+  const rearJetAccel = isRealMode ? 38.0 : 120.0;
+  const groundDriveAccel = (speed, electricFactor = 1, jetFactor = 1) => {
+    // A small jet request must not turn a held W into full rocket power, or
+    // extend the electric motor past its existing 200 km/h ceiling.
+    const electric = isRealMode && !state.insaneMode && speed >= STANDARD_EV_MAX_MPS
+      ? 0 : electricGroundAccel * driveInput.throttle * electricFactor;
+    const jet = isRearThrusterFiring ? rearJetAccel * driveInput.boost * jetFactor : 0;
+    return Math.max(electric, jet);
+  };
 
   // Requirement 1 & 2:
   // • When throttle (W or ;) and foot brake (H) / reverse (S) are pressed simultaneously, execute throttle and ignore foot brake/reverse.
   // • Handbrake (B) MUST work even when throttle (W) is held ("不松油门的情况下目前手刹无法正常使用")!
-  const isFootBraking = Boolean(keys['KeyH']) && !isAccelerating;
-  const isReversing = Boolean(keys['KeyS']) && !isAccelerating;
-  const isHandbraking = Boolean(keys['KeyU']);
+  const isFootBraking = driveInput.brake > 0 && !isAccelerating;
+  const isReversing = driveInput.reverse > 0 && !isAccelerating;
+  const isHandbraking = driveInput.handbrake > 0;
   const isAirBrakingActive = isFootBraking || (isAirborne && isReversing);
-  state.dragCoeffCd = isAirBrakingActive ? 0.72 : ((state.y > 0.2 || Math.abs(state.speed) > 33.0) ? 0.44 : 0.34);
+  const coastDragCoeff = (state.y > 0.2 || Math.abs(state.speed) > 33.0) ? 0.44 : 0.34;
+  state.dragCoeffCd = isAirBrakingActive ? coastDragCoeff + (0.72 - coastDragCoeff) * Math.max(driveInput.brake, driveInput.reverse) : coastDragCoeff;
 
   // Determine if the 4 Rear SpaceX Cold-Gas Nozzles are firing this frame:
   // 用户要求: "在空中飞行的时候，按W需要喷气，地上的W不喷气"
@@ -8176,10 +8538,10 @@ function updateSimulation(dt) {
   let isRearThrusterFiring = false;
   if (canUseRCS) {
     if (isAirborne && (isThrottleW || isRearBoostKey)) {
-      const airBurnRate = isRearBoostKey ? 0.85 : 0.65;
+      const airBurnRate = Math.max(0.85 * driveInput.boost, 0.65 * driveInput.throttle);
       isRearThrusterFiring = consumeAirTank(airBurnRate * dt, true);
     } else if (!isAirborne && isRearBoostKey) {
-      isRearThrusterFiring = consumeAirTank(0.85 * dt, false);
+      isRearThrusterFiring = consumeAirTank(0.85 * driveInput.boost * dt, false);
     }
   }
   canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
@@ -8190,7 +8552,7 @@ function updateSimulation(dt) {
     ? Math.hypot(state.vx, state.vy, state.vz)
     : (currentMap === 'highway' ? Math.abs(state.speed) : Math.hypot(state.vx, state.vz));
   const retroBrakeDemand = (isFootBraking || isReversing)
-    ? getRetroBrakeDemand(brakeTravelSpeed, isAirborne) : 0;
+    ? getRetroBrakeDemand(brakeTravelSpeed, isAirborne) * Math.max(driveInput.brake, driveInput.reverse) : 0;
   let retroImpulseSeconds = 0;
   if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
     const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
@@ -8207,7 +8569,7 @@ function updateSimulation(dt) {
   // Ground steering uses A / D only (J / L are exclusively Roll!)
   const steerLeft = Boolean(keys['KeyA']);
   const steerRight = Boolean(keys['KeyD']);
-  const lateralInput = isAirborne ? 0 : ((steerRight ? 1 : 0) - (steerLeft ? 1 : 0));
+  const lateralInput = isAirborne ? 0 : driveInput.steer;
 
   // Progressive steering rack smoothing for natural ground steering feel
   const steerRate = lateralInput !== 0 ? 8.0 : 11.0;
@@ -8217,12 +8579,13 @@ function updateSimulation(dt) {
   frontWheelSteerGroups.forEach(g => { g.rotation.y = state.steerAngle; });
 
   // Requirement 2 & 3: In mid-air, Q / E controls lateral body movement AND consumes COPV air tank!
-  const wantsAirJetLeft = isAirborne && Boolean(keys['KeyQ']);
-  const wantsAirJetRight = isAirborne && Boolean(keys['KeyE']);
+  const wantsAirJetLeft = isAirborne && (Boolean(keys['KeyQ']) || driveInput.strafe < 0);
+  const wantsAirJetRight = isAirborne && (Boolean(keys['KeyE']) || driveInput.strafe > 0);
   let airJetLeft = false;
   let airJetRight = false;
   if ((wantsAirJetLeft || wantsAirJetRight) && canUseRCS) {
-    if (consumeAirTank(0.45 * dt, true)) {
+    const strafePower = Math.max(Math.abs(driveInput.strafe), Number(Boolean(keys.KeyQ || keys.KeyE)));
+    if (consumeAirTank(0.45 * strafePower * dt, true)) {
       airJetLeft = wantsAirJetLeft;
       airJetRight = wantsAirJetRight;
     }
@@ -8237,13 +8600,16 @@ function updateSimulation(dt) {
   const nosePitchCos = Math.cos(state.pitch);
   const nosePitchSin = Math.sin(state.pitch);
 
+  const airHandlingDt = advanceAirHandling(dt, isAirborne);
   if (isAirborne) {
     state.isDrifting = false;
     state.wasHandbraking = false;
     state.driftAngle = 0.0;
-    // Preserve world-space momentum throughout flips; only thrust changes its direction.
+    // Takeoff retains its inherited vector. Established flight smoothly regains
+    // the controlled speed envelope and nose/bank response used before it.
     if (isRearThrusterFiring) {
-      const boostAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
+      const jetAirAccel = currentMap === 'city' && !isRealMode ? 145.0 : currentAirAccel;
+      const boostAirAccel = Math.max(electricAirAccel * driveInput.throttle, jetAirAccel * driveInput.boost);
       const thrust = addAirThrust(state.vx, state.vz,
         noseHorizX * nosePitchCos * boostAirAccel * dt,
         noseHorizZ * nosePitchCos * boostAirAccel * dt, state.airMaxSpeed);
@@ -8252,22 +8618,33 @@ function updateSimulation(dt) {
       const maxAirVy = currentMaxClimbVy * 1.35;
       const verticalImpulse = boostAirAccel * nosePitchSin * 0.55 * dt;
       state.vy += verticalImpulse > 0 ? Math.min(verticalImpulse, Math.max(0, maxAirVy - state.vy)) : verticalImpulse;
+      const horizMag = Math.hypot(state.vx, state.vz);
+      if (horizMag > state.airMaxSpeed && airHandlingDt > 0) {
+        // Settle inherited overspeed continuously; never clip the O launch or
+        // jump directly to a new propulsion limit when changing flight modes.
+        const nextMag = state.airMaxSpeed + (horizMag - state.airMaxSpeed) * Math.exp(-3.0 * airHandlingDt);
+        state.vx *= nextMag / horizMag;
+        state.vz *= nextMag / horizMag;
+      }
     } else {
       const horizMag = Math.hypot(state.vx, state.vz);
-      const nextMag = getAirCoastSpeed(horizMag, dt);
+      const launchCoast = getAirCoastSpeed(horizMag, Math.max(0, dt - airHandlingDt));
+      const nextMag = getResponsiveAirCoastSpeed(launchCoast, airHandlingDt);
       const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
       state.vx *= coastScale;
       state.vz *= coastScale;
     }
 
-    // Only explicit Q/E side jets request lateral assist. Rotating the body
-    // around its thrust axis cannot erase inherited sideways momentum.
-    const jetDir = (airJetRight ? 1 : 0) - (airJetLeft ? 1 : 0);
-    const targetStrafe = jetDir * 18.0;
-    const strafeRate = currentMap === 'highway' ? (isRearThrusterFiring ? 10.0 : 6.5) : 6.0;
+    // Explicit side jets keep their proportional input throughout takeoff.
+    // Bank assist and powered sideslip control blend in after the brief carry.
+    const jetDir = airJetLeft || airJetRight ? driveInput.strafe : 0;
+    const bankStrafe = canUseRCS ? Math.sin(state.roll) * 10.0 : 0;
+    const targetStrafe = jetDir * 18.0 + bankStrafe;
+    const strafeRate = isRearThrusterFiring ? 10.0 : 6.5;
     const lateralSpeed = state.vx * rightHorizX + state.vz * rightHorizZ;
-    const strafeChange = Math.abs(targetStrafe) > 0.001
-      ? (targetStrafe - lateralSpeed) * Math.min(1.0, strafeRate * dt)
+    const strafeDt = jetDir !== 0 ? dt : airHandlingDt;
+    const strafeChange = jetDir !== 0 || Math.abs(bankStrafe) > 0.001 || isRearThrusterFiring
+      ? (targetStrafe - lateralSpeed) * (1.0 - Math.exp(-strafeRate * strafeDt))
       : 0;
     state.vx += rightHorizX * strafeChange;
     state.vz += rightHorizZ * strafeChange;
@@ -8303,29 +8680,29 @@ function updateSimulation(dt) {
     if (!isAirborne) {
       // Ground mode on highway
       if (isAccelerating) {
-        const effAccel = isRearThrusterFiring ? (isRealMode ? 38.0 * fuelBurnThrustFactor : 120.0 * fuelBurnThrustFactor) : (isHandbraking ? currentGroundAccel * 0.88 : currentGroundAccel);
+        const effAccel = groundDriveAccel(state.speed, isHandbraking ? 1 - 0.12 * driveInput.handbrake : 1, fuelBurnThrustFactor);
         if (state.speed < -0.5) {
-          state.speed = Math.min(0.0, state.speed + 38.0 * dt);
+          state.speed = Math.min(0.0, state.speed + 38.0 * Math.max(driveInput.throttle, driveInput.boost) * dt);
         } else {
           state.speed = accelerateGroundSpeed(state.speed, effAccel, state.maxSpeed, dt, isStandardEVMode);
         }
       } else if (isFootBraking) {
         if (state.speed > 0.1) {
-          state.speed = Math.max(0.0, state.speed - 38.0 * dt);
+          state.speed = Math.max(0.0, state.speed - 38.0 * driveInput.brake * dt);
         } else if (state.speed < -0.1) {
-          state.speed = Math.min(0.0, state.speed + 38.0 * dt);
+          state.speed = Math.min(0.0, state.speed + 38.0 * driveInput.brake * dt);
         } else {
           state.speed = 0.0;
         }
       } else if (isReversing) {
         if (state.speed > 0.3) {
-          state.speed *= Math.pow(0.95, dt);
+          state.speed *= Math.pow(0.95, dt * driveInput.reverse);
         } else if (state.speed < -15.0) {
           // A fast backward landing brakes toward reverse cruise; the reverse
           // speed limit must never teleport existing momentum to -15 m/s.
-          state.speed = Math.min(-15.0, state.speed + 38.0 * dt);
+          state.speed = Math.min(-15.0, state.speed + 38.0 * driveInput.reverse * dt);
         } else {
-          state.speed = Math.max(-15.0, state.speed - 16.0 * dt);
+          state.speed = Math.max(-15.0, state.speed - 16.0 * driveInput.reverse * dt);
         }
       } else if (!isHandbraking) {
         // Gentle coasting, including a continuous 30%-stronger normal EV overrun.
@@ -8341,22 +8718,22 @@ function updateSimulation(dt) {
         state.wasHandbraking = true;
         if (lateralInput !== 0 || Math.abs(state.driftAngle) > 0.04) {
           state.isDrifting = true;
-          const targetSlip = -state.steerInput * 0.58 * turnSign;
+          const targetSlip = -state.steerInput * 0.58 * turnSign * driveInput.handbrake;
           state.driftAngle += (targetSlip - state.driftAngle) * 8.5 * dt;
           state.yaw = state.driftAngle;
           state.vYaw = 0.0;
-          const driftSlideVx = state.steerInput * Math.min(22.0, Math.abs(state.speed) * 0.56);
+          const driftSlideVx = state.steerInput * Math.min(22.0, Math.abs(state.speed) * 0.56) * driveInput.handbrake;
           const noseThrustVx = isRearThrusterFiring ? (noseHorizX * state.speed * 0.85) : (noseHorizX * state.speed * 0.48);
           state.vx += (driftSlideVx + noseThrustVx - state.vx) * 9.5 * dt;
           if (!isAccelerating) {
             // Very light tire-scrub (~1.2 m/s²) so handbrake never locks/stops the car
-            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * driveInput.handbrake * dt);
           }
         } else {
           state.isDrifting = false;
           state.driftAngle *= Math.pow(0.05, dt);
           if (!isAccelerating) {
-            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * driveInput.handbrake * dt);
           }
         }
       } else {
@@ -8419,26 +8796,26 @@ function updateSimulation(dt) {
         state.isDrifting = Math.abs(state.steerInput) > 0.04 || Math.abs(state.driftAngle) > 0.05;
         const turnDir = forwardSign;
         const pivotSpeedFactor = THREE.MathUtils.clamp(totalGroundSpd / 6.5, 0.35, 1.25);
-        const handbrakeYawRate = state.steerInput * 3.85 * pivotSpeedFactor * turnDir;
+        const handbrakeYawRate = state.steerInput * 3.85 * pivotSpeedFactor * turnDir * driveInput.handbrake;
         state.yaw -= handbrakeYawRate * dt;
         state.vYaw = 0.0;
 
-        const targetSlip = state.steerInput * 0.55 * turnDir;
+        const targetSlip = state.steerInput * 0.55 * turnDir * driveInput.handbrake;
         state.driftAngle += (targetSlip - state.driftAngle) * 7.5 * dt;
 
         if (isRearThrusterFiring) {
-          signedSpd = accelerateGroundSpeed(signedSpd, isRealMode ? 38.0 : 120.0, state.maxSpeed, dt, isStandardEVMode);
+          signedSpd = accelerateGroundSpeed(signedSpd, groundDriveAccel(signedSpd), state.maxSpeed, dt, isStandardEVMode);
           state.driftAngle *= Math.pow(0.15, dt);
         } else if (isAccelerating) {
-          signedSpd = accelerateGroundSpeed(signedSpd, currentGroundAccel * 0.85, state.maxSpeed * 0.94, dt, isStandardEVMode);
+          signedSpd = accelerateGroundSpeed(signedSpd, groundDriveAccel(signedSpd, 1 - 0.15 * driveInput.handbrake), state.maxSpeed * 0.94, dt, isStandardEVMode);
         } else if (isFootBraking) {
-          signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * dt);
+          signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * driveInput.brake * dt);
         } else {
           // Very gentle tire-scrub (~1.2 m/s²) while coasting in handbrake drift
           if (signedSpd > 0) {
-            signedSpd = Math.max(0.0, signedSpd - 1.2 * dt);
+            signedSpd = Math.max(0.0, signedSpd - 1.2 * driveInput.handbrake * dt);
           } else {
-            signedSpd = Math.min(0.0, signedSpd + 1.2 * dt);
+            signedSpd = Math.min(0.0, signedSpd + 1.2 * driveInput.handbrake * dt);
           }
         }
 
@@ -8475,33 +8852,33 @@ function updateSimulation(dt) {
         const newRightZ = -Math.sin(state.yaw);
 
         if (isRearThrusterFiring) {
-          vForward = accelerateGroundSpeed(vForward, isRealMode ? 38.0 : 120.0, state.maxSpeed, dt, isStandardEVMode);
+          vForward = accelerateGroundSpeed(vForward, groundDriveAccel(vForward), state.maxSpeed, dt, isStandardEVMode);
           vLateral *= Math.pow(0.002, dt);
         } else if (isAccelerating) {
           if (vForward < -0.5) {
-            vForward = Math.min(0.0, vForward + 38.0 * dt);
+            vForward = Math.min(0.0, vForward + 38.0 * driveInput.throttle * dt);
           } else {
-            vForward = accelerateGroundSpeed(vForward, currentGroundAccel, state.maxSpeed, dt, isStandardEVMode);
+            vForward = accelerateGroundSpeed(vForward, groundDriveAccel(vForward), state.maxSpeed, dt, isStandardEVMode);
           }
           vLateral *= Math.pow(0.004, dt);
         } else if (isFootBraking) {
           if (vForward > 0.1) {
-            vForward = Math.max(0.0, vForward - 38.0 * dt);
+            vForward = Math.max(0.0, vForward - 38.0 * driveInput.brake * dt);
           } else if (vForward < -0.1) {
-            vForward = Math.min(0.0, vForward + 38.0 * dt);
+            vForward = Math.min(0.0, vForward + 38.0 * driveInput.brake * dt);
           } else {
             vForward = 0.0;
           }
-          vLateral *= Math.pow(0.004, dt);
+          vLateral *= Math.pow(0.004, dt * driveInput.brake);
         } else if (isReversing) {
           if (vForward > 0.3) {
-            vForward *= Math.pow(0.95, dt);
+            vForward *= Math.pow(0.95, dt * driveInput.reverse);
           } else if (vForward < -15.0) {
-            vForward = Math.min(-15.0, vForward + 38.0 * dt);
+            vForward = Math.min(-15.0, vForward + 38.0 * driveInput.reverse * dt);
           } else {
-            vForward = Math.max(-15.0, vForward - 16.0 * dt);
+            vForward = Math.max(-15.0, vForward - 16.0 * driveInput.reverse * dt);
           }
-          vLateral *= Math.pow(0.004, dt);
+          vLateral *= Math.pow(0.004, dt * driveInput.reverse);
         } else {
           // Match the highway's continuous normal EV overspeed coasting.
           vForward = getGroundCoastSpeed(vForward, dt, isStandardEVMode);
@@ -8535,8 +8912,8 @@ function updateSimulation(dt) {
     }
   }
 
-  const wantsHover = Boolean(keys['Space']);
-  const wantsDescend = Boolean(keys['ShiftLeft'] || keys['ShiftRight']);
+  const wantsHover = driveInput.lift > 0;
+  const wantsDescend = driveInput.descend > 0;
   let isLiftFiring = false;
   let isDescendFiring = false;
   let freefallStartVy = null;
@@ -8645,7 +9022,7 @@ function updateSimulation(dt) {
       }
     } else if (wantsHover && !state.isFreefalling && state.airRemaining > 0) {
       // Space climb speed & acceleration
-      if (consumeAirTank(dt, true)) {
+      if (consumeAirTank(dt * driveInput.lift, true)) {
         if (state.isAutoDescending8s) {
           isLiftFiring = true;
           state.vy += (-3.2 - state.vy) * 6.0 * dt;
@@ -8653,7 +9030,10 @@ function updateSimulation(dt) {
           state.isAutoDescending8s = false;
           isLiftFiring = true;
           const maxAirVy = currentMaxClimbVy * 1.35;
-          state.vy = Math.min(maxAirVy, state.vy + currentLiftAccel * dt);
+          // Full stick matches Space. Partial thrust pays for and supplies only
+          // its share of lift, including the force that counteracts gravity.
+          const liftAccel = (currentLiftAccel + EARTH_GRAVITY_MPS2) * driveInput.lift - EARTH_GRAVITY_MPS2;
+          state.vy = Math.min(maxAirVy, state.vy + liftAccel * dt);
         }
       }
     } else if ((state.isAltitudeHold || (agl > 0.15 && Boolean(keys['KeyN']))) && !state.isFreefalling && state.airRemaining > 0) {
@@ -8677,9 +9057,9 @@ function updateSimulation(dt) {
     }
 
     if (wantsDescend && agl > 0.02) {
-      if (!state.isFreefalling && state.airRemaining > 0 && consumeAirTank(0.55 * dt, true)) {
+      if (!state.isFreefalling && state.airRemaining > 0 && consumeAirTank(0.55 * driveInput.descend * dt, true)) {
         isDescendFiring = true;
-        state.vy -= 18.5 * dt;
+        state.vy -= 18.5 * driveInput.descend * dt;
       }
     }
   }
@@ -8746,7 +9126,7 @@ function updateSimulation(dt) {
   let pitchInput = 0;
   let yawInput = 0;
   if (canUseRCS && (rawRollInput !== 0 || rawPitchInput !== 0 || rawYawInput !== 0)) {
-    const rcsBurn = (isAirborne ? 0.38 : 0.22) * dt;
+    const rcsBurn = (isAirborne ? 0.38 : 0.22) * Math.max(Math.abs(rawRollInput), Math.abs(rawPitchInput), Math.abs(rawYawInput)) * dt;
     if (consumeAirTank(rcsBurn, isAirborne)) {
       rollInput = rawRollInput;
       pitchInput = rawPitchInput;

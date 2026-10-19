@@ -173,6 +173,64 @@ html, body {
   display: none !important;
 }
 
+/* Mobile-only overlay: the centre stays transparent and scrollable menus keep
+   their native touch behaviour. Primary fine-pointer desktop layouts are unchanged. */
+#mobile-controls, .mobile-help { display: none; }
+#mobile-controls[hidden] { display: none !important; }
+@media (pointer: coarse) {
+  body { --mobile-stick-size: clamp(88px, 27vw, 124px); }
+  body[data-mobile-controls="true"] #touch-controls { display: none !important; }
+  #mobile-controls:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 18; pointer-events: none; }
+  .mobile-stick-group { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); width: var(--mobile-stick-size); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .mobile-stick-group-left { left: max(10px, env(safe-area-inset-left)); }
+  .mobile-stick-group-right { right: max(10px, env(safe-area-inset-right)); }
+  .mobile-stick { width: var(--mobile-stick-size); height: var(--mobile-stick-size); flex: 0 0 auto; position: relative; border: 1px solid #81d7ee88; border-radius: 50%; background: radial-gradient(circle, #0b233433 0 30%, #0c203544 31% 100%); box-shadow: inset 0 0 18px #07142388; pointer-events: auto; touch-action: none; -webkit-touch-callout: none; }
+  .mobile-stick.is-held { border-color: #a4efff; background-color: #0b293b33; }
+  .mobile-stick-cross { position: absolute; inset: 12%; border: 1px solid #a2d8f122; border-radius: 50%; pointer-events: none; }
+  .mobile-stick-cross::before, .mobile-stick-cross::after { content: ''; position: absolute; background: #a2d8f133; }
+  .mobile-stick-cross::before { top: 50%; left: 0; width: 100%; height: 1px; }
+  .mobile-stick-cross::after { left: 50%; top: 0; height: 100%; width: 1px; }
+  .mobile-stick-knob { position: absolute; width: 37%; height: 37%; top: 31.5%; left: 31.5%; border-radius: 50%; border: 1px solid #b0f1ffbb; background: radial-gradient(circle at 35% 30%, #7fcae777, #153e56bb); box-shadow: 0 3px 12px #0007; transform: translate(var(--stick-x, 0px), var(--stick-y, 0px)); pointer-events: none; }
+  .mobile-stick-label, .mobile-stick-hint { font-size: 9px; font-weight: 700; line-height: 1.3; color: #d5eef8; white-space: nowrap; text-shadow: 0 1px 3px #000; }
+  .mobile-stick-label { width: 100%; white-space: normal; text-align: center; }
+  .mobile-stick-hint { position: absolute; top: calc(100% + 2px); width: calc(100% + 12px); white-space: normal; text-align: center; font-size: 8px; line-height: 10px; }
+  #mobile-stick-mode { pointer-events: auto; width: 100%; min-height: 32px; border: 1px solid #79cce88c; border-radius: 9px; padding: 2px 8px; background: #0a1d2cec; color: #def7ff; font: inherit; font-size: 11px; touch-action: manipulation; }
+  .mobile-utilities { position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: grid; grid-template-columns: repeat(2, 42px); gap: 4px; pointer-events: auto; }
+  .mobile-utilities button { min-height: 32px; padding: 3px; color: #def6ff; background: #0a1d2cbd; border: 1px solid #79cce866; border-radius: 8px; font: inherit; font-size: 10px; touch-action: manipulation; }
+  .mobile-utilities button:focus-visible, #mobile-stick-mode:focus-visible { outline: 2px solid #a4efff; outline-offset: 2px; }
+  body[data-mobile-controls="true"] #hud-footer { padding: 4px 8px max(84px, calc(env(safe-area-inset-bottom) + 76px)); gap: 3px; overflow: visible; max-height: none; }
+  body[data-mobile-controls="true"] #hud-cluster { width: max(108px, calc(100vw - var(--mobile-stick-size) * 2 - 36px)); max-width: 250px !important; padding: 5px 6px !important; gap: 4px; flex-direction: column; }
+  body[data-mobile-controls="true"] #hud-cluster-speed { min-width: 0; padding: 0; border: 0; gap: 2px; }
+  body[data-mobile-controls="true"] #val-speed { font-size: 25px; }
+  body[data-mobile-controls="true"] #val-speed-unit { font-size: 8px; }
+  body[data-mobile-controls="true"] #val-drive-gear { font-size: 9px; margin-left: 2px; }
+  body[data-mobile-controls="true"] #val-kmh,
+  body[data-mobile-controls="true"] #val-g-force,
+  body[data-mobile-controls="true"] #indicator-turn-l,
+  body[data-mobile-controls="true"] #indicator-turn-r,
+  body[data-mobile-controls="true"] #val-air-flow,
+  body[data-mobile-controls="true"] #ui-8s-marker-label,
+  body[data-mobile-controls="true"] #ui-tank-hint,
+  body[data-mobile-controls="true"] #ui-tank-title { display: none; }
+  body[data-mobile-controls="true"] #hud-cluster-tank { font-size: 9px; }
+  body[data-mobile-controls="true"] #hud-cluster-tank > div { font-size: 9px; margin-top: 0; margin-bottom: 2px; gap: 2px; }
+  body[data-mobile-controls="true"] #hud-cluster-tank > div > div { gap: 2px; }
+  body[data-mobile-controls="true"] .city-taxi-hud { align-self: center; max-width: max(108px, calc(100vw - var(--mobile-stick-size) * 2 - 36px)); padding: 3px 6px; text-align: center; }
+  body[data-mobile-controls="true"] .city-taxi-hud strong { font-size: 12px; }
+  .mobile-help { display: block; padding: 12px; margin-bottom: 12px; border: 1px solid #35718c; border-radius: 12px; background: #0b2431; font-size: 12px; line-height: 1.7; }
+  .mobile-help h3 { margin: 0 0 5px; color: #89e8ff; }
+  .mobile-help p { margin: 0; }
+}
+@media (pointer: coarse) and (max-height: 500px) {
+  body { --mobile-stick-size: clamp(88px, 24vh, 112px); }
+  .mobile-stick-group { bottom: max(16px, env(safe-area-inset-bottom)); }
+  .mobile-stick-label, .mobile-stick-hint { font-size: 8px; }
+  body[data-mobile-controls="true"] #hud-cluster { max-width: 210px !important; }
+  body[data-mobile-controls="true"] #hud-footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .mobile-utilities { bottom: max(12px, env(safe-area-inset-bottom)); left: calc(max(10px, env(safe-area-inset-left)) + var(--mobile-stick-size) + 33px); grid-template-columns: repeat(1, 42px); gap: 3px; }
+  .mobile-utilities button { min-height: 26px; }
+}
+
 /* Ranked runs: independent of utility-CSS loading; native dialog handles focus. */
 .ranked-button {
   min-height: 36px; padding: 7px 12px; border: 1px solid #39718e; border-radius: 9px;
@@ -427,6 +485,7 @@ html, body {
 @media (pointer: coarse) {
   body:not([data-hud-mode="minimal"]) #touch-controls { display: flex; }
 }
+
 /* Medium FPV leaves a clear center/lower instrument zone on phones. Both side
    cards remain present and scrollable rather than covering the physical bar. */
 @media (max-width: 1100px) {

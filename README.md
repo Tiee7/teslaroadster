@@ -35,7 +35,7 @@ tesla_roadster_simulator_package/
 
 ### 2. 物理引擎真实化与动力学重构 (Physics Engine Rationalization)
 - **常规物理 vs 幻想模式双轨动力学**：
-  - *常规物理模式 (Realistic)*：地面遵循 0-100 km/h 1.9s 实测电驱特性，电驱极速 200 km/h；按下 `;` 键或开启狂暴模式 (Plaid) 解锁 370 km/h 超音速音障（38 m/s² 强悍推力）。普通模式松开喷气后保留超过 200 km/h 的余速，按自然滑行阻力的 1.3 倍连续缓慢回落；空中推进器只限制新增推力，不截断起跳或喷气前的惯性速度，并受空气动力阻力与重力影响。
+  - *常规物理模式 (Realistic)*：地面遵循 0-100 km/h 1.9s 实测电驱特性，电驱极速 200 km/h；按下 `;` 键或开启狂暴模式 (Plaid) 解锁 370 km/h 超音速音障（38 m/s² 强悍推力）。普通模式松开喷气后保留超过 200 km/h 的余速，按自然滑行阻力的 1.3 倍连续缓慢回落；O 跳跃先短暂保留原有横向惯性，再平滑恢复灵活的飞行操控；持续飞行时松开推进可快速减速，转向时航迹更快跟随机头。超出空中推进速度范围的余速连续回落，不瞬时截断。
   - *幻想极速模式 (Fantasy)*：超频推力上限达 576+ km/h，全功率无限制高空自由翱翔。
 - **真实 10 秒 600L COPV 气瓶压力衰减**：
   - `0.0s ~ 8.0s`：全功率冷气推力爆发。
@@ -217,6 +217,18 @@ World and weather choices stay inline alongside driving mode and traffic density
 
 Regression checks execute the real configuration handlers for all finishes, storage restore/denial, retained focus, repeated dialog openings, Back/Forward/Done/outside dismissal, keyboard launch safety, mode/traffic synchronization, preview reuse and its optional failure fallback. These deterministic DOM tests do not substitute for visual or real-browser WebGL validation.
 
+## Mobile dual joysticks / 手机双摇杆
+
+Phones and tablets with a primary coarse pointer use two independent joysticks in Full/Medium HUD, in both portrait and landscape. Desktop keyboard and fine-pointer controls stay unchanged. The old mobile driving-button grid is replaced. A neutral resting touch does nothing; drag outside the 14% dead zone, farther for more force. Releasing either thumb centres only that stick.
+
+- Left: horizontal steering (yaw while airborne), up throttle, down foot brake. A braking pull stays a brake through zero speed. Centre and pull down again once stopped to reverse; an initial downward pull at rest also reverses.
+- Right selector defaults to Lift / 升降: up lift, down powered descent, horizontal airborne strafe. Attitude / 姿态 maps vertical pitch and horizontal roll. Boost / 喷气 maps up rear jet, down handbrake drift, horizontal airborne strafe. Changing mode releases both sticks and requires fresh touches. Modes are intentionally not persisted.
+- Small Jump / Hold / View / Reset utilities keep the existing jump, altitude-hold toggle, camera and reset actions. Altitude hold continues consuming air until toggled off or cancelled by manual lift/descent. Airborne throttle still uses gas, as W does.
+- Joystick values scale production acceleration, braking, reverse, steering, jet/strafe/attitude forces and gas burn. Partial lift also supplies only its proportional gravity compensation. Keyboard commands retain full strength and independent ownership.
+- Pointer cancellation/capture loss, blur/backgrounding, page exit, resize/rotation, primary-pointer changes, modal dialogs, HUD hiding and reset all centre the sticks. Touch-action suppression is confined to the stick pads; menus keep normal scrolling and selection.
+
+The in-game bilingual Help includes this mapping. Automated VM tests cover concurrent pointers, interruption/re-arm flows and production analog physics. These checks do not replace real-device/WebGL playtesting.
+
 ## Reference Roadster 2 and preserved classic / 参考款与经典款
 
 The compact entry setup now offers independent exterior and cockpit choices. Reference Roadster 2 and the reference cabin are the defaults; Classic Roadster and the complete earlier cockpit remain available in any combination. Each choice is saved locally, with graceful fallback if browser storage is blocked. All twelve paint finishes still share the existing paint pipeline.
@@ -226,3 +238,11 @@ The new code-native exterior follows the supplied front, roof, interior and rear
 The preserved classic shell is also a shared low-detail traffic variant (3,200 body triangles, shared geometry/materials), mixed evenly with sculpted touring and track cars. All variants retain the existing traffic wheel handles, collision dimensions and behavior. No model selection changes physics, scoring, tank consumption, steering inputs or challenge rules. Neutral studio sources are captured separately from driving poses, reuse geometry/materials, and never inherit a hidden canopy, a turned wheel or active plume.
 
 Regression coverage includes independent choice persistence/restore, repeated view/model transitions, preview reuse, forward lens winding, finite smooth surface normals, axle/fender clearance, closed diffuser backing and NPC resource sharing. Release verification also uses the production Three.js r128 meshes for projected-wheel and road/instrument occlusion checks. CPU geometry projections support reference comparison; they do not replace real WebGL rendering or interactive device validation.
+
+## Brief launch carry, responsive flight / 短暂起跳惯性与灵活飞行
+
+A grounded or rooftop O jump preserves its inherited horizontal vector for the first 0.25 seconds, apart from the gentle launch aerodynamic drag. Over the next 0.60 seconds, a smoothstep handoff restores the earlier strong horizontal release-braking curve and bank assist. Sustained powered flight also damps sideslip toward the aimed nose, so yaw turns change the travel path promptly. Both maps use the same handling transition. Q/E side jets remain available during the launch grace; in-air O presses cannot restart the grace.
+
+Powered overspeed settles continuously toward the flight envelope instead of an instantaneous speed clamp. These are horizontal gameplay assists; the unpowered vertical path remains analytic 9.81 m/s² Earth gravity, with no downward injection or terminal-speed cap. Ground EV/boost coasting, paid retro braking, attitude grace, crash effects and crash-score rules retain their existing behavior. Reset and landing clear the launch transition.
+
+Regression checks cover actual O launches, powered and unpowered handoffs, A/W and D/W turns, bank/strafe response, mode changes, repeated airborne O, reset, both maps, irregular frames and 30/60/144 Hz, alongside the existing vertical ballistics, tank-depletion and collision tests. Visual gameplay verification still requires a WebGL-capable browser.

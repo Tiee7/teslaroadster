@@ -358,6 +358,7 @@ function switchMap(targetMap) {
 }
 
 function resetCar() {
+  window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
   clearDebris();
@@ -398,6 +399,7 @@ function resetCar() {
   state.pitch = 0.0;
   state.attitudeIdleSeconds = 0.0;
   state.wasAirborne = false;
+  state.jumpInertiaSeconds = null;
   state.yaw = 0.0;
   state.vRoll = 0.0;
   state.vPitch = 0.0;
@@ -422,6 +424,7 @@ function resetCar() {
 
 function applyTranslations() {
   syncHudPerspective();
+  window.RoadsterTouch?.setLanguage();
   window.RoadsterTaxi?.render();
   window.RoadsterMusic?.render();
   window.RoadsterRanked?.render();
@@ -613,6 +616,7 @@ function launchSelectedMap() {
 document.getElementById('btn-launch-selected-map').addEventListener('click', launchSelectedMap);
 
 function clearAllInputKeys() {
+  window.RoadsterTouch?.clear();
   for (const k in keys) {
     if (keys[k]) setKeyState(k, false);
   }
@@ -846,6 +850,9 @@ function triggerJump6m() {
     }
   }
   const currentAgl = Math.max(0.0, state.y - groundElev);
+  // Only a fresh ground/roof takeoff gets launch grace. Midair O taps cannot
+  // restart it and disable normal flight handling.
+  if (currentAgl <= 0.15) state.jumpInertiaSeconds = 0;
   // Jump to 6.0m above ground/rooftop (or +6.0m if already flying above 5.5m)
   state.jumpStartY = state.y;
   state.jumpTargetY = (currentAgl < 5.5) ? (groundElev + 6.0) : Math.min(MAX_FLIGHT_ALTITUDE, state.y + 6.0);

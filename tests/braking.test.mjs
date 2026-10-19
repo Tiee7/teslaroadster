@@ -519,7 +519,7 @@ test('boost release while W and handbrake are held cannot snap existing overspee
   }
 });
 
-test('Plaid, Fantasy and normal EV acceleration stay unchanged; air coasts with aerodynamic drag', () => {
+test('Plaid, Fantasy and normal EV acceleration stay unchanged; sustained air release is responsive', () => {
   for (const map of ['highway', 'city']) {
     for (const mode of [{ physicsMode: 'realistic', insaneMode: true }, { physicsMode: 'fantasy' }]) {
       const h = moving(250 / 3.6, map, mode);
@@ -538,6 +538,6 @@ test('Plaid, Fantasy and normal EV acceleration stay unchanged; air coasts with 
     const air = moving(300 / 3.6, map, { y: 100, physicsMode: 'realistic' });
     const before = air.state.speed, dt = 1 / 60;
     air.move(dt);
-    close(air.state.speed, before / (1 + 0.00012 * before * dt));
+    assert.ok(air.state.speed < before - 2 && air.state.speed > before - 3, 'established flight restores its stronger release curve');
   }
 });
