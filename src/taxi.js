@@ -97,7 +97,7 @@ const CityTaxiModel = (() => {
       return route && route.meters >= MIN_ROUTE_METERS && Math.hypot(from.x - to.x, from.z - to.z) >= MIN_DIRECT_METERS;
     }));
     if (graph.nodes.length < WAITING_COUNT || destinations.some(stops => stops.length === 0)) throw new Error('City grid cannot support passenger routes');
-    let active = false, waiting = [], passenger = null, score = 0, delivered = 0, sequence = 0, previousPosition = null;
+    let active = false, waiting = [], passenger = null, score = 0, delivered = 0, sequence = 0, previousPosition = null, finished = false;
     const pick = choices => choices[Math.min(choices.length - 1, Math.max(0, Math.floor(random() * choices.length)))];
     function newTrip(position) {
       let pickups = graph.nodes.filter(node =>
@@ -117,12 +117,12 @@ const CityTaxiModel = (() => {
     }
     function start(position) {
       if (active || !validPosition(position)) return false;
-      active = true; score = 0; delivered = 0; waiting = []; passenger = null;
+      active = true; score = 0; delivered = 0; waiting = []; passenger = null; finished = false;
       previousPosition = copyPosition(position); refill(position);
       return true;
     }
     function stop() {
-      active = false; waiting = []; passenger = null; score = 0; delivered = 0; previousPosition = null;
+      active = false; waiting = []; passenger = null; score = 0; delivered = 0; previousPosition = null; finished = false;
     }
     function pause(position) { previousPosition = validPosition(position) ? copyPosition(position) : null; }
     function losePassenger(position, reason = 'destroyed') {
@@ -134,21 +134,22 @@ const CityTaxiModel = (() => {
       return { type: 'passenger-lost', trip, penalty, deducted: before - score, reason };
     }
     function destroy(position) {
-      if (!active) return null;
+      if (!active || finished) return null;
       const event = losePassenger(position, 'destroyed');
-      // A crash forfeits the entire current session score, even in an empty car.
-      // Do this after passenger loss so its ordinary penalty cannot leave points.
-      score = 0; pause(position);
+      // Settle the existing double-fare passenger loss once, then preserve the
+      // completed round's nonnegative net fare until the next vehicle reset.
+      finished = true; pause(position);
       return event;
     }
     function reset(position) {
       if (!active || !validPosition(position)) return null;
       const event = losePassenger(position, 'reset');
+      score = 0; delivered = 0; sequence = 0; finished = false;
       waiting = []; previousPosition = copyPosition(position); refill(position);
       return event;
     }
     function advance(position, grounded = validPosition(position) && Math.abs(position.y) <= GROUND_TOLERANCE) {
-      if (!active || !validPosition(position)) return null;
+      if (!active || finished || !validPosition(position)) return null;
       // A landing frame must never sweep through a stop from an airborne point.
       if (!grounded) { previousPosition = null; return null; }
       const from = previousPosition || position;
@@ -164,7 +165,7 @@ const CityTaxiModel = (() => {
       passenger = waiting.splice(index, 1)[0];
       return { type: 'picked-up', trip: passenger };
     }
-    const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered });
+    const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered, finished });
     return { start, stop, reset, destroy, pause, advance, losePassenger, snapshot };
   }
   return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, PICKUP_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
@@ -276,10 +277,10 @@ const CityTaxiModel = (() => {
     const data = snapshot();
     pickupMarkers.forEach((marker, index) => {
       const trip = data.waiting[index];
-      marker.visible = data.active && !data.passenger && Boolean(trip);
+      marker.visible = data.active && !data.finished && !data.passenger && Boolean(trip);
       if (trip) marker.position.set(trip.pickup.x, 0, trip.pickup.z);
     });
-    destinationMarker.visible = data.active && Boolean(data.passenger);
+    destinationMarker.visible = data.active && !data.finished && Boolean(data.passenger);
     if (data.passenger) destinationMarker.position.set(data.passenger.destination.x, 0, data.passenger.destination.z);
   }
   function render() {
@@ -302,10 +303,12 @@ const CityTaxiModel = (() => {
     const detail = data.passenger
       ? (isZh() ? `载客中 · 绿色目的地 ${remaining} 米 · 送达 +${data.passenger.fare}`
         : `ON BOARD · ${remaining}m · +${data.passenger.fare}`)
+      : data.finished && lastEvent?.type !== 'passenger-lost'
+        ? (isZh() ? '本局结束 · 成绩已保留 · 复活后从零开始' : 'ROUND FINISHED · FINAL SCORE KEPT · RESPAWN TO RESTART')
       : lastEvent?.type === 'passenger-lost'
         ? (lastEvent.reason === 'destroyed'
-          ? (isZh() ? `乘客遇难 · 积分清零 · 白柱等待 ${data.waiting.length} 位`
-            : `PASSENGER LOST · SCORE RESET · ${data.waiting.length} WAITING`)
+          ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 本局成绩已保留`
+            : `PASSENGER LOST · -${lastEvent.penalty} · FINAL SCORE KEPT`)
           : (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 白柱等待 ${data.waiting.length} 位`
             : `PASSENGER LOST · -${lastEvent.penalty} · ${data.waiting.length} WAITING`))
         : (isZh() ? `空车 · ${data.waiting.length} 位乘客等待 · 前往白色光柱`
@@ -340,10 +343,10 @@ const CityTaxiModel = (() => {
     pickupMarkers = []; destinationMarker = null;
   }
   function onReset() {
-    if (!snapshot().active) return;
+    if (!snapshot().active || state.isDestroyed) return;
     if (currentMap !== 'city') { stop(); return; }
-    const event = session.reset(position());
-    if (event) lastEvent = event;
+    session.reset(position());
+    lastEvent = null;
     syncMarkers(); render();
   }
   function onDestroyed() {
@@ -361,8 +364,8 @@ const CityTaxiModel = (() => {
     if (event.repeat || currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || snapshot().active) return true;
     clearAllInputKeys();
     const approved = window.confirm(isZh()
-      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n每次撞毁后驾驶积分和接客积分清零，车内乘客遇难。载客时手动重置将失去乘客，并扣除该趟奖励的双倍积分，最低为 0。接客积分独立计算，不计入排行榜。`
-      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nEvery crash clears all current driving and passenger points and loses any passenger on board. Manually resetting an occupied car loses the passenger and deducts twice that fare, with a minimum score of zero. Passenger points are separate from the leaderboard.`);
+      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n撞毁会结算并保留本局成绩，车内乘客遇难，先扣除该趟奖励的双倍积分，最低为 0。复活或按 R 重置后，驾驶和接客累计分从 0 开始。载客时手动重置也会失去乘客。接客积分独立计算，不计入排行榜。`
+      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nA crash settles and preserves your final score. A passenger on board is lost and twice that fare is deducted first, with a minimum score of zero. Respawning or resetting with R starts driving and passenger totals from zero. A manual occupied reset also loses the passenger. Passenger points are separate from the leaderboard.`);
     // A native confirmation may be open for minutes. Never replay held controls or elapsed time.
     clearAllInputKeys(); lastTime = performance.now();
     if (approved && currentMap === 'city' && !state.isDestroyed && !blockedByUi()) start();

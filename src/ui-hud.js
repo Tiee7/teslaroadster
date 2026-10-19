@@ -446,6 +446,12 @@ function resetCar() {
   renderBannerText();
   sound.beep(520, 0.1);
   window.RoadsterTaxi?.onReset();
+  // Every new round starts clean immediately, including mobile/button resets.
+  if (typeof updateDestroyedScores === 'function') updateDestroyedScores();
+  if (typeof updateCockpitHudScreen === 'function') {
+    const speed = RoadsterDrivingScore.displayedSpeed(state, false);
+    updateCockpitHudScreen(Math.round(speed * 2.23694), Math.round(speed * 3.6), false, false, false, false, false);
+  }
 }
 
 function applyTranslations() {

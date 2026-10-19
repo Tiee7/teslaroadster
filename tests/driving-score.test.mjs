@@ -86,3 +86,17 @@ test('HUD and celebration copy never advertise the retired fixed-point awards', 
   assert.doesNotMatch(config, /\+(?:300|400|500) (?:PTS|分)/);
   assert.match(config, /lblScore: "Distance Score:"/); assert.match(config, /lblScore: "里程得分:"/);
 });
+
+
+test('final driving snapshot copies every accumulator and late writes cannot alter it', () => {
+  const state = fresh(); Object.assign(state, { carsCleared: 7, blastedCarsCount: 2 });
+  scoring.segment(state, 10, motion(200), motion(200)); const originalBands = state.distanceBySpeed, before = structuredClone(state), result = scoring.freeze(state);
+  assert.ok(Object.isFrozen(result)); assert.ok(Object.isFrozen(result.distanceBySpeed)); assert.notEqual(result.distanceBySpeed, originalBands);
+  originalBands[0] += 123; assert.deepEqual(Array.from(result.distanceBySpeed), before.distanceBySpeed);
+  state.isDestroyed = true; state.score = 9999; state.distanceMeters = 9999; state.distanceBySpeed = [9999, 0, 0, 0, 0, 0]; state.carsCleared = 900; state.blastedCarsCount = 900;
+  scoring.restoreFinal(state); scoring.segment(state, 10, motion(350), motion(350));
+  assert.equal(state.score, before.score); assert.equal(state.distanceMeters, before.distanceMeters); assert.deepEqual(Array.from(state.distanceBySpeed), before.distanceBySpeed);
+  assert.equal(state.carsCleared, 7); assert.equal(state.blastedCarsCount, 2); assert.equal(scoring.freeze(state), result);
+  scoring.reset(state); assert.equal(state.finalDrivingResult, null); assert.equal(state.score, 0); assert.deepEqual(state.distanceBySpeed, [0, 0, 0, 0, 0, 0]);
+  state.isDestroyed = false; scoring.segment(state, 1, motion(36), motion(36)); assert.equal(state.score, 1);
+});

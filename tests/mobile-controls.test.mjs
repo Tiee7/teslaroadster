@@ -406,9 +406,14 @@ test('Full and Medium keep controls; Minimal and destroyed state cancel all stic
 
 test('mobile Reset and keyboard R execute the actual reset and cannot leave either finger applying thrust', () => {
   for (const keyboardReset of [false, true]) {
-    const h = harness(); h.hold('left', 0, 1); h.hold('right', 0, 1);
+    const h = harness({ score: 321, distanceMeters: 3210, distanceBySpeed: [3210, 0, 0, 0, 0, 0], carsCleared: 8, blastedCarsCount: 2 });
+    let taxiReset = 0; h.window.RoadsterTaxi = { onReset() { taxiReset++; }, handleKeydown() { return false; } };
+    h.context.RoadsterDrivingScore.freeze(h.state);
+    h.hold('left', 0, 1); h.hold('right', 0, 1);
     if (keyboardReset) h.key('KeyR'); else h.get('mobile-reset').click();
     expectReleased(h); close(h.state.y, 0); close(h.state.speed, 42); close(h.state.airRemaining, 10);
+    assert.equal(h.state.score, 0); assert.equal(h.state.distanceMeters, 0); assert.deepEqual(Array.from(h.state.distanceBySpeed), [0, 0, 0, 0, 0, 0]);
+    assert.equal(h.state.finalDrivingResult, null); assert.equal(h.state.carsCleared, 0); assert.equal(h.state.blastedCarsCount, 0); assert.equal(taxiReset, 1);
     h.move('left', 0, 1); h.move('right', 0, 1); expectReleased(h);
   }
 });

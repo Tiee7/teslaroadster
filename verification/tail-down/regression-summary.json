@@ -1,0 +1,166 @@
+{
+  "pass": true,
+  "generatedAt": "2026-10-19T13:45:37.997206+00:00",
+  "functionalBase": "cf3e7729c863e3d40e4645c0dbe83ab556d51ade",
+  "exteriorSha256": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+  "cockpitSha256": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+  "bundleSha256": "99583fcb0c58cbdd85b7da9a9ec8257267d505b72cf0414603b940530824fcc2",
+  "nodeTests": 399,
+  "nodeFailed": 0,
+  "nodeSkipped": 0,
+  "luaTests": 24,
+  "checkPassed": true,
+  "buildPassed": true,
+  "officialRuntimeRevision": "128",
+  "screen": {
+    "generatedAt": "2026-10-19T13:45:02.121Z",
+    "runtimeRevision": "128",
+    "sources": {
+      "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+      "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+      "vehicles.js": "537415811139200c3c49eea1d216b862e205a1a4e7c41d62b01777f14e80f9ca",
+      "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+      "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+      "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+      "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+    },
+    "limits": "CPU production scene graph, world transforms and exact triangle rays; CPU studio renders are separate from browser/GPU verification.",
+    "configurations": [
+      {
+        "model": "reference",
+        "cockpit": "reference",
+        "bounds": {
+          "min": [
+            -0.1899999976158142,
+            0.6230613534455347,
+            -0.6779614636653064
+          ],
+          "max": [
+            0.1899999976158142,
+            0.7817970355166222,
+            -0.621366335897384
+          ]
+        },
+        "minimumGlassClearance": 0.1235999440249893,
+        "exteriorFirstHits": {
+          "referencePanoramicCanopy": 138,
+          "referenceFlatWedgeHood": 19,
+          "referenceWindshieldWiper": 2
+        }
+      },
+      {
+        "model": "reference",
+        "cockpit": "classic",
+        "bounds": {
+          "min": [
+            -0.1899999976158142,
+            0.6230613534455347,
+            -0.6779614636653064
+          ],
+          "max": [
+            0.1899999976158142,
+            0.7817970355166222,
+            -0.621366335897384
+          ]
+        },
+        "minimumGlassClearance": 0.1235999440249893,
+        "exteriorFirstHits": {
+          "referencePanoramicCanopy": 138,
+          "referenceFlatWedgeHood": 19,
+          "referenceWindshieldWiper": 2
+        }
+      },
+      {
+        "model": "classic",
+        "cockpit": "reference",
+        "bounds": {
+          "min": [
+            -0.1899999976158142,
+            0.6430613534455347,
+            -0.6779614636653064
+          ],
+          "max": [
+            0.1899999976158142,
+            0.8017970355166222,
+            -0.621366335897384
+          ]
+        },
+        "minimumGlassClearance": 0.20965867423510187,
+        "exteriorFirstHits": {
+          "BufferGeometry": 159
+        }
+      },
+      {
+        "model": "classic",
+        "cockpit": "classic",
+        "bounds": {
+          "min": [
+            -0.1899999976158142,
+            0.6430613534455347,
+            -0.6779614636653064
+          ],
+          "max": [
+            0.1899999976158142,
+            0.8017970355166222,
+            -0.621366335897384
+          ]
+        },
+        "minimumGlassClearance": 0.20965867423510187,
+        "exteriorFirstHits": {
+          "BufferGeometry": 159
+        }
+      }
+    ],
+    "canopyClearanceRays": 212,
+    "exteriorOcclusionRays": 636,
+    "pass": true
+  },
+  "player": {
+    "instrumentRays": 117600,
+    "roadRays": 39200,
+    "instrumentBlockCount": 0,
+    "roadBlockCount": 0,
+    "wheelEnvelopeViolations": [],
+    "rearDirectRays": 90,
+    "rearQuarterRays": 48,
+    "rearGaps": [],
+    "pass": true
+  },
+  "wheelPass": true,
+  "npc": {
+    "pass": true,
+    "styles": 15,
+    "populationCycles": 60,
+    "normalWindingDisagreements": 0,
+    "rearOcclusionMisses": 0
+  },
+  "performance": {
+    "player": {
+      "colorMeshes": 261,
+      "colorTriangles": 121388,
+      "shadowMeshes": 2,
+      "shadowTriangles": 14020,
+      "appearanceHash": "f51de066e4f59e75ffe1fbc1cde26dadc62ed3c23c4ee079ebc0d73117e84cf8"
+    },
+    "maxShadowDeviationMetres": 0.011572105410328225,
+    "unchangedExplicitNpcSamples": 30,
+    "protectedProductionFiles": 27,
+    "recursiveViewLookups": {
+      "external": 0,
+      "fpv": 0
+    }
+  },
+  "preview": {
+    "meshCount": 255,
+    "triangleCount": 121376,
+    "samples": 16,
+    "renderer": "Blender 4.3.2 Cycles CPU"
+  },
+  "independentReview": {
+    "verdict": "PASS: final bounded tail deformation, after including rear rails and aft panoramic canopy, preserves seams and protected geometry. CPU images show coherent descending upper tail; no exact-photo-match or browser/GPU-runtime claim.",
+    "sharedSeamGroups": 26,
+    "maximumFinalSeamSpreadMetres": 0.0
+  },
+  "publication": "Local candidate only. Parent owns final integration/publish.",
+  "limits": "No browser/WebGL, measured GPU/FPS or live mechanical wing animation validation; no exact likeness claim."
+}

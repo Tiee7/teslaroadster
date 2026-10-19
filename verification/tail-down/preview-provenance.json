@@ -1,0 +1,188 @@
+{
+  "sideTransforms": [
+    {
+      "label": "参考",
+      "file": "/workspace/scratch/cb38b7731a0f/tail-down-reference/image(20261019-132753).png",
+      "sha256": "399dbbe9bbc2761b26bd3ef34ce26b311228073c9db67e07f6e650c0545b6bfb",
+      "crop": [
+        60,
+        105,
+        575,
+        267
+      ],
+      "uniformScaleXY": 2.4916943521594686,
+      "inverseAffine": [
+        0.4013333333333333,
+        0,
+        -41.439999999999976,
+        0,
+        0.4013333333333333,
+        -12.37999999999999
+      ],
+      "sourceRearWheelY": 207,
+      "sourceWheelCentersX": [
+        151,
+        452
+      ],
+      "targetWheelbasePixels": 750,
+      "targetRearWheelCenter": [
+        1080,
+        285
+      ],
+      "rotationDegrees": 0,
+      "mirrored": false
+    },
+    {
+      "label": "当前上线版",
+      "file": "/workspace/scratch/cb38b7731a0f/teslaroadster_tail_down/verification/tail-down-baseline/tail-side-left-raw.png",
+      "sha256": "c5f45bb2af9c955579b175d16253db6ec84f742600cab8293585d25e9f87dcfe",
+      "crop": [
+        85,
+        235,
+        1150,
+        515
+      ],
+      "uniformScaleXY": 1.1861313868613137,
+      "inverseAffine": [
+        0.8430769230769232,
+        0,
+        -77.0615384615386,
+        0,
+        0.8430769230769232,
+        -49.12307692307692
+      ],
+      "sourceRearWheelY": 426.1538461538462,
+      "sourceWheelCentersX": [
+        286.15384615384613,
+        918.4615384615385
+      ],
+      "targetWheelbasePixels": 750,
+      "targetRearWheelCenter": [
+        1080,
+        285
+      ],
+      "rotationDegrees": 0,
+      "mirrored": false
+    },
+    {
+      "label": "向下收尾候选",
+      "file": "/workspace/scratch/cb38b7731a0f/teslaroadster_tail_down/verification/tail-down-candidate/tail-side-left-raw.png",
+      "sha256": "c58505f3f0e8819fb6ec311f8b6b58da725505560eeee2bc306051457188384c",
+      "crop": [
+        85,
+        235,
+        1150,
+        515
+      ],
+      "uniformScaleXY": 1.1861313868613137,
+      "inverseAffine": [
+        0.8430769230769232,
+        0,
+        -77.0615384615386,
+        0,
+        0.8430769230769232,
+        -49.12307692307692
+      ],
+      "sourceRearWheelY": 426.1538461538462,
+      "sourceWheelCentersX": [
+        286.15384615384613,
+        918.4615384615385
+      ],
+      "targetWheelbasePixels": 750,
+      "targetRearWheelCenter": [
+        1080,
+        285
+      ],
+      "rotationDegrees": 0,
+      "mirrored": false
+    }
+  ],
+  "beforeAfterCameraEqual": true,
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "samples": 16,
+  "sourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "vehicles.js": "537415811139200c3c49eea1d216b862e205a1a4e7c41d62b01777f14e80f9ca",
+    "reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+    "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+  },
+  "sideView": {
+    "name": "tail-side-left",
+    "cameraPositionBlender": [
+      -10,
+      0,
+      0.55
+    ],
+    "targetBlender": [
+      0,
+      0,
+      0.55
+    ],
+    "projection": "ORTHO",
+    "focalLengthMm": null,
+    "orthographicScale": 5.2,
+    "file": "tail-side-left-raw.png"
+  },
+  "rearView": {
+    "name": "rear-inspection-three-quarter",
+    "cameraPositionBlender": [
+      4.6,
+      -7,
+      1.65
+    ],
+    "targetBlender": [
+      0,
+      -0.65,
+      0.54
+    ],
+    "projection": "PERSP",
+    "focalLengthMm": 65.0,
+    "orthographicScale": null,
+    "file": "rear-inspection-three-quarter-raw.png",
+    "label": "Optional actual-mesh inspection camera; not a photograph camera match",
+    "resolution": [
+      1200,
+      760
+    ],
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "rearTransforms": [
+    {
+      "file": "/workspace/scratch/cb38b7731a0f/teslaroadster_tail_down/verification/tail-down-baseline/rear-inspection-three-quarter-raw.png",
+      "sha256": "161b364cbf228de79456fa1696a8819366028cbbac2a4cdcbf9de972e5a01883",
+      "crop": [
+        70,
+        202,
+        1145,
+        609
+      ],
+      "uniformScaleXY": 1.15,
+      "translation": [
+        40,
+        50
+      ]
+    },
+    {
+      "file": "/workspace/scratch/cb38b7731a0f/teslaroadster_tail_down/verification/tail-down-candidate/rear-inspection-three-quarter-raw.png",
+      "sha256": "e345e14d5422448a8904cd210a4b4656f3f5b6762b4995fd49230e4754dfdd33",
+      "crop": [
+        70,
+        202,
+        1145,
+        609
+      ],
+      "uniformScaleXY": 1.15,
+      "translation": [
+        40,
+        50
+      ]
+    }
+  ],
+  "photographCameraKnown": false,
+  "photographRetouched": false,
+  "sideCaption": "Uniform scale / wheelbase alignment only; original reference attitude retained; not an exact photograph camera match."
+}

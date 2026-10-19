@@ -1,0 +1,17 @@
+✔ upper rear shoulder descends behind the fixed axle rather than forming a high shelf (2.211672ms)
+✔ rear wheel opening and arch returns remain outside the upper-tail deformation (3.253712ms)
+✔ aft buttress feet descend with their deck attachment while the front glass stays independent (0.972721ms)
+✔ rear light retains ordered thin faces and the fixed plate/nozzles keep their clearance (2.293846ms)
+✔ tail taper preserves the existing wing mechanism and the two bounded shadow batches (0.562067ms)
+✔ central glazing retains front-wide rear-narrow taper while side glass spreads outboard (1.957969ms)
+✔ each side has one continuous glass mesh with a planar main region, gentle crown and acute aft point (1.856717ms)
+✔ broad planar C-buttress joins the roof branch, acute window point and rear body (0.411691ms)
+✔ window geometry stays mirrored, restores in preview, and hides with the existing FPV canopy domains (20.275084ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 713.000572

@@ -269,10 +269,8 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
 function destroyVehicle(reasonKey) {
   if (state.isDestroyed) return;
   state.isDestroyed = true;
-  RoadsterDrivingScore.reset(state);
-  state.carsCleared = 0;
-  state.blastedCarsCount = 0;
   window.RoadsterTaxi?.onDestroyed();
+  RoadsterDrivingScore.freeze(state);
   window.RoadsterRanked?.abort('crash');
   state.hullIntegrity = 0;
   state.destroyReasonKey = reasonKey || 'crashReasonThreshold';
@@ -292,13 +290,9 @@ function destroyVehicle(reasonKey) {
 }
 
 function updateDestroyedScores() {
-  // Crash effects and a collision callback may finish after destruction. They
-  // must never leave points on the current car or in its visible summary.
-  if (state.isDestroyed) {
-    RoadsterDrivingScore.reset(state);
-    state.carsCleared = 0;
-    state.blastedCarsCount = 0;
-  }
+  // Keep the completed run visible throughout the wreck animation. Any late
+  // callback is bounded by the immutable death snapshot, never a zero reset.
+  if (state.isDestroyed) RoadsterDrivingScore.restoreFinal(state);
   const t = I18N[currentLang];
   // The summary is aria-live: unchanged frames must not announce it again.
   const put = (id, value) => {
@@ -313,9 +307,9 @@ function updateDestroyedScores() {
   if (passengerRow.hidden !== !passenger?.active) passengerRow.hidden = !passenger?.active;
   put('crash-lbl-passenger-score', t.crashLblPassengerScore);
   put('crash-val-passenger-score', passenger?.active ? passenger.score : 0);
+  put('val-score', drivingScore);
+  put('val-passed', state.carsCleared);
   if (state.isDestroyed) {
-    put('val-score', 0);
-    put('val-passed', 0);
     // Fatal collision paths can return before the normal instrument refresh.
     if (typeof updateCockpitHudScreen === 'function') {
       const speed = state.wasAirborne ? Math.hypot(state.speed, state.vy * 0.45) : Math.abs(state.speed);

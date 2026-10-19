@@ -50,12 +50,14 @@ test('clipped lamp shoulders contain no collapsed Float32 triangles',()=>{
 
 test('same-grid rear bridge closes at its upper beam and rises distinctly at both outer lower corners',()=>{
   const m=e.getObjectByName('referenceRearPaintedBumper'),p=m.geometry.attributes.position;
+  const beam=e.getObjectByName('referenceRearLowerBeam').geometry.attributes.position;
+  let beamBottom=Infinity;for(let i=0;i<beam.count;i++)beamBottom=Math.min(beamBottom,beam.getY(i));
   assert.equal(m.userData.surfaceRows,24);assert.equal(m.userData.surfaceColumns,64);
   for(let c=0;c<=64;c++){
-    assert.ok(Math.abs(p.getY(c)-.667)<1e-6);assert.ok(Math.abs(p.getZ(c)-2.278)<1e-6);
+    assert.ok(p.getY(c)>beamBottom&&p.getY(c)-beamBottom<.002,'bridge follows the lowered upper transom beam');assert.ok(Math.abs(p.getZ(c)-2.278)<1e-6);
   }
   assert.ok(Math.abs(p.getY(24*65+32)-.562)<1e-6);
-  for(const c of [0,64])assert.ok(Math.abs(p.getY(24*65+c)-.642)<1e-6);
+  for(const c of [0,64])assert.ok(p.getY(24*65+c)>.6417&&p.getY(24*65+c)<=.6421);
 });
 
 test('diffuser dividers curve in depth with bounded thin-face grids and closed top edges',()=>{

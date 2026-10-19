@@ -715,6 +715,64 @@ function buildReferenceRoadsterExterior() {
   }
   exterior.userData.wingProfile={span:1.710,centerChord:.490,tipChord:.410,constructionPivot:[0,.85,2.04],poseSource:'Existing physics-main.js activeWingGroup targets, unchanged.'};
 
+  // The side photograph's wheel-axis-normalized upper tail falls aft instead
+  // of ending in a near-level shelf. Deform the existing connected upper body
+  // once at construction; do not move the wing pivot, wheels or jet assembly.
+  // The height ramp fades out above the plate/nozzle region. Its derivative
+  // keeps dy'/dy >= .386, so this cannot invert or collapse the rear fascia.
+  const tailDown={startZ:1.38,endZ:2.26,startY:.635,rampHeight:.100,crestDrop:.100,referenceCrestY:.848,protectedArchClearance:.015};
+  const tailHeight=(y,z=tailDown.endZ)=>{
+    const cutoff=Math.max(tailDown.startY,openingY(z)+tailDown.protectedArchClearance),r=z-1.38;
+    const cutoffSlope=cutoff>tailDown.startY?-1.420*r/Math.sqrt(.430**2-r*r):0;
+    const d=y-cutoff;
+    return d<=0?{value:0,slope:0,cutoffSlope}:d<tailDown.rampHeight
+      ?{value:d*d/(2*tailDown.rampHeight),slope:d/tailDown.rampHeight,cutoffSlope}
+      :{value:d-tailDown.rampHeight/2,slope:1,cutoffSlope};
+  };
+  const tailScale=tailDown.crestDrop/tailHeight(tailDown.referenceCrestY).value;
+  function tailDownSample(point){
+    const [x,y,z]=point,t=Math.max(0,Math.min(1,(z-tailDown.startZ)/(tailDown.endZ-tailDown.startZ)));
+    const blend=t*t*(3-2*t),height=tailHeight(y,z);
+    return [x,y-tailScale*blend*height.value,z];
+  }
+  const tailUnchangedRelief=/^reference(?:RearPlatePad|RearCamera|PlateFastener)/;
+  let tailChangedMeshes=0,tailChangedVertices=0;
+  // The aft central-glass edge and buttress/rail feet share the deck taper.
+  // Front windshield and side panes are ahead of this domain, bit-identical.
+  for(const root of [body,canopy,rails,rearLights])root.traverse(part=>{
+    if(!part.geometry||tailUnchangedRelief.test(part.name))return;
+    const g=part.geometry,p=g.attributes.position,n=g.attributes.normal;
+    let changed=false;
+    for(let i=0;i<p.count;i++){
+      const y=p.getY(i)+part.position.y,z=p.getZ(i)+part.position.z;
+      if(z<=tailDown.startZ||y<=tailDown.startY)continue;
+      // All affected production panels are untranslated or translation-only.
+      // Fail loudly if a future refactor introduces a rotated/scaled tail part.
+      if(part.rotation.x||part.rotation.y||part.rotation.z||part.scale.x!==1||part.scale.y!==1||part.scale.z!==1)throw Error('Unsupported tail panel transform: '+part.name);
+      const t=Math.min(1,(z-tailDown.startZ)/(tailDown.endZ-tailDown.startZ)),blend=t*t*(3-2*t);
+      const blendSlope=t<1?6*t*(1-t)/(tailDown.endZ-tailDown.startZ):0,height=tailHeight(y,z);
+      if(height.value===0)continue;
+      const a=1-tailScale*blend*height.slope,b=-tailScale*blendSlope*height.value+tailScale*blend*height.slope*height.cutoffSlope;
+      p.array[i*3+1]=y-tailScale*blend*height.value-part.position.y;
+      if(n){
+        // Exact inverse-transpose Jacobian, preserving the source hard edges
+        // rather than averaging flat fascia normals across unrelated panels.
+        const nx=n.getX(i),ny=n.getY(i)/a,nz=n.getZ(i)-b*ny,length=Math.hypot(nx,ny,nz);
+        n.array[i*3]=nx/length;n.array[i*3+1]=ny/length;n.array[i*3+2]=nz/length;
+      }
+      changed=true;tailChangedVertices++;
+    }
+    if(changed){
+      // A three-corner buttress is still one actual plane after its aft foot
+      // moves. Use that plane's normal, not a smoothly bent continuum normal.
+      if(/^referenceRearButtress/.test(part.name))g.computeVertexNormals();
+      p.needsUpdate=true;if(g.attributes.normal)g.attributes.normal.needsUpdate=true;
+      g.computeBoundingBox();g.computeBoundingSphere();tailChangedMeshes++;
+    }
+  });
+  exterior.userData.tailDownProfile={...tailDown,scale:tailScale,minimumJacobian:1-tailScale,changedMeshes:tailChangedMeshes,changedVertices:tailChangedVertices,note:'Conservative side-reference estimate:100mm additional upper-tail drop. Plate relief, four nozzles, lower diffuser and animated wing retain their existing geometry/poses.'};
+  exterior.userData.windowStructure.buttressTail=tailDownSample(buttressTail);
+
   // Render the exact detailed exterior once, rather than drawing every trim
   // panel again into the 2048² shadow map. Two shared-material silhouette
   // batches retain the body footprint and independently animated wing.
@@ -797,11 +855,11 @@ function buildReferenceRoadsterExterior() {
   exterior.userData.axles = { front: { z: -1.36, y: .32, radius: .32 }, rear: { z: 1.38, y: .35, radius: .35 } };
   exterior.userData.rearNozzleClearance = { x: [-.61, .61], y: [.39, .63], z: 2.23 };
   exterior.userData.frontWingLandmarks={nose:frontWingC,axleFold:frontWingA,cowl:frontWingB};
-  exterior.userData.likenessRevision = 'planar-front-glass-concave-rear-sculpted-wing-v6';
+  exterior.userData.likenessRevision = 'downward-tail-planar-front-glass-v7';
   exterior.userData.wingPivot = [0, .85, 2.04];
   // Public numeric samplers support runtime geometry tests and future matching.
-  exterior.userData.sampleShoulder = (z, u, side = 1) => shoulderPoint(z, u, side);
-  exterior.userData.sampleFlank = (z, u, side = 1) => sidePoint(z, u, side);
+  exterior.userData.sampleShoulder = (z, u, side = 1) => tailDownSample(shoulderPoint(z, u, side));
+  exterior.userData.sampleFlank = (z, u, side = 1) => tailDownSample(sidePoint(z, u, side));
   exterior.userData.wheelOpeningY = openingY;
   return exterior;
 }

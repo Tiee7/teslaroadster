@@ -1689,6 +1689,7 @@ const state = {
   carsCleared: 0,
   blastedCarsCount: 0,
   score: 0,
+  finalDrivingResult: null,
   distanceMeters: 0,
   distanceBySpeed: [0, 0, 0, 0, 0, 0],
   bannerTimer: 0,
@@ -1813,9 +1814,26 @@ const WEATHER_PRESETS = [
     ? Math.hypot(state.speed, state.vy * 0.45) : Math.abs(state.speed);
   const points = meters => Math.max(0, Math.ceil(meters.reduce((sum, value, i) => sum + value * multipliers[i] / 10, 0) - 1e-9));
   function reset(state) {
+    state.finalDrivingResult = null;
     state.distanceMeters = 0;
     state.distanceBySpeed = thresholds.map(() => 0);
     state.score = 0;
+  }
+  function freeze(state) {
+    if (!state.finalDrivingResult) state.finalDrivingResult = Object.freeze({
+      score: state.score, distanceMeters: state.distanceMeters,
+      distanceBySpeed: Object.freeze([...state.distanceBySpeed]),
+      carsCleared: state.carsCleared, blastedCarsCount: state.blastedCarsCount
+    });
+    return state.finalDrivingResult;
+  }
+  function restoreFinal(state) {
+    const result = freeze(state);
+    state.score = result.score;
+    state.distanceMeters = result.distanceMeters;
+    state.distanceBySpeed = result.distanceBySpeed;
+    state.carsCleared = result.carsCleared;
+    state.blastedCarsCount = result.blastedCarsCount;
   }
   // Split a linear velocity segment exactly at bonus boundaries. Never ceil a
   // frame or apply a later speed bonus retroactively to earlier metres.
@@ -1853,7 +1871,7 @@ const WEATHER_PRESETS = [
       forward: map === 'highway' ? -state.vz : state.vx * -Math.sin(state.yaw) - state.vz * Math.cos(state.yaw)
     };
   }
-  globalThis.RoadsterDrivingScore = Object.freeze({ version, thresholds, multipliers, band, points, reset, segment, motion, displayedSpeed });
+  globalThis.RoadsterDrivingScore = Object.freeze({ version, thresholds, multipliers, band, points, reset, freeze, restoreFinal, segment, motion, displayedSpeed });
 })();
 
 
@@ -5979,6 +5997,64 @@ function buildReferenceRoadsterExterior() {
   }
   exterior.userData.wingProfile={span:1.710,centerChord:.490,tipChord:.410,constructionPivot:[0,.85,2.04],poseSource:'Existing physics-main.js activeWingGroup targets, unchanged.'};
 
+  // The side photograph's wheel-axis-normalized upper tail falls aft instead
+  // of ending in a near-level shelf. Deform the existing connected upper body
+  // once at construction; do not move the wing pivot, wheels or jet assembly.
+  // The height ramp fades out above the plate/nozzle region. Its derivative
+  // keeps dy'/dy >= .386, so this cannot invert or collapse the rear fascia.
+  const tailDown={startZ:1.38,endZ:2.26,startY:.635,rampHeight:.100,crestDrop:.100,referenceCrestY:.848,protectedArchClearance:.015};
+  const tailHeight=(y,z=tailDown.endZ)=>{
+    const cutoff=Math.max(tailDown.startY,openingY(z)+tailDown.protectedArchClearance),r=z-1.38;
+    const cutoffSlope=cutoff>tailDown.startY?-1.420*r/Math.sqrt(.430**2-r*r):0;
+    const d=y-cutoff;
+    return d<=0?{value:0,slope:0,cutoffSlope}:d<tailDown.rampHeight
+      ?{value:d*d/(2*tailDown.rampHeight),slope:d/tailDown.rampHeight,cutoffSlope}
+      :{value:d-tailDown.rampHeight/2,slope:1,cutoffSlope};
+  };
+  const tailScale=tailDown.crestDrop/tailHeight(tailDown.referenceCrestY).value;
+  function tailDownSample(point){
+    const [x,y,z]=point,t=Math.max(0,Math.min(1,(z-tailDown.startZ)/(tailDown.endZ-tailDown.startZ)));
+    const blend=t*t*(3-2*t),height=tailHeight(y,z);
+    return [x,y-tailScale*blend*height.value,z];
+  }
+  const tailUnchangedRelief=/^reference(?:RearPlatePad|RearCamera|PlateFastener)/;
+  let tailChangedMeshes=0,tailChangedVertices=0;
+  // The aft central-glass edge and buttress/rail feet share the deck taper.
+  // Front windshield and side panes are ahead of this domain, bit-identical.
+  for(const root of [body,canopy,rails,rearLights])root.traverse(part=>{
+    if(!part.geometry||tailUnchangedRelief.test(part.name))return;
+    const g=part.geometry,p=g.attributes.position,n=g.attributes.normal;
+    let changed=false;
+    for(let i=0;i<p.count;i++){
+      const y=p.getY(i)+part.position.y,z=p.getZ(i)+part.position.z;
+      if(z<=tailDown.startZ||y<=tailDown.startY)continue;
+      // All affected production panels are untranslated or translation-only.
+      // Fail loudly if a future refactor introduces a rotated/scaled tail part.
+      if(part.rotation.x||part.rotation.y||part.rotation.z||part.scale.x!==1||part.scale.y!==1||part.scale.z!==1)throw Error('Unsupported tail panel transform: '+part.name);
+      const t=Math.min(1,(z-tailDown.startZ)/(tailDown.endZ-tailDown.startZ)),blend=t*t*(3-2*t);
+      const blendSlope=t<1?6*t*(1-t)/(tailDown.endZ-tailDown.startZ):0,height=tailHeight(y,z);
+      if(height.value===0)continue;
+      const a=1-tailScale*blend*height.slope,b=-tailScale*blendSlope*height.value+tailScale*blend*height.slope*height.cutoffSlope;
+      p.array[i*3+1]=y-tailScale*blend*height.value-part.position.y;
+      if(n){
+        // Exact inverse-transpose Jacobian, preserving the source hard edges
+        // rather than averaging flat fascia normals across unrelated panels.
+        const nx=n.getX(i),ny=n.getY(i)/a,nz=n.getZ(i)-b*ny,length=Math.hypot(nx,ny,nz);
+        n.array[i*3]=nx/length;n.array[i*3+1]=ny/length;n.array[i*3+2]=nz/length;
+      }
+      changed=true;tailChangedVertices++;
+    }
+    if(changed){
+      // A three-corner buttress is still one actual plane after its aft foot
+      // moves. Use that plane's normal, not a smoothly bent continuum normal.
+      if(/^referenceRearButtress/.test(part.name))g.computeVertexNormals();
+      p.needsUpdate=true;if(g.attributes.normal)g.attributes.normal.needsUpdate=true;
+      g.computeBoundingBox();g.computeBoundingSphere();tailChangedMeshes++;
+    }
+  });
+  exterior.userData.tailDownProfile={...tailDown,scale:tailScale,minimumJacobian:1-tailScale,changedMeshes:tailChangedMeshes,changedVertices:tailChangedVertices,note:'Conservative side-reference estimate:100mm additional upper-tail drop. Plate relief, four nozzles, lower diffuser and animated wing retain their existing geometry/poses.'};
+  exterior.userData.windowStructure.buttressTail=tailDownSample(buttressTail);
+
   // Render the exact detailed exterior once, rather than drawing every trim
   // panel again into the 2048² shadow map. Two shared-material silhouette
   // batches retain the body footprint and independently animated wing.
@@ -6061,11 +6137,11 @@ function buildReferenceRoadsterExterior() {
   exterior.userData.axles = { front: { z: -1.36, y: .32, radius: .32 }, rear: { z: 1.38, y: .35, radius: .35 } };
   exterior.userData.rearNozzleClearance = { x: [-.61, .61], y: [.39, .63], z: 2.23 };
   exterior.userData.frontWingLandmarks={nose:frontWingC,axleFold:frontWingA,cowl:frontWingB};
-  exterior.userData.likenessRevision = 'planar-front-glass-concave-rear-sculpted-wing-v6';
+  exterior.userData.likenessRevision = 'downward-tail-planar-front-glass-v7';
   exterior.userData.wingPivot = [0, .85, 2.04];
   // Public numeric samplers support runtime geometry tests and future matching.
-  exterior.userData.sampleShoulder = (z, u, side = 1) => shoulderPoint(z, u, side);
-  exterior.userData.sampleFlank = (z, u, side = 1) => sidePoint(z, u, side);
+  exterior.userData.sampleShoulder = (z, u, side = 1) => tailDownSample(shoulderPoint(z, u, side));
+  exterior.userData.sampleFlank = (z, u, side = 1) => tailDownSample(sidePoint(z, u, side));
   exterior.userData.wheelOpeningY = openingY;
   return exterior;
 }
@@ -6696,7 +6772,7 @@ const CityTaxiModel = (() => {
       return route && route.meters >= MIN_ROUTE_METERS && Math.hypot(from.x - to.x, from.z - to.z) >= MIN_DIRECT_METERS;
     }));
     if (graph.nodes.length < WAITING_COUNT || destinations.some(stops => stops.length === 0)) throw new Error('City grid cannot support passenger routes');
-    let active = false, waiting = [], passenger = null, score = 0, delivered = 0, sequence = 0, previousPosition = null;
+    let active = false, waiting = [], passenger = null, score = 0, delivered = 0, sequence = 0, previousPosition = null, finished = false;
     const pick = choices => choices[Math.min(choices.length - 1, Math.max(0, Math.floor(random() * choices.length)))];
     function newTrip(position) {
       let pickups = graph.nodes.filter(node =>
@@ -6716,12 +6792,12 @@ const CityTaxiModel = (() => {
     }
     function start(position) {
       if (active || !validPosition(position)) return false;
-      active = true; score = 0; delivered = 0; waiting = []; passenger = null;
+      active = true; score = 0; delivered = 0; waiting = []; passenger = null; finished = false;
       previousPosition = copyPosition(position); refill(position);
       return true;
     }
     function stop() {
-      active = false; waiting = []; passenger = null; score = 0; delivered = 0; previousPosition = null;
+      active = false; waiting = []; passenger = null; score = 0; delivered = 0; previousPosition = null; finished = false;
     }
     function pause(position) { previousPosition = validPosition(position) ? copyPosition(position) : null; }
     function losePassenger(position, reason = 'destroyed') {
@@ -6733,21 +6809,22 @@ const CityTaxiModel = (() => {
       return { type: 'passenger-lost', trip, penalty, deducted: before - score, reason };
     }
     function destroy(position) {
-      if (!active) return null;
+      if (!active || finished) return null;
       const event = losePassenger(position, 'destroyed');
-      // A crash forfeits the entire current session score, even in an empty car.
-      // Do this after passenger loss so its ordinary penalty cannot leave points.
-      score = 0; pause(position);
+      // Settle the existing double-fare passenger loss once, then preserve the
+      // completed round's nonnegative net fare until the next vehicle reset.
+      finished = true; pause(position);
       return event;
     }
     function reset(position) {
       if (!active || !validPosition(position)) return null;
       const event = losePassenger(position, 'reset');
+      score = 0; delivered = 0; sequence = 0; finished = false;
       waiting = []; previousPosition = copyPosition(position); refill(position);
       return event;
     }
     function advance(position, grounded = validPosition(position) && Math.abs(position.y) <= GROUND_TOLERANCE) {
-      if (!active || !validPosition(position)) return null;
+      if (!active || finished || !validPosition(position)) return null;
       // A landing frame must never sweep through a stop from an airborne point.
       if (!grounded) { previousPosition = null; return null; }
       const from = previousPosition || position;
@@ -6763,7 +6840,7 @@ const CityTaxiModel = (() => {
       passenger = waiting.splice(index, 1)[0];
       return { type: 'picked-up', trip: passenger };
     }
-    const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered });
+    const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered, finished });
     return { start, stop, reset, destroy, pause, advance, losePassenger, snapshot };
   }
   return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, PICKUP_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
@@ -6875,10 +6952,10 @@ const CityTaxiModel = (() => {
     const data = snapshot();
     pickupMarkers.forEach((marker, index) => {
       const trip = data.waiting[index];
-      marker.visible = data.active && !data.passenger && Boolean(trip);
+      marker.visible = data.active && !data.finished && !data.passenger && Boolean(trip);
       if (trip) marker.position.set(trip.pickup.x, 0, trip.pickup.z);
     });
-    destinationMarker.visible = data.active && Boolean(data.passenger);
+    destinationMarker.visible = data.active && !data.finished && Boolean(data.passenger);
     if (data.passenger) destinationMarker.position.set(data.passenger.destination.x, 0, data.passenger.destination.z);
   }
   function render() {
@@ -6901,10 +6978,12 @@ const CityTaxiModel = (() => {
     const detail = data.passenger
       ? (isZh() ? `载客中 · 绿色目的地 ${remaining} 米 · 送达 +${data.passenger.fare}`
         : `ON BOARD · ${remaining}m · +${data.passenger.fare}`)
+      : data.finished && lastEvent?.type !== 'passenger-lost'
+        ? (isZh() ? '本局结束 · 成绩已保留 · 复活后从零开始' : 'ROUND FINISHED · FINAL SCORE KEPT · RESPAWN TO RESTART')
       : lastEvent?.type === 'passenger-lost'
         ? (lastEvent.reason === 'destroyed'
-          ? (isZh() ? `乘客遇难 · 积分清零 · 白柱等待 ${data.waiting.length} 位`
-            : `PASSENGER LOST · SCORE RESET · ${data.waiting.length} WAITING`)
+          ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 本局成绩已保留`
+            : `PASSENGER LOST · -${lastEvent.penalty} · FINAL SCORE KEPT`)
           : (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · 白柱等待 ${data.waiting.length} 位`
             : `PASSENGER LOST · -${lastEvent.penalty} · ${data.waiting.length} WAITING`))
         : (isZh() ? `空车 · ${data.waiting.length} 位乘客等待 · 前往白色光柱`
@@ -6939,10 +7018,10 @@ const CityTaxiModel = (() => {
     pickupMarkers = []; destinationMarker = null;
   }
   function onReset() {
-    if (!snapshot().active) return;
+    if (!snapshot().active || state.isDestroyed) return;
     if (currentMap !== 'city') { stop(); return; }
-    const event = session.reset(position());
-    if (event) lastEvent = event;
+    session.reset(position());
+    lastEvent = null;
     syncMarkers(); render();
   }
   function onDestroyed() {
@@ -6960,8 +7039,8 @@ const CityTaxiModel = (() => {
     if (event.repeat || currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || snapshot().active) return true;
     clearAllInputKeys();
     const approved = window.confirm(isZh()
-      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n每次撞毁后驾驶积分和接客积分清零，车内乘客遇难。载客时手动重置将失去乘客，并扣除该趟奖励的双倍积分，最低为 0。接客积分独立计算，不计入排行榜。`
-      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nEvery crash clears all current driving and passenger points and loses any passenger on board. Manually resetting an occupied car loses the passenger and deducts twice that fare, with a minimum score of zero. Passenger points are separate from the leaderboard.`);
+      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n撞毁会结算并保留本局成绩，车内乘客遇难，先扣除该趟奖励的双倍积分，最低为 0。复活或按 R 重置后，驾驶和接客累计分从 0 开始。载客时手动重置也会失去乘客。接客积分独立计算，不计入排行榜。`
+      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nA crash settles and preserves your final score. A passenger on board is lost and twice that fare is deducted first, with a minimum score of zero. Respawning or resetting with R starts driving and passenger totals from zero. A manual occupied reset also loses the passenger. Passenger points are separate from the leaderboard.`);
     // A native confirmation may be open for minutes. Never replay held controls or elapsed time.
     clearAllInputKeys(); lastTime = performance.now();
     if (approved && currentMap === 'city' && !state.isDestroyed && !blockedByUi()) start();
@@ -7434,6 +7513,12 @@ function resetCar() {
   renderBannerText();
   sound.beep(520, 0.1);
   window.RoadsterTaxi?.onReset();
+  // Every new round starts clean immediately, including mobile/button resets.
+  if (typeof updateDestroyedScores === 'function') updateDestroyedScores();
+  if (typeof updateCockpitHudScreen === 'function') {
+    const speed = RoadsterDrivingScore.displayedSpeed(state, false);
+    updateCockpitHudScreen(Math.round(speed * 2.23694), Math.round(speed * 3.6), false, false, false, false, false);
+  }
 }
 
 function applyTranslations() {
@@ -9180,10 +9265,8 @@ function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz
 function destroyVehicle(reasonKey) {
   if (state.isDestroyed) return;
   state.isDestroyed = true;
-  RoadsterDrivingScore.reset(state);
-  state.carsCleared = 0;
-  state.blastedCarsCount = 0;
   window.RoadsterTaxi?.onDestroyed();
+  RoadsterDrivingScore.freeze(state);
   window.RoadsterRanked?.abort('crash');
   state.hullIntegrity = 0;
   state.destroyReasonKey = reasonKey || 'crashReasonThreshold';
@@ -9203,13 +9286,9 @@ function destroyVehicle(reasonKey) {
 }
 
 function updateDestroyedScores() {
-  // Crash effects and a collision callback may finish after destruction. They
-  // must never leave points on the current car or in its visible summary.
-  if (state.isDestroyed) {
-    RoadsterDrivingScore.reset(state);
-    state.carsCleared = 0;
-    state.blastedCarsCount = 0;
-  }
+  // Keep the completed run visible throughout the wreck animation. Any late
+  // callback is bounded by the immutable death snapshot, never a zero reset.
+  if (state.isDestroyed) RoadsterDrivingScore.restoreFinal(state);
   const t = I18N[currentLang];
   // The summary is aria-live: unchanged frames must not announce it again.
   const put = (id, value) => {
@@ -9224,9 +9303,9 @@ function updateDestroyedScores() {
   if (passengerRow.hidden !== !passenger?.active) passengerRow.hidden = !passenger?.active;
   put('crash-lbl-passenger-score', t.crashLblPassengerScore);
   put('crash-val-passenger-score', passenger?.active ? passenger.score : 0);
+  put('val-score', drivingScore);
+  put('val-passed', state.carsCleared);
   if (state.isDestroyed) {
-    put('val-score', 0);
-    put('val-passed', 0);
     // Fatal collision paths can return before the normal instrument refresh.
     if (typeof updateCockpitHudScreen === 'function') {
       const speed = state.wasAirborne ? Math.hypot(state.speed, state.vy * 0.45) : Math.abs(state.speed);

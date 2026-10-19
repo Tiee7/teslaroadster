@@ -12,9 +12,26 @@
     ? Math.hypot(state.speed, state.vy * 0.45) : Math.abs(state.speed);
   const points = meters => Math.max(0, Math.ceil(meters.reduce((sum, value, i) => sum + value * multipliers[i] / 10, 0) - 1e-9));
   function reset(state) {
+    state.finalDrivingResult = null;
     state.distanceMeters = 0;
     state.distanceBySpeed = thresholds.map(() => 0);
     state.score = 0;
+  }
+  function freeze(state) {
+    if (!state.finalDrivingResult) state.finalDrivingResult = Object.freeze({
+      score: state.score, distanceMeters: state.distanceMeters,
+      distanceBySpeed: Object.freeze([...state.distanceBySpeed]),
+      carsCleared: state.carsCleared, blastedCarsCount: state.blastedCarsCount
+    });
+    return state.finalDrivingResult;
+  }
+  function restoreFinal(state) {
+    const result = freeze(state);
+    state.score = result.score;
+    state.distanceMeters = result.distanceMeters;
+    state.distanceBySpeed = result.distanceBySpeed;
+    state.carsCleared = result.carsCleared;
+    state.blastedCarsCount = result.blastedCarsCount;
   }
   // Split a linear velocity segment exactly at bonus boundaries. Never ceil a
   // frame or apply a later speed bonus retroactively to earlier metres.
@@ -52,5 +69,5 @@
       forward: map === 'highway' ? -state.vz : state.vx * -Math.sin(state.yaw) - state.vz * Math.cos(state.yaw)
     };
   }
-  globalThis.RoadsterDrivingScore = Object.freeze({ version, thresholds, multipliers, band, points, reset, segment, motion, displayedSpeed });
+  globalThis.RoadsterDrivingScore = Object.freeze({ version, thresholds, multipliers, band, points, reset, freeze, restoreFinal, segment, motion, displayedSpeed });
 })();

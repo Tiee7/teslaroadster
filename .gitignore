@@ -19,3 +19,8 @@ verification/rear-wing-poses/
 verification/nose-candidate-check/
 verification/nose-baseline-check/
 verification/window-candidate-crown-check/
+
+# Tail candidate exact full exports / intermediate CPU products are local evidence.
+verification/tail-down-baseline/
+verification/tail-down-candidate/
+verification/tail-down-intermediate/

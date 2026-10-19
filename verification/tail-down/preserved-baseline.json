@@ -1,0 +1,21 @@
+{
+  "preservedCommit": "cf3e7729c863e3d40e4645c0dbe83ab556d51ade",
+  "localArchiveBranch": "archive/player-tail-before-cf3e772",
+  "sourceHashes": {
+    "world.js": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1",
+    "highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "vehicles.js": "537415811139200c3c49eea1d216b862e205a1a4e7c41d62b01777f14e80f9ca",
+    "reference-exterior.js": "b02f840f42fe0138fe5ecd8efb5efd05e5ee8b89d6c495b54fdfa4b04b5173f5",
+    "reference-cockpit.js": "9ad9e90d029e9edbdfaa93e4019a08a5b275e54df3a2320b2577da64611ca506",
+    "npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+  },
+  "exactPreviewMeshSha256": "777832e8ed11cb37bf20309c3e7fe52bec42cff38a84a1acb5e91990a5db1dfa",
+  "exactPreviewMeshCount": 255,
+  "exactPreviewTriangleCount": 121376,
+  "exactExportLocalPath": "verification/tail-down-baseline/actual-preview-meshes.json",
+  "sourceSnapshotLocalPath": "verification/tail-down-baseline/source-snapshot",
+  "productionNpcRegistryChanged": false,
+  "newSnapshotActivatedAsNpc": false,
+  "status": "Immutable Git source and exact original preview retained for a future bounded topology-aware NPC build; existing15production NPC styles untouched."
+}

@@ -1,0 +1,613 @@
+{
+  "sourceHash": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+  "manifestMatches": true,
+  "changedMeshes": [
+    {
+      "name": "referenceShoulder-1",
+      "changedVertices": 1551,
+      "minDelta": [
+        0.0,
+        -0.1017184853553772,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceUpperFlank-1",
+      "changedVertices": 334,
+      "minDelta": [
+        0.0,
+        -0.07314026355743408,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceShoulder1",
+      "changedVertices": 1551,
+      "minDelta": [
+        0.0,
+        -0.1017184853553772,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceUpperFlank1",
+      "changedVertices": 334,
+      "minDelta": [
+        0.0,
+        -0.07314026355743408,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearDeckCenter",
+      "changedVertices": 1025,
+      "minDelta": [
+        0.0,
+        -0.09606415033340454,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.030962646007537842,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearLampRecess",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.09317117929458618,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.0186464786529541,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearTopBeam",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.10920244455337524,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.0901840329170227,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearLowerBeam",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.01963186264038086,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.002947866916656494,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearCorner-1",
+      "changedVertices": 5,
+      "minDelta": [
+        0.0,
+        -0.10920244455337524,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearSlotSidewall-1",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.0901840329170227,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.01963186264038086,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearCorner1",
+      "changedVertices": 5,
+      "minDelta": [
+        0.0,
+        -0.10920244455337524,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearSlotSidewall1",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.0901840329170227,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.01963186264038086,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearSlotCeiling",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.0901840329170227,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.08888036012649536,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearSlotSill",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.021113693714141846,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.01963186264038086,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearSlotHorizontalBlade",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.04969322681427002,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.0423312783241272,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearPaintedBumper",
+      "changedVertices": 816,
+      "minDelta": [
+        0.0,
+        -0.0031411051750183105,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceJetPocketHeader",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.0001500844955444336,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referencePanoramicCanopy",
+      "changedVertices": 325,
+      "minDelta": [
+        0.0,
+        -0.032125890254974365,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceWhiteRoofRail-1",
+      "changedVertices": 91,
+      "minDelta": [
+        0.0,
+        -0.03144651651382446,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearButtress-1",
+      "changedVertices": 1,
+      "minDelta": [
+        0.0,
+        -0.03144651651382446,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceWindowSill-1",
+      "changedVertices": 52,
+      "minDelta": [
+        0.0,
+        -0.03144651651382446,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceWhiteRoofRail1",
+      "changedVertices": 91,
+      "minDelta": [
+        0.0,
+        -0.03144651651382446,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearButtress1",
+      "changedVertices": 1,
+      "minDelta": [
+        0.0,
+        -0.03144651651382446,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceWindowSill1",
+      "changedVertices": 52,
+      "minDelta": [
+        0.0,
+        -0.03144651651382446,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearContinuousRedLight",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.06687116622924805,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.05889570713043213,
+        0.0
+      ]
+    },
+    {
+      "name": "referenceRearCenterStopLamp",
+      "changedVertices": 4,
+      "minDelta": [
+        0.0,
+        -0.03841292858123779,
+        0.0
+      ],
+      "maxDelta": [
+        0.0,
+        -0.03602457046508789,
+        0.0
+      ]
+    }
+  ],
+  "topologyMismatches": [],
+  "newDegenerates": [],
+  "inversions": [],
+  "nonfinite": [],
+  "normalDisagreements": [
+    {
+      "name": "reference-yoke-padded-rim",
+      "triangles": 8
+    }
+  ],
+  "newWeldedSplits": [],
+  "attachmentProbes": [
+    {
+      "export": "baseline",
+      "side": -1,
+      "tip": [
+        -0.2750000059604645,
+        0.847000002861023,
+        1.7100000381469727
+      ],
+      "nearestDistance": 0.0008758095143491714,
+      "mesh": "referenceRearDeckCenter",
+      "nearestPoint": [
+        -0.2749908434285464,
+        0.8461243075483744,
+        1.7099892644364336
+      ]
+    },
+    {
+      "export": "baseline",
+      "side": 1,
+      "tip": [
+        0.2750000059604645,
+        0.847000002861023,
+        1.7100000381469727
+      ],
+      "nearestDistance": 0.000875890593676682,
+      "mesh": "referenceRearDeckCenter",
+      "nearestPoint": [
+        0.27499089872822796,
+        0.846124225809227,
+        1.7099892703264028
+      ]
+    },
+    {
+      "export": "candidate",
+      "side": -1,
+      "tip": [
+        -0.2750000059604645,
+        0.8155534863471985,
+        1.7100000381469727
+      ],
+      "nearestDistance": 0.0006981031546458476,
+      "mesh": "referenceRearDeckCenter",
+      "nearestPoint": [
+        -0.27499428524348096,
+        0.8148651271461287,
+        1.709883948103359
+      ]
+    },
+    {
+      "export": "candidate",
+      "side": 1,
+      "tip": [
+        0.2750000059604645,
+        0.8155534863471985,
+        1.7100000381469727
+      ],
+      "nearestDistance": 0.0006979883858380951,
+      "mesh": "referenceRearDeckCenter",
+      "nearestPoint": [
+        0.2749942233303419,
+        0.814865242089714,
+        1.7098839597683082
+      ]
+    }
+  ],
+  "normalQuality": {
+    "allFinite": true,
+    "maxUnitLengthError": 4.064331582398495e-08
+  },
+  "allMaterialPropertiesUnchanged": true,
+  "unchangedForeVertices": true,
+  "unchangedLowVertices": true,
+  "changedCount": 26,
+  "changedVertexCount": 6278,
+  "protectedMeshes": {
+    "reference-yoke-padded-rim": true,
+    "reference-yoke-silver-rim": true,
+    "reference-yoke-horn-pad": true,
+    "reference-yoke-cross-spoke": true,
+    "reference-yoke-thumb-control": true,
+    "reference-yoke-center-badge": true,
+    "referenceWhiteWingBlade": true,
+    "referenceWingCarbonUnderside": true,
+    "referenceWingLeadingEdge": true,
+    "referenceWingTrailingEdge": true,
+    "referenceWhiteWingEndplate-1": true,
+    "referenceWingSupport-1": true,
+    "referenceWingBaseMount-1": true,
+    "referenceWhiteWingEndplate1": true,
+    "referenceWingSupport1": true,
+    "referenceWingBaseMount1": true,
+    "referenceFrontWingInnerReturn-1": true,
+    "referenceFrontWingRearReturn-1": true,
+    "referenceFrontWingInnerReturn1": true,
+    "referenceFrontWingRearReturn1": true,
+    "referenceRearPlatePad": true,
+    "referenceRearCamera": true,
+    "referencePlateFastener-0.13": true,
+    "referencePlateFastener0.13": true,
+    "referenceDiffuserOuterCheek-1": true,
+    "referenceDiffuserOuterCheek1": true,
+    "referenceClosedDiffuserBacking": true,
+    "referenceDiffuserBowl": true,
+    "referenceDiffuserTrailingFace": true,
+    "referenceDiffuserFin-0.71_-1": true,
+    "referenceDiffuserFin-0.71_1": true,
+    "referenceDiffuserFinEdge-0.71": true,
+    "referenceDiffuserFin-0.473_-1": true,
+    "referenceDiffuserFin-0.473_1": true,
+    "referenceDiffuserFinEdge-0.473": true,
+    "referenceDiffuserFin-0.237_-1": true,
+    "referenceDiffuserFin-0.237_1": true,
+    "referenceDiffuserFinEdge-0.237": true,
+    "referenceDiffuserFin0_-1": true,
+    "referenceDiffuserFin0_1": true,
+    "referenceDiffuserFinEdge0": true,
+    "referenceDiffuserFin0.237_-1": true,
+    "referenceDiffuserFin0.237_1": true,
+    "referenceDiffuserFinEdge0.237": true,
+    "referenceDiffuserFin0.473_-1": true,
+    "referenceDiffuserFin0.473_1": true,
+    "referenceDiffuserFinEdge0.473": true,
+    "referenceDiffuserFin0.71_-1": true,
+    "referenceDiffuserFin0.71_1": true,
+    "referenceDiffuserFinEdge0.71": true,
+    "referenceSideWindow-1": true,
+    "referenceSideWindow1": true
+  },
+  "protectedMeshesAllUnchanged": true,
+  "renderAuditMatchesSource": true,
+  "renderEvidence": [
+    {
+      "file": "tail-side-left-raw.png",
+      "sha256": "c58505f3f0e8819fb6ec311f8b6b58da725505560eeee2bc306051457188384c"
+    },
+    {
+      "file": "rear-inspection-three-quarter-raw.png",
+      "sha256": "e345e14d5422448a8904cd210a4b4656f3f5b6762b4995fd49230e4754dfdd33"
+    }
+  ],
+  "excludedStaleImage": "reference-side-left-raw.png: left over from first candidate; not used for final verdict",
+  "crestEstimate": {
+    "baselineAxleY": 0.886,
+    "baselineTailY": 0.848,
+    "candidateAxleY": 0.886,
+    "candidateTailY": 0.748,
+    "additionalTerminalDropMeters": 0.1,
+    "wheelAxleToTailMeters": 0.88,
+    "baselineMeanDescentDegrees": 2.4725998365348074,
+    "candidateMeanDescentDegrees": 8.91243496952274,
+    "minimumVerticalJacobian": 0.38650306748466245
+  },
+  "lampRecessDimensions": {
+    "referenceRearLampRecess": {
+      "baseline": {
+        "minY": 0.7129999995231628,
+        "maxY": 0.8370000123977661
+      },
+      "candidate": {
+        "minY": 0.6943535208702087,
+        "maxY": 0.7438288331031799
+      }
+    },
+    "referenceRearContinuousRedLight": {
+      "baseline": {
+        "minY": 0.781000018119812,
+        "maxY": 0.7940000295639038
+      },
+      "candidate": {
+        "minY": 0.7221043109893799,
+        "maxY": 0.7271288633346558
+      }
+    },
+    "referenceRearTopBeam": {
+      "baseline": {
+        "minY": 0.8320000171661377,
+        "maxY": 0.8629999756813049
+      },
+      "candidate": {
+        "minY": 0.741815984249115,
+        "maxY": 0.7537975311279297
+      }
+    },
+    "referenceRearLowerBeam": {
+      "baseline": {
+        "minY": 0.6660000085830688,
+        "maxY": 0.7149999737739563
+      },
+      "candidate": {
+        "minY": 0.6630521416664124,
+        "maxY": 0.6953681111335754
+      }
+    },
+    "referenceRearPaintedBumper": {
+      "baseline": {
+        "minY": 0.5619999766349792,
+        "maxY": 0.6669999957084656
+      },
+      "candidate": {
+        "minY": 0.5619999766349792,
+        "maxY": 0.6638588905334473
+      }
+    }
+  },
+  "verdict": "PASS: final bounded tail deformation, after including rear rails and aft panoramic canopy, preserves seams and protected geometry. CPU images show coherent descending upper tail; no exact-photo-match or browser/GPU-runtime claim.",
+  "exactCanopyRailSeamGroups": 26,
+  "maximumFinalExactSeamSpreadMeters": 0.0,
+  "buttressPlanarNormalChecks": [
+    {
+      "side": -1,
+      "maxVertexNormalToFaceNormalError": 1.0748589191355065e-08,
+      "maxNormalSpread": 0.0,
+      "planeNormal": [
+        -0.4186524392501878,
+        0.8704331453465622,
+        0.2589908774299944
+      ]
+    },
+    {
+      "side": 1,
+      "maxVertexNormalToFaceNormalError": 1.0748589191355065e-08,
+      "maxNormalSpread": 0.0,
+      "planeNormal": [
+        0.4186524392501878,
+        0.8704331453465622,
+        0.2589908774299944
+      ]
+    }
+  ],
+  "buttressTailMetadata": "Source now sets windowStructure.buttressTail = tailDownSample(buttressTail), applying the same bounded coordinate mapping as the actual tail vertex; no stale original-y metadata retained.",
+  "normalMethod": "Exact inverse-transpose differential transform for smooth warped panels, with actual planar face normals recomputed for the two single-triangle rear buttresses."
+}

@@ -107,6 +107,8 @@ cam_data=bpy.data.cameras.new('Inspection camera');cam=bpy.data.objects.new('Ins
 views=[('front-three-quarter',(6.3,8.8,3.3),(0,0,.54),'PERSP',None),('rear-three-quarter',(6.3,-8.8,3.3),(0,0,.54),'PERSP',None),('side',(10,0,1.55),(0,0,.54),'ORTHO',5.65),('front',(0,10,1.55),(0,0,.54),'ORTHO',3.05),('rear',(0,-10,1.55),(0,0,.54),'ORTHO',3.05)]
 if 'reference-side-left' in requested_views:
  views.append(('reference-side-left',(-10,0,.55),(0,0,.55),'ORTHO',7.38))
+if 'tail-side-left' in requested_views:
+ views.append(('tail-side-left',(-10,0,.55),(0,0,.55),'ORTHO',5.2))
 if 'rear-detail' in requested_views:
  views.append(('rear-detail',(-1.8,-6,.82),(-.10,-2.25,.43),'PERSP',None))
 if 'rear-detail-oblique' in requested_views:

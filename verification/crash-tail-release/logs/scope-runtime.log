@@ -1,0 +1,15 @@
+{
+  "pass": true,
+  "baseline": "caada63c6518967cbeeb3432bedca6e3fb5a5167",
+  "sourceHash": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+  "player": {
+    "colorMeshes": 261,
+    "colorTriangles": 121388,
+    "shadowMeshes": 2,
+    "shadowTriangles": 14020,
+    "appearanceHash": "f51de066e4f59e75ffe1fbc1cde26dadc62ed3c23c4ee079ebc0d73117e84cf8"
+  },
+  "maxShadowSampleDeviationMetres": 0.011572105410328225,
+  "unchangedNpcSamples": 30,
+  "protectedProductionFiles": 27
+}

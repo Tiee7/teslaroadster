@@ -439,6 +439,7 @@ const state = {
   carsCleared: 0,
   blastedCarsCount: 0,
   score: 0,
+  finalDrivingResult: null,
   distanceMeters: 0,
   distanceBySpeed: [0, 0, 0, 0, 0, 0],
   bannerTimer: 0,

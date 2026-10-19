@@ -1,5 +1,7 @@
 # Highway driver pools and distance scoring verification
 
+Historical verification of the initial distance-scoring change. Its death-zero behavior is superseded by the crash-final-score lifecycle described in CRASH-FINAL-SCORE.md; traffic and speed-band rules are unchanged.
+
 Verified locally on 2026-10-19, based on commit 683f6fd15331d619866b8433520b25d36a75d216. This candidate contains gameplay/scoring changes only; the separately reviewed compact NPC appearance changes must be integrated first. No remote publication, live database write or deployment was performed.
 
 ## Requested behavior
