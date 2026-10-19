@@ -70,6 +70,15 @@ const CityTaxiModel = (() => {
 
   const copyPosition = position => ({ x: position.x, y: position.y, z: position.z });
   const validPosition = position => position && [position.x, position.y, position.z].every(Number.isFinite);
+  // Car forward is (-sin(yaw), -cos(yaw)); positive screen rotation points right.
+  // Project onto the car's horizontal axes, independent of camera mode or drift.
+  function destinationBearing(position, yaw, destination) {
+    if (!validPosition(position) || !validPosition(destination) || !Number.isFinite(yaw)) return null;
+    const dx = destination.x - position.x, dz = destination.z - position.z;
+    const right = dx * Math.cos(yaw) - dz * Math.sin(yaw);
+    const forward = -dx * Math.sin(yaw) - dz * Math.cos(yaw);
+    return { radians: Math.atan2(right, forward), meters: Math.hypot(dx, dz) };
+  }
   // Swept 3D proximity catches a fast car between frames but rejects flying above a stop.
   function withinArrival(from, to, stop) {
     if (!validPosition(from) || !validPosition(to)) return false;
@@ -151,7 +160,7 @@ const CityTaxiModel = (() => {
   }
   return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
     MIN_ROUTE_METERS, MAX_ROUTE_METERS, MIN_DIRECT_METERS, PICKUP_SPACING_METERS,
-    isStopClear, buildRoadGraph, shortestRoute, fareForDistance, withinArrival, createSession });
+    isStopClear, buildRoadGraph, shortestRoute, fareForDistance, destinationBearing, withinArrival, createSession });
 })();
 
 // Scene adapter: no DOM entry, modal, HUD, or scene object exists before the secret key.
@@ -161,6 +170,7 @@ const CityTaxiModel = (() => {
   let beamGeometry = null, coreGeometry = null, ringGeometry = null;
   let whiteMaterial = null, greenMaterial = null, whiteCoreMaterial = null, greenCoreMaterial = null;
   let pickupMarkers = [], destinationMarker = null, lastEvent = null;
+  let navigation = null, navigationArrow = null, navigationTitle = null, navigationDistance = null, navigationRotation = null;
   const isZh = () => currentLang === 'zh';
   const position = () => ({ x: state.x, y: state.y, z: state.z });
   const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
@@ -216,6 +226,46 @@ const CityTaxiModel = (() => {
       footer.appendChild(instrumentHost); footer.classList.add('taxi-active');
     }
     (footer || document.body).appendChild(hud);
+    navigation = document.createElement('section');
+    navigation.id = 'city-taxi-navigation'; navigation.className = 'city-taxi-navigation'; navigation.hidden = true;
+    navigation.setAttribute('role', 'img');
+    const card = document.createElement('div'); card.className = 'city-taxi-navigation-card';
+    const dial = document.createElement('span'); dial.className = 'city-taxi-navigation-dial'; dial.setAttribute('aria-hidden', 'true');
+    navigationArrow = document.createElement('span'); navigationArrow.className = 'city-taxi-navigation-arrow';
+    dial.appendChild(navigationArrow);
+    const detail = document.createElement('span'); detail.className = 'city-taxi-navigation-detail';
+    navigationTitle = document.createElement('strong'); navigationDistance = document.createElement('span');
+    detail.appendChild(navigationTitle); detail.appendChild(navigationDistance);
+    card.appendChild(dial); card.appendChild(detail); navigation.appendChild(card);
+    // A real row above the side panels stays upper-left even with full controls,
+    // minimal HUD or cockpit active. Its height is reserved in the panel bounds.
+    const top = document.getElementById('hud-top-container'), main = document.getElementById('hud-main');
+    if (top && main) top.insertBefore(navigation, main);
+    else document.body.appendChild(navigation);
+  }
+  function renderNavigation() {
+    if (!navigation) return;
+    const data = snapshot();
+    const bearing = data.active && data.passenger && currentMap === 'city' && !state.isDestroyed
+      ? CityTaxiModel.destinationBearing(position(), state.yaw, data.passenger.destination) : null;
+    const top = document.getElementById('hud-top-container');
+    navigation.hidden = !bearing;
+    if (!bearing) {
+      navigationRotation = null;
+      navigationArrow.style.transform = '';
+      top?.classList.remove('taxi-navigation-active');
+      return;
+    }
+    top?.classList.add('taxi-navigation-active');
+    // Unwrap the shortest signed change, so crossing north/180 never spins a turn.
+    navigationRotation = navigationRotation === null ? bearing.radians
+      : navigationRotation + Math.atan2(Math.sin(bearing.radians - navigationRotation), Math.cos(bearing.radians - navigationRotation));
+    navigationArrow.style.transform = `rotate(${navigationRotation}rad)`;
+    navigationTitle.textContent = isZh() ? '绿色目的地' : 'GREEN DESTINATION';
+    navigationDistance.textContent = `${Math.round(bearing.meters)} ${isZh() ? '米' : 'm'}`;
+    navigation.setAttribute('aria-label', isZh()
+      ? `绿色目的地方向，距离 ${Math.round(bearing.meters)} 米；箭头上方为车头前方`
+      : `Green destination direction, ${Math.round(bearing.meters)} meters; up is ahead of the car`);
   }
   function syncMarkers() {
     if (!markerGroup) return;
@@ -230,6 +280,7 @@ const CityTaxiModel = (() => {
   }
   function render() {
     if (!hud) return;
+    renderNavigation();
     const data = snapshot();
     scoreLabel.textContent = isZh()
       ? `接客积分 ${data.score.toLocaleString()} · 已送达 ${data.delivered} 位`
@@ -279,6 +330,9 @@ const CityTaxiModel = (() => {
     if (markerGroup) cityEnvGroup.remove(markerGroup);
     for (const resource of [beamGeometry, coreGeometry, ringGeometry, whiteMaterial, greenMaterial, whiteCoreMaterial, greenCoreMaterial]) resource?.dispose();
     hud?.remove();
+    navigation?.remove();
+    document.getElementById('hud-top-container')?.classList.remove('taxi-navigation-active');
+    navigation = null; navigationArrow = null; navigationTitle = null; navigationDistance = null; navigationRotation = null;
     const footer = document.getElementById('hud-footer');
     if (instrumentHost && footer) {
       for (const child of [...instrumentHost.children]) footer.appendChild(child);
@@ -323,8 +377,9 @@ const CityTaxiModel = (() => {
     if (!snapshot().active) return;
     if (currentMap !== 'city') { stop(); return; }
     if (state.isDestroyed) { onDestroyed(); return; }
-    if (document.hidden || blockedByUi()) { session.pause(position()); return; }
+    if (document.hidden || blockedByUi()) { session.pause(position()); renderNavigation(); return; }
     const event = session.advance(position(), !state.wasAirborne && Math.abs(state.y) <= CityTaxiModel.GROUND_TOLERANCE);
+    renderNavigation();
     if (!event) return;
     lastEvent = event;
     syncMarkers(); render();

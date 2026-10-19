@@ -133,3 +133,11 @@ The user-provided `assets/Ludicrous_Velocity_bgm.mp3` is served unchanged (178.5
 The game uses Vercel's [official plain-HTML integration](https://vercel.com/docs/analytics/quickstart): a `window.va` queue and a deferred first-party `/_vercel/insights/script.js` script in `src/index.html`, carried into the standalone bundle and production build. This is a static HTML/JavaScript app, so the Next.js-only `@vercel/analytics/next` component and a framework migration are unnecessary. Analytics initializes independently of WebGL, leaderboard requests, and background music. No custom events, nicknames, scores, or player identity tokens are sent by game code.
 
 Enable **Web Analytics** for the `teslaroadster` project in the Vercel dashboard, then deploy (or redeploy) so Vercel serves its analytics routes. Do not enable a paid upgrade without approval. After a normal production page visit, verify that `/_vercel/insights/script.js` loads successfully and the browser sends its automatic page-view request. Analytics is hosted by Vercel and is unavailable when opening the standalone file directly or using the local development server; its absence must not stop the game. No analytics credentials or extra npm dependencies are required.
+
+## Cockpit tank and passenger bearing / 车内气量与载客方向
+
+Cockpit tank seconds, liters, fill and gas mass now use the current remaining-air value, including a true 0.0 kg when empty. The external gas-mass telemetry is also refreshed from the same frame's tank value. The cockpit mass readout sits below the tank, clear of the flight instruments and passenger status strip.
+
+While a passenger is on board, an upper-left arrow points directly toward the green destination relative to the car's heading: up means ahead, right means the car's right. It updates in every camera/HUD mode, shows straight-line horizontal distance, and disappears on delivery, passenger loss, reset or map exit. Its own layout row keeps it above the side controls on desktop and small screens. It is a bearing indicator, not a turn-by-turn road route.
+
+Regression checks cover full/partial/empty/recharging tanks, same-frame cockpit/external readings, cardinal and arbitrary vehicle headings, full-turn angle boundaries and passenger lifecycle cleanup. The available cloud environment cannot validate real WebGL gameplay or visual appearance.

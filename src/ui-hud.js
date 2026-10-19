@@ -1130,7 +1130,11 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.fillText(`PITCH ${Math.round(THREE.MathUtils.radToDeg(state.pitch))}°  ROLL ${Math.round(THREE.MathUtils.radToDeg(state.roll))}°`, 38, 232);
 
   // 600L COPV Air Pressure Bar at Bottom
-  const airPct = Math.max(0, Math.min(1, state.airRemaining / MAX_AIR_SECONDS));
+  // Read the current tank once: the physics mass cache is updated before this
+  // frame's consumption/recharge, and zero must remain an empty tank.
+  const airSeconds = Math.max(0, Math.min(MAX_AIR_SECONDS, Number.isFinite(state.airRemaining) ? state.airRemaining : 0));
+  const airPct = airSeconds / MAX_AIR_SECONDS;
+  const gasMassKg = airPct * 144.0;
   ctx.fillStyle = '#1e293b';
   ctx.fillRect(18, 268, 476, 22);
   const isLowAir = airPct <= 0.20 && airPct > 0.001;
@@ -1142,7 +1146,12 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.fillRect(18 + 476 * 0.20, 264, 3, 30);
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 13px "JetBrains Mono", monospace';
-  ctx.fillText(`600L COPV TANK: ${state.airRemaining.toFixed(1)}s / 10.0s (${Math.round(airPct * 600)}L)`, 26, 284);
+  ctx.fillText(`600L COPV TANK: ${airSeconds.toFixed(1)}s / ${MAX_AIR_SECONDS.toFixed(1)}s (${Math.round(airPct * 600)}L)`, 26, 284);
+  // Keep the gas readout with the tank, clear of the artificial horizon and
+  // the passenger strip at y=237..263.
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 12px "JetBrains Mono", monospace';
+  ctx.fillText(`GAS: ${gasMassKg.toFixed(1)} kg`, 26, 307);
 
   // 2. CENTER-RIGHT PANEL: Live G-Force Ball Meter (G-Meter)
   const gxCenter = 268, gyCenter = 135, gRadius = 58;
@@ -1252,7 +1261,7 @@ function updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetro
   ctx.fillText(`BATT: ${socPct}% // 200 kWh PACK`, 18, 126);
   ctx.fillStyle = (state.tireTemp > 80) ? '#f59e0b' : '#38bdf8';
   ctx.fillText(`TIRE: ${Math.round(state.tireTemp || 35)}°C (μ ${(state.tireGripMu || 1.0).toFixed(2)}) // AERO: ${state.downforceN || 0} N`, 18, 144);
-  ctx.fillText(`CD: ${(state.dragCoeffCd || 0.34).toFixed(2)} // GAS: ${(state.gasMassKg || 144.0).toFixed(1)} kg`, 18, 162);
+  ctx.fillText(`CD: ${(state.dragCoeffCd || 0.34).toFixed(2)}`, 18, 162);
 
   window.RoadsterTaxi?.drawCockpit(ctx);
   cockpitHudTexture.needsUpdate = true;

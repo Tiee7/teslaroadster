@@ -134,8 +134,8 @@ html, body {
 }
 #hud-left, #hud-right { flex-shrink: 0; min-width: 0; }
 #hud-left, #hud-right-card {
-  max-height: max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - 16px));
-  max-height: max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - 16px));
+  max-height: max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - var(--hud-navigation-height, 0px) - 16px));
+  max-height: max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - var(--hud-navigation-height, 0px) - 16px));
   overflow-y: auto;
 }
 @media (max-width: 1100px) {
@@ -237,6 +237,44 @@ html, body {
 #audio-settings .ranked-button { min-height: 44px; }
 #music-label { margin-top: 24px; font-weight: 700; }
 @media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }
+
+/* Occupied-trip bearing occupies a separate upper-left row above all side panels. */
+.taxi-navigation-active { --hud-navigation-height: 64px; }
+.city-taxi-navigation {
+  display: flex; align-items: center; flex-shrink: 0; box-sizing: border-box;
+  height: var(--hud-navigation-height, 64px); padding: 4px 20px; pointer-events: none;
+}
+.city-taxi-navigation[hidden] { display: none; }
+.city-taxi-navigation-card {
+  display: flex; align-items: center; gap: 10px; max-width: 100%; box-sizing: border-box;
+  height: 100%; padding: 5px 12px; border: 1px solid rgba(134, 239, 172, 0.6);
+  border-radius: 10px; background: rgba(4, 20, 16, 0.9); color: #dcfce7;
+}
+.city-taxi-navigation-dial {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 42px; height: 42px; border: 1px solid #3a6e51; border-radius: 50%;
+}
+.city-taxi-navigation-arrow {
+  display: block; width: 20px; height: 30px; background: #86efac;
+  clip-path: polygon(50% 0, 100% 48%, 64% 48%, 64% 100%, 36% 100%, 36% 48%, 0 48%);
+  transform-origin: center;
+}
+.city-taxi-navigation-detail { display: flex; flex-direction: column; min-width: 0; font-size: 12px; line-height: 1.4; }
+.city-taxi-navigation-detail strong { color: #86efac; font-size: 11px; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .taxi-navigation-active { --hud-navigation-height: 56px; }
+  .city-taxi-navigation { padding: 4px 12px; }
+  .city-taxi-navigation-card { gap: 8px; padding: 4px 9px; }
+  .city-taxi-navigation-dial { width: 34px; height: 34px; }
+  .city-taxi-navigation-arrow { width: 16px; height: 26px; }
+}
+@media (max-width: 1100px) and (max-height: 600px) {
+  /* Keep the occupied-trip row visible without pushing notices over the footer. */
+  #hud-top-container.taxi-navigation-active {
+    --hud-notice-space: min(100px, max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-navigation-height) - 32px)));
+    --hud-notice-space: min(100px, max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-navigation-height) - 32px)));
+  }
+}
 
 /* Created only after the hidden city mode has been explicitly enabled. */
 .city-taxi-hud {

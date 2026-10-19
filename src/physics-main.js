@@ -1895,6 +1895,8 @@ function updateSimulation(dt) {
 
   const pct = Math.max(0, Math.min(100, (state.airRemaining / MAX_AIR_SECONDS) * 100));
   const liters = Math.round((state.airRemaining / MAX_AIR_SECONDS) * 600);
+  const gasMassEl = document.getElementById('val-gas-mass');
+  if (gasMassEl) gasMassEl.textContent = `${(pct * 1.44).toFixed(1)} kg`;
   document.getElementById('val-air-sec').textContent = `${state.airRemaining.toFixed(1)}s`;
   document.getElementById('val-air-liters').textContent = `(${liters}L)`;
   const burnUsedEl = document.getElementById('val-burn-used');

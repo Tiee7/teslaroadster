@@ -163,12 +163,14 @@ test('repeated starts do not duplicate passengers; occupied repairs apply double
 class Element {
   constructor() {
     this.children = []; this.attributes = {}; this.textContent = ''; this.parent = null; this.typing = false;
+    this.style = {}; this.hidden = false;
     this.classes = new Set(['hidden']);
     this.classList = { contains: x => this.classes.has(x), add: x => this.classes.add(x), remove: x => this.classes.delete(x) };
   }
   closest() { return this.typing ? this : null; }
   setAttribute(key, value) { this.attributes[key] = value; }
   appendChild(child) { child.remove(); child.parent = this; this.children.push(child); return child; }
+  insertBefore(child, reference) { child.remove(); child.parent = this; this.children.splice(this.children.indexOf(reference), 0, child); return child; }
   remove() { if (this.parent) this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null; }
 }
 class Object3D {
@@ -183,7 +185,8 @@ class Geometry { rotateX() { return this; } constructor(...args) { this.args = a
 class Material { constructor(options) { Object.assign(this, options); this.disposed = false; } dispose() { this.disposed = true; } }
 class Mesh extends Object3D { constructor(geometry, material) { super(); this.geometry = geometry; this.material = material; } }
 function harness() {
-  const elements = Object.fromEntries(['modal-map-select', 'modal-help', 'modal-destroyed', 'hud-footer'].map(id => [id, new Element()]));
+  const elements = Object.fromEntries(['modal-map-select', 'modal-help', 'modal-destroyed', 'hud-footer', 'hud-top-container', 'hud-main'].map(id => [id, new Element()]));
+  elements['hud-top-container'].appendChild(elements['hud-main']);
   const document = { hidden: false, body: new Element(), getElementById: id => elements[id] || null, createElement: () => new Element() };
   const group = new Object3D(); const confirms = []; const aborts = []; let approved = true;
   const window = {
@@ -191,7 +194,7 @@ function harness() {
     RoadsterRanked: { abort: reason => aborts.push(reason), isDialogOpen: () => false },
     RoadsterMusic: { isSettingsOpen: () => false },
   };
-  const state = { ...origin, isDestroyed: false, score: 123, carsCleared: 10 };
+  const state = { ...origin, yaw: 0, isDestroyed: false, score: 123, carsCleared: 10 };
   const context = vm.createContext({ window, document, Element, state, currentLang: 'en', currentMap: 'city', lastTime: 1,
     Math: Object.assign(Object.create(Math), { random: random(1) }),
     CITY_ROAD_COORDS: roadCoords, cityBuildings: [], CITY_HALF_BOUND: 1200, cityEnvGroup: group, performance: { now: () => 9999 },
@@ -419,4 +422,104 @@ test('cockpit passenger strip shows live destination distance and local score wi
   h.context.currentLang = 'zh'; h.taxi.drawCockpit(ctx); assert.match(draws.at(-1).text, /空车/);
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
   assert.match(hud, /window\.RoadsterTaxi\?\.drawCockpit\(ctx\);\s*cockpitHudTexture\.needsUpdate = true/);
+});
+
+test('destination bearing maps vehicle-forward up and left/right correctly at every heading', () => {
+  const position = { x: 17, y: 600, z: -29 };
+  for (const yaw of [0, Math.PI / 2, Math.PI, -Math.PI / 2, 0.432, 6 * Math.PI + 0.432]) {
+    for (const angle of [-Math.PI, -Math.PI / 2, 0, Math.PI / 2, Math.PI]) {
+      // Build the destination from the vehicle axes; altitude must not affect bearing/distance.
+      const right = Math.sin(angle) * 100, forward = Math.cos(angle) * 100;
+      const destination = { x: position.x + right * Math.cos(yaw) - forward * Math.sin(yaw),
+        y: 0, z: position.z - right * Math.sin(yaw) - forward * Math.cos(yaw) };
+      const bearing = core.destinationBearing(position, yaw, destination);
+      assert.ok(Math.abs(Math.atan2(Math.sin(bearing.radians - angle), Math.cos(bearing.radians - angle))) < 1e-10);
+      assert.ok(Math.abs(bearing.meters - 100) < 1e-10);
+    }
+  }
+  for (const bad of [NaN, Infinity, undefined]) assert.equal(core.destinationBearing(position, bad, origin), null);
+  assert.equal(core.destinationBearing({ ...position, x: NaN }, 0, origin), null);
+});
+
+const navigationParts = h => {
+  const navigation = h.elements['hud-top-container'].children.find(child => child.id === 'city-taxi-navigation');
+  return { navigation, arrow: navigation?.children[0].children[0].children[0],
+    title: navigation?.children[0].children[1].children[0], distance: navigation?.children[0].children[1].children[1] };
+};
+const rotation = arrow => Number(arrow.style.transform.match(/rotate\(([^r]+)rad\)/)[1]);
+
+test('upper-left navigation is absent before activation, hidden empty, live every frame and visible across camera/HUD modes', () => {
+  const h = harness(), top = h.elements['hud-top-container'];
+  assert.equal(navigationParts(h).navigation, undefined);
+  h.key(); const { navigation, arrow, title, distance } = navigationParts(h);
+  assert.equal(navigation.hidden, true); assert.equal(top.classList.contains('taxi-navigation-active'), false);
+  assert.equal(top.children.indexOf(navigation) + 1, top.children.indexOf(h.elements['hud-main']));
+  const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+  assert.equal(navigation.hidden, false); assert.equal(top.classList.contains('taxi-navigation-active'), true);
+  // Stay far from the destination while varying yaw, altitude, camera and HUD modes.
+  Object.assign(h.state, { x: trip.destination.x, z: trip.destination.z + 100, y: 50, wasAirborne: true });
+  for (const mode of [0, 3, 2, 1, 3, 0]) {
+    h.context.cameraModeIndex = mode; h.state.hudMinimal = mode % 2 === 1;
+    h.state.yaw = Math.PI / 2; h.taxi.tick();
+    assert.equal(navigation.hidden, false); assert.ok(Math.abs(rotation(arrow) - Math.PI / 2) < 1e-10);
+    assert.equal(distance.textContent, '100 m');
+    h.state.yaw = -Math.PI / 2; h.taxi.tick();
+    assert.ok(Math.abs(Math.sin(rotation(arrow)) + 1) < 1e-10);
+  }
+  h.context.currentLang = 'zh'; h.taxi.render(); assert.equal(title.textContent, '绿色目的地'); assert.equal(distance.textContent, '100 米');
+  assert.match(navigation.attributes['aria-label'], /上方为车头前方/);
+  const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.city-taxi-navigation\[hidden\] \{ display: none; \}/);
+  assert.match(css, /#hud-left, #hud-right-card \{[^}]*var\(--hud-navigation-height, 0px\)/s);
+  assert.match(css, /\.taxi-navigation-active \{ --hud-navigation-height: 56px; \}/);
+  assert.doesNotMatch(css, /\.cockpit-view[^}]*\.city-taxi-navigation/);
+});
+
+test('navigation crosses north and +/-180 smoothly without a reverse full-turn jump', () => {
+  for (const boundary of [0, Math.PI, 2 * Math.PI, -2 * Math.PI]) {
+    const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+    Object.assign(h.state, { x: trip.destination.x, z: trip.destination.z + 100, y: 10, wasAirborne: true, yaw: boundary - 0.001 });
+    h.taxi.tick(); const before = rotation(navigationParts(h).arrow);
+    h.state.yaw = boundary + 0.001; h.taxi.tick();
+    const after = rotation(navigationParts(h).arrow);
+    assert.ok(Math.abs((after - before) - 0.002) < 1e-10);
+  }
+});
+
+test('menus pause passenger transitions without freezing the live vehicle-relative bearing', () => {
+  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+  Object.assign(h.state, { x: trip.destination.x, z: trip.destination.z + 100, yaw: 0 });
+  h.elements['modal-help'].classList.remove('hidden'); h.taxi.tick();
+  assert.ok(Math.abs(rotation(navigationParts(h).arrow)) < 1e-10);
+  h.state.yaw = Math.PI / 2; h.taxi.tick();
+  assert.ok(Math.abs(rotation(navigationParts(h).arrow) - Math.PI / 2) < 1e-10);
+  h.move(trip.destination); assert.equal(h.taxi.snapshot().passenger.id, trip.id);
+});
+
+test('delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space', () => {
+  for (const finish of ['delivery', 'destroy', 'reset', 'stop', 'map']) {
+    const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+    const { navigation, arrow } = navigationParts(h); assert.equal(navigation.hidden, false);
+    if (finish === 'delivery') h.move(trip.destination);
+    if (finish === 'destroy') { h.state.isDestroyed = true; h.taxi.onDestroyed(); h.taxi.onDestroyed(); }
+    if (finish === 'reset') h.taxi.onReset();
+    if (finish === 'stop') { h.taxi.stop(); h.taxi.stop(); }
+    if (finish === 'map') { h.context.currentMap = 'highway'; h.taxi.tick(); }
+    assert.equal(h.taxi.snapshot().passenger, null);
+    assert.equal(h.elements['hud-top-container'].classList.contains('taxi-navigation-active'), false);
+    if (finish === 'stop' || finish === 'map') assert.equal(navigation.parent, null);
+    else { assert.equal(navigation.hidden, true); assert.equal(arrow.style.transform, ''); }
+  }
+});
+
+test('short landscape notice space is bounded by the header, footer and occupied-trip row', () => {
+  const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  const rule = css.match(/#hud-top-container\.taxi-navigation-active \{([^}]+)\}/)[1];
+  assert.match(rule, /--hud-notice-space: min\(100px, max\(0px, calc\(100dvh - var\(--hud-header-height, 150px\) - var\(--hud-footer-height, 180px\) - var\(--hud-navigation-height\) - 32px\)\)\)/);
+  for (const height of [320, 360, 375, 600]) {
+    const header = height * 0.25, footer = height * 0.32, navigation = 56;
+    const notices = Math.min(100, Math.max(0, height - header - footer - navigation - 32));
+    const panels = Math.max(0, height - header - footer - notices - navigation - 16);
+    assert.ok(header + navigation + notices + 4 + panels <= height - footer);
+  }
 });
