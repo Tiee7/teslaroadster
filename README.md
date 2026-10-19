@@ -69,8 +69,8 @@ tesla_roadster_simulator_package/
 | **W** | 电驱加速 / 空中喷气 | 地面纯电驱动；空中自动调用冷气喷气推进并耗气 |
 | **; (分号)** | SpaceX 尾部火箭喷射 | 无论地面或空中均启动 4 喷口 80kN 极限火箭推进加速 |
 | **A / D** | 转向 / 空中车头偏航 (Yaw) | 地面阿克曼转向；空中控制机头水平转向 |
-| **H** | 脚刹制动 (Foot Brake) | 强力刹车，触发高位刹车灯并让活动尾翼立起 42° 气动减速 |
-| **S** | 倒车 / 反推制动 (Reverse) | 地面后退（亮倒车灯）；空中启动前鼻锥反推喷口减速 |
+| **H** | 脚刹制动 (Foot Brake) | 普通制动；超过 200 km/h 平滑联动共享气瓶逆喷，240 km/h 满功率；触发刹车灯与活动尾翼气动减速 |
+| **S** | 倒车 / 反推制动 (Reverse) | 地面后退（亮倒车灯）；超过 200 km/h 辅助制动；空中按实际运动方向联动逆喷减速 |
 | **U** | 手刹动量漂移 (Handbrake) | 切断后轮侧向摩擦，动力滑移过弯，松开立即恢复前进 |
 | **SPACE** | 垂直爬升 (Climb & Hover) | 点火 4 个底部升力喷口加速升空 (+30% 动力) |
 | **SHIFT** | 喷气主动下降 (Descend) | 点火顶部姿态喷口强制下压快速降落 |
@@ -139,7 +139,7 @@ Enable **Web Analytics** for the `teslaroadster` project in the Vercel dashboard
 
 Cockpit tank seconds, liters, fill and gas mass now use the current remaining-air value, including a true 0.0 kg when empty. The external gas-mass telemetry is also refreshed from the same frame's tank value. The cockpit mass readout sits below the tank, clear of the flight instruments and passenger status strip.
 
-While a passenger is on board, an upper-left arrow points directly toward the green destination relative to the car's heading: up means ahead, right means the car's right. It updates in every camera/HUD mode, shows straight-line horizontal distance, and disappears on delivery, passenger loss, reset or map exit. Its own layout row keeps it above the side controls on desktop and small screens. It is a bearing indicator, not a turn-by-turn road route.
+While a passenger is on board, an upper-left arrow points directly toward the green destination relative to the car's heading: up means ahead, right means the car's right. It updates in every camera/HUD mode and disappears on delivery, passenger loss, reset or map exit. Only the arrow is visible: the title, distance text and background frame are removed; a screen-reader label retains the direction context and distance. Its own layout row keeps it above the side controls on desktop and small screens. It is a bearing indicator, not a turn-by-turn road route.
 
 Regression checks cover full/partial/empty/recharging tanks, same-frame cockpit/external readings, cardinal and arbitrary vehicle headings, full-turn angle boundaries and passenger lifecycle cleanup. The available cloud environment cannot validate real WebGL gameplay or visual appearance.
 
@@ -150,3 +150,15 @@ HUD 的中等档保留两侧面板、相机入口、语言/设置/排行榜入�
 车内仪表重排为速度、清晰横向剩余气量槽（20% 警戒线、秒数、升数、质量）及接客信息。实体屏和转向舵盘位置微调，适配竖屏宽度，防止仪表被视场边缘、仪表台或转动舵盘遮挡。移除中央后视镜及支架；外部侧镜保持原状。
 
 撞毁弹窗显示与右侧遥测一致的驾驶总分；已开启城市接客时另显示扣分后的独立接客积分，保留排行榜状态。弹窗在小屏可滚动，修复/换地图按钮可达。
+
+## High-speed retro braking / 高速逆喷制动
+
+H foot braking automatically adds cold-gas retro thrust above 200 km/h on both maps. The demand feathers smoothly from zero at 200 to full thrust at 240 km/h, and tapers back to normal braking below the threshold. S also shares this high-speed assist while keeping its reverse-drive function; airborne H/S retain the existing low-speed manual retro control. Keyboard and touch buttons use the same controls. The established W/semicolon throttle priority remains: release the accelerator to engage H/S braking. U continues to be the momentum-preserving handbrake.
+
+The added force is limited to the package's 80 kN divided by current vehicle-plus-gas mass, approximately 40–43 m/s². Full retro demand uses 0.55 tank-seconds per second (33 L/s); feathered demand and the last available gas fraction scale the impulse and tank debit together. H+S requests a single retro burn. The impulse opposes actual world-space travel, including backward/vertical flight, and clamps at zero instead of accelerating through it. Exhaust selection follows the full 3D vehicle heading. Ground, roof and helipad refill pauses while retro jets fire. The flow display measures actual combined tank debits, and tank seconds/liters/mass remain shared across cockpit and HUD modes.
+
+Air brakes now retain passive aerodynamic drag, fixing the earlier behavior where H/S removed that drag and could slow less effectively than simply releasing the throttle. An empty tank still allows mechanical ground braking and passive air drag; retro depletion itself no longer adds an artificial downward velocity kick. S brakes an already-fast reverse landing progressively instead of instantly snapping its velocity to the reverse cruise limit. Foot brake plus handbrake retains ordinary braking below the retro threshold.
+
+The bottom-right city passenger score is a single live number, retaining the existing passenger-score calculation. The upper-left destination indicator is only its rotating arrow, with no visible title, distance text or background frame. Driver score, destination-bearing calculation, cockpit passenger status and scoring rules are unchanged.
+
+Regression coverage includes the 200/240 boundaries and both HUD speed units, supersonic speeds, 30/60/144 Hz threshold fade, full/partial/empty tanks, combined-jet accounting, refill exclusion on ground/roofs/helipads, forward/reverse/vertical/flipped travel, throttle/brake/handbrake combinations, touch release/cancel, and passenger-score lifecycle changes. The tests execute production movement, altitude, attitude, input and score code in deterministic frame harnesses. The available cloud environment cannot initialize WebGL, so these checks do not constitute real-browser gameplay or visual validation.

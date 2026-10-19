@@ -256,33 +256,23 @@ html, body {
 @media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }
 
 /* Occupied-trip bearing occupies a separate upper-left row above all side panels. */
-.taxi-navigation-active { --hud-navigation-height: 64px; }
+.taxi-navigation-active { --hud-navigation-height: 48px; }
 .city-taxi-navigation {
   display: flex; align-items: center; flex-shrink: 0; box-sizing: border-box;
-  height: var(--hud-navigation-height, 64px); padding: 4px 20px; pointer-events: none;
+  height: var(--hud-navigation-height, 48px); padding: 4px 20px; pointer-events: none;
+  border: 0; background: none;
+  /* Shadow the child's arrow silhouette after clipping, with no card surface. */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9));
 }
 .city-taxi-navigation[hidden] { display: none; }
-.city-taxi-navigation-card {
-  display: flex; align-items: center; gap: 10px; max-width: 100%; box-sizing: border-box;
-  height: 100%; padding: 5px 12px; border: 1px solid rgba(134, 239, 172, 0.6);
-  border-radius: 10px; background: rgba(4, 20, 16, 0.9); color: #dcfce7;
-}
-.city-taxi-navigation-dial {
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  width: 42px; height: 42px; border: 1px solid #3a6e51; border-radius: 50%;
-}
 .city-taxi-navigation-arrow {
-  display: block; width: 20px; height: 30px; background: #86efac;
+  display: block; flex-shrink: 0; width: 20px; height: 30px; background: #86efac;
   clip-path: polygon(50% 0, 100% 48%, 64% 48%, 64% 100%, 36% 100%, 36% 48%, 0 48%);
   transform-origin: center;
 }
-.city-taxi-navigation-detail { display: flex; flex-direction: column; min-width: 0; font-size: 12px; line-height: 1.4; }
-.city-taxi-navigation-detail strong { color: #86efac; font-size: 11px; overflow-wrap: anywhere; }
 @media (max-width: 767px) {
-  .taxi-navigation-active { --hud-navigation-height: 56px; }
+  .taxi-navigation-active { --hud-navigation-height: 40px; }
   .city-taxi-navigation { padding: 4px 12px; }
-  .city-taxi-navigation-card { gap: 8px; padding: 4px 9px; }
-  .city-taxi-navigation-dial { width: 34px; height: 34px; }
   .city-taxi-navigation-arrow { width: 16px; height: 26px; }
 }
 @media (max-width: 1100px) and (max-height: 600px) {
@@ -295,13 +285,13 @@ html, body {
 
 /* Created only after the hidden city mode has been explicitly enabled. */
 .city-taxi-hud {
-  align-self: flex-end; flex-shrink: 0; width: min(21rem, 100%);
-  display: flex; flex-direction: column; gap: 0.25rem; padding: 0.65rem 1rem;
+  align-self: flex-end; flex-shrink: 0; max-width: 100%; box-sizing: border-box;
+  display: flex; padding: 0.45rem 0.8rem;
   border: 1px solid rgba(134, 239, 172, 0.45); border-radius: 0.8rem;
   background: rgba(4, 20, 16, 0.86); color: #dcfce7; text-align: right;
-  font-size: 0.75rem; line-height: 1.4; pointer-events: none;
+  line-height: 1.2; pointer-events: none;
 }
-.city-taxi-hud strong { font-size: 0.85rem; color: #86efac; }
+.city-taxi-hud strong { font-size: 1.4rem; color: #86efac; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .taxi-footer-instruments {
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
   width: 100%; min-height: 0; flex: 1 1 auto; overflow-y: auto; pointer-events: auto;
@@ -310,11 +300,11 @@ html, body {
 /* FPV already has live speed and COPV instruments on the physical dashboard. */
 .cockpit-view #hud-cluster, .cockpit-view .city-taxi-hud { display: none !important; }
 @media (max-width: 767px) {
-  .city-taxi-hud { width: min(19rem, 100%); padding: 0.45rem 0.7rem; font-size: 0.65rem; }
-  .city-taxi-hud strong { font-size: 0.75rem; }
+  .city-taxi-hud { padding: 0.35rem 0.6rem; }
+  .city-taxi-hud strong { font-size: 1.1rem; }
 }
 @media (max-width: 1100px) and (max-height: 600px) {
-  /* Only the instruments scroll; the passenger row remains visible at the edge. */
+  /* Only the instruments scroll; the score remains visible at the edge. */
   #hud-footer.taxi-active { overflow: visible; padding: 8px; gap: 4px; }
 }
 
@@ -1188,6 +1178,7 @@ const I18N = {
     tankTitle: "SPACE-X COPV AIR TANK (600L)",
     badgeReady: "READY",
     badgeThrust: "THRUSTING",
+    badgeRetroBrake: "RETRO BRAKE",
     badge8sWarn: "8s AUTO-DESCENT",
     badgeDepleted: "EMPTY • FREEFALL",
     badgeRecharging: "RECHARGING",
@@ -1354,6 +1345,7 @@ const I18N = {
     tankTitle: "SpaceX 高压空气槽 (600L COPV)",
     badgeReady: "气瓶满压",
     badgeThrust: "喷气推进中",
+    badgeRetroBrake: "逆喷制动中",
     badge8sWarn: "8秒自动下降",
     badgeDepleted: "耗尽 • 自由落体",
     badgeRecharging: "地面快速充气",
@@ -4389,11 +4381,11 @@ const CityTaxiModel = (() => {
 // Scene adapter: no DOM entry, modal, HUD, or scene object exists before the secret key.
 (() => {
   'use strict';
-  let session = null, markerGroup = null, hud = null, scoreLabel = null, statusLabel = null, instrumentHost = null;
+  let session = null, markerGroup = null, hud = null, scoreLabel = null, instrumentHost = null;
   let beamGeometry = null, coreGeometry = null, ringGeometry = null;
   let whiteMaterial = null, greenMaterial = null, whiteCoreMaterial = null, greenCoreMaterial = null;
   let pickupMarkers = [], destinationMarker = null, lastEvent = null;
-  let navigation = null, navigationArrow = null, navigationTitle = null, navigationDistance = null, navigationRotation = null;
+  let navigation = null, navigationArrow = null, navigationRotation = null;
   const isZh = () => currentLang === 'zh';
   const position = () => ({ x: state.x, y: state.y, z: state.z });
   const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
@@ -4434,14 +4426,12 @@ const CityTaxiModel = (() => {
     hud = document.createElement('section');
     hud.id = 'city-taxi-hud';
     hud.className = 'city-taxi-hud';
-    hud.setAttribute('aria-label', isZh() ? '接客游戏' : 'City passenger game');
     scoreLabel = document.createElement('strong');
-    statusLabel = document.createElement('span');
-    hud.appendChild(scoreLabel); hud.appendChild(statusLabel);
+    hud.appendChild(scoreLabel);
     // Footer flow reserves real space for the mobile controls and side-panel bounds.
     const footer = document.getElementById('hud-footer');
     if (footer) {
-      // Keep this final status row outside the scroll area on short landscapes.
+      // Keep the score outside the scroll area on short landscapes.
       // Move the existing controls, retaining their DOM nodes and input listeners.
       instrumentHost = document.createElement('div');
       instrumentHost.className = 'taxi-footer-instruments';
@@ -4452,14 +4442,9 @@ const CityTaxiModel = (() => {
     navigation = document.createElement('section');
     navigation.id = 'city-taxi-navigation'; navigation.className = 'city-taxi-navigation'; navigation.hidden = true;
     navigation.setAttribute('role', 'img');
-    const card = document.createElement('div'); card.className = 'city-taxi-navigation-card';
-    const dial = document.createElement('span'); dial.className = 'city-taxi-navigation-dial'; dial.setAttribute('aria-hidden', 'true');
     navigationArrow = document.createElement('span'); navigationArrow.className = 'city-taxi-navigation-arrow';
-    dial.appendChild(navigationArrow);
-    const detail = document.createElement('span'); detail.className = 'city-taxi-navigation-detail';
-    navigationTitle = document.createElement('strong'); navigationDistance = document.createElement('span');
-    detail.appendChild(navigationTitle); detail.appendChild(navigationDistance);
-    card.appendChild(dial); card.appendChild(detail); navigation.appendChild(card);
+    navigationArrow.setAttribute('aria-hidden', 'true');
+    navigation.appendChild(navigationArrow);
     // A real row above the side panels stays upper-left even with full controls,
     // minimal HUD or cockpit active. Its height is reserved in the panel bounds.
     const top = document.getElementById('hud-top-container'), main = document.getElementById('hud-main');
@@ -4484,8 +4469,6 @@ const CityTaxiModel = (() => {
     navigationRotation = navigationRotation === null ? bearing.radians
       : navigationRotation + Math.atan2(Math.sin(bearing.radians - navigationRotation), Math.cos(bearing.radians - navigationRotation));
     navigationArrow.style.transform = `rotate(${navigationRotation}rad)`;
-    navigationTitle.textContent = isZh() ? '绿色目的地' : 'GREEN DESTINATION';
-    navigationDistance.textContent = `${Math.round(bearing.meters)} ${isZh() ? '米' : 'm'}`;
     navigation.setAttribute('aria-label', isZh()
       ? `绿色目的地方向，距离 ${Math.round(bearing.meters)} 米；箭头上方为车头前方`
       : `Green destination direction, ${Math.round(bearing.meters)} meters; up is ahead of the car`);
@@ -4505,20 +4488,8 @@ const CityTaxiModel = (() => {
     if (!hud) return;
     renderNavigation();
     const data = snapshot();
-    scoreLabel.textContent = isZh()
-      ? `接客积分 ${data.score.toLocaleString()} · 已送达 ${data.delivered} 位`
-      : `Passenger score ${data.score.toLocaleString()} · ${data.delivered} delivered`;
-    hud.setAttribute('aria-label', isZh() ? '接客游戏' : 'City passenger game');
-    if (data.passenger) {
-      statusLabel.textContent = isZh()
-        ? `前往绿色光柱 · 路程 ${data.passenger.routeMeters} 米 · 送达 +${data.passenger.fare}`
-        : `Green column · ${data.passenger.routeMeters}m route · Fare +${data.passenger.fare}`;
-    } else {
-      const notice = lastEvent?.type === 'passenger-lost'
-        ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · ` : `Passenger lost · Double penalty ${lastEvent.penalty} · `)
-        : lastEvent?.type === 'delivered' ? (isZh() ? `送达 +${lastEvent.trip.fare} · ` : `Delivered +${lastEvent.trip.fare} · `) : '';
-      statusLabel.textContent = notice + (isZh() ? `白色光柱 · ${data.waiting.length} 位乘客等待接送` : `White columns · ${data.waiting.length} passengers waiting`);
-    }
+    scoreLabel.textContent = data.score.toLocaleString();
+    hud.setAttribute('aria-label', isZh() ? `接客积分 ${scoreLabel.textContent}` : `Passenger score ${scoreLabel.textContent}`);
   }
   function drawCockpit(ctx) {
     const data = snapshot();
@@ -4555,14 +4526,14 @@ const CityTaxiModel = (() => {
     hud?.remove();
     navigation?.remove();
     document.getElementById('hud-top-container')?.classList.remove('taxi-navigation-active');
-    navigation = null; navigationArrow = null; navigationTitle = null; navigationDistance = null; navigationRotation = null;
+    navigation = null; navigationArrow = null; navigationRotation = null;
     const footer = document.getElementById('hud-footer');
     if (instrumentHost && footer) {
       for (const child of [...instrumentHost.children]) footer.appendChild(child);
     }
     instrumentHost?.remove(); instrumentHost = null;
     footer?.classList.remove('taxi-active');
-    markerGroup = null; hud = null; scoreLabel = null; statusLabel = null;
+    markerGroup = null; hud = null; scoreLabel = null;
     beamGeometry = null; coreGeometry = null; ringGeometry = null;
     whiteMaterial = null; greenMaterial = null; whiteCoreMaterial = null; greenCoreMaterial = null;
     pickupMarkers = []; destinationMarker = null;
@@ -6591,6 +6562,23 @@ function wrapAnglePi(rad) {
   return ((rad + Math.PI) % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2) - Math.PI;
 }
 
+// Retro thrust is bounded by the existing 80 kN cold-gas package, rather than
+// increasing tire braking without limit. 200-240 km/h smoothstep avoids a kick
+// at the threshold and feathers the shared tank use with exactly the same duty.
+const RETRO_BRAKE_START_MPS = 200 / 3.6;
+const RETRO_BRAKE_FULL_MPS = 240 / 3.6;
+const RETRO_BRAKE_FORCE_N = 80000;
+const RETRO_BRAKE_BURN_PER_SECOND = 0.55;
+
+function getRetroBrakeDemand(speedMps, isAirborne) {
+  const blend = Math.max(0, Math.min(1,
+    (speedMps - RETRO_BRAKE_START_MPS) / (RETRO_BRAKE_FULL_MPS - RETRO_BRAKE_START_MPS)));
+  const highSpeedDemand = blend * blend * (3 - 2 * blend);
+  // Preserve the existing airborne H/S manual retro control at low speeds.
+  // Feather it near rest so a stopped vehicle cannot spend fuel indefinitely.
+  return isAirborne ? Math.max(highSpeedDemand, Math.min(1, speedMps)) : highSpeedDemand;
+}
+
 function readAttitudeInput(isAirborne) {
   // Touch controls use the same key state as the keyboard and arrow aliases.
   const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
@@ -6731,8 +6719,10 @@ function updateSimulation(dt) {
   const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
   // Unified COPV Air Tank Consumption Helper (Requirement 3: ALL airborne thrusters & ';' rear boost consume tank)
-  function consumeAirTank(amount, airborneNow) {
+  let airConsumedThisFrame = 0;
+  function consumeAirTank(amount, airborneNow, depletionImpulse = true) {
     if (amount <= 0 || state.isFreefalling || state.airRemaining <= 0) return false;
+    const airBefore = state.airRemaining;
     state.airRemaining = Math.max(0.0, state.airRemaining - amount);
     state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
     if (state.airRemaining <= 0.001) {
@@ -6742,11 +6732,14 @@ function updateSimulation(dt) {
       state.isAutoDescending8s = false;
       state.isAltitudeHold = false;
       state.isJumping6m = false;
-      if (airborneNow) {
+      // Retro depletion must not inject a downward impulse into the velocity
+      // it is braking. Gravity still takes over in the altitude controller.
+      if (airborneNow && depletionImpulse) {
         state.vy = Math.min(-12.0, state.vy - 10.0);
       }
       showBanner('freefall', 3.5);
       sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
+      airConsumedThisFrame += airBefore - state.airRemaining;
       return false;
     } else if (state.airUsedContinuous >= AUTO_DESCENT_USED_SECONDS && airborneNow) {
       if (!state.isAutoDescending8s) {
@@ -6755,6 +6748,7 @@ function updateSimulation(dt) {
         sound.speakAlert('8s', 'Warning: Low tank pressure. Auto-descent engaged.', '警告：气瓶压力低于百分之二十，自动下降已启动。');
       }
     }
+    airConsumedThisFrame += airBefore - state.airRemaining;
     return true;
   }
 
@@ -6818,6 +6812,26 @@ function updateSimulation(dt) {
   }
   canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
 
+  // One brake request and one COPV charge, shared by H and S. Throttle's
+  // established priority above remains unchanged, including touch controls.
+  const brakeTravelSpeed = isAirborne
+    ? Math.hypot(state.vx, state.vy, state.vz)
+    : (currentMap === 'highway' ? Math.abs(state.speed) : Math.hypot(state.vx, state.vz));
+  const retroBrakeDemand = (isFootBraking || isReversing)
+    ? getRetroBrakeDemand(brakeTravelSpeed, isAirborne) : 0;
+  let retroImpulseSeconds = 0;
+  if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
+    const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
+    const airBefore = state.airRemaining;
+    consumeAirTank(Math.min(airBefore, requestedAir), isAirborne, false);
+    // The final fraction of a nearly empty tank supplies only its proportional
+    // impulse, even when consumeAirTank returns false on depletion.
+    retroImpulseSeconds = Math.min(requestedAir, airBefore - state.airRemaining) / RETRO_BRAKE_BURN_PER_SECOND;
+  }
+  const isRetroBrakeFiring = retroImpulseSeconds > 0;
+  const retroBrakeAccel = RETRO_BRAKE_FORCE_N / currentVehicleMass;
+  canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
+
   // Ground steering uses A / D only (J / L are exclusively Roll!)
   const steerLeft = Boolean(keys['KeyA']);
   const steerRight = Boolean(keys['KeyD']);
@@ -6869,11 +6883,10 @@ function updateSimulation(dt) {
       }
     } else {
       const horizMag = Math.hypot(state.vx, state.vz);
-      const isAirBrake = isFootBraking || isReversing;
       const airStallDecel = 15.5 + 0.0085 * horizMag * horizMag;
-      const nextMag = isAirBrake
-        ? (canUseRCS ? Math.max(0, horizMag - 38.0 * dt) : horizMag)
-        : Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
+      // Braking must retain passive air resistance. Previously H/S replaced
+      // this drag with a weaker 38 m/s² and removed all braking when empty.
+      const nextMag = Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
       const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
       state.vx *= coastScale;
       state.vz *= coastScale;
@@ -6901,6 +6914,22 @@ function updateSimulation(dt) {
   }
   state.wasAirborne = isAirborne;
 
+  // Apply the paid impulse opposite actual travel, never camera/nose heading.
+  // A scalar clamp preserves direction and cannot propel the car through zero.
+  const retroTravelSpeed = isAirborne ? Math.hypot(state.vx, state.vy, state.vz)
+    : (currentMap === 'highway' ? Math.abs(state.speed) : Math.hypot(state.vx, state.vz));
+  const retroScale = retroTravelSpeed > 0
+    ? Math.max(0, retroTravelSpeed - retroBrakeAccel * retroImpulseSeconds) / retroTravelSpeed : 0;
+  const retroUsesRearNozzles = isAirborne
+    ? (state.vx * noseHorizX * nosePitchCos + state.vy * nosePitchSin + state.vz * noseHorizZ * nosePitchCos) < 0
+    : (state.vx * noseHorizX + state.vz * noseHorizZ) < 0;
+  if (isRetroBrakeFiring) {
+    state.vx *= retroScale;
+    state.vz *= retroScale;
+    if (isAirborne) state.vy *= retroScale;
+    state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * retroScale;
+  }
+
   if (currentMap === 'highway') {
     if (!isAirborne) {
       // Ground mode on highway
@@ -6922,6 +6951,10 @@ function updateSimulation(dt) {
       } else if (isReversing) {
         if (state.speed > 0.3) {
           state.speed *= Math.pow(0.95, dt);
+        } else if (state.speed < -15.0) {
+          // A fast backward landing brakes toward reverse cruise; the reverse
+          // speed limit must never teleport existing momentum to -15 m/s.
+          state.speed = Math.min(-15.0, state.speed + 38.0 * dt);
         } else {
           state.speed = Math.max(-15.0, state.speed - 16.0 * dt);
         }
@@ -6958,13 +6991,13 @@ function updateSimulation(dt) {
           state.vx += (driftSlideVx + noseThrustVx - state.vx) * 9.5 * dt;
           if (!isAccelerating) {
             // Very light tire-scrub (~1.2 m/s²) so handbrake never locks/stops the car
-            state.speed = Math.max(0.0, state.speed - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
           }
         } else {
           state.isDrifting = false;
           state.driftAngle *= Math.pow(0.05, dt);
           if (!isAccelerating) {
-            state.speed = Math.max(0.0, state.speed - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
           }
         }
       } else {
@@ -7039,6 +7072,8 @@ function updateSimulation(dt) {
           state.driftAngle *= Math.pow(0.15, dt);
         } else if (isAccelerating) {
           signedSpd = Math.min(state.maxSpeed * 0.94, signedSpd + currentGroundAccel * 0.85 * dt);
+        } else if (isFootBraking) {
+          signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * dt);
         } else {
           // Very gentle tire-scrub (~1.2 m/s²) while coasting in handbrake drift
           if (signedSpd > 0) {
@@ -7102,6 +7137,8 @@ function updateSimulation(dt) {
         } else if (isReversing) {
           if (vForward > 0.3) {
             vForward *= Math.pow(0.95, dt);
+          } else if (vForward < -15.0) {
+            vForward = Math.min(-15.0, vForward + 38.0 * dt);
           } else {
             vForward = Math.max(-15.0, vForward - 16.0 * dt);
           }
@@ -7341,8 +7378,8 @@ function updateSimulation(dt) {
       if (state.isDestroyed) return;
     }
 
-    // Only recharge on ground when NOT firing hover or ';' rear rocket thrusters
-    if ((!wantsHover && !isRearThrusterFiring) || state.isFreefalling) {
+    // A firing retro jet uses the same tank; never recharge over its burn.
+    if (!isRetroBrakeFiring && ((!wantsHover && !isRearThrusterFiring) || state.isFreefalling)) {
       state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + 3.4 * dt);
       state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
       if (state.airRemaining > 2.2) state.isAutoDescending8s = false;
@@ -7479,16 +7516,19 @@ function updateSimulation(dt) {
             if (state.isDestroyed) return;
           }
 
-          const rechargeRate = b.isHelipad ? 10.0 : 4.0;
-          state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + rechargeRate * dt);
-          state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
-          state.isFreefalling = false;
-          state.isAutoDescending8s = false;
+          // Roofs/helipads obey the same no-refill-while-firing rule as roads.
+          if (!isRetroBrakeFiring && !isRearThrusterFiring && !isLiftFiring && !isDescendFiring) {
+            const rechargeRate = b.isHelipad ? 10.0 : 4.0;
+            state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + rechargeRate * dt);
+            state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
+            state.isFreefalling = false;
+            state.isAutoDescending8s = false;
+          }
           if (b.isHelipad && !state.hasTriggeredHelipad) {
             state.hasTriggeredHelipad = true;
             state.score += 300;
             showBanner('helipad', 2.8);
-            sound.speakAlert('helipad', 'Helipad touchdown. Tank pressure restored to one hundred percent.', '停机坪降落成功，高压气瓶已补满。');
+            sound.speakAlert('helipad', 'Helipad touchdown. Release thrusters to recharge the tank.', '停机坪降落成功，松开喷气后补充高压气瓶。');
           }
         } else if (state.y < b.height - 0.55) {
           const impactSpeed = Math.hypot(state.vx, state.vz, state.vy * 0.5);
@@ -7582,7 +7622,7 @@ function updateSimulation(dt) {
 
   const isCockpitFpv = (cameraModeIndex === 3);
   const flicker = 0.82 + Math.random() * 0.36;
-  const rearActive = isRearThrusterFiring;
+  const rearActive = isRearThrusterFiring || (isRetroBrakeFiring && retroUsesRearNozzles);
   rearPlumes.forEach(p => {
     p.visible = rearActive && !isCockpitFpv;
     p.scale.set(1, flicker, 1);
@@ -7597,11 +7637,8 @@ function updateSimulation(dt) {
     p.scale.set(1, flicker, 1);
   });
 
-  // Mid-air retro braking (H or S when throttle W/; is not pressed) consumes COPV tank
-  let isFrontRetroFiring = false;
-  if (isAirborne && (isFootBraking || isReversing) && canUseRCS) {
-    isFrontRetroFiring = consumeAirTank(0.55 * dt, true);
-  }
+  // Rendering reads the already-paid brake request. It never consumes fuel.
+  const isFrontRetroFiring = isRetroBrakeFiring && !retroUsesRearNozzles;
   frontRetroPlumes.forEach(p => {
     p.visible = isFrontRetroFiring && !isCockpitFpv;
     p.scale.set(1, flicker, 1);
@@ -8154,11 +8191,9 @@ function updateSimulation(dt) {
 
   const flowEl = document.getElementById('val-air-flow');
   if (flowEl) {
-    let flowLps = 0;
-    if (rearActive) flowLps += 51;
-    if (isLiftFiring) flowLps += (state.isJumping6m ? 180 : 60);
-    if (isDescendFiring || isFrontRetroFiring) flowLps += 33;
-    if (rcsRollPitchActive || rcsYawRetroActive) flowLps += 23;
+    // 600 L / 10 tank-seconds. Measure the actual shared ledger, including
+    // feathered/partial retro burns, without counting the same nozzle twice.
+    const flowLps = dt > 0 ? Math.round(airConsumedThisFrame * 60 / dt) : 0;
     flowEl.textContent = flowLps > 0 ? `FLOW: ${flowLps} L/s` : 'FLOW: 0 L/s';
     flowEl.className = flowLps > 0 
       ? 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/25 text-cyan-300 border border-cyan-400/50 warning-pulse'
@@ -8199,6 +8234,12 @@ function updateSimulation(dt) {
     tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-300 border border-amber-400';
     modeBadge.textContent = t.modeAutoDescend;
     modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-300';
+  } else if (isRetroBrakeFiring) {
+    barFill.className = 'h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75';
+    tankBadge.textContent = t.badgeRetroBrake;
+    tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-200 border border-cyan-400';
+    modeBadge.textContent = t.badgeRetroBrake;
+    modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-300';
   } else if (isLiftFiring) {
     barFill.className = 'h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75';
     tankBadge.textContent = t.badgeThrust;

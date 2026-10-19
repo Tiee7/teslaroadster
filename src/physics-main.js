@@ -331,6 +331,23 @@ function wrapAnglePi(rad) {
   return ((rad + Math.PI) % (Math.PI * 2) + (Math.PI * 2)) % (Math.PI * 2) - Math.PI;
 }
 
+// Retro thrust is bounded by the existing 80 kN cold-gas package, rather than
+// increasing tire braking without limit. 200-240 km/h smoothstep avoids a kick
+// at the threshold and feathers the shared tank use with exactly the same duty.
+const RETRO_BRAKE_START_MPS = 200 / 3.6;
+const RETRO_BRAKE_FULL_MPS = 240 / 3.6;
+const RETRO_BRAKE_FORCE_N = 80000;
+const RETRO_BRAKE_BURN_PER_SECOND = 0.55;
+
+function getRetroBrakeDemand(speedMps, isAirborne) {
+  const blend = Math.max(0, Math.min(1,
+    (speedMps - RETRO_BRAKE_START_MPS) / (RETRO_BRAKE_FULL_MPS - RETRO_BRAKE_START_MPS)));
+  const highSpeedDemand = blend * blend * (3 - 2 * blend);
+  // Preserve the existing airborne H/S manual retro control at low speeds.
+  // Feather it near rest so a stopped vehicle cannot spend fuel indefinitely.
+  return isAirborne ? Math.max(highSpeedDemand, Math.min(1, speedMps)) : highSpeedDemand;
+}
+
 function readAttitudeInput(isAirborne) {
   // Touch controls use the same key state as the keyboard and arrow aliases.
   const rollLeft = Boolean(keys['KeyJ'] || keys['ArrowLeft']);
@@ -471,8 +488,10 @@ function updateSimulation(dt) {
   const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
   // Unified COPV Air Tank Consumption Helper (Requirement 3: ALL airborne thrusters & ';' rear boost consume tank)
-  function consumeAirTank(amount, airborneNow) {
+  let airConsumedThisFrame = 0;
+  function consumeAirTank(amount, airborneNow, depletionImpulse = true) {
     if (amount <= 0 || state.isFreefalling || state.airRemaining <= 0) return false;
+    const airBefore = state.airRemaining;
     state.airRemaining = Math.max(0.0, state.airRemaining - amount);
     state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
     if (state.airRemaining <= 0.001) {
@@ -482,11 +501,14 @@ function updateSimulation(dt) {
       state.isAutoDescending8s = false;
       state.isAltitudeHold = false;
       state.isJumping6m = false;
-      if (airborneNow) {
+      // Retro depletion must not inject a downward impulse into the velocity
+      // it is braking. Gravity still takes over in the altitude controller.
+      if (airborneNow && depletionImpulse) {
         state.vy = Math.min(-12.0, state.vy - 10.0);
       }
       showBanner('freefall', 3.5);
       sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
+      airConsumedThisFrame += airBefore - state.airRemaining;
       return false;
     } else if (state.airUsedContinuous >= AUTO_DESCENT_USED_SECONDS && airborneNow) {
       if (!state.isAutoDescending8s) {
@@ -495,6 +517,7 @@ function updateSimulation(dt) {
         sound.speakAlert('8s', 'Warning: Low tank pressure. Auto-descent engaged.', '警告：气瓶压力低于百分之二十，自动下降已启动。');
       }
     }
+    airConsumedThisFrame += airBefore - state.airRemaining;
     return true;
   }
 
@@ -558,6 +581,26 @@ function updateSimulation(dt) {
   }
   canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
 
+  // One brake request and one COPV charge, shared by H and S. Throttle's
+  // established priority above remains unchanged, including touch controls.
+  const brakeTravelSpeed = isAirborne
+    ? Math.hypot(state.vx, state.vy, state.vz)
+    : (currentMap === 'highway' ? Math.abs(state.speed) : Math.hypot(state.vx, state.vz));
+  const retroBrakeDemand = (isFootBraking || isReversing)
+    ? getRetroBrakeDemand(brakeTravelSpeed, isAirborne) : 0;
+  let retroImpulseSeconds = 0;
+  if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
+    const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
+    const airBefore = state.airRemaining;
+    consumeAirTank(Math.min(airBefore, requestedAir), isAirborne, false);
+    // The final fraction of a nearly empty tank supplies only its proportional
+    // impulse, even when consumeAirTank returns false on depletion.
+    retroImpulseSeconds = Math.min(requestedAir, airBefore - state.airRemaining) / RETRO_BRAKE_BURN_PER_SECOND;
+  }
+  const isRetroBrakeFiring = retroImpulseSeconds > 0;
+  const retroBrakeAccel = RETRO_BRAKE_FORCE_N / currentVehicleMass;
+  canUseRCS = !state.isFreefalling && state.airRemaining > 0.005;
+
   // Ground steering uses A / D only (J / L are exclusively Roll!)
   const steerLeft = Boolean(keys['KeyA']);
   const steerRight = Boolean(keys['KeyD']);
@@ -609,11 +652,10 @@ function updateSimulation(dt) {
       }
     } else {
       const horizMag = Math.hypot(state.vx, state.vz);
-      const isAirBrake = isFootBraking || isReversing;
       const airStallDecel = 15.5 + 0.0085 * horizMag * horizMag;
-      const nextMag = isAirBrake
-        ? (canUseRCS ? Math.max(0, horizMag - 38.0 * dt) : horizMag)
-        : Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
+      // Braking must retain passive air resistance. Previously H/S replaced
+      // this drag with a weaker 38 m/s² and removed all braking when empty.
+      const nextMag = Math.max(0, horizMag * Math.pow(0.45, dt) - airStallDecel * dt);
       const coastScale = horizMag > 0 ? nextMag / horizMag : 0;
       state.vx *= coastScale;
       state.vz *= coastScale;
@@ -641,6 +683,22 @@ function updateSimulation(dt) {
   }
   state.wasAirborne = isAirborne;
 
+  // Apply the paid impulse opposite actual travel, never camera/nose heading.
+  // A scalar clamp preserves direction and cannot propel the car through zero.
+  const retroTravelSpeed = isAirborne ? Math.hypot(state.vx, state.vy, state.vz)
+    : (currentMap === 'highway' ? Math.abs(state.speed) : Math.hypot(state.vx, state.vz));
+  const retroScale = retroTravelSpeed > 0
+    ? Math.max(0, retroTravelSpeed - retroBrakeAccel * retroImpulseSeconds) / retroTravelSpeed : 0;
+  const retroUsesRearNozzles = isAirborne
+    ? (state.vx * noseHorizX * nosePitchCos + state.vy * nosePitchSin + state.vz * noseHorizZ * nosePitchCos) < 0
+    : (state.vx * noseHorizX + state.vz * noseHorizZ) < 0;
+  if (isRetroBrakeFiring) {
+    state.vx *= retroScale;
+    state.vz *= retroScale;
+    if (isAirborne) state.vy *= retroScale;
+    state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * retroScale;
+  }
+
   if (currentMap === 'highway') {
     if (!isAirborne) {
       // Ground mode on highway
@@ -662,6 +720,10 @@ function updateSimulation(dt) {
       } else if (isReversing) {
         if (state.speed > 0.3) {
           state.speed *= Math.pow(0.95, dt);
+        } else if (state.speed < -15.0) {
+          // A fast backward landing brakes toward reverse cruise; the reverse
+          // speed limit must never teleport existing momentum to -15 m/s.
+          state.speed = Math.min(-15.0, state.speed + 38.0 * dt);
         } else {
           state.speed = Math.max(-15.0, state.speed - 16.0 * dt);
         }
@@ -698,13 +760,13 @@ function updateSimulation(dt) {
           state.vx += (driftSlideVx + noseThrustVx - state.vx) * 9.5 * dt;
           if (!isAccelerating) {
             // Very light tire-scrub (~1.2 m/s²) so handbrake never locks/stops the car
-            state.speed = Math.max(0.0, state.speed - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
           }
         } else {
           state.isDrifting = false;
           state.driftAngle *= Math.pow(0.05, dt);
           if (!isAccelerating) {
-            state.speed = Math.max(0.0, state.speed - 1.2 * dt);
+            state.speed = Math.sign(state.speed) * Math.max(0.0, Math.abs(state.speed) - 1.2 * dt);
           }
         }
       } else {
@@ -779,6 +841,8 @@ function updateSimulation(dt) {
           state.driftAngle *= Math.pow(0.15, dt);
         } else if (isAccelerating) {
           signedSpd = Math.min(state.maxSpeed * 0.94, signedSpd + currentGroundAccel * 0.85 * dt);
+        } else if (isFootBraking) {
+          signedSpd = Math.sign(signedSpd) * Math.max(0, Math.abs(signedSpd) - 38.0 * dt);
         } else {
           // Very gentle tire-scrub (~1.2 m/s²) while coasting in handbrake drift
           if (signedSpd > 0) {
@@ -842,6 +906,8 @@ function updateSimulation(dt) {
         } else if (isReversing) {
           if (vForward > 0.3) {
             vForward *= Math.pow(0.95, dt);
+          } else if (vForward < -15.0) {
+            vForward = Math.min(-15.0, vForward + 38.0 * dt);
           } else {
             vForward = Math.max(-15.0, vForward - 16.0 * dt);
           }
@@ -1081,8 +1147,8 @@ function updateSimulation(dt) {
       if (state.isDestroyed) return;
     }
 
-    // Only recharge on ground when NOT firing hover or ';' rear rocket thrusters
-    if ((!wantsHover && !isRearThrusterFiring) || state.isFreefalling) {
+    // A firing retro jet uses the same tank; never recharge over its burn.
+    if (!isRetroBrakeFiring && ((!wantsHover && !isRearThrusterFiring) || state.isFreefalling)) {
       state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + 3.4 * dt);
       state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
       if (state.airRemaining > 2.2) state.isAutoDescending8s = false;
@@ -1219,16 +1285,19 @@ function updateSimulation(dt) {
             if (state.isDestroyed) return;
           }
 
-          const rechargeRate = b.isHelipad ? 10.0 : 4.0;
-          state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + rechargeRate * dt);
-          state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
-          state.isFreefalling = false;
-          state.isAutoDescending8s = false;
+          // Roofs/helipads obey the same no-refill-while-firing rule as roads.
+          if (!isRetroBrakeFiring && !isRearThrusterFiring && !isLiftFiring && !isDescendFiring) {
+            const rechargeRate = b.isHelipad ? 10.0 : 4.0;
+            state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + rechargeRate * dt);
+            state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
+            state.isFreefalling = false;
+            state.isAutoDescending8s = false;
+          }
           if (b.isHelipad && !state.hasTriggeredHelipad) {
             state.hasTriggeredHelipad = true;
             state.score += 300;
             showBanner('helipad', 2.8);
-            sound.speakAlert('helipad', 'Helipad touchdown. Tank pressure restored to one hundred percent.', '停机坪降落成功，高压气瓶已补满。');
+            sound.speakAlert('helipad', 'Helipad touchdown. Release thrusters to recharge the tank.', '停机坪降落成功，松开喷气后补充高压气瓶。');
           }
         } else if (state.y < b.height - 0.55) {
           const impactSpeed = Math.hypot(state.vx, state.vz, state.vy * 0.5);
@@ -1322,7 +1391,7 @@ function updateSimulation(dt) {
 
   const isCockpitFpv = (cameraModeIndex === 3);
   const flicker = 0.82 + Math.random() * 0.36;
-  const rearActive = isRearThrusterFiring;
+  const rearActive = isRearThrusterFiring || (isRetroBrakeFiring && retroUsesRearNozzles);
   rearPlumes.forEach(p => {
     p.visible = rearActive && !isCockpitFpv;
     p.scale.set(1, flicker, 1);
@@ -1337,11 +1406,8 @@ function updateSimulation(dt) {
     p.scale.set(1, flicker, 1);
   });
 
-  // Mid-air retro braking (H or S when throttle W/; is not pressed) consumes COPV tank
-  let isFrontRetroFiring = false;
-  if (isAirborne && (isFootBraking || isReversing) && canUseRCS) {
-    isFrontRetroFiring = consumeAirTank(0.55 * dt, true);
-  }
+  // Rendering reads the already-paid brake request. It never consumes fuel.
+  const isFrontRetroFiring = isRetroBrakeFiring && !retroUsesRearNozzles;
   frontRetroPlumes.forEach(p => {
     p.visible = isFrontRetroFiring && !isCockpitFpv;
     p.scale.set(1, flicker, 1);
@@ -1894,11 +1960,9 @@ function updateSimulation(dt) {
 
   const flowEl = document.getElementById('val-air-flow');
   if (flowEl) {
-    let flowLps = 0;
-    if (rearActive) flowLps += 51;
-    if (isLiftFiring) flowLps += (state.isJumping6m ? 180 : 60);
-    if (isDescendFiring || isFrontRetroFiring) flowLps += 33;
-    if (rcsRollPitchActive || rcsYawRetroActive) flowLps += 23;
+    // 600 L / 10 tank-seconds. Measure the actual shared ledger, including
+    // feathered/partial retro burns, without counting the same nozzle twice.
+    const flowLps = dt > 0 ? Math.round(airConsumedThisFrame * 60 / dt) : 0;
     flowEl.textContent = flowLps > 0 ? `FLOW: ${flowLps} L/s` : 'FLOW: 0 L/s';
     flowEl.className = flowLps > 0 
       ? 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/25 text-cyan-300 border border-cyan-400/50 warning-pulse'
@@ -1939,6 +2003,12 @@ function updateSimulation(dt) {
     tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-300 border border-amber-400';
     modeBadge.textContent = t.modeAutoDescend;
     modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-300';
+  } else if (isRetroBrakeFiring) {
+    barFill.className = 'h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75';
+    tankBadge.textContent = t.badgeRetroBrake;
+    tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-200 border border-cyan-400';
+    modeBadge.textContent = t.badgeRetroBrake;
+    modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-300';
   } else if (isLiftFiring) {
     barFill.className = 'h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75';
     tankBadge.textContent = t.badgeThrust;

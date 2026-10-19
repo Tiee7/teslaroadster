@@ -19,7 +19,7 @@ function section(source, start, end, from = 0) {
 // Scene geometry and the separate gravity/altitude controller are outside this focused harness.
 const helpers = section(physics, 'function wrapAnglePi(', 'function updateSimulation(');
 const input = section(physics, '  const isAirborne =', '  // Unified COPV Air Tank');
-const airTank = section(physics, '  function consumeAirTank(', '  let canUseRCS =');
+const airTank = section(physics, '  let airConsumedThisFrame =', '  let canUseRCS =');
 const movementSetup = section(physics, '  const isRealMode =', '  let groundElevation =');
 const movement = section(physics, '  let canUseRCS =', '  const wantsHover =');
 const roadScroll = section(physics, '  // Highway road markings & arches scroll', '  trafficCars.forEach');
@@ -339,7 +339,8 @@ test('air braking and Q/E strafe remain responsive in either travel direction wi
       for (const direction of [1, -1]) {
         const h = harness({ pitch: Math.PI, vz: direction * 20, speed: 20 }, map);
         h.keys[code] = true; h.move(1 / 60);
-        close(h.state.vz, direction * (20 - 38 / 60));
+        const passiveSpeed = 20 * Math.pow(0.45, 1 / 60) - (15.5 + 0.0085 * 20 * 20) / 60;
+        close(h.state.vz, direction * (passiveSpeed - (80000 / (1850 + 144)) / 60));
         close(h.state.speed, Math.abs(h.state.vz));
       }
     }

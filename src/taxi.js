@@ -166,11 +166,11 @@ const CityTaxiModel = (() => {
 // Scene adapter: no DOM entry, modal, HUD, or scene object exists before the secret key.
 (() => {
   'use strict';
-  let session = null, markerGroup = null, hud = null, scoreLabel = null, statusLabel = null, instrumentHost = null;
+  let session = null, markerGroup = null, hud = null, scoreLabel = null, instrumentHost = null;
   let beamGeometry = null, coreGeometry = null, ringGeometry = null;
   let whiteMaterial = null, greenMaterial = null, whiteCoreMaterial = null, greenCoreMaterial = null;
   let pickupMarkers = [], destinationMarker = null, lastEvent = null;
-  let navigation = null, navigationArrow = null, navigationTitle = null, navigationDistance = null, navigationRotation = null;
+  let navigation = null, navigationArrow = null, navigationRotation = null;
   const isZh = () => currentLang === 'zh';
   const position = () => ({ x: state.x, y: state.y, z: state.z });
   const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
@@ -211,14 +211,12 @@ const CityTaxiModel = (() => {
     hud = document.createElement('section');
     hud.id = 'city-taxi-hud';
     hud.className = 'city-taxi-hud';
-    hud.setAttribute('aria-label', isZh() ? '接客游戏' : 'City passenger game');
     scoreLabel = document.createElement('strong');
-    statusLabel = document.createElement('span');
-    hud.appendChild(scoreLabel); hud.appendChild(statusLabel);
+    hud.appendChild(scoreLabel);
     // Footer flow reserves real space for the mobile controls and side-panel bounds.
     const footer = document.getElementById('hud-footer');
     if (footer) {
-      // Keep this final status row outside the scroll area on short landscapes.
+      // Keep the score outside the scroll area on short landscapes.
       // Move the existing controls, retaining their DOM nodes and input listeners.
       instrumentHost = document.createElement('div');
       instrumentHost.className = 'taxi-footer-instruments';
@@ -229,14 +227,9 @@ const CityTaxiModel = (() => {
     navigation = document.createElement('section');
     navigation.id = 'city-taxi-navigation'; navigation.className = 'city-taxi-navigation'; navigation.hidden = true;
     navigation.setAttribute('role', 'img');
-    const card = document.createElement('div'); card.className = 'city-taxi-navigation-card';
-    const dial = document.createElement('span'); dial.className = 'city-taxi-navigation-dial'; dial.setAttribute('aria-hidden', 'true');
     navigationArrow = document.createElement('span'); navigationArrow.className = 'city-taxi-navigation-arrow';
-    dial.appendChild(navigationArrow);
-    const detail = document.createElement('span'); detail.className = 'city-taxi-navigation-detail';
-    navigationTitle = document.createElement('strong'); navigationDistance = document.createElement('span');
-    detail.appendChild(navigationTitle); detail.appendChild(navigationDistance);
-    card.appendChild(dial); card.appendChild(detail); navigation.appendChild(card);
+    navigationArrow.setAttribute('aria-hidden', 'true');
+    navigation.appendChild(navigationArrow);
     // A real row above the side panels stays upper-left even with full controls,
     // minimal HUD or cockpit active. Its height is reserved in the panel bounds.
     const top = document.getElementById('hud-top-container'), main = document.getElementById('hud-main');
@@ -261,8 +254,6 @@ const CityTaxiModel = (() => {
     navigationRotation = navigationRotation === null ? bearing.radians
       : navigationRotation + Math.atan2(Math.sin(bearing.radians - navigationRotation), Math.cos(bearing.radians - navigationRotation));
     navigationArrow.style.transform = `rotate(${navigationRotation}rad)`;
-    navigationTitle.textContent = isZh() ? '绿色目的地' : 'GREEN DESTINATION';
-    navigationDistance.textContent = `${Math.round(bearing.meters)} ${isZh() ? '米' : 'm'}`;
     navigation.setAttribute('aria-label', isZh()
       ? `绿色目的地方向，距离 ${Math.round(bearing.meters)} 米；箭头上方为车头前方`
       : `Green destination direction, ${Math.round(bearing.meters)} meters; up is ahead of the car`);
@@ -282,20 +273,8 @@ const CityTaxiModel = (() => {
     if (!hud) return;
     renderNavigation();
     const data = snapshot();
-    scoreLabel.textContent = isZh()
-      ? `接客积分 ${data.score.toLocaleString()} · 已送达 ${data.delivered} 位`
-      : `Passenger score ${data.score.toLocaleString()} · ${data.delivered} delivered`;
-    hud.setAttribute('aria-label', isZh() ? '接客游戏' : 'City passenger game');
-    if (data.passenger) {
-      statusLabel.textContent = isZh()
-        ? `前往绿色光柱 · 路程 ${data.passenger.routeMeters} 米 · 送达 +${data.passenger.fare}`
-        : `Green column · ${data.passenger.routeMeters}m route · Fare +${data.passenger.fare}`;
-    } else {
-      const notice = lastEvent?.type === 'passenger-lost'
-        ? (isZh() ? `乘客遇难 · 双倍扣分 ${lastEvent.penalty} · ` : `Passenger lost · Double penalty ${lastEvent.penalty} · `)
-        : lastEvent?.type === 'delivered' ? (isZh() ? `送达 +${lastEvent.trip.fare} · ` : `Delivered +${lastEvent.trip.fare} · `) : '';
-      statusLabel.textContent = notice + (isZh() ? `白色光柱 · ${data.waiting.length} 位乘客等待接送` : `White columns · ${data.waiting.length} passengers waiting`);
-    }
+    scoreLabel.textContent = data.score.toLocaleString();
+    hud.setAttribute('aria-label', isZh() ? `接客积分 ${scoreLabel.textContent}` : `Passenger score ${scoreLabel.textContent}`);
   }
   function drawCockpit(ctx) {
     const data = snapshot();
@@ -332,14 +311,14 @@ const CityTaxiModel = (() => {
     hud?.remove();
     navigation?.remove();
     document.getElementById('hud-top-container')?.classList.remove('taxi-navigation-active');
-    navigation = null; navigationArrow = null; navigationTitle = null; navigationDistance = null; navigationRotation = null;
+    navigation = null; navigationArrow = null; navigationRotation = null;
     const footer = document.getElementById('hud-footer');
     if (instrumentHost && footer) {
       for (const child of [...instrumentHost.children]) footer.appendChild(child);
     }
     instrumentHost?.remove(); instrumentHost = null;
     footer?.classList.remove('taxi-active');
-    markerGroup = null; hud = null; scoreLabel = null; statusLabel = null;
+    markerGroup = null; hud = null; scoreLabel = null;
     beamGeometry = null; coreGeometry = null; ringGeometry = null;
     whiteMaterial = null; greenMaterial = null; whiteCoreMaterial = null; greenCoreMaterial = null;
     pickupMarkers = []; destinationMarker = null;

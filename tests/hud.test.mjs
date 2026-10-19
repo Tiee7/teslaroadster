@@ -190,7 +190,7 @@ test('FPV switches duplicate floating information off immediately while preservi
 });
 
 test('actual continuous consumption, depletion and reset immediately update the cockpit bar with exterior readings', () => {
-  const consume = physics.slice(physics.indexOf('  function consumeAirTank('), physics.indexOf('  let canUseRCS'));
+  const consume = physics.slice(physics.indexOf('  let airConsumedThisFrame ='), physics.indexOf('  let canUseRCS'));
   const reset = hud.slice(hud.indexOf('function resetCar('), hud.indexOf('function applyTranslations('));
   const state = { airRemaining: 10, airUsedContinuous: 0, isFreefalling: false, vy: 0 };
   const context = vm.createContext({ state, MAX_AIR_SECONDS: 10, AUTO_DESCENT_USED_SECONDS: 8,

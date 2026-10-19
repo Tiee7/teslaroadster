@@ -239,33 +239,23 @@ html, body {
 @media (max-width: 480px) { #audio-settings .ranked-heading { flex-wrap: wrap; } }
 
 /* Occupied-trip bearing occupies a separate upper-left row above all side panels. */
-.taxi-navigation-active { --hud-navigation-height: 64px; }
+.taxi-navigation-active { --hud-navigation-height: 48px; }
 .city-taxi-navigation {
   display: flex; align-items: center; flex-shrink: 0; box-sizing: border-box;
-  height: var(--hud-navigation-height, 64px); padding: 4px 20px; pointer-events: none;
+  height: var(--hud-navigation-height, 48px); padding: 4px 20px; pointer-events: none;
+  border: 0; background: none;
+  /* Shadow the child's arrow silhouette after clipping, with no card surface. */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9));
 }
 .city-taxi-navigation[hidden] { display: none; }
-.city-taxi-navigation-card {
-  display: flex; align-items: center; gap: 10px; max-width: 100%; box-sizing: border-box;
-  height: 100%; padding: 5px 12px; border: 1px solid rgba(134, 239, 172, 0.6);
-  border-radius: 10px; background: rgba(4, 20, 16, 0.9); color: #dcfce7;
-}
-.city-taxi-navigation-dial {
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  width: 42px; height: 42px; border: 1px solid #3a6e51; border-radius: 50%;
-}
 .city-taxi-navigation-arrow {
-  display: block; width: 20px; height: 30px; background: #86efac;
+  display: block; flex-shrink: 0; width: 20px; height: 30px; background: #86efac;
   clip-path: polygon(50% 0, 100% 48%, 64% 48%, 64% 100%, 36% 100%, 36% 48%, 0 48%);
   transform-origin: center;
 }
-.city-taxi-navigation-detail { display: flex; flex-direction: column; min-width: 0; font-size: 12px; line-height: 1.4; }
-.city-taxi-navigation-detail strong { color: #86efac; font-size: 11px; overflow-wrap: anywhere; }
 @media (max-width: 767px) {
-  .taxi-navigation-active { --hud-navigation-height: 56px; }
+  .taxi-navigation-active { --hud-navigation-height: 40px; }
   .city-taxi-navigation { padding: 4px 12px; }
-  .city-taxi-navigation-card { gap: 8px; padding: 4px 9px; }
-  .city-taxi-navigation-dial { width: 34px; height: 34px; }
   .city-taxi-navigation-arrow { width: 16px; height: 26px; }
 }
 @media (max-width: 1100px) and (max-height: 600px) {
@@ -278,13 +268,13 @@ html, body {
 
 /* Created only after the hidden city mode has been explicitly enabled. */
 .city-taxi-hud {
-  align-self: flex-end; flex-shrink: 0; width: min(21rem, 100%);
-  display: flex; flex-direction: column; gap: 0.25rem; padding: 0.65rem 1rem;
+  align-self: flex-end; flex-shrink: 0; max-width: 100%; box-sizing: border-box;
+  display: flex; padding: 0.45rem 0.8rem;
   border: 1px solid rgba(134, 239, 172, 0.45); border-radius: 0.8rem;
   background: rgba(4, 20, 16, 0.86); color: #dcfce7; text-align: right;
-  font-size: 0.75rem; line-height: 1.4; pointer-events: none;
+  line-height: 1.2; pointer-events: none;
 }
-.city-taxi-hud strong { font-size: 0.85rem; color: #86efac; }
+.city-taxi-hud strong { font-size: 1.4rem; color: #86efac; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .taxi-footer-instruments {
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
   width: 100%; min-height: 0; flex: 1 1 auto; overflow-y: auto; pointer-events: auto;
@@ -293,11 +283,11 @@ html, body {
 /* FPV already has live speed and COPV instruments on the physical dashboard. */
 .cockpit-view #hud-cluster, .cockpit-view .city-taxi-hud { display: none !important; }
 @media (max-width: 767px) {
-  .city-taxi-hud { width: min(19rem, 100%); padding: 0.45rem 0.7rem; font-size: 0.65rem; }
-  .city-taxi-hud strong { font-size: 0.75rem; }
+  .city-taxi-hud { padding: 0.35rem 0.6rem; }
+  .city-taxi-hud strong { font-size: 1.1rem; }
 }
 @media (max-width: 1100px) and (max-height: 600px) {
-  /* Only the instruments scroll; the passenger row remains visible at the edge. */
+  /* Only the instruments scroll; the score remains visible at the edge. */
   #hud-footer.taxi-active { overflow: visible; padding: 8px; gap: 4px; }
 }
 
