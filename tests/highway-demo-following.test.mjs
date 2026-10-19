@@ -86,7 +86,7 @@ for (const fps of [30, 60, 144]) {
 
 test('empty/freefall tank retains mechanical following brakes and only ordinary grounded recharge', () => {
   for (const airRemaining of [0, 1]) {
-    const h = simulation({ speed: 65, vz: -65, airRemaining, isFreefalling: true }, wall());
+    const h = simulation({ speed: 65, vz: -65, airRemaining, isFreefalling: true }, wall(60));
     const result = h.step(1 / 60);
     exclusive(result.frame.input);
     assert.equal(result.frame.input.brake, 1);
@@ -98,7 +98,7 @@ test('empty/freefall tank retains mechanical following brakes and only ordinary 
 });
 
 test('last tank fraction pays only its proportional following-brake impulse', () => {
-  const h = simulation({ speed: 65, vz: -65, airRemaining: 0.001, isFreefalling: false }, wall());
+  const h = simulation({ speed: 65, vz: -65, airRemaining: 0.001, isFreefalling: false }, wall(60));
   const result = h.step(1 / 60);
   exclusive(result.frame.input);
   assert.equal(result.frame.input.brake, 1); assert.equal(result.frame.jump, false);
@@ -110,7 +110,7 @@ test('last tank fraction pays only its proportional following-brake impulse', ()
 
 test('following trajectory matches real H impulse, fractional gas and longitudinal venue scale', () => {
   for (const [airRemaining, isFreefalling] of [[10, false], [0.001, false], [0, true], [1, true], [2.49, true]]) {
-    const h = simulation({ speed: 65, vz: -65, airRemaining, isFreefalling }, wall());
+    const h = simulation({ speed: 65, vz: -65, airRemaining, isFreefalling }, wall(60));
     const dt = 0.025;
     const { prediction, controls } = predictionProbe(h, dt);
     exclusive(controls); assert.equal(controls.brake, 1);
@@ -121,7 +121,7 @@ test('following trajectory matches real H impulse, fractional gas and longitudin
     assert.equal(prediction.freefall, h.state.isFreefalling);
     assert.ok(Math.abs(prediction.metres - h.state.speed * dt) < 1e-6, 'predictor stores unscaled physical forward metres');
     const front = h.cars.find(other => other.laneIdx === 3);
-    const expectedZ = -80 + (prediction.metres - 22 * dt) * 1.65;
+    const expectedZ = -60 + (prediction.metres - 22 * dt) * 1.65;
     assert.ok(Math.abs(front.mesh.position.z - expectedZ) < 1e-6, 'world scale is applied exactly once to relative traffic travel');
   }
 });

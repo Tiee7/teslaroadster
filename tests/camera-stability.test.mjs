@@ -42,6 +42,7 @@ function harness(map = 'city') {
     function stepContact(dt) {
       const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
       const playerWorldZ = currentMap === 'highway' ? 0 : state.z, groundElevation = 0;
+      const demoGroundSweep = null; // This fixture exercises ordinary airborne roof contact.
       const isAirborne = true, isAccelerating = false, isRearThrusterFiring = false, isFootBraking = false, isReversing = false;
       ${trafficAndPose}
     }

@@ -759,9 +759,16 @@ function updateSimulation(dt) {
   const steerRight = Boolean(keys['KeyD']);
   const lateralInput = isAirborne ? 0 : driveInput.steer;
 
-  // Progressive steering rack smoothing for natural ground steering feel
-  const steerRate = lateralInput !== 0 ? 8.0 : 11.0;
-  state.steerInput = (state.steerInput || 0) + (lateralInput - (state.steerInput || 0)) * Math.min(1.0, steerRate * dt);
+  // Only the opt-in highway stunt demo uses the quicker bounded rack. Manual
+  // A/D, city, drift and all airborne handling keep their established response.
+  const demoGroundHandling = currentMap === 'highway' && !isAirborne && globalThis.window?.RoadsterDemo?.isActive()
+    && typeof RoadsterHighwayDemoPlanner !== 'undefined' ? RoadsterHighwayDemoPlanner.handling : null;
+  const demoGroundSweep = demoGroundHandling ? { x:state.x, y:state.y, cars:new Map(trafficCars
+    .filter(c=>c.mode==='highway' && c.mesh.visible!==false && c.highwayWaitingToSpawn===undefined)
+    .map(c=>[c,{x:c.mesh.position.x,z:c.mesh.position.z}])) } : null;
+  const steerRate = demoGroundHandling ? demoGroundHandling.rackRate : lateralInput !== 0 ? 8.0 : 11.0;
+  const rackBlend = demoGroundHandling ? 1.0 - Math.exp(-steerRate * dt) : Math.min(1.0, steerRate * dt);
+  state.steerInput = (state.steerInput || 0) + (lateralInput - (state.steerInput || 0)) * rackBlend;
   if (Math.abs(state.steerInput) < 0.004 && lateralInput === 0) state.steerInput = 0.0;
   state.steerAngle = -state.steerInput * 0.38;
   frontWheelSteerGroups.forEach(g => { g.rotation.y = state.steerAngle; });
@@ -930,13 +937,20 @@ function updateSimulation(dt) {
         state.isDrifting = false;
         state.wasHandbraking = false;
         state.driftAngle *= Math.pow(0.005, dt);
-        const targetHwyYaw = -state.steerInput * 0.16 * turnSign * Math.min(1.0, speedFactor);
-        state.yaw += wrapAnglePi(targetHwyYaw - state.yaw) * (1.0 - Math.exp(-12.0 * dt));
-        state.vYaw = 0.0;
-        const targetVx = isRearThrusterFiring
-          ? (noseHorizX * state.speed)
-          : (state.steerInput * 13.5 * speedFactor + noseHorizX * state.speed * 0.35);
-        state.vx += (targetVx - state.vx) * 14.0 * dt;
+        if (demoGroundHandling) {
+          const targetVx = state.steerInput * demoGroundHandling.lateralSpeed * THREE.MathUtils.clamp(Math.abs(state.speed) / 18.0, 0, 1);
+          const targetYaw = -Math.atan2(targetVx, Math.max(12, Math.abs(state.speed))) * turnSign;
+          state.yaw += wrapAnglePi(targetYaw - state.yaw) * (1.0 - Math.exp(-demoGroundHandling.yawRate * dt));
+          state.vx += (targetVx - state.vx) * (1.0 - Math.exp(-demoGroundHandling.lateralRate * dt));
+        } else {
+          const targetHwyYaw = -state.steerInput * 0.16 * turnSign * Math.min(1.0, speedFactor);
+          state.yaw += wrapAnglePi(targetHwyYaw - state.yaw) * (1.0 - Math.exp(-12.0 * dt));
+          state.vYaw = 0.0;
+          const targetVx = isRearThrusterFiring
+            ? (noseHorizX * state.speed)
+            : (state.steerInput * 13.5 * speedFactor + noseHorizX * state.speed * 0.35);
+          state.vx += (targetVx - state.vx) * 14.0 * dt;
+        }
       }
       state.vz = noseHorizZ * state.speed;
     }
@@ -1646,7 +1660,16 @@ function updateSimulation(dt) {
     const dz = Math.abs(playerWorldZ - car.mesh.position.z);
     const clearanceY = state.y - car.height;
 
-    if (dx < 1.85 && dz < (car.length / 2 + 2.15)) {
+    // The faster demo rack also checks the complete relative movement chord.
+    // A narrow corner contact cannot disappear between frames. Respawn jumps
+    // are excluded; manual collision detection and response stay unchanged.
+    const demoPreviousCar = demoGroundSweep?.cars.get(car);
+    const demoSweptHit = demoPreviousCar && car.mesh.visible!==false && car.highwayWaitingToSpawn===undefined
+      && !car.highwayPassedThisFrame && Math.abs(car.mesh.position.z-demoPreviousCar.z)<2+dt*(Math.abs(state.vz)+Math.abs(car.speed))*WORLD_SPEED_SCALE
+      && demoGroundSweep.y<car.height-0.15 && state.y<car.height-0.15
+      ? RoadsterHighwayDemoPlanner.sweptContact(demoPreviousCar.x-demoGroundSweep.x,demoPreviousCar.z,
+        car.mesh.position.x-state.x,car.mesh.position.z,1.85,car.length/2+2.15)!==null : false;
+    if ((dx < 1.85 && dz < (car.length / 2 + 2.15)) || demoSweptHit) {
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0) {
           triggerPhysicsCollision(Math.abs(state.vy), 'crashReasonThreshold', 0, 5.0, 0);

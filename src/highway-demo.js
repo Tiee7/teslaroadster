@@ -1,8 +1,25 @@
-// A highway-only input driver. The planner never edits vehicle/traffic physics,
+// A highway-only input driver. The planner never edits vehicle/traffic state,
 // speed, position, gas, scores or collisions. It asks the ordinary input/jump
 // pipeline to do the work and accepts that a boxed-in, empty-tank car can crash.
 const RoadsterHighwayDemoPlanner = (() => {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  // Stunt-demo steering only. Production manual input retains its original rack,
+  // tire response and boost coupling. Both prediction and physics share these
+  // bounded rates; lateral velocity and position still integrate continuously.
+  const handling = Object.freeze({ rackRate: 30, yawRate: 18, lateralRate: 24, lateralSpeed: 24 });
+  // Continuous relative-box sweep: corner contacts between prediction samples
+  // are real hazards too. Returns the first frame fraction, or null.
+  function sweptContact(x0, z0, x1, z1, halfX, halfZ) {
+    let enter=0, leave=1;
+    for (const [a,b,half] of [[x0,x1,halfX],[z0,z1,halfZ]]) {
+      if (Math.abs(b-a)<1e-10) { if (Math.abs(a)>=half) return null; continue; }
+      let lo=(-half-a)/(b-a), hi=(half-a)/(b-a);
+      if (lo>hi) [lo,hi]=[hi,lo];
+      enter=Math.max(enter,lo); leave=Math.min(leave,hi);
+      if (enter>=leave) return null;
+    }
+    return leave>0 && enter<1 ? Math.max(0,enter) : null;
+  }
   const neutral = () => ({ steer: 0, throttle: 0, boost: 0, brake: 0, reverse: 0, handbrake: 0, lift: 0, descend: 0, strafe: 0, roll: 0, pitch: 0 });
   const nearest = (x, lanes) => lanes.reduce((best, value, i) => Math.abs(value - x) < Math.abs(lanes[best] - x) ? i : best, 0);
   function create(lanes, scale) {
@@ -93,8 +110,8 @@ const RoadsterHighwayDemoPlanner = (() => {
       if (player.airRemaining >= 7.0) charging = false;
       const boostFor = (v, gas, recharging, freefall=player.isFreefalling) => !recharging && gas > 4.3 && !freefall && v < cruiseLimit;
       const steeringFor = (x, vx, v, lane, boost) => {
-        const desired = clamp((lanes[lane] - x) * 7.0 - vx * 0.75, -13, 13);
-        const gain = boost ? Math.max(3, v * 0.16) : 13.5 * clamp(v / 14, 0, 1.25) + v * 0.056;
+        const desired = clamp((lanes[lane] - x) * 12.0 - vx * 0.6, -20, 20);
+        const gain = handling.lateralSpeed * clamp(v / 18, 0, 1);
         return clamp(desired / Math.max(3, gain), -0.95, 0.95);
       };
       const relativeZ = (o, t, ownMetres) => {
@@ -119,11 +136,11 @@ const RoadsterHighwayDemoPlanner = (() => {
       }
       function controlsFor(v,gas,recharging,leader=null,time=0,ownMetres=0,freefall=player.isFreefalling) {
         if (!leader) return { throttle: 1, brake: 0, boost: boostFor(v,gas,recharging,freefall) ? 1 : 0 };
-        const gap = Math.max(0,-relativeZ(leader,time,ownMetres)-leader.halfLength-7);
+        const gap = Math.max(0,-relativeZ(leader,time,ownMetres)-leader.halfLength-0.3);
         const leadSpeed=Math.max(0,leader.speed+Math.min(0,leader.acceleration)*(time+0.3));
-        const desiredGap=10+v*scale*0.65+Math.max(0,v-leadSpeed)*scale*0.15;
-        const followingSpeed=leadSpeed+(gap-desiredGap)/(scale*1.15);
-        const stoppingEnvelope=Math.sqrt(leadSpeed*leadSpeed+2*24*gap/scale);
+        const desiredGap=0.6+v*scale*0.005+Math.max(0,v-leadSpeed)*scale*0.02;
+        const followingSpeed=leadSpeed+(gap-desiredGap)/(scale*0.30);
+        const stoppingEnvelope=Math.sqrt(leadSpeed*leadSpeed+2*32*gap/scale);
         const requested=clamp(Math.min(followingSpeed,stoppingEnvelope),0,cruiseLimit);
         if (v>requested+0.3) return { throttle:0,boost:0,brake:clamp((v-requested)/8,0,1) };
         const throttle=clamp((requested-v)/6,0,1);
@@ -149,7 +166,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           const controls=controlsFor(p.speed,p.gas,p.charging,leader,t-h,p.metres,p.freefall);
           const boost = controls.boost > 0;
           const command = steeringFor(p.x,p.vx,p.speed,route[index],boost);
-          p.steer += (command-p.steer)*Math.min(1,(command ? 8 : 11)*h);
+          p.steer += (command-p.steer)*(1-Math.exp(-handling.rackRate*h));
           const nx = -Math.sin(p.yaw), nz = -Math.cos(p.yaw);
           const realistic = player.physicsMode === 'realistic';
           const standard = realistic && !player.insaneMode && !boost;
@@ -167,10 +184,10 @@ const RoadsterHighwayDemoPlanner = (() => {
           } else if (controls.brake>0) p.speed=Math.max(0,p.speed-38*controls.brake*h);
           else p.speed=Math.max(0,p.speed-(0.00012*p.speed*p.speed+0.35)*(standard&&p.speed>maximum?1.3:1)*h);
           const factor=clamp(p.speed/14,0,1.25);
-          const targetYaw=-p.steer*0.16*Math.min(1,factor);
-          p.yaw += (targetYaw-p.yaw)*(1-Math.exp(-12*h));
-          const targetVx=boost ? nx*p.speed : p.steer*13.5*factor+nx*p.speed*0.35;
-          p.vx += (targetVx-p.vx)*14*h;
+          const targetVx=p.steer*handling.lateralSpeed*clamp(p.speed/18,0,1);
+          const targetYaw=-Math.atan2(targetVx,Math.max(12,p.speed));
+          p.yaw += (targetYaw-p.yaw)*(1-Math.exp(-handling.yawRate*h));
+          p.vx += (targetVx-p.vx)*(1-Math.exp(-handling.lateralRate*h));
           p.x += p.vx*h; p.metres += -nz*p.speed*h;
           p.gas=clamp(p.gas+(boost ? -0.85*h : paidRetro>0 ? -paidRetro : 3.4*h),0,10);
           if (p.gas<=0.001) p.freefall=true;
@@ -180,37 +197,44 @@ const RoadsterHighwayDemoPlanner = (() => {
         points.arrival = firstArrival;
         return points;
       }
-      function collisionTime(path, margin=3, lateral=2.3, uncertainty=0.5) {
+      function collisionTime(path, margin=0.35, lateral=2.03, uncertainty=0.12) {
         let first=Infinity;
-        for (const o of live) for (const point of path) {
-          if (point.t>=first) break;
-          if (Math.abs(carX(o,point.t)-point.x)<lateral && Math.abs(relativeZ(o,point.t,point.metres))<o.halfLength+margin+point.t*uncertainty) { first=point.t;break; }
+        for (const o of live) {
+          let previousPoint=path[0];
+          for (const point of path) {
+            if (previousPoint.t>=first) break;
+            const x0=carX(o,previousPoint.t)-previousPoint.x, x1=carX(o,point.t)-point.x;
+            const z0=relativeZ(o,previousPoint.t,previousPoint.metres), z1=relativeZ(o,point.t,point.metres);
+            const hit=sweptContact(x0,z0,x1,z1,lateral,o.halfLength+margin+point.t*uncertainty);
+            if (hit!==null) { first=Math.min(first,previousPoint.t+(point.t-previousPoint.t)*hit); break; }
+            previousPoint=point;
+          }
         }
         return first;
       }
       const paths = new Map();
-      const pathFor = lane => { if (!paths.has(lane)) paths.set(lane,trajectory([lane],1.5));return paths.get(lane); };
-      const safePath = lane => { const path=pathFor(lane), end=(path.arrival ?? 1.25)+0.3;return collisionTime(path.filter(p=>p.t<=end)) === Infinity; };
+      const pathFor = lane => { if (!paths.has(lane)) paths.set(lane,trajectory([lane],1.0));return paths.get(lane); };
+      const safePath = lane => { const path=pathFor(lane), end=(path.arrival ?? 0.65)+0.10;return collisionTime(path.filter(p=>p.t<=end)) === Infinity; };
       const threatAt = lane => collisionTime(trajectory([lane],4.2),7);
       const error = lanes[target] - player.x;
       if (Math.abs(error) < 0.32 && Math.abs(player.vx) < 1.3) {
         dwell += dt;
         if (changing && dwell >= 0.08) { changing = false; completed++; }
       } else dwell = 0;
-      const currentThreat = !changing && decisionCooldown===0 && live.length ? collisionTime(trajectory([target],3.6,false),7) : Infinity;
-      function routeRoom(first) {
+      const currentThreat = !changing && decisionCooldown===0 && live.length ? collisionTime(trajectory([target],1.2,false),0.6) : Infinity;
+      function routeRoom(first,stayFlow) {
         let best={ room: 0, score: -Infinity, flow: 0, route: [first] };
         function extend(route) {
           if (route.length === 3) {
-            const path=trajectory(route,3.6);
+            const path=trajectory(route,2.4);
             const collision = collisionTime(path);
             const moves=route.reduce((n,l,i)=>n+Number(l!==(i?route[i-1]:target)),0);
-            const room=collision===Infinity?3.6:collision;
+            const room=collision===Infinity?2.4:collision;
             const flow=path[path.length-1].metres;
-            // A useful multi-stage route earns its return after the first
-            // merge. Do not make three safe stages require >32 extra metres
-            // inside this short horizon before we will leave a slow queue.
-            const score=room*100+flow*0.25-moves;
+            // A bounded exhibition reward keeps a safe three-stage escape
+            // moving instead of settling after its first pass. Every stage
+            // still has the same continuous contact validation.
+            const score=room*100+flow*1.2+(flow>stayFlow+2 ? moves*8 : -moves*0.25);
             if (score > best.score) best={ room, score, flow, route: [...route] };
             return;
           }
@@ -225,14 +249,14 @@ const RoadsterHighwayDemoPlanner = (() => {
         if (next !== undefined && safePath(next)) { target=next; routePlan.shift();changing=true;dwell=0;started++; }
         else routePlan=[];
       }
-      if (!changing && dwell >= 0.08 && currentThreat < 3.6 && decisionCooldown === 0) {
-        decisionCooldown = 0.3;
-        const stayPath=trajectory([target],3.6);
+      if (!changing && dwell >= 0.08 && currentThreat < 0.55 && decisionCooldown === 0) {
+        decisionCooldown = 0.08;
+        const stayPath=trajectory([target],2.4);
         const stayCollision=collisionTime(stayPath);
-        const stayScore=(stayCollision===Infinity?3.6:stayCollision)*100+stayPath[stayPath.length-1].metres*0.25;
+        const stayScore=(stayCollision===Infinity?2.4:stayCollision)*100+stayPath[stayPath.length-1].metres*1.2;
         const options = [target - 1, target + 1].filter(i => i >= 0 && i < lanes.length && safePath(i))
-          .map(lane => ({ lane, ...routeRoom(lane) }))
-          .filter(o => o.room>=1.2 && o.score > stayScore+0.5)
+          .map(lane => ({ lane, ...routeRoom(lane,stayPath[stayPath.length-1].metres) }))
+          .filter(o => o.room>=0.75 && o.score > stayScore+0.2)
           .sort((a, b) => b.score - a.score || Math.abs(a.lane - 2.5) - Math.abs(b.lane - 2.5));
         if (options.length) { target = options[0].lane; routePlan=options[0].route.slice(1); changing = true; dwell = 0; started++; }
       }
@@ -255,7 +279,7 @@ const RoadsterHighwayDemoPlanner = (() => {
     }
     return { step, reset, stats: () => ({ started, completed, jumps, targetLane: target, changing }) };
   }
-  return Object.freeze({ create, neutral });
+  return Object.freeze({ create, neutral, handling, sweptContact });
 })();
 
 // UI/lifecycle adapter. No keyboard shortcut is registered for this mode.

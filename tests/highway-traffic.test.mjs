@@ -259,7 +259,7 @@ function integrated(cars, overrides = {}, map = 'highway') {
   const state = { x: 30, y: 0, z: 0, vx: 0, vy: 0, vz: -22, speed: 22, carsCleared: 0, score: 0, isDestroyed: false, ...overrides };
   const context = vm.createContext({ state, trafficCars: cars, currentMap: map, LANE_CENTERS: lanes, WORLD_SPEED_SCALE: scale,
     scrollingProps: [], CITY_HALF_BOUND: 1200, sound: { beep() {} }, triggerPhysicsCollision: (...args) => impacts.push(args) });
-  vm.runInContext(`${source}\nfunction tick(dt) { const playerWorldZ = currentMap === 'highway' ? 0 : state.z; const isAirborne = state.y > 0.5; ${physics.slice(start, end)} }`, context);
+  vm.runInContext(`${source}\nfunction tick(dt) { const demoGroundSweep = null; const playerWorldZ = currentMap === 'highway' ? 0 : state.z; const isAirborne = state.y > 0.5; ${physics.slice(start, end)} }`, context);
   return { state, impacts, step: dt => context.tick(dt) };
 }
 

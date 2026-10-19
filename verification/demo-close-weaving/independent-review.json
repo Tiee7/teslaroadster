@@ -1,0 +1,47 @@
+{
+  "sourceHashes": {
+    "src/highway-demo.js": "d705cdd85ba8625b7229ed25e78207b3286f30cd588434406f721afc1129db03",
+    "src/physics-main.js": "5f115c1741e10cfa3a6b3a0fe20331ba8e6c03a43e6421069e6ec292507f231c"
+  },
+  "productionSourcesUnchanged": true,
+  "sweptRandomCases": 50000,
+  "manualEqualityFrames": 4800,
+  "manualConfigurations": 40,
+  "manualDemoOwnershipDisabled": true,
+  "manualInputChecks": 9600,
+  "manualKeysets": [
+    "neutral",
+    "KeyW+KeyD",
+    "KeyH+KeyA",
+    "Semicolon+KeyD",
+    "KeyU+KeyA+KeyW"
+  ],
+  "demoGraze": {
+    "active": true,
+    "impacts": 1,
+    "crashed": true,
+    "start": {
+      "x": 0.8,
+      "z": -5.1
+    },
+    "end": {
+      "x": 0.5004473572551857,
+      "z": -9.527042516666667
+    },
+    "endpointDx": 1.9995526427448143
+  },
+  "manualGraze": {
+    "active": false,
+    "impacts": 0,
+    "crashed": false,
+    "start": {
+      "x": 0.8,
+      "z": -5.1
+    },
+    "end": {
+      "x": 0.44444444444444453,
+      "z": -1.5270425166666666
+    },
+    "endpointDx": 2.0555555555555554
+  }
+}

@@ -1,0 +1,2955 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-19T16:25:47.491Z",
+  "repo": "/workspace/scratch/cb38b7731a0f/teslaroadster_highway_demo",
+  "commit": "6dc833633d4622475d7f640b24abb3fa08a8366d",
+  "initialSourceVersions": {
+    "src/highway-demo.js": "34412641c929d1f5ff67ac1b093324852051bd57af5f5a09cafe9e8abc6fefed",
+    "src/highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "src/physics-main.js": "114a61d07d008a1e810e63b16e7780b72849b53e7c742d36872611fa41a79722",
+    "src/ui-hud.js": "db59f2030c55550ef31e647b718bee36fd809ea7663e5d06bb12a7da1a57d38c",
+    "src/config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "tests/helpers/demo-harness.mjs": "4f239189d30590f359c8da4b9cf52a64fa67852f47517fd1e28aa2c778cfa270",
+    "scripts/verify-demo.mjs": "999753cabe31d0944615c401ba5282b27b552ac4d2548c2e2333440ac87c2d3a"
+  },
+  "controllerSha256": "34412641c929d1f5ff67ac1b093324852051bd57af5f5a09cafe9e8abc6fefed",
+  "physicsSha256": "114a61d07d008a1e810e63b16e7780b72849b53e7c742d36872611fa41a79722",
+  "settings": {
+    "seeds": [
+      1,
+      7,
+      23
+    ],
+    "counts": [
+      20,
+      36,
+      52
+    ],
+    "fps": 60,
+    "seconds": 90,
+    "warmupSeconds": 5
+  },
+  "methodology": {
+    "simulation": "Current repository production planner, motion, NPC traffic, jump, tank, and collision code through its imported harness and seeded pool. Starts at 42m/s, realistic mode. Stops at destruction.",
+    "geometry": "Exact extrema/interval clipping of the continuous piecewise-linear relative AABB sweep between each step start and the uncorrected pre-collision endpoint. This is a read-only measurement probe; production collision checks and response are unchanged. Curved within-step paths are approximated by their linear chord.",
+    "envelopes": "Matches production traffic contact envelope: |relative x| < 1.85m; |relative z| < NPC length/2 + 2.15m; body-height filter player y - NPC height < -0.15m. Signed gaps below zero denote overlap. All-height planar minima are also supplied.",
+    "encounters": "Each category counts contiguous per-car threshold episodes, not frames. Side: side gap < 0.5m with longitudinal overlap. Bumper: front or rear gap < 2m with lateral overlap. Union deduplicates category overlap. Threshold episodes include penetrations; do not interpret them as collision-free passes. pairSeconds sums across cars.",
+    "overtakes": "Only actual negative-to-nonnegative relative-z crossings on continuous visible live-car motion segments. Respawn/hidden segments and collision response jumps are excluded. No lane-nearness requirement.",
+    "following": "Time with an ahead bumper gap from 0 up to the configured close-follow gap, lateral overlap, and body-height overlap. Union across cars; brief episodes are <= configured brief duration.",
+    "stripe": "Continuous time more than 0.9m from every lane center, including airborne frames.",
+    "caveat": "CPU production-harness measurement is not browser/WebGL, visual, frame-rate, or real-device validation. Swept overlap without a new impact can reflect discrete collision sampling or impact cooldown; it is not alone proof of a production collision bug."
+  },
+  "runs": [
+    {
+      "seed": 1,
+      "count": 20,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 48.774705,
+        "p10": 92.129276,
+        "p50": 139.377557,
+        "p90": 231.64261,
+        "p95": 232.228014,
+        "max": 232.836111,
+        "mean": 154.434626,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 48.774705,
+        "p10": 91.567636,
+        "p50": 134.258298,
+        "p90": 231.707923,
+        "p95": 232.260442,
+        "max": 232.836111,
+        "mean": 153.256278,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0.227593,
+      "planner": {
+        "started": 28,
+        "completed": 27,
+        "jumps": 0,
+        "targetLane": 1,
+        "changing": true
+      },
+      "changes": {
+        "observedTargetChanges": 28,
+        "independentlySettled": 27,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.833333,
+          "p90": 1.15,
+          "p95": 1.183333,
+          "max": 1.3,
+          "mean": 0.910494,
+          "observations": 27
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 1,
+            "durationSeconds": 1
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 1,
+            "startX": -2.798102,
+            "outcome": "settled",
+            "endedAtSeconds": 1.833333,
+            "durationSeconds": 0.833333
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 1.833333,
+            "startX": -7.525508,
+            "outcome": "settled",
+            "endedAtSeconds": 2.65,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 2.65,
+            "startX": -2.474,
+            "outcome": "settled",
+            "endedAtSeconds": 3.566667,
+            "durationSeconds": 0.916667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 6.416667,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 7.233333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 15.466667,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 16.266667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 16.266667,
+            "startX": 2.499309,
+            "outcome": "settled",
+            "endedAtSeconds": 17.066667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 17.066667,
+            "startX": 7.508102,
+            "outcome": "settled",
+            "endedAtSeconds": 18.033333,
+            "durationSeconds": 0.966666
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 33.4,
+            "startX": 12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 34.2,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 34.2,
+            "startX": 7.483582,
+            "outcome": "settled",
+            "endedAtSeconds": 35.166667,
+            "durationSeconds": 0.966667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 35.483333,
+            "startX": 2.629523,
+            "outcome": "settled",
+            "endedAtSeconds": 36.383333,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 44.933333,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 45.733333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 48.266667,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 49.116667,
+            "durationSeconds": 0.85
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 49.116667,
+            "startX": -2.490301,
+            "outcome": "settled",
+            "endedAtSeconds": 50.416667,
+            "durationSeconds": 1.3
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 51.366667,
+            "startX": -7.500082,
+            "outcome": "settled",
+            "endedAtSeconds": 52.183333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 52.183333,
+            "startX": -2.473635,
+            "outcome": "settled",
+            "endedAtSeconds": 53,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 53,
+            "startX": -7.513528,
+            "outcome": "settled",
+            "endedAtSeconds": 54,
+            "durationSeconds": 1
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 54.95,
+            "startX": -12.502597,
+            "outcome": "settled",
+            "endedAtSeconds": 56.133333,
+            "durationSeconds": 1.183333
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 56.133333,
+            "startX": -7.59411,
+            "outcome": "settled",
+            "endedAtSeconds": 56.95,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 56.95,
+            "startX": -2.457463,
+            "outcome": "settled",
+            "endedAtSeconds": 57.766667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 57.766667,
+            "startX": -7.528477,
+            "outcome": "settled",
+            "endedAtSeconds": 58.916667,
+            "durationSeconds": 1.15
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 62.716667,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 63.516667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 63.516667,
+            "startX": -7.49092,
+            "outcome": "settled",
+            "endedAtSeconds": 64.35,
+            "durationSeconds": 0.833333
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 67.516667,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 68.55,
+            "durationSeconds": 1.033333
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 81.4,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 82.216667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 87.6,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 88.6,
+            "durationSeconds": 1
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 88.6,
+            "startX": -7.206856,
+            "outcome": "settled",
+            "endedAtSeconds": 89.533333,
+            "durationSeconds": 0.933333
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 89.533333,
+            "startX": -2.324767,
+            "outcome": "incomplete_at_window_end",
+            "endedAtSeconds": 90,
+            "durationSeconds": 0.466667
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 110,
+        "perMinute": 73.333333,
+        "racerCrossings": 5,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 110,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 2.017826,
+          "p10": 3.15,
+          "p50": 8.15,
+          "p90": 18.15,
+          "p95": 18.150013,
+          "max": 23.150013,
+          "mean": 9.360945,
+          "observations": 110
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 9.675049,
+        "minSideWhileLongitudinalOverlap": 1.290553,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 9.675049,
+          "minSideWhileLongitudinalOverlap": 1.290553
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.474064,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 9.121667
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 118,
+        "inactiveOrHidden": 1070
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 7,
+      "count": 20,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 71.706342,
+        "p10": 103.311422,
+        "p50": 136.844475,
+        "p90": 211.404767,
+        "p95": 230.542441,
+        "max": 232.85207,
+        "mean": 146.517468,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 71.706342,
+        "p10": 104.22469,
+        "p50": 137.986395,
+        "p90": 213.921718,
+        "p95": 230.668777,
+        "max": 232.85207,
+        "mean": 148.044075,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0.081296,
+      "planner": {
+        "started": 43,
+        "completed": 43,
+        "jumps": 0,
+        "targetLane": 4,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 43,
+        "independentlySettled": 43,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.833334,
+          "p90": 1.05,
+          "p95": 1.183333,
+          "max": 1.2,
+          "mean": 0.898062,
+          "observations": 43
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 0.816667,
+            "startX": -2.518962,
+            "outcome": "settled",
+            "endedAtSeconds": 1.616667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 1.616667,
+            "startX": -7.522282,
+            "outcome": "settled",
+            "endedAtSeconds": 2.416667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 2.416667,
+            "startX": -12.523819,
+            "outcome": "settled",
+            "endedAtSeconds": 3.233333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 3.233333,
+            "startX": -7.491419,
+            "outcome": "settled",
+            "endedAtSeconds": 4.033333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 4.033333,
+            "startX": -2.499614,
+            "outcome": "settled",
+            "endedAtSeconds": 5.083333,
+            "durationSeconds": 1.05
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 5.083333,
+            "startX": 2.772115,
+            "outcome": "settled",
+            "endedAtSeconds": 5.916667,
+            "durationSeconds": 0.833334
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 5.916667,
+            "startX": 7.530367,
+            "outcome": "settled",
+            "endedAtSeconds": 6.833333,
+            "durationSeconds": 0.916666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 6.833333,
+            "startX": 2.242211,
+            "outcome": "settled",
+            "endedAtSeconds": 7.716667,
+            "durationSeconds": 0.883334
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 7.716667,
+            "startX": -2.683771,
+            "outcome": "settled",
+            "endedAtSeconds": 8.533333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 8.533333,
+            "startX": -7.509925,
+            "outcome": "settled",
+            "endedAtSeconds": 9.533333,
+            "durationSeconds": 1
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 11.116667,
+            "startX": -12.500015,
+            "outcome": "settled",
+            "endedAtSeconds": 12.016667,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 13.283333,
+            "startX": -7.500023,
+            "outcome": "settled",
+            "endedAtSeconds": 14.1,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 14.1,
+            "startX": -2.480999,
+            "outcome": "settled",
+            "endedAtSeconds": 14.916667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 14.916667,
+            "startX": -7.679714,
+            "outcome": "settled",
+            "endedAtSeconds": 15.816667,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 27.533333,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 28.333333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 28.333333,
+            "startX": -7.483722,
+            "outcome": "settled",
+            "endedAtSeconds": 29.133333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 29.133333,
+            "startX": -2.491923,
+            "outcome": "settled",
+            "endedAtSeconds": 29.933333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 29.933333,
+            "startX": 2.515935,
+            "outcome": "settled",
+            "endedAtSeconds": 30.9,
+            "durationSeconds": 0.966667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 31.866667,
+            "startX": 7.502866,
+            "outcome": "settled",
+            "endedAtSeconds": 32.683333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 32.683333,
+            "startX": 2.476252,
+            "outcome": "settled",
+            "endedAtSeconds": 33.816667,
+            "durationSeconds": 1.133334
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 33.816667,
+            "startX": 7.557304,
+            "outcome": "settled",
+            "endedAtSeconds": 34.766667,
+            "durationSeconds": 0.95
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 42.05,
+            "startX": 12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 43.25,
+            "durationSeconds": 1.2
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 46.416667,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 47.216667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 52.916667,
+            "startX": 12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 54.1,
+            "durationSeconds": 1.183333
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 54.1,
+            "startX": 7.569016,
+            "outcome": "settled",
+            "endedAtSeconds": 54.916667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 54.916667,
+            "startX": 2.483188,
+            "outcome": "settled",
+            "endedAtSeconds": 55.866667,
+            "durationSeconds": 0.95
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 58.083333,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 58.883333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 58.883333,
+            "startX": 2.508604,
+            "outcome": "settled",
+            "endedAtSeconds": 59.866667,
+            "durationSeconds": 0.983334
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 59.866667,
+            "startX": 7.707906,
+            "outcome": "settled",
+            "endedAtSeconds": 60.766667,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 62.35,
+            "startX": 12.500002,
+            "outcome": "settled",
+            "endedAtSeconds": 63.166667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 63.166667,
+            "startX": 7.473654,
+            "outcome": "settled",
+            "endedAtSeconds": 64.133333,
+            "durationSeconds": 0.966666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 64.133333,
+            "startX": 2.195024,
+            "outcome": "settled",
+            "endedAtSeconds": 64.966667,
+            "durationSeconds": 0.833334
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 64.966667,
+            "startX": -2.50686,
+            "outcome": "settled",
+            "endedAtSeconds": 65.966667,
+            "durationSeconds": 1
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 65.966667,
+            "startX": -7.790955,
+            "outcome": "settled",
+            "endedAtSeconds": 66.866667,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 78.266667,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 79.466667,
+            "durationSeconds": 1.2
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 81.683333,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 82.5,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 82.5,
+            "startX": -12.508126,
+            "outcome": "settled",
+            "endedAtSeconds": 83.3,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 83.3,
+            "startX": -7.491937,
+            "outcome": "settled",
+            "endedAtSeconds": 84.133333,
+            "durationSeconds": 0.833333
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 85.083333,
+            "startX": -2.49962,
+            "outcome": "settled",
+            "endedAtSeconds": 85.9,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 85.9,
+            "startX": 2.525797,
+            "outcome": "settled",
+            "endedAtSeconds": 86.716667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 86.716667,
+            "startX": 7.518451,
+            "outcome": "settled",
+            "endedAtSeconds": 87.7,
+            "durationSeconds": 0.983333
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 88.65,
+            "startX": 12.502744,
+            "outcome": "settled",
+            "endedAtSeconds": 89.616667,
+            "durationSeconds": 0.966667
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 96,
+        "perMinute": 64,
+        "racerCrossings": 4,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 96,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 2.516406,
+          "p10": 3.15,
+          "p50": 8.378179,
+          "p90": 18.293902,
+          "p95": 23.149769,
+          "max": 23.39945,
+          "mean": 11.11682,
+          "observations": 96
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 21.901567,
+        "minSideWhileLongitudinalOverlap": 1.67555,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 21.901567,
+          "minSideWhileLongitudinalOverlap": 1.67555
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.461078,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 9.206667
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 108,
+        "inactiveOrHidden": 59
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 23,
+      "count": 20,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 60.795144,
+        "p10": 80.608511,
+        "p50": 124.699925,
+        "p90": 231.173766,
+        "p95": 231.94331,
+        "max": 232.838713,
+        "mean": 142.099315,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 60.795144,
+        "p10": 80.485484,
+        "p50": 122.621857,
+        "p90": 231.259822,
+        "p95": 231.988836,
+        "max": 232.838713,
+        "mean": 142.758721,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0.176667,
+      "planner": {
+        "started": 34,
+        "completed": 34,
+        "jumps": 0,
+        "targetLane": 5,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 34,
+        "independentlySettled": 34,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.816667,
+          "p90": 1.166667,
+          "p95": 1.2,
+          "max": 1.216667,
+          "mean": 0.9,
+          "observations": 34
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 0.816667,
+            "startX": -2.519797,
+            "outcome": "settled",
+            "endedAtSeconds": 1.616667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 1.616667,
+            "startX": -7.521074,
+            "outcome": "settled",
+            "endedAtSeconds": 2.416667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 4.633333,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 5.45,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 5.45,
+            "startX": -7.495538,
+            "outcome": "settled",
+            "endedAtSeconds": 6.516667,
+            "durationSeconds": 1.066667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 6.516667,
+            "startX": -2.232421,
+            "outcome": "settled",
+            "endedAtSeconds": 7.45,
+            "durationSeconds": 0.933333
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 14.416667,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 15.216667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 15.216667,
+            "startX": -2.508155,
+            "outcome": "settled",
+            "endedAtSeconds": 16.4,
+            "durationSeconds": 1.183333
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 16.4,
+            "startX": -7.572326,
+            "outcome": "settled",
+            "endedAtSeconds": 17.216667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 17.216667,
+            "startX": -2.500996,
+            "outcome": "settled",
+            "endedAtSeconds": 18.316667,
+            "durationSeconds": 1.1
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 18.316667,
+            "startX": 2.76154,
+            "outcome": "settled",
+            "endedAtSeconds": 19.25,
+            "durationSeconds": 0.933333
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 19.25,
+            "startX": 7.677247,
+            "outcome": "settled",
+            "endedAtSeconds": 20.066667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 20.066667,
+            "startX": 2.464506,
+            "outcome": "settled",
+            "endedAtSeconds": 20.966667,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 27.616667,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 28.416667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 28.733333,
+            "startX": 2.501719,
+            "outcome": "settled",
+            "endedAtSeconds": 29.716667,
+            "durationSeconds": 0.983334
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 31.6,
+            "startX": 7.500009,
+            "outcome": "settled",
+            "endedAtSeconds": 32.416667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 32.416667,
+            "startX": 2.43642,
+            "outcome": "settled",
+            "endedAtSeconds": 33.233333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 40.166667,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 40.983333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 40.983333,
+            "startX": 2.516706,
+            "outcome": "settled",
+            "endedAtSeconds": 41.933333,
+            "durationSeconds": 0.95
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 42.25,
+            "startX": 7.375953,
+            "outcome": "settled",
+            "endedAtSeconds": 43.416667,
+            "durationSeconds": 1.166667
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 57.666667,
+            "startX": 12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 58.466667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 58.466667,
+            "startX": 7.499442,
+            "outcome": "settled",
+            "endedAtSeconds": 59.266667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 59.266667,
+            "startX": 12.499917,
+            "outcome": "settled",
+            "endedAtSeconds": 60.083333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 60.083333,
+            "startX": 7.602709,
+            "outcome": "settled",
+            "endedAtSeconds": 60.883333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 60.883333,
+            "startX": 2.496017,
+            "outcome": "settled",
+            "endedAtSeconds": 62.1,
+            "durationSeconds": 1.216667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 66.85,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 67.65,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 67.65,
+            "startX": 2.498921,
+            "outcome": "settled",
+            "endedAtSeconds": 68.45,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 68.45,
+            "startX": 7.502693,
+            "outcome": "settled",
+            "endedAtSeconds": 69.483333,
+            "durationSeconds": 1.033333
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 70.116667,
+            "startX": 12.483389,
+            "outcome": "settled",
+            "endedAtSeconds": 71.016667,
+            "durationSeconds": 0.9
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 71.016667,
+            "startX": 7.325685,
+            "outcome": "settled",
+            "endedAtSeconds": 71.883333,
+            "durationSeconds": 0.866666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 71.883333,
+            "startX": 2.349651,
+            "outcome": "settled",
+            "endedAtSeconds": 72.7,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 72.7,
+            "startX": 7.526133,
+            "outcome": "settled",
+            "endedAtSeconds": 73.9,
+            "durationSeconds": 1.2
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 76.116667,
+            "startX": 12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 76.933333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 81.683333,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 82.483333,
+            "durationSeconds": 0.8
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 91,
+        "perMinute": 60.666667,
+        "racerCrossings": 5,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 91,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 1.806288,
+          "p10": 3.15,
+          "p50": 8.149999,
+          "p90": 13.327238,
+          "p95": 18.366538,
+          "max": 23.244931,
+          "mean": 8.569547,
+          "observations": 91
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 27.744561,
+        "minSideWhileLongitudinalOverlap": 1.168566,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 27.744561,
+          "minSideWhileLongitudinalOverlap": 1.168566
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.50209,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 8.9375
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 94,
+        "inactiveOrHidden": 854
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 1,
+      "count": 36,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 38.650569,
+        "p10": 69.534691,
+        "p50": 99.126275,
+        "p90": 160.28844,
+        "p95": 185.798897,
+        "max": 232.805162,
+        "mean": 106.804527,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 38.650569,
+        "p10": 69.483819,
+        "p50": 96.45087,
+        "p90": 163.125431,
+        "p95": 187.647721,
+        "max": 232.805162,
+        "mean": 106.24787,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0.012778,
+      "planner": {
+        "started": 26,
+        "completed": 26,
+        "jumps": 0,
+        "targetLane": 1,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 26,
+        "independentlySettled": 26,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.816667,
+          "p90": 1.016667,
+          "p95": 1.2,
+          "max": 1.233333,
+          "mean": 0.871795,
+          "observations": 26
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 0.816667,
+            "startX": 7.511411,
+            "outcome": "settled",
+            "endedAtSeconds": 1.633333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 1.633333,
+            "startX": 2.484336,
+            "outcome": "settled",
+            "endedAtSeconds": 2.433333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 3.7,
+            "startX": -2.500002,
+            "outcome": "settled",
+            "endedAtSeconds": 4.516667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 4.516667,
+            "startX": -7.510482,
+            "outcome": "settled",
+            "endedAtSeconds": 5.333333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 5.333333,
+            "startX": -2.482974,
+            "outcome": "settled",
+            "endedAtSeconds": 6.533333,
+            "durationSeconds": 1.2
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 7.8,
+            "startX": 2.499978,
+            "outcome": "settled",
+            "endedAtSeconds": 8.616667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 8.616667,
+            "startX": -2.502338,
+            "outcome": "settled",
+            "endedAtSeconds": 9.533333,
+            "durationSeconds": 0.916666
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 9.533333,
+            "startX": -7.515057,
+            "outcome": "settled",
+            "endedAtSeconds": 10.5,
+            "durationSeconds": 0.966667
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 16.833333,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 17.7,
+            "durationSeconds": 0.866667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 17.7,
+            "startX": -7.51587,
+            "outcome": "settled",
+            "endedAtSeconds": 18.5,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 18.5,
+            "startX": -2.437024,
+            "outcome": "settled",
+            "endedAtSeconds": 19.3,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 19.3,
+            "startX": 2.498909,
+            "outcome": "settled",
+            "endedAtSeconds": 20.1,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 22.316667,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 23.116667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 61.116667,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 61.916667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 66.35,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 67.15,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 67.15,
+            "startX": -7.504007,
+            "outcome": "settled",
+            "endedAtSeconds": 67.966667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 67.966667,
+            "startX": -2.49472,
+            "outcome": "settled",
+            "endedAtSeconds": 69.2,
+            "durationSeconds": 1.233333
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 69.516667,
+            "startX": 2.492243,
+            "outcome": "settled",
+            "endedAtSeconds": 70.45,
+            "durationSeconds": 0.933333
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 73.616667,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 74.416667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 74.416667,
+            "startX": 2.488265,
+            "outcome": "settled",
+            "endedAtSeconds": 75.233333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 75.233333,
+            "startX": 7.504574,
+            "outcome": "settled",
+            "endedAtSeconds": 76.033333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 76.033333,
+            "startX": 2.492079,
+            "outcome": "settled",
+            "endedAtSeconds": 77.016667,
+            "durationSeconds": 0.983334
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 77.65,
+            "startX": -2.488573,
+            "outcome": "settled",
+            "endedAtSeconds": 78.466667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 82.583333,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 83.6,
+            "durationSeconds": 1.016667
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 84.25,
+            "startX": -12.481427,
+            "outcome": "settled",
+            "endedAtSeconds": 85.066667,
+            "durationSeconds": 0.816667
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 69,
+        "perMinute": 46,
+        "racerCrossings": 4,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 69,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 2.790536,
+          "p10": 3.15,
+          "p50": 8.15,
+          "p90": 18.14185,
+          "p95": 19.304561,
+          "max": 23.278565,
+          "mean": 9.278482,
+          "observations": 69
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 5.229332,
+        "minSideWhileLongitudinalOverlap": 1.718755,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 5.229332,
+          "minSideWhileLongitudinalOverlap": 1.718755
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.464006,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 9.2775
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 54,
+        "inactiveOrHidden": 16734
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 7,
+      "count": 36,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 39.213177,
+        "p10": 71.639868,
+        "p50": 76.955067,
+        "p90": 129.993993,
+        "p95": 149.521087,
+        "max": 179.216228,
+        "mean": 89.001906,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 39.213177,
+        "p10": 71.638849,
+        "p50": 76.840811,
+        "p90": 130.541165,
+        "p95": 150.860066,
+        "max": 179.216228,
+        "mean": 88.756093,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0,
+      "planner": {
+        "started": 14,
+        "completed": 14,
+        "jumps": 0,
+        "targetLane": 3,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 14,
+        "independentlySettled": 14,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.816667,
+          "p90": 0.983333,
+          "p95": 1.1,
+          "max": 1.1,
+          "mean": 0.848809,
+          "observations": 14
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 0.816667,
+            "startX": 7.516957,
+            "outcome": "settled",
+            "endedAtSeconds": 1.633333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 2.9,
+            "startX": 12.500001,
+            "outcome": "settled",
+            "endedAtSeconds": 3.7,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 3.7,
+            "startX": 7.497642,
+            "outcome": "settled",
+            "endedAtSeconds": 4.5,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 16.216667,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 17.016667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 30.633333,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 31.5,
+            "durationSeconds": 0.866667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 31.5,
+            "startX": 2.516285,
+            "outcome": "settled",
+            "endedAtSeconds": 32.6,
+            "durationSeconds": 1.1
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 34.183333,
+            "startX": -2.499998,
+            "outcome": "settled",
+            "endedAtSeconds": 35,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 35,
+            "startX": -7.515968,
+            "outcome": "settled",
+            "endedAtSeconds": 35.983333,
+            "durationSeconds": 0.983333
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 37.566667,
+            "startX": -12.499995,
+            "outcome": "settled",
+            "endedAtSeconds": 38.4,
+            "durationSeconds": 0.833333
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 40.616667,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 41.433333,
+            "durationSeconds": 0.816666
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 41.433333,
+            "startX": -2.491983,
+            "outcome": "settled",
+            "endedAtSeconds": 42.25,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 42.25,
+            "startX": 2.597321,
+            "outcome": "settled",
+            "endedAtSeconds": 43.066667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 80.116667,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 80.916667,
+            "durationSeconds": 0.8
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 38,
+        "perMinute": 25.333333,
+        "racerCrossings": 3,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 38,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 3.13992,
+          "p10": 3.15,
+          "p50": 8.149999,
+          "p90": 18.15,
+          "p95": 18.327902,
+          "max": 23.150205,
+          "mean": 9.806895,
+          "observations": 38
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 4.057614,
+        "minSideWhileLongitudinalOverlap": 2.248251,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 4.057614,
+          "minSideWhileLongitudinalOverlap": 2.248251
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.522902,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 9.475833
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 42,
+        "inactiveOrHidden": 19050
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 23,
+      "count": 36,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 40.534185,
+        "p10": 71.437036,
+        "p50": 88.558862,
+        "p90": 154.661088,
+        "p95": 194.586897,
+        "max": 232.836851,
+        "mean": 101.220248,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 40.534185,
+        "p10": 71.412539,
+        "p50": 85.660699,
+        "p90": 139.510606,
+        "p95": 183.639728,
+        "max": 232.836851,
+        "mean": 98.13346,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0.037963,
+      "planner": {
+        "started": 16,
+        "completed": 16,
+        "jumps": 0,
+        "targetLane": 5,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 16,
+        "independentlySettled": 16,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.8,
+          "p90": 1.033333,
+          "p95": 1.083334,
+          "max": 1.083334,
+          "mean": 0.848958,
+          "observations": 16
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 2.4,
+            "startX": -2.499998,
+            "outcome": "settled",
+            "endedAtSeconds": 3.216667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 3.216667,
+            "startX": 2.504351,
+            "outcome": "settled",
+            "endedAtSeconds": 4.25,
+            "durationSeconds": 1.033333
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 10.266667,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 11.133333,
+            "durationSeconds": 0.866666
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 11.133333,
+            "startX": 2.503235,
+            "outcome": "settled",
+            "endedAtSeconds": 11.933333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 11.933333,
+            "startX": -2.517122,
+            "outcome": "settled",
+            "endedAtSeconds": 13.016667,
+            "durationSeconds": 1.083334
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 15.883333,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 16.7,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 25.883333,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 26.683333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 28.583333,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 29.383333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 35.4,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 36.2,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 39.05,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 39.85,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 41.75,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 42.55,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 42.55,
+            "startX": -7.498966,
+            "outcome": "settled",
+            "endedAtSeconds": 43.35,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 43.35,
+            "startX": -2.493229,
+            "outcome": "settled",
+            "endedAtSeconds": 44.3,
+            "durationSeconds": 0.95
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 54.433333,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 55.233333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 55.233333,
+            "startX": 7.502875,
+            "outcome": "settled",
+            "endedAtSeconds": 56.033333,
+            "durationSeconds": 0.8
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 58,
+        "perMinute": 38.666667,
+        "racerCrossings": 3,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 58,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 2.834488,
+          "p10": 3.149969,
+          "p50": 8.15,
+          "p90": 18.15,
+          "p95": 18.402986,
+          "max": 23.15,
+          "mean": 9.194879,
+          "observations": 58
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 11.345734,
+        "minSideWhileLongitudinalOverlap": 2.165375,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 11.345734,
+          "minSideWhileLongitudinalOverlap": 2.165375
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.47695,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 8.951667
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 52,
+        "inactiveOrHidden": 20448
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 1,
+      "count": 52,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 67.990448,
+        "p10": 69.605777,
+        "p50": 70.827677,
+        "p90": 92.465314,
+        "p95": 103.221923,
+        "max": 149.86391,
+        "mean": 76.788852,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 67.990448,
+        "p10": 69.566564,
+        "p50": 70.819005,
+        "p90": 85.540644,
+        "p95": 95.132406,
+        "max": 140.568845,
+        "mean": 75.3973,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0,
+      "planner": {
+        "started": 8,
+        "completed": 8,
+        "jumps": 0,
+        "targetLane": 3,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 8,
+        "independentlySettled": 8,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.8,
+          "p90": 0.816667,
+          "p95": 0.816667,
+          "max": 0.816667,
+          "mean": 0.802083,
+          "observations": 8
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 5.25,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 6.05,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 6.05,
+            "startX": 2.505792,
+            "outcome": "settled",
+            "endedAtSeconds": 6.85,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 6.85,
+            "startX": 7.501819,
+            "outcome": "settled",
+            "endedAtSeconds": 7.65,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 7.65,
+            "startX": 12.499337,
+            "outcome": "settled",
+            "endedAtSeconds": 8.45,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 24.916667,
+            "startX": 7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 25.716667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 31.416667,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 32.216667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 84.783333,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 85.583333,
+            "durationSeconds": 0.8
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 14,
+        "perMinute": 9.333333,
+        "racerCrossings": 2,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 14,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 3.15,
+          "p10": 3.15,
+          "p50": 3.562839,
+          "p90": 13.391847,
+          "p95": 18.15,
+          "max": 18.15,
+          "mean": 6.920132,
+          "observations": 14
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 36.849236,
+        "minSideWhileLongitudinalOverlap": 3.128816,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 36.849236,
+          "minSideWhileLongitudinalOverlap": 3.128816
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.31495,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 10
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 21,
+        "inactiveOrHidden": 65874
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 7,
+      "count": 52,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 42.047995,
+        "p10": 69.183429,
+        "p50": 82.119908,
+        "p90": 129.954065,
+        "p95": 144.537467,
+        "max": 187.361407,
+        "mean": 92.168388,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 42.047995,
+        "p10": 69.002079,
+        "p50": 80.604396,
+        "p90": 130.769118,
+        "p95": 145.637187,
+        "max": 187.361407,
+        "mean": 91.587633,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0,
+      "planner": {
+        "started": 18,
+        "completed": 18,
+        "jumps": 0,
+        "targetLane": 1,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 18,
+        "independentlySettled": 18,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.783333,
+          "p10": 0.8,
+          "p50": 0.8,
+          "p90": 0.95,
+          "p95": 1.3,
+          "max": 1.3,
+          "mean": 0.842593,
+          "observations": 18
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 4.616667,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 5.416667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 5.416667,
+            "startX": -7.505189,
+            "outcome": "settled",
+            "endedAtSeconds": 6.216667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 17.3,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 18.6,
+            "durationSeconds": 1.3
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 19.233333,
+            "startX": -7.497485,
+            "outcome": "settled",
+            "endedAtSeconds": 20.183333,
+            "durationSeconds": 0.95
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 29.366667,
+            "startX": -2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 30.216667,
+            "durationSeconds": 0.85
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 30.216667,
+            "startX": -7.495025,
+            "outcome": "settled",
+            "endedAtSeconds": 31.016667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 33.233333,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 34.033333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 36.25,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 37.066667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 0,
+            "targetLane": 1,
+            "startedAtSeconds": 44.033333,
+            "startX": -12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 44.833333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 60.983333,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 61.783333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 3,
+            "startedAtSeconds": 61.783333,
+            "startX": -2.496764,
+            "outcome": "settled",
+            "endedAtSeconds": 62.583333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 4,
+            "startedAtSeconds": 62.583333,
+            "startX": 2.509696,
+            "outcome": "settled",
+            "endedAtSeconds": 63.383333,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 5,
+            "startedAtSeconds": 64.966667,
+            "startX": 7.499999,
+            "outcome": "settled",
+            "endedAtSeconds": 65.766667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 5,
+            "targetLane": 4,
+            "startedAtSeconds": 70.2,
+            "startX": 12.5,
+            "outcome": "settled",
+            "endedAtSeconds": 71.05,
+            "durationSeconds": 0.85
+          },
+          {
+            "fromLane": 4,
+            "targetLane": 3,
+            "startedAtSeconds": 71.05,
+            "startX": 7.499912,
+            "outcome": "settled",
+            "endedAtSeconds": 71.833333,
+            "durationSeconds": 0.783333
+          },
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 74.05,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 74.85,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 74.85,
+            "startX": -2.51209,
+            "outcome": "settled",
+            "endedAtSeconds": 75.65,
+            "durationSeconds": 0.8
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 48,
+        "perMinute": 32,
+        "racerCrossings": 3,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 48,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 2.863734,
+          "p10": 3.149996,
+          "p50": 8.15,
+          "p90": 18.150043,
+          "p95": 21.73246,
+          "max": 23.15,
+          "mean": 9.581095,
+          "observations": 48
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 12.887225,
+        "minSideWhileLongitudinalOverlap": 1.719835,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 12.887225,
+          "minSideWhileLongitudinalOverlap": 1.719835
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.472556,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 9.433333
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 32,
+        "inactiveOrHidden": 74852
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    },
+    {
+      "seed": 23,
+      "count": 52,
+      "fps": 60,
+      "requestedSeconds": 90,
+      "observedSeconds": 90,
+      "crashed": false,
+      "impacts": 0,
+      "maxImpactDeltaVMetresPerSecond": 0,
+      "speedKmh": {
+        "min": 70.520309,
+        "p10": 71.574708,
+        "p50": 73.162309,
+        "p90": 102.779369,
+        "p95": 117.417565,
+        "max": 198.363927,
+        "mean": 82.137191,
+        "sampleSeconds": 90
+      },
+      "speedAfterWarmupKmh": {
+        "min": 70.520309,
+        "p10": 71.484497,
+        "p50": 73.145162,
+        "p90": 95.840165,
+        "p95": 112.534719,
+        "max": 198.363927,
+        "mean": 80.754696,
+        "sampleSeconds": 85
+      },
+      "above220Fraction": 0,
+      "planner": {
+        "started": 5,
+        "completed": 5,
+        "jumps": 0,
+        "targetLane": 0,
+        "changing": false
+      },
+      "changes": {
+        "observedTargetChanges": 5,
+        "independentlySettled": 5,
+        "settleDefinition": "Target changes until grounded within 0.32m of its center and |vx| < 1.3m/s for >= 0.08s",
+        "settledDurationSeconds": {
+          "min": 0.8,
+          "p10": 0.8,
+          "p50": 0.8,
+          "p90": 1.033333,
+          "p95": 1.033333,
+          "max": 1.033333,
+          "mean": 0.85,
+          "observations": 5
+        },
+        "events": [
+          {
+            "fromLane": 3,
+            "targetLane": 2,
+            "startedAtSeconds": 0,
+            "startX": 2.5,
+            "outcome": "settled",
+            "endedAtSeconds": 0.816667,
+            "durationSeconds": 0.816667
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 0.816667,
+            "startX": -2.501924,
+            "outcome": "settled",
+            "endedAtSeconds": 1.616667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 2,
+            "startedAtSeconds": 19.666667,
+            "startX": -7.5,
+            "outcome": "settled",
+            "endedAtSeconds": 20.466667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 2,
+            "targetLane": 1,
+            "startedAtSeconds": 20.466667,
+            "startX": -2.500044,
+            "outcome": "settled",
+            "endedAtSeconds": 21.266667,
+            "durationSeconds": 0.8
+          },
+          {
+            "fromLane": 1,
+            "targetLane": 0,
+            "startedAtSeconds": 21.266667,
+            "startX": -7.504421,
+            "outcome": "settled",
+            "endedAtSeconds": 22.3,
+            "durationSeconds": 1.033333
+          }
+        ]
+      },
+      "overtakes": {
+        "actualZCrossings": 23,
+        "perMinute": 15.333333,
+        "racerCrossings": 2,
+        "airborneCrossings": 0,
+        "bodyHeightCrossings": 23,
+        "sideGapAtBodyHeightCrossingMetres": {
+          "min": 3.149218,
+          "p10": 3.15,
+          "p50": 8.15,
+          "p90": 23.15,
+          "p95": 23.15,
+          "max": 23.153647,
+          "mean": 10.974628,
+          "observations": 23
+        },
+        "sideGapUnder0_5mCrossings": 0,
+        "bodyOverlapCrossings": 0
+      },
+      "clearanceMetres": {
+        "nearestFrontBumperWhileLateralOverlap": 12.236125,
+        "minSideWhileLongitudinalOverlap": 3.131512,
+        "planarAllHeights": {
+          "nearestFrontBumperWhileLateralOverlap": 12.236125,
+          "minSideWhileLongitudinalOverlap": 3.131512
+        }
+      },
+      "nearEncounters": {
+        "counts": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "pairSeconds": {
+          "sideUnder0_5m": 0,
+          "bumperUnder2m": 0,
+          "union": 0,
+          "sweptBodyOverlap": 0
+        },
+        "sweptBodyOverlapFramesWithoutNewImpact": 0
+      },
+      "closeFollowing": {
+        "bumperGapThresholdMetres": 2,
+        "briefLimitSeconds": 1.5,
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0
+      },
+      "maxStripeSeconds": 0.446306,
+      "air": {
+        "seconds": 0,
+        "fractionOfRun": 0,
+        "episodes": 0,
+        "longestSeconds": 0,
+        "durationSeconds": null,
+        "briefSeconds": 0,
+        "briefFractionOfRun": 0,
+        "hops": 0,
+        "plannerJumps": 0,
+        "longestHopChainWithin2Seconds": 0,
+        "rearJetSeconds": 0,
+        "liftSeconds": 0,
+        "minTankSeconds": 9.3625
+      },
+      "geometrySegmentsExcluded": {
+        "respawnOrDiscontinuity": 18,
+        "inactiveOrHidden": 48677
+      },
+      "sourceFilesStable": true,
+      "validity": "valid"
+    }
+  ],
+  "finalSourceVersions": {
+    "src/highway-demo.js": "34412641c929d1f5ff67ac1b093324852051bd57af5f5a09cafe9e8abc6fefed",
+    "src/highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "src/physics-main.js": "114a61d07d008a1e810e63b16e7780b72849b53e7c742d36872611fa41a79722",
+    "src/ui-hud.js": "db59f2030c55550ef31e647b718bee36fd809ea7663e5d06bb12a7da1a57d38c",
+    "src/config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "tests/helpers/demo-harness.mjs": "4f239189d30590f359c8da4b9cf52a64fa67852f47517fd1e28aa2c778cfa270",
+    "scripts/verify-demo.mjs": "999753cabe31d0944615c401ba5282b27b552ac4d2548c2e2333440ac87c2d3a"
+  },
+  "sourceFilesStable": true,
+  "validity": "valid"
+}

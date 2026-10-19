@@ -29,8 +29,8 @@ for(const fps of modes) test(`slow front driver uses a complete adjacent lane ra
 });
 
 test('fast rear approach blocks its target lane while the other adjacent gap is used',()=>{
-  const h=simulation({speed:65,vz:-65},[car(3,-130,22),car(2,55,100)]);
-  h.step(1/60);assert.equal(h.stats().targetLane,4);
+  const h=simulation({speed:65,vz:-65},[car(3,-30,22),car(2,20,100)]);
+  for(let i=0;i<60&&h.stats().started===0;i++)h.step(1/60);assert.equal(h.stats().targetLane,4);
   for(let i=0;i<180;i++)h.step(1/60);
   assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(h.stats().completed>=1);
 });
