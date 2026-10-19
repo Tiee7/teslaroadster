@@ -367,6 +367,7 @@ function switchMap(targetMap) {
 
 function resetCar() {
   window.RoadsterRanked?.abort('reset');
+  if (typeof resetChaseCamera === 'function') resetChaseCamera();
   clearDebris();
   carMeshGroup.visible = true;
   document.getElementById('modal-destroyed').classList.add('hidden');

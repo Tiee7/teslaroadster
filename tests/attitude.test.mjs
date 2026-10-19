@@ -453,3 +453,33 @@ test('ground traffic and building collision scalar responses remain unchanged', 
   close(h.state.speed, -6);
   close(h.state.vz, -20);
 });
+
+
+test('highway landing and ground steering preserve the equivalent yaw after complete aerial turns', () => {
+  for (const turns of [-2, -1, 0, 1, 2]) {
+    for (const yawOffset of [-0.2, 0, 0.2]) {
+      const yaw = turns * Math.PI * 2 + yawOffset;
+      const h = harness({ y: 0, yaw, speed: 0, vx: 0, vz: 0 });
+      h.step(1 / 60);
+      close(h.state.yaw, yaw);
+      h.move(1 / 60);
+      assert.ok(Math.abs(h.state.yaw - yaw) < 0.04, 'ground spring must not unwind completed turns');
+      assert.ok(Math.abs(h.context.wrapAnglePi(h.state.yaw)) <= Math.abs(yawOffset) + 1e-10);
+    }
+  }
+});
+
+test('highway rails and city boundaries use the same shortest yaw correction for every equivalent turn', () => {
+  for (const map of ['highway', 'city']) {
+    const results = [];
+    for (const turns of [-2, -1, 0, 1, 2]) {
+      const yaw = turns * Math.PI * 2 + 0.2;
+      const h = harness({ x: 5000, yaw, speed: 0, vx: 0, vz: 0 }, map);
+      h.move(1 / 60);
+      const delta = h.state.yaw - yaw;
+      assert.ok(Math.abs(delta) < 0.02, `${map}: boundary response must not unwind turns`);
+      results.push(delta);
+    }
+    results.forEach(delta => close(delta, results[0]));
+  }
+});
