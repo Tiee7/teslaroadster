@@ -39,8 +39,9 @@ function harness() {
   elements['ranked-nickname'].type = 'text';
   const calls = [];
   let now = 1000;
-  let network = async (url) => {
+  let network = async (url, options) => {
     if (url.includes('/leaderboard')) return response({ category: new URL(url, 'https://example.test').searchParams.get('category'), entries: [], limit: 100 });
+    if (url === '/api/end') return response({ ended: true, runId: JSON.parse(options.body).runId });
     if (url === '/api/run') return response({ runId: 'test-run', durationMs: 60000, serverNow: 1, expiresAt: 600001 });
     return response({ accepted: true, improved: true, bestScore: 222, rank: 1 });
   };
@@ -127,11 +128,16 @@ test('double-click does not create duplicate runs or duplicate submissions', asy
   resolveScore(response({ accepted: true, improved: true, bestScore: 0, rank: 1 })); await submit;
 });
 
-test('crash freezes achieved score but submission waits until deadline', async () => {
+test('crash immediately ends its server run and restart does not wait for 60 seconds', async () => {
   const h = harness(); await h.start(); h.state.score = 500; h.state.carsCleared = 2; h.state.isDestroyed = true;
-  h.advance(1000); assert.equal(h.phase(), 'running'); assert.match(h.elements['ranked-hud-status'].textContent, /score frozen/);
+  h.advance(1000); assert.equal(h.phase(), 'aborted'); assert.match(h.elements['ranked-hud-status'].textContent, /Vehicle crashed/);
   assert.equal(h.elements['ranked-submit'].hidden, true);
-  h.state.score = 900; h.advance(59000); assert.match(h.elements['ranked-result'].textContent, /520/);
+  const ended = h.calls.find(c => c.url === '/api/end');
+  assert.deepEqual(JSON.parse(ended.options.body), { runId: 'test-run' });
+  assert.equal(ended.options.credentials, 'same-origin'); assert.equal(ended.options.keepalive, true);
+  await h.start(); assert.equal(h.phase(), 'running'); assert.equal(h.state.isDestroyed, false);
+  assert.equal(h.calls.filter(c => c.url === '/api/run').length, 2);
+  assert.equal(h.calls.filter(c => c.url === '/api/score').length, 0);
 });
 
 test('background, blur and each settings invalidation cancel active runs', async () => {
@@ -139,6 +145,7 @@ test('background, blur and each settings invalidation cancel active runs', async
     const h = harness(); await h.start(); h.window.RoadsterRanked.abort(reason);
     assert.equal(h.phase(), 'aborted'); h.advance(60000); assert.equal(h.phase(), 'aborted');
     assert.equal(h.calls.filter(c => c.url === '/api/score').length, 0);
+    assert.equal(h.calls.filter(c => c.url === '/api/end').length, 1);
   }
   const h = harness(); await h.start(); h.document.hidden = true; await h.document.emit('visibilitychange'); assert.equal(h.phase(), 'aborted');
   const k = harness(); await k.start(); await k.window.emit('blur'); assert.equal(k.phase(), 'aborted');
@@ -147,10 +154,11 @@ test('background, blur and each settings invalidation cancel active runs', async
 
 test('cancel/close during pending start cannot unexpectedly start later', async () => {
   const h = harness(); let resolve;
-  h.network(async () => new Promise(done => { resolve = done; }));
+  h.network(async (url, options) => url === '/api/run' ? new Promise(done => { resolve = done; }) : response({ ended: true, runId: JSON.parse(options.body).runId }));
   const pending = h.start(); await flush(); await h.click('ranked-close');
-  resolve(response({ runId: 'late-run', durationMs: 60000 })); await pending;
+  resolve(response({ runId: 'late-run', durationMs: 60000 })); await pending; await flush();
   assert.equal(h.phase(), 'aborted'); assert.equal(h.state.score, 899);
+  assert.deepEqual(JSON.parse(h.calls.find(c => c.url === '/api/end').options.body), { runId: 'late-run' });
 });
 
 test('Unicode normalization and validation match nickname contract; storage denial is harmless', async () => {
@@ -213,10 +221,12 @@ test('integration guards every shared gameplay-setting pathway and ignores typin
   assert.ok(!hud.slice(hud.indexOf('const nonMinimalBtnIds'), hud.indexOf('if (state.hudMinimal)')).includes('btn-leaderboard'));
 });
 
-test('crash overlay includes its own ranked countdown', () => {
+test('crash overlay retains the canceled challenge status without an obsolete countdown', () => {
   const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
   assert.match(html, /id="ranked-crash-status"/);
   assert.match(source, /text\('ranked-crash-status'/);
+  const destroy = physics.slice(physics.indexOf('function destroyVehicle('), physics.indexOf('function updateDestroyedScores('));
+  assert.match(destroy, /RoadsterRanked\?\.abort\('crash'\)/);
 });
 
 test('submitted score status can be dismissed and reopened without losing result', async () => {
@@ -256,4 +266,63 @@ test('dismissal preserves a pending result and does not stop an active countdown
   await h.click('btn-leaderboard');
   assert.equal(h.elements['ranked-submit'].hidden, false);
   assert.equal(h.phase(), 'complete');
+});
+
+
+test('restart waits for end confirmation and does not duplicate pending end requests', async () => {
+  const h = harness(); await h.start(); let finish;
+  h.network(async (url, options) => {
+    if (url === '/api/end') return new Promise(resolve => { finish = () => resolve(response({ ended: true, runId: JSON.parse(options.body).runId })); });
+    return response({ runId: 'new-run', durationMs: 60000 });
+  });
+  h.window.RoadsterRanked.abort('crash');
+  const next = h.start(); await flush();
+  await h.start();
+  assert.equal(h.phase(), 'starting');
+  assert.equal(h.calls.filter(c => c.url === '/api/end').length, 1);
+  assert.equal(h.calls.filter(c => c.url === '/api/run').length, 1);
+  finish(); await next;
+  assert.equal(h.phase(), 'running');
+  assert.deepEqual(h.calls.map(c => c.url), ['/api/run', '/api/end', '/api/run']);
+});
+
+test('uncertain end is retried with same run ID before a new start, failures stay visible', async () => {
+  const h = harness(); await h.start(); let attempts = 0;
+  h.network(async (url, options) => {
+    if (url === '/api/end') { attempts++; if (attempts <= 2) throw Error('network_down'); return response({ ended: true, runId: JSON.parse(options.body).runId }); }
+    return response({ runId: 'new-run', durationMs: 60000 });
+  });
+  h.window.RoadsterRanked.abort('crash'); await flush();
+  assert.match(h.elements['ranked-error'].textContent, /previous challenge ended/);
+  await h.start(); assert.equal(h.phase(), 'idle');
+  assert.match(h.elements['ranked-error'].textContent, /previous challenge ended/);
+  assert.equal(h.calls.filter(c => c.url === '/api/run').length, 1);
+  await h.start(); assert.equal(h.phase(), 'running');
+  const ends = h.calls.filter(c => c.url === '/api/end');
+  assert.equal(ends.length, 3); assert.ok(ends.every(c => c.options.body === ends[0].options.body));
+});
+
+test('canceled pending issuance is ended before a newer start, late callbacks cannot abort new run', async () => {
+  const h = harness(); let finishStart; let finishEnd; let starts = 0;
+  h.network(async (url, options) => {
+    if (url === '/api/run' && ++starts === 1) return new Promise(resolve => { finishStart = resolve; });
+    if (url === '/api/end') return new Promise(resolve => { finishEnd = () => resolve(response({ ended: true, runId: JSON.parse(options.body).runId })); });
+    return response({ runId: 'new-run', durationMs: 60000 });
+  });
+  const first = h.start(); await flush(); await h.click('ranked-close');
+  const second = h.start(); await flush();
+  assert.equal(starts, 1);
+  finishStart(response({ runId: 'old-run', durationMs: 60000 })); await first; await flush();
+  assert.equal(h.phase(), 'starting'); assert.equal(starts, 1);
+  assert.equal(h.calls.filter(c => c.url === '/api/end').length, 1);
+  finishEnd(); await second;
+  assert.equal(h.phase(), 'running'); assert.equal(starts, 2);
+  assert.deepEqual(JSON.parse(h.calls.find(c => c.url === '/api/end').options.body), { runId: 'old-run' });
+});
+
+test('discarding a completed result releases its server run before playing again', async () => {
+  const h = harness(); await h.start(); h.advance(60000);
+  await h.click('ranked-discard'); await h.start();
+  assert.equal(h.phase(), 'running');
+  assert.deepEqual(h.calls.filter(c => !c.url.includes('leaderboard')).map(c => c.url), ['/api/run', '/api/end', '/api/run']);
 });

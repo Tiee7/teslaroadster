@@ -12,21 +12,22 @@
       language: '中文', category: 'Public leaderboard', current: 'Challenge category',
       nickname: 'Public nickname', nicknameHint: '1–20 letters/numbers, spaces, _ or -; start with a letter/number. This name is public. Don’t use private information.',
       privacy: 'No account needed. An anonymous cookie identifies this browser. Your best score per category stays on this browser identity; clearing cookies or changing browsers creates a new identity. Only the nickname and score are shown publicly.',
-      rules: '60 real-time seconds. Score = HUD score (points + vehicles cleared × 10). Each run resets the car, score, tires and gas, with 36 vehicles, Cyber Night, Plaid OFF and stabilizer ON. Your map and physics mode set the category. Reset, map/mode, weather, traffic, Plaid or stabilizer changes cancel a running challenge. Leaving the tab or window also cancels it. A crash freezes your score until time ends.',
+      rules: '60 real-time seconds. Score = HUD score (points + vehicles cleared × 10). Each run resets the car, score, tires and gas, with 36 vehicles, Cyber Night, Plaid OFF and stabilizer ON. Your map and physics mode set the category. Reset, map/mode, weather, traffic, Plaid or stabilizer changes cancel a running challenge. Leaving the tab or window also cancels it. A crash immediately cancels the run without publishing a score; you can restart once the server confirms it has ended.',
       trust: 'Casual v1: server-issued timed runs and basic checks. Scores come from the browser; this leaderboard is not cheat-proof.',
-      baseline: 'Starts fresh: 36 vehicles · Cyber Night · Plaid OFF · Stabilizer ON. A server-issued run reserves this browser for 65s, even if you cancel.',
+      baseline: 'Starts fresh: 36 vehicles · Cyber Night · Plaid OFF · Stabilizer ON. Crashes and cancellations end the server run before your next challenge.',
       activeError: 'A run is already reserved for this browser. Wait 65 seconds after the last start, then try again.',
       start: 'Start 60-second challenge', starting: 'Starting…', abort: 'Cancel challenge', refresh: 'Refresh board',
       submit: 'Submit public score', retry: 'Retry same score', submitting: 'Submitting…', discard: 'Discard result',
       rank: 'Rank', name: 'Nickname', score: 'Score', empty: 'No scores yet. Set the first one!',
       loading: 'Loading leaderboard…', boardError: 'Leaderboard unavailable. Try Refresh.',
-      idle: 'Sandbox • challenge is optional', running: 'Ranked challenge', crashed: 'Crashed • score frozen',
+      idle: 'Sandbox • challenge is optional', running: 'Ranked challenge', crash: 'Vehicle crashed',
       done: 'Time! Score ready to submit', cancelled: 'Challenge cancelled',
       reset: 'Car reset', map: 'Map changed', physics: 'Physics mode changed', weather: 'Weather changed',
       traffic: 'Traffic changed', plaid: 'Plaid setting changed', stabilizer: 'Stabilizer changed',
       hidden: 'Tab or window left', closed: 'Start cancelled', invalid: 'Challenge settings changed',
       invalidName: 'Use 1–20 Unicode letters/numbers, spaces, _ or -, starting with a letter/number. Choose a public nickname.',
       startError: 'Could not start the challenge. No score was submitted. Try again when connected.',
+      endError: 'The server has not confirmed the previous challenge ended. Start again to retry ending it first.',
       submitError: 'Submission not confirmed. Your exact result is kept. Retry sends the same run and score.',
       rejected: 'The server did not accept this run. Your result is kept; check the message before retrying.',
       saved: 'Score accepted', improved: 'New personal best!', unchanged: 'Your previous best stays',
@@ -42,21 +43,22 @@
       language: 'EN', category: '公开排行榜', current: '挑战分组',
       nickname: '公开昵称', nicknameHint: '1–20 个文字、数字、空格、_ 或 -，以文字或数字开头。昵称公开，请勿填写隐私信息。',
       privacy: '无需注册。匿名 Cookie 用于识别本浏览器，每个分组保存你的最高分。清除 Cookie 或更换浏览器会成为新的身份。公开榜单只显示昵称与分数。',
-      rules: '挑战持续真实时间 60 秒。分数＝HUD 得分（积分＋超越车辆数 × 10）。每次重置车辆、得分、轮胎与气体，统一为 36 辆车、星际暗夜、狂暴关闭、自动回正开启。地图与物理模式决定分组。挑战中重置车辆、更改地图、模式、天气、车流、狂暴或自动回正都会取消挑战；离开标签页或窗口也会取消。撞毁后冻结分数，等待计时结束。',
+      rules: '挑战持续真实时间 60 秒。分数＝HUD 得分（积分＋超越车辆数 × 10）。每次重置车辆、得分、轮胎与气体，统一为 36 辆车、星际暗夜、狂暴关闭、自动回正开启。地图与物理模式决定分组。挑战中重置车辆、更改地图、模式、天气、车流、狂暴或自动回正都会取消挑战；离开标签页或窗口也会取消。撞毁后立即向服务器取消挑战，不提交分数；服务器确认结束后即可重开。',
       trust: '休闲版 v1：服务器签发限时挑战并做基础校验。得分由浏览器上报，无法完全防作弊。',
-      baseline: '统一重开：36 辆车 · 星际暗夜 · 狂暴关闭 · 自动回正开启。服务器签发后将占用本浏览器 65 秒，取消也需等待。',
+      baseline: '统一重开：36 辆车 · 星际暗夜 · 狂暴关闭 · 自动回正开启。撞毁或取消会结束服务器挑战，确认后即可重开。',
       activeError: '此浏览器已有预留挑战，请在上次启动后等待 65 秒再重试。',
       start: '开始 60 秒挑战', starting: '启动中…', abort: '取消挑战', refresh: '刷新榜单',
       submit: '提交公开分数', retry: '重试同一分数', submitting: '提交中…', discard: '放弃此成绩',
       rank: '名次', name: '昵称', score: '分数', empty: '暂无成绩，来创造第一个纪录！',
       loading: '正在加载排行榜…', boardError: '暂时无法加载榜单，请刷新重试。',
-      idle: '自由驾驶 · 挑战可选', running: '排位挑战', crashed: '车辆已毁 · 得分冻结',
+      idle: '自由驾驶 · 挑战可选', running: '排位挑战', crash: '车辆已撞毁',
       done: '时间到！可提交成绩', cancelled: '挑战已取消',
       reset: '车辆已重置', map: '地图已更改', physics: '物理模式已更改', weather: '天气已更改',
       traffic: '车流已更改', plaid: '狂暴设置已更改', stabilizer: '自动回正已更改',
       hidden: '已离开标签页或窗口', closed: '已取消启动', invalid: '挑战设置已更改',
       invalidName: '请使用 1–20 个 Unicode 文字、数字、空格、_ 或 -，以文字或数字开头，并选择适合公开的昵称。',
       startError: '无法启动挑战，尚未提交分数。联网后可重试。',
+      endError: '服务器尚未确认上次挑战已结束。再次点击开始会先重试结束旧挑战。',
       submitError: '未确认提交成功。已保留完整成绩，重试只会发送同一挑战和分数。',
       rejected: '服务器未接受此挑战。成绩已保留，请查看提示后再重试。',
       saved: '成绩已接受', improved: '个人新纪录！', unchanged: '保留此前最高分',
@@ -73,7 +75,8 @@
   let run = null;
   let result = null;
   let deadline = 0;
-  let frozenScore = null;
+  const pendingEnds = new Map();
+  let pendingStart = Promise.resolve();
   let requestVersion = 0;
   let boardVersion = 0;
   let reason = '';
@@ -117,7 +120,7 @@
   }
   function statusText() {
     const c = t();
-    if (phase === 'running') return frozenScore === null ? c.running : c.crashed;
+    if (phase === 'running') return c.running;
     if (phase === 'starting') return c.starting;
     if (phase === 'complete' || phase === 'submitting') return c.done;
     if (phase === 'aborted') return `${c.cancelled}: ${c[reason] || c.invalid}`;
@@ -147,7 +150,7 @@
     text('ranked-error', errorType ? `${c[errorType]}${error ? ` (${c.errorCode}: ${error})` : ''}` : '');
     const seconds = phase === 'running' ? Math.max(0, Math.ceil((deadline - performance.now()) / 1000)) : 0;
     text('ranked-countdown', phase === 'running' ? `${seconds}s` : '');
-    text('ranked-crash-status', phase === 'running' ? `${c.crashed} · ${seconds} ${c.seconds}` : '');
+    text('ranked-crash-status', phase === 'aborted' && reason === 'crash' ? message : '');
     $('ranked-countdown').setAttribute('aria-label', `${seconds} ${c.seconds}`);
     lastSecond = seconds;
     text('ranked-start', phase === 'starting' ? c.starting : c.start);
@@ -190,8 +193,9 @@
     requestVersion += 1;
     phase = 'aborted';
     reason = why;
+    const endedRun = run;
     run = null;
-    frozenScore = null;
+    if (endedRun) queueEnd(endedRun.runId);
     clearAllInputKeys();
     render();
   }
@@ -202,9 +206,9 @@
     if (phase !== 'running') return;
     if (document.hidden) { abort('hidden'); return; }
     if (!compatible()) { abort('invalid'); return; }
-    if (state.isDestroyed && frozenScore === null) { frozenScore = score(); render(); }
+    if (state.isDestroyed) { abort('crash'); return; }
     if (now >= deadline) {
-      result = Object.freeze({ runId: run.runId, nickname: run.nickname, score: frozenScore === null ? score() : frozenScore, elapsedMs: DURATION, category: run.category });
+      result = Object.freeze({ runId: run.runId, nickname: run.nickname, score: score(), elapsedMs: DURATION, category: run.category });
       phase = 'complete';
       clearAllInputKeys();
       render();
@@ -216,7 +220,6 @@
     if (second !== lastSecond) {
       lastSecond = second;
       text('ranked-countdown', `${second}s`);
-      text('ranked-crash-status', `${t().crashed} · ${second} ${t().seconds}`);
       $('ranked-countdown').setAttribute('aria-label', `${second} ${t().seconds}`);
     }
   }
@@ -238,6 +241,39 @@
       return data;
     } finally { clearTimeout(timer); }
   }
+  // Keep uncertain end requests by exact run ID. A delayed retry can never end a newer run.
+  function queueEnd(runId) {
+    if (!pendingEnds.has(runId)) pendingEnds.set(runId, { promise: null });
+    return endRun(runId);
+  }
+  function endRun(runId) {
+    const entry = pendingEnds.get(runId);
+    if (!entry) return Promise.resolve(true);
+    if (entry.promise) return entry.promise;
+    entry.promise = (async () => {
+      try {
+        const data = await api('/api/end', {
+          method: 'POST', credentials: 'same-origin', cache: 'no-store', keepalive: true,
+          headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ runId }),
+        });
+        if (data.ended !== true || data.runId !== runId) throw new Error('invalid_response');
+        pendingEnds.delete(runId);
+        return true;
+      } catch (failure) {
+        if (!isInFlight()) {
+          errorType = 'endError'; error = failure.name === 'AbortError' ? '' : failure.message;
+          render();
+        }
+        return false;
+      } finally { entry.promise = null; }
+    })();
+    return entry.promise;
+  }
+  async function finishPendingEnds() {
+    for (const runId of pendingEnds.keys()) {
+      if (!await endRun(runId)) throw new Error('end_unconfirmed');
+    }
+  }
   async function start() {
     if (isInFlight() || isSaved()) return;
     const enteredName = $('ranked-nickname').value;
@@ -248,17 +284,35 @@
     if (document.hidden) return;
     try { localStorage.setItem('roadster-public-nickname', nickname); } catch (_) {}
     const chosen = category();
+    const previousStart = pendingStart;
     const version = ++requestVersion;
-    phase = 'starting'; error = ''; errorType = ''; result = null; savedReply = null;
+    let issuedRunId = null;
+    phase = 'starting'; error = ''; errorType = ''; result = null; run = null; savedReply = null;
     clearAllInputKeys(); render();
     try {
-      const data = await api('/api/run', {
+      // A canceled start may still return a server-issued run; release it before issuing another.
+      await previousStart;
+      if (version !== requestVersion || phase !== 'starting') return;
+      await finishPendingEnds();
+      if (version !== requestVersion || phase !== 'starting') return;
+      const issuance = api('/api/run', {
         method: 'POST', credentials: 'same-origin', cache: 'no-store',
         headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category: chosen }),
+      }).then((data) => {
+        if (typeof data.runId === 'string' && data.runId && data.runId.length <= 100) {
+          issuedRunId = data.runId;
+          if (version !== requestVersion || phase !== 'starting') queueEnd(issuedRunId);
+        }
+        return data;
       });
+      pendingStart = issuance.catch(() => {});
+      const data = await issuance;
       if (version !== requestVersion || phase !== 'starting') return;
-      if (document.hidden || category() !== chosen) { abort(document.hidden ? 'hidden' : 'invalid'); return; }
-      if (typeof data.runId !== 'string' || !data.runId || data.durationMs !== DURATION) throw new Error('invalid_run');
+      if (document.hidden || category() !== chosen) {
+        if (issuedRunId) queueEnd(issuedRunId);
+        abort(document.hidden ? 'hidden' : 'invalid'); return;
+      }
+      if (!issuedRunId || data.durationMs !== DURATION) throw new Error('invalid_run');
       // Baseline only after the server has issued a run. No elapsed sandbox score can carry over.
       normalizing = true;
       window.RoadsterTaxi?.stop();
@@ -282,7 +336,6 @@
       populateTraffic(36);
       normalizing = false;
       run = { runId: data.runId, nickname, category: chosen };
-      frozenScore = null;
       phase = 'running';
       deadline = performance.now() + DURATION;
       // Reset the animation clock so a slow request never grants a pre-start simulation step.
@@ -293,8 +346,9 @@
       render();
     } catch (failure) {
       normalizing = false;
+      if (issuedRunId) queueEnd(issuedRunId);
       if (version !== requestVersion) return;
-      phase = 'idle'; errorType = failure.message === 'run_active' ? 'activeError' : 'startError'; error = failure.name === 'AbortError' ? '' : failure.message;
+      phase = 'idle'; errorType = failure.message === 'end_unconfirmed' ? 'endError' : failure.message === 'run_active' ? 'activeError' : 'startError'; error = failure.name === 'AbortError' ? '' : failure.message;
       render();
     }
   }
@@ -353,6 +407,7 @@
   $('ranked-abort').addEventListener('click', () => abort('closed'));
   $('ranked-discard').addEventListener('click', () => {
     if (phase !== 'complete') return;
+    if (run) queueEnd(run.runId);
     result = null; run = null; phase = 'idle'; errorType = ''; error = ''; render();
   });
   $('ranked-refresh').addEventListener('click', loadBoard);
@@ -367,6 +422,7 @@
   });
   document.addEventListener('visibilitychange', () => { if (document.hidden) abort('hidden'); });
   window.addEventListener('blur', () => abort('hidden'));
+  window.addEventListener('pagehide', () => abort('hidden'));
   window.RoadsterRanked = { abort, tick, render, isDialogOpen: () => dialog.open };
   setInterval(() => tick(), 200);
   render();

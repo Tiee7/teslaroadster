@@ -271,6 +271,7 @@ function destroyVehicle(reasonKey) {
   if (state.isDestroyed) return;
   state.isDestroyed = true;
   window.RoadsterTaxi?.onDestroyed();
+  window.RoadsterRanked?.abort('crash');
   state.hullIntegrity = 0;
   state.destroyReasonKey = reasonKey || 'crashReasonThreshold';
   carMeshGroup.visible = false;

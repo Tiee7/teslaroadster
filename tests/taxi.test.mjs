@@ -62,6 +62,10 @@ test('pickup stops and every drivable route edge clear the actual generated city
     assert.equal(core.isStopClear(node, boundsContext.cityBuildings, 1200), true);
     assert.ok(Math.abs(node.x) + core.STOP_CLEARANCE < 1200 && Math.abs(node.z) + core.STOP_CLEARANCE < 1200);
     for (const building of boundsContext.cityBuildings) {
+      const dx = Math.max(building.minX - node.x, 0, node.x - building.maxX);
+      const dz = Math.max(building.minZ - node.z, 0, node.z - building.maxZ);
+      assert.ok(Math.hypot(dx, dz) > core.PICKUP_RADIUS + Math.hypot(1.1, 1.8),
+        'entire doubled pickup approach clears real building boxes including the car footprint');
       assert.ok(node.x < building.minX - 1.1 || node.x > building.maxX + 1.1 ||
         node.z < building.minZ - 1.8 || node.z > building.maxZ + 1.8, 'stop must clear the real car collision box');
       for (const edge of graph.edges[node.id]) {
@@ -97,7 +101,7 @@ test('five distinct spaced waiting passengers have long reachable trips on every
   assert.equal(session.snapshot().delivered, 120);
 });
 
-test('arrival is exactly 2m in 3D, including swept ground motion and excluding overhead flight', () => {
+test('green destination arrival stays exactly 2m in 3D, including swept motion', () => {
   const stop = { x: 0, y: 0, z: 0 };
   for (const p of [{ x: 2, y: 0, z: 0 }, { x: 0, y: 2, z: 0 }, { x: 0, y: 0, z: -2 }]) assert.equal(core.withinArrival(p, p, stop), true);
   for (const p of [{ x: 2.001, y: 0, z: 0 }, { x: 0, y: 2.001, z: 0 }, { x: 1.5, y: 1.5, z: 0 }]) assert.equal(core.withinArrival(p, p, stop), false);
@@ -107,18 +111,50 @@ test('arrival is exactly 2m in 3D, including swept ground motion and excluding o
   assert.equal(core.withinArrival(null, stop, stop), false);
 });
 
+test('white pickup radius doubles to 4m without widening destination or permitting airborne arrivals', () => {
+  assert.equal(core.PICKUP_RADIUS, core.ARRIVAL_RADIUS * 2);
+  assert.equal(core.PICKUP_RADIUS, 4); assert.equal(core.ARRIVAL_RADIUS, 2);
+  for (const offset of [4, -4]) {
+    const session = makeSession(); session.start(origin); const trip = session.snapshot().waiting[0];
+    assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + offset * 1.0001 }), null);
+    assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + offset, y: 0.36 }), null);
+    assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + offset }).type, 'picked-up');
+    assert.equal(at(session, { ...trip.destination, x: trip.destination.x + offset }), null);
+    assert.equal(at(session, { ...trip.destination, x: trip.destination.x + offset / 2 }).type, 'delivered');
+  }
+  for (const offset of [3.99, 4.01]) {
+    const session = makeSession(); session.start(origin); const trip = session.snapshot().waiting[0];
+    session.pause({ ...trip.pickup, x: trip.pickup.x - 10, z: trip.pickup.z + offset });
+    const event = session.advance({ ...trip.pickup, x: trip.pickup.x + 10, z: trip.pickup.z + offset });
+    assert.equal(event?.type ?? null, offset < 4 ? 'picked-up' : null, 'swept ground approach obeys the white radius');
+  }
+  const stop = { x: 0, y: 0, z: 0 };
+  assert.equal(core.withinArrival({ x: 2.8, y: 0, z: 2.8 }, { x: 2.8, y: 0, z: 2.8 }, stop, 4), true);
+  assert.equal(core.withinArrival({ x: 3, y: 0, z: 3 }, { x: 3, y: 0, z: 3 }, stop, 4), false);
+  for (const radius of [NaN, Infinity, -1]) assert.equal(core.withinArrival(stop, stop, stop, radius), false);
+  assert.equal(core.withinArrival(stop, stop, null, 4), false);
+});
+
+test('both start confirmations describe the expanded white pickup radius', () => {
+  for (const language of ['en', 'zh']) {
+    const h = harness(); h.context.currentLang = language; h.key();
+    assert.match(h.confirms[0], language === 'zh' ? /地面靠近 4 米自动接上/ : /within 4m on the ground/);
+  }
+});
+
 test('single-passenger state machine pays once, refills five and ignores other pickup points while occupied', () => {
   const session = makeSession(); session.start(origin);
   const [trip, other] = session.snapshot().waiting;
   assert.equal(at(session, { ...trip.pickup, y: 2.01 }), null);
-  assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 2.01 }), null);
-  assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 2 }).type, 'picked-up');
+  assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 4.01 }), null);
+  assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 4 }).type, 'picked-up');
   assert.equal(session.snapshot().waiting.length, 4);
   assert.equal(at(session, other.pickup), null);
   assert.equal(session.snapshot().passenger.id, trip.id);
   assert.equal(session.snapshot().score, 0);
   assert.equal(at(session, { ...trip.destination, y: 2.01 }), null);
-  assert.equal(at(session, trip.destination).type, 'delivered');
+  assert.equal(at(session, { ...trip.destination, x: trip.destination.x + 2.01 }), null);
+  assert.equal(at(session, { ...trip.destination, x: trip.destination.x + 2 }).type, 'delivered');
   assert.equal(session.snapshot().passenger, null);
   assert.equal(session.snapshot().waiting.length, 5);
   assert.equal(session.snapshot().score, trip.fare);
@@ -421,8 +457,8 @@ test('landing and low altitude flight never sweep a pickup or destination', () =
   const session = makeSession(); session.start(origin);
   const trip = session.snapshot().waiting[0];
   const flyThenLandBeyond = stop => {
-    assert.equal(session.advance({ ...stop, x: stop.x - 4, y: 0.4 }, false), null);
-    assert.equal(session.advance({ ...stop, x: stop.x + 4 }, true), null);
+    assert.equal(session.advance({ ...stop, x: stop.x - 6, y: 0.4 }, false), null);
+    assert.equal(session.advance({ ...stop, x: stop.x + 6 }, true), null);
     assert.equal(session.advance({ ...stop, y: 0.1 }, false), null);
   };
   flyThenLandBeyond(trip.pickup); assert.equal(session.snapshot().passenger, null);
@@ -513,11 +549,11 @@ test('destination bearing maps vehicle-forward up and left/right correctly at ev
 
 const navigationParts = h => {
   const navigation = h.elements['hud-top-container'].children.find(child => child.id === 'city-taxi-navigation');
-  return { navigation, arrow: navigation?.children[0] };
+  return { navigation, arrow: navigation?.children[0], distance: navigation?.children[1] };
 };
 const rotation = arrow => Number(arrow.style.transform.match(/rotate\(([^r]+)rad\)/)[1]);
 
-test('upper-left navigation is a bare arrow, hidden empty and live across all three real HUD modes and cameras', () => {
+test('top-left navigation shows only arrow and live meters across every HUD mode and camera', () => {
   const h = harness(), top = h.elements['hud-top-container'];
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
   const modeControls = hud.slice(hud.indexOf('const HUD_MODES'), hud.indexOf('function restoreHudMode()'));
@@ -525,11 +561,12 @@ test('upper-left navigation is a bare arrow, hidden empty and live across all th
   h.context.updateHudBounds = () => {};
   vm.runInContext(`${modeControls}\n${perspectiveControl}`, h.context);
   assert.equal(navigationParts(h).navigation, undefined);
-  h.key(); const { navigation, arrow } = navigationParts(h);
+  h.key(); const { navigation, arrow, distance } = navigationParts(h);
   assert.equal(navigation.hidden, true); assert.equal(top.classList.contains('taxi-navigation-active'), false);
   assert.equal(top.children.indexOf(navigation) + 1, top.children.indexOf(h.elements['hud-main']));
   assert.equal(navigation.attributes.role, 'img');
-  assert.deepEqual(navigation.children, [arrow], 'no label, distance, dial, card or other visible element');
+  assert.deepEqual(navigation.children, [arrow, distance], 'only arrow and meters, no title, dial or card');
+  assert.equal(distance.textContent, ''); assert.equal(distance.attributes['aria-hidden'], 'true');
   assert.equal(navigation.textContent, ''); assert.equal(arrow.textContent, '');
   assert.equal(arrow.children.length, 0); assert.equal(arrow.attributes['aria-hidden'], 'true');
   const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
@@ -548,7 +585,8 @@ test('upper-left navigation is a bare arrow, hidden empty and live across all th
       assert.match(navigation.attributes['aria-label'], /100 meters/);
       h.state.yaw = -Math.PI / 2; h.taxi.tick();
       assert.ok(Math.abs(Math.sin(rotation(arrow)) + 1) < 1e-10);
-      assert.deepEqual(navigation.children, [arrow]);
+      assert.deepEqual(navigation.children, [arrow, distance]);
+      assert.equal(distance.textContent, '100m');
       assert.equal(arrow.textContent, '');
     }
   }
@@ -558,32 +596,44 @@ test('upper-left navigation is a bare arrow, hidden empty and live across all th
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
   assert.match(css, /\.city-taxi-navigation\[hidden\] \{ display: none; \}/);
   assert.match(css, /#hud-left, #hud-right-card \{[^}]*var\(--hud-navigation-height, 0px\)/s);
-  assert.match(css, /\.taxi-navigation-active \{ --hud-navigation-height: 40px; \}/);
+  assert.match(css, /\.taxi-navigation-active \{ --hud-navigation-height: 0px; \}/);
   assert.match(css, /\.city-taxi-navigation \{[^}]*border: 0; background: none;/s);
   assert.doesNotMatch(css, /\.city-taxi-navigation-(?:card|dial|detail)/);
   assert.doesNotMatch(css, /\.cockpit-view[^}]*\.city-taxi-navigation/);
   assert.doesNotMatch(css, /(?:data-hud-mode|hud-minimal-view|hud-compact-view)[^}]*\.city-taxi-navigation/);
 });
 
-test('bare arrow has unclipped rotation space on portrait, landscape and desktop viewports', () => {
+test('corner arrow and meters clear safe areas, header controls and rotation on phone and desktop', () => {
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
-  assert.match(css, /\.taxi-navigation-active \{ --hud-navigation-height: 48px; \}/);
+  const host = css.match(/\.city-taxi-navigation \{([^}]+)\}/)[1];
+  const header = css.match(/\.taxi-navigation-active #hud-header \{([^}]+)\}/)[1];
+  assert.match(host, /position: absolute; top: calc\(4px \+ env\(safe-area-inset-top, 0px\)\)/);
+  assert.match(host, /left: calc\(4px \+ env\(safe-area-inset-left, 0px\)\)/);
+  assert.match(host, /grid-template-rows: 40px 18px/);
+  assert.match(host, /width: 40px; height: 58px/);
+  assert.match(header, /padding-left: calc\(56px \+ env\(safe-area-inset-left, 0px\)\)/);
+  assert.match(header, /min-height: calc\(68px \+ env\(safe-area-inset-top, 0px\)\)/);
   assert.match(css, /\.city-taxi-navigation-arrow \{[^}]*width: 20px; height: 30px/);
   assert.match(css, /@media \(max-width: 767px\)[\s\S]*?\.city-taxi-navigation-arrow \{ width: 16px; height: 26px; \}/);
   for (const [width, height] of [[320, 568], [568, 320], [390, 844], [844, 390], [1366, 768]]) {
-    const mobile = width <= 767;
-    const rowHeight = mobile ? 40 : 48, paddingLeft = mobile ? 12 : 20;
-    const arrowWidth = mobile ? 16 : 20, arrowHeight = mobile ? 26 : 30;
-    const radius = Math.hypot(arrowWidth, arrowHeight) / 2;
-    assert.ok(rowHeight / 2 - radius >= 4, 'arrow clears vertical row padding at any angle');
-    assert.ok(paddingLeft + arrowWidth / 2 - radius >= 0, 'left-pointing arrow stays onscreen');
-    assert.ok(paddingLeft + arrowWidth / 2 + radius < width);
-    const header = height * 0.25, footer = height * 0.32;
-    assert.ok(header + rowHeight < height - footer, 'navigation row stays clear of footer in either orientation');
+    for (const [safeLeft, safeTop] of [[0, 0], [44, 0], [0, 44]]) {
+      const mobile = width <= 767, left = 4 + safeLeft, top = 4 + safeTop;
+      const hostWidth = mobile ? 30 : 40, center = left + hostWidth / 2;
+      const arrowWidth = mobile ? 16 : 20, arrowHeight = mobile ? 26 : 30;
+      const radius = Math.hypot(arrowWidth, arrowHeight) / 2;
+      assert.ok(20 - radius >= 1.9, 'arrow clears its own row at any angle');
+      assert.ok(center - radius >= safeLeft && top + 20 - radius >= safeTop);
+      assert.ok(center + Math.max(radius, 5 * 12 * 0.6 / 2) < width && top + 58 < height);
+      assert.ok(center + Math.max(radius, 5 * 12 * 0.6 / 2) <= safeLeft + 56, 'header controls start beyond arrow and digits');
+      assert.ok(center - safeLeft < (mobile ? 20 : 30), 'actual arrow moves left of the former desktop/mobile center');
+      assert.ok(top + 58 <= safeTop + 68, 'indicator ends before the header and side-panel boundary');
+      assert.ok(40 - radius > 18, 'rotating arrow cannot cover the meter row');
+      assert.ok(center - 5 * 12 * 0.6 / 2 >= safeLeft, 'centered four-digit meters stay inside the safe edge');
+    }
   }
 });
 
-test('bare navigation arrow gets dark silhouette contrast without a background, border or card', () => {
+test('corner arrow and meter digits have silhouette contrast without a background, border or card', () => {
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
   const host = css.match(/\.city-taxi-navigation \{([^}]+)\}/)[1];
   const arrow = css.match(/\.city-taxi-navigation-arrow \{([^}]+)\}/)[1];
@@ -593,11 +643,30 @@ test('bare navigation arrow gets dark silhouette contrast without a background, 
   assert.match(arrow, /background: #86efac;/); assert.match(arrow, /clip-path: polygon\(/);
   assert.doesNotMatch(arrow, /border|outline|box-shadow/);
   // Applying the filter to the transparent host keeps the child's clip-path
-  // from cutting off the shadow; the arrow is the host's only visible content.
-  const h = harness(); h.key(); const { navigation, arrow: element } = navigationParts(h);
-  assert.deepEqual(navigation.children, [element]); assert.equal(element.children.length, 0);
+  // from cutting off the shadow; the arrow and meter digits are the only content.
+  const h = harness(); h.key(); const { navigation, arrow: element, distance } = navigationParts(h);
+  assert.deepEqual(navigation.children, [element, distance]); assert.equal(element.children.length, 0);
   assert.equal(navigation.textContent, ''); assert.equal(element.textContent, '');
   assert.doesNotMatch(css, /\.city-taxi-navigation-(?:card|dial|detail)/);
+});
+
+test('meter digits follow the occupied destination live, round once and reset between passengers', () => {
+  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+  const { navigation, distance } = navigationParts(h);
+  assert.equal(distance.textContent, `${Math.round(Math.hypot(trip.destination.x - h.state.x, trip.destination.z - h.state.z))}m`);
+  for (const [x, z, expected] of [[30, 40, '50m'], [0, 37.49, '37m'], [0, 37.51, '38m'], [0, 0, '0m']]) {
+    // Airborne navigation remains live, but reaching 0m in flight cannot deliver.
+    Object.assign(h.state, { x: trip.destination.x + x, z: trip.destination.z + z, y: 100, wasAirborne: true });
+    h.taxi.tick(); assert.equal(distance.textContent, expected); assert.equal(h.taxi.snapshot().passenger.id, trip.id);
+  }
+  h.state.wasAirborne = false; h.move(trip.destination);
+  assert.equal(navigation.hidden, true); assert.equal(distance.textContent, '');
+  const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup);
+  assert.equal(navigation.hidden, false);
+  assert.equal(distance.textContent, `${Math.round(Math.hypot(next.destination.x - h.state.x, next.destination.z - h.state.z))}m`);
+  h.elements['modal-help'].classList.remove('hidden');
+  Object.assign(h.state, { x: next.destination.x, z: next.destination.z + 75, y: 0 }); h.taxi.tick();
+  assert.equal(distance.textContent, '75m', 'menu pauses arrivals while distance still follows movement');
 });
 
 test('navigation crosses north and +/-180 smoothly without a reverse full-turn jump', () => {
@@ -624,7 +693,8 @@ test('menus pause passenger transitions without freezing the live vehicle-relati
 test('delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space', () => {
   for (const finish of ['delivery', 'destroy', 'reset', 'stop', 'map']) {
     const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
-    const { navigation, arrow } = navigationParts(h); assert.equal(navigation.hidden, false);
+    const { navigation, arrow, distance } = navigationParts(h); assert.equal(navigation.hidden, false);
+    assert.match(distance.textContent, /^\d+m$/);
     if (finish === 'delivery') h.move(trip.destination);
     if (finish === 'destroy') { h.state.isDestroyed = true; h.taxi.onDestroyed(); h.taxi.onDestroyed(); }
     if (finish === 'reset') h.taxi.onReset();
@@ -633,7 +703,7 @@ test('delivery, destroyed/reset passengers, stop and map exit clear navigation a
     assert.equal(h.taxi.snapshot().passenger, null);
     assert.equal(h.elements['hud-top-container'].classList.contains('taxi-navigation-active'), false);
     if (finish === 'stop' || finish === 'map') assert.equal(navigation.parent, null);
-    else { assert.equal(navigation.hidden, true); assert.equal(arrow.style.transform, ''); }
+    else { assert.equal(navigation.hidden, true); assert.equal(arrow.style.transform, ''); assert.equal(distance.textContent, ''); }
   }
 });
 
@@ -642,7 +712,7 @@ test('short landscape notice space is bounded by the header, footer and occupied
   const rule = css.match(/#hud-top-container\.taxi-navigation-active \{([^}]+)\}/)[1];
   assert.match(rule, /--hud-notice-space: min\(100px, max\(0px, calc\(100dvh - var\(--hud-header-height, 150px\) - var\(--hud-footer-height, 180px\) - var\(--hud-navigation-height\) - 32px\)\)\)/);
   for (const height of [320, 360, 375, 600]) {
-    const header = height * 0.25, footer = height * 0.32, navigation = 40;
+    const header = height * 0.25, footer = height * 0.32, navigation = 0;
     const notices = Math.min(100, Math.max(0, height - header - footer - navigation - 32));
     const panels = Math.max(0, height - header - footer - notices - navigation - 16);
     assert.ok(header + navigation + notices + 4 + panels <= height - footer);

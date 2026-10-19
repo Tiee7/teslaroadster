@@ -7,7 +7,7 @@ if (!process.env.LEADERBOARD_ORIGIN) process.env.LEADERBOARD_ORIGIN = `http://lo
 const handlers = createHandlers();
 http.createServer(async (req, res) => {
   const path = new URL(req.url, `http://localhost:${port}`).pathname;
-  const api = { '/api/run': handlers.run, '/api/score': handlers.score, '/api/leaderboard': handlers.leaderboard }[path];
+  const api = { '/api/run': handlers.run, '/api/end': handlers.end, '/api/score': handlers.score, '/api/leaderboard': handlers.leaderboard }[path];
   if (api) return api(req, res);
   if (path === '/assets/Ludicrous_Velocity_bgm.mp3') {
     return serveMusic(req, res);

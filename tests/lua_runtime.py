@@ -165,9 +165,11 @@ function redis.call(command, key, ...)
   if command == 'GET' then
     return db[key] or false
   elseif command == 'SET' then
+    local previous_expiry = expiries[key]
     writes = writes + 1; db[key] = args[1]; expiries[key] = nil
     if args[2] == 'PX' then expiries[key] = clock + tonumber(args[3])
-    elseif args[2] == 'EX' then expiries[key] = clock + tonumber(args[3]) * 1000 end
+    elseif args[2] == 'EX' then expiries[key] = clock + tonumber(args[3]) * 1000
+    elseif args[2] == 'KEEPTTL' then expiries[key] = previous_expiry end
     return 'OK'
   elseif command == 'INCR' then
     writes = writes + 1; db[key] = tonumber(db[key] or 0) + 1; return db[key]
@@ -235,6 +237,10 @@ class LeaderboardLuaTests(unittest.TestCase):
         return self.run_script("SCORE_LUA", [f"run:{run_id}", f"board:{board}", f"names:{board}"],
                                [player, fingerprint, now, 60_000, score, name, 600_000])
 
+    def end(self, player="player1", run_id="run1"):
+        return self.run_script("END_LUA", [f"run:{run_id}", f"active:{player}"],
+                               [player, run_id])
+
     def listing(self, board="highway-realistic"):
         return self.run_script("LIST_LUA", [f"board:{board}", f"names:{board}"], [])
 
@@ -254,6 +260,130 @@ class LeaderboardLuaTests(unittest.TestCase):
         self.assertEqual(self.score()[0], "ok")
         self.assertEqual(json.loads(self.start(run_id="run2", started=60_001))["runId"], "run2")
         self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+
+    def test_end_cancels_run_without_publishing_and_allows_immediate_new_start(self):
+        self.start()
+        self.runtime.execute("clock=1234")
+        self.assertEqual(self.end(), "ok")
+        canceled = json.loads(self.runtime.execute("return redis.call('GET','run:run1')"))
+        self.assertTrue(canceled["canceled"])
+        self.assertNotIn("receipt", canceled)
+        self.assertEqual(self.runtime.execute("return expiries['run:run1']"), 600_000)
+        self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), False)
+        self.assertEqual(self.score(), ["canceled"])
+        self.assertEqual(self.listing(), [])
+        self.assertEqual(json.loads(self.start(run_id="run2", started=1234))["runId"], "run2")
+        self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+
+    def test_repeated_end_is_idempotent_and_never_refreshes_original_expiry(self):
+        self.start()
+        self.runtime.execute("clock=1000")
+        self.end()
+        before = self.runtime.execute("return writes")
+        canceled = self.runtime.execute("return redis.call('GET','run:run1')")
+        self.runtime.execute("clock=2000")
+        self.assertEqual(self.end(), "ok")
+        self.assertEqual(self.runtime.execute("return writes"), before)
+        self.assertEqual(self.runtime.execute("return redis.call('GET','run:run1')"), canceled)
+        self.assertEqual(self.runtime.execute("return expiries['run:run1']"), 600_000)
+        self.runtime.execute("clock=600000")
+        self.assertEqual(self.end(), "ok")
+        self.assertEqual(self.runtime.execute("return redis.call('GET','run:run1')"), False)
+        self.assertEqual(self.runtime.execute("return writes"), before)
+
+    def test_end_wrong_owner_cannot_cancel_run_or_clear_either_players_lock(self):
+        self.start()
+        self.runtime.execute("db['active:other']='run1'")
+        before = self.runtime.execute("return writes")
+        original = self.runtime.execute("return redis.call('GET','run:run1')")
+        self.assertEqual(self.end(player="other"), "owner")
+        self.assertEqual(self.runtime.execute("return writes"), before)
+        self.assertEqual(self.runtime.execute("return redis.call('GET','run:run1')"), original)
+        self.assertEqual(self.runtime.execute("return {db['active:player1'],db['active:other']}"),
+                         ["run1", "run1"])
+
+    def test_start_permits_retained_canceled_run_even_if_old_active_key_remains(self):
+        self.start()
+        self.end()
+        self.runtime.execute("db['active:player1']='run1'")
+        self.assertEqual(json.loads(self.start(run_id="run2"))["runId"], "run2")
+
+    def test_delayed_old_end_only_releases_matching_id_after_newer_start(self):
+        self.start()
+        self.runtime.execute("clock=65000")
+        self.start(run_id="run2", started=65_000)
+        newer = self.runtime.execute("return redis.call('GET','run:run2')")
+        self.assertEqual(self.end(), "ok")
+        self.assertEqual(self.end(), "ok")
+        self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+        self.assertEqual(self.runtime.execute("return redis.call('GET','run:run2')"), newer)
+        self.assertEqual(self.score(), ["canceled"])
+        self.assertEqual(self.score(run_id="run2", now=125_000)[0], "ok")
+
+    def test_expired_or_unknown_old_end_cannot_touch_newer_active_run(self):
+        self.start()
+        self.runtime.execute("clock=600000")
+        self.start(run_id="run2", started=600_000)
+        newer = self.runtime.execute("return redis.call('GET','run:run2')")
+        before = self.runtime.execute("return writes")
+        for run_id in ("run1", "unknown", "run1"):
+            self.assertEqual(self.end(run_id=run_id), "ok")
+        self.assertEqual(self.runtime.execute("return writes"), before)
+        self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+        self.assertEqual(self.runtime.execute("return redis.call('GET','run:run2')"), newer)
+
+    def test_end_preserves_accepted_receipt_and_its_ttl_and_replay_semantics(self):
+        self.start()
+        self.runtime.execute("clock=60000")
+        receipt = self.score()
+        saved = self.runtime.execute("return redis.call('GET','run:run1')")
+        expiry = self.runtime.execute("return expiries['run:run1']")
+        self.runtime.execute("clock=60001")
+        self.assertEqual(self.end(), "ok")
+        self.assertEqual(self.runtime.execute("return redis.call('GET','run:run1')"), saved)
+        self.assertEqual(self.runtime.execute("return expiries['run:run1']"), expiry)
+        self.assertEqual(self.score(), receipt)
+        self.assertEqual(self.score(fingerprint="changed"), ["replay"])
+        self.assertEqual(self.listing(), [["Player 1", "100"]])
+        self.start(run_id="run2", started=60_001)
+        self.end()
+        self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+
+    def test_atomic_score_end_race_is_safe_in_both_serialization_orders(self):
+        # Redis serializes each EVAL. Exercise both possible winners with the real Lua,
+        # including a score whose preliminary API GET ran before either EVAL.
+        for order in (("end", "score"), ("score", "end")):
+            with self.subTest(order=order):
+                self.runtime.execute(REDIS_SHIM)
+                self.start()
+                snapshot = json.loads(self.runtime.execute("return redis.call('GET','run:run1')"))
+                self.assertNotIn("canceled", snapshot)
+                self.runtime.execute("clock=60000")
+                results = {action: getattr(self, action)() for action in order}
+                self.assertEqual(results["end"], "ok")
+                if order[0] == "end":
+                    self.assertEqual(results["score"], ["canceled"])
+                    self.assertEqual(self.listing(), [])
+                else:
+                    self.assertEqual(results["score"][0], "ok")
+                    self.assertEqual(self.score(), results["score"])
+                    self.assertEqual(self.listing(), [["Player 1", "100"]])
+                self.start(run_id="run2", started=60_001)
+                self.end()
+                self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+
+    def test_atomic_start_end_race_is_safe_in_both_serialization_orders(self):
+        for end_first in (True, False):
+            with self.subTest(end_first=end_first):
+                self.runtime.execute(REDIS_SHIM)
+                self.start()
+                if not end_first:
+                    self.assertEqual(self.start(run_id="run2"), "active")
+                self.assertEqual(self.end(), "ok")
+                self.assertEqual(json.loads(self.start(run_id="run2"))["runId"], "run2")
+                self.end()
+                self.assertEqual(self.runtime.execute("return redis.call('GET','active:player1')"), "run2")
+                self.assertNotIn("canceled", json.loads(self.runtime.execute("return redis.call('GET','run:run2')")))
 
     def test_missing_active_target_recovers(self):
         self.runtime.execute("db['active:player1']='deleted' ")

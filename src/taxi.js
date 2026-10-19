@@ -4,6 +4,7 @@ const CityTaxiModel = (() => {
   'use strict';
   const WAITING_COUNT = 5;
   const ARRIVAL_RADIUS = 2;
+  const PICKUP_RADIUS = ARRIVAL_RADIUS * 2;
   const MARKER_RADIUS = 3;
   const STOP_CLEARANCE = MARKER_RADIUS + 1;
   const GROUND_TOLERANCE = 0.35;
@@ -80,13 +81,13 @@ const CityTaxiModel = (() => {
     return { radians: Math.atan2(right, forward), meters: Math.hypot(dx, dz) };
   }
   // Swept 3D proximity catches a fast car between frames but rejects flying above a stop.
-  function withinArrival(from, to, stop) {
-    if (!validPosition(from) || !validPosition(to)) return false;
+  function withinArrival(from, to, stop, radius = ARRIVAL_RADIUS) {
+    if (!validPosition(from) || !validPosition(to) || !validPosition(stop) || !Number.isFinite(radius) || radius < 0) return false;
     const dx = to.x - from.x, dy = to.y - from.y, dz = to.z - from.z;
     const lengthSquared = dx * dx + dy * dy + dz * dz;
     const t = lengthSquared === 0 ? 0 : Math.max(0, Math.min(1,
       ((stop.x - from.x) * dx + (stop.y - from.y) * dy + (stop.z - from.z) * dz) / lengthSquared));
-    return Math.hypot(from.x + dx * t - stop.x, from.y + dy * t - stop.y, from.z + dz * t - stop.z) <= ARRIVAL_RADIUS;
+    return Math.hypot(from.x + dx * t - stop.x, from.y + dy * t - stop.y, from.z + dz * t - stop.z) <= radius;
   }
 
   function createSession(graph, random = Math.random) {
@@ -150,7 +151,7 @@ const CityTaxiModel = (() => {
         refill(position);
         return { type: 'delivered', trip };
       }
-      const index = waiting.findIndex(trip => withinArrival(from, position, trip.pickup));
+      const index = waiting.findIndex(trip => withinArrival(from, position, trip.pickup, PICKUP_RADIUS));
       if (index === -1) return null;
       passenger = waiting.splice(index, 1)[0];
       return { type: 'picked-up', trip: passenger };
@@ -158,7 +159,7 @@ const CityTaxiModel = (() => {
     const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered });
     return { start, stop, reset, pause, advance, losePassenger, snapshot };
   }
-  return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
+  return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, PICKUP_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
     MIN_ROUTE_METERS, MAX_ROUTE_METERS, MIN_DIRECT_METERS, PICKUP_SPACING_METERS,
     isStopClear, buildRoadGraph, shortestRoute, fareForDistance, destinationBearing, withinArrival, createSession });
 })();
@@ -170,7 +171,7 @@ const CityTaxiModel = (() => {
   let beamGeometry = null, coreGeometry = null, ringGeometry = null;
   let whiteMaterial = null, greenMaterial = null, whiteCoreMaterial = null, greenCoreMaterial = null;
   let pickupMarkers = [], destinationMarker = null, lastEvent = null;
-  let navigation = null, navigationArrow = null, navigationRotation = null;
+  let navigation = null, navigationArrow = null, navigationDistance = null, navigationRotation = null;
   const isZh = () => currentLang === 'zh';
   const position = () => ({ x: state.x, y: state.y, z: state.z });
   const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
@@ -229,9 +230,11 @@ const CityTaxiModel = (() => {
     navigation.setAttribute('role', 'img');
     navigationArrow = document.createElement('span'); navigationArrow.className = 'city-taxi-navigation-arrow';
     navigationArrow.setAttribute('aria-hidden', 'true');
-    navigation.appendChild(navigationArrow);
-    // A real row above the side panels stays upper-left even with full controls,
-    // minimal HUD or cockpit active. Its height is reserved in the panel bounds.
+    navigationDistance = document.createElement('span'); navigationDistance.className = 'city-taxi-navigation-distance';
+    navigationDistance.setAttribute('aria-hidden', 'true');
+    navigation.appendChild(navigationArrow); navigation.appendChild(navigationDistance);
+    // The corner indicator stays independent of the header's wrapping rows.
+    // CSS reserves its lane inside the header for every HUD and camera mode.
     const top = document.getElementById('hud-top-container'), main = document.getElementById('hud-main');
     if (top && main) top.insertBefore(navigation, main);
     else document.body.appendChild(navigation);
@@ -246,6 +249,7 @@ const CityTaxiModel = (() => {
     if (!bearing) {
       navigationRotation = null;
       navigationArrow.style.transform = '';
+      navigationDistance.textContent = '';
       top?.classList.remove('taxi-navigation-active');
       return;
     }
@@ -254,6 +258,7 @@ const CityTaxiModel = (() => {
     navigationRotation = navigationRotation === null ? bearing.radians
       : navigationRotation + Math.atan2(Math.sin(bearing.radians - navigationRotation), Math.cos(bearing.radians - navigationRotation));
     navigationArrow.style.transform = `rotate(${navigationRotation}rad)`;
+    navigationDistance.textContent = `${Math.round(bearing.meters)}m`;
     navigation.setAttribute('aria-label', isZh()
       ? `绿色目的地方向，距离 ${Math.round(bearing.meters)} 米；箭头上方为车头前方`
       : `Green destination direction, ${Math.round(bearing.meters)} meters; up is ahead of the car`);
@@ -311,7 +316,7 @@ const CityTaxiModel = (() => {
     hud?.remove();
     navigation?.remove();
     document.getElementById('hud-top-container')?.classList.remove('taxi-navigation-active');
-    navigation = null; navigationArrow = null; navigationRotation = null;
+    navigation = null; navigationArrow = null; navigationDistance = null; navigationRotation = null;
     const footer = document.getElementById('hud-footer');
     if (instrumentHost && footer) {
       for (const child of [...instrumentHost.children]) footer.appendChild(child);
@@ -345,8 +350,8 @@ const CityTaxiModel = (() => {
     if (event.repeat || currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || snapshot().active) return true;
     clearAllInputKeys();
     const approved = window.confirm(isZh()
-      ? '开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 2 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n载客时撞毁或重置将失去乘客，并扣除该趟奖励的双倍积分，最低为 0。接客积分独立计算，不计入排行榜。'
-      : 'Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within 2m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nDestroying or resetting the occupied car loses the passenger and deducts twice that fare, with a minimum score of zero. Passenger points are separate from the leaderboard.');
+      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n载客时撞毁或重置将失去乘客，并扣除该趟奖励的双倍积分，最低为 0。接客积分独立计算，不计入排行榜。`
+      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nDestroying or resetting the occupied car loses the passenger and deducts twice that fare, with a minimum score of zero. Passenger points are separate from the leaderboard.`);
     // A native confirmation may be open for minutes. Never replay held controls or elapsed time.
     clearAllInputKeys(); lastTime = performance.now();
     if (approved && currentMap === 'city' && !state.isDestroyed && !blockedByUi()) start();
