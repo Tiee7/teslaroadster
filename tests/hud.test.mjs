@@ -195,9 +195,11 @@ test('FPV switches duplicate floating information off immediately while preservi
 test('actual continuous consumption, depletion and reset immediately update the cockpit bar with exterior readings', () => {
   const consume = physics.slice(physics.indexOf('  let airConsumedThisFrame ='), physics.indexOf('  let canUseRCS'));
   const reset = hud.slice(hud.indexOf('function resetCar('), hud.indexOf('function applyTranslations('));
-  const state = { airRemaining: 10, airUsedContinuous: 0, isFreefalling: false, vy: 0 };
-  const context = vm.createContext({ state, MAX_AIR_SECONDS: 10, AUTO_DESCENT_USED_SECONDS: 8,
-    showBanner() {}, sound: { speakAlert() {}, beep() {} }, window: {}, clearDebris() {}, carMeshGroup: {},
+  const state = { airRemaining: 10, airUsedContinuous: 0, isFreefalling: false, y: 100, vy: 0,
+    groundHopActive: false, jumpInertiaSeconds: null };
+  const alerts = [];
+  const context = vm.createContext({ state, MAX_AIR_SECONDS: 10, AUTO_DESCENT_USED_SECONDS: 8, isAirborne: true,
+    showBanner() {}, sound: { speakAlert: type => alerts.push(type), beep() {} }, window: {}, clearDebris() {}, carMeshGroup: {},
     currentMap: 'city', renderBannerText() {}, document: { getElementById: () => ({ classList: { add() {}, remove() {} } }) },
   });
   vm.runInContext(readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8') + `\n${consume}\n${reset}`, context);
@@ -211,6 +213,7 @@ test('actual continuous consumption, depletion and reset immediately update the 
     if (frame < 50) context.consumeAirTank(0.2, true);
   }
   assert.equal(state.airRemaining, 0); assert.equal(state.isFreefalling, true);
+  assert.equal(alerts.filter(type=>type==='freefall').length,1,'the sustained-flight fixture emits exactly one depletion alert');
   context.resetCar(); assert.equal(state.airRemaining, 10); assert.equal(state.isFreefalling, false);
   const full = drawCockpitTank(state); assert.equal(full.rects.find(r => r.x === 182 && r.y === 82).width, 308);
 });

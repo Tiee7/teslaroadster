@@ -67,8 +67,24 @@ independent binding long-frame brake checks remain intact.
   The final full run must match the newest frozen runtime, not either old preview.
 - V5 exposed an isolated old gauge-test context missing its now-read airborne
   flag. That fixture now supplies the real dependency and adds English/Chinese
-  ground/O-hop/flight caption checks. Runtime stayed frozen; V6 is the complete
-  serial acceptance run with this corrected test set.
+  ground/O-hop/flight caption checks. V6 completed627 serial cases:626 passed,
+  with the sole failure another isolated cockpit-consumption fixture missing the
+  same real airborne dependency. That fixture was corrected without runtime
+  changes or reduced assertions, and now also verifies exactly one flight alarm.
+
+## Final acceptance
+
+The corrected complete V7 suite passed **627/627**, zero failures/cancellations/
+skips, using two isolated test workers in630410.788195ms. All38 frozen source/test
+rows still exactly match their bytes, SHA-256 and Git blob identities. The runtime
+is unchanged from the reviewed V5 application; neither earlier serial failure is
+relabelled as a pass. Failed/interrupted logs remain local and preserved.
+
+Fresh Lua24, exact source/mirror build identity, finite-baseline17640 Object.is
+field comparisons, check and build passed. The previous29+3 identity-guard proof
+still binds this exact unchanged source. Final commands/hashes and request-by-
+request scope are in `accepted.json`; production confirmation is recorded only
+after the actual merge/deployment, separately in the local publication receipt.
 - Finite air still requires reserve/recharge pauses. Already committed preparation
   may retain its single paid220-floor pulse. Manual frames below20fps still hit the
   existing50ms timestep cap. These are disclosed constraints, not hidden free gas.

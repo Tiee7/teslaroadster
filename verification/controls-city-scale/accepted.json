@@ -1,0 +1,62 @@
+{
+  "acceptedAt": "2026-10-20T14:36:45.712621+00:00",
+  "status": "all_required_local_checks_passed; production merge/deployment not yet claimed",
+  "pr": "https://github.com/Tiee7/teslaroadster/pull/2",
+  "reviewedLocalRuntimeCommit": "706d838a87fe408034d4ff99e733eea355e47455",
+  "reviewedRemoteRuntimeCandidate": "89ee4f2612a8809ca9e226d5e9e4ecd656003ed0",
+  "applicationHtmlSha256": "652d87445d4c1ede2cd636af03c2107611e2b0f4945d7d7230121e1f3717bc56",
+  "sourceManifest": "v7-source-candidate-files.json",
+  "frozenSourceRows": 38,
+  "allFrozenSourceIdentitiesExact": true,
+  "node": {
+    "command": "ROADSTER_THREE_RUNTIME=/tmp/roadster-three.min.js node --test --test-concurrency=2 --test-reporter=tap tests/*.test.mjs",
+    "exitCode": 0,
+    "tests": 627,
+    "pass": 627,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 630410.788195,
+    "log": "v7-all-tests-two-workers.tap"
+  },
+  "otherGates": {
+    "lua": 24,
+    "focusedEffectsFlightBadges": 58,
+    "hudAndGaugeContexts": 14,
+    "identityGuards": 29,
+    "sourceMirrorGuards": 3,
+    "fixedInputFinitePhysicalSteps": 360,
+    "strictObjectIsPhysicalFieldComparisons": 17640,
+    "projectionBuildIdentity": true,
+    "check": true,
+    "build": true
+  },
+  "requirements": {
+    "silent0": "Digit0/Numpad0 toggle session infinite air without prompts, deduplicate holds/focus and accept active/pending autopilot",
+    "fuelPrediction": "All future fuel-dependent authority invalidated on both toggle directions; pose/landing commitment retained; approximate/static/Node/actual fuel contract agrees",
+    "fairness": "Infinite mode cancels/blocks ranked play; immutable old results remain separate",
+    "autopilotClock": "No60-second timer; existing exit and overload conditions retained",
+    "cityScale": "Player/NPC horizontal displacement and wheels use1 metre;200km/h travels300m in5.4 simulation seconds",
+    "autopilotName": "Autopilot / 自动驾驶 user interface",
+    "boost": "Continuous safe jets/fractional following; startup and physically integrated preparation bounds;220+ policy retained",
+    "condensation": "Same0.8s side wisps, random3–5 eligible simulation seconds after disappearance; no repeated sound/banner/shake or timers/backlog",
+    "freefallAlarm": "Established actual flight only; ground and complete road O-hop/grace silent; alert-only marker has no physical authority",
+    "nozzleDisplay": "Top/side mouths hidden, plumes retained;J/L side plumes, top only paid Shift descent; forces/gas unchanged",
+    "keyPanel": "Existing manual active animation mirrors latest applied automatic controls/O phase, no synthetic input; release/lifecycle and real-key aliases covered",
+    "map3": "Excluded from this batch; separate later branch per user instruction"
+  },
+  "boundaries": {
+    "allMode60SecondCollisionFree": "unfinished; no guarantee against impossible or fuel-starved configurations",
+    "browser": "No current WebGL/hearing/FPS acceptance claimed; user accepted cloud limitation",
+    "manualLowFps": "Existing50ms step cap below20fps remains",
+    "oracle": "49 physical fields are not an alert/audio oracle; explicit event tests establish alarm behavior",
+    "sound": "V8-inspired current voice retained; no V12 feature claimed",
+    "failedPrototypesPromoted": false,
+    "credentialsOrProtectionChanged": false
+  },
+  "historicalRuns": {
+    "v6Serial": "627 complete /626pass /1 isolated HUD fixture context error; corrected without runtime change and never relabelled as pass",
+    "earlierInterrupted": "Preserved locally with original outcomes, not final acceptance"
+  }
+}
