@@ -1,0 +1,45 @@
+{
+  "completedAt": "2026-10-20T16:33:56.938144+00:00",
+  "runtimeCommit": "bb56013f49e3ba632f9be11a8c224f74b66846c3",
+  "runtimeTree": "3ae135be3b649dc1b4b0b7c65f9f4daa8486acea",
+  "finalDocsOnlyCorrection": true,
+  "full": {
+    "tests": 653,
+    "passed": 653,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 597479.799235,
+    "workers": 2,
+    "log": "v2-all-tests-two-workers.tap",
+    "sha256": "dad4cf3f443ea90f2f703c8e2ce714fb3d717db93fc8cd822f1af09add3fe9b9"
+  },
+  "targeted": {
+    "passed": 95,
+    "failed": 0,
+    "skipped": 0,
+    "log": "v2-targeted.log"
+  },
+  "luaTests": 24,
+  "staticIdentityChecks": 29,
+  "sourceMirrorTests": 3,
+  "numericContractTests": 6,
+  "oldMapComparison": {
+    "cases": 96,
+    "steps": 17280,
+    "fields": 49,
+    "objectIsComparisons": 846720
+  },
+  "sourceReview": {
+    "originalManifest": "v2-source-candidate-files.json",
+    "finalManifest": "final-source-candidate-files.json",
+    "originalFilesVerified": 19,
+    "scope": "No source changes to coast-map/world/config/physics-main/highway-demo/highway-traffic/audio/leaderboard. vehicles only shared eye1.12m→1.04m."
+  },
+  "limits": [
+    "Cloud normal HTTPS browser cannot create a WebGL context and stops before game UI initialization. No actual phone pixel/gameplay, GPU, FPS or listening acceptance.",
+    "Geometry tests use actual official r128 roof/windshield meshes; responsive input tests execute actual production controllers with a DOM harness; CSS safe-space budgets are not browser pixels.",
+    "Existing all-mode high-density60-second collision-free autopilot target is still not passed."
+  ],
+  "privacy": "User screenshot and Library materialization helpers remain private/untracked and excluded from the release."
+}

@@ -445,7 +445,7 @@ html, body {
   }
 }
 
-/* Created only after the hidden city mode has been explicitly enabled. */
+/* Created only after the public city game has been explicitly enabled. */
 .city-taxi-hud {
   align-self: flex-end; flex-shrink: 0; max-width: 100%; box-sizing: border-box;
   display: flex; padding: 0.45rem 0.8rem;
@@ -518,13 +518,15 @@ html, body {
 /* One always-reachable, native switch. No floating status panel over the road. */
 .highway-demo-toggle[aria-pressed="true"] { border-color: #34d399; color: #a7f3d0; background: rgba(6, 78, 59, .8); }
 .highway-demo-toggle[hidden] { display: none !important; }
+.city-taxi-toggle[hidden] { display: none !important; }
+.city-taxi-toggle[aria-pressed="true"] { border-color: #34d399; color: #a7f3d0; background: rgba(6, 78, 59, .8); }
 .highway-demo-active #mobile-drive-controls { opacity: .45; }
 @media (pointer: coarse) { .highway-demo-toggle { min-height: 44px; } }
 
 /* Phone driving-first layout. Detail sheets are opt-in; the road is clear in
    every HUD mode. A narrow scrollable toolbar keeps all existing actions. */
 @media (pointer: coarse) {
-  #hud-top-container, .cockpit-view[data-hud-mode="medium"] #hud-top-container { --hud-notice-space: 32px; }
+  #hud-top-container, #hud-top-container.taxi-navigation-active, .cockpit-view[data-hud-mode="medium"] #hud-top-container { --hud-notice-space: min(32px, max(0px, calc(100dvh - var(--hud-header-height, 46px) - var(--mobile-stick-size) - 78px - env(safe-area-inset-bottom) - 40px))); }
   #hud-header { padding: max(5px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 5px max(8px, env(safe-area-inset-left)); max-height: none; overflow: visible; }
   #hud-brand-badge { display: none !important; }
   #hud-action-bar, body[data-hud-mode="medium"] #hud-action-bar { display: flex; width: 100%; max-width: 100%; flex-wrap: nowrap; gap: 5px; overflow-x: auto; scrollbar-width: none; }
@@ -534,9 +536,10 @@ html, body {
   #btn-reset { order: -1; }
   #hud-side-panels { padding-inline: 8px; gap: 6px; }
   #hud-left, #hud-right { width: calc((100% - 6px) / 2); }
-  #hud-left, #hud-right-card, .cockpit-view[data-hud-mode="medium"] #hud-left, .cockpit-view[data-hud-mode="medium"] #hud-right-card { padding: 5px 8px; max-height: min(32dvh, max(32px, calc(100dvh - var(--hud-header-height, 46px) - var(--hud-navigation-height, 0px) - var(--hud-notice-space, 32px) - var(--mobile-stick-size) - 78px - env(safe-area-inset-bottom)))); overflow-y: auto; }
+  #hud-left, #hud-right-card, .cockpit-view[data-hud-mode="medium"] #hud-left, .cockpit-view[data-hud-mode="medium"] #hud-right-card { padding: 5px 8px; max-height: min(32dvh, max(40px, calc(100dvh - var(--hud-header-height, 46px) - var(--hud-navigation-height, 0px) - var(--hud-notice-space, 32px) - var(--mobile-stick-size) - 78px - env(safe-area-inset-bottom)))); overflow-y: auto; }
   #hud-right-card { width: 100%; }
   #hud-left-header, #hud-right-header { padding: 0; margin: 0; border: 0; min-height: 28px; }
+  body[data-mobile-hud-panel="guide"] #hud-left-header, body[data-mobile-hud-panel="telemetry"] #hud-right-header { position: sticky; top: -5px; z-index: 2; background: #0a0f1c; }
   #guide-body, #telemetry-body { display: none !important; }
   body[data-mobile-hud-panel="guide"] #guide-body, body[data-mobile-hud-panel="telemetry"] #telemetry-body { display: block !important; margin-top: 8px; }
   body[data-mobile-hud-panel="guide"] #hud-left, body[data-mobile-hud-panel="telemetry"] #hud-right { width: 100%; }

@@ -35,7 +35,7 @@ test('HUD cycles Full → Medium → Minimal repeatedly with independent compact
     assert.equal(h.hidden('hud-left'), expected === 'minimal'); assert.equal(h.hidden('hud-right'), expected === 'minimal');
     assert.equal(h.hidden('hud-brand-badge'), expected !== 'full');
     assert.equal(h.hidden('btn-map-select'), expected !== 'full');
-    assert.equal(h.hidden('btn-camera'), false); assert.equal(h.hidden('btn-reset'), false);
+    assert.equal(h.hidden('btn-camera'), false); assert.equal(h.hidden('btn-reset'), false); assert.equal(h.hidden('btn-city-taxi'), false);
     for (const id of ['btn-lang', 'btn-settings', 'btn-hud-mode', 'btn-leaderboard', 'status-banner', 'ranked-hud']) assert.equal(h.hidden(id), false);
     assert.equal(h.elements['hud-footer'].classes.has('hud-compact-view'), expected !== 'full');
     assert.equal(h.elements['hud-footer'].classes.has('hud-minimal-view'), expected === 'minimal');
@@ -105,4 +105,25 @@ test('phone detail cards start folded and only the explicitly requested sheet ex
   assert.equal(h.hidden('btn-camera'),false);assert.equal(h.hidden('btn-reset'),false);
  }
  const desktop=harness();desktop.restore();assert.equal(desktop.context.toggleMobileHudPanel('guide'),false);
+});
+
+// CSS-source and budget regression, not a browser layout or device pixel claim.
+test('phone sheets reserve a complete sticky close row above driving controls even on occupied short landscape',()=>{
+ const phone=css.slice(css.indexOf('/* Phone driving-first layout.'));
+ assert.match(phone,/#hud-top-container, #hud-top-container\.taxi-navigation-active, \.cockpit-view\[data-hud-mode="medium"\] #hud-top-container \{ --hud-notice-space: min\(32px, max\(0px, calc\(100dvh/);
+ assert.match(phone,/max-height: min\(32dvh, max\(40px, calc\(100dvh/);
+ assert.match(phone,/body\[data-mobile-hud-panel="guide"\] #hud-left-header, body\[data-mobile-hud-panel="telemetry"\] #hud-right-header \{ position: sticky; top: -5px; z-index: 2;/);
+ for(const [width,height] of [[320,568],[390,844],[568,320],[667,320],[844,390],[1024,768]]){
+  const landscape=width>height && height<=500;
+  const stick=landscape?Math.max(88,Math.min(112,height*.24)):Math.max(88,Math.min(124,width*.27));
+  for(const safe of [0,20,34])for(const occupied of [false,true]){
+   const header=(occupied?68:46)+safe;
+   const notice=Math.min(32,Math.max(0,height-header-stick-78-safe-40));
+   const sheet=Math.min(height*.32,Math.max(40,height-header-notice-stick-78-safe));
+   const sheetBottom=header+notice+4+sheet;
+   const modeTop=height-Math.max(landscape?16:18,safe)-stick-6-32;
+   assert.ok(sheet>=40,`complete close row: ${width}x${height}`);
+   assert.ok(sheetBottom<=modeTop,`${width}x${height}/safe${safe}/occupied${occupied}: ${sheetBottom} > ${modeTop}`);
+  }
+ }
 });

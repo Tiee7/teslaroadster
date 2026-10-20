@@ -48,7 +48,7 @@ tesla_roadster_simulator_package/
 - **18G 致命碰撞解体物理**：实时计算相对碰撞速度 $\Delta v$、冲击过载与形变动能，单次撞击 $\ge 18.0\,\text{G}$（$\Delta v \ge 100\,\text{km/h}$）或车体耐久归零直接粉碎性解体。
 
 ### 3. UI 界面人性化与交互增强 (UI Humanization)
-- **三档 HUD**：`Z` 或顶部 HUD 按钮依次切换完整 → 中等 → 极简，并在本浏览器保存选择。中等保留左右面板、相机入口与手机触控驾驶按钮，收起装饰、其余功能菜单与底部提示；极简只收起信息面板，始终保留驾驶触控、相机与重置。手机上三档均默认将两侧信息收进可展开/关闭的小入口，底部摇杆、模式选择和跳跃/定高/视角/重置不随精简而消失。两档精简模式均保留车外速度/气量仪表、接客方向与必要通知。FPV 仅使用车内实时仪表，不重复悬浮速度/气量。
+- **三档 HUD**：`Z` 或顶部 HUD 按钮依次切换完整 → 中等 → 极简，并在本浏览器保存选择。中等保留左右面板、相机入口与手机触控驾驶按钮，收起装饰、其余功能菜单与底部提示；极简只收起信息面板，始终保留驾驶触控、相机与重置。手机完整/中等档默认将两侧信息收进可展开/关闭的小入口，极简档隐藏两侧信息入口，底部摇杆、模式选择和跳跃/定高/视角/重置不随精简而消失。两档精简模式均保留车外速度/气量仪表、接客方向与必要通知。FPV 仅使用车内实时仪表，不重复悬浮速度/气量。
 - **清晰车内气量条**：实体仪表屏移入固定座舱视场，气量横槽与文字分离，带 20% 警戒线；车内外共用实时剩余量，满瓶、持续喷气、耗尽和重置一致。移除挡视线的车内中央后视镜与支架。
 - **中英双语极速切换 (🌐)**：全局 DOM 元素、弹窗指南、实时警报与语音朗读均支持一键热切换。
 - **12 款官方精调航天质感车漆**：航天阳极白 (Ano White)、主打多涂层红、暗夜钛黑、星舰液态亮银、赛博电光蓝等。
@@ -347,3 +347,7 @@ The third map is an original, compressed seaside district inspired by the broad 
 On coarse-pointer phones, the existing toolbar is a single horizontally scrollable row; HUD, camera and reset remain immediately available. The two information cards start folded in Full/Medium and open one bounded, closable sheet at a time. Minimal removes information, **not driving inputs**. Both independent sticks, the right-stick mode and Jump/Hold/View/Reset remain usable, while menu/destruction/blur cleanup and fresh-touch requirements are preserved. Portrait instruments reserve space above the central utility buttons; short landscape uses a separate utility column. Screen rotation clears old pointer ownership rather than replaying thrust.
 
 The common FPV eye is now1.04m above the vehicle origin, below both actual roof meshes, rather than above the lower reference roof. Camera, projected dashboard and windshield rain use the same calibrated pose;60° FOV,0.08m near plane, car attitude transforms and physical forces are unchanged. Actual r128 geometry tests check roof clearance and sight through the front windshield for every body/cockpit combination. These are geometry checks, not a claim of WebGL/FPS or listening acceptance.
+
+## Public city passenger game / 城市接客正式入口
+
+Map 2 (Cyber City) now shows **Passenger game / 接客游戏** in the toolbar in every HUD mode, including phones. Tap to start immediately and tap the active button to exit; the existing `=` start shortcut remains available without a secret confirmation. Maps 1 and 3 do not expose or run this game. White columns mark five waiting passengers; approach within 4m on the ground, then follow that passenger’s green destination. Each road route is at least 900m and pays 1,000–3,000 independent passenger points. Existing occupied-crash penalties, preserved final scores, new-round resets and map-exit resource disposal are unchanged. These fares never enter ranked scoring; starting a passenger game cancels a current ranked run, and starting a ranked run exits the passenger game.

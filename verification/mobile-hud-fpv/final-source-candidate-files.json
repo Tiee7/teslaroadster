@@ -1,0 +1,125 @@
+{
+  "frozenAt": "2026-10-20T16:33:56.937234+00:00",
+  "baselineProductionCommit": "c4c4fa46df5ac275feb1958ee0387c999181723e",
+  "baselineTree": "cc386238509f71de7dc8c48b7d218f82a3c3eaa4",
+  "baselineLocalEquivalent": "4e979c32e57e658ed945118efb1281a32fd9fdd1",
+  "scope": "Final phone driving visibility/cockpit calibration and public city-only passenger entry; original coast and map1/2 driving physics unchanged. Full653 passed.",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "593a1ce881dce98e8aa2dbb85d8c1ad4d0ce0e34f0b88d7be9ed4c77747c5c40",
+      "bytes": 51912,
+      "gitBlob": "f1b41851bdc2490d0ad686f2a9d2e11dc3245aec"
+    },
+    {
+      "path": "index.html",
+      "sha256": "df0b9a612719cf618b274e9046d1091be0f37b028f745e389da50ad85de9b691",
+      "bytes": 4747790,
+      "gitBlob": "a4cfe60e734fc0fd079066ff1d8b99b883c24783"
+    },
+    {
+      "path": "src/demo-numeric-projection.js",
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2",
+      "bytes": 232906,
+      "gitBlob": "09a362b118c72b05dcbb65af2b6b1a3124fd2a64"
+    },
+    {
+      "path": "src/index.html",
+      "sha256": "b0db4ae3b32ba51f83d67c25f53011b3f19ccbb2af446d4030cd00c5a079c2ae",
+      "bytes": 52301,
+      "gitBlob": "4b2ec93b6971627972240e61497073ae044bf3a7"
+    },
+    {
+      "path": "src/mobile-controls.js",
+      "sha256": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+      "bytes": 10417,
+      "gitBlob": "bd323d4746faa1bd72f886232cd5ad1c6cfafe80"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "7111fd1d4152604981e0026acdaaefb09ac4408298df51c5a83211f373392b75",
+      "bytes": 37257,
+      "gitBlob": "659c937ca351257ded53d2c86baaba012fcb98c8"
+    },
+    {
+      "path": "src/taxi.js",
+      "sha256": "7b92268cf0052afb8e758f5c34480b36dcc2b611fc80e6a9c9a445dbc0074493",
+      "bytes": 23392,
+      "gitBlob": "eb929461c6b886f32522500c939e9b06f900cb15"
+    },
+    {
+      "path": "src/ui-hud.js",
+      "sha256": "e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808",
+      "bytes": 60090,
+      "gitBlob": "e17be9d651894dc5b3c7a239cdbe6df8767199fa"
+    },
+    {
+      "path": "src/vehicles.js",
+      "sha256": "cdd97d85c23492ee443e5f7e78e2a516d20418d4985f1e92f78e7caad79fb311",
+      "bytes": 93009,
+      "gitBlob": "82a561c97c25c783dab83834646c3ab943fdeda3"
+    },
+    {
+      "path": "tests/cockpit-eye-calibration.test.mjs",
+      "sha256": "52371e49b39d9c6acb820bb1cd567758cf2b3cd9ff25f87bb87e43bbdf13794a",
+      "bytes": 3682,
+      "gitBlob": "f298c5c5f82ea671344abaee18016b4f30747291"
+    },
+    {
+      "path": "tests/hud-modes.test.mjs",
+      "sha256": "93ff7b89bac2f192c9ca724d8b0ddbd393e4e7667b9125933b384755761fc24c",
+      "bytes": 9286,
+      "gitBlob": "92ea2227d0e91b6ff173750a800a53b3f0309f97"
+    },
+    {
+      "path": "tests/mobile-controls.test.mjs",
+      "sha256": "1e49d0ccb38f1a13faf09ce91e73c255cd13611958e7d854b6c4c0f663ab5505",
+      "bytes": 37895,
+      "gitBlob": "f1fb8c1a12d2f9b801a0abd8c3006569d45dbcbc"
+    },
+    {
+      "path": "tests/taxi.test.mjs",
+      "sha256": "e47b1db5dd86d5c9da25d1e9825e629a6224ee00518b7ebb089a9c10c9ab30d4",
+      "bytes": 53762,
+      "gitBlob": "fbbbb3c31a4af9c23fa9353131a7d50883b06ab4"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.js",
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2",
+      "bytes": 232906,
+      "gitBlob": "09a362b118c72b05dcbb65af2b6b1a3124fd2a64"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.mjs",
+      "sha256": "5644fc54cc7faad6a33258d0744a4ed1596e14c9ba9cce598f8d43057add29dd",
+      "bytes": 232949,
+      "gitBlob": "4b6d698df49097ed0ab3c0f68618756924a9b53f"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.manifest.json",
+      "sha256": "e5897abf89c0de6a5d51850bf6507c4e413a619f78ca94c1608a86b71adadfc1",
+      "bytes": 9617,
+      "gitBlob": "928856c0d095206795eb5374da1c0463d3c20957"
+    },
+    {
+      "path": "verification/demo-continuous/emit-browser-static-projection.mjs",
+      "sha256": "2df6ee22a40788a75388dd83ed8ca7c6a75b525d5e6cd4018331d5e045fffa5c",
+      "bytes": 18454,
+      "gitBlob": "90f52fec90c163f082498c640eaf8bc91357be41"
+    },
+    {
+      "path": "verification/demo-continuous/generate-numeric-projection-kernel.mjs",
+      "sha256": "587174e45e590f5c8f4432f77f61881641d9e8b64b4362cbdb6eae0d06138cf2",
+      "bytes": 23202,
+      "gitBlob": "0ad28692d1c60523f5250e04d56dbd751aa13eb3"
+    },
+    {
+      "path": "verification/demo-continuous/static-projection-identity-only-tests.json",
+      "sha256": "04e856f30bdc1406dc09b41190ac5719185c7e42cbfe09831368324bb41676c2",
+      "bytes": 6702,
+      "gitBlob": "5d017e0d730614c11c76e185a56787aeddba0aad"
+    }
+  ],
+  "testedRuntimeCommit": "bb56013f49e3ba632f9be11a8c224f74b66846c3",
+  "postRuntimeFreezeChange": "README wording only: Minimal hides information entries; Full/Medium fold them. All 18 executable/generated/test inputs in the source manifest remain byte-identical."
+}
