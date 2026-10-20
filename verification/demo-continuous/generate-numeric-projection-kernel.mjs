@@ -13,11 +13,11 @@ import { isProxy } from 'node:util/types';
 
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const EXPECTED_SOURCE_HASHES = Object.freeze({
-  'src/config.js': 'e266a54510bd451a35d5a75fe3d330cc40204bacd681d23cfbe76a693eaf4d3f',
-  'src/physics-main.js': '3e28a4551f7a6f38ad1500f06b6232e7dcfc640dbb6a3fe0bd973057126da182',
-  'src/highway-demo.js': '30269219669489f3f1c228fc305eacd1032238bc1bcb0100a2bd9ebf6f06df43',
+  'src/config.js': '264d9d7e0f0800a8c3dce294836684d5160a1ee669ff26a742656223011d0ff0',
+  'src/physics-main.js': '589627905257e36409ef1628d5bbac971ec4366b40ebce91c55a1013d99e3e3f',
+  'src/highway-demo.js': '0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07',
   'src/highway-traffic.js': 'faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108',
-  'src/ui-hud.js': 'eda76a2f67268dacbcae89a299a9ef00af241648909a8a5e1f8b349e38079b7b',
+  'src/ui-hud.js': '821751deca17129bb121bd09bd9731e5ce37dc455d0c258536a2635cd932faa8',
   'src/audio.js': '5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee',
   'tests/helpers/demo-harness.mjs': '69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff',
   'tests/helpers/vendor/three-r128-MathUtils.mjs': '09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61'

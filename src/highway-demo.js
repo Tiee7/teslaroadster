@@ -1528,6 +1528,7 @@ const RoadsterHighwayDemoPlanner = (() => {
     if (typeof updateHudBounds === 'function') updateHudBounds();
   }
   function stop(reason) {
+    if (typeof updateAutopilotKeyBadges === 'function') updateAutopilotKeyBadges();
     if (!busy()) return;
     clock.clear();
     version++; active = pending = false; status = ''; error = reason==='performance'?'performance':false;
@@ -1565,6 +1566,7 @@ const RoadsterHighwayDemoPlanner = (() => {
       requestingJump = true;
       try { triggerJump6m(); } finally { requestingJump = false; }
     }
+    if (typeof updateAutopilotKeyBadges === 'function') updateAutopilotKeyBadges(frameInput, frame.jump || state.isJumping6m);
     if (status !== frame.status) { status = frame.status; render(); }
   }
   function advanceFrame(seconds,simulate){

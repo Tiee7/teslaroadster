@@ -21,6 +21,15 @@
   visuals repeat: no repeated boom/speech/banner/camera shake or extra geometry.
   Trigger loss, FPV, menus, focus/visibility loss, destruction and reset clear
   both pulse and delay. No timers or queued background callbacks are introduced.
+- Ground tank depletion and the complete road O-hop do not emit the freefall
+  banner/voice. Only actual established flight beyond finite hop grace can do so.
+  An alert-only road-hop marker persists through descent, clears on touchdown,
+  and yields to deliberate lift/hold. It never changes gas, forces or trajectory.
+- Top/side mouth hardware is hidden, but plumes remain. J/L uses side plumes;
+  top plumes respond only to accepted Shift descent. Physical forces are unchanged.
+- The existing key badges mirror the latest applied automatic control output,
+  using the same active style as manual keys. No input events or key-map writes
+  are synthesized; releases, pending/exit and focus/reset/menu paths clean up.
 
 ## Two driving regressions caught and repaired before publication
 1. A first danger-pause draft stranded zero-start at the200 EV ceiling, below
@@ -53,9 +62,13 @@ independent binding long-frame brake checks remain intact.
 - Earlier diagnostic/failed/interrupted logs remain local with their original
   outcomes; they are not relabelled as final passes or bundled with failed
   Tactical/rolling prototypes. Source changes use an explicit release whitelist.
-- V3 was interrupted when the new condensation-repeat request arrived, before
-  that visual code was added. V4 is the full run for the updated frozen runtime;
-  no earlier pass or preview is relabelled as the new candidate.
+- V3 was interrupted for condensation recurrence; V4 was interrupted after280
+  passing cases when the later flight-alert/nozzle/key-badge requests arrived.
+  The final full run must match the newest frozen runtime, not either old preview.
+- V5 exposed an isolated old gauge-test context missing its now-read airborne
+  flag. That fixture now supplies the real dependency and adds English/Chinese
+  ground/O-hop/flight caption checks. Runtime stayed frozen; V6 is the complete
+  serial acceptance run with this corrected test set.
 - Finite air still requires reserve/recharge pauses. Already committed preparation
   may retain its single paid220-floor pulse. Manual frames below20fps still hit the
   existing50ms timestep cap. These are disclosed constraints, not hidden free gas.

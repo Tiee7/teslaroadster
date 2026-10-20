@@ -627,6 +627,7 @@ function updateSimulation(dt) {
   // O has already supplied vertical launch velocity, even before this frame's
   // altitude integration. Do not run another tire-grip/drive frame on takeoff.
   const isAirborne = (state.y - groundElevation) > 0.15 || (state.isJumping6m && state.vy > 0);
+  if (!isAirborne) state.groundHopActive = false;
   const { rawRollInput, rawPitchInput, rawYawInput, hasManualAttitudeInput } = readAttitudeInput(isAirborne);
   const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
@@ -640,6 +641,7 @@ function updateSimulation(dt) {
     state.airRemaining = Math.max(0.0, state.airRemaining - amount);
     state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
     if (state.airRemaining <= 0.001) {
+      const flightAlertEligible = airborneNow && isAirborne && !state.groundHopActive && !state.isJumping6m && !Number.isFinite(state.jumpInertiaSeconds);
       state.airRemaining = 0.0;
       state.airUsedContinuous = MAX_AIR_SECONDS;
       state.isFreefalling = true;
@@ -647,8 +649,12 @@ function updateSimulation(dt) {
       state.isAltitudeHold = false;
       state.isJumping6m = false;
       // Losing thrust changes acceleration, never the current velocity.
-      showBanner('freefall', 3.5);
-      sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
+      // A depleted road tank (including the complete O-hop) is not flight.
+      // This presentation-only marker never changes gas, force or ballistics.
+      if (flightAlertEligible) {
+        showBanner('freefall', 3.5);
+        sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
+      }
       airConsumedThisFrame += airBefore - state.airRemaining;
       return false;
     } else if (state.airUsedContinuous >= AUTO_DESCENT_USED_SECONDS && airborneNow) {
@@ -666,6 +672,9 @@ function updateSimulation(dt) {
 
   // Requirement 4: ';' (Semicolon) triggers Rear Cold-Gas Rocket Boost in Realistic (Standard) mode!
   const driveInput = readDriveInput();
+  // Deliberate lift/hold leaves a road hop for actual flight; W held while
+  // driving over a hop alone must not accidentally arm the flight alarm.
+  if (isAirborne && (driveInput.lift > 0 || state.isAltitudeHold)) state.groundHopActive = false;
   const isRearBoostKey = driveInput.boost > 0;
   const isThrottleW = driveInput.throttle > 0;
   const isAccelerating = isThrottleW || (isRearBoostKey && canUseRCS);
@@ -2115,7 +2124,7 @@ function updateSimulation(dt) {
     barFill.className = 'h-full rounded-md bg-rose-600 transition-all duration-75';
     tankBadge.textContent = t.badgeDepleted;
     tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300 border border-rose-400';
-    modeBadge.textContent = t.modeFreefall;
+    modeBadge.textContent = isAirborne && !state.groundHopActive ? t.modeFreefall : isAirborne ? t.modeHover : t.modeGround;
     modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300';
   } else if (state.isAutoDescending8s) {
     barFill.className = 'h-full rounded-md bg-amber-400 transition-all duration-75';

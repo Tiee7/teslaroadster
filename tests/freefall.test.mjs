@@ -24,12 +24,12 @@ const close = (actual, expected, tolerance = 1e-8) =>
 // Execute the complete production map movement, tank, altitude, attitude and
 // road/roof collision paths; only rendering/DOM and explosion effects are stubs.
 function harness(overrides = {}, map = 'highway', buildings = []) {
-  const banners = [], impacts = [];
+  const banners = [], impacts = [], alerts = [];
   const context = vm.createContext({
     cityBuildings: buildings, frontWheelSteerGroups: [], carMeshGroup: {},
     THREE: { MathUtils: { clamp: (x, lo, hi) => Math.max(lo, Math.min(hi, x)), lerp: (a, b, t) => a + (b - a) * t } },
     document: { getElementById: () => ({ classList: { remove() {} } }) },
-    sound: { init() {}, speakAlert() {}, beep() {}, playCrash() {} },
+    sound: { init() {}, speakAlert: (...args) => alerts.push(args), beep() {}, playCrash() {} },
     showBanner: (...args) => banners.push(args),
     destroyVehicle() { context.gameState.isDestroyed = true; },
     recordImpact: (...args) => impacts.push(args),
@@ -46,7 +46,7 @@ function harness(overrides = {}, map = 'highway', buildings = []) {
   `, context);
   context.setMap(map);
   Object.assign(context.gameState, { x: 0, z: 0, y: 300, vx: 0, vy: 0, vz: 0, speed: 0, ...overrides });
-  return { state: context.gameState, keys: context.gameKeys, context, banners, impacts,
+  return { state: context.gameState, keys: context.gameKeys, context, banners, impacts, alerts,
     step: dt => context.step(dt), launch: () => context.triggerJump6m(),
     advance(seconds, fps) {
       const count = Math.floor(seconds * fps);
@@ -57,6 +57,46 @@ function harness(overrides = {}, map = 'highway', buildings = []) {
       return result;
     } };
 }
+
+test('freefall alarm belongs to sustained flight, never road depletion or the complete O-hop',()=>{
+  for(const map of ['highway','city'])for(const physicsMode of ['realistic','fantasy'])for(const fps of [30,60,144]){
+    for(const key of ['Semicolon','KeyH']){
+      const road=harness({y:0,speed:80,vz:-80,airRemaining:.006,physicsMode},map);
+      road.keys[key]=true;for(let frame=0;frame<3;frame++)road.step(1/fps);
+      assert.equal(road.state.isFreefalling,true,'empty tank still disables thrust normally');
+      assert.ok(!road.banners.some(x=>x[0]==='freefall'));
+      assert.ok(!road.alerts.some(x=>x[0]==='freefall'));
+    }
+    for(const hop of [
+      {y:1,vy:10,isJumping6m:true,groundHopActive:true,jumpInertiaSeconds:.1},
+      {y:3,vy:-2,isJumping6m:false,groundHopActive:true,jumpInertiaSeconds:null},
+      {y:3,vy:2,isJumping6m:false,groundHopActive:false,jumpInertiaSeconds:.1}
+    ]){
+      const h=harness({...hop,speed:80,vz:-80,airRemaining:.006,physicsMode},map);
+      h.keys.Semicolon=true;h.step(1/fps);
+      assert.equal(h.state.isFreefalling,true);
+      assert.ok(!h.banners.some(x=>x[0]==='freefall'),'O ascent, descent and finite grace remain silent');
+      assert.ok(!h.alerts.some(x=>x[0]==='freefall'));
+    }
+    const flight=harness({y:100,speed:80,vz:-80,airRemaining:.006,physicsMode,jumpInertiaSeconds:null},map);
+    flight.keys.Semicolon=true;flight.step(1/fps);
+    assert.equal(flight.banners.filter(x=>x[0]==='freefall').length,1);
+    assert.equal(flight.alerts.filter(x=>x[0]==='freefall').length,1);
+    flight.step(1/fps);assert.equal(flight.alerts.filter(x=>x[0]==='freefall').length,1,'no repeated empty-tank voice');
+  }
+});
+
+test('ground O marks its whole arc; deliberate sustained lift leaves that alert-only classification',()=>{
+  const hop=harness({y:0});hop.launch();hop.state.airRemaining=.006;
+  assert.equal(hop.state.groundHopActive,true);hop.step(1/60);
+  assert.ok(!hop.alerts.some(x=>x[0]==='freefall'));
+  const flight=harness({y:100,groundHopActive:true,isJumping6m:false,airRemaining:.006,jumpInertiaSeconds:null});
+  flight.keys.Space=true;flight.step(1/60);
+  assert.equal(flight.state.groundHopActive,false);
+  assert.equal(flight.alerts.filter(x=>x[0]==='freefall').length,1);
+  const landed=harness({y:0,groundHopActive:true});landed.step(0);
+  assert.equal(landed.state.groundHopActive,false,'touchdown clears stale classification');
+});
 
 for (const seconds of [1, 2, 3]) {
   test(`from rest, ${seconds}s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode`, () => {

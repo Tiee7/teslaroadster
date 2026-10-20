@@ -1,6 +1,6 @@
 {
   "schema": "static-projection-identity-only-tests-v1",
-  "generatedAt": "2026-10-20T13:48:25.565Z",
+  "generatedAt": "2026-10-20T14:02:10.013Z",
   "passed": true,
   "totalTests": 29,
   "byKind": {
@@ -161,19 +161,19 @@
     }
   ],
   "sourceAndArtifactHashes": {
-    "src/config.js": "e266a54510bd451a35d5a75fe3d330cc40204bacd681d23cfbe76a693eaf4d3f",
-    "src/physics-main.js": "3e28a4551f7a6f38ad1500f06b6232e7dcfc640dbb6a3fe0bd973057126da182",
-    "src/highway-demo.js": "30269219669489f3f1c228fc305eacd1032238bc1bcb0100a2bd9ebf6f06df43",
+    "src/config.js": "264d9d7e0f0800a8c3dce294836684d5160a1ee669ff26a742656223011d0ff0",
+    "src/physics-main.js": "589627905257e36409ef1628d5bbac971ec4366b40ebce91c55a1013d99e3e3f",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
-    "src/ui-hud.js": "eda76a2f67268dacbcae89a299a9ef00af241648909a8a5e1f8b349e38079b7b",
+    "src/ui-hud.js": "821751deca17129bb121bd09bd9731e5ce37dc455d0c258536a2635cd932faa8",
     "src/audio.js": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61",
-    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "0d42d33fcc909ec2bf08c1e6e1de02310f4c57e74d6fa0d5590a4a345015fa90",
-    "verification/demo-continuous/emit-browser-static-projection.mjs": "5aa497c2088462a6fd40b75b54383ab512b2c7a9d37b04785ac43068833321db",
-    "verification/demo-continuous/browser-static-projection.generated.js": "7840df7ebe5c7b5f6835be018f30877f30b6b3e6c0e4fb19c12790f99e6fde0c",
-    "verification/demo-continuous/browser-static-projection.generated.mjs": "6ee41a9d7d815c02b3d637bb838470af9229c585ad04ce55dc9035b034703993",
-    "verification/demo-continuous/browser-static-projection-identity.generated.mjs": "b7606053c6a683a92f07c5583153f0a5e14059f6e59d7829115b011290511186",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "421858fdb81f21a206231080d8f0a5b804111591525ae9563b36c4aefb67bc91",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "046f1fb78cb9a14cb7bfad2e8d261f7b3428265605f05bab7e517d979faa9c33",
+    "verification/demo-continuous/browser-static-projection.generated.js": "c514d27af57e7127fda9b81340dca3def162051675f76e08a1a9b95c3b5562e8",
+    "verification/demo-continuous/browser-static-projection.generated.mjs": "f5779e98f3c5d4bb0d32631d23770f96a829f1f28de28ff311aef64e50cf4fbc",
+    "verification/demo-continuous/browser-static-projection-identity.generated.mjs": "9b1baa540572873f0465ed6a56c5fb14de981eff28cd812b92ee4ea7cdb2ff92",
     "verification/demo-continuous/numeric-math-identity-profiles.json": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a"
   },
   "sourceAndArtifactsUnchanged": true,
@@ -182,7 +182,7 @@
   "driverStepsExecuted": 0,
   "browserRuns": 0,
   "fullUpdateSimulationCalls": 0,
-  "numericalCoreSha256": "02e77da830dc7e90c96305e5f7d28a4ccc9c92524aebc1794e5e15c16973163e",
+  "numericalCoreSha256": "9911eb4bd481965eafffa30841d77cf5bcb3e3f4b4770dc6548243286bd29ba0",
   "mathIdentityNote": "Positive identities use exact recorded source declarations only. The actual bundle is not loaded again and no clamp/lerp or physics body is called.",
   "executionBoundary": "Only static module/factory/binder/assertRuntime instantiation and build guard checks. Source functions are identity-only declarations. All destructive source probes occur in a temporary mirror; live repo source and generated artifacts remain unchanged."
 }

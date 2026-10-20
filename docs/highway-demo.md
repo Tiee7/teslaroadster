@@ -1,13 +1,13 @@
-# Highway demo driving
+# Highway autopilot
 
-> Validation in progress (2026-10-20): the current source has passed the fixed-clock seed7/52-car90-second CPU runs at30/60/144Hz and the complete-key manual comparison. Earlier truncated/stub-math runs remain historical only. Full tests, broader traffic cases and actual cloud-browser driving/input/visual acceptance are still required; no merge or production deployment has occurred. See [current results and limits](../verification/demo-continuous/README.md).
+> Current release evidence is in [controls, city scale and visual changes](../verification/controls-city-scale/README.md). The current controller has **not** completed the all-mode60-second collision-free goal. Earlier90-second CPU runs and diagrams in `demo-continuous` belong to their recorded historical snapshots, not this release. WebGL/hearing/FPS acceptance is not claimed; the user accepted that cloud-browser limitation.
 
 
 The native **Autopilot / 自动驾驶** switch is available only on Map 01, the six-lane elevated highway. It stays reachable in all three HUD modes. It has no keyboard shortcut, starts off, and is not persisted across reloads. Land before enabling it. Switch off to regain manual control.
 
 ## Behavior
 
-The driver supplies analog inputs through the production input reader. Its opt-in ground-only stunt steering has a quicker bounded rack and lateral-velocity response; manual keyboard/mobile driving, city handling, drift and airborne handling retain their original parameters. Position still advances by real integrated velocity, with no teleport. It never writes the vehicle's speed, horizontal position, tank, score, collision result, or NPC behavior. In normal Realistic driving it aims for 220+ km/h, with a 250 km/h cruise target in traffic. Empty-road, Plaid and Fantasy propulsion retain their existing limits. Acceleration from rest and after congestion is physical; the speedometer is unchanged.
+The driver supplies analog inputs through the production input reader. Its opt-in ground-only stunt steering has a quicker bounded rack and lateral-velocity response; manual keyboard/mobile driving, drift and airborne handling retain their original parameters. Position still advances by real integrated velocity, with no teleport. The planner never assigns speed, position, tank, score, collision result or NPC behavior. Normal Realistic driving targets220+ km/h; continuous safe boost can reach its existing370 km/h physical limit, with fractional following demand instead of the retired250 cap. Danger pauses ordinary extra boost while real startup/floor protection and funded routing still apply. Finite gas requires real reserve/recharge pauses. Acceleration is physical; city metre-scale changes are documented separately in the current report.
 
 The planner chooses among all six final lane centers. A two-or-more-lane maneuver uses a single continuous steering target, without recentering, dwelling or making a new ordinary routing decision at an intermediate center. The same rack/yaw/lateral integrator predicts the complete transition. A final target remains committed until settled; a newly unsafe path can extend the move in the same direction instead of alternating steering directions. Normal manual steering and physics retain their existing response.
 
@@ -29,7 +29,7 @@ The driver first tries the existing low obstacle-clearance height, then 3.2/4.5/
 
 The shared O-jump action still performs each takeoff and pays its existing lift cost. Only a requested demo hop receives a bounded launch-vector grace matched to its planned finite arc plus 0.18 seconds, capped at 2.4 seconds; manual O retains its existing 0.25-second grace and six-metre target. Ground contact clears demo grace. There is no airborne throttle, rear boost, altitude hold or sustained lift request after launch. Paid lateral strafe follows the planned landing center. Jumps cannot be extended while airborne or replaced by perpetual forward-powered flight. Actual landing/NPC behavior remains bounded prediction rather than a proof against every future configuration.
 
-The 220 floor constrains commanded braking; it is not a physical guarantee. A depleted/reserved tank can prevent a necessary boost or hop, long airborne/roof-rebound intervals still undergo ordinary drag, and real collisions can slow or destroy the vehicle. Ground recharge and every gas debit remain unchanged. No infinite fuel, teleporting, forced speed or collision immunity is introduced.
+The220 floor constrains commanded braking; it is not a physical guarantee. A depleted/reserved finite tank can prevent a necessary boost or hop, long airborne/roof-rebound intervals still undergo ordinary drag, and real collisions can slow or destroy the vehicle. Default finite gas remains unchanged. The separately requested silent0 sandbox toggle can switch infinite air while manual, active or pending; it invalidates every future fuel-dependent proof without changing the actual pose/landing target. It blocks ranked play and adds no teleport, forced speed or collision immunity.
 
 ## Demo simulation clock
 
@@ -39,6 +39,12 @@ While this switch owns input, simulation uses fixed1/60-second steps, at most th
 
 The switch owns driving inputs while active or preparing; held keyboard, legacy hold buttons and mobile sticks cannot inject a competing drive command. Stopping clears both virtual and manual held inputs. Camera, HUD, language and ordinary browser shortcuts remain usable. Reset, destruction, map/mode/traffic changes, opening map/help/leaderboard/audio/paint menus, blur, hidden and page exit stop the demo, without automatically restarting it on return.
 
+The existing left key badges mirror the latest applied autopilot control frame
+with exactly their manual `.active` animation, including fractional jets and
+the actual O-hop phase. This is display-only: it does not synthesize keyboard
+events or change the real held-key map. Releases and lifecycle exits clear it;
+shared physical aliases (for example both Shift keys) still aggregate correctly.
+
 ## Ranked isolation
 
 Enabling first invalidates any starting/running 60-second challenge and awaits its exact server cancellation, including an issuance that arrives late. An unconfirmed end fails closed and retains that run ID for retry. The demo cannot start a ranked run, including a programmatic disabled-button dispatch. It never creates or submits an automatic result. A previously completed immutable manual result remains its original manual snapshot and keeps the ordinary Submit/Discard flow before another challenge. Switching off allows a fresh manual challenge after pending ends are confirmed; there is no intentional 65-second local lock.
@@ -47,6 +53,6 @@ Enabling first invalidates any starting/running 60-second challenge and awaits i
 
 Focused tests cover continuous final-lane steering, swept intermediate/rear traffic, combined paid braking and natural-drag floor protection, complete finite arcs/refill, exact proof/certificate consumption and invalidation, render-shared count/time budgets, manual keys with both ownership flags false, ordinary O, lifecycle and ranked races. CPU helper comparisons use the project’s unmodified Three r128 MathUtils and include the real G feedback. They omit full page effects/render/audio, so they are not a browser oracle.
 
-The [current evidence report](../verification/demo-continuous/README.md) identifies the frozen current source, complete CPU clock matrix and remaining release gates. Raw per-frame comparison preserves every captured player/NPC/output-frame value without rounding; background certificate availability can differ across render schedules even when actual controls/physical trajectories are equal. The older [close-weaving report](../verification/demo-close-weaving/README.md) documents the superseded single-lane/slow-following policy and is not a current-controller pass.
+The [current evidence report](../verification/controls-city-scale/README.md) identifies the new frozen candidate and actual gates. Historical raw per-frame comparisons in [demo-continuous](../verification/demo-continuous/README.md) retain their recorded snapshot identities; they must not be relabelled as this candidate's matrix. The older [close-weaving report](../verification/demo-close-weaving/README.md) is likewise historical and not a current-controller pass.
 
 CPU trajectory diagrams and deterministic DOM tests do not replace actual WebGL rendering, visual FPS, device hit-testing or real-browser gameplay validation.

@@ -1318,14 +1318,14 @@ window.addEventListener('focus', () => { sonicCondensationFocusLost = false; });
 window.addEventListener('pagehide', resetSonicCondensation);
 document.addEventListener?.('visibilitychange', () => { if (document.hidden) resetSonicCondensation(); });
 
-// Four underside lift ports and four matching top-deck attitude/descent ports.
-// Attitude commands reuse these real outlets, rather than inventing mid-air jets.
+// Four underside lift ports and four top-deck Shift-only descent plumes.
+// Top/side mouths stay visually flush: hide their hardware, not their gas.
 const liftPlumes = [], descendPlumes = [];
 for (const z of [-1.1, 1.1]) for (const x of [-0.8, 0.8]) {
   const lift = createThrusterPlume(0.095, 1.65, plumeMatLift, new THREE.Vector3(0, -1, 0));
   lift.position.set(x < 0 ? -0.65 : 0.65, 0.119, z < 0 ? -0.72 : 0.72); carMeshGroup.add(lift); addColdGasOutlet(lift, 0.069); liftPlumes.push(lift);
   const top = createThrusterPlume(0.058, 0.90, plumeMatRCS, new THREE.Vector3(0, 1, 0));
-  top.position.set(x, z < 0 ? 0.79 : 0.90, z); carMeshGroup.add(top); addColdGasOutlet(top, 0.043); descendPlumes.push(top);
+  top.position.set(x, z < 0 ? 0.79 : 0.90, z); carMeshGroup.add(top); addColdGasOutlet(top, 0.043).visible = false; descendPlumes.push(top);
 }
 
 const frontRetroNozzles = [], frontRetroPlumes = [];
@@ -1334,13 +1334,13 @@ for (const x of [-0.34, 0.34]) {
   plume.position.set(x, 0.24, -2.32); carMeshGroup.add(plume);
   frontRetroNozzles.push(addColdGasOutlet(plume, 0.043)); frontRetroPlumes.push(plume);
 }
-// Four flush side outlets. A yaw couple and a pure strafe share these mouths.
+// Four flush side outlets. Roll (J/L), yaw and strafe share these hidden mouths.
 const rcsPlumes = {};
 for (const z of [-0.7, 0.7]) for (const side of [-1, 1]) {
   const name = (z < 0 ? 'front' : 'rear') + (side < 0 ? 'Left' : 'Right');
   const plume = createThrusterPlume(0.050, 0.82, plumeMatRCS, new THREE.Vector3(side, 0, 0));
   plume.name = 'side-rcs-' + name; plume.position.set(side * 1.01, 0.45, z);
-  carMeshGroup.add(plume); addColdGasOutlet(plume, 0.036); rcsPlumes[name] = plume;
+  carMeshGroup.add(plume); addColdGasOutlet(plume, 0.036).visible = false; rcsPlumes[name] = plume;
 }
 // Purely presentational: powers below are accepted/paid production requests.
 // Combining commands once per outlet avoids duplicate transparent envelopes.
@@ -1370,12 +1370,12 @@ function updateColdGasVisuals(dt, hidden, rearPower, retroPower, retroRear, lift
   for (const plume of frontRetroPlumes) setThrusterPlumePower(plume, Math.max(-retroZ, 0), hidden);
   for (let i = 0; i < 4; i++) {
     const side = i % 2 ? 1 : -1, fore = i < 2 ? 1 : -1;
-    setThrusterPlumePower(liftPlumes[i], Math.max(liftPower, side * roll, fore * pitch, -retroY, 0), hidden);
-    setThrusterPlumePower(descendPlumes[i], Math.max(descendPower, -side * roll, -fore * pitch, retroY, 0), hidden);
+    setThrusterPlumePower(liftPlumes[i], Math.max(liftPower, fore * pitch, -retroY, 0), hidden);
+    setThrusterPlumePower(descendPlumes[i], Math.max(descendPower, 0), hidden);
   }
   for (let i = 0; i < sideRcsPlumes.length; i++) {
     const side = i % 2 ? 1 : -1, fore = i < 2 ? 1 : -1;
-    setThrusterPlumePower(sideRcsPlumes[i], Math.max(0, -side * strafe, side * fore * yaw, side * retroX), hidden);
+    setThrusterPlumePower(sideRcsPlumes[i], Math.max(0, side * roll, -side * strafe, side * fore * yaw, side * retroX), hidden);
   }
 }
 function configureThrusterLayout(model) {

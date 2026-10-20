@@ -297,6 +297,18 @@ reset clear the effect and its delay, without queued background timers.
 [Pressure review](verification/jet-pressure-review/README.md) records
 the production-geometry checks and CPU previews, not a real-WebGL visual pass.
 
+Top and side mouth hardware is now hidden without removing their plumes. J/L
+roll uses side exhaust; top exhaust is only accepted Shift descent. This changes
+display mapping, not physical attitude forces or tank debit. Freefall banner and
+voice require established actual flight: road depletion and the complete O-hop
+remain silent. A presentation-only hop marker persists through descent and clears
+on touchdown or deliberate lift/hold, independently of finite inertia grace.
+
+During autopilot, the left key panel uses exactly its existing manual held-key
+animation for the latest applied controls and O-hop phase. This is display-only,
+with no synthetic keys or input ownership changes; release, exit and focus/menu/
+reset transitions clear it, while real shared-key aliases still aggregate.
+
 ## Highway autopilot / 第一关自动驾驶
 
 Map 01 adds a small, opt-in Autopilot / 自动驾驶 switch with no shortcut. It supplies real driving/boost/brake inputs, accelerates normally from rest, and targets 220+ km/h. A multi-lane maneuver now steers continuously toward its final lane center; intermediate centers do not insert a straightening pause. The complete predicted sweep is checked for crossed-lane traffic. Mechanical plus paid retro braking is requested only when its predicted result remains at least 220 km/h; a slower queue instead prompts a pass or an earlier, real-gas tactical hop. Real finite tank, airborne drag, landing and collision limits still apply, so an impossible or fuel-starved situation can lose speed or crash. The switch stops cleanly on reset, destruction, map/mode changes, menus and loss of focus. Automatic driving stays isolated from the 60-second leaderboard. See [implementation, paired verification and limits](docs/highway-demo.md).

@@ -1,0 +1,13 @@
+✔ exterior gauge uses a short title, remaining seconds and no capacity or used-time caption (1.231816ms)
+✔ language switching only touches surviving gauge labels and preserves warnings (1.600231ms)
+✔ simplified gauge retains the flow, status, fill and 20% auto-descent warning (0.273392ms)
+✔ remaining-time updates never require removed nodes during depletion, recharge or invalid readings (9.749791ms)
+✔ depleted mode caption distinguishes actual flight from a road O-hop without changing tank readings (2.186665ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.643317

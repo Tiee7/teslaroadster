@@ -341,7 +341,7 @@
         gasMassKg: 144, dragCoeffCd: 0.34, brakeHeat: 0, wasAirBraking: false,
         suspensionVelocity: 0, suspensionSquash: 0, aeroSquash: 0, downforceN: 0,
         driftAngle: 0, driftTimer: 0, isDrifting: false, tireSmokeTimer: 0,
-        wasSupersonic: false, cameraShake: 0, longitudinalG: 0, lateralG: 0,
+        wasSupersonic: false, groundHopActive: false, cameraShake: 0, longitudinalG: 0, lateralG: 0,
         isAutoLandingSave: false, lastAutoSaveAlt: 0, lastImpactDvKmh: 0, lastImpactEnergyKj: 0,
         lightningTimer: 6.5, lightningFlash: 0,
       });

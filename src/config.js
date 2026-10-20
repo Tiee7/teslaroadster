@@ -411,6 +411,7 @@ const state = {
   isAltitudeHold: false, // N key mid-air altitude hold hover
   holdTargetY: 0.0,
   isJumping6m: false,    // O key 2.5x climb speed jump to 6m
+  groundHopActive: false, // Alert-only: a road O-hop is not sustained flight.
   jumpTargetY: 6.0,
   driftTimer: 0.0,
   steerInput: 0.0,

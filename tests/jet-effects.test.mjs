@@ -72,10 +72,10 @@ test('body selection places actual mouth coordinates; view changes preserve sele
 test('roll/pitch/yaw/strafe reuse the correctly directed physical ports without duplicate plumes',()=>{
  const f=fixture();
  const step=(roll=0,pitch=0,yaw=0,strafe=0)=>read(f,`updateColdGasVisuals(.016,false,0,0,false,0,0,${roll},${pitch},${yaw},${strafe})`);
- step(1);assert.deepEqual(positive(active(f,'liftPlumes')),[1,3]);assert.deepEqual(positive(active(f,'descendPlumes')),[0,2]);
- step(-1);assert.deepEqual(positive(active(f,'liftPlumes')),[0,2]);assert.deepEqual(positive(active(f,'descendPlumes')),[1,3]);
- step(0,1);assert.deepEqual(positive(active(f,'liftPlumes')),[0,1]);assert.deepEqual(positive(active(f,'descendPlumes')),[2,3]);
- step(0,-1);assert.deepEqual(positive(active(f,'liftPlumes')),[2,3]);assert.deepEqual(positive(active(f,'descendPlumes')),[0,1]);
+ step(1);assert.deepEqual(positive(active(f,'sideRcsPlumes')),[1,3]);assert.deepEqual(positive(active(f,'liftPlumes')),[]);assert.deepEqual(positive(active(f,'descendPlumes')),[]);
+ step(-1);assert.deepEqual(positive(active(f,'sideRcsPlumes')),[0,2]);assert.deepEqual(positive(active(f,'liftPlumes')),[]);assert.deepEqual(positive(active(f,'descendPlumes')),[]);
+ step(0,1);assert.deepEqual(positive(active(f,'liftPlumes')),[0,1]);assert.deepEqual(positive(active(f,'descendPlumes')),[]);
+ step(0,-1);assert.deepEqual(positive(active(f,'liftPlumes')),[2,3]);assert.deepEqual(positive(active(f,'descendPlumes')),[]);
  step(0,0,1);assert.deepEqual(positive(active(f,'sideRcsPlumes')),[1,2]);
  step(0,0,-1);assert.deepEqual(positive(active(f,'sideRcsPlumes')),[0,3]);
  step(0,0,0,-1);assert.deepEqual(positive(active(f,'sideRcsPlumes')),[1,3]);
@@ -151,6 +151,22 @@ test('emergency lift uses its accepted full command at low tank, and 3D retro ch
   if(velocity[0]>0)assert.ok(active(f,'sideRcsPlumes')[1]>0&&active(f,'sideRcsPlumes')[3]>0);
   if(velocity[0]<0)assert.ok(active(f,'sideRcsPlumes')[0]>0&&active(f,'sideRcsPlumes')[2]>0);
   if(velocity[1]<0)assert.ok(active(f,'liftPlumes').every(p=>p>0));
-  if(velocity[1]>0)assert.ok(active(f,'descendPlumes').every(p=>p>0));
+  if(velocity[1]>0)assert.ok(active(f,'descendPlumes').every(p=>p===0),'top exhaust is reserved for Shift, not inferred from retro velocity');
+ }
+});
+
+test('top and side hardware stays hidden across body/cockpit/layout changes while paid plumes remain active',()=>{
+ const f=fixture(),h=installJetPhysics(f.context);
+ for(const model of ['reference','classic','reference'])for(const cabin of ['reference','classic']){
+  f.api.setModel(model);f.api.setCockpit(cabin);f.setCockpitPerspective(false);
+  assert.equal(read(f,'[...descendPlumes,...sideRcsPlumes].every(p=>thrusterPlumeState.get(p).port.visible===false)'),true);
+  assert.equal(read(f,'[...liftPlumes,...frontRetroPlumes].every(p=>thrusterPlumeState.get(p).port.visible===true)'),true);
+  for(const [key,list,indices] of [['KeyJ','sideRcsPlumes',[1,3]],['KeyL','sideRcsPlumes',[0,2]],['ShiftLeft','descendPlumes',[0,1,2,3]],['ShiftRight','descendPlumes',[0,1,2,3]]]){
+   h.reset({y:100});h.keys[key]=true;const result=h.step(1/60);
+   assert.deepEqual(positive(active(f,list)),indices,key);assert.ok(result.airConsumedThisFrame>0);
+   if(key.startsWith('Key'))assert.ok(active(f,'descendPlumes').every(p=>p===0));
+   delete h.keys[key];h.step(1/60);assert.ok(active(f,list).every(p=>p===0),'release clears plume');
+  }
+  h.reset({y:100});h.keys.Semicolon=true;h.step(1/60);assert.ok(active(f,'rearPlumes').every(p=>p>0),'rear boost unchanged');
  }
 });
