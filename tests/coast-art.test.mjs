@@ -159,7 +159,7 @@ test('whole-district apertures have four outward faces, selective masked emissio
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(430,0,0);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T),meta=root.userData.coastArtDistrict;
- assert.equal(root.getObjectByName('coast-dark-window-bands'),undefined);assert.equal(root.getObjectByName('coast-original-shop-houses').count,132);assert.equal(meta.entryCount,129);
+ assert.equal(root.getObjectByName('coast-dark-window-bands'),undefined);assert.equal(root.getObjectByName('coast-original-shop-houses').count,156);assert.equal(meta.entryCount,129);
  const windows=[root.getObjectByName('coast-district-window-sashes'),root.getObjectByName('coast-district-selected-lit-windows'),root.getObjectByName('coast-district-window-sashes-transom'),root.getObjectByName('coast-district-selected-lit-windows-transom')],pool=root.getObjectByName('coast-district-near-window-reveals');
  assert.equal(windows.reduce((n,m)=>n+m.count,0),meta.windowCount);assert.ok(meta.windowCount>14000&&meta.windowCount<19000);
  const matrix=new T.Matrix4(),point=new T.Vector3(),normal=new T.Vector3(),coverage=new Map();
@@ -360,4 +360,35 @@ test('window/forecourt refinements retain all129 published art entrance/path pos
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const expected=JSON.parse(readFileSync(new URL('../verification/coast-art/entry-pose-contract.json',import.meta.url)));const {T,coast}=actual(),root=coast.enter(new T.Scene(),T);assert.equal(root.userData.coastArtDistrict.entries.length,expected.entries);assert.equal(sha(JSON.stringify(root.userData.coastArtDistrict.entries)),expected.sha256);coast.leave();
+});
+
+test('six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),walls=root.getObjectByName('coast-original-shop-houses'),roles=walls.userData.coastWallPieces,signatures=root.userData.coastSignatureHouses,layout=coast.layout();root.updateMatrixWorld(true);
+ assert.equal(signatures.length,6);assert.equal(walls.count,156);assert.equal(roles.length,walls.count);assert.ok(walls.instanceColor);const matrix=new T.Matrix4(),color=new T.Color(),boxes=[];walls.geometry.computeBoundingBox();
+ for(let i=0;i<walls.count;i++){walls.getMatrixAt(i,matrix);boxes.push(walls.geometry.boundingBox.clone().applyMatrix4(matrix));walls.getColorAt(i,color);assert.ok(color.r>.2&&color.g>.2&&color.b>.2,'every body/pier color is initialized');}
+ for(const [bi,b] of layout.buildings.entries()){
+  const selected=signatures.find(s=>s.buildingIndex===bi),ids=roles.map((r,i)=>r.buildingIndex===bi&&r.role==='body'?i:-1).filter(i=>i>=0),segments=ids.map(i=>boxes[i]).sort((a,b)=>a.min.y-b.min.y);assert.equal(ids.length,selected?3:1);
+  let last=0,volume=0;for(const box of segments){assert.ok(Math.abs(box.min.y-last)<1e-4,'continuous exact y partition');assert.ok(Math.abs(box.min.x-b.minX)<1e-4&&Math.abs(box.max.x-b.maxX)<1e-4&&Math.abs(box.min.z-b.minZ)<1e-4&&Math.abs(box.max.z-b.maxZ)<1e-4);assert.ok(box.max.y>box.min.y);last=box.max.y;volume+=(box.max.x-box.min.x)*(box.max.y-box.min.y)*(box.max.z-box.min.z);}
+  assert.ok(Math.abs(last-b.height)<1e-4);assert.ok(Math.abs(volume-b.w*b.d*b.height)<.01,'sum of segment volumes is the original hull, not only its combined AABB');
+  if(selected){assert.ok(Math.abs(segments[0].max.y-3.2)<1e-4);assert.ok(Math.abs(segments[1].max.y-selected.top)<1e-4);assert.ok(selected.top>3.2&&selected.top<b.height);for(let j=0;j<3;j++){walls.getColorAt(ids[j],color);assert.equal(color.getHex(),selected.colors[j]);}}
+ }
+ assert.equal(coast.metrics().staticMeshDraws,80);assert.equal(coast.metrics().maximumStaticTriangles,173566);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
+});
+
+test('signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(445,0,635);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T),walls=root.getObjectByName('coast-original-shop-houses'),roles=walls.userData.coastWallPieces,signatures=root.userData.coastSignatureHouses,layout=coast.layout(),matrix=new T.Matrix4();root.updateMatrixWorld(true);walls.geometry.computeBoundingBox();
+ const piers=[];for(let i=0;i<walls.count;i++)if(roles[i].role==='pier'){walls.getMatrixAt(i,matrix);piers.push({box:walls.geometry.boundingBox.clone().applyMatrix4(matrix),buildingIndex:roles[i].buildingIndex});}assert.equal(piers.length,12);
+ const overlap=(a,b)=>Math.min(a.max.x,b.max.x)-Math.max(a.min.x,b.min.x)>1e-4&&Math.min(a.max.y,b.max.y)-Math.max(a.min.y,b.min.y)>1e-4&&Math.min(a.max.z,b.max.z)-Math.max(a.min.z,b.min.z)>1e-4;
+ const touches=(a,b)=>['x','y','z'].every(k=>Math.min(a.max[k],b.max[k])-Math.max(a.min[k],b.min[k])>=-1e-5);
+ for(const {box,buildingIndex} of piers){assert.ok(Math.abs(box.min.y-4.05)<1e-4,'above3.95m highest fascia');for(const r of coast.roads)assert.ok(box.max.x<=r.x-r.w/2-2||box.min.x>=r.x+r.w/2+2||box.max.z<=r.z-r.d/2-2||box.min.z>=r.z+r.d/2+2);for(const n of coast.nodes)assert.ok(box.max.x<=n.x-19||box.min.x>=n.x+19||box.max.z<=n.z-19||box.min.z>=n.z+19);for(const [bi,b] of layout.buildings.entries())if(bi!==buildingIndex)assert.ok(box.max.x<=b.minX||box.min.x>=b.maxX||box.max.z<=b.minZ||box.min.z>=b.maxZ);for(const p of layout.palms)assert.ok(box.max.x<=p.x-1.7||box.min.x>=p.x+1.7||box.max.z<=p.z-1.7||box.min.z>=p.z+1.7);}
+ for(let i=0;i<piers.length;i++)for(let j=i+1;j<piers.length;j++)assert.equal(overlap(piers[i].box,piers[j].box),false,'orthogonal piers butt, never overlap');
+ const apertureNames=['coast-district-window-sashes','coast-district-selected-lit-windows','coast-district-window-sashes-transom','coast-district-selected-lit-windows-transom','coast-sample-framed-glazing','coast-architecture-window-reveals','coast-district-near-window-reveals'];
+ for(const signature of signatures){const b=layout.buildings[signature.buildingIndex];focus.set(b.x,0,b.z);coast.tick(1/60);root.updateMatrixWorld(true);
+  for(const name of apertureNames){const mesh=root.getObjectByName(name);mesh.geometry.computeBoundingBox();for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const box=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));if(box.max.x<b.minX-.5||box.min.x>b.maxX+.5||box.max.z<b.minZ-.5||box.min.z>b.maxZ+.5)continue;assert.ok(signature.top<=box.min.y||signature.top>=box.max.y,`${b.x}/${b.z} top seam cuts ${name}[${i}]`);assert.ok(3.2<=box.min.y||3.2>=box.max.y,`${b.x}/${b.z} commercial base seam cuts ${name}[${i}]`);for(const p of piers.filter(p=>p.buildingIndex===signature.buildingIndex))assert.equal(touches(box,p.box),false,`pier covers even zero-thickness ${name}`);}}
+ }
+ root.traverse(mesh=>{if(!mesh.isInstancedMesh||!mesh.userData.coastArt?.visualOnly||mesh.userData.coastArt.flat)return;mesh.geometry.computeBoundingBox();for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const box=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));for(const p of piers)assert.equal(touches(box,p.box),false,`pier intersects even zero-thickness actual ${mesh.name}[${i}]`);}});coast.leave();
 });

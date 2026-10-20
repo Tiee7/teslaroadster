@@ -3195,7 +3195,27 @@ const RoadsterCoast = (() => {
     const wheelStencil=own(new THREE.RingGeometry(.24,.29,12));wheelStencil.rotateX(-Math.PI/2);
     batch('coast-boulevard-cycle-stencil-wheels',wheelStencil,roadWhite,cycleWheels,{receiveShadow:true,visualOnly:true,flat:true,renderOrder:1});
 
-    batch('coast-original-shop-houses',box,material(0xffffff,{map:plasterTexture,roughness:.95}),buildings.map((b,index)=>({p:[b.x,b.height/2,b.z],s:[b.w,b.height,b.d],color:districtWallColor(b,index)})),{castShadow:true,receiveShadow:true});
+    // Six existing boulevard houses share a restrained commercial base. Their
+    // visual wall segments exactly partition, never enlarge, the original hull.
+    const wallPieces=[],wallRoles=[],signatureHouses=[];
+    for(const [index,b] of buildings.entries()){
+      const selected=[355,485].includes(b.x)&&[440,580,720].includes(b.z);
+      const push=(p,s,color,role)=>{wallRoles.push({buildingIndex:index,role});wallPieces.push({p,s,color});};
+      if(!selected){push([b.x,b.height/2,b.z],[b.w,b.height,b.d],districtWallColor(b,index),'body');continue;}
+      const family=(Math.floor((b.z+1000)/560)+(b.x>=430?1:0))%2;
+      const highest=Math.min(8,1+Math.floor((b.height-.5-(family?1.65:1.9)/2-4.9)/3.25));
+      // Common gap between full balcony door reveals, not through a window row.
+      const top=highest<2?6.6:3.15+(highest-1)*3.25;
+      const colors=b.z===580?(b.x===355?[0x8b9c8e,0xc0ccbe,0xd4d9c8]:[0x9d8c7c,0xc9ac99,0xd9c6b4]):[0x8b9c8e,b.x===355?0xe3dcca:0xd8d8c7,b.x===355?0xe9e2d1:0xe0dfce];
+      const cuts=[0,3.2,top,b.height];for(let i=0;i<3;i++)push([b.x,(cuts[i]+cuts[i+1])/2,b.z],[b.w,cuts[i+1]-cuts[i],b.d],colors[i],'body');
+      // Two upper corner piers butt at the corner; begin above existing signs.
+      const side=b.x<430?1:-1,face=b.x+side*b.w/2,z=b.z+b.d/2,y=(4.05+b.height-.34)/2,h=b.height-4.39;
+      push([face+side*.07,y,z-.3],[.14,h,.6],colors[0],'pier');
+      push([face-side*.3,y,z+.07],[.6,h,.14],colors[0],'pier');
+      signatureHouses.push({buildingIndex:index,base:3.2,top,colors});
+    }
+    const houseWalls=batch('coast-original-shop-houses',box,material(0xffffff,{map:plasterTexture,roughness:.95}),wallPieces,{castShadow:true,receiveShadow:true});
+    houseWalls.userData.coastWallPieces=wallRoles;group.userData.coastSignatureHouses=signatureHouses;
     batch('coast-roof-terraces',box,material(0xa39f8d),buildings.map(b=>({p:[b.x,b.height+.04,b.z],s:[b.w,.08,b.d]})),{receiveShadow:true});
     const hero=buildings.filter(b=>b.x===-5&&[440,580,720].includes(b.z));
     // A coherent sample street: three original compound houses, 3–4 bays each.

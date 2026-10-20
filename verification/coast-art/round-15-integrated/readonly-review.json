@@ -1,0 +1,14 @@
+{
+  "recordedUTC": "2026-10-20T21:28:36.421000+00:00",
+  "agent": "/root/iterate_map3_art_seven_hours/coast_art_readonly_review",
+  "releaseBlocker": false,
+  "sourceSha256": "44fbd106eeffd766a24f7544fd72cceabf2c9ed97af30a6b18434e827f05a2de",
+  "findings": [
+    "Exact continuous0/3.2/top/H body intervals and original footprint/volume; all156 instance colors explicitly initialized",
+    "Six groups and12piers add288tri/zero base batches or textures",
+    "Closed projected AABB oracle now covers zero-thickness atlas/lettering planes; pier-pier positive-volume oracle permits intended butt",
+    "Base seam3.2 in3.13\u20133.305 full-reveal gap; piers start4.05 above3.95 fascia and endH-.34 belowH-.31 cornice",
+    "Personally viewed driving/corner raw offline images; modest useful identity improvement, not a transformation"
+  ],
+  "boundary": "Read-only code/geometry review and offline CPU images, NOT WebGL/FPS"
+}
