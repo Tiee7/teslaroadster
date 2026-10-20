@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at 30
+ok 1 - two-lane escape holds one final target and steering through the intermediate center at 30
+  ---
+  duration_ms: 5637.205119
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at 60
+ok 2 - two-lane escape holds one final target and steering through the intermediate center at 60
+  ---
+  duration_ms: 14281.425191
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at 144
+ok 3 - two-lane escape holds one final target and steering through the intermediate center at 144
+  ---
+  duration_ms: 34990.295243
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at irregular
+ok 4 - two-lane escape holds one final target and steering through the intermediate center at irregular
+  ---
+  duration_ms: 13938.350763
+  type: 'test'
+  ...
+# Subtest: full final-lane sweep rejects an intermediate hazard beyond the old short validation prefix
+ok 5 - full final-lane sweep rejects an intermediate hazard beyond the old short validation prefix
+  ---
+  duration_ms: 186.405884
+  type: 'test'
+  ...
+# Subtest: demo starts from zero normally with 20 real seeded traffic drivers
+ok 6 - demo starts from zero normally with 20 real seeded traffic drivers
+  ---
+  duration_ms: 1623.211912
+  type: 'test'
+  ...
+# Subtest: demo starts from zero normally with 36 real seeded traffic drivers
+ok 7 - demo starts from zero normally with 36 real seeded traffic drivers
+  ---
+  duration_ms: 4258.295758
+  type: 'test'
+  ...
+# Subtest: demo starts from zero normally with 52 real seeded traffic drivers
+ok 8 - demo starts from zero normally with 52 real seeded traffic drivers
+  ---
+  duration_ms: 3805.628709
+  type: 'test'
+  ...
+# Subtest: high-speed low hop selects a reachable clear landing lane instead of chaining into the next car
+ok 9 - high-speed low hop selects a reachable clear landing lane instead of chaining into the next car
+  ---
+  duration_ms: 9082.92953
+  type: 'test'
+  ...
+# Subtest: a late final arrival cannot borrow unpredicted hold time beyond the fixed horizon
+ok 10 - a late final arrival cannot borrow unpredicted hold time beyond the fixed horizon
+  ---
+  duration_ms: 10.086677
+  type: 'test'
+  ...
+# Subtest: landing sweep rejects the roof-rebound band even while the body envelope is clear
+ok 11 - landing sweep rejects the roof-rebound band even while the body envelope is clear
+  ---
+  duration_ms: 6.63745
+  type: 'test'
+  ...
+# Subtest: dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end with a complete planned arc
+ok 12 - dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end with a complete planned arc
+  ---
+  duration_ms: 35210.582859
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: low-tank landing reserves the real refill wait before the next launch can clear a roof
+ok 13 - complete candidate real-O unit: low-tank landing reserves the real refill wait before the next launch can clear a roof
+  ---
+  duration_ms: 1171.293788
+  type: 'test'
+  ...
+# Subtest: speculative hop traffic uses independent reservations, poses and spawn state
+ok 14 - speculative hop traffic uses independent reservations, poses and spawn state
+  ---
+  duration_ms: 39.45789
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: pending real refill cannot be interrupted by optional paid braking
+ok 15 - complete candidate real-O unit: pending real refill cannot be interrupted by optional paid braking
+  ---
+  duration_ms: 784.25048
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: the admitted preparation interval stays unpowered and conservatively transfers paid successor state
+ok 16 - complete candidate real-O unit: the admitted preparation interval stays unpowered and conservatively transfers paid successor state
+  ---
+  duration_ms: 1116.181388
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 126264.840864

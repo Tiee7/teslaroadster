@@ -1,0 +1,93 @@
+{
+  "generatedAtUTC": "2026-10-20T16:35:37Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "a045853ce0fb71d2100486ecd292f3119b2d7f11b74c46d50724e1e83153d001",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "ownedGeometries": 4,
+    "ownedMaterials": 47,
+    "ownedTextures": 4,
+    "textureBytes": 87381.33333333333,
+    "staticMeshDraws": 51,
+    "staticTriangles": 54856,
+    "instances": 4329,
+    "buildings": 132,
+    "palms": 100,
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 64,
+  "resolution": [
+    1440,
+    900
+  ],
+  "views": [
+    {
+      "name": "sample-street",
+      "positionThree": [
+        -89,
+        5,
+        797
+      ],
+      "targetThree": [
+        -5,
+        6,
+        708
+      ],
+      "fovDeg": 60,
+      "output": "sample-street-raw.png",
+      "seconds": 28.715
+    },
+    {
+      "name": "sample-frontage",
+      "positionThree": [
+        -58,
+        4.4,
+        755
+      ],
+      "targetThree": [
+        -4,
+        5,
+        714
+      ],
+      "fovDeg": 55,
+      "output": "sample-frontage-raw.png",
+      "seconds": 50.299
+    },
+    {
+      "name": "sample-aerial",
+      "positionThree": [
+        -240,
+        125,
+        855
+      ],
+      "targetThree": [
+        18,
+        0,
+        612
+      ],
+      "fovDeg": 48,
+      "output": "sample-aerial-raw.png",
+      "seconds": 48.071
+    }
+  ]
+}

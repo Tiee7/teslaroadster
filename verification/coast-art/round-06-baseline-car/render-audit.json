@@ -1,0 +1,151 @@
+{
+  "generatedAtUTC": "2026-10-20T17:54:07Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "22debfaa373996972472d1d47c02360e3c22ebd1a0b0a41d73a18311b1300e73",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "ownedGeometries": 4,
+    "ownedMaterials": 36,
+    "staticMeshDraws": 39,
+    "staticTriangles": 22972,
+    "instances": 1672,
+    "buildings": 132,
+    "palms": 100,
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "convertedTriangleCount": 22972,
+  "threads": 2,
+  "seed": 7013,
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 20,
+  "resolution": [
+    1180,
+    738
+  ],
+  "views": [
+    {
+      "name": "driver-spawn",
+      "positionThree": [
+        -64,
+        1.2,
+        700
+      ],
+      "targetThree": [
+        -64,
+        1.2,
+        580
+      ],
+      "fovDeg": 60,
+      "fovAxis": "vertical",
+      "projectionMeasuredFovXYDeg": [
+        85.42235390468187,
+        60.00000430567895
+      ],
+      "output": "driver-spawn-raw.png",
+      "seconds": 9.595
+    },
+    {
+      "name": "pier-approach",
+      "positionThree": [
+        -235,
+        1.3,
+        -650
+      ],
+      "targetThree": [
+        -600,
+        3,
+        -650
+      ],
+      "fovDeg": 65,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        64.99999601572439,
+        43.44851261453463
+      ],
+      "output": "pier-approach-raw.png",
+      "seconds": 9.011
+    },
+    {
+      "name": "coast-panorama",
+      "positionThree": [
+        -450,
+        90,
+        1000
+      ],
+      "targetThree": [
+        -150,
+        0,
+        -150
+      ],
+      "fovDeg": 72,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        72.00000183646854,
+        48.873802960080454
+      ],
+      "output": "coast-panorama-raw.png",
+      "seconds": 11.161
+    },
+    {
+      "name": "promenade",
+      "positionThree": [
+        -148,
+        3.8,
+        815
+      ],
+      "targetThree": [
+        -151,
+        3,
+        618
+      ],
+      "fovDeg": 60,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        60.00000089058408,
+        39.70814608014181
+      ],
+      "output": "promenade-raw.png",
+      "seconds": 13.489
+    },
+    {
+      "name": "sample-frontage",
+      "positionThree": [
+        -58,
+        4.4,
+        755
+      ],
+      "targetThree": [
+        -4,
+        5,
+        714
+      ],
+      "fovDeg": 55,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        55.000005936272224,
+        36.067911653578314
+      ],
+      "output": "sample-frontage-raw.png",
+      "seconds": 15.4
+    }
+  ]
+}

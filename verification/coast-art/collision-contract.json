@@ -1,0 +1,6 @@
+{
+  "baseline": "4e979c32e57e658ed945118efb1281a32fd9fdd1",
+  "prefixSha256": "764366cce7a3104ded1fd1fc95221ce9e3a03c5d433880eb68735f2adc4b9ef8",
+  "meaning": "Complete original map layout, collision, surface, road, respawn and traffic implementation before the art builder",
+  "originalWorldSha256": "bf166846dbf7019cfbbaa1d583c97b91ea4a376f1e6ab1c21a62c2808c785cf1"
+}

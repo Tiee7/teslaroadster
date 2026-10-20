@@ -341,6 +341,14 @@ The third map is an original, compressed seaside district inspired by the broad 
 
 `verification/coastal-district/` records exact-source regression, road/surface/contact/lifecycle checks and CPU scene structure. Static triangle/mesh counts exclude vehicles, shadows and renderer passes; they are **not measured FPS, total draw calls, a WebGL visual acceptance, or a promise of60fps/30fps**. Severe low-frame-rate simulation still has the existing50ms step cap. The original all-mode60-second collision-free autopilot target is not claimed complete.
 
+### Coastal art · first iterative milestone
+
+The original map3 layout now uses a coordinated chalk/seafoam/terracotta kit: real-sized doors and four-sided sash windows, roof/parapet variation, three detailed shop compounds, folded palm crowns and low planting, continuous paved sidewalks, beach furniture/lifeguard huts and an original timber pier gateway. Road paint supplies lane/parking/cycle scale references without changing any road, collision, NPC route or spawn; it is visual, not a new traffic system. Map1/2 and the published phone/cockpit/passenger features remain unchanged.
+
+All art geometry and tiny textures are original and generated locally: **zero new art fetches**. Map-local lighting/fog/environment restores on exit. Fixed near-detail pools avoid rebuilding every frame; public structure caps are96 base batches,180,000 maximum allocated-pool triangles,4MiB sampled texture mip levels and8MiB geometry/instance typed buffers. Shadows/driver allocations and extra render passes are outside those structure estimates.
+
+`verification/coast-art/ITERATIONS.md` records real development times, rejected attempts and both failed/passing gates. `verification/coast-art/review-first-release/` contains clearly marked **offline exact-geometry CPU previews, not game screenshots**. Browser WebGL/FPS acceptance remains unavailable; water/shore transitions and distant architectural repetition remain work for subsequent iterations, not a completed-art claim.
+
 
 ## Phone driving visibility and cockpit calibration
 
