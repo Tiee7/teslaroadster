@@ -24,3 +24,9 @@ verification/window-candidate-crown-check/
 verification/tail-down-baseline/
 verification/tail-down-candidate/
 verification/tail-down-intermediate/
+
+# Map 3 art iteration full offline exports are local, not web assets.
+verification/coast-art/round-*/scene.json
+verification/coast-art/round-*/*-raw.png
+verification/coast-art/round-*/source-coast-map.js.txt
+verification/coast-art/round-*/*.log

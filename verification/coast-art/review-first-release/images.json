@@ -1,0 +1,21 @@
+{
+  "copiedAtUTC": "2026-10-20T18:38:56.840755+00:00",
+  "label": "Offline exact Three geometry rendered by Blender CPU; NOT WebGL gameplay screenshots. Independent inspection lighting; not FPS proof.",
+  "images": [
+    {
+      "path": "driver-before.png",
+      "sha256": "af435f7cbca6c7cf98c6c9ff4014a071dc5a29ae6054cea597cec49204d963f5",
+      "exactCopyOf": "round-06-baseline-car/driver-spawn-raw.png"
+    },
+    {
+      "path": "driver-after.png",
+      "sha256": "f2fda48906ea6262e6fc01d55efafa5f86069e733d2e5058626117cf0ebee52e",
+      "exactCopyOf": "round-09-on-phone/driver-spawn-raw.png"
+    },
+    {
+      "path": "coast-after.png",
+      "sha256": "f8b490e5545d8d1e7edf6d6ec70ba8aef7643249782832f920e8026fccf04dc7",
+      "exactCopyOf": "round-09-on-phone/coast-panorama-raw.png"
+    }
+  ]
+}

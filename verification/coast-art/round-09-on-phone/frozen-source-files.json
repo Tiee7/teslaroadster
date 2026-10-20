@@ -1,0 +1,144 @@
+{
+  "frozenAt": "2026-10-20T18:37:34.641307+00:00",
+  "phoneBaseline": "9c253b56e950567b17453af2428894b029d171bf",
+  "productionBaseline": "bb76e6d80f78a36bf58226b72f9a6ef249f5f948",
+  "scope": "Map3 art + read-only world bridge only; frozen game source for complete serial regression",
+  "phoneAndNumericFilesExact": [
+    "src/mobile-controls.js",
+    "src/styles.css",
+    "src/taxi.js",
+    "src/ui-hud.js",
+    "src/vehicles.js",
+    "src/index.html",
+    "src/demo-numeric-projection.js",
+    "src/physics-main.js",
+    "src/config.js",
+    "verification/demo-continuous/browser-static-projection.generated.js",
+    "verification/demo-continuous/browser-static-projection.generated.mjs",
+    "verification/demo-continuous/browser-static-projection.manifest.json",
+    "verification/demo-continuous/emit-browser-static-projection.mjs",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs"
+  ],
+  "gameFiles": [
+    {
+      "path": "src/audio.js",
+      "bytes": 17878,
+      "sha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee"
+    },
+    {
+      "path": "src/coast-map.js",
+      "bytes": 75246,
+      "sha256": "a106271c78cb3521646341b1849e26b96cdef8196c9c64a79f772bb3119ec603"
+    },
+    {
+      "path": "src/config.js",
+      "bytes": 34400,
+      "sha256": "fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306"
+    },
+    {
+      "path": "src/demo-numeric-projection.js",
+      "bytes": 232906,
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2"
+    },
+    {
+      "path": "src/driving-score.js",
+      "bytes": 3733,
+      "sha256": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64"
+    },
+    {
+      "path": "src/highway-demo.js",
+      "bytes": 132506,
+      "sha256": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07"
+    },
+    {
+      "path": "src/highway-traffic.js",
+      "bytes": 25704,
+      "sha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+    },
+    {
+      "path": "src/index.html",
+      "bytes": 52301,
+      "sha256": "b0db4ae3b32ba51f83d67c25f53011b3f19ccbb2af446d4030cd00c5a079c2ae"
+    },
+    {
+      "path": "src/leaderboard.js",
+      "bytes": 26783,
+      "sha256": "aaa1c0bff102f87c0fc6428cf6a80ecfb09c8bc7fc6bb4164076d4f92367264d"
+    },
+    {
+      "path": "src/mobile-controls.js",
+      "bytes": 10417,
+      "sha256": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2"
+    },
+    {
+      "path": "src/music.js",
+      "bytes": 6404,
+      "sha256": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e"
+    },
+    {
+      "path": "src/npc-traffic-assets.js",
+      "bytes": 3720515,
+      "sha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c"
+    },
+    {
+      "path": "src/physics-main.js",
+      "bytes": 109553,
+      "sha256": "3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81"
+    },
+    {
+      "path": "src/reference-cockpit.js",
+      "bytes": 22869,
+      "sha256": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2"
+    },
+    {
+      "path": "src/reference-exterior.js",
+      "bytes": 58944,
+      "sha256": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782"
+    },
+    {
+      "path": "src/reference-traffic.js",
+      "bytes": 6413,
+      "sha256": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+    },
+    {
+      "path": "src/start-screen.js",
+      "bytes": 14322,
+      "sha256": "c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 37257,
+      "sha256": "7111fd1d4152604981e0026acdaaefb09ac4408298df51c5a83211f373392b75"
+    },
+    {
+      "path": "src/taxi.js",
+      "bytes": 23392,
+      "sha256": "7b92268cf0052afb8e758f5c34480b36dcc2b611fc80e6a9c9a445dbc0074493"
+    },
+    {
+      "path": "src/ui-hud.js",
+      "bytes": 60090,
+      "sha256": "e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808"
+    },
+    {
+      "path": "src/vehicles.js",
+      "bytes": 93009,
+      "sha256": "cdd97d85c23492ee443e5f7e78e2a516d20418d4985f1e92f78e7caad79fb311"
+    },
+    {
+      "path": "src/weather-rain.js",
+      "bytes": 12140,
+      "sha256": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0"
+    },
+    {
+      "path": "src/world.js",
+      "bytes": 25977,
+      "sha256": "4f6ffc9700e9e383c81ad7db6d511eedf24ce98bd436811903ee6986059e33fd"
+    },
+    {
+      "path": "index.html",
+      "bytes": 4805716,
+      "sha256": "cf889f5f55af77d28d1b119f0b5d24657b7093de7d6d4f5e4ded587c2f996a58"
+    }
+  ]
+}

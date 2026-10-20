@@ -1,0 +1,18 @@
+{
+  "generatedAtUTC": "2026-10-20T18:38:57.279645+00:00",
+  "newArtNetworkRequests": 0,
+  "files": {
+    "src/coast-map.js": {
+      "bytes": 75246,
+      "gzipBytes": 24349,
+      "phoneBytes": 17561,
+      "phoneGzipBytes": 6553
+    },
+    "index.html": {
+      "bytes": 4805716,
+      "gzipBytes": 2023920,
+      "phoneBytes": 4747790,
+      "phoneGzipBytes": 2006150
+    }
+  }
+}

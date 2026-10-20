@@ -1,0 +1,64 @@
+{
+  "generatedAtUTC": "2026-10-20T17:03:10Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "8e17129f0f0bb090e2313e6b08bfb3731f514ecc7d0d4504290855600805fdb0",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "ownedGeometries": 14,
+    "ownedMaterials": 33,
+    "ownedTextures": 4,
+    "textureBytes": 611670,
+    "staticMeshDraws": 39,
+    "staticTriangles": 83232,
+    "instances": 4056,
+    "buildings": 132,
+    "palms": 100,
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "convertedTriangleCount": 83232,
+  "threads": 2,
+  "seed": 7013,
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 128,
+  "resolution": [
+    1440,
+    900
+  ],
+  "views": [
+    {
+      "name": "promenade",
+      "positionThree": [
+        -148,
+        3.8,
+        815
+      ],
+      "targetThree": [
+        -151,
+        3,
+        618
+      ],
+      "fovDeg": 60,
+      "output": "promenade-raw.png",
+      "seconds": 54.429
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "recordedAtUTC": "2026-10-20T18:55:16.101617+00:00",
+  "sourceSha256": "a106271c78cb3521646341b1849e26b96cdef8196c9c64a79f772bb3119ec603",
+  "productionBaseline": "bb76e6d80f78a36bf58226b72f9a6ef249f5f948",
+  "baselineTree": "42fcfbff62c928f15c9772c3fe49a6e62f61137e",
+  "allGameFilesStayedFrozen": true,
+  "phoneAndNumericalFilesExact": true,
+  "fullSerial": {
+    "pass": 673,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 989214.653918,
+    "startedUTC": "2026-10-20T18:37:34Z",
+    "endedUTC": "2026-10-20T18:54:03Z",
+    "command": "node --test --test-concurrency=1 --test-reporter=tap tests/*.test.mjs",
+    "log": "all-tests-serial.tap"
+  },
+  "focusedSerial": {
+    "pass": 134,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 11405.594786,
+    "log": "focused-integration-serial.tap"
+  },
+  "additionalGates": {
+    "identity": 29,
+    "mirror": 3,
+    "contract": 6,
+    "oldMaps": {
+      "cases": 96,
+      "steps": 17280,
+      "objectIsComparisons": 846720,
+      "fields": 49
+    },
+    "lua": 24,
+    "check": true,
+    "build": true,
+    "independentReadOnlyReleaseBlocker": false
+  },
+  "numericalCoreSha256": "ef66db3f74dccc04be14e6f8f7424347d622de191e0a349166586d30c20bdb67",
+  "cpuOnly": {
+    "coldFirstMs": 124.0199,
+    "warmMedianMs": 90.47461500000009,
+    "warmP95Ms": 116.83433300000002,
+    "tick": {
+      "stationary": {
+        "frames": 6000,
+        "totalMs": 18.730583000000024
+      },
+      "moving": {
+        "frames": 6000,
+        "totalMs": 62.41219200000023
+      }
+    },
+    "heapBeforeBytes": 9109600,
+    "heapAfterGcBytes": 10892360
+  },
+  "notClaimed": [
+    "Browser/WebGL pixel acceptance",
+    "mobile GPU/FPS",
+    "completed seven-hour window",
+    "finished art"
+  ],
+  "knownArtPriorities": [
+    "continuous water/shore color transition",
+    "distant architectural repetition"
+  ]
+}

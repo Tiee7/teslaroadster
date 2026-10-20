@@ -30,6 +30,12 @@ const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.55);
 rimLight.position.set(-40, 30, -50);
 scene.add(rimLight);
 
+// Explicit renderer-only bridge: coast consumes focus without writing camera/physics.
+scene.userData.coastArtBridge = Object.freeze({
+  getFocus: () => camera.position,
+  sharedLights: Object.freeze([ambientLight, dirLight, rimLight])
+});
+
 // underGlowLight removed per user request (eliminates weird blue light column under car)
 const underGlowLight = { position: { set: () => {} }, intensity: 0 };
 
