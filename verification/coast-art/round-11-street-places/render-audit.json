@@ -1,0 +1,172 @@
+{
+  "generatedAtUTC": "2026-10-20T19:36:31Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "9a14f76eaaeeb74a4784f4b7840de0b58f85c04a8c3f076a3beb8814d676a669",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 38,
+    "ownedMaterials": 48,
+    "ownedTextures": 15,
+    "textureBytes": 862891,
+    "ownedGeometryBufferBytes": 186460,
+    "ownedInstanceBufferBytes": 1738856,
+    "staticMeshDraws": 76,
+    "staticTriangles": 151494,
+    "maximumStaticTriangles": 175886,
+    "nearPalms": 10,
+    "farPalms": 90,
+    "foliageRefreshes": 1,
+    "nearDetailInstances": 18,
+    "nearDetailCapacity": 768,
+    "nearDetailMatrixBytes": 49152,
+    "detailRefreshes": 1,
+    "shadowCasterBatches": 29,
+    "shadowCasterTriangles": 99672,
+    "maximumShadowCasterTriangles": 124064,
+    "instances": 26260,
+    "buildings": 132,
+    "palms": 100,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "normalMapMaterials": 2,
+  "convertedTriangleCount": 151494,
+  "threads": 2,
+  "seed": 7013,
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 24,
+  "resolution": [
+    1180,
+    738
+  ],
+  "views": [
+    {
+      "name": "driver-spawn",
+      "positionThree": [
+        -64,
+        1.2,
+        700
+      ],
+      "targetThree": [
+        -64,
+        1.2,
+        580
+      ],
+      "fovDeg": 60,
+      "fovAxis": "vertical",
+      "projectionMeasuredFovXYDeg": [
+        85.42235390468187,
+        60.00000430567895
+      ],
+      "output": "driver-spawn-raw.png",
+      "seconds": 12.881
+    },
+    {
+      "name": "driver-inland",
+      "positionThree": [
+        436,
+        1.2,
+        700
+      ],
+      "targetThree": [
+        436,
+        1.2,
+        580
+      ],
+      "fovDeg": 60,
+      "fovAxis": "vertical",
+      "projectionMeasuredFovXYDeg": [
+        85.42235390468187,
+        60.00000430567895
+      ],
+      "output": "driver-inland-raw.png",
+      "seconds": 15.07
+    },
+    {
+      "name": "coast-panorama",
+      "positionThree": [
+        -450,
+        90,
+        1000
+      ],
+      "targetThree": [
+        -150,
+        0,
+        -150
+      ],
+      "fovDeg": 72,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        72.00000183646854,
+        48.873802960080454
+      ],
+      "output": "coast-panorama-raw.png",
+      "seconds": 11.677
+    },
+    {
+      "name": "courtyard",
+      "positionThree": [
+        -17,
+        3.5,
+        396
+      ],
+      "targetThree": [
+        90,
+        1.8,
+        365
+      ],
+      "fovDeg": 64,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        64.00000396258216,
+        42.69192357024207
+      ],
+      "output": "courtyard-raw.png",
+      "seconds": 13.488
+    },
+    {
+      "name": "beach-entry",
+      "positionThree": [
+        -151,
+        1.8,
+        625
+      ],
+      "targetThree": [
+        -255,
+        1.3,
+        603
+      ],
+      "fovDeg": 64,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        64.00000396258216,
+        42.69192357024207
+      ],
+      "output": "beach-entry-raw.png",
+      "seconds": 12.158
+    }
+  ]
+}

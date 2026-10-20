@@ -1,0 +1,214 @@
+{
+  "recordedUTC": "2026-10-20T20:12:26.567299+00:00",
+  "scope": "Offline exact-geometry CPU inspection, NOT WebGL gameplay or FPS acceptance",
+  "files": [
+    {
+      "file": "inland-before.png",
+      "bytes": 994040,
+      "sha256": "80a35db33bb363099a07dbdc006d40b0b41c73b3de426d4f11aafa0e36a15646",
+      "sourceSha256": "22debfaa373996972472d1d47c02360e3c22ebd1a0b0a41d73a18311b1300e73",
+      "nativeVisualFocus": null,
+      "baselineFocusNote": "Original production greybox had no camera-followed facade/palm LOD; whole static geometry snapshot is unchanged by this camera move.",
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+      "view": {
+        "name": "driver-inland",
+        "positionThree": [
+          436,
+          1.2,
+          700
+        ],
+        "targetThree": [
+          436,
+          1.2,
+          580
+        ],
+        "fovDeg": 60,
+        "fovAxis": "vertical",
+        "projectionMeasuredFovXYDeg": [
+          85.42235390468187,
+          60.00000430567895
+        ],
+        "output": "driver-inland-raw.png",
+        "seconds": 11.324
+      },
+      "metrics": {
+        "active": true,
+        "builds": 1,
+        "disposals": 0,
+        "ownedGeometries": 4,
+        "ownedMaterials": 36,
+        "staticMeshDraws": 39,
+        "staticTriangles": 22972,
+        "instances": 1672,
+        "buildings": 132,
+        "palms": 100,
+        "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+      },
+      "inspectionLighting": {
+        "worldStrength": 0.55,
+        "sunEnergy": 2.2,
+        "sunAngleDeg": 6,
+        "sunEulerDeg": [
+          27,
+          -24,
+          -36
+        ]
+      }
+    },
+    {
+      "file": "inland-after.png",
+      "bytes": 1073946,
+      "sha256": "ce7f94c88aff1e9421fc1c7e8c06003c3eb04bff84b77fa72a97f6c54cb491c7",
+      "sourceSha256": "e8e5b1b41290c10c662b7af69bb3d7cdd447c55e5217796b96bd6a13ca6600de",
+      "nativeVisualFocus": {
+        "x": 436,
+        "z": 700
+      },
+      "baselineFocusNote": null,
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+      "view": {
+        "name": "driver-inland",
+        "positionThree": [
+          436,
+          1.2,
+          700
+        ],
+        "targetThree": [
+          436,
+          1.2,
+          580
+        ],
+        "fovDeg": 60,
+        "fovAxis": "vertical",
+        "projectionMeasuredFovXYDeg": [
+          85.42235390468187,
+          60.00000430567895
+        ],
+        "output": "driver-inland-raw.png",
+        "seconds": 16.96
+      },
+      "metrics": {
+        "active": true,
+        "builds": 1,
+        "disposals": 0,
+        "failedBuilds": 0,
+        "ownedLights": 2,
+        "shadowMapResolution": 1024,
+        "shadowSpanMetres": 160,
+        "ownedGeometries": 39,
+        "ownedMaterials": 49,
+        "ownedTextures": 15,
+        "textureBytes": 862891,
+        "ownedGeometryBufferBytes": 415396,
+        "ownedInstanceBufferBytes": 1759864,
+        "staticMeshDraws": 78,
+        "staticTriangles": 160826,
+        "maximumStaticTriangles": 177770,
+        "nearPalms": 6,
+        "farPalms": 94,
+        "foliageRefreshes": 1,
+        "nearDetailInstances": 377,
+        "nearDetailCapacity": 768,
+        "nearDetailMatrixBytes": 49152,
+        "detailRefreshes": 1,
+        "shadowCasterBatches": 30,
+        "shadowCasterTriangles": 106496,
+        "maximumShadowCasterTriangles": 123440,
+        "instances": 26940,
+        "buildings": 132,
+        "palms": 100,
+        "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+        "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+      },
+      "inspectionLighting": {
+        "worldStrength": 0.55,
+        "sunEnergy": 2.2,
+        "sunAngleDeg": 6,
+        "sunEulerDeg": [
+          27,
+          -24,
+          -36
+        ]
+      }
+    },
+    {
+      "file": "corner-after.png",
+      "bytes": 1393401,
+      "sha256": "091442d249573492da45802dbe08883f541395512d838b3ee5320fc36b31e878",
+      "sourceSha256": "e8e5b1b41290c10c662b7af69bb3d7cdd447c55e5217796b96bd6a13ca6600de",
+      "nativeVisualFocus": {
+        "x": 445,
+        "z": 635
+      },
+      "baselineFocusNote": null,
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+      "view": {
+        "name": "inland-corner",
+        "positionThree": [
+          445,
+          2.4,
+          635
+        ],
+        "targetThree": [
+          471,
+          2.6,
+          600
+        ],
+        "fovDeg": 60,
+        "fovAxis": "horizontal",
+        "projectionMeasuredFovXYDeg": [
+          60.00000089058408,
+          39.70814608014181
+        ],
+        "output": "inland-corner-raw.png",
+        "seconds": 25.832
+      },
+      "metrics": {
+        "active": true,
+        "builds": 1,
+        "disposals": 0,
+        "failedBuilds": 0,
+        "ownedLights": 2,
+        "shadowMapResolution": 1024,
+        "shadowSpanMetres": 160,
+        "ownedGeometries": 39,
+        "ownedMaterials": 49,
+        "ownedTextures": 15,
+        "textureBytes": 862891,
+        "ownedGeometryBufferBytes": 415396,
+        "ownedInstanceBufferBytes": 1759864,
+        "staticMeshDraws": 78,
+        "staticTriangles": 160394,
+        "maximumStaticTriangles": 177770,
+        "nearPalms": 6,
+        "farPalms": 94,
+        "foliageRefreshes": 1,
+        "nearDetailInstances": 359,
+        "nearDetailCapacity": 768,
+        "nearDetailMatrixBytes": 49152,
+        "detailRefreshes": 1,
+        "shadowCasterBatches": 30,
+        "shadowCasterTriangles": 106064,
+        "maximumShadowCasterTriangles": 123440,
+        "instances": 26922,
+        "buildings": 132,
+        "palms": 100,
+        "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+        "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+      },
+      "inspectionLighting": {
+        "worldStrength": 0.55,
+        "sunEnergy": 2.2,
+        "sunAngleDeg": 6,
+        "sunEulerDeg": [
+          27,
+          -24,
+          -36
+        ]
+      }
+    }
+  ]
+}

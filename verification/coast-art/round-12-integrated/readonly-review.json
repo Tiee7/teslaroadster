@@ -1,0 +1,13 @@
+{
+  "reviewedUTC": "2026-10-20T19:51:16Z",
+  "reviewer": "coast_art_readonly_review",
+  "releaseBlocker": false,
+  "notes": [
+    "Corner X/Z signs read positively; fascia outside existing projecting cornice",
+    "Exact32-triangle parapet union has correct outer/inner/top/bottom winding and ownership",
+    "Original road/collision prefix unchanged; entry selection/paths unchanged",
+    "177770 maximum triangles,78 base batches,2 real lights",
+    "Spacious setbacks and similar building scale remain art shortcomings, not resolved by passing tests",
+    "Offline exact-geometry images are not WebGL/gameplay/FPS evidence"
+  ]
+}

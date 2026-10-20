@@ -26,6 +26,13 @@ for t in data['textures']:
  for i in range(0,len(raw),channels):
   values=raw[i:i+channels];px.extend([v/255 for v in values[:3]]+[values[3]/255 if channels==4 else 1])
  img.pixels.foreach_set(px);img.update();textures[t['id']]=(img,t)
+def texture_node(texture_id,nodes,links,non_color=False):
+ img,t=textures[texture_id]
+ if non_color:img.colorspace_settings.name='Non-Color'
+ tex=nodes.new('ShaderNodeTexImage');tex.image=img;tex.extension='REPEAT'
+ coord=nodes.new('ShaderNodeTexCoord');scale=nodes.new('ShaderNodeVectorMath');scale.operation='MULTIPLY';scale.inputs[1].default_value=(*t['repeat'],1)
+ offset=nodes.new('ShaderNodeVectorMath');offset.operation='ADD';offset.inputs[1].default_value=(*t.get('offset',[0,0]),0)
+ links.new(coord.outputs['UV'],scale.inputs[0]);links.new(scale.outputs[0],offset.inputs[0]);links.new(offset.outputs[0],tex.inputs['Vector']);return tex
 materials={}
 for m in data['materials']:
  mat=bpy.data.materials.new(m['id']);mat.use_nodes=True;nodes=mat.node_tree.nodes;links=mat.node_tree.links;bs=nodes.get('Principled BSDF')
@@ -34,15 +41,18 @@ for m in data['materials']:
  if m.get('emissive'):
   bs.inputs['Emission Color'].default_value=(*(linear(v) for v in m['emissive']),1);bs.inputs['Emission Strength'].default_value=m.get('emissiveIntensity',0)
  if m.get('map'):
-  img,t=textures[m['map']];tex=nodes.new('ShaderNodeTexImage');tex.image=img;tex.extension='REPEAT'
-  coord=nodes.new('ShaderNodeTexCoord');mapping=nodes.new('ShaderNodeVectorMath');mapping.operation='MULTIPLY';mapping.inputs[1].default_value=(*t['repeat'],1)
-  links.new(coord.outputs['UV'],mapping.inputs[0]);links.new(mapping.outputs[0],tex.inputs['Vector'])
+  tex=texture_node(m['map'],nodes,links)
   mul=nodes.new('ShaderNodeMixRGB');mul.blend_type='MULTIPLY';mul.inputs[0].default_value=1;mul.inputs[1].default_value=(*(linear(v) for v in c),1)
   links.new(tex.outputs['Color'],mul.inputs[2]);links.new(mul.outputs[0],bs.inputs['Base Color'])
  if m.get('emissiveMap'):
-  img,t=textures[m['emissiveMap']];tex=nodes.new('ShaderNodeTexImage');tex.image=img;tex.extension='REPEAT'
+  tex=texture_node(m['emissiveMap'],nodes,links)
   mul=nodes.new('ShaderNodeMixRGB');mul.blend_type='MULTIPLY';mul.inputs[0].default_value=1;mul.inputs[1].default_value=bs.inputs['Emission Color'].default_value
   links.new(tex.outputs['Color'],mul.inputs[2]);links.new(mul.outputs[0],bs.inputs['Emission Color'])
+ if m.get('normalMap'):
+  tex=texture_node(m['normalMap'],nodes,links,True);normal=nodes.new('ShaderNodeNormalMap');normal.space='TANGENT'
+  scale=m.get('normalScale') or [1,1]
+  if abs(scale[0]-scale[1])>1e-7:raise RuntimeError('Offline adapter does not claim anisotropic normalScale support')
+  normal.inputs['Strength'].default_value=scale[0];links.new(tex.outputs['Color'],normal.inputs['Color']);links.new(normal.outputs['Normal'],bs.inputs['Normal'])
  if m.get('transparent') and m.get('opacity',1)<1:
   trans=nodes.new('ShaderNodeBsdfTransparent');mix=nodes.new('ShaderNodeMixShader');mix.inputs[0].default_value=m.get('opacity',1)
   links.new(trans.outputs[0],mix.inputs[1]);links.new(bs.outputs[0],mix.inputs[2]);links.new(mix.outputs[0],nodes.get('Material Output').inputs['Surface'])
@@ -96,17 +106,22 @@ views={
  'pier':((-840,70,-555),(-575,10,-650),48),
  'promenade':((-148,3.8,815),(-151,3,618),60),
  'district':((-700,470,1300),(170,0,0),52),
+ 'inland-corner':((445,2.4,635),(471,2.6,600),60),
+ 'driver-inland':((436,1.2,700),(436,1.2,580),60),
  'driver-spawn':((-64,1.2,700),(-64,1.2,580),60),
  'roadside':((-99,1.8,700),(-30,4,580),65),
  'pier-approach':((-235,1.3,-650),(-600,3,-650),65),
+ 'courtyard':((-17,3.5,396),(90,1.8,365),64),
+ 'beach-entry':((-151,1.8,625),(-255,1.3,603),64),
+ 'shore-low':((-340,.7,700),(-319,.1,640),65),
  'shore-ground':((-317,1.8,650),(-110,2,100),68),
  'coast-panorama':((-450,90,1000),(-150,0,-150),72),
 }
-audit={'generatedAtUTC':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'renderer':'Blender '+bpy.app.version_string+' Cycles CPU','warning':'Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test','source':data['source'],'metrics':data['metrics'],'coordinateMapping':data['coordinateMapping'],'exactGeometry':True,'convertedTriangleCount':converted_triangles,'threads':scene.render.threads,'seed':scene.cycles.seed,'geometryNotes':'All original vertices/triangles, instance matrices, instance-color × material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.','lighting':{'worldStrength':.55,'sunEnergy':2.2,'sunAngleDeg':6,'sunEulerDeg':[27,-24,-36]},'samples':scene.cycles.samples,'resolution':[scene.render.resolution_x,scene.render.resolution_y],'views':[]}
+audit={'generatedAtUTC':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'renderer':'Blender '+bpy.app.version_string+' Cycles CPU','warning':'Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test','source':data['source'],'metrics':data['metrics'],'coordinateMapping':data['coordinateMapping'],'exactGeometry':True,'normalMapMaterials':sum(bool(m.get('normalMap')) for m in data['materials']),'convertedTriangleCount':converted_triangles,'threads':scene.render.threads,'seed':scene.cycles.seed,'geometryNotes':'All original vertices/triangles, instance matrices, instance-color × material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.','lighting':{'worldStrength':.55,'sunEnergy':2.2,'sunAngleDeg':6,'sunEulerDeg':[27,-24,-36]},'samples':scene.cycles.samples,'resolution':[scene.render.resolution_x,scene.render.resolution_y],'views':[]}
 for name in (requested or ['sample-street','sample-frontage','sample-aerial']):
- loc,target,fov=views[name];cam.location=C@Vector(loc);t=C@Vector(target);cam.rotation_euler=(t-cam.location).to_track_quat('-Z','Y').to_euler();cam_data.type='PERSP';cam_data.sensor_fit='VERTICAL' if name=='driver-spawn' else 'HORIZONTAL';cam_data.lens=(cam_data.sensor_height if name=='driver-spawn' else cam_data.sensor_width)/(2*math.tan(math.radians(fov)/2));cam_data.clip_start=.1;cam_data.clip_end=6000
+ loc,target,fov=views[name];cam.location=C@Vector(loc);t=C@Vector(target);cam.rotation_euler=(t-cam.location).to_track_quat('-Z','Y').to_euler();cam_data.type='PERSP';cam_data.sensor_fit='VERTICAL' if name in ('driver-spawn','driver-inland') else 'HORIZONTAL';cam_data.lens=(cam_data.sensor_height if name in ('driver-spawn','driver-inland') else cam_data.sensor_width)/(2*math.tan(math.radians(fov)/2));cam_data.clip_start=.1;cam_data.clip_end=6000
  projection=cam.calc_matrix_camera(bpy.context.evaluated_depsgraph_get(),x=scene.render.resolution_x,y=scene.render.resolution_y)
  actual_fov=[math.degrees(2*math.atan(1/abs(projection[0][0]))),math.degrees(2*math.atan(1/abs(projection[1][1])))]
  scene.render.filepath=os.path.join(folder,name+'-raw.png');t0=time.time();bpy.ops.render.render(write_still=True)
- audit['views'].append({'name':name,'positionThree':loc,'targetThree':target,'fovDeg':fov,'fovAxis':'vertical' if name=='driver-spawn' else 'horizontal','projectionMeasuredFovXYDeg':actual_fov,'output':name+'-raw.png','seconds':round(time.time()-t0,3)})
+ audit['views'].append({'name':name,'positionThree':loc,'targetThree':target,'fovDeg':fov,'fovAxis':'vertical' if name in ('driver-spawn','driver-inland') else 'horizontal','projectionMeasuredFovXYDeg':actual_fov,'output':name+'-raw.png','seconds':round(time.time()-t0,3)})
  with open(os.path.join(folder,'render-audit.json'),'w') as f:json.dump(audit,f,indent=2)

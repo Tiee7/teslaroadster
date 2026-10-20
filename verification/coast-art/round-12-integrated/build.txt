@@ -1,0 +1,1 @@
+Static game copied to public/index.html; Vercel builds api/ separately.

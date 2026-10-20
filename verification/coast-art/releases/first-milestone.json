@@ -1,0 +1,47 @@
+{
+  "recordedAtUTC": "2026-10-20T19:07:39Z",
+  "milestone": "First iterative map3 art release; seven-hour work still in progress",
+  "pr": "https://github.com/Tiee7/teslaroadster/pull/5",
+  "localEquivalent": "fd39316ef6248a33f91d2c8a1d26682e058ec365",
+  "head": "135a7ee444e34546e74462e290bdfee1753cfd60",
+  "main": "b9be05578bbcd3fc61e5d48d4d8fdf8e1c6c372b",
+  "tree": "0ec4494ee3ab19bb58ce10d7101bf2dd98574262",
+  "deployment": {
+    "id": "dpl_FvT5zz2AU4kj5SATSjhHjShTG9xz",
+    "projectId": "prj_yJBBmMNz7Hb8TNNTAHRUdySe3tyr",
+    "state": "READY",
+    "target": "production",
+    "url": "teslaroadster-g2lpd5hl2-tiee1.vercel.app",
+    "alias": [
+      "tesla.tiee.xyz",
+      "teslaroadster-green.vercel.app",
+      "teslaroadster-tiee1.vercel.app",
+      "teslaroadster-git-main-tiee1.vercel.app"
+    ],
+    "aliasError": null,
+    "commit": "b9be05578bbcd3fc61e5d48d4d8fdf8e1c6c372b"
+  },
+  "sourceIdentity": {
+    "url": "https://tesla.tiee.xyz/",
+    "inlineGameUtf8Bytes": 4717038,
+    "inlineGameUtf16Length": 4705978,
+    "inlineGameSha256": "4efa135a83157bd2ae79f178c93dbe9e8bd4b29bc24ddda855cf182ffe02a261",
+    "configSha256": "b4b5394413070838555bfb7e08bd97882882d63d8fd4cdafb3625ba37d38b47f",
+    "sourceCssSha256": "635952f4b91e641ee44471676f956ce342692b591dc4f67ec8c34321fed524f7",
+    "method": "Actual DOM script read in49152 UTF16-character chunks, joined and UTF8-hashed in Cua Node realm; source CSS separately hashed. Full hashes equal frozen local bundle, not truncated evaluate output."
+  },
+  "gates": {
+    "fullSerial": 673,
+    "focusedSerial": 134,
+    "identity": 29,
+    "mirror": 3,
+    "contract": 6,
+    "oldMapCases": 96,
+    "oldMapSteps": 17280,
+    "oldMapPhysicalObjectIsComparisons": 846720,
+    "lua": 24,
+    "independentReadOnly": "No release blocker found"
+  },
+  "remainingBoundary": "Browser Three.WebGLRenderer still cannot create a WebGL context; deployment/source identity does not establish WebGL visual, mobile GPU or FPS acceptance.",
+  "capacityInterruption": "18:59:06 capacity failure; resumed19:04:35 after root waited5minutes and verified existing PR. No duplicate upload/PR."
+}

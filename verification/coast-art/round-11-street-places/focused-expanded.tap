@@ -1,0 +1,286 @@
+TAP version 13
+# Subtest: world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical
+ok 1 - world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical
+  ---
+  duration_ms: 3.060892
+  type: 'test'
+  ...
+# Subtest: actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles
+ok 2 - actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles
+  ---
+  duration_ms: 2232.046462
+  type: 'test'
+  ...
+# Subtest: coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights
+ok 3 - coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights
+  ---
+  duration_ms: 299.941676
+  type: 'test'
+  ...
+# Subtest: r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets
+ok 4 - r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets
+  ---
+  duration_ms: 727.458578
+  type: 'test'
+  ...
+# Subtest: construction and final-attach faults restore scene atomically and dispose all returned partial private resources
+ok 5 - construction and final-attach faults restore scene atomically and dispose all returned partial private resources
+  ---
+  duration_ms: 577.209335
+  type: 'test'
+  ...
+# Subtest: actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame
+ok 6 - actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame
+  ---
+  duration_ms: 786.273901
+  type: 'test'
+  ...
+# Subtest: direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion
+ok 7 - direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion
+  ---
+  duration_ms: 192.227994
+  type: 'test'
+  ...
+# Subtest: coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte
+ok 8 - coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte
+  ---
+  duration_ms: 1.466129
+  type: 'test'
+  ...
+# Subtest: actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance
+ok 9 - actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance
+  ---
+  duration_ms: 467.199988
+  type: 'test'
+  ...
+# Subtest: five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets
+ok 10 - five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets
+  ---
+  duration_ms: 730.125188
+  type: 'test'
+  ...
+# Subtest: road render union is exact, non-overlapping and uses square world-metre texture UVs
+ok 11 - road render union is exact, non-overlapping and uses square world-metre texture UVs
+  ---
+  duration_ms: 264.38889
+  type: 'test'
+  ...
+# Subtest: batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion
+ok 12 - batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion
+  ---
+  duration_ms: 179.167602
+  type: 'test'
+  ...
+# Subtest: original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes
+ok 13 - original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes
+  ---
+  duration_ms: 166.716501
+  type: 'test'
+  ...
+# Subtest: curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages
+ok 14 - curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages
+  ---
+  duration_ms: 195.984892
+  type: 'test'
+  ...
+# Subtest: palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout
+ok 15 - palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout
+  ---
+  duration_ms: 176.350206
+  type: 'test'
+  ...
+# Subtest: whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool
+ok 16 - whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool
+  ---
+  duration_ms: 201.207401
+  type: 'test'
+  ...
+# Subtest: all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building
+ok 17 - all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building
+  ---
+  duration_ms: 168.04273
+  type: 'test'
+  ...
+# Subtest: boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded
+ok 18 - boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded
+  ---
+  duration_ms: 176.702127
+  type: 'test'
+  ...
+# Subtest: boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted
+ok 19 - boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted
+  ---
+  duration_ms: 175.584393
+  type: 'test'
+  ...
+# Subtest: western boulevard curb has an actual visual cut across the original pier approach
+ok 20 - western boulevard curb has an actual visual cut across the original pier approach
+  ---
+  duration_ms: 168.641417
+  type: 'test'
+  ...
+# Subtest: continuous water/sand grids retain exact original area, bounds, elevation and upward winding
+ok 21 - continuous water/sand grids retain exact original area, bounds, elevation and upward winding
+  ---
+  duration_ms: 176.526228
+  type: 'test'
+  ...
+# Subtest: native water normals drift by uniforms only, retain finite periodic offsets and dispose once
+ok 22 - native water normals drift by uniforms only, retain finite periodic offsets and dispose once
+  ---
+  duration_ms: 382.683812
+  type: 'test'
+  ...
+# Subtest: original art payload remains below the explicit32KiB gzip ceiling with zero art fetches
+ok 23 - original art payload remains below the explicit32KiB gzip ceiling with zero art fetches
+  ---
+  duration_ms: 4.383585
+  type: 'test'
+  ...
+# Subtest: fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights
+ok 24 - fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights
+  ---
+  duration_ms: 165.638998
+  type: 'test'
+  ...
+# Subtest: selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors
+ok 25 - selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors
+  ---
+  duration_ms: 261.772495
+  type: 'test'
+  ...
+# Subtest: curved roof trim is a finite closed shallow parapet, not a new collidable full roof
+ok 26 - curved roof trim is a finite closed shallow parapet, not a new collidable full roof
+  ---
+  duration_ms: 150.597124
+  type: 'test'
+  ...
+# Subtest: composed courtyard and three beach entries retain original obstacles, shoulders and ground datum
+ok 27 - composed courtyard and three beach entries retain original obstacles, shoulders and ground datum
+  ---
+  duration_ms: 173.329384
+  type: 'test'
+  ...
+# Subtest: original map data is lazy, meter-scale, connected and explicitly separate from city/highway
+ok 28 - original map data is lazy, meter-scale, connected and explicitly separate from city/highway
+  ---
+  duration_ms: 6.538571
+  type: 'test'
+  ...
+# Subtest: all directed routes and complete vehicle corners stay on legal roads, not sand, pier or water
+ok 29 - all directed routes and complete vehicle corners stay on legal roads, not sand, pier or water
+  ---
+  duration_ms: 62.706765
+  type: 'test'
+  ...
+# Subtest: coast20-car road motion uses real metres and finite speed at30Hz
+ok 30 - coast20-car road motion uses real metres and finite speed at30Hz
+  ---
+  duration_ms: 51.93084
+  type: 'test'
+  ...
+# Subtest: coast20-car road motion uses real metres and finite speed at60Hz
+ok 31 - coast20-car road motion uses real metres and finite speed at60Hz
+  ---
+  duration_ms: 95.736309
+  type: 'test'
+  ...
+# Subtest: coast20-car road motion uses real metres and finite speed at144Hz
+ok 32 - coast20-car road motion uses real metres and finite speed at144Hz
+  ---
+  duration_ms: 231.873322
+  type: 'test'
+  ...
+# Subtest: collision stops on its actual route; blasts hide before a safe road-only respawn, without city wrap
+ok 33 - collision stops on its actual route; blasts hide before a safe road-only respawn, without city wrap
+  ---
+  duration_ms: 2.675971
+  type: 'test'
+  ...
+# Subtest: actualr128 low-poly model owns bounded geometry, creates lazily and disposes only its own map resources
+ok 34 - actualr128 low-poly model owns bounded geometry, creates lazily and disposes only its own map resources
+  ---
+  duration_ms: 800.858761
+  type: 'test'
+  ...
+# Subtest: coastal300m drive takes5.4seconds at200km/h,30Hz
+ok 35 - coastal300m drive takes5.4seconds at200km/h,30Hz
+  ---
+  duration_ms: 31.460088
+  type: 'test'
+  ...
+# Subtest: coastal300m drive takes5.4seconds at200km/h,60Hz
+ok 36 - coastal300m drive takes5.4seconds at200km/h,60Hz
+  ---
+  duration_ms: 42.75738
+  type: 'test'
+  ...
+# Subtest: coastal300m drive takes5.4seconds at200km/h,144Hz
+ok 37 - coastal300m drive takes5.4seconds at200km/h,144Hz
+  ---
+  duration_ms: 74.804914
+  type: 'test'
+  ...
+# Subtest: sea permits flight but no ghost landing save or recharge; actual touch resets once onto the road
+ok 38 - sea permits flight but no ghost landing save or recharge; actual touch resets once onto the road
+  ---
+  duration_ms: 20.233744
+  type: 'test'
+  ...
+# Subtest: spawn boulevard and pier approach form a traversable sightseeing path, not an isolated menu option
+ok 39 - spawn boulevard and pier approach form a traversable sightseeing path, not an isolated menu option
+  ---
+  duration_ms: 7.014699
+  type: 'test'
+  ...
+# Subtest: water/reset chooses a genuinely free road pose rather than spawning inside existing traffic
+ok 40 - water/reset chooses a genuinely free road pose rather than spawning inside existing traffic
+  ---
+  duration_ms: 3.855188
+  type: 'test'
+  ...
+# Subtest: coast continuous side sweep prevents high-speed building tunneling and roofs remain real support
+ok 41 - coast continuous side sweep prevents high-speed building tunneling and roofs remain real support
+  ---
+  duration_ms: 7.118364
+  type: 'test'
+  ...
+# Subtest: after touchdown, rooftop driving and a fresh O takeoff never collide with their own supporting side wall
+ok 42 - after touchdown, rooftop driving and a fresh O takeoff never collide with their own supporting side wall
+  ---
+  duration_ms: 15.505011
+  type: 'test'
+  ...
+# Subtest: actual coast contact block covers east/west cars and turning headings instead of a fixed north/south box
+ok 43 - actual coast contact block covers east/west cars and turning headings instead of a fixed north/south box
+  ---
+  duration_ms: 8.715111
+  type: 'test'
+  ...
+# Subtest: coast traffic sweep intersects height over the whole overlap, not just entry or frame end
+ok 44 - coast traffic sweep intersects height over the whole overlap, not just entry or frame end
+  ---
+  duration_ms: 7.526399
+  type: 'test'
+  ...
+# Subtest: actual player and NPC wheel blocks retain highway calibration and meter scale on both free-roam maps
+ok 45 - actual player and NPC wheel blocks retain highway calibration and meter scale on both free-roam maps
+  ---
+  duration_ms: 1.774663
+  type: 'test'
+  ...
+# Subtest: actual map switching isolates coast ownership/counts, blocks ranked starts and preserves existing maps
+ok 46 - actual map switching isolates coast ownership/counts, blocks ranked starts and preserves existing maps
+  ---
+  duration_ms: 16.869906
+  type: 'test'
+  ...
+1..46
+# tests 46
+# suites 0
+# pass 46
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10992.648849

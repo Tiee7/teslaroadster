@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import vm from 'node:vm';
+import {gzipSync} from 'node:zlib';
 const source=readFileSync(new URL('../src/coast-map.js',import.meta.url),'utf8');
 const contract=JSON.parse(readFileSync(new URL('../verification/coast-art/collision-contract.json',import.meta.url)));
 const runtime=process.env.ROADSTER_THREE_RUNTIME||'/tmp/roadster-three.min.js';
@@ -18,7 +19,7 @@ test('actual map art keeps a bounded sample street, separate texture ownership a
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),root=coast.enter(scene,T);root.updateMatrixWorld(true);
- const m=coast.metrics();assert.equal(m.ownedTextures,14);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);
+ const m=coast.metrics();assert.equal(m.ownedTextures,15);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);
  const props=[];const color=new T.Color(),matrix=new T.Matrix4(),world=new T.Matrix4();
  const windowMesh=root.getObjectByName('coast-sample-framed-glazing');assert.ok(windowMesh.count>=20,'multiple real framed shop/upper-floor apertures');
  for(const name of ['coast-sample-shop-awnings','coast-sample-balcony-metal','coast-sample-timber-details','coast-sample-parcel-paving','coast-sample-planter-shrubs'])assert.ok(root.getObjectByName(name),name);
@@ -47,7 +48,7 @@ test('five map art entry/exit cycles dispose every owned texture/material/geomet
   root.traverse(o=>{if(o.isInstancedMesh)inst.add(o);if(o.geometry)g.add(o.geometry);for(const mat of [].concat(o.material||[])){m.add(mat);for(const key of ['map','bumpMap','roughnessMap','normalMap','emissiveMap'])if(mat[key])t.add(mat[key]);}});
   if(scene.environment?.isTexture){t.add(scene.environment);if(scene.environment.isCubeTexture)for(const face of scene.environment.image)t.add(face);}
   const observed=new Map();for(const resource of [...g,...m,...t,...inst]){observed.set(resource,0);resource.addEventListener('dispose',()=>observed.set(resource,observed.get(resource)+1));}
-  assert.equal(t.size,14);coast.tick(1/30);coast.weather({rain:true});coast.leave();coast.leave();
+  assert.equal(t.size,15);coast.tick(1/30);coast.weather({rain:true});coast.leave();coast.leave();
   for(const count of observed.values())assert.equal(count,1,'owned GPU resource disposed exactly once');
   assert.equal(root.children.length,0,'a retained detached root does not keep disposed matrices/materials alive');assert.equal(scene.children.length,1);assert.equal(coast.metrics().ownedTextures,0);assert.equal(coast.metrics().textureBytes,0);
  }
@@ -115,7 +116,7 @@ test('curated beach pockets, promenade furniture and pier gateway retain human s
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T);root.updateMatrixWorld(true);
  const parasols=root.getObjectByName('coast-beach-parasols'),roofs=root.getObjectByName('coast-beach-pitched-roofs');
  assert.equal(parasols.count,36);assert.equal(roofs.count,9,'three lifeguard huts and six pier kiosks');
- assert.equal(root.getObjectByName('coast-promenade-lamp-globes').count,99);
+ assert.equal(root.getObjectByName('coast-promenade-lamp-globes').count,111);
  assert.equal(coast.metrics().ownedLights,2,'emissive globes do not add dozens of real lights');
  const matrix=new T.Matrix4(),world=new T.Matrix4();
  const batches=['coast-beach-chalk-structures','coast-beach-metal-furnishings','coast-beach-timber-furnishings','coast-beach-huts-and-kiosks','coast-beach-pitched-roofs','coast-promenade-lamp-globes','coast-promenade-lamp-shades'];
@@ -198,7 +199,7 @@ test('all129 new entry doors face finite real street segments or explicit local 
 test('boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
- const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),plants=root.getObjectByName('coast-boulevard-low-planting');assert.equal(plants.count,192);assert.equal(root.getObjectByName('coast-promenade-lamp-globes').count,99);assert.equal(coast.metrics().ownedLights,2);
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),plants=root.getObjectByName('coast-boulevard-low-planting');assert.equal(plants.count,192);assert.equal(root.getObjectByName('coast-promenade-lamp-globes').count,111);assert.equal(coast.metrics().ownedLights,2);
  const matrix=new T.Matrix4(),box=new T.Box3();plants.geometry.computeBoundingBox();for(let i=0;i<plants.count;i++){plants.getMatrixAt(i,matrix);box.copy(plants.geometry.boundingBox).applyMatrix4(matrix);assert.ok(box.max.x<=-87||box.min.x>=-53,'unchanged30m road plus2m shoulder');assert.ok((box.max.x<=-95||box.min.x>=-89.5)&&(box.max.x<=-50.5||box.min.x>=-45),'preserved inner sidewalk band');}
  const maximum=coast.metrics().maximumStaticTriangles;coast.weather({rain:true});assert.equal(coast.metrics().maximumStaticTriangles,maximum);coast.leave();
 });
@@ -206,13 +207,14 @@ test('boulevard planting and signs add scale only beyond unchanged road shoulder
 test('boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
- const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),matrix=new T.Matrix4(),point=new T.Vector3(),bounds=new T.Box3(),gaps=[...[-850,-300,300,850].map(z=>[z-34,z+34]),[-680,-620]],edges=[];
- const checkBounds=box=>{assert.ok(box.min.x>=-84.75-1e-4&&box.max.x<=-55.25+1e-4,'paint stays inside the unchanged30m boulevard');assert.ok(box.min.y>.025&&box.max.y<.026,'no raised divider/curb/obstacle');for(const [lo,hi] of gaps)assert.ok(box.max.z<=lo+1e-4||box.min.z>=hi-1e-4,'turning, zebra and pier entrances stay blank');};
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),matrix=new T.Matrix4(),point=new T.Vector3(),bounds=new T.Box3(),gaps=[...[-850,-300,300,850].map(z=>[z-34,z+34]),[-680,-620]],edges=[],centres=new Set();
+ const checkBounds=box=>{const center=box.min.x>300?430:-70;centres.add(center);assert.ok(box.min.x>=center-14.75-1e-4&&box.max.x<=center+14.75+1e-4,'paint stays inside either unchanged30m boulevard');assert.ok(box.min.y>.025&&box.max.y<.026,'no raised divider/curb/obstacle');for(const [lo,hi] of (center===-70?gaps:gaps.slice(0,-1)))assert.ok(box.max.z<=lo+1e-4||box.min.z>=hi-1e-4,'turning, zebra and pier entrances stay blank');};
  for(const name of ['coast-boulevard-painted-cycle-lanes','coast-boulevard-white-road-paint','coast-boulevard-ochre-road-paint','coast-boulevard-cycle-stencil-wheels']){
   const mesh=root.getObjectByName(name);assert.ok(mesh.userData.coastArt.flat);assert.equal(mesh.castShadow,false);assert.equal(mesh.material.depthWrite,false);assert.equal(mesh.material.polygonOffset,true);const p=mesh.geometry.attributes.position;
-  if(mesh.isInstancedMesh)for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);bounds.makeEmpty();for(let k=0;k<p.count;k++)bounds.expandByPoint(point.fromBufferAttribute(p,k).applyMatrix4(matrix));checkBounds(bounds);if(name.includes('white')&&Math.abs(matrix.elements[10])>100)edges.push(matrix.elements[12]+70);}
+  if(mesh.isInstancedMesh)for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);bounds.makeEmpty();for(let k=0;k<p.count;k++)bounds.expandByPoint(point.fromBufferAttribute(p,k).applyMatrix4(matrix));checkBounds(bounds);if(name.includes('white')&&Math.abs(matrix.elements[10])>100)edges.push(matrix.elements[12]-(matrix.elements[12]>300?430:-70));}
   else for(let i=0;i<p.count;i+=4){bounds.makeEmpty();for(let k=0;k<4;k++)bounds.expandByPoint(point.fromBufferAttribute(p,i+k));checkBounds(bounds);}
  }
+ assert.deepEqual([...centres].sort((a,b)=>a-b),[-70,430],'both existing30m boulevards get scale calibration, not the22m street');
  assert.ok(edges.some(x=>Math.abs(x-7.5)<1e-5)&&edges.some(x=>Math.abs(x+7.5)<1e-5));
  for(const center of [-4,4,6]){const lo=center>0?2.5:-7.5,hi=center>0?7.5:-2.5;assert.ok(center-1.1>lo&&center+1.1<hi,'NPCs and default spawn retain a complete conservative body envelope within the through band');}
  coast.leave();
@@ -224,4 +226,94 @@ test('western boulevard curb has an actual visual cut across the original pier a
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),curbs=root.getObjectByName('coast-street-low-curbs'),matrix=new T.Matrix4(),position=new T.Vector3(),scale=new T.Vector3(),rotation=new T.Quaternion();let checked=0;
  for(let i=0;i<curbs.count;i++){curbs.getMatrixAt(i,matrix);matrix.decompose(position,rotation,scale);if(Math.abs(position.x+85.7)<1e-3){checked++;assert.ok(position.z+scale.z/2<=-662+1e-4||position.z-scale.z/2>=-638-1e-4,'no visible curb through the drivable18m pier entrance');}}
  assert.ok(checked>=3);coast.leave();
+});
+
+test('continuous water/sand grids retain exact original area, bounds, elevation and upward winding',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),a=new T.Vector3(),b=new T.Vector3(),c=new T.Vector3(),normal=new T.Vector3();
+ for(const [name,triangles,area,x0,x1,y,tile] of [['coast-water',480,2088000,-1200,-330,-.42,24],['coast-sand',400,444000,-330,-145,-.04,4]]){
+  const mesh=root.getObjectByName(name),g=mesh.geometry,p=g.attributes.position,uv=g.attributes.uv,colors=g.attributes.color,idx=g.index.array;assert.equal(idx.length/3,triangles);g.computeBoundingBox();assert.equal(g.boundingBox.min.x,x0);assert.equal(g.boundingBox.max.x,x1);assert.equal(g.boundingBox.min.z,-1200);assert.equal(g.boundingBox.max.z,1200);assert.equal(mesh.material.vertexColors,true);assert.equal(mesh.material.color.getHex(),0xffffff);let sum=0;
+  for(let i=0;i<p.count;i++){assert.ok(Math.abs(p.getY(i)-y)<1e-7);assert.ok(Math.abs(uv.getX(i)*tile-p.getX(i))<3e-4);assert.ok(Math.abs(uv.getY(i)*tile-p.getZ(i))<3e-4);for(let k=0;k<3;k++)assert.ok(colors.array[i*3+k]>=0&&colors.array[i*3+k]<=1);}
+  for(let i=0;i<idx.length;i+=3){a.fromBufferAttribute(p,idx[i]);b.fromBufferAttribute(p,idx[i+1]);c.fromBufferAttribute(p,idx[i+2]);normal.crossVectors(b.sub(a),c.sub(a));assert.ok(normal.y>0);sum+=normal.y/2;}assert.ok(Math.abs(sum-area)<1e-5,'continuous non-overlapping coverage');
+ }
+ coast.leave();
+});
+
+test('native water normals drift by uniforms only, retain finite periodic offsets and dispose once',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),water=root.getObjectByName('coast-water'),normal=water.material.normalMap;assert.ok(normal.isDataTexture);assert.equal(normal.image.width,128);assert.equal(normal.image.height,128);assert.equal(normal.image.data.length,65536);assert.equal(normal.flipY,false);assert.equal(normal.wrapS,T.RepeatWrapping);assert.equal(normal.wrapT,T.RepeatWrapping);assert.equal(water.material.map,null,'r128 normal offset remains the selected common UV transform');assert.equal(water.material.transparent,false);assert.equal(water.material.normalScale.x,.28);assert.equal(water.material.normalScale.y,.28);
+ const bytes=sha(normal.image.data),version=normal.version,offset=normal.offset.clone();let disposed=0;normal.addEventListener('dispose',()=>disposed++);for(let i=0;i<60000;i++)coast.tick(.05);assert.notDeepEqual(normal.offset,offset);assert.equal(normal.version,version,'no per-frame texture upload');assert.equal(sha(normal.image.data),bytes);
+ for(const value of normal.offset.toArray())assert.ok(Number.isFinite(value)&&value>=0&&value<1);const stable=normal.offset.clone();for(const dt of [NaN,Infinity,-1])coast.tick(dt);assert.deepEqual(normal.offset,stable);coast.weather({rain:true});assert.equal(normal.version,version);coast.leave();coast.leave();assert.equal(disposed,1);
+});
+
+
+test('original art payload remains below the explicit32KiB gzip ceiling with zero art fetches',()=>{
+ const context=vm.createContext({window:{}});vm.runInContext(source,context);const coast=context.window.RoadsterCoast;assert.equal(coast.artBudget.sourceGzipBytes,32768);assert.ok(gzipSync(source).byteLength<=coast.artBudget.sourceGzipBytes);assert.doesNotMatch(source,/fetch\(|TextureLoader|GLTFLoader|https?:\/\//);
+});
+
+test('fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),foam=root.getObjectByName('coast-broken-surf-ribbons'),cut=root.getObjectByName('coast-shore-cut-face');assert.ok(foam&&cut);assert.equal(foam.castShadow,false);assert.equal(foam.material.transparent,false);assert.equal(foam.material.depthWrite,false);assert.equal(foam.material.polygonOffset,true);assert.equal(foam.renderOrder,1);
+ const p=foam.geometry.attributes.position;for(let i=0;i<p.count;i++){assert.ok(p.getX(i)<-330.2);assert.ok(Math.abs(p.getY(i)+.4196)<1e-7);assert.ok(p.getZ(i)>=-1200&&p.getZ(i)<=1200);}
+ const g=cut.geometry;assert.equal(g.index.count/3,2);for(let i=0;i<g.attributes.position.count;i++){assert.equal(g.attributes.position.getX(i),-330);assert.ok(Math.abs(g.attributes.normal.getX(i)+1)<1e-7);assert.ok(g.attributes.position.getY(i)>=-.4200001&&g.attributes.position.getY(i)<=-.0399999);}
+ assert.equal(coast.surface(-330,0).water,false);assert.equal(coast.surface(-330.0001,0).water,true);coast.leave();
+});
+
+
+test('selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),records=root.userData.coastBalconies,glass=root.getObjectByName('coast-sample-framed-glazing'),trim=root.getObjectByName('coast-architecture-limestone-trims'),matrix=new T.Matrix4(),p=new T.Vector3(),q=new T.Quaternion(),scale=new T.Vector3(),poses=[];
+ assert.ok(records.length>=40&&records.length<=100);for(let i=0;i<glass.count;i++){glass.getMatrixAt(i,matrix);matrix.decompose(p,q,scale);poses.push({p:p.clone(),s:scale.clone()});}
+ for(const r of records){const b=coast.layout().buildings[r.buildingIndex];assert.ok([-5,355,485].includes(b.x));assert.equal(r.doorHeight,2.45);const face=(r.axis==='x'?b.x:b.z)+r.side*((r.axis==='x'?b.w:b.d)/2+.065),want=r.axis==='x'?new T.Vector3(face,r.floor+1.225,r.along):new T.Vector3(r.along,r.floor+1.225,face),door=poses.find(v=>v.p.distanceTo(want)<1e-3);assert.ok(door,'actual glass instance at each metadata door');assert.ok(Math.abs(door.s.y-2.45)<1e-6);assert.ok(Math.abs(door.p.y-door.s.y/2-r.floor)<1e-5,'door bottom meets the platform, not a raised window sill');let found=false;
+  for(let i=0;i<trim.count;i++){trim.getMatrixAt(i,matrix);matrix.decompose(p,q,scale);const f=(r.axis==='x'?b.x:b.z)+r.side*(r.axis==='x'?b.w:b.d)/2+r.side*.78;if(Math.abs(p[r.axis]-f)<1e-3&&Math.abs(p[r.axis==='x'?'z':'x']-r.along)<1e-3&&Math.abs(p.y-(r.floor-.09))<1e-3&&Math.abs(scale.y-.18)<1e-5){assert.ok(Math.abs(p.y+scale.y/2-r.floor)<1e-5);found=true;break;}}assert.ok(found,'real platform geometry exists');
+ }coast.leave();
+});
+
+test('curved roof trim is a finite closed shallow parapet, not a new collidable full roof',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),mesh=root.getObjectByName('coast-district-curved-parapets'),g=mesh.geometry,p=g.attributes.position,n=g.attributes.normal,a=new T.Vector3(),b=new T.Vector3(),c=new T.Vector3();assert.ok(mesh.count>=15&&mesh.count<=25);assert.equal(g.index.count/3,54);g.computeBoundingBox();assert.equal(g.boundingBox.min.y,0);assert.equal(g.boundingBox.max.y,1);
+ for(let i=0;i<p.count;i++){assert.ok(Math.abs(n.getX(i)**2+n.getY(i)**2+n.getZ(i)**2-1)<1e-6);assert.ok(Math.abs(p.getX(i))<=.5&&Math.abs(p.getZ(i))<=.5);}for(let i=0;i<g.index.count;i+=3){a.fromBufferAttribute(p,g.index.getX(i));b.fromBufferAttribute(p,g.index.getX(i+1));c.fromBufferAttribute(p,g.index.getX(i+2));assert.ok(b.sub(a).cross(c.sub(a)).lengthSq()>1e-12);}coast.leave();
+});
+
+test('composed courtyard and three beach entries retain original obstacles, shoulders and ground datum',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),park=root.userData.coastCourtyard,rects=[...root.userData.coastBeachEntryRects,...park.paths];assert.equal(park.trees.length,3);assert.equal(park.width,48);assert.equal(park.depth,38);
+ for(const r of rects){const box={minX:r.x-r.w/2,maxX:r.x+r.w/2,minZ:r.z-r.d/2,maxZ:r.z+r.d/2};for(const o of coast.layout().obstacles)assert.ok(box.maxX<=o.minX||box.minX>=o.maxX||box.maxZ<=o.minZ||box.minZ>=o.maxZ,'walk never routes through an original house/palm');for(const road of coast.roads)assert.ok(box.maxX<=road.x-road.w/2-2||box.minX>=road.x+road.w/2+2||box.maxZ<=road.z-road.d/2-2||box.minZ>=road.z+road.d/2+2,'no new pavement enters unchanged road shoulders');}
+ const north=root.userData.coastBeachEntryRects;assert.ok(north.some(r=>r.x===-244.8&&r.d>20),'actual dogleg avoids the original600m palm');for(const name of ['coast-beach-access-boardwalks','coast-neighbourhood-courtyard-walks']){const o=root.getObjectByName(name);assert.equal(o.material.depthWrite,false);for(const y of o.geometry.attributes.position.array.filter((_,i)=>i%3===1))assert.ok(y>-.04&&y<-.039,'original ground top remains, only flat decal layering');}
+ assert.ok(5-(2.68+.18)>2,'the small central basin leaves over2m pedestrian room on the10m plaza');coast.leave();
+});
+
+
+test('driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),records=root.userData.coastCornerStores,panels=root.getObjectByName('coast-corner-store-ground-panels');
+ assert.equal(records.length,8);assert.equal(panels.count,8);assert.equal(new Set(records.map(r=>r.buildingIndex)).size,4);
+ for(const r of records){const b=coast.layout().buildings[r.buildingIndex];assert.ok([355,485].includes(b.x)&&[440,580].includes(b.z));assert.ok(r.entranceUnchanged);assert.ok(r.axis==='x'?r.side===(b.x<430?1:-1):r.side===1);assert.equal(r.width,11.6);}
+ assert.ok(coast.metrics().maximumStaticTriangles<=180000,'driving-scale details fit the same fixed maximum capacity budget');coast.leave();
+});
+
+
+test('corner storefront lettering reads left-to-right from actual outward X and Z viewpoints',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),mesh=root.getObjectByName('coast-sample-storefront-lettering'),matrix=new T.Matrix4(),box=new T.Box3();mesh.geometry.computeBoundingBox();
+ const glyphs={C:['01111','10000','10000','10000','10000','10000','01111'],A:['01110','10001','10001','11111','10001','10001','10001'],F:['11111','10000','10000','11110','10000','10000','10000'],E:['11111','10000','10000','11110','10000','10000','11111'],S:['01111','10000','10000','01110','00001','00001','11110'],U:['10001','10001','10001','10001','10001','10001','01110'],R:['11110','10001','10001','11110','10100','10010','10001']};
+ for(const r of root.userData.coastCornerStores){
+  const rectangles=[];for(let i=r.signStart;i<r.signStart+r.signCount;i++){mesh.getMatrixAt(i,matrix);const b=coast.layout().buildings[r.buildingIndex],face=r.axis==='x'?b.x+r.side*b.w/2:b.z+r.side*b.d/2;assert.ok(r.side*(matrix.elements[r.axis==='x'?12:14]-face)>.4,'letter plane is outside the original projecting cornice, not behind it');box.copy(mesh.geometry.boundingBox).applyMatrix4(matrix);const lo=r.axis==='x'?-r.side*(box.max.z-r.along):r.side*(box.min.x-r.along),hi=r.axis==='x'?-r.side*(box.min.z-r.along):r.side*(box.max.x-r.along);rectangles.push([Math.min(lo,hi),Math.max(lo,hi),box.min.y,box.max.y]);}
+  for(const [letter,k] of [...r.signText].map((letter,k)=>[letter,k]))for(let y=0;y<7;y++)for(let x=0;x<5;x++){
+   const sx=-((r.signText.length*6-1)*.06)/2+(k*6+x+.5)*.06,sy=3.7+(3-y)*.06,painted=rectangles.some(([lo,hi,bottom,top])=>sx>lo+1e-5&&sx<hi-1e-5&&sy>bottom+1e-5&&sy<top-1e-5);
+   assert.equal(painted,glyphs[letter][y][x]==='1',`${r.axis}${r.side} ${r.signText} glyph${k} cell${x},${y} native-instance projection`);
+  }
+ }
+ coast.leave();
+});
+
+
+test('continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),mesh=root.getObjectByName('coast-continuous-roof-parapets'),p=mesh.geometry.attributes.position,normal=mesh.geometry.attributes.normal,index=mesh.geometry.index;
+ assert.equal(index.count/3,coast.layout().buildings.length*32);assert.equal(p.count,coast.layout().buildings.length*64);assert.equal(mesh.castShadow,true);
+ for(const [bi,b] of coast.layout().buildings.entries()){
+  const bounds=new T.Box3(),v=new T.Vector3();for(let i=bi*64;i<(bi+1)*64;i++){bounds.expandByPoint(v.fromBufferAttribute(p,i));assert.ok(Math.abs(Math.hypot(normal.getX(i),normal.getY(i),normal.getZ(i))-1)<1e-6);}
+  for(const [value,expected] of [[bounds.min.x,b.minX],[bounds.max.x,b.maxX],[bounds.min.z,b.minZ],[bounds.max.z,b.maxZ],[bounds.min.y,b.height],[bounds.max.y,b.height+.64]])assert.ok(Math.abs(value-expected)<1e-4,'same roof edge/wall height as original visual boxes');
+  let upwardArea=0;const a=new T.Vector3(),c=new T.Vector3(),d=new T.Vector3();for(let i=bi*96;i<(bi+1)*96;i+=3){a.fromBufferAttribute(p,index.getX(i));c.fromBufferAttribute(p,index.getX(i+1));d.fromBufferAttribute(p,index.getX(i+2));const cross=c.sub(a).cross(d.sub(a));if(cross.y>0)upwardArea+=cross.y/2;}
+  assert.ok(Math.abs(upwardArea-(b.w*b.d-(b.w-.56)*(b.d-.56)))<.01,'open roof centre, exact .28m union ring without duplicate top corners');
+ }
+ coast.leave();
 });
