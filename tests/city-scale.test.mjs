@@ -21,7 +21,7 @@ test('city NPCs and wheel rotation use city metre scale without changing highway
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
   assert.match(physics, /car\.mesh\.position\.x \+= car\.vx \* CITY_WORLD_SPEED_SCALE \* dt/);
   assert.match(physics, /car\.mesh\.position\.z \+= car\.vz \* CITY_WORLD_SPEED_SCALE \* dt/);
-  assert.match(physics, /state\.speed \* \(currentMap === 'city' \? CITY_WORLD_SPEED_SCALE : WORLD_SPEED_SCALE\)/);
+  assert.match(physics, /state\.speed \* \(currentMap === 'highway' \? WORLD_SPEED_SCALE : CITY_WORLD_SPEED_SCALE\)/);
   assert.match(physics, /highwayTraffic\.step\([^;]+WORLD_SPEED_SCALE\)/);
 });
 for (const map of ['highway', 'city']) for (const fps of [30, 60, 144]) test(`infinite shared tank powers rear, lift, side and retro without depletion: ${map}, ${fps}Hz`, () => {

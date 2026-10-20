@@ -22,8 +22,8 @@
   let preview = null;
   let previewFailed = false;
   const copy = {
-    en: { badge: 'SPACEX COLD-GAS PACKAGE', title: 'Your Roadster', sub: 'Choose your setup and drive.', car: 'YOUR ROADSTER', change: 'Change finish ↗', choose: 'Choose your finish', collection: '12 EXTERIOR FINISHES', done: 'Done', note: 'Select a finish to preview it on your Roadster. Your choice is saved in this browser.', vehicle: 'Vehicle configuration', model: 'Vehicle model', cockpit: 'Cockpit', models: ['Roadster 2 · Reference', 'Classic Roadster'], cockpits: ['Reference cockpit', 'Classic cockpit'], worlds: 'World', highway: 'Elevated Highway', city: 'Cyber City', highwaySpec: '6 lanes · traffic', citySpec: 'Roam · rooftop refills', weather: 'Weather & time', driving: 'Driving mode', modes: ['Realistic', 'Plaid', 'Fantasy'], traffic: 'Traffic', densities: ['Normal · 20', 'Heavy · 36', 'Insane · 52'], launch: 'Launch simulation', audio: 'Audio settings', language: 'Switch to Chinese', unavailable: '3D preview unavailable' },
-    zh: { badge: 'SPACEX 冷气推进版', title: '我的 Roadster', sub: '选好车辆、地图和天气，开始驾驶。', car: '我的 ROADSTER', change: '更换涂装 ↗', choose: '选择车漆涂装', collection: '12 款专属涂装', done: '完成', note: '点选涂装即可预览效果，此浏览器会记住你的选择。', vehicle: '车辆配置', model: '车身车型', cockpit: '驾驶舱', models: ['Roadster 2 · 参考款', '经典 Roadster'], cockpits: ['参考驾驶舱', '经典驾驶舱'], worlds: '驾驶地图', highway: '高架高速', city: '赛博都市', highwaySpec: '6 车道 · 车流', citySpec: '开放都市 · 补气', weather: '天气与时间', driving: '驾驶模式', modes: ['常规物理', '狂暴 Plaid', '幻想极速'], traffic: '车流密度', densities: ['普通 · 20 辆', '密集 · 36 辆', '疯狂 · 52 辆'], launch: '进入游戏', audio: '声音设置', language: 'Switch to English', unavailable: '3D 预览暂不可用' }
+    en: { badge: 'SPACEX COLD-GAS PACKAGE', title: 'Your Roadster', sub: 'Choose your setup and drive.', car: 'YOUR ROADSTER', change: 'Change finish ↗', choose: 'Choose your finish', collection: '12 EXTERIOR FINISHES', done: 'Done', note: 'Select a finish to preview it on your Roadster. Your choice is saved in this browser.', vehicle: 'Vehicle configuration', model: 'Vehicle model', cockpit: 'Cockpit', models: ['Roadster 2 · Reference', 'Classic Roadster'], cockpits: ['Reference cockpit', 'Classic cockpit'], worlds: 'World', highway: 'Elevated Highway', city: 'Cyber City', coast: 'Coastal District', coastSpec: 'Beach · pier · original', highwaySpec: '6 lanes · traffic', citySpec: 'Roam · rooftop refills', weather: 'Weather & time', driving: 'Driving mode', modes: ['Realistic', 'Plaid', 'Fantasy'], traffic: 'Traffic', densities: ['Normal · 20', 'Heavy · 36', 'Insane · 52'], launch: 'Launch simulation', audio: 'Audio settings', language: 'Switch to Chinese', unavailable: '3D preview unavailable' },
+    zh: { badge: 'SPACEX 冷气推进版', title: '我的 Roadster', sub: '选好车辆、地图和天气，开始驾驶。', car: '我的 ROADSTER', change: '更换涂装 ↗', choose: '选择车漆涂装', collection: '12 款专属涂装', done: '完成', note: '点选涂装即可预览效果，此浏览器会记住你的选择。', vehicle: '车辆配置', model: '车身车型', cockpit: '驾驶舱', models: ['Roadster 2 · 参考款', '经典 Roadster'], cockpits: ['参考驾驶舱', '经典驾驶舱'], worlds: '驾驶地图', highway: '高架高速', city: '赛博都市', coast: '海滨街区', coastSpec: '沙滩 · 码头 · 原创', highwaySpec: '6 车道 · 车流', citySpec: '开放都市 · 补气', weather: '天气与时间', driving: '驾驶模式', modes: ['常规物理', '狂暴 Plaid', '幻想极速'], traffic: '车流密度', densities: ['普通 · 20 辆', '密集 · 36 辆', '疯狂 · 52 辆'], launch: '进入游戏', audio: '声音设置', language: 'Switch to English', unavailable: '3D 预览暂不可用' }
   };
   const menuVisible = () => !menu.classList.contains('hidden');
   const validChoice = value => value === 'reference' || value === 'classic';
@@ -108,7 +108,7 @@
   }
   function render() {
     const t = copy[currentLang];
-    const text = { 'map-modal-badge': t.badge, 'map-modal-title': t.title, 'map-modal-sub': t.sub, 'ui-modal-paint-step': t.car, 'start-paint-action': t.change, 'ui-modal-paint-title': t.choose, 'paint-picker-eyebrow': t.collection, 'paint-picker-close': t.done, 'paint-picker-note': t.note, 'ui-modal-map-title': t.worlds, 'card-hwy-title': t.highway, 'card-city-title': t.city, 'card-hwy-spec': t.highwaySpec, 'card-city-spec': t.citySpec, 'ui-modal-weather-title': t.weather, 'start-physics-label': t.driving, 'start-traffic-label': t.traffic, 'start-model-label': t.model, 'start-cockpit-label': t.cockpit, 'ui-btn-launch-map': t.launch };
+    const text = { 'map-modal-badge': t.badge, 'map-modal-title': t.title, 'map-modal-sub': t.sub, 'ui-modal-paint-step': t.car, 'start-paint-action': t.change, 'ui-modal-paint-title': t.choose, 'paint-picker-eyebrow': t.collection, 'paint-picker-close': t.done, 'paint-picker-note': t.note, 'ui-modal-map-title': t.worlds, 'card-hwy-title': t.highway, 'card-city-title': t.city, 'card-coast-title':t.coast, 'card-coast-spec':t.coastSpec, 'card-hwy-spec': t.highwaySpec, 'card-city-spec': t.citySpec, 'ui-modal-weather-title': t.weather, 'start-physics-label': t.driving, 'start-traffic-label': t.traffic, 'start-model-label': t.model, 'start-cockpit-label': t.cockpit, 'ui-btn-launch-map': t.launch };
     Object.entries(text).forEach(([id, value]) => { $(id).textContent = value; });
     $('btn-map-audio-settings').setAttribute('aria-label', t.audio);
     $('btn-map-modal-lang').setAttribute('aria-label', t.language);
@@ -124,7 +124,8 @@
     $('summary-model-chip').textContent = t.models[choices.model === 'classic' ? 1 : 0];
     $('summary-cockpit-chip').textContent = t.cockpits[choices.cockpit === 'classic' ? 1 : 0];
     Array.from(physicsSelect.options).forEach((option, idx) => { option.textContent = t.modes[idx]; });
-    Array.from(trafficSelect.options).forEach((option, idx) => { option.textContent = t.densities[idx]; });
+    const coastSelected=selectedMapInModal==='coast';
+    Array.from(trafficSelect.options).forEach((option, idx) => { option.textContent=coastSelected?(currentLang==='zh'?['普通 · 12 辆','密集 · 16 辆','繁忙 · 20 辆'][idx]:['Normal · 12','Heavy · 16','Busy · 20'][idx]):t.densities[idx]; });
     const paint = PAINT_PRESETS[paintIndex];
     $('modal-active-dot').style.backgroundColor = paint.hexCode;
     $('modal-active-paint-name').setAttribute('title', currentLang === 'zh' ? paint.nameZh : paint.nameEn);
@@ -208,7 +209,7 @@
     if (!Number.isInteger(next) || next < 0 || next > 2 || next === trafficLevelIndex) return;
     window.RoadsterRanked?.abort('traffic');
     trafficLevelIndex = next;
-    populateTraffic([20, 36, 52][next]);
+    populateTraffic((currentMap==='coast'?[12,16,20]:[20,36,52])[next]);
     applyTranslations();
     sound.beep(580, .08);
   });

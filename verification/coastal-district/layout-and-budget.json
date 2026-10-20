@@ -1,0 +1,19 @@
+{
+  "moduleBytes": 17561,
+  "moduleGzipBytes": 6617,
+  "active": true,
+  "builds": 1,
+  "disposals": 0,
+  "ownedGeometries": 4,
+  "ownedMaterials": 36,
+  "staticMeshDraws": 39,
+  "staticTriangles": 22972,
+  "instances": 1672,
+  "buildings": 132,
+  "palms": 100,
+  "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS",
+  "nodes": 12,
+  "directedEdges": 34,
+  "source": "Original procedural geometry; no GTA/OSM imagery or data",
+  "boundary": "Static scene structure only, excludes player/NPC/shadow/render passes; no FPS or total renderer draw-call claim"
+}

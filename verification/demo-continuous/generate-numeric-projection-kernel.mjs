@@ -13,11 +13,11 @@ import { isProxy } from 'node:util/types';
 
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const EXPECTED_SOURCE_HASHES = Object.freeze({
-  'src/config.js': '264d9d7e0f0800a8c3dce294836684d5160a1ee669ff26a742656223011d0ff0',
-  'src/physics-main.js': '589627905257e36409ef1628d5bbac971ec4366b40ebce91c55a1013d99e3e3f',
+  'src/config.js': 'fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306',
+  'src/physics-main.js': '3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81',
   'src/highway-demo.js': '0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07',
   'src/highway-traffic.js': 'faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108',
-  'src/ui-hud.js': '821751deca17129bb121bd09bd9731e5ce37dc455d0c258536a2635cd932faa8',
+  'src/ui-hud.js': '0f0b07d9228b27a6a1aef36de069cf6616c2d98b323fc4b1a657acb1c53d6c4b',
   'src/audio.js': '5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee',
   'tests/helpers/demo-harness.mjs': '69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff',
   'tests/helpers/vendor/three-r128-MathUtils.mjs': '09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61'
@@ -222,8 +222,8 @@ export function generateNumericProjectionKernel({ repo = DEFAULT_REPO } = {}) {
   body = inject(body, '    if (state.x < -halfRoad || state.x > halfRoad) {',
     "    if (state.x < -halfRoad || state.x > halfRoad) {\n      stop('highway-rail-contact', null, 'collision');",
     'motion-gas-altitude-attitude-body', 'insert fail-closed guard at true highway rail branch before correction');
-  contact = inject(contact, '        } else if (state.vy < 0 && clearanceY < 0.15) {',
-    "        } else if (state.vy < 0 && clearanceY < 0.15) {\n          stop('npc-roof-bounce-contact', {index:carIndex}, 'collision');",
+  contact = inject(contact, '        } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {',
+    "        } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {\n          stop('npc-roof-bounce-contact', {index:carIndex}, 'collision');",
     'npc-contact-body', 'insert fail-closed guard at true roof-bounce branch before response');
   contact = inject(contact, '      } else if (clearanceY < -0.15) {',
     "      } else if (clearanceY < -0.15) {\n        stop('npc-body-contact', {index:carIndex}, 'collision');",

@@ -7,9 +7,9 @@ export function motionHarness(overrides = {}, map = 'city', sources = null) {
   const physics = source('physics-main.js');
   const part = (from, to) => { const a = physics.indexOf(from), b = physics.indexOf(to, a + from.length); if (a < 0 || b < a) throw Error(from); return physics.slice(a, b); };
   const alerts = [], impacts = [];
-  const context = vm.createContext({ window: {}, cityBuildings: [], frontWheelSteerGroups: [], carMeshGroup: {},
+  const context = vm.createContext({ window: {}, cityBuildings: [], trafficCars: [], frontWheelSteerGroups: [], carMeshGroup: {},
     THREE: { MathUtils }, sound: { init() {}, beep() {}, speakAlert(...args) { alerts.push(args); } },
-    document: { getElementById: () => ({ classList: { remove() {} } }) }, showBanner(...args) { alerts.push(args); },
+    document: { getElementById: () => ({ classList: { add() {}, remove() {}, toggle() {} } }) }, showBanner(...args) { alerts.push(args); },
     triggerPhysicsCollision(...args) { impacts.push(args); } });
   vm.runInContext(`${source('driving-score.js')}\n${source('config.js')}\nconst keys = {};\n${part('function wrapAnglePi(', 'function updateSimulation(')}
     function motionStep(dt) { const t = I18N[currentLang]; ${part('  const isRealMode =', '  const playerWorldZ =')}

@@ -405,12 +405,15 @@ function renderBannerText() {
 function switchMap(targetMap) {
   window.RoadsterTaxi?.stop();
   window.RoadsterRanked?.abort('map');
-  currentMap = targetMap === 'city' ? 'city' : 'highway';
+  const nextMap = ['highway','city','coast'].includes(targetMap) ? targetMap : 'highway';
+  if (nextMap !== 'coast') window.RoadsterCoast?.leave();
+  else { window.RoadsterCoast?.enter(scene); window.RoadsterCoast?.weather(WEATHER_PRESETS[weatherIndex]); }
+  currentMap = nextMap;
   selectedMapInModal = currentMap;
   highwayEnvGroup.visible = (currentMap === 'highway');
   cityEnvGroup.visible = (currentMap === 'city');
 
-  const counts = [20, 36, 52];
+  const counts = mapTrafficCounts();
   resetCar();
   populateTraffic(counts[trafficLevelIndex]);
   applyTranslations();
@@ -438,7 +441,11 @@ function resetCar() {
   state.lastImpactG = 0.0;
   state.impactCooldown = 0.0;
 
-  if (currentMap === 'highway') {
+  if (currentMap === 'coast') {
+    clearAllInputKeys();
+    const spawn=window.RoadsterCoast.respawn(trafficCars);
+    state.x=spawn.x;state.y=0;state.z=spawn.z;state.speed=spawn.speed;state.vx=0;state.vy=0;state.vz=-spawn.speed;
+  } else if (currentMap === 'highway') {
     state.x = 2.5;
     state.y = 0.0;
     state.z = 0.0;
@@ -486,6 +493,7 @@ function resetCar() {
   renderBannerText();
   sound.beep(520, 0.1);
   window.RoadsterTaxi?.onReset();
+  if (currentMap === 'coast') window.RoadsterCoast?.recoverTraffic(trafficCars,state);
   // Every new round starts clean immediately, including mobile/button resets.
   if (typeof updateDestroyedScores === 'function') updateDestroyedScores();
   if (typeof updateCockpitHudScreen === 'function') {
@@ -513,7 +521,7 @@ function applyTranslations() {
   document.getElementById('ui-title').textContent = t.title;
   document.getElementById('ui-subtitle').textContent = t.subtitle;
   document.getElementById('lang-label').textContent = t.langToggle;
-  document.getElementById('ui-map-btn').textContent = currentMap === 'highway' ? t.mapBtnHighway : t.mapBtnCity;
+  document.getElementById('ui-map-btn').textContent = currentMap === 'coast' ? (currentLang === 'zh' ? '地图：海滨街区 (M)' : 'Map: Coastal District (M)') : currentMap === 'highway' ? t.mapBtnHighway : t.mapBtnCity;
   document.getElementById('ui-paint-btn').textContent = t.paintPrefix + t.paints[paintIndex];
   const physBtn = document.getElementById('ui-physics-mode-btn');
   if (physBtn) physBtn.textContent = (state.physicsMode === 'realistic') ? t.modeBtnRealistic : t.modeBtnFantasy;
@@ -547,7 +555,7 @@ function applyTranslations() {
     document.getElementById('ui-modal-weather-title').textContent = t.modalWeatherTitle;
   }
   renderModalWeatherGrid();
-  document.getElementById('ui-traffic-btn').textContent = t.trafficPrefix + t.trafficLevels[trafficLevelIndex];
+  document.getElementById('ui-traffic-btn').textContent = t.trafficPrefix + (currentMap === 'coast' ? t.trafficLevels[trafficLevelIndex].replace(/20|36|52/,String(mapTrafficCounts()[trafficLevelIndex])) : t.trafficLevels[trafficLevelIndex]);
   document.getElementById('ui-camera-btn').textContent = t.camPrefix + t.cams[cameraModeIndex];
   updateZoomButtonLabel();
   document.getElementById('ui-sound-btn').textContent = sound.enabled ? t.soundOn : t.soundOff;
@@ -638,35 +646,16 @@ const cardHighwayEl = document.getElementById('card-map-highway');
 const cardCityEl = document.getElementById('card-map-city');
 
 function highlightSelectedMapCard(mapKey) {
-  selectedMapInModal = mapKey;
-  cardHighwayEl.classList.toggle('selected', mapKey === 'highway');
-  cardCityEl.classList.toggle('selected', mapKey === 'city');
-  cardHighwayEl.setAttribute('aria-pressed', String(mapKey === 'highway'));
-  cardCityEl.setAttribute('aria-pressed', String(mapKey === 'city'));
-  const isZh = (currentLang === 'zh');
-  
-  const hwyStatus = document.getElementById('card-hwy-status');
-  const cityStatus = document.getElementById('card-city-status');
-  if (hwyStatus && cityStatus) {
-    if (mapKey === 'highway') {
-      hwyStatus.textContent = isZh ? '✓ 已选定' : '✓ SELECTED';
-      hwyStatus.className = 'font-bold text-cyan-300';
-      cityStatus.textContent = isZh ? '选择 →' : 'SELECT →';
-      cityStatus.className = 'text-slate-400 font-normal';
-    } else {
-      cityStatus.textContent = isZh ? '✓ 已选定' : '✓ SELECTED';
-      cityStatus.className = 'font-bold text-indigo-300';
-      hwyStatus.textContent = isZh ? '选择 →' : 'SELECT →';
-      hwyStatus.className = 'text-slate-400 font-normal';
-    }
+  selectedMapInModal = ['highway','city','coast'].includes(mapKey) ? mapKey : 'highway';
+  const isZh = currentLang === 'zh';
+  for (const [id,key,color] of [['highway','hwy','cyan'],['city','city','indigo'],['coast','coast','amber']]) {
+    const selected=selectedMapInModal===id,card=document.getElementById(`card-map-${id}`),badge=document.getElementById(`card-${key}-status`);
+    card?.classList.toggle('selected',selected);card?.setAttribute('aria-pressed',String(selected));
+    if (badge) { badge.textContent=selected?(isZh?'✓ 已选定':'✓ SELECTED'):(isZh?'选择 →':'SELECT →');badge.className=selected?`font-bold text-${color}-300`:'text-slate-400 font-normal'; }
   }
-
-  const summaryMapEl = document.getElementById('summary-map-chip');
-  if (summaryMapEl) {
-    summaryMapEl.textContent = mapKey === 'highway' 
-      ? (isZh ? '高架高速 (Elevated Highway)' : 'Elevated Highway')
-      : (isZh ? '赛博都市 (Mega Cyber Metropolis)' : 'Mega Open-World Cyber Metropolis');
-  }
+  const names = { highway:isZh?'高架高速 (Elevated Highway)':'Elevated Highway', city:isZh?'赛博都市 (Mega Cyber Metropolis)':'Mega Open-World Cyber Metropolis',coast:isZh?'海滨街区 · 原创压缩地图':'Original Coastal District' };
+  const summary=document.getElementById('summary-map-chip');if(summary)summary.textContent=names[selectedMapInModal];
+  window.RoadsterStart?.render();
 }
 
 cardHighwayEl.addEventListener('click', () => {
@@ -677,6 +666,9 @@ cardHighwayEl.addEventListener('click', () => {
 cardCityEl.addEventListener('click', () => {
   highlightSelectedMapCard('city');
   sound.beep(520, 0.06);
+});
+document.getElementById('card-map-coast')?.addEventListener('click', () => {
+  highlightSelectedMapCard('coast');sound.beep(520,.06);
 });
 
 function launchSelectedMap() {
@@ -801,6 +793,7 @@ function selectWeatherMode(idx, playAudio = true) {
 
   // Isolate wet asphalt from the car's studio lighting, on both maps/road axes.
   [roadMat, cityAsphaltMat, cityAsphaltEWMat].forEach(material => applyRoadWeather(material, wp));
+  window.RoadsterCoast?.weather(wp);
 
 
   if (typeof headlightSpotL !== 'undefined' && typeof headlightSpotR !== 'undefined') {
@@ -855,7 +848,7 @@ document.getElementById('btn-traffic').addEventListener('click', () => {
   globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('traffic');
   trafficLevelIndex = (trafficLevelIndex + 1) % 3;
-  const counts = [20, 36, 52];
+  const counts = mapTrafficCounts();
   populateTraffic(counts[trafficLevelIndex]);
   applyTranslations();
   sound.beep(580, 0.08);
@@ -918,10 +911,11 @@ function triggerJump6m() {
   if (globalThis.window?.RoadsterDemo?.isBusy() && !window.RoadsterDemo.isRequestingJump()) return;
   if (state.isDestroyed || state.isFreefalling || state.airRemaining <= 0.15) return;
   sound.init();
-  let groundElev = 0.0;
-  if (currentMap === 'city' && typeof cityBuildings !== 'undefined') {
-    for (let i = 0; i < cityBuildings.length; i++) {
-      const b = cityBuildings[i];
+  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.surface(state.x,state.z).height ?? 0) : 0;
+  if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
+    const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
+    for (let i = 0; i < mapBuildings.length; i++) {
+      const b = mapBuildings[i];
       if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElev = Math.max(groundElev, b.height);
@@ -955,10 +949,11 @@ function toggleAltitudeHold() {
   if (globalThis.window?.RoadsterDemo?.isBusy()) return;
   if (state.isDestroyed) return;
   sound.init();
-  let groundElev = 0.0;
-  if (currentMap === 'city' && typeof cityBuildings !== 'undefined') {
-    for (let i = 0; i < cityBuildings.length; i++) {
-      const b = cityBuildings[i];
+  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.surface(state.x,state.z).height ?? 0) : 0;
+  if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
+    const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
+    for (let i = 0; i < mapBuildings.length; i++) {
+      const b = mapBuildings[i];
       if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElev = Math.max(groundElev, b.height);
