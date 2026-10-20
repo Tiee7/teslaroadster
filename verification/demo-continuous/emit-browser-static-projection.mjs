@@ -7,8 +7,8 @@ import { generateNumericProjectionKernel, EXPECTED_SOURCE_HASHES,
   CONTROL_PHYSICS_KEYS, verifyPinnedSources } from './generate-numeric-projection-kernel.mjs';
 
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
-const GENERATOR_SHA256 = '0c2d10eb3890eb9d627959ed653e8b093d7f35d33e4fb8fa43b01ed7107a34cb';
-const EXPECTED_NUMERIC_PROGRAM_SHA256 = 'cb4aa0c07c2eb14414aef08ae9856ceb884eb0cf7057f4cd23653f0fc448eeb4';
+const GENERATOR_SHA256 = '4b0c8c3caec4d28f43791f57f98a815af14b7f056d07473e8cc5090ed069ba79';
+const EXPECTED_NUMERIC_PROGRAM_SHA256 = '02e77da830dc7e90c96305e5f7d28a4ccc9c92524aebc1794e5e15c16973163e';
 const MINIFIED_THREE_SHA256 = '9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2';
 const MATH_PROFILES_SHA256 = '2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a';
 const sha256 = value => createHash('sha256').update(value).digest('hex');

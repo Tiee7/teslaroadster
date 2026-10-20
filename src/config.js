@@ -360,7 +360,8 @@ const CITY_HALF_BOUND = 1200;
 const MAX_FLIGHT_ALTITUDE = 380.0;
 const CITY_ROAD_COORDS = [-900, -600, -300, 0, 300, 600, 900];
 const CITY_ROAD_WIDTH = 32;
-const WORLD_SPEED_SCALE = 1.65; // Calibrates 3D venue traversal speed to match speedometer optical flow
+const WORLD_SPEED_SCALE = 1.65; // Preserve the highway arcade traversal / traffic calibration.
+const CITY_WORLD_SPEED_SCALE = 1.0; // City geometry, navigation distances and velocity all use metres.
 // Vertical coordinates are meters and vertical velocity is m/s. The horizontal
 // optical-flow multiplier must never multiply gravity or the altitude display.
 const EARTH_GRAVITY_MPS2 = 9.81;
@@ -425,6 +426,7 @@ const state = {
   vYaw: 0.0,
   accumulatedRoll: 0.0,
   airRemaining: MAX_AIR_SECONDS,
+  infiniteJet: false, // Session-only silent sandbox toggle; never eligible for ranked play.
   airUsedContinuous: 0.0,
   isAutoDescending8s: false,
   isFreefalling: false,

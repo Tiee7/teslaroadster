@@ -7,18 +7,18 @@ import vm from 'node:vm';
 // covered separately by production-body trajectory replays, not these stubs.
 function planner(reset=true,clock){
   let source=fs.readFileSync(new URL('../src/highway-demo.js',import.meta.url),'utf8').split('// UI/lifecycle adapter.')[0];
-  const anchor='return { step, reset, beginRender, endRender, stats:';
+  const anchor='return { step, reset, invalidateFuelMode, beginRender, endRender, stats:';
   assert.equal(source.split(anchor).length,2);
   source=source.replace('const RoadsterHighwayDemoPlanner =','globalThis.factory =').replace(anchor,`return { test:{prepareAdmissionSteps,prepareActualAdmission,actualCheckpoint,certificatePhase,invalidateAdmission,consumePreparedSource,beforeControlStep,exactDifference,advancePlanJob,
     epoch(){return planEpoch;},schema(){return controlPhysicsSchema;},
     frame(value){simulationFrame=value;},certificate(value){certifiedNext=value;},source(value){planJob=value;},admission(value){admissionJob=value;},airborne(value){lastFrameAirborne=value;},
-    seed(value){stepSeed=value;},probe(value){globalThis.__budgetProbe=value;},state(){return {planJob,admissionJob,certifiedNext};}}, step, reset, beginRender, endRender, stats:`);
+    seed(value){stepSeed=value;},probe(value){globalThis.__budgetProbe=value;},state(){return {planJob,admissionJob,certifiedNext};}}, step, reset, invalidateFuelMode, beginRender, endRender, stats:`);
   const stepAnchor='      beforeControlStep(player,cars,dt);';assert.equal(source.split(stepAnchor).length,2);
   source=source.replace(stepAnchor,`      if(globalThis.__budgetProbe){spendWork(globalThis.__budgetProbe[0]);spendWork(globalThis.__budgetProbe[1]);return {input:neutral(),jump:false};}beforeControlStep(player,cars,dt);`);
   const realm=vm.createContext({performance:clock});vm.runInContext(source,realm);
   const p=realm.factory.create([-12.5,-7.5,-2.5,2.5,7.5,12.5],1.65);if(reset)p.reset(2.5);return p;
 }
-const state=()=>({physicsMode:'realistic',insaneMode:false,isDestroyed:false,isFreefalling:false,impactCooldown:0,speed:70,airRemaining:8,x:2.5,y:0,z:0,vx:0,vy:0,vz:-70});
+const state=()=>({physicsMode:'realistic',insaneMode:false,infiniteJet:false,isDestroyed:false,isFreefalling:false,impactCooldown:0,speed:70,airRemaining:8,x:2.5,y:0,z:0,vx:0,vy:0,vz:-70});
 function api(){return {entryAir:()=>3.6,prepareProjectedGroundSteps:function*(){},projectedImmediate:()=>Infinity,
   projectedGroundStep(){},groundSweepBefore:()=>[],groundSweepClear:()=>true,
   candidateSteps:function*(){throw Error('not expected');},groundTerminalSteps:function*(){throw Error('not expected');}};}
@@ -35,7 +35,7 @@ test('a trigger-free strict prefix is deferred without rejecting its ranking geo
 });
 
 test('a late promised retry prepares and sweeps future ground instead of reusing offset zero',()=>{
-  const p=planner(),certificate={lane:3,height:4.5,requiredNextAir:3.6,physicsMode:'realistic',insaneMode:false,frameDt:1/60,phase:1};p.test.certificate(certificate);p.test.frame(0);
+  const p=planner(),certificate={lane:3,height:4.5,requiredNextAir:3.6,physicsMode:'realistic',insaneMode:false,infiniteJet:false,frameDt:1/60,phase:1};p.test.certificate(certificate);p.test.frame(0);
   p.test.admission({promised:true,work:192,pendingWorkStart:0,pendingAnchor:{frame:0}});p.test.invalidateAdmission('anchor-not-ready');
   assert.equal(certificate.retryLeadFrames,5);
   const seed=p.test.actualCheckpoint(state(),[],0),job={dt:1/60,promised:true,geometry:[certificate],minimumAnchorFrame:certificate.retryLeadFrames,checkpoints:new Map(),work:0,nodes:0};
@@ -45,7 +45,7 @@ test('a late promised retry prepares and sweeps future ground instead of reusing
 
 test('a promised B retains only the ranking job bound to its complete certificate phase',()=>{
   for(const stale of [false,true]){
-    const p=planner(),car=state(),certificate={lane:3,height:4.5,requiredNextAir:4.2,physicsMode:'realistic',insaneMode:false,frameDt:1/60,phase:7};p.test.certificate(certificate);p.test.frame(10);
+    const p=planner(),car=state(),certificate={lane:3,height:4.5,requiredNextAir:4.2,physicsMode:'realistic',insaneMode:false,infiniteJet:false,frameDt:1/60,phase:7};p.test.certificate(certificate);p.test.frame(10);
     const source={afterCertificate:{...p.test.certificatePhase(certificate),phase:stale?6:7},readyGoal:{path:[{height:2.3,lane:4}]}};p.test.source(source);
     const root={height:4.5,lane:3,requiredNextAir:4.2};p.test.admission({dt:1/60,promised:true,sourceJob:source,done:true,invalid:false,result:{root},anchor:p.test.actualCheckpoint(car,[],10),work:0});
     const option=p.test.prepareActualAdmission(api(),car,[],1/60,Infinity);
@@ -116,7 +116,7 @@ test('a future ready source waits without synchronous work and a missed anchor l
   assert.equal(p.test.consumePreparedSource(car,[],1/60,.1),null);assert.equal(p.stats().sourceInvalidations,1);
 });
 test('a promised current hop takes priority over an otherwise exact ready source',()=>{
-  const p=planner(),car=state(),certificate={lane:3,height:4.5,requiredNextAir:3.6,physicsMode:'realistic',insaneMode:false,frameDt:1/60,phase:1};
+  const p=planner(),car=state(),certificate={lane:3,height:4.5,requiredNextAir:3.6,physicsMode:'realistic',insaneMode:false,infiniteJet:false,frameDt:1/60,phase:1};
   p.test.certificate(certificate);const job=strictSource(p,car);p.test.source(job);p.test.beforeControlStep(car,[],1/60);
   assert.equal(p.test.consumePreparedSource(car,[],1/60,.1),null);assert.equal(p.test.state().planJob,job);assert.equal(p.test.state().certifiedNext,certificate);
   assert.equal(job.sourceInvalid,undefined);assert.equal(p.stats().sourceStartChecks,1);assert.equal(p.stats().sourceAnchorChecks,0);assert.equal(p.stats().cachedSourceCommits,0);assert.equal(p.stats().backgroundWork,0);
@@ -124,7 +124,7 @@ test('a promised current hop takes priority over an otherwise exact ready source
 test('every control/physics/NPC/history dependency and phase guard invalidates source authority exactly',()=>{
   const npc=()=>({mode:'highway',speed:40,mesh:{position:{x:7.5,y:0,z:-30},rotation:{x:0,y:0,z:0},visible:true}});
   const changes=[
-    ['state.lateralG',(p,c)=>{c.lateralG=.01;}],['state.airRemaining',(p,c)=>{c.airRemaining-=.01;}],['state.roll',(p,c)=>{c.roll=-0;}],
+    ['state.lateralG',(p,c)=>{c.lateralG=.01;}],['state.airRemaining',(p,c)=>{c.airRemaining-=.01;}],['state.infiniteJet',(p,c)=>{c.infiniteJet=true;}],['state.roll',(p,c)=>{c.roll=-0;}],
     ['cars.0.mesh.position.z',(p,c,n)=>{n[0].mesh.position.z+=.01;}],['route.previousSpeeds.0',(p,c,n,j)=>{j.sourceCheckpoints.get(1).route.previousSpeeds[0]=0;}],
     ['external.keys.0',(p,c,n,j)=>{j.sourceCheckpoints.get(1).external.keys[0]=true;}],['state.physicsMode',(p,c)=>{c.physicsMode='fantasy';}],
     ['source-version',(p,c,n,j)=>{j.epoch++;}],['source-version',(p,c,n,j)=>{j.dt=1/30;}],['source-version',(p,c,n,j)=>{j.identities=[npc()];}],

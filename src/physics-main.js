@@ -634,6 +634,8 @@ function updateSimulation(dt) {
   let airConsumedThisFrame = 0;
   function consumeAirTank(amount, airborneNow) {
     if (amount <= 0 || state.isFreefalling || state.airRemaining <= 0) return false;
+    // Infinite mode changes the shared tank, not thrust strength or input.
+    if (state.infiniteJet) { airConsumedThisFrame += amount; return true; }
     const airBefore = state.airRemaining;
     state.airRemaining = Math.max(0.0, state.airRemaining - amount);
     state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
@@ -745,10 +747,11 @@ function updateSimulation(dt) {
   if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
     const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
     const airBefore = state.airRemaining;
-    consumeAirTank(Math.min(airBefore, requestedAir), isAirborne);
+    const consumedBefore = airConsumedThisFrame;
+    consumeAirTank(state.infiniteJet ? requestedAir : Math.min(airBefore, requestedAir), isAirborne);
     // The final fraction of a nearly empty tank supplies only its proportional
     // impulse, even when consumeAirTank returns false on depletion.
-    retroImpulseSeconds = Math.min(requestedAir, airBefore - state.airRemaining) / RETRO_BRAKE_BURN_PER_SECOND;
+    retroImpulseSeconds = Math.min(requestedAir, airConsumedThisFrame - consumedBefore) / RETRO_BRAKE_BURN_PER_SECOND;
   }
   const isRetroBrakeFiring = retroImpulseSeconds > 0;
   const retroBrakeAccel = RETRO_BRAKE_FORCE_N / currentVehicleMass;
@@ -1096,8 +1099,8 @@ function updateSimulation(dt) {
       }
     }
 
-    // Calibrate world traversal displacement to match venue scale (2400m city / 300m blocks)
-    const moveScale = WORLD_SPEED_SCALE;
+    // A 300 m city block is traversed in 300 / velocity seconds, on ground or in air.
+    const moveScale = CITY_WORLD_SPEED_SCALE;
     state.x += state.vx * moveScale * dt;
     state.z += state.vz * moveScale * dt;
 
@@ -1549,7 +1552,7 @@ function updateSimulation(dt) {
   rearNozzlesGimbalGroup.rotation.y += (targetGimbalYaw - rearNozzlesGimbalGroup.rotation.y) * 12 * dt;
 
   // True kinematic wheel rotation matching calibrated world speed (v / wheelRadius)
-  const wheelSpinSpeed = (state.speed * WORLD_SPEED_SCALE) / 0.335;
+  const wheelSpinSpeed = (state.speed * (currentMap === 'city' ? CITY_WORLD_SPEED_SCALE : WORLD_SPEED_SCALE)) / 0.335;
   wheels.forEach(w => { w.rotation.x -= wheelSpinSpeed * dt; });
 
   const isCockpitFpv = (cameraModeIndex === 3);
@@ -1608,7 +1611,7 @@ function updateSimulation(dt) {
 
   trafficCars.forEach((car) => {
     if (car.mesh.userData.wheels) {
-      const wRot = (car.speed * WORLD_SPEED_SCALE / 0.33) * dt;
+      const wRot = (car.speed * (currentMap === 'city' ? CITY_WORLD_SPEED_SCALE : WORLD_SPEED_SCALE) / 0.33) * dt;
       car.mesh.userData.wheels.forEach((w) => { w.rotation.x -= wRot; });
     }
 
@@ -1648,8 +1651,8 @@ function updateSimulation(dt) {
         }
       }
     } else {
-      car.mesh.position.x += car.vx * WORLD_SPEED_SCALE * dt;
-      car.mesh.position.z += car.vz * WORLD_SPEED_SCALE * dt;
+      car.mesh.position.x += car.vx * CITY_WORLD_SPEED_SCALE * dt;
+      car.mesh.position.z += car.vz * CITY_WORLD_SPEED_SCALE * dt;
       if (car.mesh.position.x > CITY_HALF_BOUND - 10) car.mesh.position.x = -CITY_HALF_BOUND + 10;
       if (car.mesh.position.x < -CITY_HALF_BOUND + 10) car.mesh.position.x = CITY_HALF_BOUND - 10;
       if (car.mesh.position.z > CITY_HALF_BOUND - 10) car.mesh.position.z = -CITY_HALF_BOUND + 10;

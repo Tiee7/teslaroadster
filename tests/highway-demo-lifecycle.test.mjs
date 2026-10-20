@@ -140,7 +140,7 @@ test('demo UI is highway-only, translates live, and adds no keyboard shortcut', 
   h.context.setMap('city'); h.demo.render();
   assert.equal(h.get('btn-highway-demo').hidden, true); await h.demo.toggle(); assert.equal(h.demo.isBusy(), false);
   h.context.setMap('highway'); h.context.setLanguage('zh'); h.demo.render();
-  assert.equal(h.get('btn-highway-demo').hidden, false); assert.match(h.get('btn-highway-demo').textContent, /演示/);
+  assert.equal(h.get('btn-highway-demo').hidden, false); assert.match(h.get('btn-highway-demo').textContent, /自动驾驶/);
 });
 
 test('native demo switch remains reachable in full, medium and minimal HUD modes without appearing in the city', async () => {
@@ -178,7 +178,7 @@ test('repeated on/off clears virtual input and held keyboard/touch ownership wit
 
 test('manual keys, mobile sticks and jump/hold actions cannot fight active demo input', async () => {
   const h = lifecycleHarness(); await h.demo.toggle(); h.demo.step(1 / 60);
-  const codes = ['KeyW','KeyA','KeyS','KeyD','KeyH','KeyU','Space','Semicolon','ShiftLeft','ShiftRight','KeyQ','KeyE','KeyI','KeyK','KeyJ','KeyL','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyO','KeyN','Digit0','Numpad0'];
+  const codes = ['KeyW','KeyA','KeyS','KeyD','KeyH','KeyU','Space','Semicolon','ShiftLeft','ShiftRight','KeyQ','KeyE','KeyI','KeyK','KeyJ','KeyL','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyO','KeyN'];
   for (const code of codes) { const event = await h.key(code); assert.equal(event.defaultPrevented, true, code); assert.notEqual(h.keys[code], true, code); }
   await h.stick('left', -1, -1); await h.stick('right', 1, 1);
   assert.deepEqual({ ...h.context.readDriveInput() }, { ...h.demo.input() });

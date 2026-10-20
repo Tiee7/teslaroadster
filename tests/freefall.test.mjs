@@ -229,13 +229,13 @@ test('W/semicolon and mode changes limit added air thrust without clipping inher
   }
 });
 
-test('city ground, O launch and free flight share the same horizontal world speed scale', () => {
+test('city ground, O launch and free flight share one metre-per-second horizontal scale', () => {
   for (const kind of ['ground', 'jump', 'air']) {
     const h = harness({ y: kind === 'air' ? 100 : 0, vx: 2, vz: -50, speed: Math.hypot(2, 50) }, 'city');
     if (kind === 'jump') h.launch();
     h.step(1 / 60);
-    close(h.state.z / (h.state.vz / 60), 1.65);
-    close(h.state.x / (h.state.vx / 60), 1.65);
+    close(h.state.z / (h.state.vz / 60), 1.0);
+    close(h.state.x / (h.state.vx / 60), 1.0);
   }
 });
 

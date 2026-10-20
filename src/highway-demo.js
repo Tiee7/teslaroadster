@@ -95,14 +95,14 @@ const RoadsterHighwayDemoPlanner = (() => {
     const previous = new WeakMap();
     // These are the complete audited future-control/physical dependencies.
     // Render/score/scene-graph objects are deliberately not cache authority.
-    const controlPhysicsKeys=('x y z vx vy vz speed maxSpeed airMaxSpeed physicsMode insaneMode gasMassKg airStrafeSpeed steerInput steerAngle roll pitch yaw vRoll vPitch vYaw attitudeIdleSeconds accumulatedRoll lateralG longitudinalG prevSpeed airRemaining airUsedContinuous isFreefalling isAutoDescending8s isJumping6m isAltitudeHold isAutoLandingSave wasAirborne jumpInertiaSeconds jumpInertiaGraceSeconds driftAngle isDrifting wasHandbraking autoStabilizer isDestroyed hullIntegrity impactCooldown jumpStartY jumpTargetY holdTargetY hudMode hudMinimal').split(' ');
-    const controlPhysicsSchema='demo-control-physics-r128-v4-early-bridge';
+    const controlPhysicsKeys=('x y z vx vy vz speed maxSpeed airMaxSpeed physicsMode insaneMode gasMassKg airStrafeSpeed steerInput steerAngle roll pitch yaw vRoll vPitch vYaw attitudeIdleSeconds accumulatedRoll lateralG longitudinalG prevSpeed airRemaining airUsedContinuous infiniteJet isFreefalling isAutoDescending8s isJumping6m isAltitudeHold isAutoLandingSave wasAirborne jumpInertiaSeconds jumpInertiaGraceSeconds driftAngle isDrifting wasHandbraking autoStabilizer isDestroyed hullIntegrity impactCooldown jumpStartY jumpTargetY holdTargetY hudMode hudMinimal').split(' ');
+    const controlPhysicsSchema='demo-control-physics-r128-v5-fuel-mode';
     const directKeyCodes=['KeyW','KeyA','KeyS','KeyD','KeyH','KeyU','Space','Semicolon','ShiftLeft','ShiftRight','KeyQ','KeyE','KeyN','KeyI','KeyK','KeyJ','KeyL','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
     const externalControlState=()=>({map:typeof currentMap==='undefined'?'highway':currentMap,active:!!globalThis.window?.RoadsterDemo?.isActive?.(),busy:!!globalThis.window?.RoadsterDemo?.isBusy?.(),requestingJump:!!globalThis.window?.RoadsterDemo?.isRequestingJump?.(),weatherIndex:typeof weatherIndex==='undefined'?null:weatherIndex,audioInitialized:typeof sound==='undefined'?false:sound.initialized===true,keys:directKeyCodes.map(code=>typeof keys==='undefined'?false:!!keys[code])});
     const controlState=p=>Object.fromEntries(controlPhysicsKeys.map(key=>[key,p[key]]));
     const controlCars=cars=>cars.map(car=>({...copyState(Object.fromEntries(Object.entries(car).filter(([key])=>key!=='mesh'))),
       mesh:{position:{x:car.mesh.position.x,y:car.mesh.position.y,z:car.mesh.position.z},rotation:{x:car.mesh.rotation.x,y:car.mesh.rotation.y,z:car.mesh.rotation.z},visible:car.mesh.visible}}));
-    const certificatePhase=certificate=>certificate?Object.fromEntries(['lane','height','requiredNextAir','physicsMode','insaneMode','frameDt','phase','successorGeometry'].map(key=>[key,certificate[key]])):null;
+    const certificatePhase=certificate=>certificate?Object.fromEntries(['lane','height','requiredNextAir','physicsMode','insaneMode','infiniteJet','frameDt','phase','successorGeometry'].map(key=>[key,certificate[key]])):null;
     function exactDifference(expected,actual,path=''){
       if(expected===null||actual===null||typeof expected!=='object'||typeof actual!=='object')return Object.is(expected,actual)?null:path||'value';
       if(Array.isArray(expected)!==Array.isArray(actual))return path||'type';
@@ -213,7 +213,7 @@ const RoadsterHighwayDemoPlanner = (() => {
     function checkPrefetchDomain(player,cars,dt){
       const job=prefetchJob;if(!job)return;
       if(job.dt!==dt||job.epoch!==planEpoch||job.identities.length!==cars.length||job.identities.some((car,i)=>car!==cars[i])){invalidatePrefetch('prefetch-version');return;}
-      if(player.physicsMode!==job.physicsMode||!!player.insaneMode!==job.insaneMode||player.isDestroyed||player.isFreefalling||player.isAltitudeHold||player.impactCooldown>0){invalidatePrefetch('prefetch-domain');return;}
+      if(player.physicsMode!==job.physicsMode||!!player.insaneMode!==job.insaneMode||!!player.infiniteJet!==!!job.infiniteJet||player.isDestroyed||player.isFreefalling||player.isAltitudeHold||player.impactCooldown>0){invalidatePrefetch('prefetch-domain');return;}
       const externalDifference=exactDifference(job.external,externalControlState());if(externalDifference){invalidatePrefetch('prefetch-external',{difference:externalDifference});return;}
       try{(job.kernel.assertRuntime||job.kernel.assertSources)();}catch(error){invalidatePrefetch('prefetch-source-version');return;}
       if(simulationFrame-job.createdFrame>Math.ceil(7/dt)){invalidatePrefetch('prefetch-expired');return;}
@@ -269,7 +269,7 @@ const RoadsterHighwayDemoPlanner = (() => {
         else{
           yield* api.prepareProjectedGroundSteps(p,traffic,h);route=copyState(projectedRoute(p,traffic,true));
           const c=route.certificate;
-          if(c&&route.jumpCooldown===0&&p.airRemaining>=api.entryAir(c.height)){
+          if(c&&route.jumpCooldown===0&&p.airRemaining>=api.entryAir(c.height,p)){
             // Conditional expected event only. Actual C still has its own
             // independent fresh admission, checked before any early reuse.
             const expected=projectedCheckpoint(p,traffic,frame,true);job.preparedCheckpoints.set(frame,expected);
@@ -285,7 +285,7 @@ const RoadsterHighwayDemoPlanner = (() => {
             // only at the full exact REAL B+true-C prepared-state cut below.
             const next=job.prefetch?c.successorGeometry:null;
             route.certificate=next?{lane:next.lane,height:next.height,requiredNextAir:next.requiredNextAir,physicsMode:p.physicsMode,
-              insaneMode:!!p.insaneMode,frameDt:h,phase:c.phase+1,successorGeometry:null}:null;
+              insaneMode:!!p.insaneMode,infiniteJet:!!p.infiniteJet,frameDt:h,phase:c.phase+1,successorGeometry:null}:null;
             route.jumpCooldown=option.duration+option.groundWait;applyEarlyRoute(p,route,external);launched++;
           }else{
             const drive=p.demoControls,v=Math.max(0,-p.vz,p.speed||0);input.throttle=drive.throttle;input.boost=drive.boost;input.brake=drive.brake;
@@ -339,9 +339,9 @@ const RoadsterHighwayDemoPlanner = (() => {
       const job={dt,epoch:planEpoch,identities,certificate:copyState(seed.route.certificate),work:0,done:false,result:null,invalid:false,
         createdFrame:simulationFrame,validatedUntil:simulationFrame,checkpoints:new Map(),preparedCheckpoints:new Map(),expectedLaunches:new Map(),
         expectedLaunchCount:prefetch?2:1,prefetch,source:null,kernel,cExecuted:false,landingValidated:false,bConsumed:false,
-        physicsMode:seed.state.physicsMode,insaneMode:!!seed.state.insaneMode,external:copyState(seed.external)};
+        physicsMode:seed.state.physicsMode,insaneMode:!!seed.state.insaneMode,infiniteJet:!!seed.state.infiniteJet,external:copyState(seed.external)};
       const b=job.certificate,c=b.successorGeometry;job.futureCertificate=c?{lane:c.lane,height:c.height,requiredNextAir:c.requiredNextAir,physicsMode:b.physicsMode,
-        insaneMode:b.insaneMode,frameDt:b.frameDt,phase:b.phase+1,successorGeometry:null}:null;
+        insaneMode:b.insaneMode,infiniteJet:!!b.infiniteJet,frameDt:b.frameDt,phase:b.phase+1,successorGeometry:null}:null;
       job.iterator=earlyBridgeSteps(job,seed,api,kernel);if(prefetch){prefetchJob=job;prefetchJobs++;}else{earlyJob=job;earlyJobs++;}
     }
     function endRender(){
@@ -425,12 +425,12 @@ const RoadsterHighwayDemoPlanner = (() => {
       for(let offset=0;offset<=Math.ceil(2.4/dt);offset++){
         const frame=seed.frame+offset;job.checkpoints.set(frame,projectedCheckpoint(p,traffic,frame));
         yield* api.prepareProjectedGroundSteps(p,traffic,dt);p.demoLandingLane=null;
-        const immediate=api.projectedImmediate(p,traffic,dt),entryAir=api.entryAir(job.geometry[0].height);
+        const immediate=api.projectedImmediate(p,traffic,dt),entryAir=api.entryAir(job.geometry[0].height,p);
         if(frame>=job.minimumAnchorFrame&&p.demoJumpCooldown===0&&(job.promised||immediate<.55)&&p.airRemaining>=entryAir){
           attemptedAnchor=true;const anchor=projectedCheckpoint(p,traffic,frame,true);job.pendingAnchor=anchor;job.pendingWorkStart=job.work;
           const arcs=[];let state=p,cars=traffic,clear=true;
           for(let i=0;i<job.geometry.length;i++){
-            const selected=job.geometry[i],next=job.geometry[i+1],nextAir=selected.requiredNextAir??(next?api.entryAir(next.height):3.6);job.nodes++;
+            const selected=job.geometry[i],next=job.geometry[i+1],nextAir=selected.requiredNextAir??(next?api.entryAir(next.height,p):3.6);job.nodes++;
             const option=yield* api.candidateSteps(state,cars,selected.height,selected.lane,true,null,nextAir);
             if(!option){clear=false;break;}arcs.push(option);state=option.endpoint;cars=option.forecast;
           }
@@ -496,7 +496,19 @@ const RoadsterHighwayDemoPlanner = (() => {
       return null;
     }
 
+    let fuelMode = null, fuelModeChanges = 0;
+    function invalidateFuelMode(player) {
+      // Fuel is a future-physics dependency. Discard every old proof/iterator,
+      // but preserve the currently executing airborne route and real inputs.
+      fuelMode = !!player.infiniteJet; fuelModeChanges++; planEpoch++;
+      planJob = admissionJob = earlyJob = prefetchJob = pendingEarlySeed = null;
+      certifiedNext = lastProjectionApi = stepSeed = prefetchRejectedPhase = null;
+      lastLaunchedFromCertificate = false; proposalHints = [];
+      charging = false; refillTarget = 0; lastImmediate = Infinity;
+      groundReanchorPending = true;
+    }
     function reset(x = 2.5) {
+      fuelMode = null; fuelModeChanges = 0;
       earlyJob=null;prefetchJob=null;pendingEarlySeed=null;lastProjectionApi=null;lastLaunchedFromCertificate=false;prefetchJobs=prefetchWork=prefetchBindings=prefetchInvalidations=0;lastPrefetchFailure=lastPrefetchBinding=null;prefetchRejectedPhase=null;earlyJobs=earlyWork=earlyChecks=earlyInvalidations=earlyLandings=earlyFreshCChecks=0;lastEarlyFailure=lastEarlyPromotion=null;
       renderWorkRemaining=null;renderStartedAt=renderDeadline=null;renderTimeLimitHits=maxRenderElapsedAtPlannerExitMs=0;admissionJob=null;stepSeed=null;simulationFrame=-1;lastFrameAirborne=false;groundReanchorPending=false;certificateSerial=0;
       sourceStartChecks=sourceAnchorChecks=sourceInvalidations=cachedSourceCommits=0;lastSourceFailure=null;
@@ -562,6 +574,9 @@ const RoadsterHighwayDemoPlanner = (() => {
       p.lateralG=(1-10*h)*(p.lateralG||0)+(10*h)*(lateral/9.81);
     }
     const hopProfiles=new Map();
+    function entryAirFor(p, height, frameDt) {
+      return p.infiniteJet ? 0 : Math.max(3.6, hopProfile(height, p.physicsMode === 'realistic', frameDt).cost + 2.2);
+    }
     function hopProfile(height, realistic=true,frameDt=1/60) {
       const h=clamp(frameDt,1/240,.1);
       const key=`${height}/${realistic}/${h}`;if(hopProfiles.has(key))return hopProfiles.get(key);
@@ -611,6 +626,8 @@ const RoadsterHighwayDemoPlanner = (() => {
     function step(player, cars, dt) {
       const initialRenderBudget=renderWorkRemaining,initialRenderStart=renderStartedAt,initialRenderDeadline=renderDeadline;
       if (target === null) reset(player.x);
+      if (fuelMode === null) fuelMode = !!player.infiniteJet;
+      else if (fuelMode !== !!player.infiniteJet) invalidateFuelMode(player);
       renderWorkRemaining=initialRenderBudget;renderStartedAt=initialRenderStart;renderDeadline=initialRenderDeadline;
       // Public direct-step callers own one render. The browser clock calls
       // beginRender once for up to three ticks; neither path grants each job
@@ -621,8 +638,8 @@ const RoadsterHighwayDemoPlanner = (() => {
       let frameValidations=0;elapsed+=dt;proposalHints=proposalHints.filter(hint=>elapsed-hint.createdAt<=2);
       jumpCooldown = Math.max(0, jumpCooldown - dt);if(jumpCooldown<1e-7)jumpCooldown=0;
       decisionCooldown = Math.max(0, decisionCooldown - dt);if(decisionCooldown<1e-7)decisionCooldown=0;
-      if(certifiedNext&&(player.physicsMode!==certifiedNext.physicsMode||!!player.insaneMode!==certifiedNext.insaneMode)){certifiedNext=null;invalidatedCertificates++;}
-      if(planJob&&(player.physicsMode!==planJob.physicsMode||!!player.insaneMode!==planJob.insaneMode))planJob=null;
+      if(certifiedNext&&(player.physicsMode!==certifiedNext.physicsMode||!!player.insaneMode!==certifiedNext.insaneMode||!!player.infiniteJet!==!!certifiedNext.infiniteJet)){certifiedNext=null;invalidatedCertificates++;}
+      if(planJob&&(player.physicsMode!==planJob.physicsMode||!!player.insaneMode!==planJob.insaneMode||!!player.infiniteJet!==!!planJob.infiniteJet))planJob=null;
       const grounded = player.y <= 0.005 && Math.abs(player.vy || 0) < 0.01 && !player.isJumping6m;
       const bridgeSource=earlyJob?.source||prefetchJob?.source;if(bridgeSource&&planJob!==bridgeSource){bridgeSource.age+=dt;bridgeSource.untilStart-=dt;}
       if(planJob){planJob.age+=dt;planJob.untilStart-=dt;if(planJob.epoch!==planEpoch||planJob.dt!==dt||planJob.age>8||planJob.identities.length!==cars.length||planJob.identities.some((car,i)=>car!==cars[i])){planJob=null;expiredPlans++;}}
@@ -715,13 +732,13 @@ const RoadsterHighwayDemoPlanner = (() => {
       landingLane = null;
       input.throttle = 1;
       const speed = Math.max(0, -player.vz, player.speed || 0);
-      const cruiseLimit = player.physicsMode !== 'realistic' ? 160 : player.insaneMode ? 370 / 3.6 : live.length ? 250 / 3.6 : 370 / 3.6;
+      const cruiseLimit = player.physicsMode !== 'realistic' ? 160 : 370 / 3.6;
       if (player.airRemaining < 4.3) charging = true;
       if (player.airRemaining >= 7.0) charging = false;
       if (player.airRemaining>=refillTarget) refillTarget=0;
       // Recharge hysteresis must not strand usable paid ground boost below
       // the floor plus finite-hop coast headroom. This never powers flight.
-      const boostFor = (v, gas, recharging, freefall=player.isFreefalling,seconds=dt,requiredAir=refillTarget) => refillBoost(v,gas,seconds,freefall)||(!recharging || v<220/3.6+2) && gas > 4.3 && !freefall && v < cruiseLimit
+      const boostFor = (v, gas, recharging, freefall=player.isFreefalling,seconds=dt,requiredAir=refillTarget) => refillBoost(v,gas,seconds,freefall)||(!recharging || v<220/3.6+2) && gas > 4.3 && !freefall
         && !(gas<requiredAir && v>220/3.6+1);
       const steeringFor = (x, vx, v, lane, boost) => {
         const desired = clamp((lanes[lane] - x) * 12.0 - vx * 0.6, -20, 20);
@@ -764,7 +781,7 @@ const RoadsterHighwayDemoPlanner = (() => {
       function brakeResult(v, gas, brake, seconds, freefall) {
         const blend = clamp((v - 200 / 3.6) / (40 / 3.6), 0, 1);
         const demand = blend * blend * (3 - 2 * blend) * brake;
-        const paid = freefall ? 0 : Math.min(gas, 0.55 * demand * seconds);
+        const paid = freefall ? 0 : player.infiniteJet ? 0.55 * demand * seconds : Math.min(gas, 0.55 * demand * seconds);
         const mass = 1850 + Number((gas * 14.4).toFixed(1));
         return { speed: Math.max(0, v - 38 * brake * seconds - 80000 / mass * paid / 0.55), paid };
       }
@@ -779,7 +796,7 @@ const RoadsterHighwayDemoPlanner = (() => {
         const requested=clamp(Math.min(followingSpeed,stoppingEnvelope),0,cruiseLimit);
         // A slow queue is a routing/hop request, never permission to follow it
         // below 220. From rest we still accelerate using ordinary propulsion.
-        if (requested < speedFloor + 0.5) return { ...cruise, jumpNeeded: true };
+        if (requested < speedFloor + 0.5) return { ...cruise, boost: v < speedFloor ? cruise.boost : refillBoost(v,gas,seconds,freefall) ? 1 : 0, jumpNeeded: true };
         if (v>requested+0.3) {
           let brake=clamp((v-requested)/8,0,1);
           if (brakeResult(v,gas,brake,seconds,freefall).speed < speedFloor) {
@@ -789,7 +806,13 @@ const RoadsterHighwayDemoPlanner = (() => {
           }
           if (brake>0) return { throttle:0,boost:0,brake,jumpNeeded:false };
         }
-        // Avoid slowly coasting through the floor while waiting for a gap.
+        // Clear road: keep the requested jet lit even at the physical limiter.
+        // A finite following envelope feathers continuously instead of a full
+        // on/off switch around a speed threshold. The exact same command is
+        // used by live control and every ground trajectory projection.
+        if (requested < cruiseLimit - 1e-6) cruise.boost *= clamp((requested - v) / 4, 0, 1);
+        // The established 220 floor still needs its real paid protection pulse.
+        if (!cruise.boost && refillBoost(v,gas,seconds,freefall)) cruise.boost = 1;
         return cruise;
       }
       // One trajectory for first-gap validation, route ranking and the urgent
@@ -815,7 +838,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           const realistic = state.physicsMode === 'realistic';
           const standard = realistic && !state.insaneMode && !boost;
           const maximum = realistic ? (standard ? 200/3.6 : 370/3.6) : 160;
-          const electric = realistic ? (state.insaneMode ? 38 : 16.5) : 72;
+          const electric = realistic && !state.insaneMode && p.speed >= 200/3.6 ? 0 : realistic ? (state.insaneMode ? 38 : 16.5) : 72;
           const mass=1850+Number((p.gas*14.4).toFixed(1));
           const jet = (realistic ? 38 : 120) * 1994 / mass;
           const braking=brakeResult(p.speed,p.gas,controls.brake,h,p.freefall);
@@ -823,7 +846,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           if (paidRetro>0) p.speed=Math.max(0,p.speed-80000/mass*(paidRetro/0.55));
           if (controls.throttle>0 || boost) {
             if (standard && p.speed > maximum) p.speed = Math.max(maximum,p.speed-(0.00012*p.speed*p.speed+0.35)*1.3*h);
-            else p.speed = Math.min(maximum,p.speed+Math.max(electric*controls.throttle,boost ? jet : 0)*h);
+            else p.speed = Math.min(maximum,p.speed+Math.max(electric*controls.throttle,boost ? jet*controls.boost : 0)*h);
           } else if (controls.brake>0) p.speed=Math.max(0,p.speed-38*controls.brake*h);
           else p.speed=Math.max(0,p.speed-(0.00012*p.speed*p.speed+0.35)*(standard&&p.speed>maximum?1.3:1)*h);
           const factor=clamp(p.speed/14,0,1.25);
@@ -832,7 +855,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           p.yaw += (targetYaw-p.yaw)*(1-Math.exp(-handling.yawRate*h));
           p.vx += (targetVx-p.vx)*(1-Math.exp(-handling.lateralRate*h));
           p.x += p.vx*h; p.metres += -nz*p.speed*h;
-          p.gas=clamp(p.gas+(boost ? -0.85*h : paidRetro>0 ? -paidRetro : 3.4*h),0,10);
+          p.gas=state.infiniteJet?10:clamp(p.gas+(boost ? -0.85*controls.boost*h : paidRetro>0 ? -paidRetro : 3.4*h),0,10);
           if (p.gas<=0.001) p.freefall=true;
           if (p.gas>=2.5 && !boost) p.freefall=false;
           points.push({t,x:p.x,metres:p.metres,speed:p.speed});
@@ -941,7 +964,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           let groundDwell=lane===startLane?(start.demoDwell??dwell):0,groundChanging=lane!==startLane||!!(start.demoChanging??changing),groundCharging=start.demoCharging??charging;
           const attitude={yaw,roll:start.roll||0,pitch:start.pitch||0,vRoll:start.vRoll||0,vPitch:start.vPitch||0,vYaw:start.vYaw||0,autoStabilizer:start.autoStabilizer,attitudeIdleSeconds:start.attitudeIdleSeconds||0,lateralG:start.lateralG||0};
           const climb=start.physicsMode==='realistic'?20.15:117;
-          const clearHeight=Math.max(...live.map(o=>o.height+.2),1.45),riseTime=Math.ceil(clearHeight/(climb*h))*h,requiredNextAir=Math.max(3.6,nextRequiredAir);
+          const clearHeight=Math.max(...live.map(o=>o.height+.2),1.45),riseTime=Math.ceil(clearHeight/(climb*h))*h,requiredNextAir=start.infiniteJet?0:Math.max(3.6,nextRequiredAir);
           let groundWait=Math.ceil(.12/h)*h,preparation=Math.ceil(.30/h)*h,handoff=null,finish=profile.duration+(prepare?preparation:0);
           function groundCoast(value){
             let magnitude=Math.abs(value);if(magnitude<=.1)return 0;let remainder=h;
@@ -967,7 +990,7 @@ const RoadsterHighwayDemoPlanner = (() => {
               const oldYaw=yaw,groundedPlanner=!airbornePhase;
               let command=0,boost=false;
               if(groundedPlanner){
-                const beforeGas=start.airRemaining-profile.cost-paidSide+touchdownCredit+3.4*groundSeconds-4.25*boostedGroundSeconds;groundGasBefore=beforeGas;
+                const beforeGas=start.infiniteJet?10:start.airRemaining-profile.cost-paidSide+touchdownCredit+3.4*groundSeconds-4.25*boostedGroundSeconds;groundGasBefore=beforeGas;
                 if(beforeGas<4.3)groundCharging=true;if(beforeGas>=7)groundCharging=false;
                 if(Math.abs(x-lanes[lane])<.32&&Math.abs(vx)<1.3){groundDwell+=h;if(groundChanging&&groundDwell>=.08)groundChanging=false;}else groundDwell=0;
                 boost=refillBoost(groundSpeed,beforeGas,h,start.isFreefalling,start);
@@ -988,22 +1011,28 @@ const RoadsterHighwayDemoPlanner = (() => {
             x+=vx*h;metres+=-vz*h;
             Object.assign(attitude,{yaw,y,steerInput:steer,speed:physicsAirborne?Math.hypot(vx,vz):groundSpeed});advanceDemoAttitude(attitude,h,physicsAirborne,!!profile.points[Math.min(profile.points.length-1,Math.round(sample))].landing);yaw=attitude.yaw;
             if(airbornePhase&&y===0)touchdownCredit=3.4*h;
-            if(!handoff){const rechargeTime=Math.max(0,requiredNextAir-(start.airRemaining-profile.cost-paidSide+touchdownCredit-4.25*boostedGroundSeconds))/3.4;
+            if(!handoff){const rechargeTime=start.infiniteJet?0:Math.max(0,requiredNextAir-(start.airRemaining-profile.cost-paidSide+touchdownCredit-4.25*boostedGroundSeconds))/3.4;
             groundWait=Math.ceil(Math.max(.12,rechargeTime)/h-1e-8)*h;preparation=Math.ceil(Math.max(.30,groundWait+riseTime+3*h)/h-1e-8)*h;finish=profile.duration+(prepare?preparation:0);}
-            const maximumForward=Math.max(start.speed||0,cruiseLimit)+(start.physicsMode==='realistic'?38:120)*1994/1850*dt;
-            fastestMetres=airbornePhase?metres:fastestMetres+Math.max(-vz,maximumForward)*h;
+            // Until the committed ground wait ends, the real driver owns only
+            // W + the paid floor pulse above. Afterwards bound free acceleration
+            // from the handoff speed; a370 limit is not an instant370 velocity.
+            const freeGroundSeconds=Math.max(0,t-profile.duration-groundWait);
+            const handoffSpeed=handoff?.groundSpeed??groundSpeed??Math.hypot(vx,vz);
+            const physicalLimit=start.physicsMode==='realistic'?370/3.6:160;
+            const maximumForward=Math.max(handoffSpeed,Math.min(physicalLimit,handoffSpeed+(start.physicsMode==='realistic'?38:120)*1994/1850*(freeGroundSeconds+dt)));
+            fastestMetres=freeGroundSeconds<=1e-8?metres:fastestMetres+Math.max(-vz,maximumForward)*h;
             const point={t,x,metres,fastestMetres,y};if(Math.abs(x)>13.65){ok=false;break;}
             const motionIndex=steps.length;steps.push({point,vx,vz});
-            if(!handoff&&t>=profile.duration+groundWait-1e-6){const remaining=clamp(start.airRemaining-profile.cost-paidSide+touchdownCredit+3.4*groundSeconds-4.25*boostedGroundSeconds,0,10);handoff={index:motionIndex,remaining,gasBefore:groundGasBefore,x,vx,vz,groundSpeed,groundYaw:yaw,groundSteer:steer,groundDwell,groundChanging,groundCharging,attitude:{...attitude}};}
+            if(!handoff&&t>=profile.duration+groundWait-1e-6){const remaining=start.infiniteJet?10:clamp(start.airRemaining-profile.cost-paidSide+touchdownCredit+3.4*groundSeconds-4.25*boostedGroundSeconds,0,10);handoff={index:motionIndex,remaining,gasBefore:groundGasBefore,x,vx,vz,groundSpeed,groundYaw:yaw,groundSteer:steer,groundDwell,groundChanging,groundCharging,attitude:{...attitude}};}
             priorY=y;
           }
-          const valid=!(!ok||!handoff||minSpeed<speedFloor||Math.abs(x-lanes[lane])>=.6||start.airRemaining<profile.cost+paidSide+2.1);
-          return {steps,h,handoff,valid,minSpeed,cost:profile.cost+paidSide+.85*boostedGroundSeconds,requiredNextAir,groundWait,preparation};
+          const valid=!(!ok||!handoff||minSpeed<speedFloor||Math.abs(x-lanes[lane])>=.6||(!start.infiniteJet&&start.airRemaining<profile.cost+paidSide+2.1));
+          return {steps,h,handoff,valid,minSpeed,cost:start.infiniteJet?0:profile.cost+paidSide+.85*boostedGroundSeconds,requiredNextAir,groundWait,preparation};
         }
         function* candidateSteps(start,sourceCars,height,lane,prepare,failure=null,nextRequiredAir=3.6){
           const profile=hopProfile(height,start.physicsMode==='realistic',dt);
           if(!(profile.duration>0)||profile.duration+.18>2.4)return null;
-          if(start.isDestroyed||start.isFreefalling||start.isAltitudeHold||start.airRemaining<Math.max(3.6,profile.cost+2.2)||Math.abs(lanes[lane]-start.x)>8.5*profile.duration+1)return null;
+          if(start.isDestroyed||start.isFreefalling||start.isAltitudeHold||(!start.infiniteJet&&start.airRemaining<entryAirFor(start,height,dt))||Math.abs(lanes[lane]-start.x)>8.5*profile.duration+1)return null;
           const motion=playerMotion(start,profile,lane,prepare,nextRequiredAir);
           // A requested retry hint is observable: an earlier collision can
           // still suggest a later takeoff even if this path cannot center.
@@ -1123,10 +1152,10 @@ const RoadsterHighwayDemoPlanner = (() => {
           if(!withSuccessor&&job?.successorHint){
             const hint=job.successorHint;yield null;
             const suggested=yield* trial(start,sourceCars,hint.height,hint.lane,true);
-            if(suggested){suggested.launchAtAge=job.candidateLaunchAge;suggested.entryAir=Math.max(3.6,hopProfile(hint.height,start.physicsMode==='realistic',dt).cost+2.2);yield* offer(suggested);}
+            if(suggested){suggested.launchAtAge=job.candidateLaunchAge;suggested.entryAir=entryAirFor(start,hint.height,dt);yield* offer(suggested);}
           }
           for(const height of heights){
-            const entryAir=Math.max(3.6,hopProfile(height,start.physicsMode==='realistic',dt).cost+2.2);
+            const entryAir=entryAirFor(start,height,dt);
             const launch=yield* waitForLaunch(start,sourceCars,entryAir,0,.75);if(!launch)continue;
             for(const lane of order){
               yield null;const failure={};
@@ -1193,7 +1222,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           const demand=blend*blend*(3-2*blend)*controls.brake;
           const requestedAir=.55*demand*h;
           const retroGas=controls.brake>0&&!p.isFreefalling&&originalGas>0?Math.max(0,originalGas-Math.min(originalGas,requestedAir)):originalGas;
-          const impulseSeconds=Math.min(requestedAir,originalGas-retroGas)/.55;
+          const impulseSeconds=(p.infiniteJet?requestedAir:Math.min(requestedAir,originalGas-retroGas))/.55;
           const retroTravelSpeed=Math.abs(oldSpeed);
           const retroScale=retroTravelSpeed>0?Math.max(0,retroTravelSpeed-80000/mass*impulseSeconds)/retroTravelSpeed:0;
           if(impulseSeconds>0){p.vx*=retroScale;p.vz*=retroScale;p.speed*=retroScale;}
@@ -1208,7 +1237,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           const yawError=wrap(-Math.atan2(desired,Math.max(12,p.speed))-oldYaw);
           p.yaw=oldYaw+yawError*(1-Math.exp(-handling.yawRate*h));
           p.vx=(p.vx||0)+(desired-(p.vx||0))*(1-Math.exp(-handling.lateralRate*h));p.vz=-Math.cos(oldYaw)*p.speed;p.x+=p.vx*h;
-          p.airRemaining=boost?Math.max(0,originalGas-.85*controls.boost*h):impulseSeconds>0?retroGas:Math.min(10,originalGas+3.4*h);
+          p.airRemaining=p.infiniteJet?10:boost?Math.max(0,originalGas-.85*controls.boost*h):impulseSeconds>0?retroGas:Math.min(10,originalGas+3.4*h);
           p.airUsedContinuous=10-p.airRemaining;p.gasMassKg=Number((144*(originalGas/10)).toFixed(1));
           if(p.airRemaining>=2.5&&!boost)p.isFreefalling=false;
           p.isDrifting=false;p.wasHandbraking=false;p.driftAngle*=Math.pow(.005,h);p.isAutoLandingSave=false;p.isJumping6m=false;p.accumulatedRoll=0;if(!boost&&impulseSeconds===0&&p.airRemaining>2.2)p.isAutoDescending8s=false;
@@ -1265,7 +1294,7 @@ const RoadsterHighwayDemoPlanner = (() => {
         function* finiteSearchSteps(start,sourceCars,job={}){
           finiteSearches++;job.nodes??=0;job.cap??=36**3;job.capped??=false;
           const edgeMemo=new WeakMap();
-          const entry=height=>Math.max(3.6,hopProfile(height,start.physicsMode==='realistic',dt).cost+2.2);
+          const entry=height=>entryAirFor(start,height,dt);
           function* edge(state,traffic,height,lane,nextAir=3.6){
             if(job.nodes>=job.cap){job.capped=true;finiteCapped++;return null;}
             job.nodes++;finiteNodes++;yield null;
@@ -1369,7 +1398,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           const traffic=sourceCars.map(car=>({...car,laneChange:car.laneChange?{...car.laneChange}:null,
             mesh:{position:{...car.mesh.position},rotation:{...car.mesh.rotation},visible:car.mesh.visible}}));
           backgroundSearches++;
-          const job={dt,identities:[...cars],work:0,result:null,readyGoal:null,kind:'finite',physicsMode:start.physicsMode,insaneMode:!!start.insaneMode,origin,successorHint:origin==='handoff'?plannedHop.successorHint:null,ready:null,firstSafe:null,safeRoots:[],routeChanges:afterSuccessor&&phaseHop.lane!==plannedHop.lane?[{from:plannedHop.lane,to:phaseHop.lane,age:plannedHop.duration+plannedHop.groundWait}]:[],afterCertificate:afterSuccessor?{lane:phaseHop.lane,height:phaseHop.height,requiredNextAir:phaseHop.requiredNextAir,physicsMode:start.physicsMode,insaneMode:!!start.insaneMode,frameDt:dt,phase:certificateSerial+1,successorGeometry:phaseHop.successor?{lane:phaseHop.successor.lane,height:phaseHop.successor.height,requiredNextAir:phaseHop.successor.requiredNextAir}:null}:null,done:false,age:0,untilStart:!isGround?plannedHop.duration+plannedHop.groundWait+(afterSuccessor?phaseHop.duration+phaseHop.groundWait:0)+rankingPrefixSeconds:0,rankingPrefixSeconds,epoch:planEpoch,target:!isGround?plannedHop.lane:target,expectedState:snapshot,expectedCars:traffic,anchorDefined:false,projectStep:projectedGroundStep};job.createdFrame=simulationFrame;job.cursorFrame=simulationFrame+Math.round(job.untilStart/dt);
+          const job={dt,identities:[...cars],work:0,result:null,readyGoal:null,kind:'finite',physicsMode:start.physicsMode,insaneMode:!!start.insaneMode,infiniteJet:!!start.infiniteJet,origin,successorHint:origin==='handoff'?plannedHop.successorHint:null,ready:null,firstSafe:null,safeRoots:[],routeChanges:afterSuccessor&&phaseHop.lane!==plannedHop.lane?[{from:plannedHop.lane,to:phaseHop.lane,age:plannedHop.duration+plannedHop.groundWait}]:[],afterCertificate:afterSuccessor?{lane:phaseHop.lane,height:phaseHop.height,requiredNextAir:phaseHop.requiredNextAir,physicsMode:start.physicsMode,insaneMode:!!start.insaneMode,infiniteJet:!!start.infiniteJet,frameDt:dt,phase:certificateSerial+1,successorGeometry:phaseHop.successor?{lane:phaseHop.successor.lane,height:phaseHop.successor.height,requiredNextAir:phaseHop.successor.requiredNextAir}:null}:null,done:false,age:0,untilStart:!isGround?plannedHop.duration+plannedHop.groundWait+(afterSuccessor?phaseHop.duration+phaseHop.groundWait:0)+rankingPrefixSeconds:0,rankingPrefixSeconds,epoch:planEpoch,target:!isGround?plannedHop.lane:target,expectedState:snapshot,expectedCars:traffic,anchorDefined:false,projectStep:projectedGroundStep};job.createdFrame=simulationFrame;job.cursorFrame=simulationFrame+Math.round(job.untilStart/dt);
           if(isGround&&stepSeed){job.strictSource=true;job.sourceSchema=controlPhysicsSchema;job.sourceValidatedUntil=simulationFrame;job.sourceCheckpoints=new Map([[simulationFrame,copyState(stepSeed)]]);}
           if(origin==='ground-window')job.iterator=(function*(){
             const firstWork=job.work,terminal=yield* groundTerminalSteps(snapshot,traffic,2.4,job);job.windowWork=job.work-firstWork;groundWindowWork+=job.windowWork;
@@ -1383,7 +1412,7 @@ const RoadsterHighwayDemoPlanner = (() => {
         };
         function makeProjectedGroundJob(start,sourceCars,sourceFrame){
           const snapshot=copyState(start),traffic=copyState(sourceCars);snapshot.demoRoutePrepared=false;
-          const job={dt,identities:[...cars],work:0,result:null,readyGoal:null,kind:'finite',physicsMode:start.physicsMode,insaneMode:!!start.insaneMode,
+          const job={dt,identities:[...cars],work:0,result:null,readyGoal:null,kind:'finite',physicsMode:start.physicsMode,insaneMode:!!start.insaneMode,infiniteJet:!!start.infiniteJet,
             origin:'ground-window',ready:null,firstSafe:null,safeRoots:[],routeChanges:[],afterCertificate:null,done:false,age:0,untilStart:0,epoch:planEpoch,target:start.demoTarget,
             createdFrame:sourceFrame,cursorFrame:sourceFrame,anchorDefined:false,strictSource:true,sourceSchema:controlPhysicsSchema,
             sourceValidatedUntil:sourceFrame-1,sourceCheckpoints:new Map(),sourceInvalid:false,fromEarlyBridge:true,bridgeValidated:false};
@@ -1395,7 +1424,7 @@ const RoadsterHighwayDemoPlanner = (() => {
           })();return job;
         }
         const admissionApi={makeProjectedGroundJob,steeringFor,candidateSteps,prepareProjectedGroundSteps,projectedGroundStep,projectedImmediate,groundTerminalSteps,groundSweepBefore,groundSweepClear,
-          entryAir:height=>Math.max(3.6,hopProfile(height,player.physicsMode==='realistic',dt).cost+2.2)};
+          entryAir:(height,p=player)=>entryAirFor(p,height,dt)};
         lastProjectionApi=admissionApi;
         if(groundReanchorPending&&!certifiedNext&&planJob?.kind!=='continuation'){
           const hint=planJob?.readyGoal?.path?.[0]||planJob?.rootHint;planJob=makeJob(player,cars,'ground-window');planJob.rootHint=hint?{height:hint.height,lane:hint.lane}:null;groundReanchorPending=false;groundReanchors++;
@@ -1417,7 +1446,7 @@ const RoadsterHighwayDemoPlanner = (() => {
             // B is freshly checked. B launches on its own completed proof; C
             // is optional work on B's NEW endpoint, never an extra gate on B.
             const b=plannedHop,hint=b.continuationGeometry;
-            const job={dt,identities:[...cars],work:0,result:null,readyGoal:null,kind:'continuation',physicsMode:player.physicsMode,insaneMode:!!player.insaneMode,
+            const job={dt,identities:[...cars],work:0,result:null,readyGoal:null,kind:'continuation',physicsMode:player.physicsMode,insaneMode:!!player.insaneMode,infiniteJet:!!player.infiniteJet,
               origin:'continuation',done:false,age:0,untilStart:b.duration+b.groundWait,epoch:planEpoch};
             continuationProofs++;backgroundSearches++;
             job.iterator=(function*(){
@@ -1430,7 +1459,7 @@ const RoadsterHighwayDemoPlanner = (() => {
               b.successor=proof.root;b.rankingTerminal=proof.terminal;
               const next=makeJob(proof.terminal.endpoint,proof.terminal.forecast,'post-certificate',true,proof.terminal.seconds);next.untilStart-=age;
               certifiedNext={lane:proof.root.lane,height:proof.root.height,requiredNextAir:proof.root.requiredNextAir,
-                physicsMode:job.physicsMode,insaneMode:job.insaneMode,frameDt:dt,phase:++certificateSerial,successorGeometry:null,
+                physicsMode:job.physicsMode,insaneMode:job.insaneMode,infiniteJet:!!job.infiniteJet,frameDt:dt,phase:++certificateSerial,successorGeometry:null,
                 scheduledAfter:b.duration+b.groundWait,expectedState:copyState(b.endpoint),expectedCars:b.forecast};
               continuedCertificates++;return next;
             };
@@ -1450,7 +1479,7 @@ const RoadsterHighwayDemoPlanner = (() => {
         if(span>1)multiLane++;maxLaneSpan=Math.max(maxLaneSpan,span);
         target=plannedHop.lane;landingLane=target;refillTarget=plannedHop.requiredNextAir;
         certifiedNext=plannedHop.successor?{lane:plannedHop.successor.lane,height:plannedHop.successor.height,
-          physicsMode:player.physicsMode,insaneMode:!!player.insaneMode,frameDt:dt,requiredNextAir:plannedHop.successor.requiredNextAir,phase:++certificateSerial,
+          physicsMode:player.physicsMode,insaneMode:!!player.insaneMode,infiniteJet:!!player.infiniteJet,frameDt:dt,requiredNextAir:plannedHop.successor.requiredNextAir,phase:++certificateSerial,
           successorGeometry:plannedHop.successor.successor?{lane:plannedHop.successor.successor.lane,height:plannedHop.successor.successor.height,requiredNextAir:plannedHop.successor.successor.requiredNextAir}:null,
           scheduledAfter:plannedHop.duration+plannedHop.groundWait,expectedState:{...plannedHop.endpoint},expectedCars:plannedHop.forecast}:null;
         jumpCooldown=plannedHop.duration+plannedHop.groundWait;jumps++;
@@ -1469,7 +1498,7 @@ const RoadsterHighwayDemoPlanner = (() => {
         if(standalone){renderWorkRemaining=null;renderStartedAt=renderDeadline=null;}
       }
     }
-    return { step, reset, beginRender, endRender, stats: () => ({ started, completed, jumps, multiLane, maxLaneSpan, targetLane: target, changing,certifiedNextLane:certifiedNext?.lane??null,certifiedNextHeight:certifiedNext?.height??null,certifiedHandoffs,invalidatedCertificates,releasedCertificates,backupHops,freshValidations,maxFreshValidations,retainedHints:proposalHints.length,backgroundSearches,backgroundWork,backgroundFrames,maxBackgroundWork,planningWorkLimit,planningBudgetMs,earlyJobs,earlyWork,earlyChecks,earlyInvalidations,earlyLandings,earlyFreshCChecks,lastEarlyFailure,lastEarlyPromotion,prefetchJobs,prefetchWork,prefetchBindings,prefetchInvalidations,lastPrefetchFailure,lastPrefetchBinding,renderTimeLimitHits,maxRenderElapsedAtPlannerExitMs,expiredPlans,emptyPlans,preparedJobs,preparedWork,preparedChecks,preparedStartChecks,preparedInvalidations,preparedNoReady,maxPreparedWork,preparedCommits,preparedDeferred,sourceStartChecks,sourceAnchorChecks,sourceInvalidations,cachedSourceCommits,lastSourceFailure,groundReanchors,groundWindows,groundWindowFailures,groundWindowWork,lastGroundReanchor,lastPreparedFailure,controlPhysicsSchema,finiteSearches,finiteNodes,finiteYields,finiteCapped,finiteGoals,finiteMemoHits,continuationProofs,continuedCertificates,lastPlanMismatch,expiryReasons }) };
+    return { step, reset, invalidateFuelMode, beginRender, endRender, stats: () => ({ fuelMode, fuelModeChanges, planEpoch, started, completed, jumps, multiLane, maxLaneSpan, targetLane: target, changing,certifiedNextLane:certifiedNext?.lane??null,certifiedNextHeight:certifiedNext?.height??null,certifiedHandoffs,invalidatedCertificates,releasedCertificates,backupHops,freshValidations,maxFreshValidations,retainedHints:proposalHints.length,backgroundSearches,backgroundWork,backgroundFrames,maxBackgroundWork,planningWorkLimit,planningBudgetMs,earlyJobs,earlyWork,earlyChecks,earlyInvalidations,earlyLandings,earlyFreshCChecks,lastEarlyFailure,lastEarlyPromotion,prefetchJobs,prefetchWork,prefetchBindings,prefetchInvalidations,lastPrefetchFailure,lastPrefetchBinding,renderTimeLimitHits,maxRenderElapsedAtPlannerExitMs,expiredPlans,emptyPlans,preparedJobs,preparedWork,preparedChecks,preparedStartChecks,preparedInvalidations,preparedNoReady,maxPreparedWork,preparedCommits,preparedDeferred,sourceStartChecks,sourceAnchorChecks,sourceInvalidations,cachedSourceCommits,lastSourceFailure,groundReanchors,groundWindows,groundWindowFailures,groundWindowWork,lastGroundReanchor,lastPreparedFailure,controlPhysicsSchema,finiteSearches,finiteNodes,finiteYields,finiteCapped,finiteGoals,finiteMemoHits,continuationProofs,continuedCertificates,lastPlanMismatch,expiryReasons }) };
   }
   return Object.freeze({ create, createClock, neutral, handling, sweptContact, activationHazard });
 })();
@@ -1489,8 +1518,8 @@ const RoadsterHighwayDemoPlanner = (() => {
     button.hidden = currentMap !== 'highway';
     button.setAttribute('aria-pressed', String(active));
     button.setAttribute('aria-busy', String(pending));
-    button.textContent = pending ? (zh ? '演示：准备中·取消' : 'Demo: preparing · cancel') : active ? (status === 'brake' ? (zh ? '演示：制动·退出' : 'Demo: braking · exit') : (zh ? '演示：开·退出' : 'Demo: on · exit')) : error === 'unsafe' ? (zh ? '演示：暂不能安全接管' : 'Demo: cannot safely take over') : error === 'ground' ? (zh ? '演示：先落地' : 'Demo: land first') : error ? (zh ? '演示：重试' : 'Demo: retry') : (zh ? '演示模式' : 'Demo drive');
-    const details = error === 'unsafe' ? (zh ? '暂不能安全接管：高速近端危险，规划尚未就绪。请保持手动驾驶，在有充分净空时重试。' : 'Cannot safely take over: a near-term hazard leaves no prepared plan at high speed. Keep manual control and retry with sufficient clearance.') : error === 'performance' ? (zh ? '演示已退出：渲染过慢。请降低画质后重新开启；当前已恢复手动驾驶。' : 'Demo stopped: rendering is too slow. Lower graphics quality and restart; manual driving is restored.') : error === 'ground' ? (zh ? '请先落地，再开启演示驾驶。' : 'Land before enabling demo drive.') : error ? (zh ? '旧挑战尚未确认结束，请重试演示。' : 'Previous challenge end is unconfirmed. Retry demo.') : active ? (status === 'brake' ? (zh ? '仅在预测不低于220 km/h时制动；否则优先变道或真实耗气跳跃。关闭后手动驾驶。' : 'Braking only above 220 km/h; otherwise pass or use a paid hop. Switch off for manual control.') : (zh ? '自动驾驶·目标220+ km/h·不计排行。连续变道、耗气跳跃；气量不足时受真实物理限制。' : 'Autodrive · target 220+ km/h · unranked. Continuous merges and paid hops; real tank limits apply.')) : (zh ? '第一关自动演示。真实用气与碰撞，无快捷键。' : 'Highway autodrive. Real gas and collisions. No shortcut.');
+    button.textContent = pending ? (zh ? '自动驾驶：准备中·取消' : 'Autopilot: preparing · cancel') : active ? (status === 'brake' ? (zh ? '自动驾驶：制动·退出' : 'Autopilot: braking · exit') : (zh ? '自动驾驶：开·退出' : 'Autopilot: on · exit')) : error === 'unsafe' ? (zh ? '自动驾驶：暂不能安全接管' : 'Autopilot: cannot safely take over') : error === 'ground' ? (zh ? '自动驾驶：先落地' : 'Autopilot: land first') : error ? (zh ? '自动驾驶：重试' : 'Autopilot: retry') : (zh ? '自动驾驶模式' : 'Autopilot');
+    const details = error === 'unsafe' ? (zh ? '暂不能安全接管：高速近端危险，规划尚未就绪。请保持手动驾驶，在有充分净空时重试。' : 'Cannot safely take over: a near-term hazard leaves no prepared plan at high speed. Keep manual control and retry with sufficient clearance.') : error === 'performance' ? (zh ? '自动驾驶已退出：渲染过慢。请降低画质后重新开启；当前已恢复手动驾驶。' : 'Autopilot stopped: rendering is too slow. Lower graphics quality and restart; manual driving is restored.') : error === 'ground' ? (zh ? '请先落地，再开启自动驾驶。' : 'Land before enabling autopilot.') : error ? (zh ? '旧挑战尚未确认结束，请重试自动驾驶。' : 'Previous challenge end is unconfirmed. Retry autopilot.') : active ? (status === 'brake' ? (zh ? '仅在预测不低于220 km/h时制动；否则优先变道或真实耗气跳跃。关闭后手动驾驶。' : 'Braking only above 220 km/h; otherwise pass or use a paid hop. Switch off for manual control.') : (zh ? '自动驾驶·目标220+ km/h·不计排行。连续变道、耗气跳跃；气量不足时受真实物理限制。' : 'Autopilot · target 220+ km/h · unranked. Continuous merges and paid hops; real tank limits apply.')) : (zh ? '第一关自动驾驶。真实用气与碰撞，无快捷键。' : 'Highway autopilot. Real gas and collisions. No shortcut.');
     button.title = details;
     button.setAttribute('aria-label', `${button.textContent}. ${details}`);
     button.dataset.status = status;
@@ -1550,6 +1579,6 @@ const RoadsterHighwayDemoPlanner = (() => {
   window.addEventListener('blur', stop);
   window.addEventListener('pagehide', stop);
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
-  window.RoadsterDemo = { jumpHeight: () => plannedJumpHeight, jumpGraceSeconds:()=>plannedJumpGrace, isRequestingJump: () => requestingJump, isActive: () => active, isBusy: busy, stop, toggle, step, advanceFrame, clockStats:()=>({...clock.stats(),lastFrame:lastClockFrame}), render, input: () => frameInput };
+  window.RoadsterDemo = { jumpHeight: () => plannedJumpHeight, jumpGraceSeconds:()=>plannedJumpGrace, isRequestingJump: () => requestingJump, isActive: () => active, isBusy: busy, stop, toggle, onFuelModeChange: () => planner.invalidateFuelMode(state), step, advanceFrame, clockStats:()=>({...clock.stats(),lastFrame:lastClockFrame}), render, input: () => frameInput };
   render();
 })();

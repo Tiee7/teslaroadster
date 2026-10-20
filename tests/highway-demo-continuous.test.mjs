@@ -26,14 +26,18 @@ for(const fps of [30,60,144,'irregular'])test(`two-lane escape holds one final t
 });
 
 test('full final-lane sweep rejects an intermediate hazard beyond the old short validation prefix',()=>{
- const h=simulation({x:12.5,speed:65,vz:-65},[car(1,-80,22)]);
+ // Keep the original obstacle and add the crossing witness for continuous
+ // acceleration: at1.05s the new path is atx=-7.444,zTravel=87.465m;
+ // z=-106.2 intersects that intermediate lane, still after the.75s prefix.
+ const h=simulation({x:12.5,speed:65,vz:-65},[car(1,-80,22),car(1,-106.2,22)]);
  const production=source('highway-demo.js').split('// UI/lifecycle adapter.')[0]
   .replace('const RoadsterHighwayDemoPlanner =','globalThis.finalSweepFactory =')
-  .replace(/const currentThreat\s*=[^;]+;/,m=>m+' if(!globalThis.finalSweepProbe)globalThis.finalSweepProbe={trajectory,collisionTime,safePath};');
+  .replace(/const currentThreat\s*=[^;]+;/,m=>m+' if(!globalThis.finalSweepProbe)globalThis.finalSweepProbe={trajectory,collisionTime,safePath,live};');
  vm.runInContext(production,h.context);h.context.finalSweepFactory.create(lanes,1.65).step(h.state,h.cars,1/60);
- const {trajectory,collisionTime,safePath}=h.context.finalSweepProbe;
+ const {trajectory,collisionTime,safePath,live}=h.context.finalSweepProbe;
  const path=trajectory([0],2.4,false),prefix=path.filter(p=>p.t<=.75);
  assert.ok(path.arrival>1.4);assert.equal(collisionTime(prefix),Infinity);
+ assert.equal(collisionTime(path,.35,2.03,.12,[live[0]]),Infinity,'the original obstacle is now truly passed before crossing; do not invent a collision');
  assert.ok(collisionTime(path)>.75&&collisionTime(path)<path.arrival,'intervening lane hit before final arrival');
  assert.equal(drain(safePath(0)),false,'clear final lane is insufficient');
 });

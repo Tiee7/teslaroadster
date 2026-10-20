@@ -100,7 +100,7 @@ function harness(map = 'highway') {
 }
 
 for (const code of ['Digit0', 'Numpad0']) for (const map of ['highway', 'city']) {
-  test(`${map} ${code}: empty/partial/full tank refills synchronously, both gauges show full, no sound or new notice`, async () => {
+  test(`${map} ${code}: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice`, async () => {
     const h = harness(map);
     for (const remaining of [0, 1.5, 6.4, 10]) {
       Object.assign(h.state, { airRemaining: remaining, airUsedContinuous: 10 - remaining, gasMassKg: 144 * remaining / 10,
@@ -117,7 +117,11 @@ for (const code of ['Digit0', 'Numpad0']) for (const map of ['highway', 'city'])
       assert.equal(h.elements['val-gas-mass'].textContent, '144.0 kg');
       assert.ok(h.draws.includes('10.0s / 10.0s')); assert.ok(h.draws.includes('GAS: 144.0 kg')); assert.ok(h.draws.includes('600L'));
       assert.ok(h.rects.some(rect => rect.x === 182 && rect.y === 82 && rect.height === 24 && rect.width === 308));
-      assert.equal(h.run(`Object.hasOwn(keys, '${code}')`), false, 'refill bypasses driving keys and audio initialization');
+      assert.equal(h.run(`Object.hasOwn(keys, '${code}')`), false, 'toggle bypasses driving keys and audio initialization');
+      assert.equal(h.state.infiniteJet, true);
+      await h.window.emit('keyup', { code }); await h.key(code);
+      assert.equal(h.state.infiniteJet, false); assert.equal(h.state.airRemaining, 10);
+      await h.window.emit('keyup', { code });
     }
     assert.deepEqual(h.audio, []); assert.deepEqual(h.effects, []); assert.deepEqual(h.calls, []);
     h.state.airRemaining = 4; await h.key(code, { repeat: true }); assert.equal(h.state.airRemaining, 4);
@@ -162,6 +166,7 @@ for (const code of ['Digit0', 'Numpad0']) {
     assert.equal(h.elements['ranked-submit'].hidden, true); assert.equal(h.elements['ranked-dialog'].open, false);
     await h.key(code, { repeat: true }); h.advance(60000); await h.click('ranked-submit');
     assert.equal(h.calls.filter(call => call.url === '/api/end').length, 1); assert.equal(h.calls.filter(call => call.url === '/api/score').length, 0);
+    await h.window.emit('keyup', { code }); await h.key(code); assert.equal(h.state.infiniteJet, false);
     const next = h.start(); await flush();
     assert.equal(h.phase(), 'starting'); assert.equal(h.calls.filter(call => call.url === '/api/run').length, 1);
     end.resolve(response({ ended: true, runId: 'run-1' })); await next;
@@ -178,6 +183,7 @@ for (const code of ['Digit0', 'Numpad0']) {
     const first = h.start(); await flush(); assert.equal(h.phase(), 'starting');
     h.state.airRemaining = 1; h.state.score = 333;
     await h.key(code); assert.equal(h.state.airRemaining, 10); assert.equal(h.phase(), 'idle'); assert.equal(h.elements['ranked-hud'].hidden, true);
+    await h.window.emit('keyup', { code }); await h.key(code); assert.equal(h.state.infiniteJet, false);
     const second = h.start(); await flush(); assert.equal(starts, 1);
     issuance.resolve(response({ runId: 'late-run', durationMs: 60000, scoreVersion: 'distance-v2' })); await first; await flush();
     assert.equal(h.phase(), 'starting'); assert.equal(starts, 1); assert.equal(h.state.score, 333, 'late run never applies its baseline');
@@ -204,6 +210,7 @@ test('silent cancellation network failures stay silent and retry the same ID bef
     await first; await flush();
     assert.equal(h.phase(), 'idle'); assert.equal(h.elements['ranked-error'].textContent, ''); assert.equal(h.elements['ranked-hud'].hidden, true);
     h.window.RoadsterRanked.render(); assert.equal(h.elements['ranked-error'].textContent, '');
+    await h.window.emit('keyup', { code: 'Digit0' }); await h.key();
     await h.start(); assert.equal(h.phase(), 'running');
     const endCalls = h.calls.filter(call => call.url === '/api/end');
     assert.equal(endCalls.length, 2); assert.equal(endCalls[0].options.body, endCalls[1].options.body);
@@ -228,8 +235,9 @@ test('completed and submitting snapshots never acquire later sandbox refill scor
   assert.equal(h.state.airRemaining, 10); assert.equal(h.phase(), 'complete');
   const saving = deferred(); h.network(async () => saving.promise);
   const submit = h.click('ranked-submit'); await flush(); assert.equal(h.phase(), 'submitting');
+  await h.window.emit('keyup', { code: 'Digit0' });
   h.state.airRemaining = 0; h.state.score = 999999; await h.key('Numpad0');
-  assert.equal(h.state.airRemaining, 10); assert.equal(h.phase(), 'submitting');
+  assert.equal(h.state.infiniteJet, false); assert.equal(h.state.airRemaining, 0); assert.equal(h.phase(), 'submitting');
   const scores = h.calls.filter(call => call.url === '/api/score');
   assert.equal(scores.length, 1); assert.equal(JSON.parse(scores[0].options.body).score, 100);
   assert.equal(h.calls.filter(call => call.url === '/api/end').length, 0, 'already-finished immutable result is unaffected');
@@ -242,4 +250,27 @@ test('hidden refill adds no help, badge, button, tooltip, translation or sound p
   const refill = section(hud, 'function refillAirTank()', "window.addEventListener('keydown'");
   assert.doesNotMatch(refill, /sound\.|showBanner|alert\(|confirm\(|applyTranslations|resetCar\(/);
   assert.doesNotMatch(section(hud, 'const keyBadgeMap =', 'function setKeyState('), /Digit0|Numpad0/);
+});
+
+for (const code of ['Digit0', 'Numpad0']) test(`${code}: held/duplicate keys switch once and unlimited mode cannot start ranked`, async () => {
+  const h = harness(); await h.key(code); assert.equal(h.state.infiniteJet, true);
+  await h.key(code); await h.key(code, { repeat: true });
+  assert.equal(h.state.infiniteJet, true);
+  assert.equal(h.elements['ranked-start'].disabled, true);
+  await h.start(); assert.equal(h.calls.filter(c => c.url === '/api/run').length, 0);
+  await h.window.emit('keyup', { code }); await h.key(code);
+  assert.equal(h.state.infiniteJet, false); assert.equal(h.elements['ranked-start'].disabled, false);
+  await h.start(); assert.equal(h.phase(), 'running');
+  assert.deepEqual(h.audio, []); assert.deepEqual(h.effects, []);
+});
+
+test('focus loss clears the shortcut latch but never creates a fresh toggle or resumes held propulsion', async () => {
+  const h = harness();
+  h.run(section(hud, "// Fix operational bug: clear all keys", '// Dynamic Camera Distance Zoom Controls'));
+  await h.key(); assert.equal(h.state.infiniteJet, true);
+  await h.window.emit('blur'); await h.key('Digit0', { repeat: true }); assert.equal(h.state.infiniteJet, true);
+  await h.key(); assert.equal(h.state.infiniteJet, false);
+  h.document.hidden = true; await h.document.emit('visibilitychange'); h.document.hidden = false;
+  await h.key(); assert.equal(h.state.infiniteJet, true);
+  assert.deepEqual(h.audio, []); assert.deepEqual(h.effects, []);
 });

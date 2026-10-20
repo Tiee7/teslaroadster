@@ -257,7 +257,7 @@ function integrated(cars, overrides = {}, map = 'highway') {
   assert.ok(start > 0 && end > start);
   const impacts = [];
   const state = { x: 30, y: 0, z: 0, vx: 0, vy: 0, vz: -22, speed: 22, carsCleared: 0, score: 0, isDestroyed: false, ...overrides };
-  const context = vm.createContext({ state, trafficCars: cars, currentMap: map, LANE_CENTERS: lanes, WORLD_SPEED_SCALE: scale,
+  const context = vm.createContext({ state, trafficCars: cars, currentMap: map, LANE_CENTERS: lanes, WORLD_SPEED_SCALE: scale, CITY_WORLD_SPEED_SCALE: 1,
     scrollingProps: [], CITY_HALF_BOUND: 1200, sound: { beep() {} }, triggerPhysicsCollision: (...args) => impacts.push(args) });
   vm.runInContext(`${source}\nfunction tick(dt) { const demoGroundSweep = null; const playerWorldZ = currentMap === 'highway' ? 0 : state.z; const isAirborne = state.y > 0.5; ${physics.slice(start, end)} }`, context);
   return { state, impacts, step: dt => context.tick(dt) };
@@ -272,7 +272,8 @@ test('actual runtime traffic block moves once, preserves score/destruction guard
   const dead = integrated([car(2, 64.9, 20)], { vz: -60, isDestroyed: true }); dead.step(0.05);
   assert.equal(dead.state.carsCleared, 0); assert.equal(dead.state.score, 0);
   const city = car(2, 20, 22, { mode: 'city', vx: 12, vz: -7 }); const cityRun = integrated([city], {}, 'city');
-  cityRun.step(0.05); close(city.mesh.position.x, lanes[2] + 12 * scale * 0.05); close(city.mesh.position.z, 20 - 7 * scale * 0.05);
+  city.mesh.userData.wheels = [{ rotation: { x: 0 } }];
+  cityRun.step(0.05); close(city.mesh.userData.wheels[0].rotation.x, -22 / 0.33 * 0.05); close(city.mesh.position.x, lanes[2] + 12 * 0.05); close(city.mesh.position.z, 20 - 7 * 0.05);
   assert.equal(city.desiredSpeed, 22); assert.equal(city.highwayPassedThisFrame, undefined);
 });
 

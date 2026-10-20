@@ -25,7 +25,7 @@
       done: 'Time! Score ready to submit', cancelled: 'Challenge cancelled',
       reset: 'Car reset', map: 'Map changed', physics: 'Physics mode changed', weather: 'Weather changed',
       traffic: 'Traffic changed', plaid: 'Plaid setting changed', stabilizer: 'Stabilizer changed',
-      demo: 'Demo drive enabled', demoActive: 'Exit demo drive before starting a manual challenge.',
+      demo: 'Autopilot enabled', demoActive: 'Exit autopilot before starting a manual challenge.',
       hidden: 'Tab or window left', closed: 'Start cancelled', invalid: 'Challenge settings changed',
       invalidName: 'Use 1–20 Unicode letters/numbers, spaces, _ or -, starting with a letter/number. Choose a public nickname.',
       startError: 'Could not start the challenge. No score was submitted. Try again when connected.',
@@ -57,7 +57,7 @@
       done: '时间到！可提交成绩', cancelled: '挑战已取消',
       reset: '车辆已重置', map: '地图已更改', physics: '物理模式已更改', weather: '天气已更改',
       traffic: '车流已更改', plaid: '狂暴设置已更改', stabilizer: '自动回正已更改',
-      demo: '已开启演示驾驶', demoActive: '请先退出演示，再开始手动挑战。',
+      demo: '已开启自动驾驶', demoActive: '请先退出自动驾驶，再开始手动挑战。',
       hidden: '已离开标签页或窗口', closed: '已取消启动', invalid: '挑战设置已更改',
       invalidName: '请使用 1–20 个 Unicode 文字、数字、空格、_ 或 -，以文字或数字开头，并选择适合公开的昵称。',
       startError: '无法启动挑战，尚未提交分数。联网后可重试。',
@@ -159,7 +159,7 @@
     lastSecond = seconds;
     text('ranked-start', phase === 'starting' ? c.starting : c.start);
     const demoBusy = Boolean(window.RoadsterDemo?.isBusy());
-    $('ranked-start').disabled = isInFlight() || isSaved() || demoBusy;
+    $('ranked-start').disabled = isInFlight() || isSaved() || demoBusy || !!state.infiniteJet;
     if (demoBusy) text('ranked-settings-hint', c.demoActive);
     $('ranked-nickname').disabled = isInFlight() || isSaved();
     text('ranked-name-lock', isInFlight() || isSaved() ? c.lockedName : '');
@@ -209,7 +209,7 @@
     render();
   }
   function compatible() {
-    return !window.RoadsterDemo?.isBusy() && run && category() === run.category && trafficLevelIndex === 1 && weatherIndex === 0 && !state.insaneMode && state.autoStabilizer;
+    return !state.infiniteJet && !window.RoadsterDemo?.isBusy() && run && category() === run.category && trafficLevelIndex === 1 && weatherIndex === 0 && !state.insaneMode && state.autoStabilizer;
   }
   function tick(now = performance.now()) {
     if (phase !== 'running') return;
@@ -285,7 +285,7 @@
     }
   }
   async function start() {
-    if (window.RoadsterDemo?.isBusy()) return;
+    if (state.infiniteJet || window.RoadsterDemo?.isBusy()) return;
     if (isInFlight() || isSaved()) return;
     const enteredName = $('ranked-nickname').value;
     const nickname = enteredName.normalize('NFKC').trim();

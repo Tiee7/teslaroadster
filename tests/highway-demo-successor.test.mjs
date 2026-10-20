@@ -10,7 +10,7 @@ function prepared(state={},cars=fixture.actualCars){
  const instrumented=source.replace('const RoadsterHighwayDemoPlanner =','globalThis.certificateFactory =').replace(anchor,`${anchor}
       if(globalThis.__certificateFixture){const f=globalThis.__certificateFixture,p=f.privateState;target=p.target;changing=p.changing;dwell=p.dwell;jumpCooldown=p.jumpCooldown;charging=p.charging;decisionCooldown=p.decisionCooldown;refillTarget=p.refillTarget;landingLane=p.landingLane;
         for(let i=0;i<cars.length;i++)if(typeof p.previousSpeeds[i]==='number')previous.set(cars[i],p.previousSpeeds[i]);
-        certifiedNext={lane:f.expectedB.lane,height:f.expectedB.height,physicsMode:player.physicsMode,insaneMode:!!player.insaneMode,frameDt:f.dt};globalThis.__certificateFixture=null;}`);
+        certifiedNext={lane:f.expectedB.lane,height:f.expectedB.height,physicsMode:player.physicsMode,insaneMode:!!player.insaneMode,infiniteJet:!!player.infiniteJet,frameDt:f.dt};globalThis.__certificateFixture=null;}`);
  vm.runInContext(instrumented,h.context);h.context.__certificateFixture=clone(fixture);
  const p=h.context.certificateFactory.create(lanes,1.65);h.context.demoPlanner.step=p.step;h.stats=p.stats;h.reset=p.reset;
  return h;

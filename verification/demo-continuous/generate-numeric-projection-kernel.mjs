@@ -13,16 +13,16 @@ import { isProxy } from 'node:util/types';
 
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const EXPECTED_SOURCE_HASHES = Object.freeze({
-  'src/config.js': '673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f',
-  'src/physics-main.js': '548a8bb80f984ddafa5da17a75e71d7f703a77890af90c88fba9c40924053df2',
-  'src/highway-demo.js': '3cd0dca79b78ae6a7a85bd92443a2340cd9273f02f15e993af5489e9353a466a',
+  'src/config.js': 'e266a54510bd451a35d5a75fe3d330cc40204bacd681d23cfbe76a693eaf4d3f',
+  'src/physics-main.js': 'ca0ce77283ac6fcedbc0b20db182778d3935ebe09f9f4cac4f8f9ba29f0aec13',
+  'src/highway-demo.js': '30269219669489f3f1c228fc305eacd1032238bc1bcb0100a2bd9ebf6f06df43',
   'src/highway-traffic.js': 'faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108',
-  'src/ui-hud.js': '60a63ba8dece14c8efec292054dbe1aa0554a56f5618afeb9f8db9e475440e9d',
+  'src/ui-hud.js': 'eda76a2f67268dacbcae89a299a9ef00af241648909a8a5e1f8b349e38079b7b',
   'src/audio.js': '5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee',
   'tests/helpers/demo-harness.mjs': '69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff',
   'tests/helpers/vendor/three-r128-MathUtils.mjs': '09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61'
 });
-export const CONTROL_PHYSICS_KEYS = Object.freeze(('x y z vx vy vz speed maxSpeed airMaxSpeed physicsMode insaneMode gasMassKg airStrafeSpeed steerInput steerAngle roll pitch yaw vRoll vPitch vYaw attitudeIdleSeconds accumulatedRoll lateralG longitudinalG prevSpeed airRemaining airUsedContinuous isFreefalling isAutoDescending8s isJumping6m isAltitudeHold isAutoLandingSave wasAirborne jumpInertiaSeconds jumpInertiaGraceSeconds driftAngle isDrifting wasHandbraking autoStabilizer isDestroyed hullIntegrity impactCooldown jumpStartY jumpTargetY holdTargetY hudMode hudMinimal').split(' '));
+export const CONTROL_PHYSICS_KEYS = Object.freeze(('x y z vx vy vz speed maxSpeed airMaxSpeed physicsMode insaneMode gasMassKg airStrafeSpeed steerInput steerAngle roll pitch yaw vRoll vPitch vYaw attitudeIdleSeconds accumulatedRoll lateralG longitudinalG prevSpeed airRemaining airUsedContinuous infiniteJet isFreefalling isAutoDescending8s isJumping6m isAltitudeHold isAutoLandingSave wasAirborne jumpInertiaSeconds jumpInertiaGraceSeconds driftAngle isDrifting wasHandbraking autoStabilizer isDestroyed hullIntegrity impactCooldown jumpStartY jumpTargetY holdTargetY hudMode hudMinimal').split(' '));
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 
 /** Also a negative-test entry: supplied text is verified, never executed. */
@@ -124,7 +124,7 @@ function instantiateProjectionKernel({ repo = DEFAULT_REPO, programSource, manif
     if (state.isDestroyed !== false || state.isFreefalling !== false || state.impactCooldown !== 0 || state.isAltitudeHold !== false)
       stop('unsupported-destruction-freefall-cooldown-or-hold');
     const nullable = new Set(['jumpInertiaSeconds', 'jumpInertiaGraceSeconds', 'jumpStartY']);
-    const flags = new Set(['physicsMode', 'insaneMode', 'isFreefalling', 'isAutoDescending8s', 'isJumping6m',
+    const flags = new Set(['physicsMode', 'insaneMode', 'infiniteJet', 'isFreefalling', 'isAutoDescending8s', 'isJumping6m',
       'isAltitudeHold', 'isAutoLandingSave', 'wasAirborne', 'isDrifting', 'wasHandbraking',
       'autoStabilizer', 'isDestroyed', 'hudMode', 'hudMinimal']);
     for (const key of flags) {

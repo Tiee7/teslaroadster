@@ -1,0 +1,12 @@
+{
+  "oldFixtureZ": -80,
+  "newPhysicalCrossing": {
+    "t": 1.0500000000000003,
+    "x": -7.444187825244562,
+    "metres": 87.46511059710978,
+    "speed": 102.77777777777777
+  },
+  "derivedHazardZ": -106.20243248523113,
+  "oldCollisionTime": "Infinity",
+  "arrival": 1.5749999999999984
+}

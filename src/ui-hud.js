@@ -74,6 +74,7 @@ function toggleHudMode() {
 // 8. INPUT HANDLERS, MAP SELECTION & UI TRANSLATIONS
 // =========================================================================
 const keys = {};
+const infiniteJetShortcutDown = new Set();
 const keyBadgeMap = {
   KeyW: 'key-w',
   Semicolon: 'key-semi',
@@ -129,6 +130,13 @@ function refillAirTank() {
   }
 }
 
+function toggleInfiniteJet() {
+  if (!state.infiniteJet) refillAirTank();
+  state.infiniteJet = !state.infiniteJet;
+  window.RoadsterDemo?.onFuelModeChange?.();
+  window.RoadsterRanked?.render();
+}
+
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
   if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen() || window.RoadsterStart?.isPaintOpen()) return;
@@ -145,13 +153,16 @@ window.addEventListener('keydown', (e) => {
   }
   // Focused native activation is an interface action, not a driving hotkey.
   if (e.code === 'Space' && e.target === document.getElementById('btn-highway-demo')) return;
-  if (globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN', 'Digit0', 'Numpad0'].includes(e.code)) { if (!e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault(); return; }
+  if (globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN'].includes(e.code)) { if (!e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault(); return; }
   if (e.code === 'Digit0' || e.code === 'Numpad0') {
     const hasOverlay = ['modal-help', 'modal-destroyed'].some((id) => {
       const overlay = document.getElementById(id);
       return overlay && !overlay.classList.contains('hidden');
     });
-    if (!e.repeat && !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey && !document.hidden && !state.isDestroyed && !hasOverlay) refillAirTank();
+    if (!e.repeat && !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey && !document.hidden && !state.isDestroyed && !hasOverlay) {
+      if (infiniteJetShortcutDown.size === 0) toggleInfiniteJet();
+      infiniteJetShortcutDown.add(e.code);
+    }
     return;
   }
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
@@ -230,6 +241,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('keyup', (e) => {
+  if (e.code === 'Digit0' || e.code === 'Numpad0') { infiniteJetShortcutDown.delete(e.code); return; }
   setKeyState(e.code, false);
 });
 
@@ -656,6 +668,7 @@ function launchSelectedMap() {
 document.getElementById('btn-launch-selected-map').addEventListener('click', launchSelectedMap);
 
 function clearAllInputKeys() {
+  infiniteJetShortcutDown.clear();
   window.RoadsterTouch?.clear();
   for (const k in keys) {
     if (keys[k]) setKeyState(k, false);
@@ -1177,12 +1190,14 @@ function updateSpeedAndWeatherOverlay(dt, mph, isThrusting, isSupersonic) {
 
 // Fix operational bug: clear all keys when window loses focus (e.g. alt-tab) to avoid stuck throttle/thruster
 window.addEventListener('blur', () => {
+  infiniteJetShortcutDown.clear();
   for (const k in keys) {
     if (keys[k]) setKeyState(k, false);
   }
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
+    infiniteJetShortcutDown.clear();
     for (const k in keys) {
       if (keys[k]) setKeyState(k, false);
     }

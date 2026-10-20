@@ -203,7 +203,7 @@ This is a near-Earth, ideal ballistic vertical model; the package has no measure
 
 ## Inertial jump and flight / 起跳与空中惯性
 
-The O jump retains the complete pre-launch horizontal velocity vector on both maps, including backward travel and drifting. Its vertical impulse immediately switches horizontal motion out of tire-grip control. Unpowered air coasting uses the existing ground aerodynamic term, `dv/dt = -0.00012 v²`, without rolling resistance or an artificial stall brake. The exact drag solution preserves direction and produces matching speeds at different frame rates; merely pitching/yawing/banking an unpowered vehicle does not turn its travel vector. Powered rear-jet limits constrain the additional impulse instead of clipping existing momentum. City ground and air movement both use the existing `WORLD_SPEED_SCALE = 1.65`, eliminating the takeoff-only optical-flow slowdown. Mechanical/retro braking and actual lateral RCS remain available.
+The O jump retains the complete pre-launch horizontal velocity vector on both maps, including backward travel and drifting. Its vertical impulse immediately switches horizontal motion out of tire-grip control. Unpowered air coasting uses the existing ground aerodynamic term, `dv/dt = -0.00012 v²`, without rolling resistance or an artificial stall brake. The exact drag solution preserves direction and produces matching speeds at different frame rates; merely pitching/yawing/banking an unpowered vehicle does not turn its travel vector. Powered rear-jet limits constrain the additional impulse instead of clipping existing momentum. City ground and air movement both use `CITY_WORLD_SPEED_SCALE = 1.0`: one world metre per physical metre. The highway retains its existing arcade traversal calibration. Mechanical/retro braking and actual lateral RCS remain available.
 
 
 ## Final crash score and new-round reset / 撞毁成绩与新局清零
@@ -300,3 +300,16 @@ Map 01 adds a small, opt-in Demo drive / 演示模式 switch with no shortcut. I
 all-mode, high-density 60-second collision-free acceptance. The sound/jet release
 does not claim that driving target is complete; failed isolated driving
 prototypes are not promoted into the game.
+
+
+## City metre scale and continuous autopilot jets / 城市米制与自动驾驶连续喷气
+
+City player motion, NPC traversal and wheel rotation now use the same metre scale as buildings and navigation. At200 km/h a300 m block takes5.4 simulation seconds, not3.27 seconds. Ground, takeoff and airborne horizontal paths share this scale; Earth gravity, acceleration, tyre behaviour and the highway map remain separate. The manual frame loop still caps an individual physics step at50 ms; severe low frame rates are not claimed real-time accurate.
+
+The highway switch is now labelled **Autopilot / 自动驾驶** throughout its button states and ranking copy. It has no60-second auto-off timer: that duration belongs only to the voluntary ranked challenge. Manual exit, menus/reset/map changes, destruction, loss of focus/visibility and sustained rendering overload can still return control to the player. It is a game stunt controller, not a guarantee of collision-free driving.
+
+Safe ground acceleration keeps the rear jet requested even at its physical speed limit, removing the former250/370-threshold on/off chatter. A finite following envelope feathers jet power continuously; slow traffic requests a lane change or funded hop without continuing ordinary acceleration into the blockage. The existing220 km/h floor, zero-start entry acceleration, finite planning budget, genuine collisions and paid hop preparation remain in force. Committed jump preparation uses its actual controls; later uncertainty is bounded by time-integrated maximum acceleration, not an instantaneous jump to the370 limit. Finite gas still needs its real reserve/recharge pauses, and a committed preparation can retain its single paid floor-protection pulse; these are not hidden free fuel.
+
+The silent session-only infinite-air sandbox flag applies to every shared thruster and can change while autopilot is active or preparing. Enabling refills the shared tank; disabling preserves its current level and restores normal consumption. Both directions discard all future fuel-dependent proofs without changing the current pose or airborne landing lane. All three approximate predictions and the exact static/Node numerical mirrors use the same flag, including retro impulse and full-tank mass. Infinite mode cancels/blocks ranked runs; old immutable completed results remain separate. No new banner, speech, sound, key badge or settings prompt is added. Reset/map changes do not silently flip the flag; page reload starts finite again.
+
+Fresh checks and the explicit numerical-epoch proof are in `verification/controls-city-scale/`. They do not constitute WebGL/listening/FPS acceptance or all-mode60-second collision-free acceptance.
