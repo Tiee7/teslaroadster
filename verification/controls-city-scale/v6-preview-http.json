@@ -1,0 +1,14 @@
+{
+  "status": 200,
+  "success": true,
+  "rawBodyCharacters": 4701116,
+  "applicationCharacters": 4700953,
+  "exactRawFrozenHtml": false,
+  "applicationHtmlExactAfterPlatformInjectionRemoval": true,
+  "removedVercelLiveFeedbackTags": 1,
+  "removedCharacters": 163,
+  "applicationHtmlSha256": "652d87445d4c1ede2cd636af03c2107611e2b0f4945d7d7230121e1f3717bc56",
+  "deploymentId": "dpl_B46SGwLnsjW1VGwLYJUYedkLSWLw",
+  "commit": "89ee4f2612a8809ca9e226d5e9e4ecd656003ed0",
+  "boundary": "HTTP identity only; Vercel preview toolbar injection removed. No WebGL/hearing/FPS acceptance."
+}

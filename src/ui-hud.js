@@ -74,6 +74,7 @@ function toggleHudMode() {
 // 8. INPUT HANDLERS, MAP SELECTION & UI TRANSLATIONS
 // =========================================================================
 const keys = {};
+const infiniteJetShortcutDown = new Set();
 const keyBadgeMap = {
   KeyW: 'key-w',
   Semicolon: 'key-semi',
@@ -102,15 +103,35 @@ const keyBadgeMap = {
   KeyC: 'key-c',
   KeyT: 'key-t'
 };
+const autopilotKeyBadges = new Set();
+const autopilotControlBadges = ['key-w','key-semi','key-h','key-s','key-u','key-a','key-d',
+  'key-space','key-shift','key-q','key-e','key-left','key-right','key-up','key-down','key-o'];
+function refreshKeyBadge(badgeId) {
+  const held = Object.keys(keyBadgeMap).some(code => keyBadgeMap[code] === badgeId && keys[code]);
+  document.getElementById(badgeId)?.classList.toggle('active', held || autopilotKeyBadges.has(badgeId));
+}
+// Display only. Never write real keys, synthesize input, charge gas or take ownership.
+function updateAutopilotKeyBadges(input = null, jumping = false) {
+  autopilotKeyBadges.clear();
+  const value = name => Number.isFinite(input?.[name]) ? input[name] : 0;
+  for (const [name,badge] of [['throttle','key-w'],['boost','key-semi'],['brake','key-h'],
+    ['reverse','key-s'],['handbrake','key-u'],['lift','key-space'],['descend','key-shift']]) {
+    if (value(name) > 0) autopilotKeyBadges.add(badge);
+  }
+  for (const [name,negative,positive] of [['steer','key-a','key-d'],['strafe','key-q','key-e'],
+    ['roll','key-right','key-left'],['pitch','key-down','key-up']]) {
+    if (value(name) < 0) autopilotKeyBadges.add(negative);
+    if (value(name) > 0) autopilotKeyBadges.add(positive);
+  }
+  if (jumping) autopilotKeyBadges.add('key-o');
+  autopilotControlBadges.forEach(refreshKeyBadge);
+}
 
 function setKeyState(code, isDown) {
   if (isDown && globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN'].includes(code)) return;
   keys[code] = isDown;
   const badgeId = keyBadgeMap[code];
-  if (badgeId) {
-    const el = document.getElementById(badgeId);
-    if (el) el.classList.toggle('active', isDown);
-  }
+  if (badgeId) refreshKeyBadge(badgeId);
   if (isDown) sound.init();
 }
 
@@ -129,6 +150,13 @@ function refillAirTank() {
   }
 }
 
+function toggleInfiniteJet() {
+  if (!state.infiniteJet) refillAirTank();
+  state.infiniteJet = !state.infiniteJet;
+  window.RoadsterDemo?.onFuelModeChange?.();
+  window.RoadsterRanked?.render();
+}
+
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
   if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen() || window.RoadsterStart?.isPaintOpen()) return;
@@ -145,13 +173,16 @@ window.addEventListener('keydown', (e) => {
   }
   // Focused native activation is an interface action, not a driving hotkey.
   if (e.code === 'Space' && e.target === document.getElementById('btn-highway-demo')) return;
-  if (globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN', 'Digit0', 'Numpad0'].includes(e.code)) { if (!e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault(); return; }
+  if (globalThis.window?.RoadsterDemo?.isBusy() && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyH', 'KeyU', 'Space', 'Semicolon', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'KeyI', 'KeyK', 'KeyJ', 'KeyL', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyO', 'KeyN'].includes(e.code)) { if (!e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault(); return; }
   if (e.code === 'Digit0' || e.code === 'Numpad0') {
     const hasOverlay = ['modal-help', 'modal-destroyed'].some((id) => {
       const overlay = document.getElementById(id);
       return overlay && !overlay.classList.contains('hidden');
     });
-    if (!e.repeat && !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey && !document.hidden && !state.isDestroyed && !hasOverlay) refillAirTank();
+    if (!e.repeat && !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey && !document.hidden && !state.isDestroyed && !hasOverlay) {
+      if (infiniteJetShortcutDown.size === 0) toggleInfiniteJet();
+      infiniteJetShortcutDown.add(e.code);
+    }
     return;
   }
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
@@ -230,6 +261,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('keyup', (e) => {
+  if (e.code === 'Digit0' || e.code === 'Numpad0') { infiniteJetShortcutDown.delete(e.code); return; }
   setKeyState(e.code, false);
 });
 
@@ -433,6 +465,7 @@ function resetCar() {
   state.wasAirborne = false;
   state.jumpInertiaSeconds = null;
   state.jumpInertiaGraceSeconds = null;
+  state.groundHopActive = false;
   state.yaw = 0.0;
   state.vRoll = 0.0;
   state.vPitch = 0.0;
@@ -656,6 +689,8 @@ function launchSelectedMap() {
 document.getElementById('btn-launch-selected-map').addEventListener('click', launchSelectedMap);
 
 function clearAllInputKeys() {
+  updateAutopilotKeyBadges();
+  infiniteJetShortcutDown.clear();
   window.RoadsterTouch?.clear();
   for (const k in keys) {
     if (keys[k]) setKeyState(k, false);
@@ -898,6 +933,7 @@ function triggerJump6m() {
   // Only a fresh ground/roof takeoff gets launch grace. Midair O taps cannot
   // restart it and disable normal flight handling.
   if (currentAgl <= 0.15) {
+    state.groundHopActive = true;
     state.jumpInertiaSeconds = 0;
     state.jumpInertiaGraceSeconds = globalThis.window?.RoadsterDemo?.isRequestingJump() ? (window.RoadsterDemo.jumpGraceSeconds?.() ?? 0.95) : null;
   }
@@ -1177,12 +1213,16 @@ function updateSpeedAndWeatherOverlay(dt, mph, isThrusting, isSupersonic) {
 
 // Fix operational bug: clear all keys when window loses focus (e.g. alt-tab) to avoid stuck throttle/thruster
 window.addEventListener('blur', () => {
+  updateAutopilotKeyBadges();
+  infiniteJetShortcutDown.clear();
   for (const k in keys) {
     if (keys[k]) setKeyState(k, false);
   }
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
+    updateAutopilotKeyBadges();
+    infiniteJetShortcutDown.clear();
     for (const k in keys) {
       if (keys[k]) setKeyState(k, false);
     }

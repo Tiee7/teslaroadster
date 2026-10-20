@@ -1,0 +1,13 @@
+{
+  "status": 200,
+  "success": true,
+  "rawBodyCharacters": 4695287,
+  "exactRawFrozenHtml": false,
+  "applicationHtmlExactAfterPlatformInjectionRemoval": true,
+  "removedVercelLiveFeedbackTags": 1,
+  "removedCharacters": 163,
+  "applicationHtmlSha256": "3d0662deb0695bf5234bee5929dba912771388ffff083284917df399c1e64dd0",
+  "deploymentId": "dpl_8JrueH7fhb1FfLxz1DVMtiEGzjoZ",
+  "commit": "e723029271e1e35306f9f334af3768fa9f2f4a89",
+  "boundary": "HTTP application identity only; Vercel preview adds one feedback toolbar script. No WebGL/hearing/FPS acceptance."
+}

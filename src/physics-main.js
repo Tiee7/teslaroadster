@@ -627,6 +627,7 @@ function updateSimulation(dt) {
   // O has already supplied vertical launch velocity, even before this frame's
   // altitude integration. Do not run another tire-grip/drive frame on takeoff.
   const isAirborne = (state.y - groundElevation) > 0.15 || (state.isJumping6m && state.vy > 0);
+  if (!isAirborne) state.groundHopActive = false;
   const { rawRollInput, rawPitchInput, rawYawInput, hasManualAttitudeInput } = readAttitudeInput(isAirborne);
   const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
 
@@ -634,10 +635,13 @@ function updateSimulation(dt) {
   let airConsumedThisFrame = 0;
   function consumeAirTank(amount, airborneNow) {
     if (amount <= 0 || state.isFreefalling || state.airRemaining <= 0) return false;
+    // Infinite mode changes the shared tank, not thrust strength or input.
+    if (state.infiniteJet) { airConsumedThisFrame += amount; return true; }
     const airBefore = state.airRemaining;
     state.airRemaining = Math.max(0.0, state.airRemaining - amount);
     state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
     if (state.airRemaining <= 0.001) {
+      const flightAlertEligible = airborneNow && isAirborne && !state.groundHopActive && !state.isJumping6m && !Number.isFinite(state.jumpInertiaSeconds);
       state.airRemaining = 0.0;
       state.airUsedContinuous = MAX_AIR_SECONDS;
       state.isFreefalling = true;
@@ -645,8 +649,12 @@ function updateSimulation(dt) {
       state.isAltitudeHold = false;
       state.isJumping6m = false;
       // Losing thrust changes acceleration, never the current velocity.
-      showBanner('freefall', 3.5);
-      sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
+      // A depleted road tank (including the complete O-hop) is not flight.
+      // This presentation-only marker never changes gas, force or ballistics.
+      if (flightAlertEligible) {
+        showBanner('freefall', 3.5);
+        sound.speakAlert('freefall', 'Critical alert: compressed air depleted. Immediate freefall!', '严重警报：冷气推进剂耗尽，进入自由落体！');
+      }
       airConsumedThisFrame += airBefore - state.airRemaining;
       return false;
     } else if (state.airUsedContinuous >= AUTO_DESCENT_USED_SECONDS && airborneNow) {
@@ -664,6 +672,9 @@ function updateSimulation(dt) {
 
   // Requirement 4: ';' (Semicolon) triggers Rear Cold-Gas Rocket Boost in Realistic (Standard) mode!
   const driveInput = readDriveInput();
+  // Deliberate lift/hold leaves a road hop for actual flight; W held while
+  // driving over a hop alone must not accidentally arm the flight alarm.
+  if (isAirborne && (driveInput.lift > 0 || state.isAltitudeHold)) state.groundHopActive = false;
   const isRearBoostKey = driveInput.boost > 0;
   const isThrottleW = driveInput.throttle > 0;
   const isAccelerating = isThrottleW || (isRearBoostKey && canUseRCS);
@@ -745,10 +756,11 @@ function updateSimulation(dt) {
   if (retroBrakeDemand > 0 && !state.isFreefalling && state.airRemaining > 0) {
     const requestedAir = RETRO_BRAKE_BURN_PER_SECOND * retroBrakeDemand * dt;
     const airBefore = state.airRemaining;
-    consumeAirTank(Math.min(airBefore, requestedAir), isAirborne);
+    const consumedBefore = airConsumedThisFrame;
+    consumeAirTank(state.infiniteJet ? requestedAir : Math.min(airBefore, requestedAir), isAirborne);
     // The final fraction of a nearly empty tank supplies only its proportional
     // impulse, even when consumeAirTank returns false on depletion.
-    retroImpulseSeconds = Math.min(requestedAir, airBefore - state.airRemaining) / RETRO_BRAKE_BURN_PER_SECOND;
+    retroImpulseSeconds = Math.min(requestedAir, airConsumedThisFrame - consumedBefore) / RETRO_BRAKE_BURN_PER_SECOND;
   }
   const isRetroBrakeFiring = retroImpulseSeconds > 0;
   const retroBrakeAccel = RETRO_BRAKE_FORCE_N / currentVehicleMass;
@@ -1096,8 +1108,8 @@ function updateSimulation(dt) {
       }
     }
 
-    // Calibrate world traversal displacement to match venue scale (2400m city / 300m blocks)
-    const moveScale = WORLD_SPEED_SCALE;
+    // A 300 m city block is traversed in 300 / velocity seconds, on ground or in air.
+    const moveScale = CITY_WORLD_SPEED_SCALE;
     state.x += state.vx * moveScale * dt;
     state.z += state.vz * moveScale * dt;
 
@@ -1549,7 +1561,7 @@ function updateSimulation(dt) {
   rearNozzlesGimbalGroup.rotation.y += (targetGimbalYaw - rearNozzlesGimbalGroup.rotation.y) * 12 * dt;
 
   // True kinematic wheel rotation matching calibrated world speed (v / wheelRadius)
-  const wheelSpinSpeed = (state.speed * WORLD_SPEED_SCALE) / 0.335;
+  const wheelSpinSpeed = (state.speed * (currentMap === 'city' ? CITY_WORLD_SPEED_SCALE : WORLD_SPEED_SCALE)) / 0.335;
   wheels.forEach(w => { w.rotation.x -= wheelSpinSpeed * dt; });
 
   const isCockpitFpv = (cameraModeIndex === 3);
@@ -1608,7 +1620,7 @@ function updateSimulation(dt) {
 
   trafficCars.forEach((car) => {
     if (car.mesh.userData.wheels) {
-      const wRot = (car.speed * WORLD_SPEED_SCALE / 0.33) * dt;
+      const wRot = (car.speed * (currentMap === 'city' ? CITY_WORLD_SPEED_SCALE : WORLD_SPEED_SCALE) / 0.33) * dt;
       car.mesh.userData.wheels.forEach((w) => { w.rotation.x -= wRot; });
     }
 
@@ -1648,8 +1660,8 @@ function updateSimulation(dt) {
         }
       }
     } else {
-      car.mesh.position.x += car.vx * WORLD_SPEED_SCALE * dt;
-      car.mesh.position.z += car.vz * WORLD_SPEED_SCALE * dt;
+      car.mesh.position.x += car.vx * CITY_WORLD_SPEED_SCALE * dt;
+      car.mesh.position.z += car.vz * CITY_WORLD_SPEED_SCALE * dt;
       if (car.mesh.position.x > CITY_HALF_BOUND - 10) car.mesh.position.x = -CITY_HALF_BOUND + 10;
       if (car.mesh.position.x < -CITY_HALF_BOUND + 10) car.mesh.position.x = CITY_HALF_BOUND - 10;
       if (car.mesh.position.z > CITY_HALF_BOUND - 10) car.mesh.position.z = -CITY_HALF_BOUND + 10;
@@ -1850,7 +1862,7 @@ function updateSimulation(dt) {
   } else if (mph < 215) {
     state.wasSupersonic = false;
   }
-  updateSonicCondensation(dt, crossedSonicThreshold, isCockpitFpv);
+  updateSonicCondensation(dt, crossedSonicThreshold, isCockpitFpv, isSupersonic);
 
   // Requirement 5: Left/right ground steering sound removed completely
   tireScreechIntensity = 0.0;
@@ -2112,7 +2124,7 @@ function updateSimulation(dt) {
     barFill.className = 'h-full rounded-md bg-rose-600 transition-all duration-75';
     tankBadge.textContent = t.badgeDepleted;
     tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300 border border-rose-400';
-    modeBadge.textContent = t.modeFreefall;
+    modeBadge.textContent = isAirborne && !state.groundHopActive ? t.modeFreefall : isAirborne ? t.modeHover : t.modeGround;
     modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300';
   } else if (state.isAutoDescending8s) {
     barFill.className = 'h-full rounded-md bg-amber-400 transition-all duration-75';

@@ -14,7 +14,7 @@ export function candidateHarness(overrides={},cars=[],options={}){
  let source=original;
  const replace=(a,b)=>{assert.equal(source.split(a).length,2,'candidate unit seam: '+a);source=source.replace(a,b);};
  replace('const RoadsterHighwayDemoPlanner =','globalThis.candidateUnitFactory =');
- replace('const preparedSource=consumePreparedSource(player,cars,dt,immediate);','globalThis.__candidateUnitApi=admissionApi;const preparedSource=consumePreparedSource(player,cars,dt,immediate);');
+ replace('const preparedSource=consumePreparedSource(player,cars,dt,immediate);','globalThis.__candidateUnitApi={...admissionApi,controlsFor,boostFor,brakeResult,trajectory};const preparedSource=consumePreparedSource(player,cars,dt,immediate);');
  replace('          const motion=playerMotion(start,profile,lane,prepare,nextRequiredAir);','          const motion=playerMotion(start,profile,lane,prepare,nextRequiredAir);if(start===player)globalThis.__candidateUnitMotion={height,lane,profile,motion};');
  replace('        if(plannedHop){\n          if(plannedHop.fromCertificate', '        if(globalThis.__candidateUnitDispatch){plannedHop=globalThis.__candidateUnitDispatch;globalThis.__candidateUnitDispatch=null;}\n        if(plannedHop){\n          if(plannedHop.fromCertificate');
  vm.runInContext(source,h.context);

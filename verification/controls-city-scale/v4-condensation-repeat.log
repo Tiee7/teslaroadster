@@ -1,0 +1,24 @@
+✔ side wisps repeat 3s after disappearance at 0.03333333333333333 frames (13.354606ms)
+✔ side wisps repeat 4s after disappearance at 0.03333333333333333 frames (7.249463ms)
+✔ side wisps repeat 5s after disappearance at 0.03333333333333333 frames (8.062216ms)
+✔ side wisps repeat 3s after disappearance at 0.016666666666666666 frames (13.389463ms)
+✔ side wisps repeat 4s after disappearance at 0.016666666666666666 frames (13.067979ms)
+✔ side wisps repeat 5s after disappearance at 0.016666666666666666 frames (14.129758ms)
+✔ side wisps repeat 3s after disappearance at 0.006944444444444444 frames (30.021813ms)
+✔ side wisps repeat 4s after disappearance at 0.006944444444444444 frames (19.515814ms)
+✔ side wisps repeat 5s after disappearance at 0.006944444444444444 frames (19.732981ms)
+✔ side wisps repeat 3s after disappearance at 0.007/0.023/0.05/0.011 frames (9.831563ms)
+✔ side wisps repeat 4s after disappearance at 0.007/0.023/0.05/0.011 frames (5.961632ms)
+✔ side wisps repeat 5s after disappearance at 0.007/0.023/0.05/0.011 frames (5.72799ms)
+✔ pulse shape/lifetime stay unchanged; threshold noise cannot overlap or restart a live pulse (3.190447ms)
+✔ loss of trigger, FPV, destruction, menu, hidden page and focus clear pulses and stale delay (6.160091ms)
+✔ paused/invalid deltas cannot advance cooldown; injected randomness remains bounded (6.561105ms)
+✔ only existing body wisps repeat, with no timers, added geometry, force, sound or banner (0.827206ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 306.985252

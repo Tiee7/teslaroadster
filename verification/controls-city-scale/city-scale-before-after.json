@@ -1,0 +1,53 @@
+{
+  "reason": "City coordinates and navigation distances are metres; horizontal visual multiplier was1.65 while HUD remained m/s*3.6",
+  "rows": [
+    {
+      "fps": 30,
+      "baseline": true,
+      "seconds": 5.4,
+      "displayedKmh": 200,
+      "worldMeters": 494.9999999999985,
+      "expectedMeters": 300
+    },
+    {
+      "fps": 30,
+      "baseline": false,
+      "seconds": 5.4,
+      "displayedKmh": 200,
+      "worldMeters": 299.99999999999955,
+      "expectedMeters": 300
+    },
+    {
+      "fps": 60,
+      "baseline": true,
+      "seconds": 5.4,
+      "displayedKmh": 200,
+      "worldMeters": 494.99999999999824,
+      "expectedMeters": 300
+    },
+    {
+      "fps": 60,
+      "baseline": false,
+      "seconds": 5.4,
+      "displayedKmh": 200,
+      "worldMeters": 299.99999999999943,
+      "expectedMeters": 300
+    },
+    {
+      "fps": 144,
+      "baseline": true,
+      "seconds": 5.4,
+      "displayedKmh": 200,
+      "worldMeters": 495.00000000000153,
+      "expectedMeters": 300
+    },
+    {
+      "fps": 144,
+      "baseline": false,
+      "seconds": 5.4,
+      "displayedKmh": 200,
+      "worldMeters": 299.9999999999968,
+      "expectedMeters": 300
+    }
+  ]
+}

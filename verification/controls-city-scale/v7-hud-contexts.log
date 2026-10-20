@@ -1,0 +1,22 @@
+✔ exterior gauge uses a short title, remaining seconds and no capacity or used-time caption (1.0026ms)
+✔ language switching only touches surviving gauge labels and preserves warnings (1.574091ms)
+✔ simplified gauge retains the flow, status, fill and 20% auto-descent warning (0.23884ms)
+✔ remaining-time updates never require removed nodes during depletion, recharge or invalid readings (9.069272ms)
+✔ depleted mode caption distinguishes actual flight from a road O-hop without changing tank readings (2.06464ms)
+✔ cockpit gas, seconds, liters and fill use the current air tank, including empty and recharge frames (9.258506ms)
+✔ cockpit tank bounds and gas text stay inside their reserved area without overlapping the passenger strip (2.97374ms)
+✔ external telemetry updates gas mass and matches cockpit remaining seconds and mass on the same frame (7.546659ms)
+✔ cockpit and footer use identical speed, units and rounded values with readable Canvas digits (13.68202ms)
+✔ notifications are independent of the side-panel flow on desktop and mobile (0.498421ms)
+✔ HUD bounds observe only permanent header/footer, never transient alerts (0.908309ms)
+✔ cockpit essentials have separate speed/tank columns and a reserved passenger strip (0.73009ms)
+✔ FPV switches duplicate floating information off immediately while preserving side controls (1.092115ms)
+✔ actual continuous consumption, depletion and reset immediately update the cockpit bar with exterior readings (27.124551ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 164.161044

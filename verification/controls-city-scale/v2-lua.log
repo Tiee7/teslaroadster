@@ -1,0 +1,29 @@
+test_active_key_expires_after_65_seconds (__main__.LeaderboardLuaTests.test_active_key_expires_after_65_seconds) ... ok
+test_atomic_score_end_race_is_safe_in_both_serialization_orders (__main__.LeaderboardLuaTests.test_atomic_score_end_race_is_safe_in_both_serialization_orders) ... ok
+test_atomic_start_end_race_is_safe_in_both_serialization_orders (__main__.LeaderboardLuaTests.test_atomic_start_end_race_is_safe_in_both_serialization_orders) ... ok
+test_boards_are_isolated_and_ties_follow_reverse_member_order (__main__.LeaderboardLuaTests.test_boards_are_isolated_and_ties_follow_reverse_member_order) ... ok
+test_concurrent_start_cannot_create_a_second_unfinished_run (__main__.LeaderboardLuaTests.test_concurrent_start_cannot_create_a_second_unfinished_run) ... ok
+test_delayed_old_end_only_releases_matching_id_after_newer_start (__main__.LeaderboardLuaTests.test_delayed_old_end_only_releases_matching_id_after_newer_start) ... ok
+test_end_cancels_run_without_publishing_and_allows_immediate_new_start (__main__.LeaderboardLuaTests.test_end_cancels_run_without_publishing_and_allows_immediate_new_start) ... ok
+test_end_preserves_accepted_receipt_and_its_ttl_and_replay_semantics (__main__.LeaderboardLuaTests.test_end_preserves_accepted_receipt_and_its_ttl_and_replay_semantics) ... ok
+test_end_wrong_owner_cannot_cancel_run_or_clear_either_players_lock (__main__.LeaderboardLuaTests.test_end_wrong_owner_cannot_cancel_run_or_clear_either_players_lock) ... ok
+test_expired_or_unknown_old_end_cannot_touch_newer_active_run (__main__.LeaderboardLuaTests.test_expired_or_unknown_old_end_cannot_touch_newer_active_run) ... ok
+test_finished_run_allows_immediate_new_run (__main__.LeaderboardLuaTests.test_finished_run_allows_immediate_new_run) ... ok
+test_improvement_replaces_score_and_name (__main__.LeaderboardLuaTests.test_improvement_replaces_score_and_name) ... ok
+test_list_is_capped_at_100_and_hides_member_identifiers (__main__.LeaderboardLuaTests.test_list_is_capped_at_100_and_hides_member_identifiers) ... ok
+test_lower_and_equal_scores_do_not_replace_best_nickname (__main__.LeaderboardLuaTests.test_lower_and_equal_scores_do_not_replace_best_nickname) ... ok
+test_missing_active_target_recovers (__main__.LeaderboardLuaTests.test_missing_active_target_recovers) ... ok
+test_missing_owner_early_and_expired_rejections_do_not_write (__main__.LeaderboardLuaTests.test_missing_owner_early_and_expired_rejections_do_not_write) ... ok
+test_rate_denial_increments_neither_counter (__main__.LeaderboardLuaTests.test_rate_denial_increments_neither_counter) ... ok
+test_rate_ttl_is_set_once_and_expiry_resets_counts (__main__.LeaderboardLuaTests.test_rate_ttl_is_set_once_and_expiry_resets_counts) ... ok
+test_receipt_is_idempotent_and_conflicting_replay_cannot_write (__main__.LeaderboardLuaTests.test_receipt_is_idempotent_and_conflicting_replay_cannot_write) ... ok
+test_repeated_end_is_idempotent_and_never_refreshes_original_expiry (__main__.LeaderboardLuaTests.test_repeated_end_is_idempotent_and_never_refreshes_original_expiry) ... ok
+test_single_key_public_read_rate_has_correct_argument_index (__main__.LeaderboardLuaTests.test_single_key_public_read_rate_has_correct_argument_index) ... ok
+test_start_creates_both_keys_with_correct_ttl (__main__.LeaderboardLuaTests.test_start_creates_both_keys_with_correct_ttl) ... ok
+test_start_permits_retained_canceled_run_even_if_old_active_key_remains (__main__.LeaderboardLuaTests.test_start_permits_retained_canceled_run_even_if_old_active_key_remains) ... ok
+test_zero_score_and_unicode_name_are_valid (__main__.LeaderboardLuaTests.test_zero_score_and_unicode_name_are_valid) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.141s
+
+OK

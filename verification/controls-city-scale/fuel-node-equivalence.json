@@ -1,0 +1,199 @@
+{
+  "passed": true,
+  "historicalLocalReviewCommit": "47036ce914d4e322e2550b8cd5be36f1e8fbcab9",
+  "publishedEquivalentTree": "239aa694da5cf8048896c271a2d80d8199979aff",
+  "historicalPhysicsSha256": "548a8bb80f984ddafa5da17a75e71d7f703a77890af90c88fba9c40924053df2",
+  "cases": [
+    {
+      "name": "ground-boost",
+      "state": {
+        "speed": 80,
+        "vz": -80
+      },
+      "input": {
+        "throttle": 1,
+        "boost": 1
+      },
+      "infiniteJet": false,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": true
+    },
+    {
+      "name": "ground-fractional-boost",
+      "state": {
+        "speed": 80,
+        "vz": -80
+      },
+      "input": {
+        "throttle": 1,
+        "boost": 0.25
+      },
+      "infiniteJet": false,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": true
+    },
+    {
+      "name": "ground-retro",
+      "state": {
+        "speed": 80,
+        "vz": -80
+      },
+      "input": {
+        "brake": 1
+      },
+      "infiniteJet": false,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": true
+    },
+    {
+      "name": "ground-electric",
+      "state": {
+        "speed": 42,
+        "vz": -42
+      },
+      "input": {
+        "throttle": 1
+      },
+      "infiniteJet": false,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": true
+    },
+    {
+      "name": "air-neutral",
+      "state": {
+        "speed": 65,
+        "vz": -65,
+        "y": 20,
+        "wasAirborne": true
+      },
+      "input": {},
+      "infiniteJet": false,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": true
+    },
+    {
+      "name": "air-strafe",
+      "state": {
+        "speed": 65,
+        "vz": -65,
+        "y": 20,
+        "wasAirborne": true
+      },
+      "input": {
+        "strafe": 0.25
+      },
+      "infiniteJet": false,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": true
+    },
+    {
+      "name": "ground-boost",
+      "state": {
+        "speed": 80,
+        "vz": -80
+      },
+      "input": {
+        "throttle": 1,
+        "boost": 1
+      },
+      "infiniteJet": true,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": false
+    },
+    {
+      "name": "ground-fractional-boost",
+      "state": {
+        "speed": 80,
+        "vz": -80
+      },
+      "input": {
+        "throttle": 1,
+        "boost": 0.25
+      },
+      "infiniteJet": true,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": false
+    },
+    {
+      "name": "ground-retro",
+      "state": {
+        "speed": 80,
+        "vz": -80
+      },
+      "input": {
+        "brake": 1
+      },
+      "infiniteJet": true,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": false
+    },
+    {
+      "name": "ground-electric",
+      "state": {
+        "speed": 42,
+        "vz": -42
+      },
+      "input": {
+        "throttle": 1
+      },
+      "infiniteJet": true,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": false
+    },
+    {
+      "name": "air-neutral",
+      "state": {
+        "speed": 65,
+        "vz": -65,
+        "y": 20,
+        "wasAirborne": true
+      },
+      "input": {},
+      "infiniteJet": true,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": false
+    },
+    {
+      "name": "air-strafe",
+      "state": {
+        "speed": 65,
+        "vz": -65,
+        "y": 20,
+        "wasAirborne": true
+      },
+      "input": {
+        "strafe": 0.25
+      },
+      "infiniteJet": true,
+      "steps": 30,
+      "comparedControlFields": 49,
+      "exactNodeAndProduction": true,
+      "exactPriorFinitePhysics": false
+    }
+  ],
+  "totalPhysicalSteps": 360,
+  "strictObjectIsFieldComparisons": 17640,
+  "boundary": "Extracted production motion/contact/G only; no WebGL, render, full-page RNG or collision-free autopilot claim."
+}

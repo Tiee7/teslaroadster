@@ -1,0 +1,176 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 46443,
+    "sha256": "e229acae2038482f26c3451d30ceb6c1408bbb24229ba955bbfb4cce2668ceba",
+    "blobSha": "20cdffc66d9ae96e89deae54d902b49e339220a9"
+  },
+  {
+    "path": "index.html",
+    "bytes": 4706417,
+    "sha256": "3d0662deb0695bf5234bee5929dba912771388ffff083284917df399c1e64dd0",
+    "blobSha": "d2dd1b8bc869f61af1006d50ade2cfe8a1334781"
+  },
+  {
+    "path": "src/config.js",
+    "bytes": 34203,
+    "sha256": "e266a54510bd451a35d5a75fe3d330cc40204bacd681d23cfbe76a693eaf4d3f",
+    "blobSha": "fc96d2b4a1f8a3af257f40b91d0a2aa1a4dbec31"
+  },
+  {
+    "path": "src/demo-numeric-projection.js",
+    "bytes": 224730,
+    "sha256": "fbd6728adbe7c27d88e04deebea01760bc4d167b6f57873fa01170e5f4c7468c",
+    "blobSha": "3d28ebdf91c9ecf78a63b8e559d432988edc68a5"
+  },
+  {
+    "path": "src/highway-demo.js",
+    "bytes": 132295,
+    "sha256": "30269219669489f3f1c228fc305eacd1032238bc1bcb0100a2bd9ebf6f06df43",
+    "blobSha": "222a5a1f4723a723c981a5173f9c7df8a25e3317"
+  },
+  {
+    "path": "src/index.html",
+    "bytes": 51547,
+    "sha256": "fe1c2fd5f51730298abe7d6b90a74d8ac04f2f78c4df735d97bc6c9bded03851",
+    "blobSha": "9c3a3730766504e8d378cf2af7228f925ca1e542"
+  },
+  {
+    "path": "src/leaderboard.js",
+    "bytes": 26331,
+    "sha256": "14dd05f76ab9223f2f1249b50998a5a5637e2f67d0d3a39c3ffa34aa8c00b44f",
+    "blobSha": "cb55113e48e40ff25d52079838530230ad694de7"
+  },
+  {
+    "path": "src/physics-main.js",
+    "bytes": 105486,
+    "sha256": "ca0ce77283ac6fcedbc0b20db182778d3935ebe09f9f4cac4f8f9ba29f0aec13",
+    "blobSha": "bc565630fffa08aca550616c86254e492a66173f"
+  },
+  {
+    "path": "src/ui-hud.js",
+    "bytes": 56362,
+    "sha256": "eda76a2f67268dacbcae89a299a9ef00af241648909a8a5e1f8b349e38079b7b",
+    "blobSha": "bad14da5c9b62fd761cbb7d028d4ad32479001c1"
+  },
+  {
+    "path": "tests/camera-stability.test.mjs",
+    "bytes": 7814,
+    "sha256": "cf28852939adc1f4cdd64d5896b4130a37d192569e76abde16912d6f958571a0",
+    "blobSha": "ac06cea13b7b8cddb4ce0978bc6981ca80d60322"
+  },
+  {
+    "path": "tests/freefall.test.mjs",
+    "bytes": 19041,
+    "sha256": "3911cc58ceb7a724908104192111d99a638245fce24eaa8717c5527a53e21919",
+    "blobSha": "1e7a02e88581988afd8befd4c39dd8961b3db1fb"
+  },
+  {
+    "path": "tests/gas-refill.test.mjs",
+    "bytes": 20169,
+    "sha256": "3e034a20c0236fc4c0b8d9f8397402c72cd2534b04dde50ad3d32fb0afba3938",
+    "blobSha": "874a9c7413ddadb4cb6a44bdf5b4f02c2d6fedae"
+  },
+  {
+    "path": "tests/helpers/demo-candidate-harness.mjs",
+    "bytes": 3083,
+    "sha256": "92b8aeb111de39eef2544a67440f71942b645749b5108acef38d31ee4751fa67",
+    "blobSha": "5291a066d4afcafc6285252e4889465403cfcd27"
+  },
+  {
+    "path": "tests/highway-demo-continuous.test.mjs",
+    "bytes": 12476,
+    "sha256": "1cdb4b07b4004bdc1cd717e03682a4184458f8915c2311285cdf2f66204d8237",
+    "blobSha": "be47df5020e655d6d8a586f79e0604466d4f7f84"
+  },
+  {
+    "path": "tests/highway-demo-lifecycle.test.mjs",
+    "bytes": 21288,
+    "sha256": "0a2b73f9213307b284674eb23de416e57137aaaf987806b572201c581ea174b0",
+    "blobSha": "644fafbb392ed8ccbaa9355fbc97aeca34569082"
+  },
+  {
+    "path": "tests/highway-demo-scheduling.test.mjs",
+    "bytes": 15409,
+    "sha256": "cb649bbca4e44b51ed408844c77fe6cac3f4fb1592ff3e9c2eb8c02676a7ce73",
+    "blobSha": "8cec62a126f538024ee2ae99a8d885ba86f4f0a3"
+  },
+  {
+    "path": "tests/highway-demo-successor.test.mjs",
+    "bytes": 6268,
+    "sha256": "bde90a4134006a1a6d79e18bf72d61235af887d8610507e2d56a9652b6a003b5",
+    "blobSha": "e4c1daffd9d85e5bae87d5476a317b0f41969f1d"
+  },
+  {
+    "path": "tests/highway-traffic.test.mjs",
+    "bytes": 25155,
+    "sha256": "13e8937fe2da90156488ebe7b782a1661894ca15a3039ba323a6b862fe04f447",
+    "blobSha": "7a94524b468770fc458db0b0081858c4d1bae124"
+  },
+  {
+    "path": "verification/demo-continuous/browser-static-projection-identity.generated.mjs",
+    "bytes": 82420,
+    "sha256": "dda9d5c071d5cc621cac697c140adb414a4e5bb05608e801d0f03e4e27c3839f",
+    "blobSha": "2317baf1ed794258ec634879f83d4ae428e48292"
+  },
+  {
+    "path": "verification/demo-continuous/browser-static-projection.generated.js",
+    "bytes": 224730,
+    "sha256": "fbd6728adbe7c27d88e04deebea01760bc4d167b6f57873fa01170e5f4c7468c",
+    "blobSha": "3d28ebdf91c9ecf78a63b8e559d432988edc68a5"
+  },
+  {
+    "path": "verification/demo-continuous/browser-static-projection.generated.mjs",
+    "bytes": 224773,
+    "sha256": "896efec66f5f884b5d45c6bf6a5687f2482a866ff63633bf01433a710dc7564b",
+    "blobSha": "98c3242dd583e772c3b63a85502e952cd9648f34"
+  },
+  {
+    "path": "verification/demo-continuous/browser-static-projection.manifest.json",
+    "bytes": 9615,
+    "sha256": "b60a4c989ab8547901cc4e1795ae971d24f7750c49e703a70b986bdcddbb210f",
+    "blobSha": "f055ec614a9e2f93bd1db5cdc108dadd31f8a967"
+  },
+  {
+    "path": "verification/demo-continuous/emit-browser-static-projection.mjs",
+    "bytes": 18454,
+    "sha256": "14398ac3c56363a70eea30d7ab66b7043989a91cdcf8d5e71d242490f9a87f2f",
+    "blobSha": "7e8f383df6c0b0c52412b4d8e6068a5127c56ece"
+  },
+  {
+    "path": "verification/demo-continuous/generate-numeric-projection-kernel.mjs",
+    "bytes": 23118,
+    "sha256": "4b0c8c3caec4d28f43791f57f98a815af14b7f056d07473e8cc5090ed069ba79",
+    "blobSha": "2fb5f82ce9d3142c0cb25af906e048458989ef1f"
+  },
+  {
+    "path": "verification/demo-continuous/static-projection-identity-only-tests.json",
+    "bytes": 6702,
+    "sha256": "3611515c335b6e4ff58fb0837373a2af85a9ce5796e87637b7c30e836b7a93f3",
+    "blobSha": "43153847a1f6ddd82e8d9ea317833c369f62e8ee"
+  },
+  {
+    "path": "tests/city-scale.test.mjs",
+    "bytes": 2956,
+    "sha256": "ab97da2fb19c3ba93685f570a5151926807933680a847cafe1f502925c4e4579",
+    "blobSha": "90fb0085fd3ca6911ed40d8d4dbe0632f742ad38"
+  },
+  {
+    "path": "tests/infinite-jet-prediction.test.mjs",
+    "bytes": 6772,
+    "sha256": "577e5b628261733f029bcc01d89e5f47622f0dffb80f1cb76d93ba484f3c033f",
+    "blobSha": "189f9273cfdd2207029ad9326f9ab98a16e12175"
+  },
+  {
+    "path": "tests/autopilot-continuous-boost.test.mjs",
+    "bytes": 3922,
+    "sha256": "3030e27e8c7b98ecaf5ba8d0864f25b2a98c79eaa5f5b9447508a18d839c8ee2",
+    "blobSha": "59d06c202ef53108526e873dcdfc72d8408fc75e"
+  },
+  {
+    "path": "tests/helpers/motion-harness.mjs",
+    "bytes": 1785,
+    "sha256": "d2f1d0d287133fc89f776b2ed5b802d50d13ab1b7ad31ac5284a58de0a9117f8",
+    "blobSha": "3a8848b7a427801f23812ebe483059b81dde4c8c"
+  }
+]

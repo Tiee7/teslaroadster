@@ -1,0 +1,11 @@
+✔ useful final-lane routing continues past the old slow-queue stall at 30 Hz (2618.489091ms)
+✔ useful final-lane routing continues past the old slow-queue stall at 60 Hz (110476.092117ms)
+✔ useful final-lane routing continues past the old slow-queue stall at 144 Hz (173082.187318ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 286318.598194

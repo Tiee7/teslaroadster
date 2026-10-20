@@ -60,8 +60,18 @@ for(const fps of [30,60,144]) {
 }
 
 test('prediction and actual H obey the floor across fractional tanks, freefall and long frames',()=>{
+  // At80m the new continuous-boost policy has no braking demand: the prior
+  // brake came only from the retired250 cruise cap. Keep that old position as
+  // an explicit no-fake-brake check, then use40m for actual H/retro coverage.
+  const clearHarness=simulation({speed:75,vz:-75},wall(80,62));
+  const clear=predictionProbe(clearHarness,.025);
+  assert.equal(clear.controls.brake,0);assert.ok(clear.controls.boost>0);
+  const clearActual=clearHarness.step(.025);
+  assert.equal(clearActual.frame.input.brake,0);assert.ok(clearActual.frame.input.boost>0);
+  assert.ok(Math.abs(clear.prediction.speed-clearHarness.state.speed)<1e-6);
+  assert.ok(Math.abs(clear.prediction.gas-clearHarness.state.airRemaining)<1e-9);
   for(const dt of [1/144,1/60,1/30,.1])for(const [airRemaining,isFreefalling] of [[10,false],[.001,false],[0,true],[1,true],[2.49,true]]){
-    const h=simulation({speed:75,vz:-75,airRemaining,isFreefalling},wall(80,62));
+    const h=simulation({speed:75,vz:-75,airRemaining,isFreefalling},wall(40,62));
     // One predictor sample is 25ms; compare that exact integration step.
     const {prediction,controls}=predictionProbe(h,.025);
     exclusive(controls);assert.ok(controls.brake>0);
@@ -69,7 +79,7 @@ test('prediction and actual H obey the floor across fractional tanks, freefall a
     assert.ok(prediction.speed>=floor);assert.ok(h.state.speed>=floor);
     assert.ok(Math.abs(prediction.speed-h.state.speed)<1e-6);
     assert.ok(Math.abs(prediction.gas-h.state.airRemaining)<1e-9);
-    const direct=simulation({speed:floor+.01,vz:-floor-.01,airRemaining,isFreefalling},wall(80,62));
+    const direct=simulation({speed:floor+.01,vz:-floor-.01,airRemaining,isFreefalling},wall(40,62));
     const near=direct.step(dt);if(near.frame.input.brake>0)assert.ok(direct.state.speed>=floor-1e-9,'actual brake cannot cross the floor');
     else if(isFreefalling)assert.equal(near.frame.input.brake,0,'unavailable boost may coast naturally, never command a below-floor brake');
   }
