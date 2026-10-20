@@ -390,12 +390,13 @@ for (const id of ['modal-map-select', 'modal-help', 'modal-destroyed', 'ranked-d
   });
 }
 
-test('Full and Medium keep controls; Minimal and destroyed state cancel all stick requests', () => {
+test('Full, Medium and Minimal retain fresh dual-stick input; mode changes and destruction clear old requests', () => {
   const h = harness();
   h.document.body.dataset.hudMode = 'medium'; h.flushMutations();
   h.hold('left', 0, 1); expectInput(h, { throttle: 1 });
   h.document.body.dataset.hudMode = 'minimal'; h.flushMutations(); expectReleased(h);
-  assert.equal(h.get('mobile-controls').hidden, true);
+  assert.equal(h.get('mobile-controls').hidden, false);
+  h.hold('left',0,1); h.hold('right',0,1); expectInput(h,{throttle:1,lift:1});
   h.document.body.dataset.hudMode = 'full'; h.flushMutations();
   h.move('left', 0, 1); expectReleased(h);
   h.hold('right', 0, 1); h.state.isDestroyed = true;
@@ -427,14 +428,15 @@ test('the existing clearAllInputKeys map/menu hook releases both mobile and keyb
   h.hold('right', 0, 0.5, 88); expectInput(h, { lift: 0.5 });
 });
 
-test('Jump, altitude-hold toggle and View call existing actions without synthesizing held keys', () => {
-  const h = harness(); h.get('mobile-jump').click();
+for(const hudMode of ['full','medium','minimal'])test(`${hudMode}: Jump, Hold, View and Reset retain real actions without synthetic keys`, () => {
+  const h = harness(); h.document.body.dataset.hudMode=hudMode;h.flushMutations();h.get('mobile-jump').click();
   assert.equal(h.state.isJumping6m, true); close(h.state.jumpTargetY, 106); assert.ok(h.state.vy > 0);
   h.get('mobile-hold').click(); assert.equal(h.state.isJumping6m, false); assert.equal(h.state.isAltitudeHold, true);
   h.state.vy = 0; const result = h.step(0.1);
   close(result.airConsumedThisFrame, 0.022); close(h.state.y, 100); close(h.state.vy, 0);
   h.get('mobile-hold').click(); assert.equal(h.state.isAltitudeHold, false);
   h.get('mobile-camera').click(); assert.equal(h.get('btn-camera').clickCount, 1);
+  h.hold('left',0,1);h.hold('right',0,1);h.get('mobile-reset').click();expectReleased(h);assert.equal(h.state.y,0);
   assert.deepEqual(Object.keys(h.keys), []);
 });
 

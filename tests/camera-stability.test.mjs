@@ -15,7 +15,7 @@ function section(start, end) {
 }
 const helpers = section('function wrapAnglePi(', 'function updateSimulation(');
 const cameraStep = section('  // Requirement 7: Constant 60°', '\n  if (state.bannerTimer > 0)');
-const trafficAndPose = section('  trafficCars.forEach((car) => {\n    if (car.mesh.userData.wheels)', '\n  // Calculate Real-Time G-Forces');
+const trafficAndPose = section('  trafficCars.forEach((car) => {\n    if (car.mode === \'coast\'', '\n  // Calculate Real-Time G-Forces');
 function point() {
   return { x: 0, y: 0, z: 0, set(x, y, z) { Object.assign(this, { x, y, z }); }, copy(v) { this.set(v.x, v.y, v.z); } };
 }

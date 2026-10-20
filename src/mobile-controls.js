@@ -16,7 +16,6 @@
 
   function blocked() {
     return document.hidden || (typeof state !== 'undefined' && state.isDestroyed) ||
-      document.body.dataset.hudMode === 'minimal' ||
       ['modal-map-select', 'modal-help', 'modal-destroyed'].some(id => {
         const node = document.getElementById(id);
         return node && !node.classList.contains('hidden');
@@ -188,7 +187,7 @@
   if (coarse.addEventListener) coarse.addEventListener('change', () => { clear(); sync(); });
   else coarse.addListener?.(() => { clear(); sync(); });
   if (typeof MutationObserver !== 'undefined') {
-    const observer = new MutationObserver(sync);
+    const observer = new MutationObserver(() => { clear(); sync(); });
     observer.observe(document.body, { attributes: true, attributeFilter: ['data-hud-mode'] });
     ['modal-map-select', 'modal-help', 'modal-destroyed', 'ranked-dialog', 'audio-settings', 'paint-picker'].forEach(id => {
       const node = document.getElementById(id);

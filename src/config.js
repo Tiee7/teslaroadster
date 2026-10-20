@@ -343,13 +343,15 @@ const I18N = {
 };
 
 let currentLang = 'en'; // Default English as requested
-let currentMap = 'highway'; // 'highway' or 'city'
+let currentMap = 'highway'; // 'highway', 'city', or original 'coast'
 let selectedMapInModal = 'highway';
 let paintIndex = 0;    // 0: Ano White, 1: Official Signature Red, etc.
 let weatherIndex = 0;  // 0: Cyber Night, 1: Cyber Neon Rain, 2: Mars Sunset Dusk
 let trafficLevelIndex = 1; // 0: 20, 1: 36 (Heavy default), 2: 52
 let cameraModeIndex = 0; // 0: Chase, 1: 3D Showroom, 2: High Orbit, 3: Cockpit FPV
 let cameraZoomScale = 0.75; // Default close view (~3.9m distance in highway)
+
+function mapTrafficCounts(map = currentMap) { return map === 'coast' ? [12,16,20] : [20,36,52]; }
 
 // World & Map Dimension Constants
 const ROAD_WIDTH = 30;
