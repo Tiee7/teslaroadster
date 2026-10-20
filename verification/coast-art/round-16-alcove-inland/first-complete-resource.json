@@ -1,0 +1,22 @@
+{
+  "startedUTC": "2026-10-20T21:40:26.862995+00:00",
+  "endedUTC": "2026-10-20T21:40:46.543818+00:00",
+  "seconds": 19.680831331992522,
+  "command": [
+    "blender",
+    "-b",
+    "--factory-startup",
+    "--python",
+    "verification/coast-art/render-scene.py",
+    "--",
+    "verification/coast-art/round-16-alcove-inland",
+    "driver-inland"
+  ],
+  "returnCode": 0,
+  "childMaxRssKiB": 450296,
+  "childUserSeconds": 34.31477,
+  "childSystemSeconds": 0.8894839999999999,
+  "sourceSha256": "07fe34d32ac5eab52e16692c0c9cae0a6983cb4c38efb895d3d53139fa344398",
+  "adapterSha256": "0a42c1598c3cf9a67e0876f8528c44188accd8f7c837d574caca13d4ec16c4b0",
+  "warning": "CPU offline inspection resource report, NOT WebGL/GPU/FPS evidence; no safety settings changed."
+}

@@ -1,0 +1,88 @@
+{
+  "recordedUTC": "2026-10-20T22:00:26.806105+00:00",
+  "productionBaseline": "e28bb3b4aab8e217dca1db49c9f3cd3e48d5eac8",
+  "sourceSha256": "07fe34d32ac5eab52e16692c0c9cae0a6983cb4c38efb895d3d53139fa344398",
+  "allFrozenFilesUnchanged": true,
+  "frozenIdentityCount": 98,
+  "phoneAndNumericFilesExact": true,
+  "fullSerial": {
+    "pass": 690,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 973923.193833,
+    "startedUTC": "2026-10-20T21:43:18.186470+00:00",
+    "endedUTC": "2026-10-20T21:59:32.167547+00:00",
+    "log": "all-tests-serial.tap"
+  },
+  "additionalGates": {
+    "identity": 29,
+    "mirror": 3,
+    "contract": 6,
+    "oldMaps": {
+      "cases": 96,
+      "steps": 17280,
+      "objectIsComparisons": 846720,
+      "fields": 49
+    },
+    "lua": 24,
+    "check": true,
+    "build": true,
+    "independentReadOnlyReleaseBlocker": false
+  },
+  "numericalCoreSha256": "ef66db3f74dccc04be14e6f8f7424347d622de191e0a349166586d30c20bdb67",
+  "spawnSceneMetrics": {
+    "active": true,
+    "builds": 30,
+    "disposals": 29,
+    "failedBuilds": 0,
+    "cachedCpuPixelBytes": 262144,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 42,
+    "ownedMaterials": 49,
+    "ownedTextures": 16,
+    "textureBytes": 1256107,
+    "ownedGeometryBufferBytes": 418196,
+    "ownedInstanceBufferBytes": 1623680,
+    "staticMeshDraws": 80,
+    "staticTriangles": 150170,
+    "maximumStaticTriangles": 174634,
+    "nearPalms": 10,
+    "farPalms": 90,
+    "foliageRefreshes": 1,
+    "nearDetailInstances": 15,
+    "nearDetailCapacity": 768,
+    "nearDetailMatrixBytes": 49152,
+    "detailRefreshes": 1,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 100136,
+    "maximumShadowCasterTriangles": 124600,
+    "instances": 24443,
+    "buildings": 132,
+    "palms": 100,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "cpuOnly": {
+    "coldFirstMs": 200.680002,
+    "warmMedianMs": 143.78363199999967,
+    "warmP95Ms": 173.6198569999999,
+    "tick": {
+      "stationary": {
+        "frames": 6000,
+        "totalMs": 24.892229000000043
+      },
+      "moving": {
+        "frames": 6000,
+        "totalMs": 55.69004399999994
+      }
+    },
+    "heapBeforeBytes": 9165528,
+    "heapAfterGcBytes": 11355128
+  },
+  "sourceGzipBytes": 32523,
+  "sourceGzipMethod": "node:zlib.gzipSync default compression, same as budget test",
+  "performanceBoundary": "Node CPU construction/disposal/visual tick only; additional1068tri is not a speedup claim. No WebGL/GPU/mobile/FPS measured.",
+  "browserEvidence": "Formal fourth-release DOM source/CSS exact after preserved transient timeout recovery. Browser WebGL context unavailable; next publication also requires full DOM identity."
+}

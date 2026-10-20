@@ -374,7 +374,7 @@ test('six grouped facade signatures partition original wall hulls exactly with e
   assert.ok(Math.abs(last-b.height)<1e-4);assert.ok(Math.abs(volume-b.w*b.d*b.height)<.01,'sum of segment volumes is the original hull, not only its combined AABB');
   if(selected){assert.ok(Math.abs(segments[0].max.y-3.2)<1e-4);assert.ok(Math.abs(segments[1].max.y-selected.top)<1e-4);assert.ok(selected.top>3.2&&selected.top<b.height);for(let j=0;j<3;j++){walls.getColorAt(ids[j],color);assert.equal(color.getHex(),selected.colors[j]);}}
  }
- assert.equal(coast.metrics().staticMeshDraws,80);assert.equal(coast.metrics().maximumStaticTriangles,173566);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
+ assert.equal(coast.metrics().staticMeshDraws,80);assert.equal(coast.metrics().maximumStaticTriangles,174634);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
 });
 
 test('signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance',{
@@ -391,4 +391,22 @@ test('signature seams avoid native window and full-door reveals and corner piers
   for(const name of apertureNames){const mesh=root.getObjectByName(name);mesh.geometry.computeBoundingBox();for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const box=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));if(box.max.x<b.minX-.5||box.min.x>b.maxX+.5||box.max.z<b.minZ-.5||box.min.z>b.maxZ+.5)continue;assert.ok(signature.top<=box.min.y||signature.top>=box.max.y,`${b.x}/${b.z} top seam cuts ${name}[${i}]`);assert.ok(3.2<=box.min.y||3.2>=box.max.y,`${b.x}/${b.z} commercial base seam cuts ${name}[${i}]`);for(const p of piers.filter(p=>p.buildingIndex===signature.buildingIndex))assert.equal(touches(box,p.box),false,`pier covers even zero-thickness ${name}`);}}
  }
  root.traverse(mesh=>{if(!mesh.isInstancedMesh||!mesh.userData.coastArt?.visualOnly||mesh.userData.coastArt.flat)return;mesh.geometry.computeBoundingBox();for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const box=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));for(const p of piers)assert.equal(touches(box,p.box),false,`pier intersects even zero-thickness actual ${mesh.name}[${i}]`);}});coast.leave();
+});
+
+test('two driving-visible arrival places reuse flat paving/furniture batches and protect original and new footpaths',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),places=root.userData.coastArrivalCourts,layout=coast.layout(),matrix=new T.Matrix4();root.updateMatrixWorld(true);assert.deepEqual(Array.from(places.pause),[466,605]);assert.equal(places.paths.length,2);assert.equal(places.trees.length,2);
+ const paving=root.getObjectByName('coast-district-entry-paving'),position=paving.geometry.attributes.position;const tops=[];for(let i=0;i<position.count;i+=4){const xs=[0,1,2,3].map(k=>position.getX(i+k)),zs=[0,1,2,3].map(k=>position.getZ(i+k));tops.push({minX:Math.min(...xs),maxX:Math.max(...xs),minZ:Math.min(...zs),maxZ:Math.max(...zs)});for(let k=0;k<4;k++)assert.ok(Math.abs(position.getY(i+k)-.03)<1e-6);}
+ for(const r of places.paths){assert.ok(r.w*r.d<300);for(const o of layout.obstacles)assert.ok(r.x+r.w/2<=o.minX||r.x-r.w/2>=o.maxX||r.z+r.d/2<=o.minZ||r.z-r.d/2>=o.maxZ,'paving does not cut inherited solids');}
+ const includes=(x,z)=>tops.some(r=>x>=r.minX-1e-5&&x<=r.maxX+1e-5&&z>=r.minZ-1e-5&&z<=r.maxZ+1e-5);
+ for(let z=580;z<=590;z+=.25)for(const dx of [-1.29,0,1.29])assert.ok(includes(394+dx,z),'entire2.6m branch joins the original580 entry, no green gap');
+ for(let x=386;x<=402;x+=.5)for(let z=583;z<=597;z+=.5)assert.ok(includes(x,z),'arrival court union coverage');
+ const protectedPaths=root.userData.coastArtDistrict.entries.filter(e=>e.linkedToSidewalk).map(e=>e.axis==='x'?{minX:Math.min(e.door[0],e.pathEnd),maxX:Math.max(e.door[0],e.pathEnd),minZ:e.door[2]-1.3,maxZ:e.door[2]+1.3}:{minX:e.door[0]-1.3,maxX:e.door[0]+1.3,minZ:Math.min(e.door[2],e.pathEnd),maxZ:Math.max(e.door[2],e.pathEnd)});protectedPaths.push({minX:392.7,maxX:395.3,minZ:580,maxZ:590},{minX:459.7564,maxX:477.7563,minZ:600.7953,maxZ:603.3953});
+ const newProps=[];let triangles=0;
+ for(const [name,count] of [['coast-sample-planter-shrubs',8],['coast-sample-planter-walls',6],['coast-courtyard-seating-and-open-pergola',18],['coast-courtyard-forked-tree-stems',8],['coast-courtyard-folded-tree-crowns',6]]){
+  const mesh=root.getObjectByName(name),start=mesh.userData.coastArrivalStart;assert.equal(mesh.count-start,count);mesh.geometry.computeBoundingBox();triangles+=count*(mesh.geometry.index?mesh.geometry.index.count:mesh.geometry.attributes.position.count)/3;
+  for(let i=start;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const b=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));newProps.push(b);assert.ok(b.min.y>=-.01,'new geometry does not sink below original ground');if(name.includes('shrubs'))assert.ok(b.max.y<=.7,'shop display stays above low planting');if(b.min.x>450&&b.min.z>600)assert.ok(b.min.x>=459.7563&&b.max.x<=477.7564&&b.min.z>=600.7952&&b.max.z<=607.7954,'entire group remains on the existing original L court');for(const p of protectedPaths)assert.ok(b.max.x<=p.minX||b.min.x>=p.maxX||b.max.z<=p.minZ||b.min.z>=p.maxZ,'complete prop/canopy avoids old and new1.3m footpath bands');for(const o of layout.obstacles)assert.ok(b.max.x<=o.minX||b.min.x>=o.maxX||b.max.z<=o.minZ||b.min.z>=o.maxZ,'complete prop/canopy avoids inherited palm/house');for(const r of coast.roads)assert.ok(b.max.x<=r.x-r.w/2-2||b.min.x>=r.x+r.w/2+2||b.max.z<=r.z-r.d/2-2||b.min.z>=r.z+r.d/2+2);for(const n of coast.nodes)assert.ok(b.max.x<=n.x-19||b.min.x>=n.x+19||b.max.z<=n.z-19||b.min.z>=n.z+19);}
+ }
+ assert.equal(newProps.length,46);assert.equal(triangles,1064);assert.equal(coast.metrics().maximumStaticTriangles-173566,1068,'1064props+4flat union triangles, not an unbounded decoration pass');assert.equal(coast.metrics().staticMeshDraws,80);assert.equal(coast.metrics().ownedTextures,16);assert.equal(coast.metrics().ownedLights,2);coast.leave();
 });

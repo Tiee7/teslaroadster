@@ -1,0 +1,1 @@
+JavaScript syntax, inline bundle, unique DOM IDs, deterministic bundler, and deployment config passed.

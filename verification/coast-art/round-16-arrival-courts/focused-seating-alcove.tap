@@ -1,0 +1,232 @@
+TAP version 13
+# Subtest: world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical
+ok 1 - world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical
+  ---
+  duration_ms: 4.344347
+  type: 'test'
+  ...
+# Subtest: actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles
+ok 2 - actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles
+  ---
+  duration_ms: 2527.728877
+  type: 'test'
+  ...
+# Subtest: coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights
+ok 3 - coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights
+  ---
+  duration_ms: 336.572459
+  type: 'test'
+  ...
+# Subtest: r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets
+ok 4 - r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets
+  ---
+  duration_ms: 745.994735
+  type: 'test'
+  ...
+# Subtest: construction and final-attach faults restore scene atomically and dispose all returned partial private resources
+ok 5 - construction and final-attach faults restore scene atomically and dispose all returned partial private resources
+  ---
+  duration_ms: 605.482539
+  type: 'test'
+  ...
+# Subtest: actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame
+ok 6 - actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame
+  ---
+  duration_ms: 785.478143
+  type: 'test'
+  ...
+# Subtest: direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion
+ok 7 - direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion
+  ---
+  duration_ms: 202.258444
+  type: 'test'
+  ...
+# Subtest: coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte
+ok 8 - coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte
+  ---
+  duration_ms: 1.637027
+  type: 'test'
+  ...
+# Subtest: actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance
+ok 9 - actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance
+  ---
+  duration_ms: 426.192895
+  type: 'test'
+  ...
+# Subtest: five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets
+ok 10 - five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets
+  ---
+  duration_ms: 762.344436
+  type: 'test'
+  ...
+# Subtest: road render union is exact, non-overlapping and uses square world-metre texture UVs
+ok 11 - road render union is exact, non-overlapping and uses square world-metre texture UVs
+  ---
+  duration_ms: 237.058869
+  type: 'test'
+  ...
+# Subtest: batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion
+ok 12 - batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion
+  ---
+  duration_ms: 196.947941
+  type: 'test'
+  ...
+# Subtest: original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes
+ok 13 - original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes
+  ---
+  duration_ms: 179.444003
+  type: 'test'
+  ...
+# Subtest: curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages
+ok 14 - curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages
+  ---
+  duration_ms: 202.16263
+  type: 'test'
+  ...
+# Subtest: palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout
+ok 15 - palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout
+  ---
+  duration_ms: 200.532543
+  type: 'test'
+  ...
+# Subtest: whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool
+ok 16 - whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool
+  ---
+  duration_ms: 218.859071
+  type: 'test'
+  ...
+# Subtest: all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building
+ok 17 - all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building
+  ---
+  duration_ms: 176.179624
+  type: 'test'
+  ...
+# Subtest: boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded
+ok 18 - boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded
+  ---
+  duration_ms: 186.237025
+  type: 'test'
+  ...
+# Subtest: boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted
+ok 19 - boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted
+  ---
+  duration_ms: 185.543755
+  type: 'test'
+  ...
+# Subtest: western boulevard curb has an actual visual cut across the original pier approach
+ok 20 - western boulevard curb has an actual visual cut across the original pier approach
+  ---
+  duration_ms: 177.99561
+  type: 'test'
+  ...
+# Subtest: continuous water/sand grids retain exact original area, bounds, elevation and upward winding
+ok 21 - continuous water/sand grids retain exact original area, bounds, elevation and upward winding
+  ---
+  duration_ms: 178.762425
+  type: 'test'
+  ...
+# Subtest: native water normals drift by uniforms only, retain finite periodic offsets and dispose once
+ok 22 - native water normals drift by uniforms only, retain finite periodic offsets and dispose once
+  ---
+  duration_ms: 328.436936
+  type: 'test'
+  ...
+# Subtest: original art payload remains below the explicit32KiB gzip ceiling with zero art fetches
+ok 23 - original art payload remains below the explicit32KiB gzip ceiling with zero art fetches
+  ---
+  duration_ms: 4.754776
+  type: 'test'
+  ...
+# Subtest: fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights
+ok 24 - fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights
+  ---
+  duration_ms: 171.029673
+  type: 'test'
+  ...
+# Subtest: selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors
+ok 25 - selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors
+  ---
+  duration_ms: 224.117066
+  type: 'test'
+  ...
+# Subtest: curved roof trim is a finite closed shallow parapet, not a new collidable full roof
+ok 26 - curved roof trim is a finite closed shallow parapet, not a new collidable full roof
+  ---
+  duration_ms: 223.594392
+  type: 'test'
+  ...
+# Subtest: composed courtyard and three beach entries retain original obstacles, shoulders and ground datum
+ok 27 - composed courtyard and three beach entries retain original obstacles, shoulders and ground datum
+  ---
+  duration_ms: 185.871293
+  type: 'test'
+  ...
+# Subtest: driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles
+ok 28 - driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles
+  ---
+  duration_ms: 198.358537
+  type: 'test'
+  ...
+# Subtest: corner storefront lettering reads left-to-right from actual outward X and Z viewpoints
+ok 29 - corner storefront lettering reads left-to-right from actual outward X and Z viewpoints
+  ---
+  duration_ms: 201.040584
+  type: 'test'
+  ...
+# Subtest: continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles
+ok 30 - continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles
+  ---
+  duration_ms: 193.482381
+  type: 'test'
+  ...
+# Subtest: world ground field retains exact full box/independent UV, uploads once and reuses only bounded CPU pixels
+ok 31 - world ground field retains exact full box/independent UV, uploads once and reuses only bounded CPU pixels
+  ---
+  duration_ms: 344.786075
+  type: 'test'
+  ...
+# Subtest: two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks
+ok 32 - two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks
+  ---
+  duration_ms: 187.069747
+  type: 'test'
+  ...
+# Subtest: curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle
+ok 33 - curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle
+  ---
+  duration_ms: 182.592224
+  type: 'test'
+  ...
+# Subtest: window/forecourt refinements retain all129 published art entrance/path poses byte for byte
+ok 34 - window/forecourt refinements retain all129 published art entrance/path poses byte for byte
+  ---
+  duration_ms: 172.972025
+  type: 'test'
+  ...
+# Subtest: six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors
+ok 35 - six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors
+  ---
+  duration_ms: 195.760719
+  type: 'test'
+  ...
+# Subtest: signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance
+ok 36 - signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance
+  ---
+  duration_ms: 1126.408339
+  type: 'test'
+  ...
+# Subtest: two driving-visible arrival places reuse flat paving/furniture batches and protect original and new footpaths
+ok 37 - two driving-visible arrival places reuse flat paving/furniture batches and protect original and new footpaths
+  ---
+  duration_ms: 183.338957
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12923.156069

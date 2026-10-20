@@ -1,0 +1,23 @@
+{
+  "recordedUTC": "2026-10-20T21:37:04.080268+00:00",
+  "target": "https://tesla.tiee.xyz/",
+  "productionDeployment": "dpl_DNYmmNtYZn5h9a56CNRw2qKc9s12",
+  "readyState": "READY",
+  "aliasError": null,
+  "previewFullSourceAndCssExact": true,
+  "attempts": [
+    {
+      "observedUTC": "2026-10-20T21:32:34Z",
+      "action": "existing production tab goto formal domain",
+      "error": "Page.enable timed out; navigation result uncertain"
+    },
+    {
+      "observedUTC": "2026-10-20T21:32:42Z",
+      "action": "readCoastInline DOM source readback",
+      "error": "Page.getFrameTree timed out; no verified DOM hash returned"
+    }
+  ],
+  "retryNotBeforeUTC": "2026-10-20T21:37:42Z",
+  "settingsChanged": false,
+  "productionIdentityVerified": false
+}

@@ -1,0 +1,11 @@
+✔ src projection artifact passes complete build identity and equals verification mirror (17.732039ms)
+✔ src projection stale-byte mutation rejects without changing verification mirror (13.851991ms)
+✔ emitter --check rejects src-versus-verification mirror desynchronization (83.587913ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 195.348625

@@ -1,0 +1,14 @@
+{
+  "recordedUTC": "2026-10-20T22:00:26.805295+00:00",
+  "agent": "/root/iterate_map3_art_seven_hours/coast_art_readonly_review",
+  "releaseBlocker": false,
+  "sourceSha256": "07fe34d32ac5eab52e16692c0c9cae0a6983cb4c38efb895d3d53139fa344398",
+  "findings": [
+    "Same-source driver/corner offline images inspected; purposeful L seating/planting alcove is a modest local improvement, not changed whole-driving scale",
+    "Six stone borders abut; two mulch top.055 boxes abut. Buried mulch-to-stone joints intentionally overlap atY.03-.055; not falsely claimed globally disjoint geometry",
+    "A front edgeZ603.66 preserves display walk end603.3953 by.2647m; northborder607.64 stays inside originalL end607.7953 by.1553m",
+    "Full native new-prop/canopy AABB and original/new\u00b11.3m path tests; original132 physical buildings,129entries,prefix unchanged",
+    "80base/174634max triangles,16textures/2lights;245byte gzip headroom, do not add unvalidated source"
+  ],
+  "coverageBoundary": "Border/mulch pair relation was coordinate-reviewed, NOT claimed as an automated pairwise assertion. Offline CPU images not WebGL/FPS."
+}

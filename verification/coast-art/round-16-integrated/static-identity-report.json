@@ -1,0 +1,188 @@
+{
+  "schema": "static-projection-identity-only-tests-v1",
+  "generatedAt": "2026-10-20T21:43:14.809Z",
+  "passed": true,
+  "totalTests": 29,
+  "byKind": {
+    "positive-identity": 3,
+    "first-bind-rejection": 9,
+    "cached-reference-or-value-rejection": 5,
+    "positive-build": 1,
+    "build-source-rejection": 8,
+    "build-generator-rejection": 1,
+    "build-profile-rejection": 1,
+    "build-artifact-rejection": 1
+  },
+  "rows": [
+    {
+      "name": "CPU exact recorded math pair binds",
+      "kind": "positive-identity",
+      "passed": true
+    },
+    {
+      "name": "minified exact recorded math pair binds",
+      "kind": "positive-identity",
+      "passed": true
+    },
+    {
+      "name": "missing function rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "nonfunction rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "different helper source rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "different full update source rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "unknown math pair rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "mixed recorded math pair rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "wrong gravity constant rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "wrong handling value rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "missing handling key rejected",
+      "kind": "first-bind-rejection",
+      "passed": true
+    },
+    {
+      "name": "same-source new helper reference rejected",
+      "kind": "cached-reference-or-value-rejection",
+      "passed": true
+    },
+    {
+      "name": "same-source new math reference rejected",
+      "kind": "cached-reference-or-value-rejection",
+      "passed": true
+    },
+    {
+      "name": "equal-value new handling reference rejected",
+      "kind": "cached-reference-or-value-rejection",
+      "passed": true
+    },
+    {
+      "name": "cached gravity mutation rejected",
+      "kind": "cached-reference-or-value-rejection",
+      "passed": true
+    },
+    {
+      "name": "cached lane value mutation rejected",
+      "kind": "cached-reference-or-value-rejection",
+      "passed": true
+    },
+    {
+      "name": "restoring original reference restores valid identity",
+      "kind": "positive-identity",
+      "passed": true
+    },
+    {
+      "name": "unchanged source mirror generates exact artifact",
+      "kind": "positive-build",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: src/config.js",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: src/physics-main.js",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: src/highway-demo.js",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: src/highway-traffic.js",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: src/ui-hud.js",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: src/audio.js",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: tests/helpers/demo-harness.mjs",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed complete source rejects: tests/helpers/vendor/three-r128-MathUtils.mjs",
+      "kind": "build-source-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed frozen generator rejects",
+      "kind": "build-generator-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed math profile artifact rejects",
+      "kind": "build-profile-rejection",
+      "passed": true
+    },
+    {
+      "name": "changed emitted bytes reject",
+      "kind": "build-artifact-rejection",
+      "passed": true
+    }
+  ],
+  "sourceAndArtifactHashes": {
+    "src/config.js": "fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306",
+    "src/physics-main.js": "3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "src/ui-hud.js": "e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808",
+    "src/audio.js": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+    "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+    "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "587174e45e590f5c8f4432f77f61881641d9e8b64b4362cbdb6eae0d06138cf2",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "2df6ee22a40788a75388dd83ed8ca7c6a75b525d5e6cd4018331d5e045fffa5c",
+    "verification/demo-continuous/browser-static-projection.generated.js": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2",
+    "verification/demo-continuous/browser-static-projection.generated.mjs": "5644fc54cc7faad6a33258d0744a4ed1596e14c9ba9cce598f8d43057add29dd",
+    "verification/demo-continuous/browser-static-projection-identity.generated.mjs": "775e33b34ad2d541807bc09cc16b1a41667029ffaf25622b94e8261cc9cdf00c",
+    "verification/demo-continuous/numeric-math-identity-profiles.json": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a"
+  },
+  "sourceAndArtifactsUnchanged": true,
+  "physicsStepsExecuted": 0,
+  "jumpEntriesExecuted": 0,
+  "driverStepsExecuted": 0,
+  "browserRuns": 0,
+  "fullUpdateSimulationCalls": 0,
+  "numericalCoreSha256": "ef66db3f74dccc04be14e6f8f7424347d622de191e0a349166586d30c20bdb67",
+  "mathIdentityNote": "Positive identities use exact recorded source declarations only. The actual bundle is not loaded again and no clamp/lerp or physics body is called.",
+  "executionBoundary": "Only static module/factory/binder/assertRuntime instantiation and build guard checks. Source functions are identity-only declarations. All destructive source probes occur in a temporary mirror; live repo source and generated artifacts remain unchanged."
+}
