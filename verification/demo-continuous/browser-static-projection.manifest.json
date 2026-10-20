@@ -3,7 +3,7 @@
   "numericalProgramSourceSha256": "02e77da830dc7e90c96305e5f7d28a4ccc9c92524aebc1794e5e15c16973163e",
   "sourceHashes": {
     "src/config.js": "e266a54510bd451a35d5a75fe3d330cc40204bacd681d23cfbe76a693eaf4d3f",
-    "src/physics-main.js": "ca0ce77283ac6fcedbc0b20db182778d3935ebe09f9f4cac4f8f9ba29f0aec13",
+    "src/physics-main.js": "3e28a4551f7a6f38ad1500f06b6232e7dcfc640dbb6a3fe0bd973057126da182",
     "src/highway-demo.js": "30269219669489f3f1c228fc305eacd1032238bc1bcb0100a2bd9ebf6f06df43",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
     "src/ui-hud.js": "eda76a2f67268dacbcae89a299a9ef00af241648909a8a5e1f8b349e38079b7b",
@@ -11,7 +11,7 @@
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "nodeGeneratorSha256": "4b0c8c3caec4d28f43791f57f98a815af14b7f056d07473e8cc5090ed069ba79",
+  "nodeGeneratorSha256": "0d42d33fcc909ec2bf08c1e6e1de02310f4c57e74d6fa0d5590a4a345015fa90",
   "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
   "mathProfiles": [
     {
@@ -25,8 +25,8 @@
   ],
   "functionSources": {
     "updateSimulation": {
-      "sha256": "00f1e1fd86666cc9ead96614183bdcd36296857e12d8cf8f198edb2bf3fdb035",
-      "length": 79925
+      "sha256": "b6e7f37cc3f0bad22c9aa54df05d12cd694e5ef5f09a899c3ef94ea33f18fffe",
+      "length": 79939
     },
     "wrapAnglePi": {
       "sha256": "4a43189ee76d5927e870e14a61a5de8fe71d91dcb8c3a5996d52adc61fa19c52",

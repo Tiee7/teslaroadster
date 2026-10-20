@@ -3,7 +3,7 @@
 > Validation in progress (2026-10-20): the current source has passed the fixed-clock seed7/52-car90-second CPU runs at30/60/144Hz and the complete-key manual comparison. Earlier truncated/stub-math runs remain historical only. Full tests, broader traffic cases and actual cloud-browser driving/input/visual acceptance are still required; no merge or production deployment has occurred. See [current results and limits](../verification/demo-continuous/README.md).
 
 
-The native **Demo drive / 演示模式** switch is available only on Map 01, the six-lane elevated highway. It stays reachable in all three HUD modes. It has no keyboard shortcut, starts off, and is not persisted across reloads. Land before enabling it. Switch off to regain manual control.
+The native **Autopilot / 自动驾驶** switch is available only on Map 01, the six-lane elevated highway. It stays reachable in all three HUD modes. It has no keyboard shortcut, starts off, and is not persisted across reloads. Land before enabling it. Switch off to regain manual control.
 
 ## Behavior
 

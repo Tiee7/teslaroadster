@@ -1310,7 +1310,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
   } else if (mph < 215) {
     state.wasSupersonic = false;
   }
-  updateSonicCondensation(dt, crossedSonicThreshold, isCockpitFpv);
+  updateSonicCondensation(dt, crossedSonicThreshold, isCockpitFpv, isSupersonic);
 
   // Requirement 5: Left/right ground steering sound removed completely
   tireScreechIntensity = 0.0;

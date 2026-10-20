@@ -16,6 +16,11 @@
   limiter instead of chattering at250/370. Following demand feathers continuously.
   Startup can still reach220; dangerous traffic pauses ordinary extra boost.
   The220 floor and its genuine paid protection remain unchanged.
+- The existing body-side condensation wisps retain their shader, shape and0.8s
+  pulse, then repeat after a random3–5 seconds of eligible simulation time. Only
+  visuals repeat: no repeated boom/speech/banner/camera shake or extra geometry.
+  Trigger loss, FPV, menus, focus/visibility loss, destruction and reset clear
+  both pulse and delay. No timers or queued background callbacks are introduced.
 
 ## Two driving regressions caught and repaired before publication
 1. A first danger-pause draft stranded zero-start at the200 EV ceiling, below
@@ -32,6 +37,12 @@ obstacle at the now-intersecting phase. The original full-sweep, late-prefix and
 safePath rejection assertions are retained; no collision is invented or removed.
 `final-lane-witness-migration.json` records the measured crossing.
 
+The following-demand fixture likewise keeps its original80m lead position and
+checks that neither predictor nor actual execution invents braking solely for
+the retired250 cruise cap. Its real H/retro/gas matrix uses40m, where the actual
+following envelope is below the player's75m/s; existing multi-frame80m safety and
+independent binding long-frame brake checks remain intact.
+
 ## Evidence boundaries
 - `verify-fuel-equivalence.mjs` compares the prior published tree with fixed-input
   default finite highway physics, and current Node projection with actual extracted
@@ -42,6 +53,9 @@ safePath rejection assertions are retained; no collision is invented or removed.
 - Earlier diagnostic/failed/interrupted logs remain local with their original
   outcomes; they are not relabelled as final passes or bundled with failed
   Tactical/rolling prototypes. Source changes use an explicit release whitelist.
+- V3 was interrupted when the new condensation-repeat request arrived, before
+  that visual code was added. V4 is the full run for the updated frozen runtime;
+  no earlier pass or preview is relabelled as the new candidate.
 - Finite air still requires reserve/recharge pauses. Already committed preparation
   may retain its single paid220-floor pulse. Manual frames below20fps still hit the
   existing50ms timestep cap. These are disclosed constraints, not hidden free gas.

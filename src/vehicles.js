@@ -1184,7 +1184,7 @@ function setThrusterPlumePower(plume, power, hidden = false) {
 }
 function clearThrusterVisuals() {
   for (const plume of allThrusterPlumes) setThrusterPlumePower(plume, 0);
-  sonicBoomConeGroup.visible = false; sonicCondensationAge = 1;
+  resetSonicCondensation();
 }
 
 const rearNozzlesGimbalGroup = new THREE.Group();
@@ -1265,14 +1265,45 @@ const sonicCondensationMesh = new THREE.Mesh(sonicCondensationGeometry, sonicCon
 sonicBoomConeGroup.add(sonicCondensationMesh); sonicBoomConeGroup.visible = false;
 carMeshGroup.add(sonicBoomConeGroup);
 let sonicCondensationAge = 1;
+let sonicCondensationRepeatSeconds = null;
+let sonicCondensationFocusLost = false;
 const sonicTrailingDirection = new THREE.Vector3(), sonicLocalQuaternion = new THREE.Quaternion();
 const sonicAxis = new THREE.Vector3(0, 0, 1);
-function updateSonicCondensation(dt, crossedThreshold, isCockpitFpv) {
-  if (crossedThreshold) sonicCondensationAge = 0;
-  else sonicCondensationAge = Math.min(1, sonicCondensationAge + dt / 0.8);
+function resetSonicCondensation() {
+  sonicCondensationAge = 1;
+  sonicCondensationRepeatSeconds = null;
+  sonicBoomConeGroup.visible = false;
+  sonicCondensationMaterial.uniforms.uOpacity.value = 0;
+}
+// Advance only with simulation time: no timers, queued pulses or repeated boom/audio.
+// A fresh delay begins after the old 0.8s wisp has completely disappeared.
+function updateSonicCondensation(dt, crossedThreshold, isCockpitFpv, isSupersonic, random = Math.random) {
+  const mapMenu = document.getElementById?.('modal-map-select');
+  if (!isSupersonic || isCockpitFpv || state.isDestroyed || document.hidden || sonicCondensationFocusLost ||
+      (mapMenu && !mapMenu.classList.contains('hidden'))) {
+    resetSonicCondensation();
+    return;
+  }
+  const elapsed = Number.isFinite(dt) ? Math.max(0, dt) : 0;
+  const nextDelay = () => 3 + 2 * Math.max(0, Math.min(1, Number(random()) || 0));
+  if (crossedThreshold && sonicCondensationAge === 1 && sonicCondensationRepeatSeconds === null) {
+    sonicCondensationAge = 0;
+  } else if (sonicCondensationAge < 1) {
+    sonicCondensationAge = Math.min(1, sonicCondensationAge + elapsed / 0.8);
+  } else if (sonicCondensationRepeatSeconds === null) {
+    // Resume/camera change while already above threshold: wait, never backfill.
+    sonicCondensationRepeatSeconds = nextDelay();
+  } else {
+    sonicCondensationRepeatSeconds = Math.max(0, sonicCondensationRepeatSeconds - elapsed);
+    if (sonicCondensationRepeatSeconds <= 1e-8) {
+      sonicCondensationAge = 0;
+      sonicCondensationRepeatSeconds = null;
+    }
+  }
   if (sonicCondensationAge >= 1 - 1e-8) sonicCondensationAge = 1;
+  if (sonicCondensationAge === 1 && sonicCondensationRepeatSeconds === null) sonicCondensationRepeatSeconds = nextDelay();
   const pulse = Math.sin(Math.PI * sonicCondensationAge);
-  sonicBoomConeGroup.visible = sonicCondensationAge < 1 && !isCockpitFpv && !state.isDestroyed;
+  sonicBoomConeGroup.visible = sonicCondensationAge < 1;
   sonicCondensationMaterial.uniforms.uOpacity.value = Math.max(0, pulse) * 0.20;
   if (!sonicBoomConeGroup.visible) return;
   // Follow actual travel, including sideways/backward flight, using reusable scratch values.
@@ -1282,6 +1313,10 @@ function updateSonicCondensation(dt, crossedThreshold, isCockpitFpv) {
   else sonicTrailingDirection.normalize().applyQuaternion(sonicLocalQuaternion);
   sonicBoomConeGroup.quaternion.setFromUnitVectors(sonicAxis, sonicTrailingDirection);
 }
+window.addEventListener('blur', () => { sonicCondensationFocusLost = true; resetSonicCondensation(); });
+window.addEventListener('focus', () => { sonicCondensationFocusLost = false; });
+window.addEventListener('pagehide', resetSonicCondensation);
+document.addEventListener?.('visibilitychange', () => { if (document.hidden) resetSonicCondensation(); });
 
 // Four underside lift ports and four matching top-deck attitude/descent ports.
 // Attitude commands reuse these real outlets, rather than inventing mid-air jets.

@@ -14,7 +14,7 @@ import { isProxy } from 'node:util/types';
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const EXPECTED_SOURCE_HASHES = Object.freeze({
   'src/config.js': 'e266a54510bd451a35d5a75fe3d330cc40204bacd681d23cfbe76a693eaf4d3f',
-  'src/physics-main.js': 'ca0ce77283ac6fcedbc0b20db182778d3935ebe09f9f4cac4f8f9ba29f0aec13',
+  'src/physics-main.js': '3e28a4551f7a6f38ad1500f06b6232e7dcfc640dbb6a3fe0bd973057126da182',
   'src/highway-demo.js': '30269219669489f3f1c228fc305eacd1032238bc1bcb0100a2bd9ebf6f06df43',
   'src/highway-traffic.js': 'faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108',
   'src/ui-hud.js': 'eda76a2f67268dacbcae89a299a9ef00af241648909a8a5e1f8b349e38079b7b',

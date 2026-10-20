@@ -289,12 +289,17 @@ All propulsion/attitude outlets now use one soft, outward-only, depth-tested col
 The current visual revision broadens and lengthens the pressure wake without
 moving the nozzle mouths or adding outlet meshes. Rear jets reach 2.35 m at full
 power; the condensation pulse is slightly more visible but still expires in
-0.8 seconds. [Pressure review](verification/jet-pressure-review/README.md) records
+0.8 seconds. While the existing high-speed condition remains true, only these
+body-side wisps reappear a random3–5 simulation seconds after disappearing.
+Their shape and opacity stay unchanged; repeat pulses do not replay the boom,
+speech, banner or camera shake. FPV, lost focus/visibility, menus, destruction and
+reset clear the effect and its delay, without queued background timers.
+[Pressure review](verification/jet-pressure-review/README.md) records
 the production-geometry checks and CPU previews, not a real-WebGL visual pass.
 
-## Highway demo driving / 第一关演示驾驶
+## Highway autopilot / 第一关自动驾驶
 
-Map 01 adds a small, opt-in Demo drive / 演示模式 switch with no shortcut. It supplies real driving/boost/brake inputs, accelerates normally from rest, and targets 220+ km/h. A multi-lane maneuver now steers continuously toward its final lane center; intermediate centers do not insert a straightening pause. The complete predicted sweep is checked for crossed-lane traffic. Mechanical plus paid retro braking is requested only when its predicted result remains at least 220 km/h; a slower queue instead prompts a pass or an earlier, real-gas tactical hop. Real finite tank, airborne drag, landing and collision limits still apply, so an impossible or fuel-starved situation can lose speed or crash. The switch stops cleanly on reset, destruction, map/mode changes, menus and loss of focus. Automatic driving stays isolated from the 60-second leaderboard. See [implementation, paired verification and limits](docs/highway-demo.md).
+Map 01 adds a small, opt-in Autopilot / 自动驾驶 switch with no shortcut. It supplies real driving/boost/brake inputs, accelerates normally from rest, and targets 220+ km/h. A multi-lane maneuver now steers continuously toward its final lane center; intermediate centers do not insert a straightening pause. The complete predicted sweep is checked for crossed-lane traffic. Mechanical plus paid retro braking is requested only when its predicted result remains at least 220 km/h; a slower queue instead prompts a pass or an earlier, real-gas tactical hop. Real finite tank, airborne drag, landing and collision limits still apply, so an impossible or fuel-starved situation can lose speed or crash. The switch stops cleanly on reset, destruction, map/mode changes, menus and loss of focus. Automatic driving stays isolated from the 60-second leaderboard. See [implementation, paired verification and limits](docs/highway-demo.md).
 
 **Known limitation:** the current integrated demo has not passed the requested
 all-mode, high-density 60-second collision-free acceptance. The sound/jet release
