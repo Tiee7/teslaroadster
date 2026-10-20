@@ -25,6 +25,18 @@ function syncHudPerspective() {
 
 const HUD_MODES = ['full', 'medium', 'minimal'];
 const HUD_STORAGE_KEY = 'roadster-hud-mode';
+function toggleMobileHudPanel(panel) {
+  if (typeof window === 'undefined' || !window.matchMedia?.('(pointer: coarse)').matches) return false;
+  const next = document.body.dataset.mobileHudPanel === panel ? 'none' : panel;
+  document.body.dataset.mobileHudPanel = next;
+  for (const [name,id] of [['guide','btn-collapse-guide'],['telemetry','btn-collapse-telemetry']]) {
+    const button = document.getElementById(id);
+    button?.setAttribute('aria-expanded',String(next === name));
+    if (button) button.textContent = next === name ? '−' : '+';
+  }
+  updateHudBounds();
+  return true;
+}
 function normalizeHudMode(value) {
   if (HUD_MODES.includes(value)) return value;
   // Accept the former boolean shape without treating an unknown value as minimal.
@@ -42,10 +54,17 @@ function applyHudMode() {
   const extraButtons = [
     'btn-map-select', 'btn-physics-mode', 'btn-plaid-mode', 'btn-unit-toggle',
     'btn-paint', 'btn-weather', 'btn-traffic', 'btn-camera-zoom',
-    'btn-sound', 'btn-reset', 'btn-help'
+    'btn-sound', 'btn-help'
   ];
   extraButtons.forEach(id => document.getElementById(id)?.classList.toggle('hidden', compact));
-  document.getElementById('btn-camera')?.classList.toggle('hidden', mode === 'minimal');
+  // HUD reduction removes information, never the available driving controls.
+  ['btn-camera','btn-reset'].forEach(id => document.getElementById(id)?.classList.toggle('hidden',false));
+  document.body.dataset.mobileHudPanel = 'none';
+  if (typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches) {
+    for (const id of ['btn-collapse-guide','btn-collapse-telemetry']) {
+      const button=document.getElementById(id);button?.setAttribute?.('aria-expanded','false');if(button)button.textContent='+';
+    }
+  }
   ['hud-left', 'hud-right'].forEach(id => document.getElementById(id)?.classList.toggle('hidden', mode === 'minimal'));
   const footer = document.getElementById('hud-footer');
   footer?.classList.remove('hidden');
@@ -1019,6 +1038,7 @@ document.getElementById('btn-close-modal').addEventListener('click', toggleHelpM
 document.getElementById('btn-start-game').addEventListener('click', toggleHelpModal);
 
 document.getElementById('btn-collapse-guide').addEventListener('click', () => {
+  if (toggleMobileHudPanel('guide')) return;
   const body = document.getElementById('guide-body');
   const hudLeft = document.getElementById('hud-left');
   const hudLeftHeader = document.getElementById('hud-left-header');
@@ -1038,6 +1058,7 @@ document.getElementById('btn-collapse-guide').addEventListener('click', () => {
 const btnCollapseTelemetry = document.getElementById('btn-collapse-telemetry');
 if (btnCollapseTelemetry) {
   btnCollapseTelemetry.addEventListener('click', () => {
+    if (toggleMobileHudPanel('telemetry')) return;
     const body = document.getElementById('telemetry-body');
     const card = document.getElementById('hud-right-card');
     const header = document.getElementById('hud-right-header');

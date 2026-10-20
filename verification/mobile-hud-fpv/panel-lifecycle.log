@@ -1,0 +1,15 @@
+✔ HUD cycles Full → Medium → Minimal repeatedly with independent compact and side-panel flags (6.922921ms)
+✔ all HUD modes restore on reload, boolean legacy values migrate safely, invalid values use Full (13.71857ms)
+✔ blocked localStorage never prevents HUD switching and medium preserves collapsed panel contents (1.477677ms)
+✔ all HUD modes retain touch inputs and camera/reset; keyboard and button share the same action (0.753606ms)
+✔ central cabin mirror and its mount/material are removed, exterior and traffic mirrors retained (0.890562ms)
+✔ small-screen Medium FPV keeps both side cards scrollable above the central instrument band (0.303748ms)
+✔ phone detail cards start folded and only the explicitly requested sheet expands, across repeated HUD cycles (5.591996ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.111517

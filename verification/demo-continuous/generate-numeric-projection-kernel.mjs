@@ -17,7 +17,7 @@ export const EXPECTED_SOURCE_HASHES = Object.freeze({
   'src/physics-main.js': '3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81',
   'src/highway-demo.js': '0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07',
   'src/highway-traffic.js': 'faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108',
-  'src/ui-hud.js': '0f0b07d9228b27a6a1aef36de069cf6616c2d98b323fc4b1a657acb1c53d6c4b',
+  'src/ui-hud.js': 'e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808',
   'src/audio.js': '5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee',
   'tests/helpers/demo-harness.mjs': '69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff',
   'tests/helpers/vendor/three-r128-MathUtils.mjs': '09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61'

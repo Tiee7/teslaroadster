@@ -1,6 +1,6 @@
 {
   "schema": "static-projection-identity-only-tests-v1",
-  "generatedAt": "2026-10-20T15:18:03.364Z",
+  "generatedAt": "2026-10-20T16:22:38.479Z",
   "passed": true,
   "totalTests": 29,
   "byKind": {
@@ -165,14 +165,14 @@
     "src/physics-main.js": "3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
-    "src/ui-hud.js": "0f0b07d9228b27a6a1aef36de069cf6616c2d98b323fc4b1a657acb1c53d6c4b",
+    "src/ui-hud.js": "e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808",
     "src/audio.js": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61",
-    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "443e84f62d4108f6792bcb8e4b0e7af32f7cc3d2b75809b8485bf6a2ae88502b",
-    "verification/demo-continuous/emit-browser-static-projection.mjs": "245b0c9795ec1e9f8f52e27b08ccf3e219ad60631c10606caa20b6811ba1ae36",
-    "verification/demo-continuous/browser-static-projection.generated.js": "e18e4301790a4fff5ef4a8218c8503787cac62d0f74800cb4cc434b90abe2dfd",
-    "verification/demo-continuous/browser-static-projection.generated.mjs": "5e7ad0b2ed08f84d3c70b0ceeef31ee3991ef72d3b953d4798fc955cd4f4dc87",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "587174e45e590f5c8f4432f77f61881641d9e8b64b4362cbdb6eae0d06138cf2",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "2df6ee22a40788a75388dd83ed8ca7c6a75b525d5e6cd4018331d5e045fffa5c",
+    "verification/demo-continuous/browser-static-projection.generated.js": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2",
+    "verification/demo-continuous/browser-static-projection.generated.mjs": "5644fc54cc7faad6a33258d0744a4ed1596e14c9ba9cce598f8d43057add29dd",
     "verification/demo-continuous/browser-static-projection-identity.generated.mjs": "775e33b34ad2d541807bc09cc16b1a41667029ffaf25622b94e8261cc9cdf00c",
     "verification/demo-continuous/numeric-math-identity-profiles.json": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a"
   },

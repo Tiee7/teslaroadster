@@ -2,8 +2,9 @@
 // 4. PLAYER VEHICLE: TRUE 2026 TESLA ROADSTER CYBER-WEDGE MODEL (V8)
 //    Rebuilt 1:1 from user reference photos (image_ed309d, ed30b9, ed8256)
 // =========================================================================
-// One fixed driver pose is shared by the camera and projection-sized instruments.
-const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.12, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.47, wheelDepth: 0.30, dashDepth: 0.60 });
+// The shared eye lies inside both actual canopies (reference roof here is1.101m),
+// not above the roof. Camera, instruments and windshield projection use one pose.
+const COCKPIT_VIEW = Object.freeze({ eyeHeight: 1.04, eyeZ: -0.15, downwardSlope: 0.04, displayDepth: 0.47, wheelDepth: 0.30, dashDepth: 0.60 });
 const playerWrapper = new THREE.Group();
 playerWrapper.position.set(2.5, 0, 0);
 scene.add(playerWrapper);

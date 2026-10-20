@@ -6,10 +6,10 @@ import { readFileSync } from 'node:fs';
 const read = name => readFileSync(new URL(`../src/${name}`, import.meta.url), 'utf8');
 const hud = read('ui-hud.js'), html = read('index.html'), css = read('styles.css'), config = read('config.js');
 const modes = hud.slice(hud.indexOf('const HUD_MODES'), hud.indexOf('// =========================================================================', hud.indexOf('const HUD_MODES')));
-function harness(saved = null, blocked = false, legacy) {
+function harness(saved = null, blocked = false, legacy, coarse = false) {
   const elements = Object.fromEntries([...html.matchAll(/\bid="([^"]+)"/g)].map(([, id]) => {
     const classes = new Set();
-    return [id, { classes, classList: {
+    return [id, { classes, attributes:{}, setAttribute(name,value){this.attributes[name]=String(value);}, classList: {
       toggle(name, active) { if (active) classes.add(name); else classes.delete(name); },
       remove(name) { classes.delete(name); },
     } }];
@@ -17,7 +17,7 @@ function harness(saved = null, blocked = false, legacy) {
   let stored = saved, bounds = 0, translations = 0, beeps = 0;
   const state = legacy === undefined ? { hudMode: 'full', hudMinimal: false } : { hudMinimal: legacy };
   const body = { dataset: {} };
-  const context = vm.createContext({ state, document: { body, getElementById: id => elements[id] },
+  const context = vm.createContext({ state, window:{matchMedia:()=>({matches:coarse})}, document: { body, getElementById: id => elements[id] },
     localStorage: { getItem() { if (blocked) throw Error('blocked'); return stored; }, setItem(key, value) { if (blocked) throw Error('blocked'); assert.equal(key, 'roadster-hud-mode'); stored = value; } },
     updateHudBounds() { bounds++; }, applyTranslations() { translations++; }, sound: { beep() { beeps++; } },
   });
@@ -35,7 +35,7 @@ test('HUD cycles Full → Medium → Minimal repeatedly with independent compact
     assert.equal(h.hidden('hud-left'), expected === 'minimal'); assert.equal(h.hidden('hud-right'), expected === 'minimal');
     assert.equal(h.hidden('hud-brand-badge'), expected !== 'full');
     assert.equal(h.hidden('btn-map-select'), expected !== 'full');
-    assert.equal(h.hidden('btn-camera'), expected === 'minimal');
+    assert.equal(h.hidden('btn-camera'), false); assert.equal(h.hidden('btn-reset'), false); assert.equal(h.hidden('btn-city-taxi'), false);
     for (const id of ['btn-lang', 'btn-settings', 'btn-hud-mode', 'btn-leaderboard', 'status-banner', 'ranked-hud']) assert.equal(h.hidden(id), false);
     assert.equal(h.elements['hud-footer'].classes.has('hud-compact-view'), expected !== 'full');
     assert.equal(h.elements['hud-footer'].classes.has('hud-minimal-view'), expected === 'minimal');
@@ -63,10 +63,10 @@ test('blocked localStorage never prevents HUD switching and medium preserves col
   assert.equal(h.hidden('guide-body'), true); assert.equal(h.hidden('telemetry-body'), true);
 });
 
-test('medium keeps mobile touch controls; keyboard and button share the same three-state action', () => {
-  assert.match(css, /\.hud-minimal-view #touch-controls\s*\{\s*display: none !important;/);
+test('all HUD modes retain touch inputs and camera/reset; keyboard and button share the same action', () => {
+  assert.doesNotMatch(css, /\.hud-minimal-view #touch-controls\s*\{\s*display: none/);
   assert.doesNotMatch(css, /\.hud-compact-view #touch-controls/);
-  assert.match(css, /@media \(pointer: coarse\) \{\s*body:not\(\[data-hud-mode="minimal"\]\) #touch-controls \{ display: flex; \}/);
+  assert.match(css, /@media \(pointer: coarse\) \{\s*body #touch-controls \{ display: flex; \}/);
   assert.match(hud, /btnHudMode\.addEventListener\('click', toggleHudMode\)/);
   assert.match(hud, /if \(e\.code === 'KeyZ'\) \{\s*if \(!e\.repeat\) toggleHudMode\(\);/);
   assert.match(config, /hudBtnMedium: "HUD: Medium \(Z\)"/);
@@ -89,4 +89,41 @@ test('small-screen Medium FPV keeps both side cards scrollable above the central
     assert.ok(card >= 32);
     if (height > 400) assert.ok(top + card < height * 0.45);
   }
+});
+
+
+test('phone detail cards start folded and only the explicitly requested sheet expands, across repeated HUD cycles',()=>{
+ const h=harness(null,false,undefined,true);h.restore();
+ assert.equal(h.body.dataset.mobileHudPanel,'none');
+ for(let i=0;i<6;i++){
+  assert.equal(h.context.toggleMobileHudPanel('guide'),true);assert.equal(h.body.dataset.mobileHudPanel,'guide');
+  assert.equal(h.elements['btn-collapse-guide'].attributes['aria-expanded'],'true');
+  h.context.toggleMobileHudPanel('telemetry');assert.equal(h.body.dataset.mobileHudPanel,'telemetry');
+  assert.equal(h.elements['btn-collapse-guide'].attributes['aria-expanded'],'false');
+  h.context.toggleMobileHudPanel('telemetry');assert.equal(h.body.dataset.mobileHudPanel,'none');
+  h.toggle();assert.equal(h.body.dataset.mobileHudPanel,'none');
+  assert.equal(h.hidden('btn-camera'),false);assert.equal(h.hidden('btn-reset'),false);
+ }
+ const desktop=harness();desktop.restore();assert.equal(desktop.context.toggleMobileHudPanel('guide'),false);
+});
+
+// CSS-source and budget regression, not a browser layout or device pixel claim.
+test('phone sheets reserve a complete sticky close row above driving controls even on occupied short landscape',()=>{
+ const phone=css.slice(css.indexOf('/* Phone driving-first layout.'));
+ assert.match(phone,/#hud-top-container, #hud-top-container\.taxi-navigation-active, \.cockpit-view\[data-hud-mode="medium"\] #hud-top-container \{ --hud-notice-space: min\(32px, max\(0px, calc\(100dvh/);
+ assert.match(phone,/max-height: min\(32dvh, max\(40px, calc\(100dvh/);
+ assert.match(phone,/body\[data-mobile-hud-panel="guide"\] #hud-left-header, body\[data-mobile-hud-panel="telemetry"\] #hud-right-header \{ position: sticky; top: -5px; z-index: 2;/);
+ for(const [width,height] of [[320,568],[390,844],[568,320],[667,320],[844,390],[1024,768]]){
+  const landscape=width>height && height<=500;
+  const stick=landscape?Math.max(88,Math.min(112,height*.24)):Math.max(88,Math.min(124,width*.27));
+  for(const safe of [0,20,34])for(const occupied of [false,true]){
+   const header=(occupied?68:46)+safe;
+   const notice=Math.min(32,Math.max(0,height-header-stick-78-safe-40));
+   const sheet=Math.min(height*.32,Math.max(40,height-header-notice-stick-78-safe));
+   const sheetBottom=header+notice+4+sheet;
+   const modeTop=height-Math.max(landscape?16:18,safe)-stick-6-32;
+   assert.ok(sheet>=40,`complete close row: ${width}x${height}`);
+   assert.ok(sheetBottom<=modeTop,`${width}x${height}/safe${safe}/occupied${occupied}: ${sheetBottom} > ${modeTop}`);
+  }
+ }
 });

@@ -1,0 +1,200 @@
+{
+  "frozenAt": "2026-10-20T16:04:13.677375+00:00",
+  "baselineProductionCommit": "20d0d2cf237595df3d9060faf2f4a6a95a618928",
+  "baselineTree": "647d6b797cf31afa3884906fe70a776e777a3d9a",
+  "scope": "Mobile driving visibility/cockpit fix integrated after original coast candidate; full aggregate pending, historical coast647 is not relabelled for this tree.",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "bb2c13c1ccd4c42e7e7da6abc0597fd7a034846bae3df9f42d4fe860832ba11a",
+      "bytes": 51028,
+      "gitBlob": "a1f61ff111cf6421a9afd785340bbadfe3868c11"
+    },
+    {
+      "path": "bundle_app.py",
+      "sha256": "2068de321d7892b404f61dd4f9150f04267b6c397035270dad7674fea7f83276",
+      "bytes": 1919,
+      "gitBlob": "2d2a7a9771d61cb0279b9eb7406c218fd12a2368"
+    },
+    {
+      "path": "index.html",
+      "sha256": "ff6b0a13c1d55ae0d63b9c1211f78d6350e804171e9038d007fd4701f956b91a",
+      "bytes": 4746799,
+      "gitBlob": "1c777bcd11fc9cdd90c7e15b3919dcf6ae5e9565"
+    },
+    {
+      "path": "src/coast-map.js",
+      "sha256": "22debfaa373996972472d1d47c02360e3c22ebd1a0b0a41d73a18311b1300e73",
+      "bytes": 17561,
+      "gitBlob": "1a4b82d1b3a70e90816d68a9366ab018afbca66d"
+    },
+    {
+      "path": "src/config.js",
+      "sha256": "fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306",
+      "bytes": 34400,
+      "gitBlob": "34d546aaa4c306ff680b286a1465ee3e1e87634e"
+    },
+    {
+      "path": "src/demo-numeric-projection.js",
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2",
+      "bytes": 232906,
+      "gitBlob": "09a362b118c72b05dcbb65af2b6b1a3124fd2a64"
+    },
+    {
+      "path": "src/index.html",
+      "sha256": "7bb60554a1cea5b3d8df8382bf45e22f1c27efb514c6ac236425f49a250d8026",
+      "bytes": 52062,
+      "gitBlob": "b31af083b3bd84ff45a6a967062b8d240db776ca"
+    },
+    {
+      "path": "src/leaderboard.js",
+      "sha256": "aaa1c0bff102f87c0fc6428cf6a80ecfb09c8bc7fc6bb4164076d4f92367264d",
+      "bytes": 26783,
+      "gitBlob": "1926f73a223458842254b674d7ca3aa48eea7953"
+    },
+    {
+      "path": "src/mobile-controls.js",
+      "sha256": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+      "bytes": 10417,
+      "gitBlob": "bd323d4746faa1bd72f886232cd5ad1c6cfafe80"
+    },
+    {
+      "path": "src/physics-main.js",
+      "sha256": "3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81",
+      "bytes": 109553,
+      "gitBlob": "40c95ffc4999bb567bc179606b3b47e9012074cf"
+    },
+    {
+      "path": "src/start-screen.js",
+      "sha256": "c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d",
+      "bytes": 14322,
+      "gitBlob": "ecc255187d04d2c89bcc8108ab1b88451f12e245"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "e3237e0733a6c93a5f6826c281f3266c1fcddabda0600d3826102cb367267668",
+      "bytes": 36730,
+      "gitBlob": "28c7698bf76a829b4164bbdf5fc1eef71616a7be"
+    },
+    {
+      "path": "src/ui-hud.js",
+      "sha256": "e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808",
+      "bytes": 60090,
+      "gitBlob": "e17be9d651894dc5b3c7a239cdbe6df8767199fa"
+    },
+    {
+      "path": "src/vehicles.js",
+      "sha256": "cdd97d85c23492ee443e5f7e78e2a516d20418d4985f1e92f78e7caad79fb311",
+      "bytes": 93009,
+      "gitBlob": "82a561c97c25c783dab83834646c3ab943fdeda3"
+    },
+    {
+      "path": "tests/attitude.test.mjs",
+      "sha256": "97658703d19b3e7ac36b2b0f487afc3a0af7b5c033b6db4d4d16dae2b8adfe39",
+      "bytes": 24675,
+      "gitBlob": "6537d1ca04cf26c21fc25e398882d65cdd099909"
+    },
+    {
+      "path": "tests/braking.test.mjs",
+      "sha256": "742b712fd626883d13623ac58c1ce005e811cec38fc53d7027ca94f5477c1dfb",
+      "bytes": 26119,
+      "gitBlob": "1605df19076ba7d0cd395ca45c40a6958a9d724d"
+    },
+    {
+      "path": "tests/camera-stability.test.mjs",
+      "sha256": "a871e781e1976c11aecec8d5e707f4e36b235599eca605bed82ca09958416f99",
+      "bytes": 7811,
+      "gitBlob": "11239dceb28c5b35b223a1f337597d4afc3b41aa"
+    },
+    {
+      "path": "tests/city-scale.test.mjs",
+      "sha256": "051d11610fd9cabc8af039f811b71b432e986d5cabfbcfa004c7c2be769beb61",
+      "bytes": 2959,
+      "gitBlob": "1acf3c87034b2752db34717477bf52de1ee24097"
+    },
+    {
+      "path": "tests/coast-map.test.mjs",
+      "sha256": "a407d1ef6aa6daa113a585edf7ed6f7c116065026d38234de881bdc72e8fc070",
+      "bytes": 16578,
+      "gitBlob": "e34644470d79a68cc73c77fa21659e8a5b54661d"
+    },
+    {
+      "path": "tests/cockpit-eye-calibration.test.mjs",
+      "sha256": "52371e49b39d9c6acb820bb1cd567758cf2b3cd9ff25f87bb87e43bbdf13794a",
+      "bytes": 3682,
+      "gitBlob": "f298c5c5f82ea671344abaee18016b4f30747291"
+    },
+    {
+      "path": "tests/engine-sound.test.mjs",
+      "sha256": "ef891c9f5ee92d5ec50244cb3e7565a0081179d5121b406caabdcff0cc9a2d65",
+      "bytes": 18397,
+      "gitBlob": "2252fef15b2ea1865208653dd7fe7a3f483f0014"
+    },
+    {
+      "path": "tests/helpers/motion-harness.mjs",
+      "sha256": "f8d03131cf84c290b7fa04260a74d5e235ac3f3f301731da8f4ef5b15b18c353",
+      "bytes": 1825,
+      "gitBlob": "fd03691563d090d64e3611e8d632267f35d92e4d"
+    },
+    {
+      "path": "tests/hud-modes.test.mjs",
+      "sha256": "39907498ac8458982d64d772ba63a3f5bc32f582d2ec5139f79a72388d1cdf6f",
+      "bytes": 7695,
+      "gitBlob": "6811c1059f477e3ff78b9a204ae82ad36b02e1ce"
+    },
+    {
+      "path": "tests/input-frame.test.mjs",
+      "sha256": "0200461830f32f260e43b94d66e50b13aeda6d14532227a120201ba48326b035",
+      "bytes": 2359,
+      "gitBlob": "e44ce398c92f0d20e4be0cefc3da5a8a62a533b7"
+    },
+    {
+      "path": "tests/mobile-controls.test.mjs",
+      "sha256": "1e49d0ccb38f1a13faf09ce91e73c255cd13611958e7d854b6c4c0f663ab5505",
+      "bytes": 37895,
+      "gitBlob": "f1fb8c1a12d2f9b801a0abd8c3006569d45dbcbc"
+    },
+    {
+      "path": "tests/start-screen.test.mjs",
+      "sha256": "9a810a3e5d75b98f92789affd57698a7e1cf5719f3a46d109449165047a39278",
+      "bytes": 25490,
+      "gitBlob": "f11e2436f37a3898f754c9b17b190ca767ff15c8"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection-identity.generated.mjs",
+      "sha256": "775e33b34ad2d541807bc09cc16b1a41667029ffaf25622b94e8261cc9cdf00c",
+      "bytes": 86692,
+      "gitBlob": "ef9cb85ddcdc6b75be559e82b8dedeb99be7174d"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.js",
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2",
+      "bytes": 232906,
+      "gitBlob": "09a362b118c72b05dcbb65af2b6b1a3124fd2a64"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.mjs",
+      "sha256": "5644fc54cc7faad6a33258d0744a4ed1596e14c9ba9cce598f8d43057add29dd",
+      "bytes": 232949,
+      "gitBlob": "4b6d698df49097ed0ab3c0f68618756924a9b53f"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.manifest.json",
+      "sha256": "e5897abf89c0de6a5d51850bf6507c4e413a619f78ca94c1608a86b71adadfc1",
+      "bytes": 9617,
+      "gitBlob": "928856c0d095206795eb5374da1c0463d3c20957"
+    },
+    {
+      "path": "verification/demo-continuous/emit-browser-static-projection.mjs",
+      "sha256": "2df6ee22a40788a75388dd83ed8ca7c6a75b525d5e6cd4018331d5e045fffa5c",
+      "bytes": 18454,
+      "gitBlob": "90f52fec90c163f082498c640eaf8bc91357be41"
+    },
+    {
+      "path": "verification/demo-continuous/generate-numeric-projection-kernel.mjs",
+      "sha256": "587174e45e590f5c8f4432f77f61881641d9e8b64b4362cbdb6eae0d06138cf2",
+      "bytes": 23202,
+      "gitBlob": "0ad28692d1c60523f5250e04d56dbd751aa13eb3"
+    }
+  ]
+}

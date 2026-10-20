@@ -1,4 +1,4 @@
-// Hidden city passenger sandbox. Its session and score never enter ranked scoring.
+// City passenger sandbox. Its session and score never enter ranked scoring.
 // The model is renderer-independent so route, proximity, and lifecycle rules are testable.
 const CityTaxiModel = (() => {
   'use strict';
@@ -173,7 +173,7 @@ const CityTaxiModel = (() => {
     isStopClear, buildRoadGraph, shortestRoute, fareForDistance, destinationBearing, withinArrival, createSession });
 })();
 
-// Scene adapter: no DOM entry, modal, HUD, or scene object exists before the secret key.
+// Scene adapter: the public city-only entry creates no scene resources until started.
 (() => {
   'use strict';
   let session = null, markerGroup = null, hud = null, scoreLabel = null, instrumentHost = null;
@@ -184,6 +184,21 @@ const CityTaxiModel = (() => {
   const isZh = () => currentLang === 'zh';
   const position = () => ({ x: state.x, y: state.y, z: state.z });
   const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
+  function renderEntry() {
+    const button = document.getElementById('btn-city-taxi');
+    if (!button) return;
+    const active = snapshot().active;
+    button.hidden = currentMap !== 'city';
+    button.disabled = Boolean(state.isDestroyed);
+    button.setAttribute('aria-pressed', String(active));
+    button.textContent = isZh() ? (active ? '退出接客' : '接客游戏') : (active ? 'Exit passengers' : 'Passenger game');
+    const help = document.getElementById('city-taxi-help');
+    const instructions = isZh()
+      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活、重置或退出接客后从零开始。`
+      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning, resetting or exiting starts from zero.`;
+    button.setAttribute('title', instructions);
+    if (help) help.textContent = instructions;
+  }
   function blockedByUi() {
     return ['modal-map-select', 'modal-help', 'modal-destroyed'].some(id => {
       const element = document.getElementById(id);
@@ -284,6 +299,7 @@ const CityTaxiModel = (() => {
     if (data.passenger) destinationMarker.position.set(data.passenger.destination.x, 0, data.passenger.destination.z);
   }
   function render() {
+    renderEntry();
     if (!hud) return;
     renderNavigation();
     const data = snapshot();
@@ -341,6 +357,7 @@ const CityTaxiModel = (() => {
     beamGeometry = null; coreGeometry = null; ringGeometry = null;
     whiteMaterial = null; greenMaterial = null; whiteCoreMaterial = null; greenCoreMaterial = null;
     pickupMarkers = []; destinationMarker = null;
+    renderEntry();
   }
   function onReset() {
     if (!snapshot().active || state.isDestroyed) return;
@@ -362,13 +379,8 @@ const CityTaxiModel = (() => {
     if (textEntry(event)) return true;
     event.preventDefault();
     if (event.repeat || currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || snapshot().active) return true;
-    clearAllInputKeys();
-    const approved = window.confirm(isZh()
-      ? `开启城市接客游戏？\n\n白色光柱是等待中的乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；上车后只显示该乘客的绿色目的地，送达可获 1000–3000 接客积分。每段行程至少 900 米，一次接送一位。\n\n撞毁会结算并保留本局成绩，车内乘客遇难，先扣除该趟奖励的双倍积分，最低为 0。复活或按 R 重置后，驾驶和接客累计分从 0 开始。载客时手动重置也会失去乘客。接客积分独立计算，不计入排行榜。`
-      : `Start the city passenger game?\n\nWhite columns mark waiting passengers. Get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up. Only that passenger’s green destination is then visible. Deliver them for 1,000–3,000 passenger points. Routes are at least 900m, one passenger at a time.\n\nA crash settles and preserves your final score. A passenger on board is lost and twice that fare is deducted first, with a minimum score of zero. Respawning or resetting with R starts driving and passenger totals from zero. A manual occupied reset also loses the passenger. Passenger points are separate from the leaderboard.`);
-    // A native confirmation may be open for minutes. Never replay held controls or elapsed time.
     clearAllInputKeys(); lastTime = performance.now();
-    if (approved && currentMap === 'city' && !state.isDestroyed && !blockedByUi()) start();
+    start();
     return true;
   }
   function tick() {
@@ -383,5 +395,11 @@ const CityTaxiModel = (() => {
     syncMarkers(); render();
     sound.beep(event.type === 'delivered' ? 960 : 720, 0.12);
   }
+  document.getElementById('btn-city-taxi')?.addEventListener('click', () => {
+    if (currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi()) return;
+    clearAllInputKeys(); lastTime = performance.now();
+    if (snapshot().active) stop(); else start();
+  });
   window.RoadsterTaxi = Object.freeze({ handleKeydown, tick, stop, onReset, onDestroyed, render, drawCockpit, snapshot });
+  renderEntry();
 })();

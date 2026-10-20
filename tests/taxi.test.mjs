@@ -135,10 +135,14 @@ test('white pickup radius doubles to 4m without widening destination or permitti
   assert.equal(core.withinArrival(stop, stop, null, 4), false);
 });
 
-test('both start confirmations describe the expanded white pickup radius', () => {
+test('public entry explains pickup radius and independent fares in both languages', () => {
   for (const language of ['en', 'zh']) {
-    const h = harness(); h.context.currentLang = language; h.key();
-    assert.match(h.confirms[0], language === 'zh' ? /地面靠近 4 米自动接上/ : /within 4m on the ground/);
+    const h = harness(); h.context.currentLang = language; h.taxi.render();
+    const button = h.elements['btn-city-taxi'];
+    assert.match(button.attributes.title, language === 'zh' ? /地面靠近 4 米自动接上/ : /within 4m on the ground/);
+    assert.equal(h.elements['city-taxi-help'].textContent, button.attributes.title);
+    assert.match(button.attributes.title, language === 'zh' ? /不计入排行榜/ : /never leaderboard/);
+    assert.equal(h.confirms.length, 0);
   }
 });
 
@@ -200,12 +204,14 @@ test('repeated starts do not duplicate passengers; reset settles loss then clear
 class Element {
   constructor() {
     this.children = []; this.attributes = {}; this.textContent = ''; this.parent = null; this.typing = false;
-    this.style = {}; this.dataset = {}; this.hidden = false;
+    this.style = {}; this.dataset = {}; this.hidden = false; this.listeners = {};
     this.classes = new Set(['hidden']);
     this.classList = { contains: x => this.classes.has(x), add: x => this.classes.add(x), remove: x => this.classes.delete(x),
       toggle: (name, force = !this.classes.has(name)) => { if (force) this.classes.add(name); else this.classes.delete(name); return force; } };
   }
   closest() { return this.typing ? this : null; }
+  addEventListener(type, listener) { this.listeners[type] = listener; }
+  click() { if (!this.hidden && !this.disabled) this.listeners.click?.(); }
   setAttribute(key, value) { this.attributes[key] = value; }
   appendChild(child) { child.remove(); child.parent = this; this.children.push(child); return child; }
   insertBefore(child, reference) { child.remove(); child.parent = this; this.children.splice(this.children.indexOf(reference), 0, child); return child; }
@@ -223,7 +229,7 @@ class Geometry { rotateX() { return this; } constructor(...args) { this.args = a
 class Material { constructor(options) { Object.assign(this, options); this.disposed = false; } dispose() { this.disposed = true; } }
 class Mesh extends Object3D { constructor(geometry, material) { super(); this.geometry = geometry; this.material = material; } }
 function harness() {
-  const elements = Object.fromEntries(['modal-map-select', 'modal-help', 'modal-destroyed', 'hud-footer', 'hud-top-container', 'hud-main'].map(id => [id, new Element()]));
+  const elements = Object.fromEntries(['modal-map-select', 'modal-help', 'modal-destroyed', 'hud-footer', 'hud-top-container', 'hud-main', 'btn-city-taxi', 'city-taxi-help'].map(id => [id, new Element()]));
   elements['hud-top-container'].appendChild(elements['hud-main']);
   const document = { hidden: false, body: new Element(), getElementById: id => elements[id] || null, createElement: () => new Element() };
   const group = new Object3D(); const confirms = []; const aborts = []; let approved = true;
@@ -246,29 +252,58 @@ function harness() {
   return { context, state, window, document, elements, group, taxi, confirms, aborts, key, move, approve: value => { approved = value; } };
 }
 
-test('secret key is city-only, opt-in, repeat-safe, focus-safe and never reopens an active game', () => {
-  const h = harness(); assert.equal(h.elements['hud-footer'].children.length, 0); assert.equal(h.group.children.length, 0);
-  h.context.currentMap = 'highway'; h.key(); assert.equal(h.confirms.length, 0);
-  h.context.currentMap = 'city'; h.key({ repeat: true }); assert.equal(h.confirms.length, 0);
-  for (const flag of ['shiftKey', 'ctrlKey', 'altKey', 'metaKey', 'isComposing']) {
-    assert.equal(h.key({ [flag]: true }), false);
-  }
-  const input = new Element(); input.typing = true; h.key({ target: input }); assert.equal(h.confirms.length, 0);
-  for (const id of Object.keys(h.elements).filter(id => id.startsWith('modal-'))) {
-    h.elements[id].classList.remove('hidden'); h.key(); assert.equal(h.confirms.length, 0); h.elements[id].classList.add('hidden');
-  }
-  h.document.hidden = true; h.key(); h.document.hidden = false; assert.equal(h.confirms.length, 0);
-  h.window.RoadsterRanked.isDialogOpen = () => true; h.key(); h.window.RoadsterRanked.isDialogOpen = () => false;
-  h.window.RoadsterMusic.isSettingsOpen = () => true; h.key(); h.window.RoadsterMusic.isSettingsOpen = () => false;
-  h.state.isDestroyed = true; h.key(); h.state.isDestroyed = false; assert.equal(h.confirms.length, 0);
-  h.approve(false); h.key(); assert.equal(h.confirms.length, 1); assert.equal(h.taxi.snapshot().active, false);
+test('public shortcut is city-only, repeat-safe, focus-safe and never reopens an active game', () => {
+  const h = harness(); const inactive = () => assert.equal(h.taxi.snapshot().active, false);
   assert.equal(h.elements['hud-footer'].children.length, 0); assert.equal(h.group.children.length, 0);
-  h.approve(true); h.key(); assert.equal(h.confirms.length, 2); assert.equal(h.taxi.snapshot().waiting.length, 5);
-  assert.equal(h.aborts.join(','), 'invalid'); assert.equal(h.context.lastTime, 9999); assert.ok(h.context.clears >= 4);
+  for (const map of ['highway','coast']) { h.context.currentMap = map; h.key(); inactive(); }
+  h.context.currentMap = 'city'; h.key({ repeat: true }); inactive();
+  for (const flag of ['shiftKey', 'ctrlKey', 'altKey', 'metaKey', 'isComposing']) {
+    assert.equal(h.key({ [flag]: true }), false); inactive();
+  }
+  const input = new Element(); input.typing = true; h.key({ target: input }); inactive();
+  for (const id of Object.keys(h.elements).filter(id => id.startsWith('modal-'))) {
+    h.elements[id].classList.remove('hidden'); h.key(); inactive(); h.elements[id].classList.add('hidden');
+  }
+  h.document.hidden = true; h.key(); h.document.hidden = false; inactive();
+  h.window.RoadsterRanked.isDialogOpen = () => true; h.key(); inactive(); h.window.RoadsterRanked.isDialogOpen = () => false;
+  h.window.RoadsterMusic.isSettingsOpen = () => true; h.key(); inactive(); h.window.RoadsterMusic.isSettingsOpen = () => false;
+  h.state.isDestroyed = true; h.key(); h.state.isDestroyed = false; inactive();
+  h.key(); assert.equal(h.taxi.snapshot().waiting.length, 5);
+  assert.equal(h.confirms.length, 0, 'formal entry has no secret confirmation');
+  assert.equal(h.aborts.join(','), 'invalid'); assert.equal(h.context.lastTime, 9999); assert.equal(h.context.clears, 1);
   const ids = h.taxi.snapshot().waiting.map(x => x.id).join(',');
-  h.key(); h.key({ repeat: true }); assert.equal(h.confirms.length, 2);
+  h.key(); h.key({ repeat: true }); assert.equal(h.confirms.length, 0);
   assert.equal(h.taxi.snapshot().waiting.map(x => x.id).join(','), ids);
   assert.equal(h.elements['hud-footer'].children.length, 2); assert.equal(h.group.children.length, 1);
+});
+
+test('public city button starts and exits cleanly in every HUD, while other maps never expose or start it', () => {
+  const h = harness(), button = h.elements['btn-city-taxi'];
+  assert.equal(button.hidden, false); assert.equal(button.attributes['aria-pressed'], 'false');
+  for (const mode of ['full','medium','minimal','full']) {
+    h.document.body.dataset.hudMode = mode;
+    button.click(); assert.equal(h.taxi.snapshot().active, true); assert.equal(h.group.children.length, 1);
+    assert.equal(button.attributes['aria-pressed'], 'true');
+    const geometry = h.group.children[0].children[0].children[0].geometry;
+    button.click(); assert.equal(h.taxi.snapshot().active, false); assert.equal(h.group.children.length, 0);
+    assert.equal(h.elements['hud-footer'].children.length, 0); assert.equal(geometry.disposed, true);
+    assert.equal(button.attributes['aria-pressed'], 'false');
+  }
+  for (const map of ['highway','coast']) {
+    h.context.currentMap = map; h.taxi.render(); assert.equal(button.hidden, true);
+    button.listeners.click(); assert.equal(h.taxi.snapshot().active, false);
+  }
+  h.context.currentMap = 'city'; h.taxi.render(); assert.equal(button.hidden, false);
+  h.state.isDestroyed = true; h.taxi.render(); assert.equal(button.disabled, true); button.listeners.click();
+  assert.equal(h.taxi.snapshot().active, false);
+  h.state.isDestroyed = false; h.taxi.render(); assert.equal(button.disabled, false);
+  for (const reason of ['hidden','modal','ranked','settings']) {
+    h.document.hidden = reason === 'hidden';
+    h.elements['modal-help'].classList.toggle('hidden', reason !== 'modal');
+    h.window.RoadsterRanked.isDialogOpen = () => reason === 'ranked';
+    h.window.RoadsterMusic.isSettingsOpen = () => reason === 'settings';
+    button.listeners.click(); assert.equal(h.taxi.snapshot().active, false, reason);
+  }
 });
 
 test('real shared keyboard handler delegates = exclusively, preserves typing, and retains ] zoom', () => {
@@ -285,9 +320,9 @@ test('real shared keyboard handler delegates = exclusively, preserves typing, an
   const event = code => ({ code, key: code === 'Equal' ? '=' : ']', target: new Element(), preventDefault() {} });
   const typed = event('Equal'); typed.target.typing = true; handler(typed);
   assert.equal(h.confirms.length, 0); assert.equal(h.state.camZoom, 0.75);
-  handler(event('Equal')); assert.equal(h.confirms.length, 1); assert.equal(h.taxi.snapshot().active, true);
+  handler(event('Equal')); assert.equal(h.confirms.length, 0); assert.equal(h.taxi.snapshot().active, true);
   assert.equal(h.state.camZoom, 0.75);
-  handler(event('Equal')); assert.equal(h.confirms.length, 1); assert.equal(h.state.camZoom, 0.75);
+  handler(event('Equal')); assert.equal(h.confirms.length, 0); assert.equal(h.state.camZoom, 0.75);
   handler(event('BracketRight')); assert.equal(h.state.camZoom, 0.65);
 });
 
@@ -421,13 +456,13 @@ test('menus pause transitions; destruction clears the occupied ride before any p
   assert.equal(h.taxi.snapshot().score, 0); assert.equal(h.taxi.snapshot().passenger, null);
 });
 
-test('integration has no discoverable entry, retains zoom brackets and keeps taxi fares out of ranked state', () => {
+test('integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state', () => {
   const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
   const hiddenCrashScore = html.match(/<div id="crash-passenger-score"[^>]* hidden>[\s\S]*?<\/strong>\s*<\/div>/)?.[0];
-  assert.ok(hiddenCrashScore, 'passenger crash score is hidden until the secret game is active');
-  const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(hiddenCrashScore, '');
-  assert.doesNotMatch(visibleHtml, /taxi|passenger|接客|乘客|快捷键[^<]*=|\[=\]|aria-keyshortcuts\s*=\s*["']=["']/i);
-  assert.doesNotMatch(config.replace(/^.*crashLblPassengerScore:.*$/gm, ''), /taxi|passenger|接客|乘客/);
+  assert.ok(hiddenCrashScore, 'passenger crash score is hidden until a passenger game is active');
+  assert.match(html, /<button id="btn-city-taxi"[^>]*aria-pressed="false"[^>]*aria-describedby="city-taxi-help"[^>]*hidden>Passenger game<\/button>/);
+  assert.match(source, /button.hidden = currentMap !== 'city'/);
+  assert.doesNotMatch(source, /window\.confirm/);
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
   assert.match(hud, /if \(window\.RoadsterTaxi\?\.handleKeydown\(e\)\) return/);
   assert.ok(hud.indexOf("closest('input") < hud.indexOf('RoadsterTaxi?.handleKeydown(e)'));
