@@ -1,0 +1,91 @@
+{
+  "generatedAtUTC": "2026-10-20T21:09:58Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "44fbd106eeffd766a24f7544fd72cceabf2c9ed97af30a6b18434e827f05a2de",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "cachedCpuPixelBytes": 262144,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 42,
+    "ownedMaterials": 49,
+    "ownedTextures": 16,
+    "textureBytes": 1256107,
+    "ownedGeometryBufferBytes": 417916,
+    "ownedInstanceBufferBytes": 1620568,
+    "staticMeshDraws": 80,
+    "staticTriangles": 145822,
+    "maximumStaticTriangles": 173566,
+    "nearPalms": 0,
+    "farPalms": 100,
+    "foliageRefreshes": 1,
+    "nearDetailInstances": 0,
+    "nearDetailCapacity": 768,
+    "nearDetailMatrixBytes": 49152,
+    "detailRefreshes": 1,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 95864,
+    "maximumShadowCasterTriangles": 123608,
+    "instances": 24382,
+    "buildings": 132,
+    "palms": 100,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "nativeCastShadowFlagsHonored": true,
+  "normalMapMaterials": 2,
+  "convertedTriangleCount": 145822,
+  "threads": 2,
+  "seed": 7013,
+  "memoryHandling": "Packed float32 texture staging; transient Python triangle expansion released after exact native mesh creation. No geometry, samples, resolution, threads or safety settings reduced.",
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. Native per-part castShadow flags are honored; receiver/material/light/color mapping still approximates Three, not a pixel reference.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 24,
+  "resolution": [
+    1180,
+    738
+  ],
+  "views": [
+    {
+      "name": "coast-panorama",
+      "positionThree": [
+        -450,
+        90,
+        1000
+      ],
+      "targetThree": [
+        -150,
+        0,
+        -150
+      ],
+      "fovDeg": 72,
+      "fovAxis": "horizontal",
+      "projectionMeasuredFovXYDeg": [
+        72.00000183646854,
+        48.873802960080454
+      ],
+      "output": "coast-panorama-raw.png",
+      "seconds": 11.724
+    }
+  ]
+}

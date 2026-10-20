@@ -1,0 +1,14 @@
+✔ isolated positive step copies input, retains all49 exact field values and never grants reuse itself (6.164079ms)
+✔ source mismatch rejects both before generation and after a kernel instance exists (8.350643ms)
+✔ random, uninitialized audio, unknown visual calls and impact response fail closed (9.963575ms)
+✔ dt, ownership, weather, keys, freefall and missing audio bindings never produce an endpoint (15.691676ms)
+✔ snapshot Proxy/accessor code is rejected before any reflection trap or getter executes (2.935594ms)
+✔ true rail/body/roof branches reject before response, including invisible NPCs (6.495959ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.169906

@@ -1,0 +1,513 @@
+{
+  "frozenAtUTC": "2026-10-20T21:11:47.002791+00:00",
+  "productionBaseline": "2ade86bc1a60a8fcba6ad79ef6f96f24bd42c602",
+  "phoneBaseline": "9c253b56e950567b17453af2428894b029d171bf",
+  "phoneAndNumericFilesExact": [
+    "src/mobile-controls.js",
+    "src/styles.css",
+    "src/taxi.js",
+    "src/ui-hud.js",
+    "src/vehicles.js",
+    "src/index.html",
+    "src/demo-numeric-projection.js",
+    "src/physics-main.js",
+    "src/config.js",
+    "verification/demo-continuous/browser-static-projection.generated.js",
+    "verification/demo-continuous/browser-static-projection.generated.mjs",
+    "verification/demo-continuous/browser-static-projection.manifest.json",
+    "verification/demo-continuous/emit-browser-static-projection.mjs",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs"
+  ],
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 4832535,
+      "sha256": "c9a919459d0da6d69828774b2dc8c3e320ee3498828b231f7858456c2a44954b"
+    },
+    {
+      "path": "src/audio.js",
+      "bytes": 17878,
+      "sha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee"
+    },
+    {
+      "path": "src/coast-map.js",
+      "bytes": 102065,
+      "sha256": "44fbd106eeffd766a24f7544fd72cceabf2c9ed97af30a6b18434e827f05a2de"
+    },
+    {
+      "path": "src/config.js",
+      "bytes": 34400,
+      "sha256": "fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306"
+    },
+    {
+      "path": "src/demo-numeric-projection.js",
+      "bytes": 232906,
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2"
+    },
+    {
+      "path": "src/driving-score.js",
+      "bytes": 3733,
+      "sha256": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64"
+    },
+    {
+      "path": "src/highway-demo.js",
+      "bytes": 132506,
+      "sha256": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07"
+    },
+    {
+      "path": "src/highway-traffic.js",
+      "bytes": 25704,
+      "sha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+    },
+    {
+      "path": "src/index.html",
+      "bytes": 52301,
+      "sha256": "b0db4ae3b32ba51f83d67c25f53011b3f19ccbb2af446d4030cd00c5a079c2ae"
+    },
+    {
+      "path": "src/leaderboard.js",
+      "bytes": 26783,
+      "sha256": "aaa1c0bff102f87c0fc6428cf6a80ecfb09c8bc7fc6bb4164076d4f92367264d"
+    },
+    {
+      "path": "src/mobile-controls.js",
+      "bytes": 10417,
+      "sha256": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2"
+    },
+    {
+      "path": "src/music.js",
+      "bytes": 6404,
+      "sha256": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e"
+    },
+    {
+      "path": "src/npc-traffic-assets.js",
+      "bytes": 3720515,
+      "sha256": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c"
+    },
+    {
+      "path": "src/physics-main.js",
+      "bytes": 109553,
+      "sha256": "3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81"
+    },
+    {
+      "path": "src/reference-cockpit.js",
+      "bytes": 22869,
+      "sha256": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2"
+    },
+    {
+      "path": "src/reference-exterior.js",
+      "bytes": 58944,
+      "sha256": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782"
+    },
+    {
+      "path": "src/reference-traffic.js",
+      "bytes": 6413,
+      "sha256": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114"
+    },
+    {
+      "path": "src/start-screen.js",
+      "bytes": 14322,
+      "sha256": "c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 37257,
+      "sha256": "7111fd1d4152604981e0026acdaaefb09ac4408298df51c5a83211f373392b75"
+    },
+    {
+      "path": "src/taxi.js",
+      "bytes": 23392,
+      "sha256": "7b92268cf0052afb8e758f5c34480b36dcc2b611fc80e6a9c9a445dbc0074493"
+    },
+    {
+      "path": "src/ui-hud.js",
+      "bytes": 60090,
+      "sha256": "e55d95ec7617a1d12e93c7080d59e4dc3b43a5086575ad1dcce97a9855a03808"
+    },
+    {
+      "path": "src/vehicles.js",
+      "bytes": 93009,
+      "sha256": "cdd97d85c23492ee443e5f7e78e2a516d20418d4985f1e92f78e7caad79fb311"
+    },
+    {
+      "path": "src/weather-rain.js",
+      "bytes": 12140,
+      "sha256": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0"
+    },
+    {
+      "path": "src/world.js",
+      "bytes": 25977,
+      "sha256": "4f6ffc9700e9e383c81ad7db6d511eedf24ce98bd436811903ee6986059e33fd"
+    },
+    {
+      "path": "tests/air-gauge.test.mjs",
+      "bytes": 5415,
+      "sha256": "2d1d041d6200240ad23ef66d27070ba3c2930193b708de7b939e499cdd3ec1e8"
+    },
+    {
+      "path": "tests/analytics.test.mjs",
+      "bytes": 2373,
+      "sha256": "8f385534f7c8cf286c54cebf869bedfe6a3be26f8c5d8ce638242923695a57f5"
+    },
+    {
+      "path": "tests/attitude.test.mjs",
+      "bytes": 24675,
+      "sha256": "97658703d19b3e7ac36b2b0f487afc3a0af7b5c033b6db4d4d16dae2b8adfe39"
+    },
+    {
+      "path": "tests/autopilot-continuous-boost.test.mjs",
+      "bytes": 3922,
+      "sha256": "3030e27e8c7b98ecaf5ba8d0864f25b2a98c79eaa5f5b9447508a18d839c8ee2"
+    },
+    {
+      "path": "tests/autopilot-key-badges.test.mjs",
+      "bytes": 4596,
+      "sha256": "9f3535a556054950d8bc87de369e6ce04cc7ee5ee0ef6455ff37ac5f0f96fd25"
+    },
+    {
+      "path": "tests/backend.test.mjs",
+      "bytes": 28063,
+      "sha256": "a1367dcfd2d4733f3acb4e6cbffe843fcc68dfa89cf760e42880d00d12e5f39d"
+    },
+    {
+      "path": "tests/body-surface.test.mjs",
+      "bytes": 6274,
+      "sha256": "690cc1437ec698e87aa7f5206ace20c96ac3dd502f784ee3ff921b2b96a7a7d6"
+    },
+    {
+      "path": "tests/braking.test.mjs",
+      "bytes": 26119,
+      "sha256": "742b712fd626883d13623ac58c1ce005e811cec38fc53d7027ca94f5477c1dfb"
+    },
+    {
+      "path": "tests/camera-stability.test.mjs",
+      "bytes": 7811,
+      "sha256": "a871e781e1976c11aecec8d5e707f4e36b235599eca605bed82ca09958416f99"
+    },
+    {
+      "path": "tests/city-scale.test.mjs",
+      "bytes": 2959,
+      "sha256": "051d11610fd9cabc8af039f811b71b432e986d5cabfbcfa004c7c2be769beb61"
+    },
+    {
+      "path": "tests/coast-art-lighting.test.mjs",
+      "bytes": 13914,
+      "sha256": "82894c31add7579c705dc910b7e15733a7b98ea483c8152a9d3c4bbb663c2767"
+    },
+    {
+      "path": "tests/coast-art.test.mjs",
+      "bytes": 49381,
+      "sha256": "7b22ea4f018c2710253aeabd74a6ed1145ff470a00520f5b7698d8fd1d9de311"
+    },
+    {
+      "path": "tests/coast-map.test.mjs",
+      "bytes": 16642,
+      "sha256": "85904f0ea0866bcabd43bcb64b96913ced9f577f21d6f6039b2c1d3a190fde9a"
+    },
+    {
+      "path": "tests/cockpit-display-interior.test.mjs",
+      "bytes": 2506,
+      "sha256": "bc4ddc3c7367bb80b4bbc69dafc022fc3b0e8c157191bc8c81984322ea397145"
+    },
+    {
+      "path": "tests/cockpit-exterior-details.test.mjs",
+      "bytes": 5409,
+      "sha256": "6b47ce504fe789cf48e3f5a9891331312c53fea65ae1697b0a6d656c3ec2669f"
+    },
+    {
+      "path": "tests/cockpit-eye-calibration.test.mjs",
+      "bytes": 3682,
+      "sha256": "52371e49b39d9c6acb820bb1cd567758cf2b3cd9ff25f87bb87e43bbdf13794a"
+    },
+    {
+      "path": "tests/cockpit-layout.test.mjs",
+      "bytes": 25605,
+      "sha256": "935418f51004011bff5923e3c0b5c26a1f7fad3910cfff8eaa7889c9770d3090"
+    },
+    {
+      "path": "tests/cockpit-rain.test.mjs",
+      "bytes": 5433,
+      "sha256": "5aa5403cecc12beebad59423d74f231896b7a7e74d0d75b1bbfd3c3e29e13f87"
+    },
+    {
+      "path": "tests/crash-score.test.mjs",
+      "bytes": 20267,
+      "sha256": "5a48222a182baa28f7468f99f2645c1af6d839237b7dc19a244af732b0d14550"
+    },
+    {
+      "path": "tests/driving-score.test.mjs",
+      "bytes": 7002,
+      "sha256": "71da68db06f9d094144dbea665d6b715d064e16a99e116a803b2e69f58046c61"
+    },
+    {
+      "path": "tests/engine-sound-render.test.mjs",
+      "bytes": 1429,
+      "sha256": "ebc7f41e75662977542f2d1c941e00a9ba6b62dd263f870f814c0df3b13b8859"
+    },
+    {
+      "path": "tests/engine-sound.test.mjs",
+      "bytes": 18397,
+      "sha256": "ef891c9f5ee92d5ec50244cb3e7565a0081179d5121b406caabdcff0cc9a2d65"
+    },
+    {
+      "path": "tests/freefall.test.mjs",
+      "bytes": 21509,
+      "sha256": "8d79dccf9ace03626757e39033e6910635ff0e693f479df0189b0dcb95a1e66e"
+    },
+    {
+      "path": "tests/frontend.test.mjs",
+      "bytes": 21462,
+      "sha256": "d4c130475db8127a1d4ae7c54915be4950f7aff68e1541b1c85eca9d94a441bb"
+    },
+    {
+      "path": "tests/gas-refill.test.mjs",
+      "bytes": 20169,
+      "sha256": "3e034a20c0236fc4c0b8d9f8397402c72cd2534b04dde50ad3d32fb0afba3938"
+    },
+    {
+      "path": "tests/helpers/demo-harness.mjs",
+      "bytes": 4214,
+      "sha256": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff"
+    },
+    {
+      "path": "tests/helpers/vendor/three-r128-MathUtils.mjs",
+      "bytes": 5263,
+      "sha256": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
+    },
+    {
+      "path": "tests/highway-demo-clock.test.mjs",
+      "bytes": 2856,
+      "sha256": "ce98e7e4cbdc737103ee759eed1b54c55a073e14118dad5cd382a2913f0c17ef"
+    },
+    {
+      "path": "tests/highway-demo-consumed-certificate.test.mjs",
+      "bytes": 2153,
+      "sha256": "89afd18736b293baded04a63a4b3834271e775fb4236d03d2e20c0e108ae16f8"
+    },
+    {
+      "path": "tests/highway-demo-continuous.test.mjs",
+      "bytes": 12476,
+      "sha256": "1cdb4b07b4004bdc1cd717e03682a4184458f8915c2311285cdf2f66204d8237"
+    },
+    {
+      "path": "tests/highway-demo-floor-refill.test.mjs",
+      "bytes": 5116,
+      "sha256": "e5a617f68946926266e79d5f5af51b07346d287ee0af204c70338a28d2d03fe5"
+    },
+    {
+      "path": "tests/highway-demo-following.test.mjs",
+      "bytes": 8644,
+      "sha256": "675da673f5c0269641be6418865cbb86b5e4dd6c1971c3244e2d0ce66edef4b9"
+    },
+    {
+      "path": "tests/highway-demo-lifecycle.test.mjs",
+      "bytes": 21288,
+      "sha256": "0a2b73f9213307b284674eb23de416e57137aaaf987806b572201c581ea174b0"
+    },
+    {
+      "path": "tests/highway-demo-physics.test.mjs",
+      "bytes": 7764,
+      "sha256": "7b017141b56ca513dc0eb7fd814743685c5d4ccc069b9509e568c6d0f21d724b"
+    },
+    {
+      "path": "tests/highway-demo-planning-cost.test.mjs",
+      "bytes": 4720,
+      "sha256": "a4f87bab4e58a6dc27faa50115a14b36a3122ecfdc6e0886371dee7295c8081b"
+    },
+    {
+      "path": "tests/highway-demo-routing.test.mjs",
+      "bytes": 1078,
+      "sha256": "b75470b75a6aebf183b0e9f5d18ae7ead71b907fcd318691500405c410d8fa44"
+    },
+    {
+      "path": "tests/highway-demo-scheduling.test.mjs",
+      "bytes": 15409,
+      "sha256": "cb649bbca4e44b51ed408844c77fe6cac3f4fb1592ff3e9c2eb8c02676a7ce73"
+    },
+    {
+      "path": "tests/highway-demo-successor.test.mjs",
+      "bytes": 6268,
+      "sha256": "bde90a4134006a1a6d79e18bf72d61235af887d8610507e2d56a9652b6a003b5"
+    },
+    {
+      "path": "tests/highway-demo-weaving.test.mjs",
+      "bytes": 3982,
+      "sha256": "ad472a46efc7bfedb6c9d6e88a9c184a81982f5a2fabdc38cad024fdcdd04afd"
+    },
+    {
+      "path": "tests/highway-traffic-forecast.test.mjs",
+      "bytes": 10852,
+      "sha256": "3f798610806f62a64e0b020b662ebe158220aee0d47204697b73c03d190fafd6"
+    },
+    {
+      "path": "tests/highway-traffic.test.mjs",
+      "bytes": 25155,
+      "sha256": "13e8937fe2da90156488ebe7b782a1661894ca15a3039ba323a6b862fe04f447"
+    },
+    {
+      "path": "tests/hud-modes.test.mjs",
+      "bytes": 9286,
+      "sha256": "93ff7b89bac2f192c9ca724d8b0ddbd393e4e7667b9125933b384755761fc24c"
+    },
+    {
+      "path": "tests/hud.test.mjs",
+      "bytes": 13387,
+      "sha256": "6d8baabfd90f29a8f568182f74ae97c7aea60998cbd8a8c872d9cbe93715c1ac"
+    },
+    {
+      "path": "tests/infinite-jet-prediction.test.mjs",
+      "bytes": 6772,
+      "sha256": "577e5b628261733f029bcc01d89e5f47622f0dffb80f1cb76d93ba484f3c033f"
+    },
+    {
+      "path": "tests/input-frame.test.mjs",
+      "bytes": 2359,
+      "sha256": "0200461830f32f260e43b94d66e50b13aeda6d14532227a120201ba48326b035"
+    },
+    {
+      "path": "tests/jet-effects.test.mjs",
+      "bytes": 12068,
+      "sha256": "0931205a52ff17ab9aab4119bb8c19a3f0df3df11703fc29fdcf0c40853783b5"
+    },
+    {
+      "path": "tests/mobile-controls.test.mjs",
+      "bytes": 37895,
+      "sha256": "1e49d0ccb38f1a13faf09ce91e73c255cd13611958e7d854b6c4c0f663ab5505"
+    },
+    {
+      "path": "tests/music.test.mjs",
+      "bytes": 10721,
+      "sha256": "c4ad690003c3344afb76440cb2e3c4f49b74ab75e68b69bed6d93b49a7cda670"
+    },
+    {
+      "path": "tests/npc-source-fingerprint.test.mjs",
+      "bytes": 1214,
+      "sha256": "7135787eb1c6b2c8d487ec22b0106a3a64da362ae992f59c62db773fa43e59e7"
+    },
+    {
+      "path": "tests/npc-traffic-assets.test.mjs",
+      "bytes": 9531,
+      "sha256": "d7f6cafa4561aa2ad81844c86d0c7bdaa4c0f2a23b0b0c8afbba43bc8fa1d5df"
+    },
+    {
+      "path": "tests/npc-traffic-integration.test.mjs",
+      "bytes": 3171,
+      "sha256": "b349def9ac9e2a5353699b5547da1d69bd0469bd8832c6ea21d64c6e8efddc2f"
+    },
+    {
+      "path": "tests/rain-road.test.mjs",
+      "bytes": 9593,
+      "sha256": "60963fcdf145098afb8edb4b93e5cffde63480604e8b22ffc614c41be849432d"
+    },
+    {
+      "path": "tests/reference-flat-windshield-rear-wing.test.mjs",
+      "bytes": 5249,
+      "sha256": "9779ee441390cbfda7601be157bcab4bea8581dbf53662a8035f6df16f377db6"
+    },
+    {
+      "path": "tests/reference-likeness.test.mjs",
+      "bytes": 6700,
+      "sha256": "4053aae8e12c82a46d4fccf8f50a559082f79a7bb9ff6aa8638d194a374c9748"
+    },
+    {
+      "path": "tests/reference-model-geometry.test.mjs",
+      "bytes": 2968,
+      "sha256": "d974320e96f182be5dd7350fd5d0258e08633f8dc0977b3e182826d5e21551ec"
+    },
+    {
+      "path": "tests/reference-model.test.mjs",
+      "bytes": 8628,
+      "sha256": "120b4a8d2b44b11beeadb02219be37409543ec5cbea4cf6ed0d4ff2c852fe785"
+    },
+    {
+      "path": "tests/reference-sloping-nose.test.mjs",
+      "bytes": 4622,
+      "sha256": "7c9721a9dd813f0a75a35e23fd9a302e224a5d7ff9a40e72ded59e847f9a8b7f"
+    },
+    {
+      "path": "tests/reference-tail-down.test.mjs",
+      "bytes": 3610,
+      "sha256": "d2a3cae88a1af6d1dd7977ef478f0a1ffcb8f98cdf206b81cf88fa06f58be765"
+    },
+    {
+      "path": "tests/reference-wheel-batching.test.mjs",
+      "bytes": 2183,
+      "sha256": "b8e9fe5e49486df581911e834f05ba316addee1865e1fce3da1844a666bd9adc"
+    },
+    {
+      "path": "tests/reference-window-structure.test.mjs",
+      "bytes": 4082,
+      "sha256": "16d6f596d6f57cb06f79431f1a92139be55154b874982e4094ff70807b6c50cd"
+    },
+    {
+      "path": "tests/sonic-condensation-repeat.test.mjs",
+      "bytes": 5878,
+      "sha256": "86f6e1ceb1963e97802034b8572297498e1327eae6542f34a2e0a6dcbd69a894"
+    },
+    {
+      "path": "tests/start-screen.test.mjs",
+      "bytes": 25490,
+      "sha256": "9a810a3e5d75b98f92789affd57698a7e1cf5719f3a46d109449165047a39278"
+    },
+    {
+      "path": "tests/taxi.test.mjs",
+      "bytes": 53762,
+      "sha256": "e47b1db5dd86d5c9da25d1e9825e629a6224ee00518b7ebb089a9c10c9ab30d4"
+    },
+    {
+      "path": "tests/traffic-body.test.mjs",
+      "bytes": 10344,
+      "sha256": "9562d63bdd0433ca925eecff278d2209dd7465c9c414461c44a514a025bbfd26"
+    },
+    {
+      "path": "tests/vehicle-variant-library.test.mjs",
+      "bytes": 3143,
+      "sha256": "b7292084a43b0746376603a47d693ff4ba23735e0f6108913605a86ccf23b23f"
+    },
+    {
+      "path": "verification/coast-art/collision-contract.json",
+      "bytes": 370,
+      "sha256": "8d1e11c6b2d5815cd27816574f1fbbd4e1a165e0d7cf68d53f7685a8f595fc20"
+    },
+    {
+      "path": "verification/coast-art/entry-pose-contract.json",
+      "bytes": 337,
+      "sha256": "d7932adb3a72276e5039229cecac2e770aa494cf8bd8e18e16a9a59051b5268c"
+    },
+    {
+      "path": "verification/coast-art/export-scene.cjs",
+      "bytes": 6793,
+      "sha256": "c734ac339ff610a00973a6a5249e951dac58fe0199a84cdea813e2d01efbe7a7"
+    },
+    {
+      "path": "verification/coast-art/render-scene.py",
+      "bytes": 12127,
+      "sha256": "0a42c1598c3cf9a67e0876f8528c44188accd8f7c837d574caca13d4ec16c4b0"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.js",
+      "bytes": 232906,
+      "sha256": "d635d8f0c0ab8716aef7da43221c7f1758dd755761467557b08224b1345655b2"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.mjs",
+      "bytes": 232949,
+      "sha256": "5644fc54cc7faad6a33258d0744a4ed1596e14c9ba9cce598f8d43057add29dd"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.manifest.json",
+      "bytes": 9617,
+      "sha256": "e5897abf89c0de6a5d51850bf6507c4e413a619f78ca94c1608a86b71adadfc1"
+    },
+    {
+      "path": "verification/demo-continuous/emit-browser-static-projection.mjs",
+      "bytes": 18454,
+      "sha256": "2df6ee22a40788a75388dd83ed8ca7c6a75b525d5e6cd4018331d5e045fffa5c"
+    },
+    {
+      "path": "verification/demo-continuous/generate-numeric-projection-kernel.mjs",
+      "bytes": 23202,
+      "sha256": "587174e45e590f5c8f4432f77f61881641d9e8b64b4362cbdb6eae0d06138cf2"
+    }
+  ]
+}

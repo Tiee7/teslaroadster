@@ -1,0 +1,4146 @@
+TAP version 13
+# Subtest: exterior gauge uses a short title, remaining seconds and no capacity or used-time caption
+ok 1 - exterior gauge uses a short title, remaining seconds and no capacity or used-time caption
+  ---
+  duration_ms: 1.143954
+  type: 'test'
+  ...
+# Subtest: language switching only touches surviving gauge labels and preserves warnings
+ok 2 - language switching only touches surviving gauge labels and preserves warnings
+  ---
+  duration_ms: 1.621383
+  type: 'test'
+  ...
+# Subtest: simplified gauge retains the flow, status, fill and 20% auto-descent warning
+ok 3 - simplified gauge retains the flow, status, fill and 20% auto-descent warning
+  ---
+  duration_ms: 0.230778
+  type: 'test'
+  ...
+# Subtest: remaining-time updates never require removed nodes during depletion, recharge or invalid readings
+ok 4 - remaining-time updates never require removed nodes during depletion, recharge or invalid readings
+  ---
+  duration_ms: 8.874763
+  type: 'test'
+  ...
+# Subtest: depleted mode caption distinguishes actual flight from a road O-hop without changing tank readings
+ok 5 - depleted mode caption distinguishes actual flight from a road O-hop without changing tank readings
+  ---
+  duration_ms: 2.01749
+  type: 'test'
+  ...
+# Subtest: source and standalone bundle each include one deferred first-party analytics script
+ok 6 - source and standalone bundle each include one deferred first-party analytics script
+  ---
+  duration_ms: 8.558537
+  type: 'test'
+  ...
+# Subtest: analytics queue preserves calls in order without emitting game or player data
+ok 7 - analytics queue preserves calls in order without emitting game or player data
+  ---
+  duration_ms: 1.410576
+  type: 'test'
+  ...
+# Subtest: analytics initialization preserves an existing loader or queue across repeated evaluation
+ok 8 - analytics initialization preserves an existing loader or queue across repeated evaluation
+  ---
+  duration_ms: 0.718673
+  type: 'test'
+  ...
+# Subtest: keyboard I/K, arrow aliases and opposing controls retain their attitude mapping
+ok 9 - keyboard I/K, arrow aliases and opposing controls retain their attitude mapping
+  ---
+  duration_ms: 16.300624
+  type: 'test'
+  ...
+# Subtest: held forward/back pitch completes repeated 360-degree loops without 74/180/360-degree stops
+ok 10 - held forward/back pitch completes repeated 360-degree loops without 74/180/360-degree stops
+  ---
+  duration_ms: 105.078608
+  type: 'test'
+  ...
+# Subtest: auto-level and high-speed wing assist wait the full two seconds after release
+ok 11 - auto-level and high-speed wing assist wait the full two seconds after release
+  ---
+  duration_ms: 6.116677
+  type: 'test'
+  ...
+# Subtest: a frame crossing the deadline uses only its post-deadline fraction for restoring torque
+ok 12 - a frame crossing the deadline uses only its post-deadline fraction for restoring torque
+  ---
+  duration_ms: 1.557427
+  type: 'test'
+  ...
+# Subtest: every held attitude/strafe control disables both auto-level axes, even if jets are unavailable
+ok 13 - every held attitude/strafe control disables both auto-level axes, even if jets are unavailable
+  ---
+  duration_ms: 384.002953
+  type: 'test'
+  ...
+# Subtest: renewed input interrupts active correction and restarts a fresh full two-second grace period
+ok 14 - renewed input interrupts active correction and restarts a fresh full two-second grace period
+  ---
+  duration_ms: 5.847892
+  type: 'test'
+  ...
+# Subtest: stabilizer-off keeps a released airborne attitude, including above wing-assist speed
+ok 15 - stabilizer-off keeps a released airborne attitude, including above wing-assist speed
+  ---
+  duration_ms: 13.342426
+  type: 'test'
+  ...
+# Subtest: pitch correction takes the nearest level path across +/-180 and completed +/-360 loops
+ok 16 - pitch correction takes the nearest level path across +/-180 and completed +/-360 loops
+  ---
+  duration_ms: 171.547985
+  type: 'test'
+  ...
+# Subtest: landing after either full pitch loop preserves the equivalent ground attitude and resets idle
+ok 17 - landing after either full pitch loop preserves the equivalent ground attitude and resets idle
+  ---
+  duration_ms: 12.638484
+  type: 'test'
+  ...
+# Subtest: emergency descent braking keeps working while its attitude correction respects controls and delay
+ok 18 - emergency descent braking keeps working while its attitude correction respects controls and delay
+  ---
+  duration_ms: 2.292404
+  type: 'test'
+  ...
+# Subtest: reset clears the delayed-stabilizer state together with all angular motion
+ok 19 - reset clears the delayed-stabilizer state together with all angular motion
+  ---
+  duration_ms: 1.577337
+  type: 'test'
+  ...
+# Subtest: mobile touch pitch/roll buttons use the keyboard mapping and release/cancel without stuck input
+ok 20 - mobile touch pitch/roll buttons use the keyboard mapping and release/cancel without stuck input
+  ---
+  duration_ms: 16.823862
+  type: 'test'
+  ...
+# Subtest: complete movement paths project thrust through +/-90/180/270/360 without reversing on release
+ok 21 - complete movement paths project thrust through +/-90/180/270/360 without reversing on release
+  ---
+  duration_ms: 119.886467
+  type: 'test'
+  ...
+# Subtest: coasting momentum is independent of pitch rotation and yaw input on either map
+ok 22 - coasting momentum is independent of pitch rotation and yaw input on either map
+  ---
+  duration_ms: 6.531742
+  type: 'test'
+  ...
+# Subtest: thrusting while holding pitch keeps velocity changes continuous through two full loops
+ok 23 - thrusting while holding pitch keeps velocity changes continuous through two full loops
+  ---
+  duration_ms: 123.928798
+  type: 'test'
+  ...
+# Subtest: air braking and Q/E strafe remain responsive in either travel direction without release inversion
+ok 24 - air braking and Q/E strafe remain responsive in either travel direction without release inversion
+  ---
+  duration_ms: 28.74812
+  type: 'test'
+  ...
+# Subtest: backward flight hands signed momentum into ground driving after touchdown
+ok 25 - backward flight hands signed momentum into ground driving after touchdown
+  ---
+  duration_ms: 3.914158
+  type: 'test'
+  ...
+# Subtest: highway road, traffic and blast scrolling follow actual vz rather than positive HUD speed
+ok 26 - highway road, traffic and blast scrolling follow actual vz rather than positive HUD speed
+  ---
+  duration_ms: 3.862971
+  type: 'test'
+  ...
+# Subtest: real airborne traffic collision slowdown/rebound survives the next movement frame on both maps
+ok 27 - real airborne traffic collision slowdown/rebound survives the next movement frame on both maps
+  ---
+  duration_ms: 3.824854
+  type: 'test'
+  ...
+# Subtest: real city building and outer-boundary rebounds keep authoritative airborne velocity and magnitude
+ok 28 - real city building and outer-boundary rebounds keep authoritative airborne velocity and magnitude
+  ---
+  duration_ms: 3.544891
+  type: 'test'
+  ...
+# Subtest: generic collision applies longitudinal bounce in air while preserving the existing ground response
+ok 29 - generic collision applies longitudinal bounce in air while preserving the existing ground response
+  ---
+  duration_ms: 3.014823
+  type: 'test'
+  ...
+# Subtest: ground traffic and building collision scalar responses remain unchanged
+ok 30 - ground traffic and building collision scalar responses remain unchanged
+  ---
+  duration_ms: 4.357978
+  type: 'test'
+  ...
+# Subtest: highway landing and ground steering preserve the equivalent yaw after complete aerial turns
+ok 31 - highway landing and ground steering preserve the equivalent yaw after complete aerial turns
+  ---
+  duration_ms: 24.573971
+  type: 'test'
+  ...
+# Subtest: highway rails and city boundaries use the same shortest yaw correction for every equivalent turn
+ok 32 - highway rails and city boundaries use the same shortest yaw correction for every equivalent turn
+  ---
+  duration_ms: 13.515717
+  type: 'test'
+  ...
+# Subtest: clear road keeps jet lit without speed-limiter chatter: gas=false
+ok 33 - clear road keeps jet lit without speed-limiter chatter: gas=false
+  ---
+  duration_ms: 44.706317
+  type: 'test'
+  ...
+# Subtest: clear road keeps jet lit without speed-limiter chatter: gas=true
+ok 34 - clear road keeps jet lit without speed-limiter chatter: gas=true
+  ---
+  duration_ms: 25.069405
+  type: 'test'
+  ...
+# Subtest: hazard stops normal boost, clearance restores it, following demand is continuous: gas=false
+ok 35 - hazard stops normal boost, clearance restores it, following demand is continuous: gas=false
+  ---
+  duration_ms: 8.025072
+  type: 'test'
+  ...
+# Subtest: hazard stops normal boost, clearance restores it, following demand is continuous: gas=true
+ok 36 - hazard stops normal boost, clearance restores it, following demand is continuous: gas=true
+  ---
+  duration_ms: 2.967352
+  type: 'test'
+  ...
+# Subtest: all autopilot button states and ranked ownership copy use the requested name
+ok 37 - all autopilot button states and ranked ownership copy use the requested name
+  ---
+  duration_ms: 15.808731
+  type: 'test'
+  ...
+# Subtest: fractional follow prediction cannot invent electric acceleration above200: gas=false
+ok 38 - fractional follow prediction cannot invent electric acceleration above200: gas=false
+  ---
+  duration_ms: 3.561456
+  type: 'test'
+  ...
+# Subtest: fractional follow prediction cannot invent electric acceleration above200: gas=true
+ok 39 - fractional follow prediction cannot invent electric acceleration above200: gas=true
+  ---
+  duration_ms: 3.489899
+  type: 'test'
+  ...
+# Subtest: active autopilot animates the real key badges for every applied output, not synthetic keyboard input
+ok 40 - active autopilot animates the real key badges for every applied output, not synthetic keyboard input
+  ---
+  duration_ms: 21.325102
+  type: 'test'
+  ...
+# Subtest: O animates its actual jump phase without impersonating Space or retriggering takeoff
+ok 41 - O animates its actual jump phase without impersonating Space or retriggering takeoff
+  ---
+  duration_ms: 5.518846
+  type: 'test'
+  ...
+# Subtest: manual shared-key badges aggregate correctly and resume normally after autopilot
+ok 42 - manual shared-key badges aggregate correctly and resume normally after autopilot
+  ---
+  duration_ms: 7.093398
+  type: 'test'
+  ...
+# Subtest: stop, focus/visibility loss, reset, map/menu and performance exit clear automatic badges
+ok 43 - stop, focus/visibility loss, reset, map/menu and performance exit clear automatic badges
+  ---
+  duration_ms: 47.722233
+  type: 'test'
+  ...
+# Subtest: pending and cancelled preparations never leave old control animations
+ok 44 - pending and cancelled preparations never leave old control animations
+  ---
+  duration_ms: 11.190116
+  type: 'test'
+  ...
+# Subtest: nickname canonicalization accepts multilingual names; rejects XSS, controls and pathological input
+ok 45 - nickname canonicalization accepts multilingual names; rejects XSS, controls and pathological input
+  ---
+  duration_ms: 3.810993
+  type: 'test'
+  ...
+# Subtest: score schema rejects unknown fields, bad types, invalid numeric values and forged categories
+ok 46 - score schema rejects unknown fields, bad types, invalid numeric values and forged categories
+  ---
+  duration_ms: 0.628247
+  type: 'test'
+  ...
+# Subtest: end schema accepts only an exact UUID-v4 run ID object
+ok 47 - end schema accepts only an exact UUID-v4 run ID object
+  ---
+  duration_ms: 0.72386
+  type: 'test'
+  ...
+# Subtest: end API entry point is POST-only with uncached safe errors
+ok 48 - end API entry point is POST-only with uncached safe errors
+  ---
+  duration_ms: 0.466353
+  type: 'test'
+  ...
+# Subtest: bounded body parsing covers parsed Vercel body, raw buffers, streams, malformed JSON and headers
+ok 49 - bounded body parsing covers parsed Vercel body, raw buffers, streams, malformed JSON and headers
+  ---
+  duration_ms: 3.747287
+  type: 'test'
+  ...
+# Subtest: signed host-only identity resists changed IDs, signatures and duplicate cookie ambiguity
+ok 50 - signed host-only identity resists changed IDs, signatures and duplicate cookie ambiguity
+  ---
+  duration_ms: 2.155599
+  type: 'test'
+  ...
+# Subtest: configuration fails closed and REST client uses server-only Bearer auth, JSON arrays and no redirects
+ok 51 - configuration fails closed and REST client uses server-only Bearer auth, JSON arrays and no redirects
+  ---
+  duration_ms: 1.425438
+  type: 'test'
+  ...
+# Subtest: no database commands happen for malformed/untrusted inputs and unsupported methods
+ok 52 - no database commands happen for malformed/untrusted inputs and unsupported methods
+  ---
+  duration_ms: 0.622147
+  type: 'test'
+  ...
+# Subtest: full lifecycle: server run, early rejection, score acceptance, best only, same-payload idempotence and changed replay rejection
+ok 53 - full lifecycle: server run, early rejection, score acceptance, best only, same-payload idempotence and changed replay rejection
+  ---
+  duration_ms: 2.789724
+  type: 'test'
+  ...
+# Subtest: ownership, expiry, category isolation and rate-limit failures are fail-closed
+ok 54 - ownership, expiry, category isolation and rate-limit failures are fail-closed
+  ---
+  duration_ms: 1.144976
+  type: 'test'
+  ...
+# Subtest: Top 100 is ordered, anonymized, bounded and empty categories use an array
+ok 55 - Top 100 is ordered, anonymized, bounded and empty categories use an array
+  ---
+  duration_ms: 1.375733
+  type: 'test'
+  ...
+# Subtest: active runs cannot be reused, while submitted runs allow immediate play-again
+ok 56 - active runs cannot be reused, while submitted runs allow immediate play-again
+  ---
+  duration_ms: 0.686024
+  type: 'test'
+  ...
+# Subtest: end rejects invalid origin, method, body and missing/tampered identity before any database operation
+ok 57 - end rejects invalid origin, method, body and missing/tampered identity before any database operation
+  ---
+  duration_ms: 0.755579
+  type: 'test'
+  ...
+# Subtest: start -> end -> immediate new start is idempotent and canceled scores cannot publish
+ok 58 - start -> end -> immediate new start is idempotent and canceled scores cannot publish
+  ---
+  duration_ms: 0.699965
+  type: 'test'
+  ...
+# Subtest: end ownership is enforced atomically and unknown/expired old IDs cannot release a newer active lock
+ok 59 - end ownership is enforced atomically and unknown/expired old IDs cannot release a newer active lock
+  ---
+  duration_ms: 1.87172
+  type: 'test'
+  ...
+# Subtest: end after accepted score preserves its exact receipt, best score, nickname and replay semantics
+ok 60 - end after accepted score preserves its exact receipt, best score, nickname and replay semantics
+  ---
+  duration_ms: 0.735489
+  type: 'test'
+  ...
+# Subtest: cancellation between score lookup and atomic submission cannot publish a stale score
+ok 61 - cancellation between score lookup and atomic submission cannot publish a stale score
+  ---
+  duration_ms: 0.680916
+  type: 'test'
+  ...
+# Subtest: end uses an independent bounded rate allowance and infrastructure failures remain safe
+ok 62 - end uses an independent bounded rate allowance and infrastructure failures remain safe
+  ---
+  duration_ms: 0.435136
+  type: 'test'
+  ...
+# Subtest: invalid stored nicknames fail as infrastructure errors rather than blaming the reader
+ok 63 - invalid stored nicknames fail as infrastructure errors rather than blaming the reader
+  ---
+  duration_ms: 0.21265
+  type: 'test'
+  ...
+# Subtest: distance v2 rejects legacy clients, mismatched totals and malformed telemetry before any writes
+ok 64 - distance v2 rejects legacy clients, mismatched totals and malformed telemetry before any writes
+  ---
+  duration_ms: 0.892956
+  type: 'test'
+  ...
+# Subtest: distance v2 uses category-specific speed/time plausibility and recomputes mixed-band ceil once
+ok 65 - distance v2 uses category-specific speed/time plausibility and recomputes mixed-band ceil once
+  ---
+  duration_ms: 0.652754
+  type: 'test'
+  ...
+# Subtest: distance v2 isolates new boards without deleting legacy records and rejects legacy issued runs
+ok 66 - distance v2 isolates new boards without deleting legacy records and rejects legacy issued runs
+  ---
+  duration_ms: 0.345851
+  type: 'test'
+  ...
+# Subtest: shared station tangents reproduce a straight loft without flat spots and stay C1 at keys
+ok 67 - shared station tangents reproduce a straight loft without flat spots and stay C1 at keys
+  ---
+  duration_ms: 4.122863
+  type: 'test'
+  ...
+# Subtest: shape-preserving station loft retains every landmark and never overshoots any interval
+ok 68 - shape-preserving station loft retains every landmark and never overshoots any interval
+  ---
+  duration_ms: 5.532166
+  type: 'test'
+  ...
+# Subtest: cross sections are curved, symmetric and preserve all sculpting anchors
+ok 69 - cross sections are curved, symmetric and preserve all sculpting anchors
+  ---
+  duration_ms: 0.326271
+  type: 'test'
+  ...
+# Subtest: actual body/canopy meshes carry finite unit mirrored tangent normals with upward crowns
+ok 70 - actual body/canopy meshes carry finite unit mirrored tangent normals with upward crowns
+  ---
+  duration_ms: 5.205664
+  type: 'test'
+  ...
+# Subtest: wheel arch cut and exterior dimensions remain exact after curved tessellation
+ok 71 - wheel arch cut and exterior dimensions remain exact after curved tessellation
+  ---
+  duration_ms: 1.447452
+  type: 'test'
+  ...
+# Subtest: vehicle-only reflection softening survives paint changes while all preset finishes remain distinct
+ok 72 - vehicle-only reflection softening survives paint changes while all preset finishes remain distinct
+  ---
+  duration_ms: 0.199961
+  type: 'test'
+  ...
+# Subtest: 200 km/h boundary uses km/h physics regardless of HUD unit, smoothly reaches full thrust at 240
+ok 73 - 200 km/h boundary uses km/h physics regardless of HUD unit, smoothly reaches full thrust at 240
+  ---
+  duration_ms: 100.504159
+  type: 'test'
+  ...
+# Subtest: supersonic braking adds finite force-based thrust, shared by H and S, without double billing
+ok 74 - supersonic braking adds finite force-based thrust, shared by H and S, without double billing
+  ---
+  duration_ms: 9.834188
+  type: 'test'
+  ...
+# Subtest: H/S throttle overlap retains W/semicolon priority on keyboard and released controls engage braking
+ok 75 - H/S throttle overlap retains W/semicolon priority on keyboard and released controls engage braking
+  ---
+  duration_ms: 25.942501
+  type: 'test'
+  ...
+# Subtest: reverse, yawed, airborne and flipped travel loses kinetic speed without direction inversion
+ok 76 - reverse, yawed, airborne and flipped travel loses kinetic speed without direction inversion
+  ---
+  duration_ms: 57.845026
+  type: 'test'
+  ...
+# Subtest: empty tanks retain mechanical/air drag braking, last tank fraction buys only proportional impulse
+ok 77 - empty tanks retain mechanical/air drag braking, last tank fraction buys only proportional impulse
+  ---
+  duration_ms: 13.959054
+  type: 'test'
+  ...
+# Subtest: retro and handbrake together keep foot braking in both directions and maps
+ok 78 - retro and handbrake together keep foot braking in both directions and maps
+  ---
+  duration_ms: 33.870566
+  type: 'test'
+  ...
+# Subtest: ground tank cannot recharge over retro thrust, resumes normally after releasing brake
+ok 79 - ground tank cannot recharge over retro thrust, resumes normally after releasing brake
+  ---
+  duration_ms: 5.287818
+  type: 'test'
+  ...
+# Subtest: mobile brake and reverse buttons share demand/consumption, release/cancel and focus loss clear input
+ok 80 - mobile brake and reverse buttons share demand/consumption, release/cancel and focus loss clear input
+  ---
+  duration_ms: 13.869724
+  type: 'test'
+  ...
+# Subtest: 30/60/144 Hz maintain consistent threshold fade and supersonic stopping, with no reversal
+ok 81 - 30/60/144 Hz maintain consistent threshold fade and supersonic stopping, with no reversal
+  ---
+  duration_ms: 104.567182
+  type: 'test'
+  ...
+# Subtest: rooftop and helipad replenishment cannot cancel any active retro burn
+ok 82 - rooftop and helipad replenishment cannot cancel any active retro burn
+  ---
+  duration_ms: 2.954883
+  type: 'test'
+  ...
+# Subtest: S brakes fast reverse landings progressively before retaining normal low-speed reverse drive
+ok 83 - S brakes fast reverse landings progressively before retaining normal low-speed reverse drive
+  ---
+  duration_ms: 4.153208
+  type: 'test'
+  ...
+# Subtest: complete movement/altitude/attitude path debits every combined jet from one shared tank
+ok 84 - complete movement/altitude/attitude path debits every combined jet from one shared tank
+  ---
+  duration_ms: 5.347518
+  type: 'test'
+  ...
+# Subtest: complete airborne control retains passive drag when empty and finite gravity at retro depletion
+ok 85 - complete airborne control retains passive drag when empty and finite gravity at retro depletion
+  ---
+  duration_ms: 16.55808
+  type: 'test'
+  ...
+# Subtest: normal-mode boost release keeps 250/300 km/h momentum with or without W held
+ok 86 - normal-mode boost release keeps 250/300 km/h momentum with or without W held
+  ---
+  duration_ms: 82.288613
+  type: 'test'
+  ...
+# Subtest: normal overspeed coast uses exactly 1.3 times the existing aero-plus-roll baseline
+ok 87 - normal overspeed coast uses exactly 1.3 times the existing aero-plus-roll baseline
+  ---
+  duration_ms: 17.940122
+  type: 'test'
+  ...
+# Subtest: coasting crosses 200 continuously and W returns to its electric-drive ceiling without a jump
+ok 88 - coasting crosses 200 continuously and W returns to its electric-drive ceiling without a jump
+  ---
+  duration_ms: 29.443867
+  type: 'test'
+  ...
+# Subtest: boost release coasting stays consistent at 30/60/144 Hz and variable frame times
+ok 89 - boost release coasting stays consistent at 30/60/144 Hz and variable frame times
+  ---
+  duration_ms: 819.993964
+  type: 'test'
+  ...
+# Subtest: normal overspeed retains active H/S retro braking, empty-tank brakes and throttle priority
+ok 90 - normal overspeed retains active H/S retro braking, empty-tank brakes and throttle priority
+  ---
+  duration_ms: 32.872111
+  type: 'test'
+  ...
+# Subtest: boost release while W and handbrake are held cannot snap existing overspeed to the drift limit
+ok 91 - boost release while W and handbrake are held cannot snap existing overspeed to the drift limit
+  ---
+  duration_ms: 3.739885
+  type: 'test'
+  ...
+# Subtest: Plaid, Fantasy and normal EV acceleration stay unchanged; sustained air release is responsive
+ok 92 - Plaid, Fantasy and normal EV acceleration stay unchanged; sustained air release is responsive
+  ---
+  duration_ms: 12.207394
+  type: 'test'
+  ...
+# Subtest: city chase holds the same vehicle framing across speed changes and irregular 20–144Hz frames
+ok 93 - city chase holds the same vehicle framing across speed changes and irregular 20–144Hz frames
+  ---
+  duration_ms: 8.412105
+  type: 'test'
+  ...
+# Subtest: a dropped 50ms frame does not pull the camera toward a steadily moving city car
+ok 94 - a dropped 50ms frame does not pull the camera toward a steadily moving city car
+  ---
+  duration_ms: 7.780734
+  type: 'test'
+  ...
+# Subtest: chase offset damping is timestep invariant, including its aim and zoom
+ok 95 - chase offset damping is timestep invariant, including its aim and zoom
+  ---
+  duration_ms: 3.839565
+  type: 'test'
+  ...
+# Subtest: yaw crossing +/-180 and pitch crossing a complete loop keep camera position and aim continuous
+ok 96 - yaw crossing +/-180 and pitch crossing a complete loop keep camera position and aim continuous
+  ---
+  duration_ms: 1.416204
+  type: 'test'
+  ...
+# Subtest: render shake is bounded to the current frame and never pollutes the chase rig
+ok 97 - render shake is bounded to the current frame and never pollutes the chase rig
+  ---
+  duration_ms: 1.386239
+  type: 'test'
+  ...
+# Subtest: reset teleport and map/view switches use the new vehicle anchor without a world-space camera sweep
+ok 98 - reset teleport and map/view switches use the new vehicle anchor without a world-space camera sweep
+  ---
+  duration_ms: 2.550398
+  type: 'test'
+  ...
+# Subtest: traffic-roof contact resolves the rendered vehicle pose in the same frame used by the camera
+ok 99 - traffic-roof contact resolves the rendered vehicle pose in the same frame used by the camera
+  ---
+  duration_ms: 1.429594
+  type: 'test'
+  ...
+# Subtest: city 300m block takes 5.4s at actual 200km/h, 30Hz
+ok 100 - city 300m block takes 5.4s at actual 200km/h, 30Hz
+  ---
+  duration_ms: 16.300862
+  type: 'test'
+  ...
+# Subtest: city 300m block takes 5.4s at actual 200km/h, 60Hz
+ok 101 - city 300m block takes 5.4s at actual 200km/h, 60Hz
+  ---
+  duration_ms: 19.128744
+  type: 'test'
+  ...
+# Subtest: city 300m block takes 5.4s at actual 200km/h, 144Hz
+ok 102 - city 300m block takes 5.4s at actual 200km/h, 144Hz
+  ---
+  duration_ms: 41.302564
+  type: 'test'
+  ...
+# Subtest: city ground: same-frame displacement is velocity in metres per second
+ok 103 - city ground: same-frame displacement is velocity in metres per second
+  ---
+  duration_ms: 3.221494
+  type: 'test'
+  ...
+# Subtest: city air: same-frame displacement is velocity in metres per second
+ok 104 - city air: same-frame displacement is velocity in metres per second
+  ---
+  duration_ms: 2.86076
+  type: 'test'
+  ...
+# Subtest: city reverse: same-frame displacement is velocity in metres per second
+ok 105 - city reverse: same-frame displacement is velocity in metres per second
+  ---
+  duration_ms: 2.843154
+  type: 'test'
+  ...
+# Subtest: city strafe: same-frame displacement is velocity in metres per second
+ok 106 - city strafe: same-frame displacement is velocity in metres per second
+  ---
+  duration_ms: 2.890435
+  type: 'test'
+  ...
+# Subtest: city NPCs and wheel rotation use city metre scale without changing highway traffic calibration
+ok 107 - city NPCs and wheel rotation use city metre scale without changing highway traffic calibration
+  ---
+  duration_ms: 0.735898
+  type: 'test'
+  ...
+# Subtest: infinite shared tank powers rear, lift, side and retro without depletion: highway, 30Hz
+ok 108 - infinite shared tank powers rear, lift, side and retro without depletion: highway, 30Hz
+  ---
+  duration_ms: 93.255973
+  type: 'test'
+  ...
+# Subtest: infinite shared tank powers rear, lift, side and retro without depletion: highway, 60Hz
+ok 109 - infinite shared tank powers rear, lift, side and retro without depletion: highway, 60Hz
+  ---
+  duration_ms: 135.742597
+  type: 'test'
+  ...
+# Subtest: infinite shared tank powers rear, lift, side and retro without depletion: highway, 144Hz
+ok 110 - infinite shared tank powers rear, lift, side and retro without depletion: highway, 144Hz
+  ---
+  duration_ms: 297.05394
+  type: 'test'
+  ...
+# Subtest: infinite shared tank powers rear, lift, side and retro without depletion: city, 30Hz
+ok 111 - infinite shared tank powers rear, lift, side and retro without depletion: city, 30Hz
+  ---
+  duration_ms: 73.351415
+  type: 'test'
+  ...
+# Subtest: infinite shared tank powers rear, lift, side and retro without depletion: city, 60Hz
+ok 112 - infinite shared tank powers rear, lift, side and retro without depletion: city, 60Hz
+  ---
+  duration_ms: 132.739031
+  type: 'test'
+  ...
+# Subtest: infinite shared tank powers rear, lift, side and retro without depletion: city, 144Hz
+ok 113 - infinite shared tank powers rear, lift, side and retro without depletion: city, 144Hz
+  ---
+  duration_ms: 316.72109
+  type: 'test'
+  ...
+# Subtest: world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical
+ok 114 - world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical
+  ---
+  duration_ms: 4.794173
+  type: 'test'
+  ...
+# Subtest: actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles
+ok 115 - actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles
+  ---
+  duration_ms: 2420.522931
+  type: 'test'
+  ...
+# Subtest: coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights
+ok 116 - coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights
+  ---
+  duration_ms: 323.618798
+  type: 'test'
+  ...
+# Subtest: r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets
+ok 117 - r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets
+  ---
+  duration_ms: 730.542068
+  type: 'test'
+  ...
+# Subtest: construction and final-attach faults restore scene atomically and dispose all returned partial private resources
+ok 118 - construction and final-attach faults restore scene atomically and dispose all returned partial private resources
+  ---
+  duration_ms: 595.475854
+  type: 'test'
+  ...
+# Subtest: actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame
+ok 119 - actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame
+  ---
+  duration_ms: 811.217584
+  type: 'test'
+  ...
+# Subtest: direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion
+ok 120 - direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion
+  ---
+  duration_ms: 199.136467
+  type: 'test'
+  ...
+# Subtest: coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte
+ok 121 - coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte
+  ---
+  duration_ms: 1.489774
+  type: 'test'
+  ...
+# Subtest: actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance
+ok 122 - actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance
+  ---
+  duration_ms: 443.111458
+  type: 'test'
+  ...
+# Subtest: five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets
+ok 123 - five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets
+  ---
+  duration_ms: 809.32757
+  type: 'test'
+  ...
+# Subtest: road render union is exact, non-overlapping and uses square world-metre texture UVs
+ok 124 - road render union is exact, non-overlapping and uses square world-metre texture UVs
+  ---
+  duration_ms: 251.064546
+  type: 'test'
+  ...
+# Subtest: batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion
+ok 125 - batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion
+  ---
+  duration_ms: 194.886576
+  type: 'test'
+  ...
+# Subtest: original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes
+ok 126 - original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes
+  ---
+  duration_ms: 173.000369
+  type: 'test'
+  ...
+# Subtest: curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages
+ok 127 - curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages
+  ---
+  duration_ms: 197.506796
+  type: 'test'
+  ...
+# Subtest: palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout
+ok 128 - palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout
+  ---
+  duration_ms: 189.666612
+  type: 'test'
+  ...
+# Subtest: whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool
+ok 129 - whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool
+  ---
+  duration_ms: 223.510601
+  type: 'test'
+  ...
+# Subtest: all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building
+ok 130 - all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building
+  ---
+  duration_ms: 178.617042
+  type: 'test'
+  ...
+# Subtest: boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded
+ok 131 - boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded
+  ---
+  duration_ms: 184.704606
+  type: 'test'
+  ...
+# Subtest: boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted
+ok 132 - boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted
+  ---
+  duration_ms: 192.336906
+  type: 'test'
+  ...
+# Subtest: western boulevard curb has an actual visual cut across the original pier approach
+ok 133 - western boulevard curb has an actual visual cut across the original pier approach
+  ---
+  duration_ms: 176.340382
+  type: 'test'
+  ...
+# Subtest: continuous water/sand grids retain exact original area, bounds, elevation and upward winding
+ok 134 - continuous water/sand grids retain exact original area, bounds, elevation and upward winding
+  ---
+  duration_ms: 196.53384
+  type: 'test'
+  ...
+# Subtest: native water normals drift by uniforms only, retain finite periodic offsets and dispose once
+ok 135 - native water normals drift by uniforms only, retain finite periodic offsets and dispose once
+  ---
+  duration_ms: 330.490256
+  type: 'test'
+  ...
+# Subtest: original art payload remains below the explicit32KiB gzip ceiling with zero art fetches
+ok 136 - original art payload remains below the explicit32KiB gzip ceiling with zero art fetches
+  ---
+  duration_ms: 4.429394
+  type: 'test'
+  ...
+# Subtest: fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights
+ok 137 - fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights
+  ---
+  duration_ms: 184.516683
+  type: 'test'
+  ...
+# Subtest: selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors
+ok 138 - selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors
+  ---
+  duration_ms: 215.170078
+  type: 'test'
+  ...
+# Subtest: curved roof trim is a finite closed shallow parapet, not a new collidable full roof
+ok 139 - curved roof trim is a finite closed shallow parapet, not a new collidable full roof
+  ---
+  duration_ms: 208.670514
+  type: 'test'
+  ...
+# Subtest: composed courtyard and three beach entries retain original obstacles, shoulders and ground datum
+ok 140 - composed courtyard and three beach entries retain original obstacles, shoulders and ground datum
+  ---
+  duration_ms: 178.056758
+  type: 'test'
+  ...
+# Subtest: driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles
+ok 141 - driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles
+  ---
+  duration_ms: 188.781949
+  type: 'test'
+  ...
+# Subtest: corner storefront lettering reads left-to-right from actual outward X and Z viewpoints
+ok 142 - corner storefront lettering reads left-to-right from actual outward X and Z viewpoints
+  ---
+  duration_ms: 187.716494
+  type: 'test'
+  ...
+# Subtest: continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles
+ok 143 - continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles
+  ---
+  duration_ms: 208.085152
+  type: 'test'
+  ...
+# Subtest: world ground field retains exact full box/independent UV, uploads once and reuses only bounded CPU pixels
+ok 144 - world ground field retains exact full box/independent UV, uploads once and reuses only bounded CPU pixels
+  ---
+  duration_ms: 326.029798
+  type: 'test'
+  ...
+# Subtest: two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks
+ok 145 - two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks
+  ---
+  duration_ms: 173.85755
+  type: 'test'
+  ...
+# Subtest: curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle
+ok 146 - curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle
+  ---
+  duration_ms: 186.961466
+  type: 'test'
+  ...
+# Subtest: window/forecourt refinements retain all129 published art entrance/path poses byte for byte
+ok 147 - window/forecourt refinements retain all129 published art entrance/path poses byte for byte
+  ---
+  duration_ms: 179.288734
+  type: 'test'
+  ...
+# Subtest: six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors
+ok 148 - six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors
+  ---
+  duration_ms: 178.551634
+  type: 'test'
+  ...
+# Subtest: signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance
+ok 149 - signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance
+  ---
+  duration_ms: 1220.7471
+  type: 'test'
+  ...
+# Subtest: original map data is lazy, meter-scale, connected and explicitly separate from city/highway
+ok 150 - original map data is lazy, meter-scale, connected and explicitly separate from city/highway
+  ---
+  duration_ms: 7.705609
+  type: 'test'
+  ...
+# Subtest: all directed routes and complete vehicle corners stay on legal roads, not sand, pier or water
+ok 151 - all directed routes and complete vehicle corners stay on legal roads, not sand, pier or water
+  ---
+  duration_ms: 64.293183
+  type: 'test'
+  ...
+# Subtest: coast20-car road motion uses real metres and finite speed at30Hz
+ok 152 - coast20-car road motion uses real metres and finite speed at30Hz
+  ---
+  duration_ms: 56.802448
+  type: 'test'
+  ...
+# Subtest: coast20-car road motion uses real metres and finite speed at60Hz
+ok 153 - coast20-car road motion uses real metres and finite speed at60Hz
+  ---
+  duration_ms: 102.498833
+  type: 'test'
+  ...
+# Subtest: coast20-car road motion uses real metres and finite speed at144Hz
+ok 154 - coast20-car road motion uses real metres and finite speed at144Hz
+  ---
+  duration_ms: 221.600981
+  type: 'test'
+  ...
+# Subtest: collision stops on its actual route; blasts hide before a safe road-only respawn, without city wrap
+ok 155 - collision stops on its actual route; blasts hide before a safe road-only respawn, without city wrap
+  ---
+  duration_ms: 2.507558
+  type: 'test'
+  ...
+# Subtest: actualr128 low-poly model owns bounded geometry, creates lazily and disposes only its own map resources
+ok 156 - actualr128 low-poly model owns bounded geometry, creates lazily and disposes only its own map resources
+  ---
+  duration_ms: 836.641353
+  type: 'test'
+  ...
+# Subtest: coastal300m drive takes5.4seconds at200km/h,30Hz
+ok 157 - coastal300m drive takes5.4seconds at200km/h,30Hz
+  ---
+  duration_ms: 34.084241
+  type: 'test'
+  ...
+# Subtest: coastal300m drive takes5.4seconds at200km/h,60Hz
+ok 158 - coastal300m drive takes5.4seconds at200km/h,60Hz
+  ---
+  duration_ms: 39.251797
+  type: 'test'
+  ...
+# Subtest: coastal300m drive takes5.4seconds at200km/h,144Hz
+ok 159 - coastal300m drive takes5.4seconds at200km/h,144Hz
+  ---
+  duration_ms: 80.704774
+  type: 'test'
+  ...
+# Subtest: sea permits flight but no ghost landing save or recharge; actual touch resets once onto the road
+ok 160 - sea permits flight but no ghost landing save or recharge; actual touch resets once onto the road
+  ---
+  duration_ms: 19.17605
+  type: 'test'
+  ...
+# Subtest: spawn boulevard and pier approach form a traversable sightseeing path, not an isolated menu option
+ok 161 - spawn boulevard and pier approach form a traversable sightseeing path, not an isolated menu option
+  ---
+  duration_ms: 5.993349
+  type: 'test'
+  ...
+# Subtest: water/reset chooses a genuinely free road pose rather than spawning inside existing traffic
+ok 162 - water/reset chooses a genuinely free road pose rather than spawning inside existing traffic
+  ---
+  duration_ms: 3.740125
+  type: 'test'
+  ...
+# Subtest: coast continuous side sweep prevents high-speed building tunneling and roofs remain real support
+ok 163 - coast continuous side sweep prevents high-speed building tunneling and roofs remain real support
+  ---
+  duration_ms: 8.77461
+  type: 'test'
+  ...
+# Subtest: after touchdown, rooftop driving and a fresh O takeoff never collide with their own supporting side wall
+ok 164 - after touchdown, rooftop driving and a fresh O takeoff never collide with their own supporting side wall
+  ---
+  duration_ms: 16.512949
+  type: 'test'
+  ...
+# Subtest: actual coast contact block covers east/west cars and turning headings instead of a fixed north/south box
+ok 165 - actual coast contact block covers east/west cars and turning headings instead of a fixed north/south box
+  ---
+  duration_ms: 7.688894
+  type: 'test'
+  ...
+# Subtest: coast traffic sweep intersects height over the whole overlap, not just entry or frame end
+ok 166 - coast traffic sweep intersects height over the whole overlap, not just entry or frame end
+  ---
+  duration_ms: 7.863096
+  type: 'test'
+  ...
+# Subtest: actual player and NPC wheel blocks retain highway calibration and meter scale on both free-roam maps
+ok 167 - actual player and NPC wheel blocks retain highway calibration and meter scale on both free-roam maps
+  ---
+  duration_ms: 1.714984
+  type: 'test'
+  ...
+# Subtest: actual map switching isolates coast ownership/counts, blocks ranked starts and preserves existing maps
+ok 168 - actual map switching isolates coast ownership/counts, blocks ranked starts and preserves existing maps
+  ---
+  duration_ms: 19.744757
+  type: 'test'
+  ...
+# Subtest: all four exterior/cockpit choices separate the in-cabin screen from the readable FPV pod
+ok 169 - all four exterior/cockpit choices separate the in-cabin screen from the readable FPV pod
+  ---
+  duration_ms: 358.589161
+  type: 'test'
+  ...
+# Subtest: front lens triangles face the road without duplicate glowing backfaces
+ok 170 - front lens triangles face the road without duplicate glowing backfaces
+  ---
+  duration_ms: 50.041372
+  type: 'test'
+  ...
+# Subtest: LED boxes have opaque non-emissive rear housings and only their front face emits
+ok 171 - LED boxes have opaque non-emissive rear housings and only their front face emits
+  ---
+  duration_ms: 43.462239
+  type: 'test'
+  ...
+# Subtest: cockpit excludes exposed exterior lamp/vent backs but keeps real road lighting and restores all outside views
+ok 172 - cockpit excludes exposed exterior lamp/vent backs but keeps real road lighting and restores all outside views
+  ---
+  duration_ms: 49.863874
+  type: 'test'
+  ...
+# Subtest: actual r128 driver eye is inside both body canopies and looks through the front windshield, never over the roof
+ok 173 - actual r128 driver eye is inside both body canopies and looks through the front windshield, never over the roof
+  ---
+  duration_ms: 554.387693
+  type: 'test'
+  ...
+# Subtest: FPV instruments stay exactly centered while the left-hand-drive wheel remains visibly left across resize
+ok 174 - FPV instruments stay exactly centered while the left-hand-drive wheel remains visibly left across resize
+  ---
+  duration_ms: 54.924383
+  type: 'test'
+  ...
+# Subtest: all speed, air and passenger readouts clear real generated body triangles, cowling and a fully turned yoke
+ok 175 - all speed, air and passenger readouts clear real generated body triangles, cowling and a fully turned yoke
+  ---
+  duration_ms: 3778.689127
+  type: 'test'
+  ...
+# Subtest: central forward road rays stay clear of actual body/rocker/cockpit across all viewport shapes
+ok 176 - central forward road rays stay clear of actual body/rocker/cockpit across all viewport shapes
+  ---
+  duration_ms: 1802.898008
+  type: 'test'
+  ...
+# Subtest: the close driver yoke is materially larger, with the live hub and LEDs visible through its complete steering range
+ok 177 - the close driver yoke is materially larger, with the live hub and LEDs visible through its complete steering range
+  ---
+  duration_ms: 2753.648004
+  type: 'test'
+  ...
+# Subtest: leaving FPV restores exterior geometry repeatedly; resize does not change that pose
+ok 178 - leaving FPV restores exterior geometry repeatedly; resize does not change that pose
+  ---
+  duration_ms: 42.017739
+  type: 'test'
+  ...
+# Subtest: the dark 3D cockpit masks the white hood and physically mounts the steering column
+ok 179 - the dark 3D cockpit masks the white hood and physically mounts the steering column
+  ---
+  duration_ms: 1212.819518
+  type: 'test'
+  ...
+# Subtest: no projected yoke triangle can cover any part of the complete centered live display at full steering
+ok 180 - no projected yoke triangle can cover any part of the complete centered live display at full steering
+  ---
+  duration_ms: 772.88193
+  type: 'test'
+  ...
+# Subtest: constrained portrait and square windows keep legible central telemetry without wheel overlap
+ok 181 - constrained portrait and square windows keep legible central telemetry without wheel overlap
+  ---
+  duration_ms: 1512.451029
+  type: 'test'
+  ...
+# Subtest: whole rain segments, including crossings with both endpoints outside, are excluded from the cabin
+ok 182 - whole rain segments, including crossings with both endpoints outside, are excluded from the cabin
+  ---
+  duration_ms: 1.000668
+  type: 'test'
+  ...
+# Subtest: exact glass sampling respects the reference front plane and follows the original classic grid
+ok 183 - exact glass sampling respects the reference front plane and follows the original classic grid
+  ---
+  duration_ms: 407.008228
+  type: 'test'
+  ...
+# Subtest: eight small glass beads reuse one depth-tested transparent mesh and all buffers across modes/models/resize
+ok 184 - eight small glass beads reuse one depth-tested transparent mesh and all buffers across modes/models/resize
+  ---
+  duration_ms: 753.660829
+  type: 'test'
+  ...
+# Subtest: beads slide down the real glass and speed cannot turn them into long full-screen streaks
+ok 185 - beads slide down the real glass and speed cannot turn them into long full-screen streaks
+  ---
+  duration_ms: 395.22246
+  type: 'test'
+  ...
+# Subtest: global rain reconstruction restores suppressed streaks and no 2D windshield rain remains
+ok 186 - global rain reconstruction restores suppressed streaks and no 2D windshield rain remains
+  ---
+  duration_ms: 1.209272
+  type: 'test'
+  ...
+# Subtest: highway: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn
+ok 187 - highway: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn
+  ---
+  duration_ms: 11.869052
+  type: 'test'
+  ...
+# Subtest: highway: crashReasonGround freezes final scores through wreck frames and clears only on respawn
+ok 188 - highway: crashReasonGround freezes final scores through wreck frames and clears only on respawn
+  ---
+  duration_ms: 2.319455
+  type: 'test'
+  ...
+# Subtest: highway: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn
+ok 189 - highway: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn
+  ---
+  duration_ms: 2.164881
+  type: 'test'
+  ...
+# Subtest: highway: surviving collisions preserve scores and do not create a final snapshot
+ok 190 - highway: surviving collisions preserve scores and do not create a final snapshot
+  ---
+  duration_ms: 1.864959
+  type: 'test'
+  ...
+# Subtest: highway: keyboard reset starts mileage and passenger totals from zero
+ok 191 - highway: keyboard reset starts mileage and passenger totals from zero
+  ---
+  duration_ms: 3.101994
+  type: 'test'
+  ...
+# Subtest: highway: button reset starts mileage and passenger totals from zero
+ok 192 - highway: button reset starts mileage and passenger totals from zero
+  ---
+  duration_ms: 1.713161
+  type: 'test'
+  ...
+# Subtest: highway: caller reset starts mileage and passenger totals from zero
+ok 193 - highway: caller reset starts mileage and passenger totals from zero
+  ---
+  duration_ms: 1.496955
+  type: 'test'
+  ...
+# Subtest: city: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn
+ok 194 - city: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn
+  ---
+  duration_ms: 87.240979
+  type: 'test'
+  ...
+# Subtest: city: crashReasonGround freezes final scores through wreck frames and clears only on respawn
+ok 195 - city: crashReasonGround freezes final scores through wreck frames and clears only on respawn
+  ---
+  duration_ms: 62.046197
+  type: 'test'
+  ...
+# Subtest: city: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn
+ok 196 - city: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn
+  ---
+  duration_ms: 60.16999
+  type: 'test'
+  ...
+# Subtest: city: surviving collisions preserve scores and do not create a final snapshot
+ok 197 - city: surviving collisions preserve scores and do not create a final snapshot
+  ---
+  duration_ms: 60.837076
+  type: 'test'
+  ...
+# Subtest: city: keyboard reset starts mileage and passenger totals from zero
+ok 198 - city: keyboard reset starts mileage and passenger totals from zero
+  ---
+  duration_ms: 65.232828
+  type: 'test'
+  ...
+# Subtest: city: button reset starts mileage and passenger totals from zero
+ok 199 - city: button reset starts mileage and passenger totals from zero
+  ---
+  duration_ms: 58.293043
+  type: 'test'
+  ...
+# Subtest: city: caller reset starts mileage and passenger totals from zero
+ok 200 - city: caller reset starts mileage and passenger totals from zero
+  ---
+  duration_ms: 65.364947
+  type: 'test'
+  ...
+# Subtest: an empty taxi retains settled fares through death and clears them on the next round
+ok 201 - an empty taxi retains settled fares through death and clears them on the next round
+  ---
+  duration_ms: 65.519469
+  type: 'test'
+  ...
+# Subtest: late callbacks cannot change frozen mileage, final score or clear/blast counts
+ok 202 - late callbacks cannot change frozen mileage, final score or clear/blast counts
+  ---
+  duration_ms: 1.790768
+  type: 'test'
+  ...
+# Subtest: highway: crash releases ranked session immediately while final score remains until restart
+ok 203 - highway: crash releases ranked session immediately while final score remains until restart
+  ---
+  duration_ms: 12.593413
+  type: 'test'
+  ...
+# Subtest: highway: completed ranked payload survives later death and R before explicit submission
+ok 204 - highway: completed ranked payload survives later death and R before explicit submission
+  ---
+  duration_ms: 2.452094
+  type: 'test'
+  ...
+# Subtest: city: crash releases ranked session immediately while final score remains until restart
+ok 205 - city: crash releases ranked session immediately while final score remains until restart
+  ---
+  duration_ms: 2.940931
+  type: 'test'
+  ...
+# Subtest: city: completed ranked payload survives later death and R before explicit submission
+ok 206 - city: completed ranked payload survives later death and R before explicit submission
+  ---
+  duration_ms: 2.092993
+  type: 'test'
+  ...
+# Subtest: crash summary preserves ranked notice, language switching and small-screen scrolling
+ok 207 - crash summary preserves ranked notice, language switching and small-screen scrolling
+  ---
+  duration_ms: 1.503665
+  type: 'test'
+  ...
+# Subtest: 10 metres per point is rounded upward only on the cumulative weighted distance
+ok 208 - 10 metres per point is rounded upward only on the cumulative weighted distance
+  ---
+  duration_ms: 3.662257
+  type: 'test'
+  ...
+# Subtest: each exact km/h boundary selects the highest applicable non-stacking bonus
+ok 209 - each exact km/h boundary selects the highest applicable non-stacking bonus
+  ---
+  duration_ms: 1.046176
+  type: 'test'
+  ...
+# Subtest: accelerating or braking across every threshold is split identically at 20/30/60/144 Hz
+ok 210 - accelerating or braking across every threshold is split identically at 20/30/60/144 Hz
+  ---
+  duration_ms: 9.134591
+  type: 'test'
+  ...
+# Subtest: speeding later never upgrades earlier mileage and slowing never removes an earned bonus
+ok 211 - speeding later never upgrades earlier mileage and slowing never removes an earned bonus
+  ---
+  duration_ms: 0.69004
+  type: 'test'
+  ...
+# Subtest: highway: physical forward travel uses speedometer metres; idle, reverse and vertical hovering earn zero
+ok 212 - highway: physical forward travel uses speedometer metres; idle, reverse and vertical hovering earn zero
+  ---
+  duration_ms: 0.332221
+  type: 'test'
+  ...
+# Subtest: city: physical forward travel uses speedometer metres; idle, reverse and vertical hovering earn zero
+ok 213 - city: physical forward travel uses speedometer metres; idle, reverse and vertical hovering earn zero
+  ---
+  duration_ms: 0.163857
+  type: 'test'
+  ...
+# Subtest: reset clears both accumulators and rendered scores, and production awards have one shared source
+ok 214 - reset clears both accumulators and rendered scores, and production awards have one shared source
+  ---
+  duration_ms: 1.152146
+  type: 'test'
+  ...
+# Subtest: highway lateral handling cannot inflate metres beyond the HUD speed-band envelope
+ok 215 - highway lateral handling cannot inflate metres beyond the HUD speed-band envelope
+  ---
+  duration_ms: 0.182575
+  type: 'test'
+  ...
+# Subtest: HUD and celebration copy never advertise the retired fixed-point awards
+ok 216 - HUD and celebration copy never advertise the retired fixed-point awards
+  ---
+  duration_ms: 0.413333
+  type: 'test'
+  ...
+# Subtest: final driving snapshot copies every accumulator and late writes cannot alter it
+ok 217 - final driving snapshot copies every accumulator and late writes cannot alter it
+  ---
+  duration_ms: 0.516718
+  type: 'test'
+  ...
+# Subtest: production V8 graph CPU reference renders bounded, finite load response and smooth mute/destruction recovery
+ok 218 - production V8 graph CPU reference renders bounded, finite load response and smooth mute/destruction recovery
+  ---
+  duration_ms: 368.608244
+  type: 'test'
+  ...
+# Subtest: engine preference defaults on and can be changed before audio initializes without unlocking audio
+ok 219 - engine preference defaults on and can be changed before audio initializes without unlocking audio
+  ---
+  duration_ms: 10.173337
+  type: 'test'
+  ...
+# Subtest: only the synthesized motor routes through the smoothly switched preference gate
+ok 220 - only the synthesized motor routes through the smoothly switched preference gate
+  ---
+  duration_ms: 3.224587
+  type: 'test'
+  ...
+# Subtest: SFX mute and destruction still silence motor, thrusters and tires after toggling
+ok 221 - SFX mute and destruction still silence motor, thrusters and tires after toggling
+  ---
+  duration_ms: 2.709502
+  type: 'test'
+  ...
+# Subtest: off and on survive reload independently of BGM and storage errors or missing audio APIs remain safe
+ok 222 - off and on survive reload independently of BGM and storage errors or missing audio APIs remain safe
+  ---
+  duration_ms: 7.542413
+  type: 'test'
+  ...
+# Subtest: settings loads saved state before WebGL, translates and toggles only engine audio without creating a context
+ok 223 - settings loads saved state before WebGL, translates and toggles only engine audio without creating a context
+  ---
+  duration_ms: 19.472277
+  type: 'test'
+  ...
+# Subtest: production map switches and repeated vehicle or challenge resets retain the engine preference
+ok 224 - production map switches and repeated vehicle or challenge resets retain the engine preference
+  ---
+  duration_ms: 3.96944
+  type: 'test'
+  ...
+# Subtest: original V8 voice uses two irregular exhaust banks, filtered air, bass and bounded soft saturation
+ok 225 - original V8 voice uses two irregular exhaust banks, filtered air, bass and bounded soft saturation
+  ---
+  duration_ms: 2.766388
+  type: 'test'
+  ...
+# Subtest: virtual RPM and exhaust load rise smoothly with speed and analog throttle while coasting becomes quieter
+ok 226 - virtual RPM and exhaust load rise smoothly with speed and analog throttle while coasting becomes quieter
+  ---
+  duration_ms: 3.666514
+  type: 'test'
+  ...
+# Subtest: invalid inputs and extreme speed keep V8 pitch, filter, and level finite and bounded; legacy callers remain compatible
+ok 227 - invalid inputs and extreme speed keep V8 pitch, filter, and level finite and bounded; legacy callers remain compatible
+  ---
+  duration_ms: 3.127371
+  type: 'test'
+  ...
+# Subtest: production physics passes actual analog drive load without changing the existing SFX argument meanings
+ok 228 - production physics passes actual analog drive load without changing the existing SFX argument meanings
+  ---
+  duration_ms: 12.089133
+  type: 'test'
+  ...
+# Subtest: freefall alarm belongs to sustained flight, never road depletion or the complete O-hop
+ok 229 - freefall alarm belongs to sustained flight, never road depletion or the complete O-hop
+  ---
+  duration_ms: 104.536582
+  type: 'test'
+  ...
+# Subtest: ground O marks its whole arc; deliberate sustained lift leaves that alert-only classification
+ok 230 - ground O marks its whole arc; deliberate sustained lift leaves that alert-only classification
+  ---
+  duration_ms: 3.862769
+  type: 'test'
+  ...
+# Subtest: from rest, 1s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode
+ok 231 - from rest, 1s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode
+  ---
+  duration_ms: 113.785896
+  type: 'test'
+  ...
+# Subtest: from rest, 2s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode
+ok 232 - from rest, 2s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode
+  ---
+  duration_ms: 182.373801
+  type: 'test'
+  ...
+# Subtest: from rest, 3s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode
+ok 233 - from rest, 3s follows y=y0−½gt² and vy=−gt at every FPS/map/tank/mode
+  ---
+  duration_ms: 267.106605
+  type: 'test'
+  ...
+# Subtest: initial upward/downward velocities and arbitrary attitudes do not change gravity or create a terminal cap
+ok 234 - initial upward/downward velocities and arbitrary attitudes do not change gravity or create a terminal cap
+  ---
+  duration_ms: 69.787275
+  type: 'test'
+  ...
+# Subtest: variable frame lengths, zero dt, and sub-centimeter clearance retain exact ballistics
+ok 235 - variable frame lengths, zero dt, and sub-centimeter clearance retain exact ballistics
+  ---
+  duration_ms: 7.756247
+  type: 'test'
+  ...
+# Subtest: Space climb and pitched rear thrust release preserve initial velocity through the apex
+ok 236 - Space climb and pitched rear thrust release preserve initial velocity through the apex
+  ---
+  duration_ms: 131.985004
+  type: 'test'
+  ...
+# Subtest: every depletion path preserves velocity and receives gravity in the same unpowered frame
+ok 237 - every depletion path preserves velocity and receives gravity in the same unpowered frame
+  ---
+  duration_ms: 536.083479
+  type: 'test'
+  ...
+# Subtest: depleting an emergency-save tank grants no unpaid braking frame
+ok 238 - depleting an emergency-save tank grants no unpaid braking frame
+  ---
+  duration_ms: 4.544047
+  type: 'test'
+  ...
+# Subtest: roads/roofs contact at analytic fall time and impact speed without tunneling
+ok 239 - roads/roofs contact at analytic fall time and impact speed without tunneling
+  ---
+  duration_ms: 415.883161
+  type: 'test'
+  ...
+# Subtest: roof contact waits for the physical surface, while ordinary powered controls remain active
+ok 240 - roof contact waits for the physical surface, while ordinary powered controls remain active
+  ---
+  duration_ms: 5.650073
+  type: 'test'
+  ...
+# Subtest: actual O launch preserves the complete prior horizontal vector on both maps
+ok 241 - actual O launch preserves the complete prior horizontal vector on both maps
+  ---
+  duration_ms: 64.761503
+  type: 'test'
+  ...
+# Subtest: established unpowered flight regains the previous release braking without changing vertical gravity
+ok 242 - established unpowered flight regains the previous release braking without changing vertical gravity
+  ---
+  duration_ms: 57.802797
+  type: 'test'
+  ...
+# Subtest: W/semicolon and mode changes limit added air thrust without clipping inherited overspeed
+ok 243 - W/semicolon and mode changes limit added air thrust without clipping inherited overspeed
+  ---
+  duration_ms: 28.189185
+  type: 'test'
+  ...
+# Subtest: city ground, O launch and free flight share one metre-per-second horizontal scale
+ok 244 - city ground, O launch and free flight share one metre-per-second horizontal scale
+  ---
+  duration_ms: 4.072977
+  type: 'test'
+  ...
+# Subtest: banked/yawed O plus rear thrust changes travel only by its finite nose impulse
+ok 245 - banked/yawed O plus rear thrust changes travel only by its finite nose impulse
+  ---
+  duration_ms: 30.384704
+  type: 'test'
+  ...
+# Subtest: rear thrust cannot clip an existing upward velocity or inject lift while level
+ok 246 - rear thrust cannot clip an existing upward velocity or inject lift while level
+  ---
+  duration_ms: 7.681444
+  type: 'test'
+  ...
+# Subtest: established powered flight promptly removes sideslip toward the aimed nose on both maps
+ok 247 - established powered flight promptly removes sideslip toward the aimed nose on both maps
+  ---
+  duration_ms: 12.94162
+  type: 'test'
+  ...
+# Subtest: O carries the full inherited vector for 0.25 seconds before smoothly restoring flight release braking
+ok 248 - O carries the full inherited vector for 0.25 seconds before smoothly restoring flight release braking
+  ---
+  duration_ms: 37.268106
+  type: 'test'
+  ...
+# Subtest: smoothstep transition integrates frame crossings, zero dt and irregular frame lengths exactly
+ok 249 - smoothstep transition integrates frame crossings, zero dt and irregular frame lengths exactly
+  ---
+  duration_ms: 3.57051
+  type: 'test'
+  ...
+# Subtest: powered O overspeed settles after the launch grace without instantaneous clipping or mode-switch steps
+ok 250 - powered O overspeed settles after the launch grace without instantaneous clipping or mode-switch steps
+  ---
+  duration_ms: 100.558296
+  type: 'test'
+  ...
+# Subtest: midair O cannot restart launch inertia, while a fresh grounded O can
+ok 251 - midair O cannot restart launch inertia, while a fresh grounded O can
+  ---
+  duration_ms: 6.211389
+  type: 'test'
+  ...
+# Subtest: bank assist returns after the hop on both maps and cannot supply empty-tank side jets
+ok 252 - bank assist returns after the hop on both maps and cannot supply empty-tank side jets
+  ---
+  duration_ms: 25.317954
+  type: 'test'
+  ...
+# Subtest: actual A/W and D/W flight turns keep the velocity close to the changing heading across FPS and maps
+ok 253 - actual A/W and D/W flight turns keep the velocity close to the changing heading across FPS and maps
+  ---
+  duration_ms: 66.443347
+  type: 'test'
+  ...
+# Subtest: ranked start resets score and normalized gameplay, fixed 60s score is opt-in
+ok 254 - ranked start resets score and normalized gameplay, fixed 60s score is opt-in
+  ---
+  duration_ms: 9.912416
+  type: 'test'
+  ...
+# Subtest: network-loss submission keeps exact immutable payload and retries same run
+ok 255 - network-loss submission keeps exact immutable payload and retries same run
+  ---
+  duration_ms: 3.991865
+  type: 'test'
+  ...
+# Subtest: double-click does not create duplicate runs or duplicate submissions
+ok 256 - double-click does not create duplicate runs or duplicate submissions
+  ---
+  duration_ms: 5.756163
+  type: 'test'
+  ...
+# Subtest: crash immediately ends its server run and restart does not wait for 60 seconds
+ok 257 - crash immediately ends its server run and restart does not wait for 60 seconds
+  ---
+  duration_ms: 2.259655
+  type: 'test'
+  ...
+# Subtest: background, blur and each settings invalidation cancel active runs
+ok 258 - background, blur and each settings invalidation cancel active runs
+  ---
+  duration_ms: 18.321026
+  type: 'test'
+  ...
+# Subtest: cancel/close during pending start cannot unexpectedly start later
+ok 259 - cancel/close during pending start cannot unexpectedly start later
+  ---
+  duration_ms: 2.540388
+  type: 'test'
+  ...
+# Subtest: Unicode normalization and validation match nickname contract; storage denial is harmless
+ok 260 - Unicode normalization and validation match nickname contract; storage denial is harmless
+  ---
+  duration_ms: 14.832239
+  type: 'test'
+  ...
+# Subtest: run_active and malformed run errors are usable and never silently retry
+ok 261 - run_active and malformed run errors are usable and never silently retry
+  ---
+  duration_ms: 5.162118
+  type: 'test'
+  ...
+# Subtest: boards use cookie-free GET and text-only nickname rendering with stale-response protection
+ok 262 - boards use cookie-free GET and text-only nickname rendering with stale-response protection
+  ---
+  duration_ms: 2.808071
+  type: 'test'
+  ...
+# Subtest: English/Chinese, modal dismissal and retained finished result work
+ok 263 - English/Chinese, modal dismissal and retained finished result work
+  ---
+  duration_ms: 3.022484
+  type: 'test'
+  ...
+# Subtest: integration guards every shared gameplay-setting pathway and ignores typing
+ok 264 - integration guards every shared gameplay-setting pathway and ignores typing
+  ---
+  duration_ms: 1.91787
+  type: 'test'
+  ...
+# Subtest: crash overlay retains the canceled challenge status without an obsolete countdown
+ok 265 - crash overlay retains the canceled challenge status without an obsolete countdown
+  ---
+  duration_ms: 0.460123
+  type: 'test'
+  ...
+# Subtest: submitted score status can be dismissed and reopened without losing result
+ok 266 - submitted score status can be dismissed and reopened without losing result
+  ---
+  duration_ms: 2.947902
+  type: 'test'
+  ...
+# Subtest: dismissal preserves a pending result and does not stop an active countdown
+ok 267 - dismissal preserves a pending result and does not stop an active countdown
+  ---
+  duration_ms: 2.248889
+  type: 'test'
+  ...
+# Subtest: restart waits for end confirmation and does not duplicate pending end requests
+ok 268 - restart waits for end confirmation and does not duplicate pending end requests
+  ---
+  duration_ms: 6.40474
+  type: 'test'
+  ...
+# Subtest: uncertain end is retried with same run ID before a new start, failures stay visible
+ok 269 - uncertain end is retried with same run ID before a new start, failures stay visible
+  ---
+  duration_ms: 2.527779
+  type: 'test'
+  ...
+# Subtest: canceled pending issuance is ended before a newer start, late callbacks cannot abort new run
+ok 270 - canceled pending issuance is ended before a newer start, late callbacks cannot abort new run
+  ---
+  duration_ms: 2.139193
+  type: 'test'
+  ...
+# Subtest: discarding a completed result releases its server run before playing again
+ok 271 - discarding a completed result releases its server run before playing again
+  ---
+  duration_ms: 1.780653
+  type: 'test'
+  ...
+# Subtest: highway Digit0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+ok 272 - highway Digit0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+  ---
+  duration_ms: 10.981217
+  type: 'test'
+  ...
+# Subtest: city Digit0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+ok 273 - city Digit0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+  ---
+  duration_ms: 2.773539
+  type: 'test'
+  ...
+# Subtest: highway Numpad0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+ok 274 - highway Numpad0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+  ---
+  duration_ms: 3.020831
+  type: 'test'
+  ...
+# Subtest: city Numpad0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+ok 275 - city Numpad0: empty/partial/full tank enables infinite synchronously; second press disables without sound or notice
+  ---
+  duration_ms: 3.333933
+  type: 'test'
+  ...
+# Subtest: Digit0: text editing, dialogs, menus, destruction and browser shortcuts never refill
+ok 276 - Digit0: text editing, dialogs, menus, destruction and browser shortcuts never refill
+  ---
+  duration_ms: 2.433677
+  type: 'test'
+  ...
+# Subtest: Digit0: running ranked challenge is ineligible before refill; next run waits for exact cancellation
+ok 277 - Digit0: running ranked challenge is ineligible before refill; next run waits for exact cancellation
+  ---
+  duration_ms: 11.907251
+  type: 'test'
+  ...
+# Subtest: Digit0: refilling during pending server start releases late issuance before another start
+ok 278 - Digit0: refilling during pending server start releases late issuance before another start
+  ---
+  duration_ms: 2.242399
+  type: 'test'
+  ...
+# Subtest: Numpad0: text editing, dialogs, menus, destruction and browser shortcuts never refill
+ok 279 - Numpad0: text editing, dialogs, menus, destruction and browser shortcuts never refill
+  ---
+  duration_ms: 1.668333
+  type: 'test'
+  ...
+# Subtest: Numpad0: running ranked challenge is ineligible before refill; next run waits for exact cancellation
+ok 280 - Numpad0: running ranked challenge is ineligible before refill; next run waits for exact cancellation
+  ---
+  duration_ms: 4.644648
+  type: 'test'
+  ...
+# Subtest: Numpad0: refilling during pending server start releases late issuance before another start
+ok 281 - Numpad0: refilling during pending server start releases late issuance before another start
+  ---
+  duration_ms: 3.719264
+  type: 'test'
+  ...
+# Subtest: silent cancellation network failures stay silent and retry the same ID before another challenge
+ok 282 - silent cancellation network failures stay silent and retry the same ID before another challenge
+  ---
+  duration_ms: 7.562495
+  type: 'test'
+  ...
+# Subtest: ordinary cancellation still shows its reason and cancellation transport error
+ok 283 - ordinary cancellation still shows its reason and cancellation transport error
+  ---
+  duration_ms: 1.958411
+  type: 'test'
+  ...
+# Subtest: completed and submitting snapshots never acquire later sandbox refill scores
+ok 284 - completed and submitting snapshots never acquire later sandbox refill scores
+  ---
+  duration_ms: 2.696303
+  type: 'test'
+  ...
+# Subtest: hidden refill adds no help, badge, button, tooltip, translation or sound path
+ok 285 - hidden refill adds no help, badge, button, tooltip, translation or sound path
+  ---
+  duration_ms: 0.966086
+  type: 'test'
+  ...
+# Subtest: Digit0: held/duplicate keys switch once and unlimited mode cannot start ranked
+ok 286 - Digit0: held/duplicate keys switch once and unlimited mode cannot start ranked
+  ---
+  duration_ms: 2.166044
+  type: 'test'
+  ...
+# Subtest: Numpad0: held/duplicate keys switch once and unlimited mode cannot start ranked
+ok 287 - Numpad0: held/duplicate keys switch once and unlimited mode cannot start ranked
+  ---
+  duration_ms: 2.211893
+  type: 'test'
+  ...
+# Subtest: focus loss clears the shortcut latch but never creates a fresh toggle or resumes held propulsion
+ok 288 - focus loss clears the shortcut latch but never creates a fresh toggle or resumes held propulsion
+  ---
+  duration_ms: 2.404073
+  type: 'test'
+  ...
+# Subtest: demo fixed clock preserves elapsed time and full physical trajectory at 30Hz
+ok 289 - demo fixed clock preserves elapsed time and full physical trajectory at 30Hz
+  ---
+  duration_ms: 33.636804
+  type: 'test'
+  ...
+# Subtest: demo fixed clock preserves elapsed time and full physical trajectory at 60Hz
+ok 290 - demo fixed clock preserves elapsed time and full physical trajectory at 60Hz
+  ---
+  duration_ms: 23.166347
+  type: 'test'
+  ...
+# Subtest: demo fixed clock preserves elapsed time and full physical trajectory at 144Hz
+ok 291 - demo fixed clock preserves elapsed time and full physical trajectory at 144Hz
+  ---
+  duration_ms: 20.034569
+  type: 'test'
+  ...
+# Subtest: fixed demo clock retains bounded short debt and explicitly rejects sustained <20fps
+ok 292 - fixed demo clock retains bounded short debt and explicitly rejects sustained <20fps
+  ---
+  duration_ms: 0.380323
+  type: 'test'
+  ...
+# Subtest: demo clock stops additional physics ticks immediately when ownership ends
+ok 293 - demo clock stops additional physics ticks immediately when ownership ends
+  ---
+  duration_ms: 0.187432
+  type: 'test'
+  ...
+# Subtest: adapter slow-render exit restores both manual ownership flags and real keys immediately
+ok 294 - adapter slow-render exit restores both manual ownership flags and real keys immediately
+  ---
+  duration_ms: 20.628923
+  type: 'test'
+  ...
+# Subtest: a fresh C proof does not carry the consumed B certificate into its terminal ground route
+ok 295 - a fresh C proof does not carry the consumed B certificate into its terminal ground route
+  ---
+  duration_ms: 936.468533
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at 30
+ok 296 - two-lane escape holds one final target and steering through the intermediate center at 30
+  ---
+  duration_ms: 5505.016461
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at 60
+ok 297 - two-lane escape holds one final target and steering through the intermediate center at 60
+  ---
+  duration_ms: 13561.400968
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at 144
+ok 298 - two-lane escape holds one final target and steering through the intermediate center at 144
+  ---
+  duration_ms: 33863.095
+  type: 'test'
+  ...
+# Subtest: two-lane escape holds one final target and steering through the intermediate center at irregular
+ok 299 - two-lane escape holds one final target and steering through the intermediate center at irregular
+  ---
+  duration_ms: 13277.884429
+  type: 'test'
+  ...
+# Subtest: full final-lane sweep rejects an intermediate hazard beyond the old short validation prefix
+ok 300 - full final-lane sweep rejects an intermediate hazard beyond the old short validation prefix
+  ---
+  duration_ms: 184.798815
+  type: 'test'
+  ...
+# Subtest: demo starts from zero normally with 20 real seeded traffic drivers
+ok 301 - demo starts from zero normally with 20 real seeded traffic drivers
+  ---
+  duration_ms: 1625.30445
+  type: 'test'
+  ...
+# Subtest: demo starts from zero normally with 36 real seeded traffic drivers
+ok 302 - demo starts from zero normally with 36 real seeded traffic drivers
+  ---
+  duration_ms: 4262.985589
+  type: 'test'
+  ...
+# Subtest: demo starts from zero normally with 52 real seeded traffic drivers
+ok 303 - demo starts from zero normally with 52 real seeded traffic drivers
+  ---
+  duration_ms: 3811.021377
+  type: 'test'
+  ...
+# Subtest: high-speed low hop selects a reachable clear landing lane instead of chaining into the next car
+ok 304 - high-speed low hop selects a reachable clear landing lane instead of chaining into the next car
+  ---
+  duration_ms: 9172.490049
+  type: 'test'
+  ...
+# Subtest: a late final arrival cannot borrow unpredicted hold time beyond the fixed horizon
+ok 305 - a late final arrival cannot borrow unpredicted hold time beyond the fixed horizon
+  ---
+  duration_ms: 8.48191
+  type: 'test'
+  ...
+# Subtest: landing sweep rejects the roof-rebound band even while the body envelope is clear
+ok 306 - landing sweep rejects the roof-rebound band even while the body envelope is clear
+  ---
+  duration_ms: 6.253391
+  type: 'test'
+  ...
+# Subtest: dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end with a complete planned arc
+ok 307 - dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end with a complete planned arc
+  ---
+  duration_ms: 33886.647073
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: low-tank landing reserves the real refill wait before the next launch can clear a roof
+ok 308 - complete candidate real-O unit: low-tank landing reserves the real refill wait before the next launch can clear a roof
+  ---
+  duration_ms: 1212.741184
+  type: 'test'
+  ...
+# Subtest: speculative hop traffic uses independent reservations, poses and spawn state
+ok 309 - speculative hop traffic uses independent reservations, poses and spawn state
+  ---
+  duration_ms: 29.4823
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: pending real refill cannot be interrupted by optional paid braking
+ok 310 - complete candidate real-O unit: pending real refill cannot be interrupted by optional paid braking
+  ---
+  duration_ms: 784.543138
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: the admitted preparation interval stays unpowered and conservatively transfers paid successor state
+ok 311 - complete candidate real-O unit: the admitted preparation interval stays unpowered and conservatively transfers paid successor state
+  ---
+  duration_ms: 1125.695803
+  type: 'test'
+  ...
+# Subtest: complete candidate real-O unit: a paid refill pulse preserves220 and the exact admitted handoff without free recharge
+ok 312 - complete candidate real-O unit: a paid refill pulse preserves220 and the exact admitted handoff without free recharge
+  ---
+  duration_ms: 6653.105914
+  type: 'test'
+  ...
+# Subtest: slow boxed-in wall uses a real paid hop instead of braking below 220 at 30 Hz
+ok 313 - slow boxed-in wall uses a real paid hop instead of braking below 220 at 30 Hz
+  ---
+  duration_ms: 1212.851768
+  type: 'test'
+  ...
+# Subtest: braking above 220 remains paid and releases both propulsion requests at 30 Hz
+ok 314 - braking above 220 remains paid and releases both propulsion requests at 30 Hz
+  ---
+  duration_ms: 23498.567918
+  type: 'test'
+  ...
+# Subtest: slow boxed-in wall uses a real paid hop instead of braking below 220 at 60 Hz
+ok 315 - slow boxed-in wall uses a real paid hop instead of braking below 220 at 60 Hz
+  ---
+  duration_ms: 1765.855897
+  type: 'test'
+  ...
+# Subtest: braking above 220 remains paid and releases both propulsion requests at 60 Hz
+ok 316 - braking above 220 remains paid and releases both propulsion requests at 60 Hz
+  ---
+  duration_ms: 37905.07111
+  type: 'test'
+  ...
+# Subtest: slow boxed-in wall uses a real paid hop instead of braking below 220 at 144 Hz
+ok 317 - slow boxed-in wall uses a real paid hop instead of braking below 220 at 144 Hz
+  ---
+  duration_ms: 3828.831637
+  type: 'test'
+  ...
+# Subtest: braking above 220 remains paid and releases both propulsion requests at 144 Hz
+ok 318 - braking above 220 remains paid and releases both propulsion requests at 144 Hz
+  ---
+  duration_ms: 58590.991444
+  type: 'test'
+  ...
+# Subtest: prediction and actual H obey the floor across fractional tanks, freefall and long frames
+ok 319 - prediction and actual H obey the floor across fractional tanks, freefall and long frames
+  ---
+  duration_ms: 4083.86387
+  type: 'test'
+  ...
+# Subtest: empty/freefall tanks cannot synthesize a hop or fuel to clear an unavoidable wall
+ok 320 - empty/freefall tanks cannot synthesize a hop or fuel to clear an unavoidable wall
+  ---
+  duration_ms: 45.148098
+  type: 'test'
+  ...
+# Subtest: manual W/H precedence remains unchanged before and after demo ownership
+ok 321 - manual W/H precedence remains unchanged before and after demo ownership
+  ---
+  duration_ms: 31.319394
+  type: 'test'
+  ...
+# Subtest: binding long-frame brake clip predicts and pays only the impulse down to 220
+ok 322 - binding long-frame brake clip predicts and pays only the impulse down to 220
+  ---
+  duration_ms: 789.628266
+  type: 'test'
+  ...
+# Subtest: demo cancels a running ranked session, waits for exact server end, and never submits its score
+ok 323 - demo cancels a running ranked session, waits for exact server end, and never submits its score
+  ---
+  duration_ms: 23.787938
+  type: 'test'
+  ...
+# Subtest: late ranked issuance is ended before pending demo becomes active
+ok 324 - late ranked issuance is ended before pending demo becomes active
+  ---
+  duration_ms: 7.775194
+  type: 'test'
+  ...
+# Subtest: unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit
+ok 325 - unconfirmed end fails closed, retries the same run, and permits manual ranked after demo exit
+  ---
+  duration_ms: 10.591777
+  type: 'test'
+  ...
+# Subtest: failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry
+ok 326 - failed cancellation of a late-issued run keeps demo off and preserves that exact ID for retry
+  ---
+  duration_ms: 6.970022
+  type: 'test'
+  ...
+# Subtest: cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end
+ok 327 - cancelled pending demo cannot turn itself on after late issuance/end; repeated preparation shares exact end
+  ---
+  duration_ms: 8.342968
+  type: 'test'
+  ...
+# Subtest: programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch
+ok 328 - programmatic ranked start is blocked during active and pending demo, including disabled-button dispatch
+  ---
+  duration_ms: 12.953966
+  type: 'test'
+  ...
+# Subtest: old completed manual snapshot survives demo scoring and submits the original immutable payload
+ok 329 - old completed manual snapshot survives demo scoring and submits the original immutable payload
+  ---
+  duration_ms: 8.261445
+  type: 'test'
+  ...
+# Subtest: demo UI is highway-only, translates live, and adds no keyboard shortcut
+ok 330 - demo UI is highway-only, translates live, and adds no keyboard shortcut
+  ---
+  duration_ms: 7.739741
+  type: 'test'
+  ...
+# Subtest: native demo switch remains reachable in full, medium and minimal HUD modes without appearing in the city
+ok 331 - native demo switch remains reachable in full, medium and minimal HUD modes without appearing in the city
+  ---
+  duration_ms: 7.409092
+  type: 'test'
+  ...
+# Subtest: repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank
+ok 332 - repeated on/off clears virtual input and held keyboard/touch ownership without changing physics or tank
+  ---
+  duration_ms: 12.130456
+  type: 'test'
+  ...
+# Subtest: manual keys, mobile sticks and jump/hold actions cannot fight active demo input
+ok 333 - manual keys, mobile sticks and jump/hold actions cannot fight active demo input
+  ---
+  duration_ms: 13.104401
+  type: 'test'
+  ...
+# Subtest: legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo
+ok 334 - legacy hold buttons cannot inject propulsion, lift or attitude into an airborne demo
+  ---
+  duration_ms: 6.934678
+  type: 'test'
+  ...
+# Subtest: pending ranked cancellation also owns analog mobile input and returns neutral until ready or cancelled
+ok 335 - pending ranked cancellation also owns analog mobile input and returns neutral until ready or cancelled
+  ---
+  duration_ms: 7.361771
+  type: 'test'
+  ...
+# Subtest: adapter dispatches its supplied admitted short-hop command through real O and releases airborne propulsion
+ok 336 - adapter dispatches its supplied admitted short-hop command through real O and releases airborne propulsion
+  ---
+  duration_ms: 6.06739
+  type: 'test'
+  ...
+# Subtest: blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control
+ok 337 - blur, hidden, pagehide, real reset, crash, and map switch return demo to neutral manual control
+  ---
+  duration_ms: 33.323724
+  type: 'test'
+  ...
+# Subtest: pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves
+ok 338 - pending demo is invalidated by blur, hidden, and reset before delayed prepare resolves
+  ---
+  duration_ms: 19.703825
+  type: 'test'
+  ...
+# Subtest: mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed
+ok 339 - mobile map, help, audio and leaderboard menus stop demo and do not resume it when dismissed
+  ---
+  duration_ms: 20.53715
+  type: 'test'
+  ...
+# Subtest: mobile paint menu stops demo and keeps vehicle neutral throughout the open picker
+ok 340 - mobile paint menu stops demo and keeps vehicle neutral throughout the open picker
+  ---
+  duration_ms: 5.083499
+  type: 'test'
+  ...
+# Subtest: opening any mobile overlay cancels pending demo even if server-end confirmation arrives later
+ok 341 - opening any mobile overlay cancels pending demo even if server-end confirmation arrives later
+  ---
+  duration_ms: 37.248717
+  type: 'test'
+  ...
+# Subtest: near-term high-speed cold activation refuses input ownership and preserves actual manual keys
+ok 342 - near-term high-speed cold activation refuses input ownership and preserves actual manual keys
+  ---
+  duration_ms: 4.793592
+  type: 'test'
+  ...
+# Subtest: sufficient-clearance high-speed activation and ordinary zero-speed activation remain available
+ok 343 - sufficient-clearance high-speed activation and ordinary zero-speed activation remain available
+  ---
+  duration_ms: 10.095259
+  type: 'test'
+  ...
+# Subtest: startup veto is never used to abandon an already-running demo after a sudden hazard
+ok 344 - startup veto is never used to abandon an already-running demo after a sudden hazard
+  ---
+  duration_ms: 47.979704
+  type: 'test'
+  ...
+# Subtest: real input from rest, full ground throttle, paid boost and centered cruise at 30 Hz
+ok 345 - real input from rest, full ground throttle, paid boost and centered cruise at 30 Hz
+  ---
+  duration_ms: 57.984386
+  type: 'test'
+  ...
+# Subtest: real input from rest, full ground throttle, paid boost and centered cruise at 60 Hz
+ok 346 - real input from rest, full ground throttle, paid boost and centered cruise at 60 Hz
+  ---
+  duration_ms: 66.498362
+  type: 'test'
+  ...
+# Subtest: real input from rest, full ground throttle, paid boost and centered cruise at 144 Hz
+ok 347 - real input from rest, full ground throttle, paid boost and centered cruise at 144 Hz
+  ---
+  duration_ms: 161.431467
+  type: 'test'
+  ...
+# Subtest: slow front driver uses a complete adjacent lane rather than a stripe at 30 Hz
+ok 348 - slow front driver uses a complete adjacent lane rather than a stripe at 30 Hz
+  ---
+  duration_ms: 18364.034149
+  type: 'test'
+  ...
+# Subtest: slow front driver uses a complete adjacent lane rather than a stripe at 60 Hz
+ok 349 - slow front driver uses a complete adjacent lane rather than a stripe at 60 Hz
+  ---
+  duration_ms: 47319.234665
+  type: 'test'
+  ...
+# Subtest: slow front driver uses a complete adjacent lane rather than a stripe at 144 Hz
+ok 350 - slow front driver uses a complete adjacent lane rather than a stripe at 144 Hz
+  ---
+  duration_ms: 118269.413303
+  type: 'test'
+  ...
+# Subtest: fast rear approach blocks its target lane while the other adjacent gap is used
+ok 351 - fast rear approach blocks its target lane while the other adjacent gap is used
+  ---
+  duration_ms: 24895.486517
+  type: 'test'
+  ...
+# Subtest: a complete low candidate clears the unchanged 20m wall through paid O and ordinary airborne inputs
+ok 352 - a complete low candidate clears the unchanged 20m wall through paid O and ordinary airborne inputs
+  ---
+  duration_ms: 1743.609061
+  type: 'test'
+  ...
+# Subtest: cold 20m wall boundary keeps real collisions when the finite proof is not ready
+ok 353 - cold 20m wall boundary keeps real collisions when the finite proof is not ready
+  ---
+  duration_ms: 931.898941
+  type: 'test'
+  ...
+# Subtest: empty tank cannot create boost, jump or refill; ordinary grounded recharge is bounded
+ok 354 - empty tank cannot create boost, jump or refill; ordinary grounded recharge is bounded
+  ---
+  duration_ms: 10.187522
+  type: 'test'
+  ...
+# Subtest: planner is read-only, ignores waiting/hidden traffic and always targets whole lane centers
+ok 355 - planner is read-only, ignores waiting/hidden traffic and always targets whole lane centers
+  ---
+  duration_ms: 5.324624
+  type: 'test'
+  ...
+# Subtest: planned finite hop covers the real paid arc through touchdown at 30 Hz
+ok 356 - planned finite hop covers the real paid arc through touchdown at 30 Hz
+  ---
+  duration_ms: 511.074498
+  type: 'test'
+  ...
+# Subtest: planned finite hop covers the real paid arc through touchdown at 60 Hz
+ok 357 - planned finite hop covers the real paid arc through touchdown at 60 Hz
+  ---
+  duration_ms: 837.768053
+  type: 'test'
+  ...
+# Subtest: planned finite hop covers the real paid arc through touchdown at 144 Hz
+ok 358 - planned finite hop covers the real paid arc through touchdown at 144 Hz
+  ---
+  duration_ms: 1694.714313
+  type: 'test'
+  ...
+# Subtest: finite 2.3m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+ok 359 - finite 2.3m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+  ---
+  duration_ms: 6.692742
+  type: 'test'
+  ...
+# Subtest: finite 4.5m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+ok 360 - finite 4.5m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+  ---
+  duration_ms: 4.182931
+  type: 'test'
+  ...
+# Subtest: finite 7.5m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+ok 361 - finite 7.5m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+  ---
+  duration_ms: 3.702898
+  type: 'test'
+  ...
+# Subtest: finite 10m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+ok 362 - finite 10m demo profile matches actual O touchdown and every paid lift unit at 30Hz
+  ---
+  duration_ms: 4.058012
+  type: 'test'
+  ...
+# Subtest: finite 2.3m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+ok 363 - finite 2.3m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+  ---
+  duration_ms: 3.908859
+  type: 'test'
+  ...
+# Subtest: finite 4.5m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+ok 364 - finite 4.5m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+  ---
+  duration_ms: 4.869836
+  type: 'test'
+  ...
+# Subtest: finite 7.5m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+ok 365 - finite 7.5m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+  ---
+  duration_ms: 4.962295
+  type: 'test'
+  ...
+# Subtest: finite 10m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+ok 366 - finite 10m demo profile matches actual O touchdown and every paid lift unit at 60Hz
+  ---
+  duration_ms: 5.287235
+  type: 'test'
+  ...
+# Subtest: finite 2.3m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+ok 367 - finite 2.3m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+  ---
+  duration_ms: 5.537712
+  type: 'test'
+  ...
+# Subtest: finite 4.5m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+ok 368 - finite 4.5m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+  ---
+  duration_ms: 6.720934
+  type: 'test'
+  ...
+# Subtest: finite 7.5m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+ok 369 - finite 7.5m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+  ---
+  duration_ms: 7.143882
+  type: 'test'
+  ...
+# Subtest: finite 10m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+ok 370 - finite 10m demo profile matches actual O touchdown and every paid lift unit at 144Hz
+  ---
+  duration_ms: 7.998688
+  type: 'test'
+  ...
+# Subtest: protected ground wait keeps exact previous per-frame controls and completion bookkeeping
+ok 371 - protected ground wait keeps exact previous per-frame controls and completion bookkeeping
+  ---
+  duration_ms: 644.218282
+  type: 'test'
+  ...
+# Subtest: route-decision cooldown skips unused long paths without delaying per-frame real controls
+ok 372 - route-decision cooldown skips unused long paths without delaying per-frame real controls
+  ---
+  duration_ms: 2540.376691
+  type: 'test'
+  ...
+# Subtest: urgent collision validation reuses the exact complete-trajectory prefix
+ok 373 - urgent collision validation reuses the exact complete-trajectory prefix
+  ---
+  duration_ms: 38.742631
+  type: 'test'
+  ...
+# Subtest: useful final-lane routing continues past the old slow-queue stall at 30 Hz
+ok 374 - useful final-lane routing continues past the old slow-queue stall at 30 Hz
+  ---
+  duration_ms: 1950.2182
+  type: 'test'
+  ...
+# Subtest: useful final-lane routing continues past the old slow-queue stall at 60 Hz
+ok 375 - useful final-lane routing continues past the old slow-queue stall at 60 Hz
+  ---
+  duration_ms: 80641.163457
+  type: 'test'
+  ...
+# Subtest: useful final-lane routing continues past the old slow-queue stall at 144 Hz
+ok 376 - useful final-lane routing continues past the old slow-queue stall at 144 Hz
+  ---
+  duration_ms: 153953.679594
+  type: 'test'
+  ...
+# Subtest: a trigger-free strict prefix is deferred without rejecting its ranking geometry
+ok 377 - a trigger-free strict prefix is deferred without rejecting its ranking geometry
+  ---
+  duration_ms: 10.322182
+  type: 'test'
+  ...
+# Subtest: a late promised retry prepares and sweeps future ground instead of reusing offset zero
+ok 378 - a late promised retry prepares and sweeps future ground instead of reusing offset zero
+  ---
+  duration_ms: 2.642562
+  type: 'test'
+  ...
+# Subtest: a promised B retains only the ranking job bound to its complete certificate phase
+ok 379 - a promised B retains only the ranking job bound to its complete certificate phase
+  ---
+  duration_ms: 4.585568
+  type: 'test'
+  ...
+# Subtest: direct step and multi-tick render share one192-work allowance across every role
+ok 380 - direct step and multi-tick render share one192-work allowance across every role
+  ---
+  duration_ms: 3.898243
+  type: 'test'
+  ...
+# Subtest: selected future geometry is not retried at every earlier transient trigger
+ok 381 - selected future geometry is not retried at every earlier transient trigger
+  ---
+  duration_ms: 5.484763
+  type: 'test'
+  ...
+# Subtest: air-origin geometry alone never starts an actual admission or takes its budget
+ok 382 - air-origin geometry alone never starts an actual admission or takes its budget
+  ---
+  duration_ms: 5.15723
+  type: 'test'
+  ...
+# Subtest: inline ranking work preserves the current-hop and physical-phase priorities
+ok 383 - inline ranking work preserves the current-hop and physical-phase priorities
+  ---
+  duration_ms: 20.994862
+  type: 'test'
+  ...
+# Subtest: the first implicit reset preserves the caller render allowance across three ticks
+ok 384 - the first implicit reset preserves the caller render allowance across three ticks
+  ---
+  duration_ms: 1.482553
+  type: 'test'
+  ...
+# Subtest: an exact complete actual-ground prefix and prepared anchor commit the original full proof once
+ok 385 - an exact complete actual-ground prefix and prepared anchor commit the original full proof once
+  ---
+  duration_ms: 2.70796
+  type: 'test'
+  ...
+# Subtest: a future ready source waits without synchronous work and a missed anchor loses authority
+ok 386 - a future ready source waits without synchronous work and a missed anchor loses authority
+  ---
+  duration_ms: 1.816466
+  type: 'test'
+  ...
+# Subtest: a promised current hop takes priority over an otherwise exact ready source
+ok 387 - a promised current hop takes priority over an otherwise exact ready source
+  ---
+  duration_ms: 1.750237
+  type: 'test'
+  ...
+# Subtest: every control/physics/NPC/history dependency and phase guard invalidates source authority exactly
+ok 388 - every control/physics/NPC/history dependency and phase guard invalidates source authority exactly
+  ---
+  duration_ms: 29.162987
+  type: 'test'
+  ...
+# Subtest: the prepared anchor independently checks all dependencies after normal route preparation
+ok 389 - the prepared anchor independently checks all dependencies after normal route preparation
+  ---
+  duration_ms: 4.365557
+  type: 'test'
+  ...
+# Subtest: a proof completed within the anchor step can be consumed without a second work slice
+ok 390 - a proof completed within the anchor step can be consumed without a second work slice
+  ---
+  duration_ms: 2.212133
+  type: 'test'
+  ...
+# Subtest: all roles and ticks stop additional prediction at the real render deadline
+ok 391 - all roles and ticks stop additional prediction at the real render deadline
+  ---
+  duration_ms: 1.44042
+  type: 'test'
+  ...
+# Subtest: the captured safe B executes at handoff without inventing a new C requirement or epsilon frame delay
+ok 392 - the captured safe B executes at handoff without inventing a new C requirement or epsilon frame delay
+  ---
+  duration_ms: 1530.503884
+  type: 'test'
+  ...
+# Subtest: a saved B cannot override a real gas loss or a newly occupied takeoff corridor
+ok 393 - a saved B cannot override a real gas loss or a newly occupied takeoff corridor
+  ---
+  duration_ms: 29.163468
+  type: 'test'
+  ...
+# Subtest: a due certificate waits for actual ground contact and reset invalidates it
+ok 394 - a due certificate waits for actual ground contact and reset invalidates it
+  ---
+  duration_ms: 5.712356
+  type: 'test'
+  ...
+# Subtest: a physically dispatched isolated-wall arc releases its checked successor after safe ground continuation
+ok 395 - a physically dispatched isolated-wall arc releases its checked successor after safe ground continuation
+  ---
+  duration_ms: 1319.32051
+  type: 'test'
+  ...
+# Subtest: the captured complete current arc remains physically safe through paid preparation without a farther certificate
+ok 396 - the captured complete current arc remains physically safe through paid preparation without a farther certificate
+  ---
+  duration_ms: 10929.160405
+  type: 'test'
+  ...
+# Subtest: manual comparison harness releases both demo ownership flags and reads real keyboard controls
+ok 397 - manual comparison harness releases both demo ownership flags and reads real keyboard controls
+  ---
+  duration_ms: 11.540909
+  type: 'test'
+  ...
+# Subtest: continuous sweep catches a brief corner contact with clear endpoints
+ok 398 - continuous sweep catches a brief corner contact with clear endpoints
+  ---
+  duration_ms: 0.20602
+  type: 'test'
+  ...
+# Subtest: real demo collisions include swept contact and retain fatal damage
+ok 399 - real demo collisions include swept contact and retain fatal damage
+  ---
+  duration_ms: 9.699183
+  type: 'test'
+  ...
+# Subtest: demo changes whole lanes quickly with a continuous bounded trajectory at 30
+ok 400 - demo changes whole lanes quickly with a continuous bounded trajectory at 30
+  ---
+  duration_ms: 9873.405778
+  type: 'test'
+  ...
+# Subtest: demo changes whole lanes quickly with a continuous bounded trajectory at 60
+ok 401 - demo changes whole lanes quickly with a continuous bounded trajectory at 60
+  ---
+  duration_ms: 25422.976443
+  type: 'test'
+  ...
+# Subtest: demo changes whole lanes quickly with a continuous bounded trajectory at 144
+ok 402 - demo changes whole lanes quickly with a continuous bounded trajectory at 144
+  ---
+  duration_ms: 61383.100177
+  type: 'test'
+  ...
+# Subtest: demo changes whole lanes quickly with a continuous bounded trajectory at irregular
+ok 403 - demo changes whole lanes quickly with a continuous bounded trajectory at irregular
+  ---
+  duration_ms: 23518.701944
+  type: 'test'
+  ...
+# Subtest: manual rack and ground response remain unchanged without rear boost, including after demo exit
+ok 404 - manual rack and ground response remain unchanged without rear boost, including after demo exit
+  ---
+  duration_ms: 24.816229
+  type: 'test'
+  ...
+# Subtest: manual rack and ground response remain unchanged with rear boost, including after demo exit
+ok 405 - manual rack and ground response remain unchanged with rear boost, including after demo exit
+  ---
+  duration_ms: 10.129572
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 30Hz with 20 mixed-state cars
+ok 406 - forecastStep exactly matches ordinary step at 30Hz with 20 mixed-state cars
+  ---
+  duration_ms: 33.665261
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 30Hz with 36 mixed-state cars
+ok 407 - forecastStep exactly matches ordinary step at 30Hz with 36 mixed-state cars
+  ---
+  duration_ms: 37.864358
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 30Hz with 52 mixed-state cars
+ok 408 - forecastStep exactly matches ordinary step at 30Hz with 52 mixed-state cars
+  ---
+  duration_ms: 81.4857
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 60Hz with 20 mixed-state cars
+ok 409 - forecastStep exactly matches ordinary step at 60Hz with 20 mixed-state cars
+  ---
+  duration_ms: 11.154305
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 60Hz with 36 mixed-state cars
+ok 410 - forecastStep exactly matches ordinary step at 60Hz with 36 mixed-state cars
+  ---
+  duration_ms: 21.416368
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 60Hz with 52 mixed-state cars
+ok 411 - forecastStep exactly matches ordinary step at 60Hz with 52 mixed-state cars
+  ---
+  duration_ms: 77.285161
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 144Hz with 20 mixed-state cars
+ok 412 - forecastStep exactly matches ordinary step at 144Hz with 20 mixed-state cars
+  ---
+  duration_ms: 16.867854
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 144Hz with 36 mixed-state cars
+ok 413 - forecastStep exactly matches ordinary step at 144Hz with 36 mixed-state cars
+  ---
+  duration_ms: 53.731384
+  type: 'test'
+  ...
+# Subtest: forecastStep exactly matches ordinary step at 144Hz with 52 mixed-state cars
+ok 414 - forecastStep exactly matches ordinary step at 144Hz with 52 mixed-state cars
+  ---
+  duration_ms: 165.131653
+  type: 'test'
+  ...
+# Subtest: forecast initialization, reserved-lane order and safety-speed ties match exactly
+ok 415 - forecast initialization, reserved-lane order and safety-speed ties match exactly
+  ---
+  duration_ms: 8.853089
+  type: 'test'
+  ...
+# Subtest: forecastStep retains ordinary zero/negative-dt and non-six-lane behavior
+ok 416 - forecastStep retains ordinary zero/negative-dt and non-six-lane behavior
+  ---
+  duration_ms: 4.744108
+  type: 'test'
+  ...
+# Subtest: 52 dense cars reuse repeated waiting geometry without sharing per-driver spawn decisions
+ok 417 - 52 dense cars reuse repeated waiting geometry without sharing per-driver spawn decisions
+  ---
+  duration_ms: 449.195197
+  type: 'test'
+  ...
+# Subtest: captured 52-car terminal fixture traffic is exactly equivalent through repeated spawn retries
+ok 418 - captured 52-car terminal fixture traffic is exactly equivalent through repeated spawn retries
+  ---
+  duration_ms: 399.74631
+  type: 'test'
+  ...
+# Subtest: indexed lane queries preserve original ordinal, own-reference exclusion, lengths and speed overrides
+ok 419 - indexed lane queries preserve original ordinal, own-reference exclusion, lengths and speed overrides
+  ---
+  duration_ms: 1.50061
+  type: 'test'
+  ...
+# Subtest: approved simultaneous reservations immediately update forecast lane indexes in original order
+ok 420 - approved simultaneous reservations immediately update forecast lane indexes in original order
+  ---
+  duration_ms: 16.412378
+  type: 'test'
+  ...
+# mixed traffic 36: 28 overtakes (11 racer), 46 safe wraps, longest lane vacancy 0.00s
+# mixed traffic 52: 30 overtakes (4 racer), 59 safe wraps, longest lane vacancy 0.00s
+# Subtest: an unblocked driver keeps its own exact cruise speed and lane without randomness
+ok 421 - an unblocked driver keeps its own exact cruise speed and lane without randomness
+  ---
+  duration_ms: 23.637158
+  type: 'test'
+  ...
+# Subtest: same-speed traffic and distant slower traffic never justify overtaking
+ok 422 - same-speed traffic and distant slower traffic never justify overtaking
+  ---
+  duration_ms: 5.375682
+  type: 'test'
+  ...
+# Subtest: a blocked driver brakes smoothly and follows when both adjacent lanes are occupied
+ok 423 - a blocked driver brakes smoothly and follows when both adjacent lanes are occupied
+  ---
+  duration_ms: 17.877266
+  type: 'test'
+  ...
+# Subtest: a slower nearby leader triggers one smooth adjacent overtake and no automatic return
+ok 424 - a slower nearby leader triggers one smooth adjacent overtake and no automatic return
+  ---
+  duration_ms: 13.260202
+  type: 'test'
+  ...
+# Subtest: an adjacent lane with equally slow traffic has no useful passing advantage
+ok 425 - an adjacent lane with equally slow traffic has no useful passing advantage
+  ---
+  duration_ms: 3.11457
+  type: 'test'
+  ...
+# Subtest: a too-close front car or a fast rear NPC prevents a cut-in
+ok 426 - a too-close front car or a fast rear NPC prevents a cut-in
+  ---
+  duration_ms: 5.497593
+  type: 'test'
+  ...
+# Subtest: a grounded player alongside or closing fast from behind prevents an NPC merge
+ok 427 - a grounded player alongside or closing fast from behind prevents an NPC merge
+  ---
+  duration_ms: 5.015696
+  type: 'test'
+  ...
+# Subtest: rear safety includes braking during the merge, even for an initially equal-speed player or wreck
+ok 428 - rear safety includes braking during the merge, even for an initially equal-speed player or wreck
+  ---
+  duration_ms: 12.349558
+  type: 'test'
+  ...
+# Subtest: player lateral sweep reserves the destination lane; high flight does not block the road
+ok 429 - player lateral sweep reserves the destination lane; high flight does not block the road
+  ---
+  duration_ms: 5.453468
+  type: 'test'
+  ...
+# Subtest: simultaneous opposite-side requests cannot reserve the same passing gap
+ok 430 - simultaneous opposite-side requests cannot reserve the same passing gap
+  ---
+  duration_ms: 7.409756
+  type: 'test'
+  ...
+# Subtest: an in-progress merge occupies its source and destination until completion
+ok 431 - an in-progress merge occupies its source and destination until completion
+  ---
+  duration_ms: 4.179964
+  type: 'test'
+  ...
+# Subtest: cooldown and sustained-blockage hysteresis prevent transient/ping-pong changes
+ok 432 - cooldown and sustained-blockage hysteresis prevent transient/ping-pong changes
+  ---
+  duration_ms: 5.879692
+  type: 'test'
+  ...
+# Subtest: both road ends respawn safely, cancel old merge state and retain cruise speed
+ok 433 - both road ends respawn safely, cancel old merge state and retain cruise speed
+  ---
+  duration_ms: 2.79165
+  type: 'test'
+  ...
+# Subtest: rear respawn accounts for a stopped player and never spawns a fast car into its stopping gap
+ok 434 - rear respawn accounts for a stopped player and never spawns a fast car into its stopping gap
+  ---
+  duration_ms: 1.117542
+  type: 'test'
+  ...
+# Subtest: a completely occupied respawn area waits out of view and retries without duplicate rewards
+ok 435 - a completely occupied respawn area waits out of view and retries without duplicate rewards
+  ---
+  duration_ms: 7.239613
+  type: 'test'
+  ...
+# Subtest: blast motion is excluded from driver control and lane recovery is smooth
+ok 436 - blast motion is excluded from driver control and lane recovery is smooth
+  ---
+  duration_ms: 1.033877
+  type: 'test'
+  ...
+# Subtest: blast recovery waits for a safe lane instead of recentering into an adjacent NPC
+ok 437 - blast recovery waits for a safe lane instead of recentering into an adjacent NPC
+  ---
+  duration_ms: 5.381209
+  type: 'test'
+  ...
+# Subtest: a low blasted wreck uses the unchanged blast path when predicting a rear closing gap
+ok 438 - a low blasted wreck uses the unchanged blast path when predicting a rear closing gap
+  ---
+  duration_ms: 5.267901
+  type: 'test'
+  ...
+# Subtest: rear wreck safety includes damping-driven acceleration through repeated real ground bounces
+ok 439 - rear wreck safety includes damping-driven acceleration through repeated real ground bounces
+  ---
+  duration_ms: 5.900142
+  type: 'test'
+  ...
+# Subtest: highway lateral collision velocity matches the actual unscaled path derivative
+ok 440 - highway lateral collision velocity matches the actual unscaled path derivative
+  ---
+  duration_ms: 2.947472
+  type: 'test'
+  ...
+# Subtest: overtaking, following and lane easing agree across 20/30/60/144 Hz
+ok 441 - overtaking, following and lane easing agree across 20/30/60/144 Hz
+  ---
+  duration_ms: 37.385909
+  type: 'test'
+  ...
+# Subtest: actual runtime traffic block moves once, preserves score/destruction guard and city movement
+ok 442 - actual runtime traffic block moves once, preserves score/destruction guard and city movement
+  ---
+  duration_ms: 6.288419
+  type: 'test'
+  ...
+# Subtest: spawn code assigns one personal cruise speed and the controller is bundled before physics
+ok 443 - spawn code assigns one personal cruise speed and the controller is bundled before physics
+  ---
+  duration_ms: 27.930623
+  type: 'test'
+  ...
+# Subtest: dense seeded 52-car runtime remains collision-free through following, overtakes and both wraps
+ok 444 - dense seeded 52-car runtime remains collision-free through following, overtakes and both wraps
+  ---
+  duration_ms: 23898.776197
+  type: 'test'
+  ...
+# Subtest: all traffic presets keep the four weighted pools within one car, stable random km/h targets, and balanced lanes
+ok 445 - all traffic presets keep the four weighted pools within one car, stable random km/h targets, and balanced lanes
+  ---
+  duration_ms: 39.299081
+  type: 'test'
+  ...
+# Subtest: racers react faster and merge continuously while ordinary drivers also actively pass
+ok 446 - racers react faster and merge continuously while ordinary drivers also actively pass
+  ---
+  duration_ms: 8.260496
+  type: 'test'
+  ...
+# Subtest: new mixed-speed seeded traffic actually overtakes, uses every lane, retains identities, and never overlaps
+ok 447 - new mixed-speed seeded traffic actually overtakes, uses every lane, retains identities, and never overlaps
+  ---
+  duration_ms: 12271.254578
+  type: 'test'
+  ...
+# Subtest: a racer born behind slower traffic starts inside a safe braking envelope without changing its target
+ok 448 - a racer born behind slower traffic starts inside a safe braking envelope without changing its target
+  ---
+  duration_ms: 1311.682627
+  type: 'test'
+  ...
+# Subtest: traffic refresh at a stopped player uses the live lane and safely slows approaching newborn drivers
+ok 449 - traffic refresh at a stopped player uses the live lane and safely slows approaching newborn drivers
+  ---
+  duration_ms: 1016.261422
+  type: 'test'
+  ...
+# Subtest: HUD cycles Full → Medium → Minimal repeatedly with independent compact and side-panel flags
+ok 450 - HUD cycles Full → Medium → Minimal repeatedly with independent compact and side-panel flags
+  ---
+  duration_ms: 4.189252
+  type: 'test'
+  ...
+# Subtest: all HUD modes restore on reload, boolean legacy values migrate safely, invalid values use Full
+ok 451 - all HUD modes restore on reload, boolean legacy values migrate safely, invalid values use Full
+  ---
+  duration_ms: 17.126644
+  type: 'test'
+  ...
+# Subtest: blocked localStorage never prevents HUD switching and medium preserves collapsed panel contents
+ok 452 - blocked localStorage never prevents HUD switching and medium preserves collapsed panel contents
+  ---
+  duration_ms: 1.465328
+  type: 'test'
+  ...
+# Subtest: all HUD modes retain touch inputs and camera/reset; keyboard and button share the same action
+ok 453 - all HUD modes retain touch inputs and camera/reset; keyboard and button share the same action
+  ---
+  duration_ms: 0.607025
+  type: 'test'
+  ...
+# Subtest: central cabin mirror and its mount/material are removed, exterior and traffic mirrors retained
+ok 454 - central cabin mirror and its mount/material are removed, exterior and traffic mirrors retained
+  ---
+  duration_ms: 0.637651
+  type: 'test'
+  ...
+# Subtest: small-screen Medium FPV keeps both side cards scrollable above the central instrument band
+ok 455 - small-screen Medium FPV keeps both side cards scrollable above the central instrument band
+  ---
+  duration_ms: 0.370569
+  type: 'test'
+  ...
+# Subtest: phone detail cards start folded and only the explicitly requested sheet expands, across repeated HUD cycles
+ok 456 - phone detail cards start folded and only the explicitly requested sheet expands, across repeated HUD cycles
+  ---
+  duration_ms: 3.327794
+  type: 'test'
+  ...
+# Subtest: phone sheets reserve a complete sticky close row above driving controls even on occupied short landscape
+ok 457 - phone sheets reserve a complete sticky close row above driving controls even on occupied short landscape
+  ---
+  duration_ms: 0.360514
+  type: 'test'
+  ...
+# Subtest: cockpit gas, seconds, liters and fill use the current air tank, including empty and recharge frames
+ok 458 - cockpit gas, seconds, liters and fill use the current air tank, including empty and recharge frames
+  ---
+  duration_ms: 7.729346
+  type: 'test'
+  ...
+# Subtest: cockpit tank bounds and gas text stay inside their reserved area without overlapping the passenger strip
+ok 459 - cockpit tank bounds and gas text stay inside their reserved area without overlapping the passenger strip
+  ---
+  duration_ms: 2.986871
+  type: 'test'
+  ...
+# Subtest: external telemetry updates gas mass and matches cockpit remaining seconds and mass on the same frame
+ok 460 - external telemetry updates gas mass and matches cockpit remaining seconds and mass on the same frame
+  ---
+  duration_ms: 6.752965
+  type: 'test'
+  ...
+# Subtest: cockpit and footer use identical speed, units and rounded values with readable Canvas digits
+ok 461 - cockpit and footer use identical speed, units and rounded values with readable Canvas digits
+  ---
+  duration_ms: 14.27058
+  type: 'test'
+  ...
+# Subtest: notifications are independent of the side-panel flow on desktop and mobile
+ok 462 - notifications are independent of the side-panel flow on desktop and mobile
+  ---
+  duration_ms: 0.483168
+  type: 'test'
+  ...
+# Subtest: HUD bounds observe only permanent header/footer, never transient alerts
+ok 463 - HUD bounds observe only permanent header/footer, never transient alerts
+  ---
+  duration_ms: 0.891093
+  type: 'test'
+  ...
+# Subtest: cockpit essentials have separate speed/tank columns and a reserved passenger strip
+ok 464 - cockpit essentials have separate speed/tank columns and a reserved passenger strip
+  ---
+  duration_ms: 0.987658
+  type: 'test'
+  ...
+# Subtest: FPV switches duplicate floating information off immediately while preserving side controls
+ok 465 - FPV switches duplicate floating information off immediately while preserving side controls
+  ---
+  duration_ms: 1.259788
+  type: 'test'
+  ...
+# Subtest: actual continuous consumption, depletion and reset immediately update the cockpit bar with exterior readings
+ok 466 - actual continuous consumption, depletion and reset immediately update the cockpit bar with exterior readings
+  ---
+  duration_ms: 27.398311
+  type: 'test'
+  ...
+# Subtest: fuel epoch false/boost: production, Node and static mirrors agree for every physical field
+ok 467 - fuel epoch false/boost: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 113.202658
+  type: 'test'
+  ...
+# Subtest: fuel epoch false/fractional-boost: production, Node and static mirrors agree for every physical field
+ok 468 - fuel epoch false/fractional-boost: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 85.93135
+  type: 'test'
+  ...
+# Subtest: fuel epoch false/retro: production, Node and static mirrors agree for every physical field
+ok 469 - fuel epoch false/retro: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 81.045715
+  type: 'test'
+  ...
+# Subtest: fuel epoch false/electric: production, Node and static mirrors agree for every physical field
+ok 470 - fuel epoch false/electric: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 68.419992
+  type: 'test'
+  ...
+# Subtest: fuel epoch false/air-coast: production, Node and static mirrors agree for every physical field
+ok 471 - fuel epoch false/air-coast: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 80.679362
+  type: 'test'
+  ...
+# Subtest: fuel epoch false/air-strafe: production, Node and static mirrors agree for every physical field
+ok 472 - fuel epoch false/air-strafe: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 69.747779
+  type: 'test'
+  ...
+# Subtest: fuel epoch true/boost: production, Node and static mirrors agree for every physical field
+ok 473 - fuel epoch true/boost: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 66.157569
+  type: 'test'
+  ...
+# Subtest: fuel epoch true/fractional-boost: production, Node and static mirrors agree for every physical field
+ok 474 - fuel epoch true/fractional-boost: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 74.270675
+  type: 'test'
+  ...
+# Subtest: fuel epoch true/retro: production, Node and static mirrors agree for every physical field
+ok 475 - fuel epoch true/retro: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 73.799254
+  type: 'test'
+  ...
+# Subtest: fuel epoch true/electric: production, Node and static mirrors agree for every physical field
+ok 476 - fuel epoch true/electric: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 75.448439
+  type: 'test'
+  ...
+# Subtest: fuel epoch true/air-coast: production, Node and static mirrors agree for every physical field
+ok 477 - fuel epoch true/air-coast: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 73.281043
+  type: 'test'
+  ...
+# Subtest: fuel epoch true/air-strafe: production, Node and static mirrors agree for every physical field
+ok 478 - fuel epoch true/air-strafe: production, Node and static mirrors agree for every physical field
+  ---
+  duration_ms: 62.517415
+  type: 'test'
+  ...
+# Subtest: candidate gas/handoff/approximate ground obey the same false fuel mode
+ok 479 - candidate gas/handoff/approximate ground obey the same false fuel mode
+  ---
+  duration_ms: 28.974189
+  type: 'test'
+  ...
+# Subtest: candidate gas/handoff/approximate ground obey the same true fuel mode
+ok 480 - candidate gas/handoff/approximate ground obey the same true fuel mode
+  ---
+  duration_ms: 22.313053
+  type: 'test'
+  ...
+# Subtest: Digit0 toggles active/pending demo without losing ownership, pose or airborne route
+ok 481 - Digit0 toggles active/pending demo without losing ownership, pose or airborne route
+  ---
+  duration_ms: 28.090298
+  type: 'test'
+  ...
+# Subtest: Numpad0 toggles active/pending demo without losing ownership, pose or airborne route
+ok 482 - Numpad0 toggles active/pending demo without losing ownership, pose or airborne route
+  ---
+  duration_ms: 10.259499
+  type: 'test'
+  ...
+# Subtest: demo keeps running beyond 60 seconds; only ranked challenges have that deadline
+ok 483 - demo keeps running beyond 60 seconds; only ranked challenges have that deadline
+  ---
+  duration_ms: 4.403785
+  type: 'test'
+  ...
+# Subtest: driving key events update state synchronously and are consumed before the next frame renders
+ok 484 - driving key events update state synchronously and are consumed before the next frame renders
+  ---
+  duration_ms: 2.563824
+  type: 'test'
+  ...
+# Subtest: one open shared envelope per outlet has finite bounded topology, unlit alpha and no solid disks
+ok 485 - one open shared envelope per outlet has finite bounded topology, unlit alpha and no solid disks
+  ---
+  duration_ms: 423.184994
+  type: 'test'
+  ...
+# Subtest: pressure wake opens downstream while every physical mouth and draw count stay fixed
+ok 486 - pressure wake opens downstream while every physical mouth and draw count stay fixed
+  ---
+  duration_ms: 348.902086
+  type: 'test'
+  ...
+# Subtest: stronger gas remains power-sensitive, finite and completely cleared on release
+ok 487 - stronger gas remains power-sensitive, finite and completely cleared on release
+  ---
+  duration_ms: 305.638214
+  type: 'test'
+  ...
+# Subtest: body selection places actual mouth coordinates; view changes preserve selected layout
+ok 488 - body selection places actual mouth coordinates; view changes preserve selected layout
+  ---
+  duration_ms: 323.383398
+  type: 'test'
+  ...
+# Subtest: roll/pitch/yaw/strafe reuse the correctly directed physical ports without duplicate plumes
+ok 489 - roll/pitch/yaw/strafe reuse the correctly directed physical ports without duplicate plumes
+  ---
+  duration_ms: 360.877722
+  type: 'test'
+  ...
+# Subtest: highway/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+ok 490 - highway/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+  ---
+  duration_ms: 468.147164
+  type: 'test'
+  ...
+# Subtest: highway/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+ok 491 - highway/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+  ---
+  duration_ms: 535.889994
+  type: 'test'
+  ...
+# Subtest: city/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+ok 492 - city/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+  ---
+  duration_ms: 478.835486
+  type: 'test'
+  ...
+# Subtest: city/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+ok 493 - city/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries
+  ---
+  duration_ms: 464.262869
+  type: 'test'
+  ...
+# Subtest: analog requests scale the correct longitudinal axis, release immediately and hide every FPV plume
+ok 494 - analog requests scale the correct longitudinal axis, release immediately and hide every FPV plume
+  ---
+  duration_ms: 329.25639
+  type: 'test'
+  ...
+# Subtest: emergency lift uses its accepted full command at low tank, and 3D retro chooses paid travel components
+ok 495 - emergency lift uses its accepted full command at low tank, and 3D retro chooses paid travel components
+  ---
+  duration_ms: 340.126697
+  type: 'test'
+  ...
+# Subtest: top and side hardware stays hidden across body/cockpit/layout changes while paid plumes remain active
+ok 496 - top and side hardware stays hidden across body/cockpit/layout changes while paid plumes remain active
+  ---
+  duration_ms: 337.019648
+  type: 'test'
+  ...
+# Subtest: mobile pads stay outside the scrolling footer and passenger score stays between them
+ok 497 - mobile pads stay outside the scrolling footer and passenger score stays between them
+  ---
+  duration_ms: 1.328452
+  type: 'test'
+  ...
+# Subtest: repeated idle physics reads do not mutate DOM attributes or measure joystick layout
+ok 498 - repeated idle physics reads do not mutate DOM attributes or measure joystick layout
+  ---
+  duration_ms: 23.289779
+  type: 'test'
+  ...
+# Subtest: coarse capability enables real sticks, while fine-pointer desktop keeps the existing button grid
+ok 499 - coarse capability enables real sticks, while fine-pointer desktop keeps the existing button grid
+  ---
+  duration_ms: 9.290208
+  type: 'test'
+  ...
+# Subtest: a resting thumb is neutral at centre or pad edge; only deliberate relative drag drives
+ok 500 - a resting thumb is neutral at centre or pad edge; only deliberate relative drag drives
+  ---
+  duration_ms: 7.684117
+  type: 'test'
+  ...
+# Subtest: two simultaneous pointer IDs retain independent ownership and release only their own pad
+ok 501 - two simultaneous pointer IDs retain independent ownership and release only their own pad
+  ---
+  duration_ms: 2.84723
+  type: 'test'
+  ...
+# Subtest: stale, mouse, extra and already-owned pointers cannot steal a stick or mutate either input
+ok 502 - stale, mouse, extra and already-owned pointers cannot steal a stick or mutate either input
+  ---
+  duration_ms: 4.205777
+  type: 'test'
+  ...
+# Subtest: pointerup, pointercancel and lostpointercapture clear displacement, latch and capture idempotently
+ok 503 - pointerup, pointercancel and lostpointercapture clear displacement, latch and capture idempotently
+  ---
+  duration_ms: 11.294218
+  type: 'test'
+  ...
+# Subtest: failed capture aborts ownership without leaving any thrust or stuck held appearance
+ok 504 - failed capture aborts ownership without leaving any thrust or stuck held appearance
+  ---
+  duration_ms: 2.319665
+  type: 'test'
+  ...
+# Subtest: radial deadzone, per-axis neutral band and circular saturation retain precise analog magnitude
+ok 505 - radial deadzone, per-axis neutral band and circular saturation retain precise analog magnitude
+  ---
+  duration_ms: 2.524203
+  type: 'test'
+  ...
+# Subtest: left stick maps steering and throttle independently; lower pull latches brake until centred
+ok 506 - left stick maps steering and throttle independently; lower pull latches brake until centred
+  ---
+  duration_ms: 7.10852
+  type: 'test'
+  ...
+# Subtest: moving backward and airborne lower pulls brake, while a fresh stationary grounded pull reverses
+ok 507 - moving backward and airborne lower pulls brake, while a fresh stationary grounded pull reverses
+  ---
+  duration_ms: 13.390509
+  type: 'test'
+  ...
+# Subtest: right modes have exact signed lift/descend/strafe, pitch/roll and boost/handbrake mappings
+ok 508 - right modes have exact signed lift/descend/strafe, pitch/roll and boost/handbrake mappings
+  ---
+  duration_ms: 30.303067
+  type: 'test'
+  ...
+# Subtest: every mode change releases both fingers and stale moves require fresh pointerdowns
+ok 509 - every mode change releases both fingers and stale moves require fresh pointerdowns
+  ---
+  duration_ms: 3.075844
+  type: 'test'
+  ...
+# Subtest: blur releases both pointers and a returning stale gesture cannot reactivate them
+ok 510 - blur releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.473497
+  type: 'test'
+  ...
+# Subtest: pagehide releases both pointers and a returning stale gesture cannot reactivate them
+ok 511 - pagehide releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.248879
+  type: 'test'
+  ...
+# Subtest: resize releases both pointers and a returning stale gesture cannot reactivate them
+ok 512 - resize releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.576863
+  type: 'test'
+  ...
+# Subtest: orientationchange releases both pointers and a returning stale gesture cannot reactivate them
+ok 513 - orientationchange releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.404694
+  type: 'test'
+  ...
+# Subtest: visual viewport resize releases both pointers and a returning stale gesture cannot reactivate them
+ok 514 - visual viewport resize releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.368879
+  type: 'test'
+  ...
+# Subtest: screen rotation releases both pointers and a returning stale gesture cannot reactivate them
+ok 515 - screen rotation releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.406345
+  type: 'test'
+  ...
+# Subtest: visibilitychange releases both pointers and a returning stale gesture cannot reactivate them
+ok 516 - visibilitychange releases both pointers and a returning stale gesture cannot reactivate them
+  ---
+  duration_ms: 2.282279
+  type: 'test'
+  ...
+# Subtest: media capability transition clears held pointers (change event)
+ok 517 - media capability transition clears held pointers (change event)
+  ---
+  duration_ms: 6.997864
+  type: 'test'
+  ...
+# Subtest: media capability transition clears held pointers (legacy addListener)
+ok 518 - media capability transition clears held pointers (legacy addListener)
+  ---
+  duration_ms: 2.798156
+  type: 'test'
+  ...
+# Subtest: modal-map-select opening clears both sticks, suppresses utilities and requires a new gesture after close
+ok 519 - modal-map-select opening clears both sticks, suppresses utilities and requires a new gesture after close
+  ---
+  duration_ms: 2.91359
+  type: 'test'
+  ...
+# Subtest: modal-help opening clears both sticks, suppresses utilities and requires a new gesture after close
+ok 520 - modal-help opening clears both sticks, suppresses utilities and requires a new gesture after close
+  ---
+  duration_ms: 2.510202
+  type: 'test'
+  ...
+# Subtest: modal-destroyed opening clears both sticks, suppresses utilities and requires a new gesture after close
+ok 521 - modal-destroyed opening clears both sticks, suppresses utilities and requires a new gesture after close
+  ---
+  duration_ms: 2.547008
+  type: 'test'
+  ...
+# Subtest: ranked-dialog opening clears both sticks, suppresses utilities and requires a new gesture after close
+ok 522 - ranked-dialog opening clears both sticks, suppresses utilities and requires a new gesture after close
+  ---
+  duration_ms: 2.919719
+  type: 'test'
+  ...
+# Subtest: audio-settings opening clears both sticks, suppresses utilities and requires a new gesture after close
+ok 523 - audio-settings opening clears both sticks, suppresses utilities and requires a new gesture after close
+  ---
+  duration_ms: 2.673899
+  type: 'test'
+  ...
+# Subtest: paint-picker opening clears both sticks, suppresses utilities and requires a new gesture after close
+ok 524 - paint-picker opening clears both sticks, suppresses utilities and requires a new gesture after close
+  ---
+  duration_ms: 2.731705
+  type: 'test'
+  ...
+# Subtest: Full, Medium and Minimal retain fresh dual-stick input; mode changes and destruction clear old requests
+ok 525 - Full, Medium and Minimal retain fresh dual-stick input; mode changes and destruction clear old requests
+  ---
+  duration_ms: 2.779838
+  type: 'test'
+  ...
+# Subtest: mobile Reset and keyboard R execute the actual reset and cannot leave either finger applying thrust
+ok 526 - mobile Reset and keyboard R execute the actual reset and cannot leave either finger applying thrust
+  ---
+  duration_ms: 5.632266
+  type: 'test'
+  ...
+# Subtest: the existing clearAllInputKeys map/menu hook releases both mobile and keyboard sources
+ok 527 - the existing clearAllInputKeys map/menu hook releases both mobile and keyboard sources
+  ---
+  duration_ms: 2.976905
+  type: 'test'
+  ...
+# Subtest: full: Jump, Hold, View and Reset retain real actions without synthetic keys
+ok 528 - full: Jump, Hold, View and Reset retain real actions without synthetic keys
+  ---
+  duration_ms: 3.983973
+  type: 'test'
+  ...
+# Subtest: medium: Jump, Hold, View and Reset retain real actions without synthetic keys
+ok 529 - medium: Jump, Hold, View and Reset retain real actions without synthetic keys
+  ---
+  duration_ms: 3.262966
+  type: 'test'
+  ...
+# Subtest: minimal: Jump, Hold, View and Reset retain real actions without synthetic keys
+ok 530 - minimal: Jump, Hold, View and Reset retain real actions without synthetic keys
+  ---
+  duration_ms: 3.401084
+  type: 'test'
+  ...
+# Subtest: English and Chinese labels expose the mode, live hint and accurate brake/reverse guidance
+ok 531 - English and Chinese labels expose the mode, live hint and accurate brake/reverse guidance
+  ---
+  duration_ms: 2.745997
+  type: 'test'
+  ...
+# Subtest: neutral thumbs and released thumbs retain exact freefall and consume no air on either map
+ok 532 - neutral thumbs and released thumbs retain exact freefall and consume no air on either map
+  ---
+  duration_ms: 72.640275
+  type: 'test'
+  ...
+# Subtest: half/full left throttle produces proportionate ground motor force without gas burn on both maps
+ok 533 - half/full left throttle produces proportionate ground motor force without gas burn on both maps
+  ---
+  duration_ms: 27.313443
+  type: 'test'
+  ...
+# Subtest: half/full ground steering reaches the real smoothed rack with the correct sign and no RCS bill
+ok 534 - half/full ground steering reaches the real smoothed rack with the correct sign and no RCS bill
+  ---
+  duration_ms: 20.524333
+  type: 'test'
+  ...
+# Subtest: both fingers affect the same real physics frame and release independently without double-charging gas
+ok 535 - both fingers affect the same real physics frame and release independently without double-charging gas
+  ---
+  duration_ms: 6.282545
+  type: 'test'
+  ...
+# Subtest: half/full airborne throttle scales rear impulse and shared tank use on both maps
+ok 536 - half/full airborne throttle scales rear impulse and shared tank use on both maps
+  ---
+  duration_ms: 10.531217
+  type: 'test'
+  ...
+# Subtest: half/full Boost scales ground and aerial thrust and burn rather than becoming a digital button
+ok 537 - half/full Boost scales ground and aerial thrust and burn rather than becoming a digital button
+  ---
+  duration_ms: 23.242859
+  type: 'test'
+  ...
+# Subtest: a tiny Boost cannot promote held W to full rocket force or bypass the motor ceiling
+ok 538 - a tiny Boost cannot promote held W to full rocket force or bypass the motor ceiling
+  ---
+  duration_ms: 25.098005
+  type: 'test'
+  ...
+# Subtest: half/full Lift pays for proportional gravity compensation plus climb force
+ok 539 - half/full Lift pays for proportional gravity compensation plus climb force
+  ---
+  duration_ms: 61.289934
+  type: 'test'
+  ...
+# Subtest: half/full Descend adds only its requested downward force and gas use, with gravity retained
+ok 540 - half/full Descend adds only its requested downward force and gas use, with gravity retained
+  ---
+  duration_ms: 11.846889
+  type: 'test'
+  ...
+# Subtest: half/full braking scales mechanical and high-speed retro force with exactly one tank charge
+ok 541 - half/full braking scales mechanical and high-speed retro force with exactly one tank charge
+  ---
+  duration_ms: 23.574149
+  type: 'test'
+  ...
+# Subtest: half/full strafe uses the side-jet axis and proportional gas without inventing roll or yaw torque
+ok 542 - half/full strafe uses the side-jet axis and proportional gas without inventing roll or yaw torque
+  ---
+  duration_ms: 47.552746
+  type: 'test'
+  ...
+# Subtest: attitude sticks scale signed roll, pitch and yaw torque and share max-axis RCS billing
+ok 543 - attitude sticks scale signed roll, pitch and yaw torque and share max-axis RCS billing
+  ---
+  duration_ms: 88.419429
+  type: 'test'
+  ...
+# Subtest: manual analog input resets the two-second stabilizer grace and release restores it without gas burn
+ok 544 - manual analog input resets the two-second stabilizer grace and release restores it without gas burn
+  ---
+  duration_ms: 5.291643
+  type: 'test'
+  ...
+# Subtest: mobile cleanup and mode switching never release keyboard drive, lift or attitude keys
+ok 545 - mobile cleanup and mode switching never release keyboard drive, lift or attitude keys
+  ---
+  duration_ms: 3.056625
+  type: 'test'
+  ...
+# Subtest: keyboard and touch priority, opposite axes and saturation stay bounded and preserve source ownership
+ok 546 - keyboard and touch priority, opposite axes and saturation stay bounded and preserve source ownership
+  ---
+  duration_ms: 3.217669
+  type: 'test'
+  ...
+# Subtest: half/full handbrake feathers drift scrubbing without rear gas and remains effective with throttle
+ok 547 - half/full handbrake feathers drift scrubbing without rear gas and remains effective with throttle
+  ---
+  duration_ms: 12.649399
+  type: 'test'
+  ...
+# Subtest: empty tank gives no unpaid analog thrust while normal ground motor and mechanical brake remain usable
+ok 548 - empty tank gives no unpaid analog thrust while normal ground motor and mechanical brake remain usable
+  ---
+  duration_ms: 34.53315
+  type: 'test'
+  ...
+# Subtest: music defaults to looping, waits for real interaction and has one player/listener set
+ok 549 - music defaults to looping, waits for real interaction and has one player/listener set
+  ---
+  duration_ms: 6.715699
+  type: 'test'
+  ...
+# Subtest: settings truly pauses, retains position and preference, resumes the same element
+ok 550 - settings truly pauses, retains position and preference, resumes the same element
+  ---
+  duration_ms: 2.818137
+  type: 'test'
+  ...
+# Subtest: storage failures do not break controls or silently disable default music
+ok 551 - storage failures do not break controls or silently disable default music
+  ---
+  duration_ms: 1.950439
+  type: 'test'
+  ...
+# Subtest: pending plays are deduplicated and late success cannot undo manual pause
+ok 552 - pending plays are deduplicated and late success cannot undo manual pause
+  ---
+  duration_ms: 0.817351
+  type: 'test'
+  ...
+# Subtest: rejected autoplay remains enabled, explicit retry works and old rejection is harmless
+ok 553 - rejected autoplay remains enabled, explicit retry works and old rejection is harmless
+  ---
+  duration_ms: 1.666271
+  type: 'test'
+  ...
+# Subtest: hidden/page lifecycle pauses without changing preference and resumes only when appropriate
+ok 554 - hidden/page lifecycle pauses without changing preference and resumes only when appropriate
+  ---
+  duration_ms: 1.964069
+  type: 'test'
+  ...
+# Subtest: hidden transition wins over pending play, and a later gesture recovers a sync error
+ok 555 - hidden transition wins over pending play, and a later gesture recovers a sync error
+  ---
+  duration_ms: 1.63936
+  type: 'test'
+  ...
+# Subtest: settings handles repeated open/close and translations without changing music or SFX
+ok 556 - settings handles repeated open/close and translations without changing music or SFX
+  ---
+  duration_ms: 16.83247
+  type: 'test'
+  ...
+# Subtest: build preserves original MP3 bytes and audio metadata contract
+ok 557 - build preserves original MP3 bytes and audio metadata contract
+  ---
+  duration_ms: 3.191157
+  type: 'test'
+  ...
+# Subtest: music dev endpoint serves complete bytes, HEAD, valid ranges and rejects invalid ranges
+ok 558 - music dev endpoint serves complete bytes, HEAD, valid ranges and rejects invalid ranges
+  ---
+  duration_ms: 84.925019
+  type: 'test'
+  ...
+# Subtest: source geometry fingerprint ignores incidental UUIDs, names, materials and normals
+ok 559 - source geometry fingerprint ignores incidental UUIDs, names, materials and normals
+  ---
+  duration_ms: 1.209192
+  type: 'test'
+  ...
+# Subtest: identical normalized geometry/pose has the same hash across JSON round trips
+ok 560 - identical normalized geometry/pose has the same hash across JSON round trips
+  ---
+  duration_ms: 0.342336
+  type: 'test'
+  ...
+# Subtest: clean traffic profiles cover every historical entry without enabling a quarantined derivative
+ok 561 - clean traffic profiles cover every historical entry without enabling a quarantined derivative
+  ---
+  duration_ms: 1.876227
+  type: 'test'
+  ...
+# Subtest: packed shared geometry is finite, bounded, hash-checked and front-wound after transport
+ok 562 - packed shared geometry is finite, bounded, hash-checked and front-wound after transport
+  ---
+  duration_ms: 459.364074
+  type: 'test'
+  ...
+# Subtest: spawn randomness happens once and chooses all source identities without per-frame changes
+ok 563 - spawn randomness happens once and chooses all source identities without per-frame changes
+  ---
+  duration_ms: 396.609308
+  type: 'test'
+  ...
+# Subtest: geometry and materials are shared across instances and repeated LOD changes
+ok 564 - geometry and materials are shared across instances and repeated LOD changes
+  ---
+  duration_ms: 340.961881
+  type: 'test'
+  ...
+# Subtest: LOD caps nearby detail and each style preserves normal traffic dimensions
+ok 565 - LOD caps nearby detail and each style preserves normal traffic dimensions
+  ---
+  duration_ms: 353.481601
+  type: 'test'
+  ...
+# Subtest: both maps cap repeated populations without growing shared geometry or retaining removed instances
+ok 566 - both maps cap repeated populations without growing shared geometry or retaining removed instances
+  ---
+  duration_ms: 412.680412
+  type: 'test'
+  ...
+# Subtest: legacy canopy tiers keep the same closed crown and original roof rails stay densely sampled
+ok 567 - legacy canopy tiers keep the same closed crown and original roof rails stay densely sampled
+  ---
+  duration_ms: 1.427561
+  type: 'test'
+  ...
+# Subtest: legacy-only repair leaves every historical reference style packed geometry byte-identical
+ok 568 - legacy-only repair leaves every historical reference style packed geometry byte-identical
+  ---
+  duration_ms: 12.16532
+  type: 'test'
+  ...
+# Subtest: classic painted rails partition the canopy without overlapping offset surfaces
+ok 569 - classic painted rails partition the canopy without overlapping offset surfaces
+  ---
+  duration_ms: 2.642912
+  type: 'test'
+  ...
+# Subtest: combined scripts keep scoring/controller/NPC dependencies before consumers
+ok 570 - combined scripts keep scoring/controller/NPC dependencies before consumers
+  ---
+  duration_ms: 1.722415
+  type: 'test'
+  ...
+# Subtest: real NPC appearance randomness coexists with exact speed bands and stable driver identities
+ok 571 - real NPC appearance randomness coexists with exact speed bands and stable driver identities
+  ---
+  duration_ms: 4115.050997
+  type: 'test'
+  ...
+# Subtest: rain uses a dim road-only environment without studio softboxes; car environment is retained
+ok 572 - rain uses a dim road-only environment without studio softboxes; car environment is retained
+  ---
+  duration_ms: 10.608984
+  type: 'test'
+  ...
+# Subtest: all road axes have deterministic metre-scaled, mipmapped microdetail
+ok 573 - all road axes have deterministic metre-scaled, mipmapped microdetail
+  ---
+  duration_ms: 9.673325
+  type: 'test'
+  ...
+# Subtest: wet roughness keeps a finite broad highlight instead of the old pin-sharp light peak
+ok 574 - wet roughness keeps a finite broad highlight instead of the old pin-sharp light peak
+  ---
+  duration_ms: 6.738623
+  type: 'test'
+  ...
+# Subtest: r128 GGX rim-light mirror-direction peak stays below a clipped cyan core
+ok 575 - r128 GGX rim-light mirror-direction peak stays below a clipped cyan core
+  ---
+  duration_ms: 7.044134
+  type: 'test'
+  ...
+# Subtest: repeated weather changes restore both dry presets and reuse all road textures
+ok 576 - repeated weather changes restore both dry presets and reuse all road textures
+  ---
+  duration_ms: 7.350635
+  type: 'test'
+  ...
+# Subtest: road weather helper tolerates absent city materials without changing vehicle materials
+ok 577 - road weather helper tolerates absent city materials without changing vehicle materials
+  ---
+  duration_ms: 6.532322
+  type: 'test'
+  ...
+# Subtest: only the front windshield is one exact raked plane with a single limiting normal
+ok 578 - only the front windshield is one exact raked plane with a single limiting normal
+  ---
+  duration_ms: 2.43594
+  type: 'test'
+  ...
+# Subtest: roof and outboard side panes retain their independent curved outline
+ok 579 - roof and outboard side panes retain their independent curved outline
+  ---
+  duration_ms: 0.399923
+  type: 'test'
+  ...
+# Subtest: concave rear bridge side wings recess behind the preserved central plate attachment
+ok 580 - concave rear bridge side wings recess behind the preserved central plate attachment
+  ---
+  duration_ms: 0.166471
+  type: 'test'
+  ...
+# Subtest: four recessed nozzle mouths sit inside a shallow straight-run rounded-rectangle frame
+ok 581 - four recessed nozzle mouths sit inside a shallow straight-run rounded-rectangle frame
+  ---
+  duration_ms: 0.446713
+  type: 'test'
+  ...
+# Subtest: wing is swept, tapered and closed without adding detached endplate towers
+ok 582 - wing is swept, tapered and closed without adding detached endplate towers
+  ---
+  duration_ms: 0.259902
+  type: 'test'
+  ...
+# Subtest: the diffuser bulkhead has real per-channel depth and a completely closed matching boundary
+ok 583 - the diffuser bulkhead has real per-channel depth and a completely closed matching boundary
+  ---
+  duration_ms: 6.873687
+  type: 'test'
+  ...
+# Subtest: reference silhouette has tapered nose and a pinched waist between wide wheel shoulders
+ok 584 - reference silhouette has tapered nose and a pinched waist between wide wheel shoulders
+  ---
+  duration_ms: 362.276609
+  type: 'test'
+  ...
+# Subtest: front wings fold over inward triangular optics and the cross-nose datum stays shallow
+ok 585 - front wings fold over inward triangular optics and the cross-nose datum stays shallow
+  ---
+  duration_ms: 320.593625
+  type: 'test'
+  ...
+# Subtest: lamp shoulder bridges and sculpted diffuser channels are physical source meshes
+ok 586 - lamp shoulder bridges and sculpted diffuser channels are physical source meshes
+  ---
+  duration_ms: 327.581714
+  type: 'test'
+  ...
+# Subtest: lamp pocket returns attach to the actual planar aperture without cross-section drift
+ok 587 - lamp pocket returns attach to the actual planar aperture without cross-section drift
+  ---
+  duration_ms: 333.170755
+  type: 'test'
+  ...
+# Subtest: raised front wings share the cached FPV-hidden shoulder domain and restore externally
+ok 588 - raised front wings share the cached FPV-hidden shoulder domain and restore externally
+  ---
+  duration_ms: 369.42562
+  type: 'test'
+  ...
+# Subtest: reference nozzles are recessed, and projection-sized instruments stay inside driver views
+ok 589 - reference nozzles are recessed, and projection-sized instruments stay inside driver views
+  ---
+  duration_ms: 329.740717
+  type: 'test'
+  ...
+# Subtest: reference wheel skin follows the original spin and steer handles and classic wheels restore
+ok 590 - reference wheel skin follows the original spin and steer handles and classic wheels restore
+  ---
+  duration_ms: 339.585206
+  type: 'test'
+  ...
+# Subtest: reference surfaces have finite positions, smooth unit normals and valid indexed triangles
+ok 591 - reference surfaces have finite positions, smooth unit normals and valid indexed triangles
+  ---
+  duration_ms: 31.666012
+  type: 'test'
+  ...
+# Subtest: both inset triangular headlights and crossnose light emit only forward
+ok 592 - both inset triangular headlights and crossnose light emit only forward
+  ---
+  duration_ms: 0.449017
+  type: 'test'
+  ...
+# Subtest: reference fenders remain symmetric and clear the unchanged spinning wheel crowns
+ok 593 - reference fenders remain symmetric and clear the unchanged spinning wheel crowns
+  ---
+  duration_ms: 8.848964
+  type: 'test'
+  ...
+# Subtest: four metallic rear jets share the original gimbal and functional plumes while the diffuser is closed
+ok 594 - four metallic rear jets share the original gimbal and functional plumes while the diffuser is closed
+  ---
+  duration_ms: 0.43791
+  type: 'test'
+  ...
+# Subtest: new reference model and cabin default independently while the classic remains preserved
+ok 595 - new reference model and cabin default independently while the classic remains preserved
+  ---
+  duration_ms: 371.690379
+  type: 'test'
+  ...
+# Subtest: choices restore, validate and persist without depending on storage availability
+ok 596 - choices restore, validate and persist without depending on storage availability
+  ---
+  duration_ms: 651.861763
+  type: 'test'
+  ...
+# Subtest: switching models and cockpit views repeatedly restores surfaces without hiding functional lights or effects
+ok 597 - switching models and cockpit views repeatedly restores surfaces without hiding functional lights or effects
+  ---
+  duration_ms: 331.097206
+  type: 'test'
+  ...
+# Subtest: studio sources stay neutral and independent of FPV visibility, steering and jet animations
+ok 598 - studio sources stay neutral and independent of FPV visibility, steering and jet animations
+  ---
+  duration_ms: 391.425124
+  type: 'test'
+  ...
+# Subtest: NPC inventory retains classic/touring/track and every archived geometry with unchanged collision bounds
+ok 599 - NPC inventory retains classic/touring/track and every archived geometry with unchanged collision bounds
+  ---
+  duration_ms: 412.217443
+  type: 'test'
+  ...
+# Subtest: stable frame view synchronization does no recursive scene lookups or repeated cabin copies
+ok 600 - stable frame view synchronization does no recursive scene lookups or repeated cabin copies
+  ---
+  duration_ms: 358.555529
+  type: 'test'
+  ...
+# Subtest: reference shadows use two invisible bounded silhouette batches and retain the live wing pivot
+ok 601 - reference shadows use two invisible bounded silhouette batches and retain the live wing pivot
+  ---
+  duration_ms: 344.2412
+  type: 'test'
+  ...
+# Subtest: viewport changes preserve exterior driver offset without relying on per-frame visibility repair
+ok 602 - viewport changes preserve exterior driver offset without relying on per-frame visibility repair
+  ---
+  duration_ms: 347.028229
+  type: 'test'
+  ...
+# Subtest: side-reference nose falls continuously forward and its high fold sits over the unchanged axle
+ok 603 - side-reference nose falls continuously forward and its high fold sits over the unchanged axle
+  ---
+  duration_ms: 5.828983
+  type: 'test'
+  ...
+# Subtest: hood and complete front mask use the shorter visual overhang without moving the cabin
+ok 604 - hood and complete front mask use the shorter visual overhang without moving the cabin
+  ---
+  duration_ms: 2.959169
+  type: 'test'
+  ...
+# Subtest: clipped lamp shoulders contain no collapsed Float32 triangles
+ok 605 - clipped lamp shoulders contain no collapsed Float32 triangles
+  ---
+  duration_ms: 2.084961
+  type: 'test'
+  ...
+# Subtest: same-grid rear bridge closes at its upper beam and rises distinctly at both outer lower corners
+ok 606 - same-grid rear bridge closes at its upper beam and rises distinctly at both outer lower corners
+  ---
+  duration_ms: 0.290798
+  type: 'test'
+  ...
+# Subtest: diffuser dividers curve in depth with bounded thin-face grids and closed top edges
+ok 607 - diffuser dividers curve in depth with bounded thin-face grids and closed top edges
+  ---
+  duration_ms: 0.613113
+  type: 'test'
+  ...
+# Subtest: upper rear shoulder descends behind the fixed axle rather than forming a high shelf
+ok 608 - upper rear shoulder descends behind the fixed axle rather than forming a high shelf
+  ---
+  duration_ms: 2.331593
+  type: 'test'
+  ...
+# Subtest: rear wheel opening and arch returns remain outside the upper-tail deformation
+ok 609 - rear wheel opening and arch returns remain outside the upper-tail deformation
+  ---
+  duration_ms: 4.471998
+  type: 'test'
+  ...
+# Subtest: aft buttress feet descend with their deck attachment while the front glass stays independent
+ok 610 - aft buttress feet descend with their deck attachment while the front glass stays independent
+  ---
+  duration_ms: 0.512412
+  type: 'test'
+  ...
+# Subtest: rear light retains ordered thin faces and the fixed plate/nozzles keep their clearance
+ok 611 - rear light retains ordered thin faces and the fixed plate/nozzles keep their clearance
+  ---
+  duration_ms: 0.351389
+  type: 'test'
+  ...
+# Subtest: tail taper preserves the existing wing mechanism and the two bounded shadow batches
+ok 612 - tail taper preserves the existing wing mechanism and the two bounded shadow batches
+  ---
+  duration_ms: 0.518732
+  type: 'test'
+  ...
+# Subtest: minimal scene fixture retains unbatched wheel parts without pretending to batch
+ok 613 - minimal scene fixture retains unbatched wheel parts without pretending to batch
+  ---
+  duration_ms: 373.277249
+  type: 'test'
+  ...
+# Subtest: real r128 wheel batches preserve every oriented triangle, normal, UV and animation parent
+ok 614 - real r128 wheel batches preserve every oriented triangle, normal, UV and animation parent
+  ---
+  duration_ms: 2964.749584
+  type: 'test'
+  ...
+# Subtest: central glazing retains front-wide rear-narrow taper while side glass spreads outboard
+ok 615 - central glazing retains front-wide rear-narrow taper while side glass spreads outboard
+  ---
+  duration_ms: 1.356263
+  type: 'test'
+  ...
+# Subtest: each side has one continuous glass mesh with a planar main region, gentle crown and acute aft point
+ok 616 - each side has one continuous glass mesh with a planar main region, gentle crown and acute aft point
+  ---
+  duration_ms: 3.951274
+  type: 'test'
+  ...
+# Subtest: broad planar C-buttress joins the roof branch, acute window point and rear body
+ok 617 - broad planar C-buttress joins the roof branch, acute window point and rear body
+  ---
+  duration_ms: 0.276186
+  type: 'test'
+  ...
+# Subtest: window geometry stays mirrored, restores in preview, and hides with the existing FPV canopy domains
+ok 618 - window geometry stays mirrored, restores in preview, and hides with the existing FPV canopy domains
+  ---
+  duration_ms: 15.44892
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 3s after disappearance at 0.03333333333333333 frames
+ok 619 - side wisps repeat 3s after disappearance at 0.03333333333333333 frames
+  ---
+  duration_ms: 10.297808
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 4s after disappearance at 0.03333333333333333 frames
+ok 620 - side wisps repeat 4s after disappearance at 0.03333333333333333 frames
+  ---
+  duration_ms: 6.274776
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 5s after disappearance at 0.03333333333333333 frames
+ok 621 - side wisps repeat 5s after disappearance at 0.03333333333333333 frames
+  ---
+  duration_ms: 5.690786
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 3s after disappearance at 0.016666666666666666 frames
+ok 622 - side wisps repeat 3s after disappearance at 0.016666666666666666 frames
+  ---
+  duration_ms: 11.411246
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 4s after disappearance at 0.016666666666666666 frames
+ok 623 - side wisps repeat 4s after disappearance at 0.016666666666666666 frames
+  ---
+  duration_ms: 12.03802
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 5s after disappearance at 0.016666666666666666 frames
+ok 624 - side wisps repeat 5s after disappearance at 0.016666666666666666 frames
+  ---
+  duration_ms: 10.448314
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 3s after disappearance at 0.006944444444444444 frames
+ok 625 - side wisps repeat 3s after disappearance at 0.006944444444444444 frames
+  ---
+  duration_ms: 20.141672
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 4s after disappearance at 0.006944444444444444 frames
+ok 626 - side wisps repeat 4s after disappearance at 0.006944444444444444 frames
+  ---
+  duration_ms: 23.681797
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 5s after disappearance at 0.006944444444444444 frames
+ok 627 - side wisps repeat 5s after disappearance at 0.006944444444444444 frames
+  ---
+  duration_ms: 21.350313
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 3s after disappearance at 0.007/0.023/0.05/0.011 frames
+ok 628 - side wisps repeat 3s after disappearance at 0.007/0.023/0.05/0.011 frames
+  ---
+  duration_ms: 8.502633
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 4s after disappearance at 0.007/0.023/0.05/0.011 frames
+ok 629 - side wisps repeat 4s after disappearance at 0.007/0.023/0.05/0.011 frames
+  ---
+  duration_ms: 5.491716
+  type: 'test'
+  ...
+# Subtest: side wisps repeat 5s after disappearance at 0.007/0.023/0.05/0.011 frames
+ok 630 - side wisps repeat 5s after disappearance at 0.007/0.023/0.05/0.011 frames
+  ---
+  duration_ms: 5.734862
+  type: 'test'
+  ...
+# Subtest: pulse shape/lifetime stay unchanged; threshold noise cannot overlap or restart a live pulse
+ok 631 - pulse shape/lifetime stay unchanged; threshold noise cannot overlap or restart a live pulse
+  ---
+  duration_ms: 0.697271
+  type: 'test'
+  ...
+# Subtest: loss of trigger, FPV, destruction, menu, hidden page and focus clear pulses and stale delay
+ok 632 - loss of trigger, FPV, destruction, menu, hidden page and focus clear pulses and stale delay
+  ---
+  duration_ms: 4.563867
+  type: 'test'
+  ...
+# Subtest: paused/invalid deltas cannot advance cooldown; injected randomness remains bounded
+ok 633 - paused/invalid deltas cannot advance cooldown; injected randomness remains bounded
+  ---
+  duration_ms: 2.532046
+  type: 'test'
+  ...
+# Subtest: only existing body wisps repeat, with no timers, added geometry, force, sound or banner
+ok 634 - only existing body wisps repeat, with no timers, added geometry, force, sound or banner
+  ---
+  duration_ms: 0.50404
+  type: 'test'
+  ...
+# Subtest: compact entry shows the actual model once, with a stable shared paint material and capped pixel ratio
+ok 635 - compact entry shows the actual model once, with a stable shared paint material and capped pixel ratio
+  ---
+  duration_ms: 8.456723
+  type: 'test'
+  ...
+# Subtest: all 12 finishes apply and restore by stable ID; blocked or stale storage is harmless
+ok 636 - all 12 finishes apply and restore by stable ID; blocked or stale storage is harmless
+  ---
+  duration_ms: 5.628272
+  type: 'test'
+  ...
+# Subtest: finish picker closes by Done/Escape/outside/Back, returns focus, and supports repeated open and Forward
+ok 637 - finish picker closes by Done/Escape/outside/Back, returns focus, and supports repeated open and Forward
+  ---
+  duration_ms: 1.933434
+  type: 'test'
+  ...
+# Subtest: menu and picker keyboard interactions never trigger gameplay or an accidental launch
+ok 638 - menu and picker keyboard interactions never trigger gameplay or an accidental launch
+  ---
+  duration_ms: 3.296829
+  type: 'test'
+  ...
+# Subtest: world/weather use keyboard-native pressed buttons, and mode/traffic selectors stay synchronized
+ok 639 - world/weather use keyboard-native pressed buttons, and mode/traffic selectors stay synchronized
+  ---
+  duration_ms: 2.280928
+  type: 'test'
+  ...
+# Subtest: third original coast card is keyboard-native and uses its actual bilingual traffic densities
+ok 640 - third original coast card is keyboard-native and uses its actual bilingual traffic densities
+  ---
+  duration_ms: 2.490623
+  type: 'test'
+  ...
+# Subtest: optional preview failure cannot block configuration, and initial paint collection is in a separate native dialog
+ok 641 - optional preview failure cannot block configuration, and initial paint collection is in a separate native dialog
+  ---
+  duration_ms: 3.680796
+  type: 'test'
+  ...
+# Subtest: an immediate reopen waits for asynchronous Back rather than closing the newer picker
+ok 642 - an immediate reopen waits for asynchronous Back rather than closing the newer picker
+  ---
+  duration_ms: 1.542104
+  type: 'test'
+  ...
+# Subtest: independent entry choices use the vehicle API and refresh one shared-resource model without new renderers
+ok 643 - independent entry choices use the vehicle API and refresh one shared-resource model without new renderers
+  ---
+  duration_ms: 1.83173
+  type: 'test'
+  ...
+# Subtest: saved mixed choices, external changes, translated copy, and source replacement stay synchronized
+ok 644 - saved mixed choices, external changes, translated copy, and source replacement stay synchronized
+  ---
+  duration_ms: 1.605399
+  type: 'test'
+  ...
+# Subtest: choice changes move the same live-configured preview between entry and paint dialog, and defer hidden work
+ok 645 - choice changes move the same live-configured preview between entry and paint dialog, and defer hidden work
+  ---
+  duration_ms: 1.640643
+  type: 'test'
+  ...
+# Subtest: vehicle selectors remain usable without the optional module or WebGL and expose explicit production defaults
+ok 646 - vehicle selectors remain usable without the optional module or WebGL and expose explicit production defaults
+  ---
+  duration_ms: 3.068064
+  type: 'test'
+  ...
+# Subtest: a lost preview context is released once while configuration and launch remain available
+ok 647 - a lost preview context is released once while configuration and launch remain available
+  ---
+  duration_ms: 1.653062
+  type: 'test'
+  ...
+# Subtest: all stops and shortest-route segments stay on the connected city asphalt grid
+ok 648 - all stops and shortest-route segments stay on the connected city asphalt grid
+  ---
+  duration_ms: 66.966433
+  type: 'test'
+  ...
+# Subtest: pickup stops and every drivable route edge clear the actual generated city building collision boxes
+ok 649 - pickup stops and every drivable route edge clear the actual generated city building collision boxes
+  ---
+  duration_ms: 15.400808
+  type: 'test'
+  ...
+# Subtest: five distinct spaced waiting passengers have long reachable trips on every refill
+ok 650 - five distinct spaced waiting passengers have long reachable trips on every refill
+  ---
+  duration_ms: 125.721534
+  type: 'test'
+  ...
+# Subtest: green destination arrival stays exactly 2m in 3D, including swept motion
+ok 651 - green destination arrival stays exactly 2m in 3D, including swept motion
+  ---
+  duration_ms: 0.32534
+  type: 'test'
+  ...
+# Subtest: white pickup radius doubles to 4m without widening destination or permitting airborne arrivals
+ok 652 - white pickup radius doubles to 4m without widening destination or permitting airborne arrivals
+  ---
+  duration_ms: 196.431127
+  type: 'test'
+  ...
+# Subtest: public entry explains pickup radius and independent fares in both languages
+ok 653 - public entry explains pickup radius and independent fares in both languages
+  ---
+  duration_ms: 2.827742
+  type: 'test'
+  ...
+# Subtest: single-passenger state machine pays once, refills five and ignores other pickup points while occupied
+ok 654 - single-passenger state machine pays once, refills five and ignores other pickup points while occupied
+  ---
+  duration_ms: 49.713565
+  type: 'test'
+  ...
+# Subtest: distance-based fares are integral, monotonic and bounded at 1000–3000
+ok 655 - distance-based fares are integral, monotonic and bounded at 1000–3000
+  ---
+  duration_ms: 0.277378
+  type: 'test'
+  ...
+# Subtest: repeated starts do not duplicate passengers; reset settles loss then clears the new round
+ok 656 - repeated starts do not duplicate passengers; reset settles loss then clears the new round
+  ---
+  duration_ms: 49.407854
+  type: 'test'
+  ...
+# Subtest: public shortcut is city-only, repeat-safe, focus-safe and never reopens an active game
+ok 657 - public shortcut is city-only, repeat-safe, focus-safe and never reopens an active game
+  ---
+  duration_ms: 71.371342
+  type: 'test'
+  ...
+# Subtest: public city button starts and exits cleanly in every HUD, while other maps never expose or start it
+ok 658 - public city button starts and exits cleanly in every HUD, while other maps never expose or start it
+  ---
+  duration_ms: 60.494591
+  type: 'test'
+  ...
+# Subtest: real shared keyboard handler delegates = exclusively, preserves typing, and retains ] zoom
+ok 659 - real shared keyboard handler delegates = exclusively, preserves typing, and retains ] zoom
+  ---
+  duration_ms: 75.334403
+  type: 'test'
+  ...
+# Subtest: scene has five readable double-sided white beams and only one green destination while occupied
+ok 660 - scene has five readable double-sided white beams and only one green destination while occupied
+  ---
+  duration_ms: 58.908029
+  type: 'test'
+  ...
+# Subtest: map exit and repeated stops fully remove and dispose markers and the active-only score display
+ok 661 - map exit and repeated stops fully remove and dispose markers and the active-only score display
+  ---
+  duration_ms: 57.99256
+  type: 'test'
+  ...
+# Subtest: bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets
+ok 662 - bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets
+  ---
+  duration_ms: 59.915088
+  type: 'test'
+  ...
+# Subtest: numeric passenger score survives language and HUD/camera changes without adding visual text
+ok 663 - numeric passenger score survives language and HUD/camera changes without adding visual text
+  ---
+  duration_ms: 60.907413
+  type: 'test'
+  ...
+# Subtest: menus pause transitions; destruction clears the occupied ride before any payout
+ok 664 - menus pause transitions; destruction clears the occupied ride before any payout
+  ---
+  duration_ms: 59.720394
+  type: 'test'
+  ...
+# Subtest: integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state
+ok 665 - integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state
+  ---
+  duration_ms: 2.043269
+  type: 'test'
+  ...
+# Subtest: stop clearance rejects the entire column footprint, trim margin and city boundary
+ok 666 - stop clearance rejects the entire column footprint, trim margin and city boundary
+  ---
+  duration_ms: 0.534896
+  type: 'test'
+  ...
+# Subtest: landing and low altitude flight never sweep a pickup or destination
+ok 667 - landing and low altitude flight never sweep a pickup or destination
+  ---
+  duration_ms: 109.161799
+  type: 'test'
+  ...
+# Subtest: crashes settle a single double-fare penalty and freeze the result until a new round
+ok 668 - crashes settle a single double-fare penalty and freeze the result until a new round
+  ---
+  duration_ms: 64.75405
+  type: 'test'
+  ...
+# Subtest: empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn
+ok 669 - empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn
+  ---
+  duration_ms: 57.017761
+  type: 'test'
+  ...
+# Subtest: taxi model itself blocks all payouts after death and applies nonnegative loss only once
+ok 670 - taxi model itself blocks all payouts after death and applies nonnegative loss only once
+  ---
+  duration_ms: 99.569875
+  type: 'test'
+  ...
+# Subtest: bottom-right passenger HUD participates in footer bounds and releases its active layout
+ok 671 - bottom-right passenger HUD participates in footer bounds and releases its active layout
+  ---
+  duration_ms: 59.283325
+  type: 'test'
+  ...
+# Subtest: cockpit passenger strip shows live destination distance and local score without covering speed or tank
+ok 672 - cockpit passenger strip shows live destination distance and local score without covering speed or tank
+  ---
+  duration_ms: 66.901956
+  type: 'test'
+  ...
+# Subtest: destination bearing maps vehicle-forward up and left/right correctly at every heading
+ok 673 - destination bearing maps vehicle-forward up and left/right correctly at every heading
+  ---
+  duration_ms: 0.706956
+  type: 'test'
+  ...
+# Subtest: top-left navigation shows only arrow and live meters across every HUD mode and camera
+ok 674 - top-left navigation shows only arrow and live meters across every HUD mode and camera
+  ---
+  duration_ms: 64.895433
+  type: 'test'
+  ...
+# Subtest: corner arrow and meters clear safe areas, header controls and rotation on phone and desktop
+ok 675 - corner arrow and meters clear safe areas, header controls and rotation on phone and desktop
+  ---
+  duration_ms: 0.607125
+  type: 'test'
+  ...
+# Subtest: corner arrow and meter digits have silhouette contrast without a background, border or card
+ok 676 - corner arrow and meter digits have silhouette contrast without a background, border or card
+  ---
+  duration_ms: 57.534561
+  type: 'test'
+  ...
+# Subtest: meter digits follow the occupied destination live, round once and reset between passengers
+ok 677 - meter digits follow the occupied destination live, round once and reset between passengers
+  ---
+  duration_ms: 57.770876
+  type: 'test'
+  ...
+# Subtest: navigation crosses north and +/-180 smoothly without a reverse full-turn jump
+ok 678 - navigation crosses north and +/-180 smoothly without a reverse full-turn jump
+  ---
+  duration_ms: 231.600325
+  type: 'test'
+  ...
+# Subtest: menus pause passenger transitions without freezing the live vehicle-relative bearing
+ok 679 - menus pause passenger transitions without freezing the live vehicle-relative bearing
+  ---
+  duration_ms: 60.782295
+  type: 'test'
+  ...
+# Subtest: delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space
+ok 680 - delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space
+  ---
+  duration_ms: 311.049929
+  type: 'test'
+  ...
+# Subtest: short landscape notice space is bounded by the header, footer and occupied-trip row
+ok 681 - short landscape notice space is bounded by the header, footer and occupied-trip row
+  ---
+  duration_ms: 0.562387
+  type: 'test'
+  ...
+# Subtest: traffic caps keep the existing sculpted shell, wheel cuts, bounds and shading intact
+ok 682 - traffic caps keep the existing sculpted shell, wheel cuts, bounds and shading intact
+  ---
+  duration_ms: 3.153943
+  type: 'test'
+  ...
+# Subtest: front and rear traffic caps are finite, nondegenerate, outward-facing and flat-shaded
+ok 683 - front and rear traffic caps are finite, nondegenerate, outward-facing and flat-shaded
+  ---
+  duration_ms: 0.594386
+  type: 'test'
+  ...
+# Subtest: every interior pixel sample of both end silhouettes is blocked by the production cap triangles
+ok 684 - every interior pixel sample of both end silhouettes is blocked by the production cap triangles
+  ---
+  duration_ms: 69.683549
+  type: 'test'
+  ...
+# Subtest: all traffic colors share opaque capped bodies and a backed diffuser, preserving wheels and lights
+ok 685 - all traffic colors share opaque capped bodies and a backed diffuser, preserving wheels and lights
+  ---
+  duration_ms: 2.104181
+  type: 'test'
+  ...
+# Subtest: rear panel and lower diffuser block wheel/road sightlines from following and three-quarter views
+ok 686 - rear panel and lower diffuser block wheel/road sightlines from following and three-quarter views
+  ---
+  duration_ms: 31.921032
+  type: 'test'
+  ...
+# Subtest: compact provenance retains all original identities and an independently recoverable versioned archive
+ok 687 - compact provenance retains all original identities and an independently recoverable versioned archive
+  ---
+  duration_ms: 4.534563
+  type: 'test'
+  ...
+# Subtest: crowned-window source hashes and exact parent/commit lineage do not need private Git history
+ok 688 - crowned-window source hashes and exact parent/commit lineage do not need private Git history
+  ---
+  duration_ms: 0.216526
+  type: 'test'
+  ...
+# Subtest: startup ships only clean compact profiles and never reads original or quarantined payloads
+ok 689 - startup ships only clean compact profiles and never reads original or quarantined payloads
+  ---
+  duration_ms: 0.812895
+  type: 'test'
+  ...
+1..689
+# tests 689
+# suites 0
+# pass 689
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 959172.140373
