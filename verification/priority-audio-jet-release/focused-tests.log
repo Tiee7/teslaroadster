@@ -1,0 +1,47 @@
+✔ production V8 graph CPU reference renders bounded, finite load response and smooth mute/destruction recovery (469.761244ms)
+✔ engine preference defaults on and can be changed before audio initializes without unlocking audio (14.436479ms)
+✔ only the synthesized motor routes through the smoothly switched preference gate (5.277241ms)
+✔ SFX mute and destruction still silence motor, thrusters and tires after toggling (4.469394ms)
+✔ off and on survive reload independently of BGM and storage errors or missing audio APIs remain safe (12.234512ms)
+✔ settings loads saved state before WebGL, translates and toggles only engine audio without creating a context (29.529919ms)
+✔ production map switches and repeated vehicle or challenge resets retain the engine preference (5.833479ms)
+✔ original V8 voice uses two irregular exhaust banks, filtered air, bass and bounded soft saturation (4.895035ms)
+✔ virtual RPM and exhaust load rise smoothly with speed and analog throttle while coasting becomes quieter (6.360002ms)
+✔ invalid inputs and extreme speed keep V8 pitch, filter, and level finite and bounded; legacy callers remain compatible (5.490041ms)
+✔ production physics passes actual analog drive load without changing the existing SFX argument meanings (20.787818ms)
+✔ one open shared envelope per outlet has finite bounded topology, unlit alpha and no solid disks (478.480076ms)
+✔ pressure wake opens downstream while every physical mouth and draw count stay fixed (373.105148ms)
+✔ stronger gas remains power-sensitive, finite and completely cleared on release (401.149104ms)
+✔ body selection places actual mouth coordinates; view changes preserve selected layout (390.880538ms)
+✔ roll/pitch/yaw/strafe reuse the correctly directed physical ports without duplicate plumes (547.263122ms)
+✔ highway/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (493.648742ms)
+✔ highway/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (502.678702ms)
+✔ city/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (441.126388ms)
+✔ city/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (458.579589ms)
+✔ analog requests scale the correct longitudinal axis, release immediately and hide every FPV plume (342.936051ms)
+✔ emergency lift uses its accepted full command at low tank, and 3D retro chooses paid travel components (320.475094ms)
+✔ music defaults to looping, waits for real interaction and has one player/listener set (5.847159ms)
+✔ settings truly pauses, retains position and preference, resumes the same element (3.167462ms)
+✔ storage failures do not break controls or silently disable default music (2.940139ms)
+✔ pending plays are deduplicated and late success cannot undo manual pause (1.36738ms)
+✔ rejected autoplay remains enabled, explicit retry works and old rejection is harmless (2.585815ms)
+✔ hidden/page lifecycle pauses without changing preference and resumes only when appropriate (2.349099ms)
+✔ hidden transition wins over pending play, and a later gesture recovers a sync error (2.454888ms)
+✔ settings handles repeated open/close and translations without changing music or SFX (23.098931ms)
+✔ build preserves original MP3 bytes and audio metadata contract (3.80952ms)
+✔ music dev endpoint serves complete bytes, HEAD, valid ranges and rejects invalid ranges (133.996907ms)
+✔ reference silhouette has tapered nose and a pinched waist between wide wheel shoulders (445.258154ms)
+✔ front wings fold over inward triangular optics and the cross-nose datum stays shallow (349.488242ms)
+✔ lamp shoulder bridges and sculpted diffuser channels are physical source meshes (312.88937ms)
+✔ lamp pocket returns attach to the actual planar aperture without cross-section drift (379.592761ms)
+✔ raised front wings share the cached FPV-hidden shoulder domain and restore externally (588.84997ms)
+✔ reference nozzles are recessed, and projection-sized instruments stay inside driver views (358.576296ms)
+✔ reference wheel skin follows the original spin and steer handles and classic wheels restore (381.076907ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4881.673248

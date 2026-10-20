@@ -248,13 +248,20 @@ Powered overspeed settles continuously toward the flight envelope instead of an 
 
 Regression checks cover actual O launches, powered and unpowered handoffs, A/W and D/W turns, bank/strafe response, mode changes, repeated airborne O, reset, both maps, irregular frames and 30/60/144 Hz, alongside the existing vertical ballistics, tank-depletion and collision tests. Visual gameplay verification still requires a WebGL-capable browser.
 
-## Softer electric-drive sound and reference-model responsiveness
+## Earlier electric-drive sound and reference-model responsiveness
 
-The motor simulation now uses a quiet, rounded sine-based electric hum, fades to
-silence at rest and keeps its separate engine/SFX/music controls. Detailed visible
+The earlier motor simulation used a quiet, rounded sine-based electric hum, fading to
+silence at rest with separate engine/SFX/music controls. Detailed visible
 reference meshes remain unchanged; two bounded silhouette batches replace 108
 individual shadow casters. Camera/model visibility updates are cached rather than
 repeated on every frame. See [investigation and verification limits](docs/audio-input-latency.md).
+
+The current optional engine voice replaces that hum with an original procedural
+V8-inspired exhaust sound: two coherent pulse banks, a low bass layer and filtered
+air texture respond smoothly to speed and actual analog throttle. It is not a
+Tesla engine recording, and no V12 selector is included. The persistent simulated
+engine switch remains independent of BGM and rocket effects; SFX mute and
+destruction still silence it. See [sound implementation and listening limits](docs/engine-sound.md).
 
 ## Mixed highway drivers and distance scoring / 高架速度分组与里程积分
 
@@ -279,6 +286,17 @@ and buffers. See [implementation and verification limits](docs/cockpit-rain.md).
 
 All propulsion/attitude outlets now use one soft, outward-only, depth-tested cold-gas envelope per active mouth. Actual paid input controls visual power, including analog controls, low-air states, hover and three-dimensional retro braking. Roll/pitch/strafe/yaw share their physical outlets rather than layering duplicate plumes. Classic and reference mouths are aligned independently, and FPV hides all plumes. The existing high-speed gameplay threshold creates a brief, travel-aligned condensation pulse instead of a persistent opaque cone/ring. Physics, gas burn, overspeed settling, retro impulse and scoring are unchanged. See [verification and CPU-render boundaries](docs/jet-effects.md); real WebGL appearance and FPS still require a working GPU browser.
 
+The current visual revision broadens and lengthens the pressure wake without
+moving the nozzle mouths or adding outlet meshes. Rear jets reach 2.35 m at full
+power; the condensation pulse is slightly more visible but still expires in
+0.8 seconds. [Pressure review](verification/jet-pressure-review/README.md) records
+the production-geometry checks and CPU previews, not a real-WebGL visual pass.
+
 ## Highway demo driving / 第一关演示驾驶
 
-Map 01 adds a small, opt-in Demo drive / 演示模式 switch with no shortcut. It supplies real driving/boost/brake inputs and targets 220+ km/h when traffic permits. Its demo-only stunt steering now makes quick complete lane-center changes, follows much closer and favors useful multi-stage weaving. Narrow predictive gaps retain continuous swept collision checking and real damage; ordinary manual handling is unchanged. Unsafe gaps use temporary close-following slowdown, then acceleration resumes. A paid low hop is reserved for otherwise unavoidable close hazards; it retains a bounded launch vector without airborne forward/lift/hover requests. Manual O and normal handling are unchanged. The switch stops cleanly on reset, destruction, map/mode changes, menus and loss of focus. Automatic driving is isolated from the 60-second leaderboard, including late-start and cancellation races. See [implementation, measured verification and limits](docs/highway-demo.md).
+Map 01 adds a small, opt-in Demo drive / 演示模式 switch with no shortcut. It supplies real driving/boost/brake inputs, accelerates normally from rest, and targets 220+ km/h. A multi-lane maneuver now steers continuously toward its final lane center; intermediate centers do not insert a straightening pause. The complete predicted sweep is checked for crossed-lane traffic. Mechanical plus paid retro braking is requested only when its predicted result remains at least 220 km/h; a slower queue instead prompts a pass or an earlier, real-gas tactical hop. Real finite tank, airborne drag, landing and collision limits still apply, so an impossible or fuel-starved situation can lose speed or crash. The switch stops cleanly on reset, destruction, map/mode changes, menus and loss of focus. Automatic driving stays isolated from the 60-second leaderboard. See [implementation, paired verification and limits](docs/highway-demo.md).
+
+**Known limitation:** the current integrated demo has not passed the requested
+all-mode, high-density 60-second collision-free acceptance. The sound/jet release
+does not claim that driving target is complete; failed isolated driving
+prototypes are not promoted into the game.

@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-20T11:35:22Z",
+  "target": "https://tesla.tiee.xyz/",
+  "version": "Existing production0dbe3f997da0f011397131895db16c5f8aaccbb9, not new candidate",
+  "route": "Supported own-cloud CUA browser",
+  "observed": [
+    "HTML launch menu accessible",
+    "Vehicle preview empty",
+    "Launch simulation did not reveal gameplay scene",
+    "THREE.WebGLRenderer: Error creating WebGL context.",
+    "Uncaught Error: Error creating WebGL context."
+  ],
+  "recovery": "One ordinary reload confirmed same errors at11:35:21UTC; no further GPU/security/local-browser changes attempted",
+  "status": "blocked-capability",
+  "notPassed": [
+    "New candidate WebGL shader compilation",
+    "Jet/sonic real rendering and interactive FPS",
+    "Real gameplay sound/hearing review",
+    "Manual real-browser driving/input acceptance"
+  ],
+  "localDenialsRespected": [
+    "Execution-environment Chromium singleton socket failed EPERM",
+    "Escalated launch failed bwrap setup before browser launch",
+    "CUA localhost connection refused; error-page observation rejected by URL policy"
+  ]
+}

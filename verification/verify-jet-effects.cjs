@@ -55,7 +55,7 @@ for(const velocity of [[0,0,-80],[0,0,80],[80,0,0],[-80,0,0],[0,-80,0],[0,80,0],
 }
 for(const hz of [30,60,144]){
  e.clear();Object.assign(e.state,{vx:20,vy:5,vz:-110,yaw:.7,pitch:-.2,roll:.3});e.attitude.rotation.set(e.state.pitch,e.state.yaw,e.state.roll);e.sonicUpdate(0,true,false);
- let elapsed=0;for(let i=0;i<Math.ceil(hz*.9);i++){e.sonicUpdate(1/hz,false,false);elapsed+=1/hz;assert.ok(e.sonicMaterial.uniforms.uOpacity.value<=.160000001);}
+ let elapsed=0;for(let i=0;i<Math.ceil(hz*.9);i++){e.sonicUpdate(1/hz,false,false);elapsed+=1/hz;assert.ok(e.sonicMaterial.uniforms.uOpacity.value<=.200000001);}
  assert.equal(e.sonic.visible,false);
  e.sonicUpdate(0,true,false);e.sonicUpdate(.4,false,false);e.car.updateMatrixWorld(true);
  const worldAxis=new T.Vector3(0,0,1).applyQuaternion(e.sonic.getWorldQuaternion(new T.Quaternion()));const expected=new T.Vector3(-e.state.vx,-e.state.vy,-e.state.vz).normalize();assert.ok(worldAxis.dot(expected)>1-1e-10);
@@ -70,6 +70,6 @@ if(baseline){
  report.physicsPreserved={equal:true,sha256:crypto.createHash('sha256').update(previous).digest('hex')};
 }
 const blocked=report.portAudit.reduce((n,a)=>n+a.blocked.length,0);report.passed=blocked===0;
-const out=path.join(__dirname,'jet-effects/runtime-audit.json');fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n');
+const out=process.env.ROADSTER_JET_AUDIT_OUTPUT?path.resolve(process.env.ROADSTER_JET_AUDIT_OUTPUT):path.join(__dirname,'jet-effects/runtime-audit.json');fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({passed:report.passed,portRays:report.portAudit.reduce((n,a)=>n+a.rays,0),blocked,report:out},null,2));
 if(blocked)process.exitCode=1;

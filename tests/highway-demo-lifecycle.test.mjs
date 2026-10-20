@@ -220,13 +220,17 @@ test('pending ranked cancellation also owns analog mobile input and returns neut
   assert.equal(h.demo.isBusy(), false); assert.equal(neutral(h.context.readDriveInput()), true);
 });
 
-test('boxed-in demo uses its short jump through the real O action and releases airborne propulsion', async () => {
+test('adapter dispatches its supplied admitted short-hop command through real O and releases airborne propulsion', async () => {
   const h = lifecycleHarness(); await h.demo.toggle();
   Object.assign(h.state, { x: 2.5, y: 0, vx: 0, vy: 0, vz: -65, speed: 65, airRemaining: 10 });
   for (const [x, z] of [[2.5, -12], [-2.5, -8], [7.5, -8]]) {
     h.context.trafficCars.push({ mode: 'highway', speed: 20, length: 4.62, height: 1.25,
       mesh: { visible: true, position: { x, z } } });
   }
+  // Adapter unit: planner admission is separately exercised by complete clock
+  // runs. Supply a completed command, never fake the resulting motion/tank.
+  let launch=true;h.context.adapterPlannerForTest.step=()=>{const jump=launch;launch=false;return{input:RoadsterNeutral(),jump,jumpHeight:2.3,jumpGraceSeconds:1,status:'jump',targetLane:3};};
+  function RoadsterNeutral(){return{steer:0,throttle:0,boost:0,brake:0,reverse:0,handbrake:0,lift:0,descend:0,strafe:0,roll:0,pitch:0};}
   h.demo.step(1 / 60);
   assert.equal(h.state.isJumping6m, true);
   assert.equal(h.state.jumpTargetY, h.demo.jumpHeight());
@@ -306,4 +310,31 @@ test('opening any mobile overlay cancels pending demo even if server-end confirm
     assert.equal(neutral(h.demo.input()), true, name);
     assert.equal(h.requests('/api/score').length, 0, name);
   }
+});
+
+test('near-term high-speed cold activation refuses input ownership and preserves actual manual keys', async()=>{
+ const h=lifecycleHarness();Object.assign(h.state,{x:2.5,y:0,vx:0,vy:0,vz:-65,speed:65});
+ for(const x of[-12.5,-7.5,-2.5,2.5,7.5,12.5])h.context.trafficCars.push({mode:'highway',speed:22,vx:0,vz:-22,length:4.62,height:1.25,mesh:{visible:true,position:{x,y:0,z:-20},rotation:{x:0,y:0,z:0}}});
+ await h.key('KeyW');await h.key('KeyD');const before=JSON.stringify(h.state),keysBefore=JSON.stringify(h.keys);
+ await h.demo.toggle();assert.equal(h.demo.isActive(),false);assert.equal(h.demo.isBusy(),false);assert.equal(h.demo.isRequestingJump(),false);
+ assert.equal(JSON.stringify(h.state),before);assert.equal(JSON.stringify(h.keys),keysBefore);
+ const input=h.context.readDriveInput();assert.equal(input.throttle,1);assert.equal(input.steer,1);
+ assert.equal(h.get('btn-highway-demo').dataset.status,'unsafe');assert.match(h.get('btn-highway-demo').title,/Cannot safely take over|暂不能安全接管/);
+ assert.equal(h.requests('/api/end').length,0,'refused startup cannot cancel an existing manual challenge');
+ await h.demo.toggle();assert.equal(h.demo.isBusy(),false);assert.equal(JSON.stringify(h.keys),keysBefore,'same unsafe retry must not clear held manual input');
+});
+
+test('sufficient-clearance high-speed activation and ordinary zero-speed activation remain available', async()=>{
+ for(const speed of[0,65]){
+  const h=lifecycleHarness();Object.assign(h.state,{x:2.5,y:0,vx:0,vy:0,vz:-speed,speed});
+  for(const x of[-12.5,-7.5,-2.5,2.5,7.5,12.5])h.context.trafficCars.push({mode:'highway',speed:22,vx:0,vz:-22,length:4.62,height:1.25,mesh:{visible:true,position:{x,y:0,z:-80},rotation:{x:0,y:0,z:0}}});
+  await h.demo.toggle();assert.equal(h.demo.isActive(),true);assert.equal(h.demo.isBusy(),true);assert.equal(h.state.speed,speed,'activation does not inject or clip speed');
+ }
+});
+
+test('startup veto is never used to abandon an already-running demo after a sudden hazard',async()=>{
+ const h=lifecycleHarness();Object.assign(h.state,{x:2.5,y:0,vx:0,vy:0,vz:-65,speed:65});await h.demo.toggle();assert.equal(h.demo.isActive(),true);
+ for(const x of[-12.5,-7.5,-2.5,2.5,7.5,12.5])h.context.trafficCars.push({mode:'highway',speed:22,vx:0,vz:-22,length:4.62,height:1.25,mesh:{visible:true,position:{x,y:0,z:-20},rotation:{x:0,y:0,z:0}}});
+ h.demo.step(1/60);assert.equal(h.demo.isActive(),true);assert.equal(h.demo.isBusy(),true);assert.notEqual(h.get('btn-highway-demo').dataset.status,'unsafe');
+ assert.equal(h.context.readDriveInput().throttle,h.demo.input().throttle,'still owns its real input rather than silently handing off');
 });

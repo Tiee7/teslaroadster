@@ -18,6 +18,7 @@ class AudioParam {
 class AudioNode {
   constructor() { this.connections = []; this.gain = new AudioParam(); this.frequency = new AudioParam(); this.Q = new AudioParam(); }
   connect(target) { this.connections.push(target); }
+  setPeriodicWave(wave) { this.wave = wave; this.type = 'custom'; }
   start() { this.started = true; }
   stop() { this.stopped = true; }
 }
@@ -44,6 +45,8 @@ function harness({ stored, blockedStorage = false, audioAvailable = true, settin
     createGain() { return this.node(); }
     createOscillator() { return this.node(); }
     createBiquadFilter() { return this.node(); }
+    createWaveShaper() { return this.node(); }
+    createPeriodicWave(real, imag) { return { real, imag }; }
     createBufferSource() { return this.node(); }
     node() { const node = new AudioNode(); this.nodes.push(node); return node; }
     resume() { this.resumeCalls++; this.state = 'running'; return Promise.resolve(); }
@@ -166,30 +169,97 @@ test('production map switches and repeated vehicle or challenge resets retain th
 });
 
 
-test('replacement motor is a quiet rounded electric hum, silent at rest and bounded at extreme speed', () => {
+test('original V8 voice uses two irregular exhaust banks, filtered air, bass and bounded soft saturation', () => {
   const {sound} = harness(); sound.init();
-  assert.equal(sound.engineOsc.type, 'sine');
-  assert.equal(sound.engineOvertoneOsc.type, 'sine');
-  assert.equal(sound.engineOvertoneGain.gain.value, .12);
-  assert.equal(sound.engineFilter.type, 'lowpass');
-  assert.equal(sound.engineFilter.frequency.value, 420);
-  assert.equal(sound.engineFilter.Q.value, .5);
+  assert.equal(sound.engineOsc.type, 'custom');
+  assert.equal(sound.engineOvertoneOsc.type, 'custom');
+  assert.notDeepEqual(sound.engineOsc.wave.real, sound.engineOvertoneOsc.wave.real);
+  for (const osc of [sound.engineOsc, sound.engineOvertoneOsc]) {
+    assert.equal(osc.wave.real.length, 97);
+    assert.equal(osc.wave.real[0], 0); assert.equal(osc.wave.imag[0], 0);
+    assert.ok([...osc.wave.real, ...osc.wave.imag].every(Number.isFinite));
+    assert.ok(osc.wave.real.slice(1, 8).some(n => Math.abs(n) > .05), 'uneven bank firing retains a low burble');
+    assert.ok(Math.hypot(osc.wave.real[8], osc.wave.imag[8]) > .5, 'eight firing events per engine cycle');
+  }
+  assert.equal(sound.engineBodyOsc.type, 'sine');
+  assert.equal(sound.engineFilter.type, 'lowpass'); assert.equal(sound.engineFilter.Q.value, .55);
+  assert.equal(sound.engineTextureFilter.type, 'bandpass');
+  assert.deepEqual(sound.engineOsc.connections, [sound.engineBankGain]);
+  assert.deepEqual(sound.engineBankGain.connections, [sound.engineFilter]);
   assert.deepEqual(sound.engineOvertoneOsc.connections, [sound.engineOvertoneGain]);
   assert.deepEqual(sound.engineOvertoneGain.connections, [sound.engineFilter]);
+  assert.deepEqual(sound.engineTextureGain.connections, [sound.engineFilter]);
+  assert.deepEqual(sound.engineFilter.connections, [sound.engineSaturator]);
+  assert.deepEqual(sound.engineSaturator.connections, [sound.engineGain]);
+  assert.equal(sound.engineSaturator.curve[1024], 0);
+  assert.ok([...sound.engineSaturator.curve].every(n => Number.isFinite(n) && Math.abs(n) <= 1));
+  assert.equal(sound.engineSaturator.curve[0], -1); assert.equal(sound.engineSaturator.curve[2048], 1);
+});
+
+test('virtual RPM and exhaust load rise smoothly with speed and analog throttle while coasting becomes quieter', () => {
+  const {sound} = harness(); sound.init();
+  let previous;
+  for (const load of [0, .25, .5, .75, 1]) {
+    sound.update(.5, false, false, false, 0, load);
+    const current = {...sound.engineVoice};
+    assert.equal(current.load, load);
+    if (previous) for (const key of ['rpm', 'gain', 'cutoff', 'textureGain', 'bodyGain', 'bankGain']) assert.ok(current[key] > previous[key], key);
+    previous = current;
+    assert.equal(sound.engineOsc.frequency.value, current.rpm / 120);
+    assert.equal(sound.engineOvertoneOsc.frequency.value, current.rpm / 120, 'both banks share one coherent crank speed');
+    assert.equal(sound.engineBodyOsc.frequency.value, current.rpm / 60);
+    assert.equal(sound.engineGain.gain.targets.at(-1).constant, .08);
+    assert.equal(sound.engineOsc.frequency.targets.at(-1).constant, .10);
+  }
+  sound.update(.5, true, true, false, 0, .5);
+  const thrustVoice = {...sound.engineVoice};
+  sound.update(.5, false, false, false, 0, .5);
+  assert.deepEqual({...sound.engineVoice}, thrustVoice, 'rocket status cannot override explicit motor load or jump its pitch');
+  sound.update(0, false, false, false, 0, 0); assert.equal(sound.engineGain.gain.value, 0, 'silent parked EV');
+  sound.update(0, false, false, false, 0, 1); assert.ok(sound.engineGain.gain.value > 0, 'stationary held throttle can rev softly');
+});
+
+test('invalid inputs and extreme speed keep V8 pitch, filter, and level finite and bounded; legacy callers remain compatible', () => {
+  const {sound} = harness(); sound.init();
   for (const speed of [-10, 0, NaN, Infinity]) {
     sound.update(speed, false, false, false);
     assert.equal(sound.engineGain.gain.value, 0, 'no persistent idle drone');
-    assert.equal(sound.engineOsc.frequency.value, 58);
   }
-  for (const speed of [.001, .03, .06, .5, 1, 1.5, 100]) {
-    sound.update(speed, false, false, false);
-    const normalPitch = sound.engineOsc.frequency.value;
-    assert.ok(sound.engineGain.gain.value > 0 && sound.engineGain.gain.value <= .026);
-    assert.ok(normalPitch >= 58 && normalPitch <= 196);
-    assert.equal(sound.engineOvertoneOsc.frequency.value, normalPitch * 2);
-    assert.equal(sound.engineGain.gain.targets.at(-1).constant, .09);
-    sound.update(speed, true, false, false);
-    assert.ok(Math.abs(sound.engineOsc.frequency.value - normalPitch - 6) < 1e-10, 'boost should not create the old harsh pitch leap');
-    assert.ok(sound.engineOvertoneOsc.frequency.value <= 404);
+  for (const speed of [-10, 0, .001, .03, .06, .5, 1, 1.5, 100, NaN, Infinity]) {
+    for (const load of [undefined, NaN, Infinity, -10, 0, .3, .7, 1, 100]) {
+      sound.update(speed, false, false, false, 0, load);
+      assert.ok(Object.values(sound.engineVoice).every(Number.isFinite));
+      assert.ok(sound.engineGain.gain.value >= 0 && sound.engineGain.gain.value <= .084);
+      assert.ok(sound.engineVoice.rpm >= 850 && sound.engineVoice.rpm <= 6800);
+      assert.ok(sound.engineFilter.frequency.value >= 360 && sound.engineFilter.frequency.value <= 2200);
+    }
+  }
+  sound.update(.8, false, false, false); assert.ok(sound.engineGain.gain.value > 0);
+  const legacyLevel = sound.engineGain.gain.value;
+  sound.update(.8, true, false, false); assert.ok(sound.engineGain.gain.value > legacyLevel);
+});
+
+test('production physics passes actual analog drive load without changing the existing SFX argument meanings', () => {
+  const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
+  const callSite = physics.slice(physics.indexOf('  const anyAttitude ='), physics.indexOf('  // Update Live Cockpit Center'));
+  assert.ok(callSite.includes('sound.update('), 'exercise the production call site');
+  for (const driveInput of [
+    {throttle: 0, boost: 0, reverse: 0},
+    {throttle: .5, boost: 0, reverse: 0},
+    {throttle: .5, boost: .7, reverse: .4},
+    {throttle: 0, boost: 0, reverse: 1},
+  ]) {
+    let args;
+    const context = vm.createContext({
+      state: {speed: -40, maxSpeed: 80}, driveInput,
+      rollInput: 0, pitchInput: 0, yawInput: 0, airJetLeft: false, airJetRight: false, canUseRCS: true,
+      isLiftFiring: false, rearActive: true, isFrontRetroFiring: false, tireScreechIntensity: .42,
+      sound: {update(...values) { args = values; }},
+    });
+    vm.runInContext(callSite, context);
+    assert.deepEqual(args, [.5, true, false, false, .42, Math.max(...Object.values(driveInput))]);
+    const {sound} = harness(); sound.init(); sound.update(...args);
+    assert.equal(sound.engineVoice.load, args[5]);
+    assert.equal(sound.thrusterGain.gain.value, .24, 'engine load does not redefine the existing rocket audio');
   }
 });

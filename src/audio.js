@@ -2,6 +2,47 @@
 // 2. MULTI-LAYER SYNTHESIZED WEB AUDIO & COCKPIT VOICE ALERT ENGINE
 //    (Thrusters, Motor, Tire Screech, Sonic Boom, Thunder & Female Voice HUD)
 // =========================================================================
+// Original, sample-free cross-plane V8-inspired sound for the EV simulation.
+// Each bank fires four times per 720-degree cycle. Uneven bank spacing and
+// slightly different pulse strengths create a low exhaust burble, while the
+// combined eight events retain a coherent RPM-linked firing order.
+function createRoadsterV8Wave(ctx, bank) {
+  const firingSlots = bank === 0 ? [0, 3, 5, 6] : [1, 2, 4, 7];
+  const strengths = bank === 0 ? [1, 0.86, 1.04, 0.93] : [0.92, 1.02, 0.88, 1];
+  const real = new Float32Array(97);
+  const imag = new Float32Array(97);
+  for (let harmonic = 1; harmonic < real.length; harmonic++) {
+    // Rounded pressure pulses: no DC, sawtooth ramp, or hard-edged square wave.
+    const decay = 1 / Math.pow(1 + Math.pow(harmonic / 18, 2), 0.85);
+    const pulsePhase = -Math.atan(harmonic * 0.11);
+    for (let event = 0; event < firingSlots.length; event++) {
+      const phase = -2 * Math.PI * harmonic * (firingSlots[event] / 8 + bank * 0.006) + pulsePhase;
+      real[harmonic] += Math.cos(phase) * strengths[event] * decay / 4;
+      imag[harmonic] += Math.sin(phase) * strengths[event] * decay / 4;
+    }
+  }
+  return ctx.createPeriodicWave(real, imag);
+}
+
+function getRoadsterEngineVoice(speedRatio, engineLoad, isThrusting = false) {
+  const speed = Math.max(0, Math.min(1.5, Number.isFinite(speedRatio) ? speedRatio : 0));
+  // The optional sixth update argument is actual drive input, including analog
+  // throttle. Old callers retain useful speed feedback without a new dependency.
+  const load = Number.isFinite(engineLoad)
+    ? Math.max(0, Math.min(1, engineLoad)) : (isThrusting ? 0.9 : 0.28);
+  const activity = Math.max(Math.min(1, speed / 0.045), Number.isFinite(engineLoad) ? load * 0.65 : 0);
+  const rpm = Math.min(6800, 850 + speed * 3100 + load * 950);
+  return {
+    speed, load, rpm,
+    cycleFrequency: rpm / 120,
+    cutoff: Math.min(2200, 360 + speed * 580 + load * 1120),
+    gain: activity * (0.021 + Math.min(1, speed) * 0.025 + load * 0.038),
+    textureGain: 0.018 + load * 0.105,
+    bodyGain: 0.18 + load * 0.08,
+    bankGain: 0.44 + load * 0.10,
+  };
+}
+
 class SoundEngine {
   constructor() {
     this.ctx = null;
@@ -12,6 +53,13 @@ class SoundEngine {
     this.engineOvertoneOsc = null;
     this.engineFilter = null;
     this.engineOvertoneGain = null;
+    this.engineBankGain = null;
+    this.engineBodyOsc = null;
+    this.engineBodyGain = null;
+    this.engineTextureGain = null;
+    this.engineTextureFilter = null;
+    this.engineSaturator = null;
+    this.engineVoice = null;
     this.simulatedEngineGain = null;
     this.simulatedEngineEnabled = true;
     try { this.simulatedEngineEnabled = localStorage.getItem('roadster.engineSound.enabled.v1') !== 'false'; } catch (_) {}
@@ -55,35 +103,73 @@ class SoundEngine {
       this.thrusterGain.connect(this.ctx.destination);
       whiteNoise.start(0);
 
-      // 2. Soft electric-drive hum: rounded sine tones, no buzzy sawtooth idle
+      // 2. V8-style EV sound: two irregular exhaust banks, a crank-order
+      // bass layer and a restrained, load-sensitive combustion-air texture.
       this.engineOsc = this.ctx.createOscillator();
-      this.engineOsc.type = 'sine';
-      this.engineOsc.frequency.value = 58;
+      this.engineOsc.setPeriodicWave(createRoadsterV8Wave(this.ctx, 0));
+      this.engineOsc.frequency.value = 850 / 120;
+      this.engineBankGain = this.ctx.createGain();
+      this.engineBankGain.gain.value = 0.60;
       this.engineOvertoneOsc = this.ctx.createOscillator();
-      this.engineOvertoneOsc.type = 'sine';
-      this.engineOvertoneOsc.frequency.value = 116;
+      this.engineOvertoneOsc.setPeriodicWave(createRoadsterV8Wave(this.ctx, 1));
+      this.engineOvertoneOsc.frequency.value = 850 / 120;
       this.engineOvertoneGain = this.ctx.createGain();
-      this.engineOvertoneGain.gain.value = 0.12;
+      this.engineOvertoneGain.gain.value = 0.44;
+
+      this.engineBodyOsc = this.ctx.createOscillator();
+      this.engineBodyOsc.type = 'sine';
+      this.engineBodyOsc.frequency.value = 850 / 60;
+      this.engineBodyGain = this.ctx.createGain();
+      this.engineBodyGain.gain.value = 0.18;
+
+      const engineTexture = this.ctx.createBufferSource();
+      engineTexture.buffer = this.noiseBuffer;
+      engineTexture.loop = true;
+      this.engineTextureFilter = this.ctx.createBiquadFilter();
+      this.engineTextureFilter.type = 'bandpass';
+      this.engineTextureFilter.frequency.value = 650;
+      this.engineTextureFilter.Q.value = 0.65;
+      this.engineTextureGain = this.ctx.createGain();
+      this.engineTextureGain.gain.value = 0.018;
+
       this.engineFilter = this.ctx.createBiquadFilter();
       this.engineFilter.type = 'lowpass';
-      this.engineFilter.frequency.value = 420;
-      this.engineFilter.Q.value = 0.5;
-
+      this.engineFilter.frequency.value = 360;
+      this.engineFilter.Q.value = 0.55;
+      // Soft saturation gives exhaust body and provides a hard digital peak
+      // bound for this voice only. Its output is <= 1, then gain stays <= .084.
+      this.engineSaturator = this.ctx.createWaveShaper();
+      const curve = new Float32Array(2049);
+      for (let i = 0; i < curve.length; i++) {
+        const x = i * 2 / (curve.length - 1) - 1;
+        curve[i] = Math.tanh(x * 1.35) / Math.tanh(1.35);
+      }
+      this.engineSaturator.curve = curve;
+      this.engineSaturator.oversample = '2x';
       this.engineGain = this.ctx.createGain();
       this.engineGain.gain.value = 0.0;
-      // Only the simulated motor passes through this preference gate. Thrusters,
-      // tires, alerts and the separate HTML music player keep their own controls.
+      // Only the simulated engine passes through this preference gate.
+      // Thrusters, tires, alerts and BGM retain their existing controls.
       this.simulatedEngineGain = this.ctx.createGain();
       this.simulatedEngineGain.gain.value = this.simulatedEngineEnabled ? 1 : 0;
 
-      this.engineOsc.connect(this.engineFilter);
+      this.engineOsc.connect(this.engineBankGain);
+      this.engineBankGain.connect(this.engineFilter);
       this.engineOvertoneOsc.connect(this.engineOvertoneGain);
       this.engineOvertoneGain.connect(this.engineFilter);
-      this.engineFilter.connect(this.engineGain);
+      this.engineBodyOsc.connect(this.engineBodyGain);
+      this.engineBodyGain.connect(this.engineFilter);
+      engineTexture.connect(this.engineTextureFilter);
+      this.engineTextureFilter.connect(this.engineTextureGain);
+      this.engineTextureGain.connect(this.engineFilter);
+      this.engineFilter.connect(this.engineSaturator);
+      this.engineSaturator.connect(this.engineGain);
       this.engineGain.connect(this.simulatedEngineGain);
       this.simulatedEngineGain.connect(this.ctx.destination);
       this.engineOsc.start(0);
       this.engineOvertoneOsc.start(0);
+      this.engineBodyOsc.start(0);
+      engineTexture.start(0);
 
       // 3. Ground Tire Grip Screech Synthesizer (High-Speed Cornering & Hard Braking)
       this.screechOsc = this.ctx.createOscillator();
@@ -123,7 +209,7 @@ class SoundEngine {
     }
   }
 
-  update(speedRatio, isThrusting, isAttitudeFiring, isDestroyed, tireScreechIntensity = 0.0) {
+  update(speedRatio, isThrusting, isAttitudeFiring, isDestroyed, tireScreechIntensity = 0.0, engineLoad) {
     if (!this.initialized || !this.ctx) return;
     if (!this.enabled || isDestroyed) {
       this.thrusterGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.04);
@@ -138,14 +224,19 @@ class SoundEngine {
     const thrustLevel = (isThrusting ? 0.24 : 0) + (isAttitudeFiring ? 0.09 : 0);
     this.thrusterGain.gain.setTargetAtTime(thrustLevel, now, 0.04);
 
-    // Keep speed feedback low and smooth. Silence at rest avoids the old
-    // continuous sawtooth drone; boost no longer jumps the pitch by 85 Hz.
-    const motorSpeed = Math.max(0, Math.min(1.5, Number.isFinite(speedRatio) ? speedRatio : 0));
-    const motorFreq = 58 + motorSpeed * 92 + (isThrusting ? 6 : 0);
-    this.engineOsc.frequency.setTargetAtTime(motorFreq, now, 0.09);
-    this.engineOvertoneOsc.frequency.setTargetAtTime(motorFreq * 2, now, 0.09);
-    const movingLevel = Math.min(1, motorSpeed / 0.06);
-    this.engineGain.gain.setTargetAtTime(movingLevel * (0.007 + Math.min(1, motorSpeed) * 0.019), now, 0.09);
+    // Continuous virtual RPM suits an electric drivetrain: no invented gear
+    // shifts, no boost pitch jump. All changes ramp to avoid throttle/toggle pops.
+    const voice = getRoadsterEngineVoice(speedRatio, engineLoad, isThrusting);
+    this.engineVoice = voice;
+    this.engineOsc.frequency.setTargetAtTime(voice.cycleFrequency, now, 0.10);
+    this.engineOvertoneOsc.frequency.setTargetAtTime(voice.cycleFrequency, now, 0.10);
+    this.engineBodyOsc.frequency.setTargetAtTime(voice.cycleFrequency * 2, now, 0.10);
+    this.engineFilter.frequency.setTargetAtTime(voice.cutoff, now, 0.08);
+    this.engineTextureFilter.frequency.setTargetAtTime(450 + voice.load * 850 + voice.speed * 180, now, 0.10);
+    this.engineTextureGain.gain.setTargetAtTime(voice.textureGain, now, 0.08);
+    this.engineBodyGain.gain.setTargetAtTime(voice.bodyGain, now, 0.08);
+    this.engineOvertoneGain.gain.setTargetAtTime(voice.bankGain, now, 0.08);
+    this.engineGain.gain.setTargetAtTime(voice.gain, now, 0.08);
 
     if (this.screechGain && this.screechOsc) {
       const clampScreech = Math.min(0.16, Math.max(0.0, tireScreechIntensity * 0.14));

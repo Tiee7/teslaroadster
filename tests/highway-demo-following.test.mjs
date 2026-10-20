@@ -29,101 +29,64 @@ function predictionProbe(h, dt) {
     prediction: probe.trajectory([3], dt).at(-1) };
 }
 
-for (const fps of [30, 60, 144]) {
-  test(`boxed-in demo follows a slower wall using ordinary paid H braking at ${fps} Hz`, () => {
-    const h = simulation({ speed: 65, vz: -65 }, wall());
-    let braking = 0, paidRetro = 0, minimumGap = Infinity;
-    for (let frame = 0; frame < 4 * fps; frame++) {
-      const result = h.step(1 / fps);
-      assert.ok(result, 'vehicle stays live');
-      const input = result.frame.input;
-      exclusive(input, `at frame ${frame}`);
-      if (input.brake > 0) {
-        braking++;
-        assert.equal(input.throttle, 0); assert.equal(input.boost, 0);
-        assert.equal(result.isRearThrusterFiring, false);
-        paidRetro += result.airConsumedThisFrame;
-      }
-      minimumGap = Math.min(minimumGap, ...h.cars.filter(other => Math.abs(other.mesh.position.x - h.state.x) < 1.85)
-        .map(other => Math.abs(other.mesh.position.z)));
-      assert.equal(h.state.y, 0, 'feasible ground following never needs a hop');
-      assert.ok(h.state.airRemaining >= 0 && h.state.airRemaining <= 10);
-      assert.ok(Math.abs(h.state.x - 2.5) < 0.01, 'a blocked wall does not induce lane-stripe hunting');
-    }
-    assert.ok(braking > 0); assert.ok(paidRetro > 0, 'high-speed H burns the real shared tank');
-    assert.ok(minimumGap > 4.62 / 2 + 2.15, 'real collision envelope stays clear');
-    assert.ok(h.state.speed >= 20 && h.state.speed <= 24, 'settles to the ordinary NPC flow');
-    assert.equal(h.launches.length, 0); assert.equal(h.impacts.length, 0); assert.equal(h.state.isDestroyed, false);
-  });
-
-  test(`clearing congestion releases following immediately and recovers 220+ with real boost at ${fps} Hz`, () => {
-    const h = simulation({ speed: 65, vz: -65 }, wall());
-    for (let frame = 0; frame < 4 * fps; frame++) h.step(1 / fps);
-    assert.ok(h.state.speed < 220 / 3.6, 'this scenario actually slowed for congestion');
-    const gas = h.state.airRemaining, before = h.state.speed;
-    h.cars.length = 0;
-    const released = h.step(1 / fps);
-    assert.equal(released.frame.input.brake, 0);
-    assert.equal(released.frame.input.throttle, 1);
-    assert.notEqual(released.frame.status, 'follow');
-    assert.ok(h.state.speed > before);
-    let boostFrames = 0;
-    for (let frame = 0; frame < 6 * fps; frame++) {
-      const beforeGas = h.state.airRemaining;
-      const result = h.step(1 / fps);
+const floor=220/3.6;
+for(const fps of [30,60,144]) {
+  test(`slow boxed-in wall uses a real paid hop instead of braking below 220 at ${fps} Hz`,()=>{
+    const h=simulation({speed:65,vz:-65},wall());
+    let peak=0,air=0,minimum=Infinity,landed=false,paid=0;
+    for(let frame=0;frame<4*fps;frame++){
+      const before=h.state.speed,result=h.step(1/fps);assert.ok(result);
       exclusive(result.frame.input);
-      assert.equal(result.frame.input.brake, 0);
-      if (result.isRearThrusterFiring) {
-        boostFrames++;
-        assert.ok(Math.abs(beforeGas - h.state.airRemaining - 0.85 / fps) < 1e-9, 'each real boost frame pays its tank debit');
-      }
+      if(result.frame.input.brake>0)assert.ok(h.state.speed>=floor-1e-9,'combined mechanical + paid retro stays above floor');
+      minimum=Math.min(minimum,h.state.speed);peak=Math.max(peak,h.state.y);paid+=result.airConsumedThisFrame;
+      if(result.isAirborne){air+=1/fps;assert.equal(result.frame.input.throttle,0);assert.equal(result.frame.input.boost,0);assert.equal(result.frame.input.lift,0);}
+      if(h.launches.length&&h.state.y===0)landed=true;
+      assert.ok(h.state.speed-before<=40/fps+.01,'no speed assignment');
+      assert.ok(h.state.airRemaining>=0&&h.state.airRemaining<=10);
     }
-    assert.ok(boostFrames > 0); assert.ok(gas > 0);
-    assert.ok(h.state.speed * 3.6 >= 220);
-    assert.equal(h.launches.length, 0); assert.equal(h.impacts.length, 0); assert.equal(h.state.isDestroyed, false);
+    assert.equal(h.launches.length,1);assert.ok(minimum>=floor);assert.ok(peak>=2&&peak<4);
+    assert.ok(air<1.6);assert.equal(landed,true);assert.ok(paid>1);
+    assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);
+  });
+  test(`braking above 220 remains paid and releases both propulsion requests at ${fps} Hz`,()=>{
+    const h=simulation({speed:75,vz:-75},wall(80,62));let frames=0,paid=0;
+    for(let i=0;i<4*fps;i++){
+      const f=h.step(1/fps);exclusive(f.frame.input);
+      if(f.frame.input.brake>0){frames++;paid+=f.airConsumedThisFrame;assert.equal(f.isRearThrusterFiring,false);}
+      assert.ok(h.state.speed>=floor-1e-9);
+    }
+    assert.ok(frames>0);assert.ok(paid>0);assert.equal(h.launches.length,0);assert.equal(h.impacts.length,0);
   });
 }
 
-test('empty/freefall tank retains mechanical following brakes and only ordinary grounded recharge', () => {
-  for (const airRemaining of [0, 1]) {
-    const h = simulation({ speed: 65, vz: -65, airRemaining, isFreefalling: true }, wall(60));
-    const result = h.step(1 / 60);
-    exclusive(result.frame.input);
-    assert.equal(result.frame.input.brake, 1);
-    assert.equal(result.frame.input.throttle, 0); assert.equal(result.frame.input.boost, 0);
-    assert.equal(result.frame.jump, false); assert.equal(result.airConsumedThisFrame, 0);
-    assert.ok(Math.abs(h.state.speed - (65 - 38 / 60)) < 1e-9, 'no unpaid retro impulse while freefall blocks the jets');
-    assert.ok(Math.abs(h.state.airRemaining - (airRemaining + 3.4 / 60)) < 1e-9);
+test('prediction and actual H obey the floor across fractional tanks, freefall and long frames',()=>{
+  for(const dt of [1/144,1/60,1/30,.1])for(const [airRemaining,isFreefalling] of [[10,false],[.001,false],[0,true],[1,true],[2.49,true]]){
+    const h=simulation({speed:75,vz:-75,airRemaining,isFreefalling},wall(80,62));
+    // One predictor sample is 25ms; compare that exact integration step.
+    const {prediction,controls}=predictionProbe(h,.025);
+    exclusive(controls);assert.ok(controls.brake>0);
+    const f=h.step(.025);assert.equal(f.frame.input.brake,controls.brake);
+    assert.ok(prediction.speed>=floor);assert.ok(h.state.speed>=floor);
+    assert.ok(Math.abs(prediction.speed-h.state.speed)<1e-6);
+    assert.ok(Math.abs(prediction.gas-h.state.airRemaining)<1e-9);
+    const direct=simulation({speed:floor+.01,vz:-floor-.01,airRemaining,isFreefalling},wall(80,62));
+    const near=direct.step(dt);if(near.frame.input.brake>0)assert.ok(direct.state.speed>=floor-1e-9,'actual brake cannot cross the floor');
+    else if(isFreefalling)assert.equal(near.frame.input.brake,0,'unavailable boost may coast naturally, never command a below-floor brake');
   }
 });
 
-test('last tank fraction pays only its proportional following-brake impulse', () => {
-  const h = simulation({ speed: 65, vz: -65, airRemaining: 0.001, isFreefalling: false }, wall(60));
-  const result = h.step(1 / 60);
-  exclusive(result.frame.input);
-  assert.equal(result.frame.input.brake, 1); assert.equal(result.frame.jump, false);
-  assert.equal(result.airConsumedThisFrame, 0.001); assert.equal(h.state.airRemaining, 0);
-  // Production telemetry rounds this tiny initial gas mass to 0.0 kg.
-  const expected = 65 - 38 / 60 - 80000 / 1850 * (0.001 / 0.55);
-  assert.ok(Math.abs(h.state.speed - expected) < 1e-9);
-});
-
-test('following trajectory matches real H impulse, fractional gas and longitudinal venue scale', () => {
-  for (const [airRemaining, isFreefalling] of [[10, false], [0.001, false], [0, true], [1, true], [2.49, true]]) {
-    const h = simulation({ speed: 65, vz: -65, airRemaining, isFreefalling }, wall(60));
-    const dt = 0.025;
-    const { prediction, controls } = predictionProbe(h, dt);
-    exclusive(controls); assert.equal(controls.brake, 1);
-    const result = h.step(dt);
-    assert.equal(result.frame.input.brake, controls.brake);
-    assert.ok(Math.abs(prediction.speed - h.state.speed) < 1e-6, `same paid speed impulse for gas=${airRemaining}, freefall=${isFreefalling}`);
-    assert.ok(Math.abs(prediction.gas - h.state.airRemaining) < 1e-9);
-    assert.equal(prediction.freefall, h.state.isFreefalling);
-    assert.ok(Math.abs(prediction.metres - h.state.speed * dt) < 1e-6, 'predictor stores unscaled physical forward metres');
-    const front = h.cars.find(other => other.laneIdx === 3);
-    const expectedZ = -60 + (prediction.metres - 22 * dt) * 1.65;
-    assert.ok(Math.abs(front.mesh.position.z - expectedZ) < 1e-6, 'world scale is applied exactly once to relative traffic travel');
+test('empty/freefall tanks cannot synthesize a hop or fuel to clear an unavoidable wall',()=>{
+  for(const airRemaining of [0,.001,1]){
+    const h=simulation({speed:65,vz:-65,airRemaining,isFreefalling:true},wall(20));
+    const f=h.step(1/60);exclusive(f.frame.input);
+    assert.equal(f.frame.jump,false);assert.equal(f.frame.input.brake,0);
+    assert.equal(f.isRearThrusterFiring,false);assert.equal(f.airConsumedThisFrame,0);
+    assert.ok(h.state.airRemaining<=airRemaining+3.4/60+1e-9,'only ordinary grounded recharge');
+    assert.ok(h.state.speed>floor);
   }
+  const h=simulation({speed:65,vz:-65,airRemaining:0,isFreefalling:true},wall(8));
+  for(let i=0;i<20&&!h.state.isDestroyed;i++)h.step(1/60);
+  assert.equal(h.launches.length,0);assert.ok(h.impacts.length>0,'real collision remains possible with no usable gas');
 });
 
 test('manual W/H precedence remains unchanged before and after demo ownership', async () => {
@@ -147,4 +110,22 @@ test('manual W/H precedence remains unchanged before and after demo ownership', 
     assert.ok(braking.state.speed < powered.state.speed);
     assert.equal(braking.demo.isBusy(), false);
   }
+});
+
+test('binding long-frame brake clip predicts and pays only the impulse down to 220',()=>{
+ for(const dt of [.25,.5]){
+  const h=simulation({speed:65,vz:-65,airRemaining:10,isFreefalling:false},wall(6,61.7));
+  predictionProbe(h,dt);
+  const probe=h.context.followingPredictionProbe,leader=probe.live.find(o=>o.x===2.5);
+  const controls=probe.controlsFor(65,10,false,leader,0,0,false,dt);
+  assert.ok(controls.brake>0&&controls.brake<.21,'floor cap binds');exclusive(controls);
+  const input={...h.context.followingPredictionFactory.neutral(),throttle:controls.throttle,boost:controls.boost,brake:controls.brake};
+  h.cars.length=0;
+  h.context.demoPlanner.step=()=>({input,jump:false,status:'brake',targetLane:3});
+  const result=h.step(dt);
+  assert.ok(h.state.speed>=floor);assert.ok(h.state.speed<floor+1e-5);
+  assert.ok(Math.abs(result.airConsumedThisFrame-.026544270131153243)<1e-9);
+  assert.ok(Math.abs(h.state.airRemaining-(10-result.airConsumedThisFrame))<1e-9);
+  assert.equal(h.impacts.length,0);assert.equal(h.launches.length,0);
+ }
 });

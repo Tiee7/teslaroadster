@@ -60,6 +60,73 @@ const highwayTraffic = (() => {
       desiredSpeed: car.desiredSpeed, length: car.length || 4.62, lanes: [...new Set([...occupiedLanes(car), ...footprint(car.mesh.position.x, lanes)])] };
   }
 
+  // Explicit speculative-only allocation path. Shared arrays are immutable;
+  // reservations replace own.lanes rather than mutating an occupancy array.
+  // Keep the original reserved-lane-first Set order, including reversed merges.
+  const forecastMaskLanes = Array.from({ length: 64 }, (_, mask) =>
+    Object.freeze(Array.from({ length: 6 }, (_, i) => i).filter(i => mask & (1 << i))));
+  const forecastOccupancy = new Array(6 * 7 * 64);
+  function forecastFootprint(x, lanes) {
+    let mask = 0;
+    for (let i = 0; i < 6; i++) if (Math.abs(lanes[i] - x) <= FOOTPRINT_RADIUS) mask |= 1 << i;
+    return forecastMaskLanes[mask];
+  }
+  function forecastOccupied(car, lanes) {
+    const first = car.laneChange ? car.laneChange.from : car.laneIdx;
+    const second = car.laneChange ? car.laneChange.to : 6;
+    if (!Number.isInteger(first) || first < 0 || first >= 6 ||
+        !Number.isInteger(second) || second < 0 || second > 6 || (car.laneChange && second === 6))
+      return [...new Set([...occupiedLanes(car), ...footprint(car.mesh.position.x, lanes)])];
+    let mask = 0;
+    for (let i = 0; i < 6; i++) if (Math.abs(lanes[i] - car.mesh.position.x) <= FOOTPRINT_RADIUS) mask |= 1 << i;
+    const key = (first * 7 + second) * 64 + mask;
+    let occupied = forecastOccupancy[key];
+    if (!occupied) {
+      occupied = [first];
+      let included = 1 << first;
+      if (second < 6 && second !== first) { occupied.push(second); included |= 1 << second; }
+      for (let i = 0; i < 6; i++) if ((mask & (1 << i)) && !(included & (1 << i))) occupied.push(i);
+      forecastOccupancy[key] = Object.freeze(occupied);
+    }
+    return occupied;
+  }
+  function forecastSnapshot(car, lanes) {
+    if (!Number.isFinite(car.desiredSpeed)) car.desiredSpeed = car.speed;
+    if (!Number.isInteger(car.laneIdx)) car.laneIdx = closestLane(car.mesh.position.x, lanes);
+    return { car, x: car.mesh.position.x, z: car.mesh.position.z, speed: car.speed,
+      desiredSpeed: car.desiredSpeed, length: car.length || 4.62, lanes: forecastOccupied(car, lanes) };
+  }
+  const forecastLaneKey = Symbol('forecast lane members');
+  function forecastIndexLanes(traffic) {
+    const members = [[], [], [], [], [], []];
+    // Original traffic ordinal is the tie-breaker. Do not sort by z: lengths,
+    // equal-z contacts and exact floating-point gap comparisons still matter.
+    for (const other of traffic) for (const lane of other.lanes) {
+      if (!Number.isInteger(lane) || lane < 0 || lane >= 6) continue;
+      const list = members[lane];
+      if (list[list.length - 1] !== other) list.push(other);
+    }
+    traffic[forecastLaneKey] = members;
+  }
+  function forecastMembers(traffic, lane) {
+    return Number.isInteger(lane) && lane >= 0 && lane < 6 ? traffic[forecastLaneKey]?.[lane] : null;
+  }
+  function forecastSafeAdjacentGap(own, lane, traffic, scale) {
+    return safeAdjacentGap(own, lane, forecastMembers(traffic, lane) || traffic, scale);
+  }
+  function forecastLeaderFor(own, lane, traffic) {
+    let leader = null, nearestGap = 0;
+    const members = forecastMembers(traffic, lane);
+    for (const other of members || traffic) {
+      if (own === other || (!members && !other.lanes.includes(lane)) || other.z > own.z) continue;
+      const gap = own.z - other.z - (own.length + other.length) / 2;
+      if (!leader || gap < nearestGap) { leader = other; nearestGap = gap; }
+    }
+    // All consumers use only speed and gap. Preserve the safety override and
+    // strict comparison above; equal-gap leaders retain original array order.
+    return leader ? { speed: leader.frontSafetySpeed ?? leader.speed, gap: nearestGap } : null;
+  }
+
   function leaderFor(own, lane, traffic) {
     let leader = null;
     for (const other of traffic) {
@@ -70,18 +137,21 @@ const highwayTraffic = (() => {
     return leader;
   }
 
-  function initializeSpeeds(cars, lanes, scale, player) {
+  function initializeSpeeds(cars, lanes, scale, player, forecast = false) {
+    const snapshotFor = forecast ? forecastSnapshot : snapshot;
+    const leaderForStep = forecast ? forecastLeaderFor : leaderFor;
+    const footprintFor = forecast ? forecastFootprint : footprint;
     // Birth placement is balanced, not a safety promise: a 180 km/h racer can
     // otherwise start behind a 70 km/h car inside its braking distance.
     // Resolve ahead-to-rear once, retaining every personal cruise target.
     const initial = cars.filter(car => car.mode === 'highway' && !car.highwaySpeedInitialized)
       .sort((a, b) => a.mesh.position.z - b.mesh.position.z);
     for (const car of initial) {
-      const own = snapshot(car, lanes);
-      const traffic = cars.filter(other => other.mode === 'highway' && other !== car && other.highwayWaitingToSpawn === undefined).map(other => snapshot(other, lanes));
-      if (player && player.y < 4) traffic.push({ z: player.z || 0, speed: Math.max(0, -player.vz), length: 4.62, lanes: footprint(player.x, lanes) });
+      const own = snapshotFor(car, lanes);
+      const traffic = cars.filter(other => other.mode === 'highway' && other !== car && other.highwayWaitingToSpawn === undefined).map(other => snapshotFor(other, lanes));
+      if (player && player.y < 4) traffic.push({ z: player.z || 0, speed: Math.max(0, -player.vz), length: 4.62, lanes: footprintFor(player.x, lanes) });
       for (const lane of own.lanes) {
-        const leader = leaderFor(own, lane, traffic);
+        const leader = leaderForStep(own, lane, traffic);
         if (!leader) continue;
         const safeSpeed = Math.sqrt(Math.max(0, leader.speed) ** 2 + 2 * MAX_BRAKE * Math.max(0, leader.gap - MIN_GAP - 2) / scale);
         car.speed = Math.min(car.speed, safeSpeed);
@@ -124,7 +194,67 @@ const highwayTraffic = (() => {
     return true;
   }
 
-  function respawn(car, cars, lanes, ahead, player, scale) {
+  const forecastReserves = (car, lane) => car.laneChange
+    ? car.laneChange.from === lane || car.laneChange.to === lane : car.laneIdx === lane;
+  function forecastSpawnIndex(own, cars, lanes, player, scale) {
+    const occupancy = [0, 0, 0, 0, 0, 0], neighbors = [], live = [];
+    for (const other of cars) {
+      if (other === own || other.mode !== 'highway' || other.highwayWaitingToSpawn !== undefined) continue;
+      live.push(other);
+      for (let lane = 0; lane < 6; lane++) if (forecastReserves(other, lane)) occupancy[lane]++;
+      const neighbor = { car: other, z: other.mesh.position.z,
+        speed: other.blastTimer > 0 ? blastSpeed(other, player, scale) : other.speed,
+        length: other.length || 4.62, lanes: forecastOccupied(other, lanes) };
+      if (other.blastTimer > 0) {
+        const bounds = blastSafetyBounds(other, player, scale);
+        neighbor.frontSafetySpeed = bounds.frontSafetySpeed; neighbor.rearSafetySpeed = bounds.rearSafetySpeed;
+      }
+      neighbors.push(neighbor);
+    }
+    if (player.y < 4) neighbors.push({ z: player.z || 0, speed: -player.vz, length: 4.62,
+      lanes: forecastFootprint(player.x, lanes) });
+    forecastIndexLanes(neighbors);
+    return { occupancy, neighbors, live, aheadGaps: new Map(), behindGaps: new Map() };
+  }
+  function forecastRespawn(car, cars, lanes, ahead, player, scale, shared) {
+    const holder = shared || { index: null };
+    const index = holder.index || (holder.index = forecastSpawnIndex(car, cars, lanes, player, scale));
+    const candidates = ahead ? [-452, -470, -434, -416] : [55, 39, 23];
+    const order = lanes.map((_, i) => i).sort((a, b) => index.occupancy[a] - index.occupancy[b] || Math.abs(a - car.laneIdx) - Math.abs(b - car.laneIdx));
+    const length = car.length || 4.62, byLength = ahead ? index.aheadGaps : index.behindGaps;
+    let slots = byLength.get(length);
+    if (!slots) {
+      slots = candidates.map(z => lanes.map((_, lane) => {
+        let gap = Infinity;
+        for (const other of index.live) {
+          if (!forecastReserves(other, lane) && Math.abs(other.mesh.position.x - lanes[lane]) > 2.3) continue;
+          // Keep the exact original operation order. Splitting the two half
+          // lengths can round differently at the 24 m admission boundary.
+          gap = Math.min(gap, Math.abs(z - other.mesh.position.z) - (length + (other.length || 4.62)) / 2);
+        }
+        return gap;
+      }));
+      byLength.set(length, slots);
+    }
+    for (let slot = 0; slot < candidates.length; slot++) {
+      const z = candidates[slot];
+      for (const lane of order) {
+        const atSpawn = { car, z, speed: car.speed, length };
+        // Each waiting driver still pays its OWN speed/profile safety check.
+        // Only immutable slot geometry is shared, never a failure decision.
+        if (slots[slot][lane] >= 24 && forecastSafeAdjacentGap(atSpawn, lane, index.neighbors, scale)) {
+          reset(car, lane, lanes); car.mesh.position.z = z;
+          holder.index = null; // Newly live car changes every later retry.
+          return;
+        }
+      }
+    }
+    car.highwayWaitingToSpawn = ahead; car.mesh.visible = false;
+    car.mesh.position.z = ahead ? -510 : 95; car.vx = 0;
+  }
+
+  function respawn(car, cars, lanes, ahead, player, scale, forecast = false, shared = null) {
+    if (forecast) return forecastRespawn(car, cars, lanes, ahead, player, scale, shared);
     const candidates = ahead ? [-452, -470, -434, -416] : [55, 39, 23];
     const occupancy = lanes.map((_, lane) => cars.filter(other => other !== car && other.mode === 'highway' && other.highwayWaitingToSpawn === undefined && occupiedLanes(other).includes(lane)).length);
     const order = lanes.map((_, i) => i).sort((a, b) => occupancy[a] - occupancy[b] || Math.abs(a - car.laneIdx) - Math.abs(b - car.laneIdx));
@@ -164,18 +294,24 @@ const highwayTraffic = (() => {
     car.vx = 0;
   }
 
-  function step(cars, player, dt, lanes, scale) {
+  function step(cars, player, dt, lanes, scale, forecast = false) {
+    const snapshotFor = forecast ? forecastSnapshot : snapshot;
+    const leaderForStep = forecast ? forecastLeaderFor : leaderFor;
+    const footprintFor = forecast ? forecastFootprint : footprint;
+    const adjacentGapFor = forecast ? forecastSafeAdjacentGap : safeAdjacentGap;
     for (const car of cars) car.highwayPassedThisFrame = false;
     if (!(dt > 0)) return;
-    initializeSpeeds(cars, lanes, scale, player);
+    initializeSpeeds(cars, lanes, scale, player, forecast);
     // Bound braking/decisions to 60 Hz or finer, including a slow render frame.
     const count = Math.max(1, Math.ceil(dt / (1 / 60) - 1e-8));
     const h = dt / count;
     for (let substep = 0; substep < count; substep++) {
       const live = [];
+      const forecastSpawns = forecast ? { index: null } : null;
       for (const car of cars) {
         if (car.mode !== 'highway') continue;
         if (car.blastTimer > 0) {
+          if (forecastSpawns) forecastSpawns.index = null;
           car.laneChange = null;
           car.blockedTime = 0;
           car.laneChangeCooldown = profile(car).cooldown;
@@ -185,43 +321,53 @@ const highwayTraffic = (() => {
         if (car.highwayWaitingToSpawn !== undefined) {
           const ahead = car.highwayWaitingToSpawn;
           delete car.highwayWaitingToSpawn;
-          respawn(car, cars, lanes, ahead, player, scale);
+          respawn(car, cars, lanes, ahead, player, scale, forecast, forecastSpawns);
           if (car.highwayWaitingToSpawn !== undefined) continue;
         }
         if (car.recoverHighwayLane) {
+          if (forecastSpawns) forecastSpawns.index = null;
           car.laneIdx = closestLane(car.mesh.position.x, lanes);
           car.targetX = lanes[car.laneIdx];
         }
         car.laneChangeCooldown = Math.max(0, (car.laneChangeCooldown || 0) - h);
-        live.push(snapshot(car, lanes));
+        if (forecastSpawns && !Number.isInteger(car.laneIdx)) forecastSpawns.index = null;
+        live.push(snapshotFor(car, lanes));
       }
       const traffic = live.slice();
       // A low player car occupies every lane swept by its lateral motion during
       // a merge. High flight remains free of road traffic interactions.
       if (player.y < 4) {
         const endX = player.x + (player.vx || 0) * MERGE_SECONDS;
-        const occupied = lanes.flatMap((x, i) => x >= Math.min(player.x, endX) - FOOTPRINT_RADIUS && x <= Math.max(player.x, endX) + FOOTPRINT_RADIUS ? [i] : []);
+        let occupied;
+        if (forecast) {
+          let mask = 0;
+          const low = Math.min(player.x, endX) - FOOTPRINT_RADIUS, high = Math.max(player.x, endX) + FOOTPRINT_RADIUS;
+          for (let i = 0; i < 6; i++) if (lanes[i] >= low && lanes[i] <= high) mask |= 1 << i;
+          occupied = forecastMaskLanes[mask];
+        } else occupied = lanes.flatMap((x, i) => x >= Math.min(player.x, endX) - FOOTPRINT_RADIUS && x <= Math.max(player.x, endX) + FOOTPRINT_RADIUS ? [i] : []);
         traffic.push({ x: player.x, z: player.z || 0, speed: -player.vz, length: 4.62, lanes: occupied });
       }
       // Keep airborne blast physics separate, but don't merge into a low wreck.
       for (const car of cars) {
         if (car.mode !== 'highway' || !(car.blastTimer > 0) || (car.y || 0) >= 4) continue;
         traffic.push({ z: car.mesh.position.z, speed: blastSpeed(car, player, scale), ...blastSafetyBounds(car, player, scale), length: car.length || 4.62,
-          lanes: footprint(car.mesh.position.x, lanes) });
+          lanes: footprintFor(car.mesh.position.x, lanes) });
       }
+
+      if (forecast) forecastIndexLanes(traffic);
 
       // A shockwave may leave a car off-center. Rejoin only after checking
       // the destination, while reserving every lane under its actual footprint.
       for (const own of live) {
         const car = own.car;
-        if (!car.recoverHighwayLane || !safeAdjacentGap(own, car.laneIdx, traffic, scale)) continue;
+        if (!car.recoverHighwayLane || !adjacentGapFor(own, car.laneIdx, traffic, scale)) continue;
         car.laneChange = { from: car.laneIdx, to: car.laneIdx, startX: own.x, elapsed: 0 };
         delete car.recoverHighwayLane;
       }
       const requests = [];
       for (const own of live) {
         const car = own.car;
-        const leader = leaderFor(own, car.laneIdx, traffic);
+        const leader = leaderForStep(own, car.laneIdx, traffic);
         const blocked = leader && leader.gap > MIN_GAP && leader.gap < lookAhead(own, scale) && own.desiredSpeed - leader.speed >= profile(car).advantage;
         car.blockedTime = blocked ? (car.blockedTime || 0) + h : 0;
         if (blocked && !car.recoverHighwayLane && !car.laneChange && car.laneChangeCooldown === 0 && car.blockedTime >= profile(car).reaction) requests.push({ own, leader });
@@ -231,7 +377,7 @@ const highwayTraffic = (() => {
         const car = own.car;
         const options = [car.laneIdx - 1, car.laneIdx + 1].filter(lane => lane >= 0 && lane < lanes.length)
           .map(lane => {
-            const targetLeader = leaderFor(own, lane, traffic);
+            const targetLeader = leaderForStep(own, lane, traffic);
             const usefulGap = MIN_GAP + own.desiredSpeed * scale * profile(car).headway;
             const flow = targetLeader ? Math.min(own.desiredSpeed, targetLeader.speed + Math.max(0, targetLeader.gap - usefulGap) / (scale * 3)) : own.desiredSpeed;
             const useful = !targetLeader || targetLeader.speed - leader.speed >= profile(car).advantage || targetLeader.gap - leader.gap > (car.driverType === 'racer' ? 20 : 30);
@@ -244,13 +390,16 @@ const highwayTraffic = (() => {
         car.targetX = lanes[to];
         car.blockedTime = 0;
         own.lanes = [car.laneIdx, to]; // Reservation is visible to every later request.
+        // Rebuild immediately in original ordinal order before the next
+        // request sees this reservation. Never reuse a pre-approval index.
+        if (forecast) forecastIndexLanes(traffic);
       }
 
       const plans = live.map(own => {
         const driver = profile(own.car);
         let acceleration = driver.acceleration * (1 - Math.pow(own.speed / Math.max(1, own.desiredSpeed), 4));
         for (const lane of own.lanes) {
-          const leader = leaderFor(own, lane, traffic);
+          const leader = leaderForStep(own, lane, traffic);
           if (!leader) continue;
           const v = Math.max(0, own.speed) * scale;
           const closing = (own.speed - leader.speed) * scale;
@@ -285,10 +434,15 @@ const highwayTraffic = (() => {
         car.mesh.rotation.z = -clamp(lateralSpeed * 0.018, -0.06, 0.06);
         if (car.mesh.position.z > 65) {
           car.highwayPassedThisFrame = true;
-          respawn(car, cars, lanes, true, player, scale);
-        } else if (car.mesh.position.z < -480) respawn(car, cars, lanes, false, player, scale);
+          respawn(car, cars, lanes, true, player, scale, forecast);
+        } else if (car.mesh.position.z < -480) respawn(car, cars, lanes, false, player, scale, forecast);
       }
     }
   }
-  return Object.freeze({ step, createDrivers, initializeSpeeds });
+  function forecastStep(cars, player, dt, lanes, scale) {
+    // The six-lane cache is an allocation optimization, never an approximation
+    // for another road layout. Other lane counts retain the ordinary path.
+    return step(cars, player, dt, lanes, scale, lanes.length === 6);
+  }
+  return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds });
 })();

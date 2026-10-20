@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-20T11:33:57.745Z",
+  "oldArtifactSha256": "f9e5783f3905c61c3de322f3a7759b44ec9bf113dd9dd5446dfd62dc00feebf9",
+  "oldManifest": {
+    "src/config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "src/physics-main.js": "a1c049f611ad419109533fc27f6e4a4a4ed150d3dbdb32fa8dde751474cc8307",
+    "src/highway-demo.js": "3cd0dca79b78ae6a7a85bd92443a2340cd9273f02f15e993af5489e9353a466a",
+    "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "src/ui-hud.js": "60a63ba8dece14c8efec292054dbe1aa0554a56f5618afeb9f8db9e475440e9d",
+    "src/audio.js": "d56cf64cb9f4711399eaab29ed5c89ddc67e35b03bab825adcc1420b3b091925",
+    "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+    "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
+  },
+  "currentPinnedSourcesVerified": [
+    "src/config.js",
+    "src/physics-main.js",
+    "src/highway-demo.js",
+    "src/highway-traffic.js",
+    "src/ui-hud.js",
+    "src/audio.js",
+    "tests/helpers/demo-harness.mjs",
+    "tests/helpers/vendor/three-r128-MathUtils.mjs"
+  ],
+  "nextManifest": {
+    "src/config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "src/physics-main.js": "548a8bb80f984ddafa5da17a75e71d7f703a77890af90c88fba9c40924053df2",
+    "src/highway-demo.js": "3cd0dca79b78ae6a7a85bd92443a2340cd9273f02f15e993af5489e9353a466a",
+    "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "src/ui-hud.js": "60a63ba8dece14c8efec292054dbe1aa0554a56f5618afeb9f8db9e475440e9d",
+    "src/audio.js": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+    "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+    "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
+  },
+  "oldNumeric": "cb4aa0c07c2eb14414aef08ae9856ceb884eb0cf7057f4cd23653f0fc448eeb4",
+  "nextNumeric": "cb4aa0c07c2eb14414aef08ae9856ceb884eb0cf7057f4cd23653f0fc448eeb4",
+  "numericUnchanged": true,
+  "reason": "Checked-in browser artifact not regenerated after full-file source identity updated; numeric body is unchanged and hard-pinned. Production driver remains exact3cd; no isolated tactic promoted."
+}

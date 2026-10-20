@@ -376,10 +376,10 @@ function advanceAirHandling(dt, isAirborne) {
     return 0;
   }
   if (!Number.isFinite(state.jumpInertiaSeconds)) return dt;
-  // A low demo hop retains its paid launch vector for at most one second.
+  // A finite demo hop may retain its paid launch vector through its planned arc.
   // Manual O and ordinary flight keep their existing quarter-second grace.
   const grace = Number.isFinite(state.jumpInertiaGraceSeconds)
-    ? Math.max(JUMP_INERTIA_GRACE_SECONDS, Math.min(1.0, state.jumpInertiaGraceSeconds)) : JUMP_INERTIA_GRACE_SECONDS;
+    ? Math.max(JUMP_INERTIA_GRACE_SECONDS, Math.min(2.4, state.jumpInertiaGraceSeconds)) : JUMP_INERTIA_GRACE_SECONDS;
   const before = state.jumpInertiaSeconds;
   const after = before + dt;
   const integratedBlend = seconds => {
@@ -1979,7 +1979,8 @@ function updateSimulation(dt) {
     isLiftFiring || rearActive || isFrontRetroFiring,
     anyAttitude || isFrontRetroFiring,
     false,
-    tireScreechIntensity
+    tireScreechIntensity,
+    Math.max(driveInput.throttle, driveInput.boost, driveInput.reverse)
   );
 
   // Update Live Cockpit Center Touchscreen & Speed/Rain Overlay Canvas
@@ -2174,9 +2175,14 @@ function animate(now) {
   requestAnimationFrame(animate);
   // Snapshot the score before any simulation step beyond the real-time deadline.
   window.RoadsterRanked?.tick(now);
+  const frameSeconds = (now - lastTime) / 1000;
   const dt = Math.min(0.05, (now - lastTime) / 1000);
   lastTime = now;
-  updateSimulation(dt);
+  if (window.RoadsterDemo?.isActive()) {
+    window.RoadsterDemo.advanceFrame(frameSeconds, updateSimulation);
+  } else {
+    updateSimulation(dt);
+  }
   window.RoadsterTaxi?.tick();
   if (state.isDestroyed) updateDestroyedScores();
   window.RoadsterTrafficAssets?.updateLods(trafficCars, camera.position);

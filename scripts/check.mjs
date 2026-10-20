@@ -1,6 +1,8 @@
+import { verifyBrowserStaticProjectionBuild } from '../verification/demo-continuous/emit-browser-static-projection.mjs';
 import { readFileSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
+verifyBrowserStaticProjectionBuild('src/demo-numeric-projection.js');
 const root = readFileSync('index.html', 'utf8');
 for (const dir of ['api', 'lib', 'src', 'scripts', 'tests']) {
   for (const file of readdirSync(dir).filter(f => /\.(?:m?js)$/.test(f))) {

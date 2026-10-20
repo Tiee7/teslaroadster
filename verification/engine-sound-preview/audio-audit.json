@@ -1,0 +1,112 @@
+{
+  "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+  "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+  "sourceSha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+  "sampleRate": 44100,
+  "duration": 12,
+  "peak": 0.06742797791957855,
+  "rms": 0.01740402202885255,
+  "mean": -0.00012695232117716201,
+  "maxStep": 0.008062574162977398,
+  "segments": {
+    "rest": {
+      "rms": 0,
+      "peak": 0
+    },
+    "lowLoad": {
+      "rms": 0.01199032477906983,
+      "peak": 0.03172161057591438
+    },
+    "highLoad": {
+      "rms": 0.025902805946362475,
+      "peak": 0.06581529229879379
+    },
+    "coast": {
+      "rms": 0.010499424987653466,
+      "peak": 0.02780633233487606
+    },
+    "muted": {
+      "rms": 9.812999010931245e-18,
+      "peak": 1.8923561751119344e-16
+    },
+    "restarted": {
+      "rms": 0.023705444662226533,
+      "peak": 0.05934915319085121
+    },
+    "destroyed": {
+      "rms": 1.7134334403729139e-9,
+      "peak": 1.667344839972884e-8
+    },
+    "recovered": {
+      "rms": 0.023678487750911106,
+      "peak": 0.0598837286233902
+    }
+  },
+  "voices": [
+    {
+      "time": 0,
+      "rpm": 850,
+      "gain": 0
+    },
+    {
+      "time": 1,
+      "rpm": 1525.5,
+      "gain": 0.0401
+    },
+    {
+      "time": 2,
+      "rpm": 1525.5,
+      "gain": 0.0401
+    },
+    {
+      "time": 3,
+      "rpm": 2357,
+      "gain": 0.061975
+    },
+    {
+      "time": 4,
+      "rpm": 3070,
+      "gain": 0.06772500000000001
+    },
+    {
+      "time": 5,
+      "rpm": 3783,
+      "gain": 0.07347500000000001
+    },
+    {
+      "time": 6,
+      "rpm": 4496,
+      "gain": 0.079225
+    },
+    {
+      "time": 7,
+      "rpm": 3330,
+      "gain": 0.04100000000000001
+    },
+    {
+      "time": 8,
+      "rpm": 4137.5,
+      "gain": 0.0733
+    },
+    {
+      "time": 9,
+      "rpm": 4137.5,
+      "gain": 0.0733
+    },
+    {
+      "time": 10,
+      "rpm": 4137.5,
+      "gain": 0
+    },
+    {
+      "time": 11,
+      "rpm": 4137.5,
+      "gain": 0.0733
+    },
+    {
+      "time": 12,
+      "rpm": 4137.5,
+      "gain": 0.0733
+    }
+  ]
+}

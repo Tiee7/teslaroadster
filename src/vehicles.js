@@ -1081,11 +1081,12 @@ wheelSpecs.forEach((ws) => {
 const nozzleMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.92, roughness: 0.18, side: THREE.DoubleSide });
 const flangeMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.85, roughness: 0.3, side: THREE.DoubleSide });
 const heatTintMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-// Cold gas is represented by one short, open, fading envelope per physical
-// outlet. It is a readable gameplay cue, not luminous combustion or measured CFD.
-const plumeMatMain = { tint: [0.87, 0.95, 1.0], opacity: 0.34 };
-const plumeMatLift = { tint: [0.82, 0.92, 0.98], opacity: 0.30 };
-const plumeMatRCS = { tint: [0.88, 0.95, 1.0], opacity: 0.28 };
+// One pressure-driven, open cold-gas envelope per physical outlet. The dense
+// white throat opens into a turbulent wake, without luminous combustion,
+// particle pools or a claim of measured CFD / official-video reconstruction.
+const plumeMatMain = { tint: [0.91, 0.97, 1.0], opacity: 0.50 };
+const plumeMatLift = { tint: [0.88, 0.95, 0.99], opacity: 0.44 };
+const plumeMatRCS = { tint: [0.91, 0.97, 1.0], opacity: 0.38 };
 const coldGasTime = { value: 0 };
 const thrusterPlumeState = new WeakMap();
 const allThrusterPlumes = [];
@@ -1098,7 +1099,9 @@ function createColdGasEnvelopeGeometry() {
   const positions = [], uvs = [], indices = [], rows = 12, sides = 12;
   for (let row = 0; row <= rows; row++) {
     const v = row / rows;
-    const r = 0.56 + 0.66 * Math.sin(Math.min(1, v * 1.5) * Math.PI * 0.5);
+    // Keep the exact mouth radius; expansion happens downstream of the body.
+    // A broad, taper-faded wake reads as pressurized gas rather than a thin rod.
+    const r = 0.56 + 2.40 * Math.sin(Math.min(1, v * 1.15) * Math.PI * 0.5);
     for (let side = 0; side <= sides; side++) {
       const u = side / sides, angle = u * Math.PI * 2;
       positions.push(Math.cos(angle) * r, Math.sin(angle) * r, v);
@@ -1129,10 +1132,13 @@ const coldGasFragmentShader = `
   uniform vec3 uTint; uniform float uOpacity; uniform float uPower; uniform float uTime;
   varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
   void main() {
-    float axial = smoothstep(0.0, 0.035, vUv.y) * (1.0 - smoothstep(0.12, 1.0, vUv.y));
-    float facing = 0.20 + 0.80 * pow(abs(dot(normalize(vNormal), normalize(vView))), 0.65);
-    float wisps = 0.78 + 0.22 * sin(vUv.y * 30.0 - uTime * 17.0 + sin(vUv.x * 37.0));
-    float alpha = uOpacity * uPower * axial * facing * wisps;
+    float axial = smoothstep(0.0, 0.018, vUv.y) * (1.0 - smoothstep(0.26, 1.0, vUv.y));
+    float facing = 0.30 + 0.70 * pow(abs(dot(normalize(vNormal), normalize(vView))), 0.65);
+    // Fast downstream compression and torn longitudinal filaments share the
+    // same surface. No opaque caps, separate shock disks or additive bloom.
+    float filaments = 0.77 + 0.23 * sin(vUv.x * 37.6991 + sin(vUv.y * 31.0 - uTime * 29.0));
+    float pressure = 0.86 + 0.14 * sin(vUv.y * 56.0 - uTime * 46.0);
+    float alpha = uOpacity * uPower * axial * facing * filaments * pressure;
     if (alpha < 0.002) discard;
     gl_FragColor = vec4(uTint, alpha);
   }
@@ -1217,7 +1223,7 @@ const rearPlumes = [];
   propellantLine.position.set(rx, 0.12, -0.06);
   rearNozzlesGimbalGroup.add(flange, gimbalBall, noz, lipRing, innerBell, pintle, propellantLine);
 
-  const plume = createThrusterPlume(0.092, 1.35, plumeMatMain, new THREE.Vector3(0, 0, 1));
+  const plume = createThrusterPlume(0.092, 2.35, plumeMatMain, new THREE.Vector3(0, 0, 1));
   plume.position.set(rx, 0, 0.17);
   rearNozzlesGimbalGroup.add(plume);
   rearPlumes.push(plume);
@@ -1267,7 +1273,7 @@ function updateSonicCondensation(dt, crossedThreshold, isCockpitFpv) {
   if (sonicCondensationAge >= 1 - 1e-8) sonicCondensationAge = 1;
   const pulse = Math.sin(Math.PI * sonicCondensationAge);
   sonicBoomConeGroup.visible = sonicCondensationAge < 1 && !isCockpitFpv && !state.isDestroyed;
-  sonicCondensationMaterial.uniforms.uOpacity.value = Math.max(0, pulse) * 0.16;
+  sonicCondensationMaterial.uniforms.uOpacity.value = Math.max(0, pulse) * 0.20;
   if (!sonicBoomConeGroup.visible) return;
   // Follow actual travel, including sideways/backward flight, using reusable scratch values.
   carMeshGroup.getWorldQuaternion(sonicLocalQuaternion).invert();
@@ -1281,15 +1287,15 @@ function updateSonicCondensation(dt, crossedThreshold, isCockpitFpv) {
 // Attitude commands reuse these real outlets, rather than inventing mid-air jets.
 const liftPlumes = [], descendPlumes = [];
 for (const z of [-1.1, 1.1]) for (const x of [-0.8, 0.8]) {
-  const lift = createThrusterPlume(0.095, 1.15, plumeMatLift, new THREE.Vector3(0, -1, 0));
+  const lift = createThrusterPlume(0.095, 1.65, plumeMatLift, new THREE.Vector3(0, -1, 0));
   lift.position.set(x < 0 ? -0.65 : 0.65, 0.119, z < 0 ? -0.72 : 0.72); carMeshGroup.add(lift); addColdGasOutlet(lift, 0.069); liftPlumes.push(lift);
-  const top = createThrusterPlume(0.058, 0.65, plumeMatRCS, new THREE.Vector3(0, 1, 0));
+  const top = createThrusterPlume(0.058, 0.90, plumeMatRCS, new THREE.Vector3(0, 1, 0));
   top.position.set(x, z < 0 ? 0.79 : 0.90, z); carMeshGroup.add(top); addColdGasOutlet(top, 0.043); descendPlumes.push(top);
 }
 
 const frontRetroNozzles = [], frontRetroPlumes = [];
 for (const x of [-0.34, 0.34]) {
-  const plume = createThrusterPlume(0.060, 1.05, plumeMatRCS, new THREE.Vector3(0, 0, -1));
+  const plume = createThrusterPlume(0.060, 1.35, plumeMatRCS, new THREE.Vector3(0, 0, -1));
   plume.position.set(x, 0.24, -2.32); carMeshGroup.add(plume);
   frontRetroNozzles.push(addColdGasOutlet(plume, 0.043)); frontRetroPlumes.push(plume);
 }
@@ -1297,7 +1303,7 @@ for (const x of [-0.34, 0.34]) {
 const rcsPlumes = {};
 for (const z of [-0.7, 0.7]) for (const side of [-1, 1]) {
   const name = (z < 0 ? 'front' : 'rear') + (side < 0 ? 'Left' : 'Right');
-  const plume = createThrusterPlume(0.050, 0.58, plumeMatRCS, new THREE.Vector3(side, 0, 0));
+  const plume = createThrusterPlume(0.050, 0.82, plumeMatRCS, new THREE.Vector3(side, 0, 0));
   plume.name = 'side-rcs-' + name; plume.position.set(side * 1.01, 0.45, z);
   carMeshGroup.add(plume); addColdGasOutlet(plume, 0.036); rcsPlumes[name] = plume;
 }
