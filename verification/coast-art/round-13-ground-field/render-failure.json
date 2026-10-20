@@ -1,0 +1,10 @@
+{
+  "observedUTC": "2026-10-20T20:24:33Z",
+  "startedUTC": "2026-10-20T20:23:22Z",
+  "shellExitCode": 137,
+  "lastProgress": "Sample1/24; Blender scene-reported164.37MB, not OS peakRSS",
+  "cause": "Unknown; not asserted OOM",
+  "producedRender": false,
+  "retryNotBeforeUTC": "2026-10-20T20:29:33Z",
+  "safeCorrection": "Packed float texture staging and release of transient Python triangle-expansion buffers after exact native mesh construction; no safety setting, quality, geometry, threads or resolution changed"
+}

@@ -19,7 +19,7 @@ test('actual map art keeps a bounded sample street, separate texture ownership a
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),root=coast.enter(scene,T);root.updateMatrixWorld(true);
- const m=coast.metrics();assert.equal(m.ownedTextures,15);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);
+ const m=coast.metrics();assert.equal(m.ownedTextures,16);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);
  const props=[];const color=new T.Color(),matrix=new T.Matrix4(),world=new T.Matrix4();
  const windowMesh=root.getObjectByName('coast-sample-framed-glazing');assert.ok(windowMesh.count>=20,'multiple real framed shop/upper-floor apertures');
  for(const name of ['coast-sample-shop-awnings','coast-sample-balcony-metal','coast-sample-timber-details','coast-sample-parcel-paving','coast-sample-planter-shrubs'])assert.ok(root.getObjectByName(name),name);
@@ -48,7 +48,7 @@ test('five map art entry/exit cycles dispose every owned texture/material/geomet
   root.traverse(o=>{if(o.isInstancedMesh)inst.add(o);if(o.geometry)g.add(o.geometry);for(const mat of [].concat(o.material||[])){m.add(mat);for(const key of ['map','bumpMap','roughnessMap','normalMap','emissiveMap'])if(mat[key])t.add(mat[key]);}});
   if(scene.environment?.isTexture){t.add(scene.environment);if(scene.environment.isCubeTexture)for(const face of scene.environment.image)t.add(face);}
   const observed=new Map();for(const resource of [...g,...m,...t,...inst]){observed.set(resource,0);resource.addEventListener('dispose',()=>observed.set(resource,observed.get(resource)+1));}
-  assert.equal(t.size,15);coast.tick(1/30);coast.weather({rain:true});coast.leave();coast.leave();
+  assert.equal(t.size,16);coast.tick(1/30);coast.weather({rain:true});coast.leave();coast.leave();
   for(const count of observed.values())assert.equal(count,1,'owned GPU resource disposed exactly once');
   assert.equal(root.children.length,0,'a retained detached root does not keep disposed matrices/materials alive');assert.equal(scene.children.length,1);assert.equal(coast.metrics().ownedTextures,0);assert.equal(coast.metrics().textureBytes,0);
  }
@@ -160,18 +160,18 @@ test('whole-district apertures have four outward faces, selective masked emissio
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(430,0,0);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T),meta=root.userData.coastArtDistrict;
  assert.equal(root.getObjectByName('coast-dark-window-bands'),undefined);assert.equal(root.getObjectByName('coast-original-shop-houses').count,132);assert.equal(meta.entryCount,129);
- const windows=[root.getObjectByName('coast-district-window-sashes'),root.getObjectByName('coast-district-selected-lit-windows')],pool=root.getObjectByName('coast-district-near-window-reveals');
- assert.equal(windows[0].count+windows[1].count,meta.windowCount);assert.ok(meta.windowCount>17000&&meta.windowCount<19000);
+ const windows=[root.getObjectByName('coast-district-window-sashes'),root.getObjectByName('coast-district-selected-lit-windows'),root.getObjectByName('coast-district-window-sashes-transom'),root.getObjectByName('coast-district-selected-lit-windows-transom')],pool=root.getObjectByName('coast-district-near-window-reveals');
+ assert.equal(windows.reduce((n,m)=>n+m.count,0),meta.windowCount);assert.ok(meta.windowCount>14000&&meta.windowCount<19000);
  const matrix=new T.Matrix4(),point=new T.Vector3(),normal=new T.Vector3(),coverage=new Map();
  for(const mesh of windows)for(let i=0;i<mesh.count;i++){
   mesh.getMatrixAt(i,matrix);point.setFromMatrixPosition(matrix);normal.set(1,0,0).transformDirection(matrix);
   const bi=coast.layout().buildings.findIndex(b=>point.y<b.height&&point.x>=b.minX-.07&&point.x<=b.maxX+.07&&point.z>=b.minZ-.07&&point.z<=b.maxZ+.07);
-  assert.ok(bi>=0);const b=coast.layout().buildings[bi];assert.ok(normal.dot(point.clone().sub(new T.Vector3(b.x,point.y,b.z)))>0,'front faces are not culled toward their own solid wall');
+  assert.ok(bi>=0);assert.equal(mesh.userData.coastArt.facadeFamily,meta.families.find(r=>r.buildingIndex===bi).family,'one coherent atlas family per whole building');const b=coast.layout().buildings[bi];assert.ok(normal.dot(point.clone().sub(new T.Vector3(b.x,point.y,b.z)))>0,'front faces are not culled toward their own solid wall');
   const face=Math.abs(normal.x)>.9?(normal.x<0?'west':'east'):(normal.z<0?'north':'south');if(!coverage.has(bi))coverage.set(bi,new Set());coverage.get(bi).add(face);
  }
  assert.equal(coverage.size,129);for(const faces of coverage.values())assert.equal(faces.size,4);
- assert.equal(windows[1].material.emissiveMap.image.width,64);assert.equal(windows[0].material.map,windows[1].material.map);
- const mask=windows[1].material.emissiveMap.image.data;assert.equal(mask[(20*64+7)*4],0);assert.ok(mask[(20*64+8)*4]>0);assert.ok(mask[(20*64+55)*4]>0);assert.equal(mask[(20*64+56)*4],0);
+ assert.equal(windows[1].material.emissiveMap.image.width,128);assert.equal(windows[0].material.map,windows[1].material.map);
+ const mask=windows[1].material.emissiveMap.image.data;assert.equal(mask[(20*128+7)*4],0);assert.ok(mask[(20*128+8)*4]>0);assert.ok(mask[(20*128+55)*4]>0);assert.equal(mask[(20*128+56)*4],0);
  assert.equal(pool.userData.coastArt.capacity,768);assert.equal(pool.instanceMatrix.array.byteLength,49152);assert.ok(pool.count>0&&pool.count<=768);
  const buffer=pool.instanceMatrix.array,version=pool.instanceMatrix.version,refreshes=coast.metrics().detailRefreshes;
  for(let i=0;i<600;i++)coast.tick(1/60);assert.equal(pool.instanceMatrix.version,version);focus.x+=19.99;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes);focus.x+=.02;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes+1);
@@ -316,4 +316,48 @@ test('continuous roof parapets preserve exact four-box union while removing2112 
   assert.ok(Math.abs(upwardArea-(b.w*b.d-(b.w-.56)*(b.d-.56)))<.01,'open roof centre, exact .28m union ring without duplicate top corners');
  }
  coast.leave();
+});
+
+
+test('world ground field retains exact full box/independent UV, uploads once and reuses only bounded CPU pixels',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),scene=new T.Scene(),root=coast.enter(scene,T),ground=root.getObjectByName('coast-inland-ground'),texture=ground.material.map,meta=root.userData.coastGroundField;
+ assert.equal(texture.image.width,256);assert.equal(texture.image.height,256);assert.equal(texture.wrapS,T.ClampToEdgeWrapping);assert.equal(texture.wrapT,T.ClampToEdgeWrapping);assert.equal(texture.repeat.x,1);assert.equal(texture.repeat.y,1);assert.equal(texture.offset.x,0);assert.equal(texture.offset.y,0);assert.equal(texture.generateMipmaps,true);
+ assert.deepEqual(Array.from(meta.bounds),[-145,1200,-1200,1200]);assert.equal(meta.regions.length,root.userData.coastArtDistrict.entries.filter(e=>e.linkedToSidewalk).length+root.userData.coastCornerCourts.length+1);assert.equal(ground.material.color.getHex(),0xffffff);
+ const p=ground.geometry.attributes.position,uv=ground.geometry.attributes.uv;for(let i=0;i<p.count;i++){assert.ok(Math.abs(uv.getX(i)-(p.getX(i)+.5))<1e-7);assert.ok(Math.abs(uv.getY(i)-(p.getZ(i)+.5))<1e-7);}
+ const matrix=new T.Matrix4();ground.getMatrixAt(0,matrix);ground.geometry.computeBoundingBox();const bounds=ground.geometry.boundingBox.clone().applyMatrix4(matrix);for(const [a,b] of [[bounds.min.x,-145],[bounds.max.x,1200],[bounds.min.z,-1200],[bounds.max.z,1200],[bounds.min.y,-.20],[bounds.max.y,-.04]])assert.ok(Math.abs(a-b)<1e-5,'complete original box including bottom and side heights');
+ const pixels=texture.image.data,version=texture.version,checksum=sha(pixels);let disposed=0;texture.addEventListener('dispose',()=>disposed++);for(let i=0;i<600;i++)coast.tick(1/60);coast.weather({rain:true});coast.weather({marsSun:true});assert.equal(texture.image.data,pixels);assert.equal(texture.version,version);assert.equal(sha(pixels),checksum);assert.equal(pixels.byteLength,256*256*4);assert.ok(coast.metrics().cachedCpuPixelBytes<=coast.artBudget.cpuPixelCacheBytes);
+ coast.leave();assert.equal(disposed,1);assert.equal(coast.metrics().ownedTextures,0);assert.equal(coast.metrics().textureBytes,0);assert.equal(coast.metrics().cachedCpuPixelBytes,256*256*4,'explicit CPU bitmap cache, not a retained GPU texture');const again=coast.enter(scene,T).getObjectByName('coast-inland-ground').material.map;assert.notEqual(again,texture);assert.equal(again.image.data,pixels);coast.leave();
+});
+
+
+test('two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),meta=root.userData.coastArtDistrict;
+ assert.equal(meta.families.length,129);for(const r of meta.families){const b=coast.layout().buildings[r.buildingIndex];assert.equal(r.family,(Math.floor((b.z+1000)/560)+(b.x>=430?1:0))%2);}
+ const first=root.getObjectByName('coast-district-window-sashes'),second=root.getObjectByName('coast-district-window-sashes-transom'),lit=root.getObjectByName('coast-district-selected-lit-windows');assert.equal(first.material,second.material);assert.notEqual(first.geometry,second.geometry);
+ for(const [family,mesh] of [[0,first],[1,second]]){const uv=mesh.geometry.attributes.uv;for(let i=0;i<uv.count;i++)assert.ok(uv.getX(i)>=family/2&&uv.getX(i)<=(family+1)/2);}
+ const albedo=first.material.map.image.data,mask=lit.material.emissiveMap.image.data;
+ for(let family=0;family<2;family++)for(let y=0;y<64;y++)for(let x=0;x<64;x++){
+  const i=(y*128+family*64+x)*4,inner=x>=8&&x<56&&y>=8&&y<56,bar=family?(y>=44&&y<=45):(x>=31&&x<=32),glass=inner&&!bar;
+  assert.equal(mask[i]>0,glass,'emission never illuminates an old/missing mullion');if(glass)assert.ok(albedo[i]<80);else if(inner)assert.equal(albedo[i],194);
+ }
+ assert.ok(Object.isFrozen(root.userData.coastGroundField.regions));assert.ok(root.userData.coastGroundField.regions.every(Object.isFrozen));coast.leave();
+});
+
+test('curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),courts=root.userData.coastCornerCourts;assert.equal(courts.length,8);assert.equal(new Set(courts.map(r=>r.buildingIndex)).size,4);
+ for(const r of courts){const b=coast.layout().buildings[r.buildingIndex];assert.ok(r.minX<r.maxX&&r.minZ<r.maxZ);assert.ok((r.maxX-r.minX)*(r.maxZ-r.minZ)<300,'limited frontage, not a giant color rectangle');for(const o of coast.layout().obstacles)if(o!==b)assert.ok(r.maxX<=o.minX||r.minX>=o.maxX||r.maxZ<=o.minZ||r.minZ>=o.maxZ,'no false route through inherited palms/houses');for(const road of coast.roads)assert.ok(r.maxX<=road.x-road.w/2-2||r.minX>=road.x+road.w/2+2||r.maxZ<=road.z-road.d/2-2||r.minZ>=road.z+road.d/2+2);}
+ assert.ok(root.getObjectByName('coast-district-entry-paving').userData.coastArt.flat);coast.leave();
+});
+
+
+test('window/forecourt refinements retain all129 published art entrance/path poses byte for byte',{
+ skip:existsSync(runtime)?false:'Official production Three r128 required'
+},()=>{
+ const expected=JSON.parse(readFileSync(new URL('../verification/coast-art/entry-pose-contract.json',import.meta.url)));const {T,coast}=actual(),root=coast.enter(new T.Scene(),T);assert.equal(root.userData.coastArtDistrict.entries.length,expected.entries);assert.equal(sha(JSON.stringify(root.userData.coastArtDistrict.entries)),expected.sha256);coast.leave();
 });

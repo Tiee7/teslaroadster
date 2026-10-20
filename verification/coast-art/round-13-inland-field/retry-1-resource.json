@@ -1,0 +1,22 @@
+{
+  "startedUTC": "2026-10-20T20:29:33.037117+00:00",
+  "endedUTC": "2026-10-20T20:29:54.003431+00:00",
+  "seconds": 20.966352215997176,
+  "command": [
+    "blender",
+    "-b",
+    "--factory-startup",
+    "--python",
+    "verification/coast-art/render-scene.py",
+    "--",
+    "verification/coast-art/round-13-inland-field",
+    "driver-inland"
+  ],
+  "returnCode": 0,
+  "childMaxRssKiB": 461200,
+  "childUserSeconds": 36.295719,
+  "childSystemSeconds": 0.8585809999999999,
+  "sourceSha256": "55a618ffea62c27f323d446315680bc3e2a7b38907fa3d34a9f3f49a9f647ddd",
+  "adapterSha256": "1d95c4276b081f84573816ec06d33f42979d6cc05918dfcdeadcadd59cb9397f",
+  "warning": "CPU offline inspection resource report, NOT WebGL/GPU/FPS evidence; no safety settings changed."
+}

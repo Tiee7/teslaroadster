@@ -1,0 +1,83 @@
+{
+  "recordedUTC": "2026-10-20T21:01:49.859074+00:00",
+  "productionBaseline": "25f5feb1e0fd49cbf3301093500cafcba6027d37",
+  "sourceSha256": "c5c8544cf07ad332165d38b770d91e791b0c4124b72b54f12687a830c2b60dd3",
+  "allFrozenFilesUnchanged": true,
+  "frozenIdentityCount": 98,
+  "phoneAndNumericFilesExact": true,
+  "fullSerial": {
+    "pass": 687,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 958250.94718,
+    "startedUTC": "2026-10-20T20:45:17.146441+00:00",
+    "endedUTC": "2026-10-20T21:01:15.455524+00:00",
+    "log": "all-tests-serial.tap"
+  },
+  "additionalGates": {
+    "identity": 29,
+    "mirror": 3,
+    "contract": 6,
+    "oldMaps": {
+      "cases": 96,
+      "steps": 17280,
+      "objectIsComparisons": 846720,
+      "fields": 49
+    },
+    "lua": 24,
+    "check": true,
+    "build": true,
+    "independentReadOnlyReleaseBlocker": false
+  },
+  "numericalCoreSha256": "ef66db3f74dccc04be14e6f8f7424347d622de191e0a349166586d30c20bdb67",
+  "cornerSceneMetrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "cachedCpuPixelBytes": 262144,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 42,
+    "ownedMaterials": 49,
+    "ownedTextures": 16,
+    "textureBytes": 1256107,
+    "ownedGeometryBufferBytes": 417916,
+    "ownedInstanceBufferBytes": 1618744,
+    "staticMeshDraws": 80,
+    "staticTriangles": 154654,
+    "maximumStaticTriangles": 173278,
+    "nearPalms": 6,
+    "farPalms": 94,
+    "foliageRefreshes": 1,
+    "nearDetailInstances": 307,
+    "nearDetailCapacity": 768,
+    "nearDetailMatrixBytes": 49152,
+    "detailRefreshes": 1,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 104696,
+    "maximumShadowCasterTriangles": 123320,
+    "instances": 24665,
+    "buildings": 132,
+    "palms": 100,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "cpuOnlyComparison": {
+    "baseline": {
+      "coldMs": 193.890491,
+      "warmMedianMs": 131.22949900000003,
+      "warmP95Ms": 155.98216200000024
+    },
+    "combinedCurrent": {
+      "coldMs": 171.366734,
+      "warmMedianMs": 134.68419099999983,
+      "warmP95Ms": 150.4190639999997
+    }
+  },
+  "performanceBoundary": "Alternating20 complete entry/leave pairs per version, combined field/front-court/window-family changes; not isolated field delta or general speedup, and not renderer/mobile/FPS. Earlier cold field regression and shell137 retained in round13 evidence.",
+  "sourceGzipBytes": 31865,
+  "browserEvidence": "WebGL context unavailable; publication verifies exact shipped DOM source/CSS identity only",
+  "sourceGzipMethod": "node:zlib.gzipSync default compression, same as budget test"
+}

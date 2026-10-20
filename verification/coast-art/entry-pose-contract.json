@@ -1,0 +1,7 @@
+{
+  "baseline": "05770c8f51911d1006ebec1185dc2f453922b3d7",
+  "baselineProduction": "25f5feb1e0fd49cbf3301093500cafcba6027d37",
+  "entries": 129,
+  "sha256": "db356e5db64ba4cb1d789d42e7aadf655d43e98f100895b794fd2327fbde2558",
+  "scope": "Exact129 existing art door axis/side/road/link/path-end poses, not an expanded physics contract"
+}

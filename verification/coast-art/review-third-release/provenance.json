@@ -1,0 +1,236 @@
+{
+  "recordedUTC": "2026-10-20T20:55:51.736988+00:00",
+  "scope": "Offline exact-geometry CPU inspection, NOT WebGL gameplay or FPS acceptance",
+  "files": [
+    {
+      "file": "corner-before.png",
+      "bytes": 1390526,
+      "sha256": "ec60249b3e08582abd3afd49befcb71ec7f67c68b9c7e0c94a7a7a82ea07d4ea",
+      "source": {
+        "path": "/tmp/coast-before-field-e8.js",
+        "sha256": "e8e5b1b41290c10c662b7af69bb3d7cdd447c55e5217796b96bd6a13ca6600de",
+        "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+      },
+      "nativeVisualFocus": {
+        "x": 445,
+        "z": 635
+      },
+      "metrics": {
+        "active": true,
+        "builds": 1,
+        "disposals": 0,
+        "failedBuilds": 0,
+        "ownedLights": 2,
+        "shadowMapResolution": 1024,
+        "shadowSpanMetres": 160,
+        "ownedGeometries": 39,
+        "ownedMaterials": 49,
+        "ownedTextures": 15,
+        "textureBytes": 862891,
+        "ownedGeometryBufferBytes": 415396,
+        "ownedInstanceBufferBytes": 1759864,
+        "staticMeshDraws": 78,
+        "staticTriangles": 160394,
+        "maximumStaticTriangles": 177770,
+        "nearPalms": 6,
+        "farPalms": 94,
+        "foliageRefreshes": 1,
+        "nearDetailInstances": 359,
+        "nearDetailCapacity": 768,
+        "nearDetailMatrixBytes": 49152,
+        "detailRefreshes": 1,
+        "shadowCasterBatches": 30,
+        "shadowCasterTriangles": 106064,
+        "maximumShadowCasterTriangles": 123440,
+        "instances": 26922,
+        "buildings": 132,
+        "palms": 100,
+        "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+        "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+      },
+      "view": {
+        "name": "inland-corner",
+        "positionThree": [
+          445,
+          2.4,
+          635
+        ],
+        "targetThree": [
+          471,
+          2.6,
+          600
+        ],
+        "fovDeg": 60,
+        "fovAxis": "horizontal",
+        "projectionMeasuredFovXYDeg": [
+          60.00000089058408,
+          39.70814608014181
+        ],
+        "output": "inland-corner-raw.png",
+        "seconds": 24.977
+      },
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "nativeCastShadowFlagsHonored": true,
+      "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. Native per-part castShadow flags are honored; receiver/material/light/color mapping still approximates Three, not a pixel reference.",
+      "samples": 24,
+      "resolution": [
+        1180,
+        738
+      ]
+    },
+    {
+      "file": "corner-after.png",
+      "bytes": 1374332,
+      "sha256": "60a4866e9587b58aa8d35fc0feadafd6f57999ea2ce647a81afa4172c4f697e6",
+      "source": {
+        "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+        "sha256": "c5c8544cf07ad332165d38b770d91e791b0c4124b72b54f12687a830c2b60dd3",
+        "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+      },
+      "nativeVisualFocus": {
+        "x": 445,
+        "z": 635
+      },
+      "metrics": {
+        "active": true,
+        "builds": 1,
+        "disposals": 0,
+        "failedBuilds": 0,
+        "cachedCpuPixelBytes": 262144,
+        "ownedLights": 2,
+        "shadowMapResolution": 1024,
+        "shadowSpanMetres": 160,
+        "ownedGeometries": 42,
+        "ownedMaterials": 49,
+        "ownedTextures": 16,
+        "textureBytes": 1256107,
+        "ownedGeometryBufferBytes": 417916,
+        "ownedInstanceBufferBytes": 1618744,
+        "staticMeshDraws": 80,
+        "staticTriangles": 154654,
+        "maximumStaticTriangles": 173278,
+        "nearPalms": 6,
+        "farPalms": 94,
+        "foliageRefreshes": 1,
+        "nearDetailInstances": 307,
+        "nearDetailCapacity": 768,
+        "nearDetailMatrixBytes": 49152,
+        "detailRefreshes": 1,
+        "shadowCasterBatches": 30,
+        "shadowCasterTriangles": 104696,
+        "maximumShadowCasterTriangles": 123320,
+        "instances": 24665,
+        "buildings": 132,
+        "palms": 100,
+        "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+        "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+      },
+      "view": {
+        "name": "inland-corner",
+        "positionThree": [
+          445,
+          2.4,
+          635
+        ],
+        "targetThree": [
+          471,
+          2.6,
+          600
+        ],
+        "fovDeg": 60,
+        "fovAxis": "horizontal",
+        "projectionMeasuredFovXYDeg": [
+          60.00000089058408,
+          39.70814608014181
+        ],
+        "output": "inland-corner-raw.png",
+        "seconds": 23.778
+      },
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "nativeCastShadowFlagsHonored": true,
+      "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. Native per-part castShadow flags are honored; receiver/material/light/color mapping still approximates Three, not a pixel reference.",
+      "samples": 24,
+      "resolution": [
+        1180,
+        738
+      ]
+    },
+    {
+      "file": "inland-after.png",
+      "bytes": 1071433,
+      "sha256": "5afebc112227fcef46fced49a091ac4d9f87ef2ad44bbb1b8a8e5b1a216e7548",
+      "source": {
+        "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+        "sha256": "c5c8544cf07ad332165d38b770d91e791b0c4124b72b54f12687a830c2b60dd3",
+        "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+      },
+      "nativeVisualFocus": {
+        "x": 436,
+        "z": 700
+      },
+      "metrics": {
+        "active": true,
+        "builds": 1,
+        "disposals": 0,
+        "failedBuilds": 0,
+        "cachedCpuPixelBytes": 262144,
+        "ownedLights": 2,
+        "shadowMapResolution": 1024,
+        "shadowSpanMetres": 160,
+        "ownedGeometries": 42,
+        "ownedMaterials": 49,
+        "ownedTextures": 16,
+        "textureBytes": 1256107,
+        "ownedGeometryBufferBytes": 417916,
+        "ownedInstanceBufferBytes": 1618744,
+        "staticMeshDraws": 80,
+        "staticTriangles": 155014,
+        "maximumStaticTriangles": 173278,
+        "nearPalms": 6,
+        "farPalms": 94,
+        "foliageRefreshes": 1,
+        "nearDetailInstances": 322,
+        "nearDetailCapacity": 768,
+        "nearDetailMatrixBytes": 49152,
+        "detailRefreshes": 1,
+        "shadowCasterBatches": 30,
+        "shadowCasterTriangles": 105056,
+        "maximumShadowCasterTriangles": 123320,
+        "instances": 24680,
+        "buildings": 132,
+        "palms": 100,
+        "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+        "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+      },
+      "view": {
+        "name": "driver-inland",
+        "positionThree": [
+          436,
+          1.2,
+          700
+        ],
+        "targetThree": [
+          436,
+          1.2,
+          580
+        ],
+        "fovDeg": 60,
+        "fovAxis": "vertical",
+        "projectionMeasuredFovXYDeg": [
+          85.42235390468187,
+          60.00000430567895
+        ],
+        "output": "driver-inland-raw.png",
+        "seconds": 15.275
+      },
+      "renderer": "Blender 4.3.2 Cycles CPU",
+      "nativeCastShadowFlagsHonored": true,
+      "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. Native per-part castShadow flags are honored; receiver/material/light/color mapping still approximates Three, not a pixel reference.",
+      "samples": 24,
+      "resolution": [
+        1180,
+        738
+      ]
+    }
+  ]
+}

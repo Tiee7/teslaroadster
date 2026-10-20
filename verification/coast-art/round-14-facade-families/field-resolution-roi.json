@@ -1,0 +1,10 @@
+{
+  "recordedUTC": "2026-10-20T20:39:15.112170+00:00",
+  "method": "Read-only PNG RGB difference over manually bounded visible green-ground region, excluding sky/roads and green-classifying within that region. No image modification. CPU Cycles approximation only, not native Three/WebGL pixels.",
+  "mask": "520<=X<=1150;440<=Y<=620;Y<0.185*X+417;G>R+2;G>B+8 on512 image",
+  "pixels": 82624,
+  "meanAbsoluteChannelDifference255": 0.4286526917118513,
+  "p95ChannelDifference255": 3.0,
+  "maxChannelDifference255": 11,
+  "fractionPixelsAnyChannelDifferenceAbove8": 0.0001815453137103021
+}
