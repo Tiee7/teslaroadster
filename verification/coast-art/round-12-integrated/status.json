@@ -1,0 +1,166 @@
+{
+  "startedUTC": "2026-10-20T19:51:14.959864+00:00",
+  "sourceSha256": "e8e5b1b41290c10c662b7af69bb3d7cdd447c55e5217796b96bd6a13ca6600de",
+  "steps": [
+    {
+      "name": "check",
+      "command": [
+        "node",
+        "scripts/check.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:14.960017+00:00",
+      "endedUTC": "2026-10-20T19:51:21.442676+00:00",
+      "seconds": 6.482678579981439,
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "command": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:21.443360+00:00",
+      "endedUTC": "2026-10-20T19:51:21.510537+00:00",
+      "seconds": 0.0671919809828978,
+      "exitCode": 0
+    },
+    {
+      "name": "identity",
+      "command": [
+        "node",
+        "verification/demo-continuous/test-static-projection-identity-only.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:21.511226+00:00",
+      "endedUTC": "2026-10-20T19:51:21.684620+00:00",
+      "seconds": 0.17340510300709866,
+      "exitCode": 0
+    },
+    {
+      "name": "mirror",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "verification/demo-continuous/test-src-projection-mirror-identity-only.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:21.684832+00:00",
+      "endedUTC": "2026-10-20T19:51:21.932933+00:00",
+      "seconds": 0.24811911201686598,
+      "exitCode": 0
+    },
+    {
+      "name": "contract",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "verification/coastal-district/numeric-kernel-contract.test.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:21.933460+00:00",
+      "endedUTC": "2026-10-20T19:51:22.155968+00:00",
+      "seconds": 0.22252524900250137,
+      "exitCode": 0
+    },
+    {
+      "name": "old-maps",
+      "command": [
+        "node",
+        "verification/coastal-district/verify-existing-maps.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:22.156796+00:00",
+      "endedUTC": "2026-10-20T19:51:24.793771+00:00",
+      "seconds": 2.63698797399411,
+      "exitCode": 0
+    },
+    {
+      "name": "lua",
+      "command": [
+        "python3",
+        "tests/lua_runtime.py"
+      ],
+      "startedUTC": "2026-10-20T19:51:24.794008+00:00",
+      "endedUTC": "2026-10-20T19:51:25.059009+00:00",
+      "seconds": 0.2650149049877655,
+      "exitCode": 0
+    },
+    {
+      "name": "full-serial",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/air-gauge.test.mjs",
+        "tests/analytics.test.mjs",
+        "tests/attitude.test.mjs",
+        "tests/autopilot-continuous-boost.test.mjs",
+        "tests/autopilot-key-badges.test.mjs",
+        "tests/backend.test.mjs",
+        "tests/body-surface.test.mjs",
+        "tests/braking.test.mjs",
+        "tests/camera-stability.test.mjs",
+        "tests/city-scale.test.mjs",
+        "tests/coast-art-lighting.test.mjs",
+        "tests/coast-art.test.mjs",
+        "tests/coast-map.test.mjs",
+        "tests/cockpit-display-interior.test.mjs",
+        "tests/cockpit-exterior-details.test.mjs",
+        "tests/cockpit-eye-calibration.test.mjs",
+        "tests/cockpit-layout.test.mjs",
+        "tests/cockpit-rain.test.mjs",
+        "tests/crash-score.test.mjs",
+        "tests/driving-score.test.mjs",
+        "tests/engine-sound-render.test.mjs",
+        "tests/engine-sound.test.mjs",
+        "tests/freefall.test.mjs",
+        "tests/frontend.test.mjs",
+        "tests/gas-refill.test.mjs",
+        "tests/highway-demo-clock.test.mjs",
+        "tests/highway-demo-consumed-certificate.test.mjs",
+        "tests/highway-demo-continuous.test.mjs",
+        "tests/highway-demo-floor-refill.test.mjs",
+        "tests/highway-demo-following.test.mjs",
+        "tests/highway-demo-lifecycle.test.mjs",
+        "tests/highway-demo-physics.test.mjs",
+        "tests/highway-demo-planning-cost.test.mjs",
+        "tests/highway-demo-routing.test.mjs",
+        "tests/highway-demo-scheduling.test.mjs",
+        "tests/highway-demo-successor.test.mjs",
+        "tests/highway-demo-weaving.test.mjs",
+        "tests/highway-traffic-forecast.test.mjs",
+        "tests/highway-traffic.test.mjs",
+        "tests/hud-modes.test.mjs",
+        "tests/hud.test.mjs",
+        "tests/infinite-jet-prediction.test.mjs",
+        "tests/input-frame.test.mjs",
+        "tests/jet-effects.test.mjs",
+        "tests/mobile-controls.test.mjs",
+        "tests/music.test.mjs",
+        "tests/npc-source-fingerprint.test.mjs",
+        "tests/npc-traffic-assets.test.mjs",
+        "tests/npc-traffic-integration.test.mjs",
+        "tests/rain-road.test.mjs",
+        "tests/reference-flat-windshield-rear-wing.test.mjs",
+        "tests/reference-likeness.test.mjs",
+        "tests/reference-model-geometry.test.mjs",
+        "tests/reference-model.test.mjs",
+        "tests/reference-sloping-nose.test.mjs",
+        "tests/reference-tail-down.test.mjs",
+        "tests/reference-wheel-batching.test.mjs",
+        "tests/reference-window-structure.test.mjs",
+        "tests/sonic-condensation-repeat.test.mjs",
+        "tests/start-screen.test.mjs",
+        "tests/taxi.test.mjs",
+        "tests/traffic-body.test.mjs",
+        "tests/vehicle-variant-library.test.mjs"
+      ],
+      "startedUTC": "2026-10-20T19:51:25.061063+00:00",
+      "endedUTC": "2026-10-20T20:07:41.031661+00:00",
+      "seconds": 975.9706263999979,
+      "exitCode": 0
+    }
+  ],
+  "endedUTC": "2026-10-20T20:07:41.093935+00:00",
+  "allFrozenFilesUnchanged": true,
+  "phoneAndNumericFilesExact": true
+}

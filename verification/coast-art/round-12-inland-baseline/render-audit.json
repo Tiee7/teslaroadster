@@ -1,0 +1,68 @@
+{
+  "generatedAtUTC": "2026-10-20T20:11:18Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "22debfaa373996972472d1d47c02360e3c22ebd1a0b0a41d73a18311b1300e73",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "ownedGeometries": 4,
+    "ownedMaterials": 36,
+    "staticMeshDraws": 39,
+    "staticTriangles": 22972,
+    "instances": 1672,
+    "buildings": 132,
+    "palms": 100,
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "normalMapMaterials": 0,
+  "convertedTriangleCount": 22972,
+  "threads": 2,
+  "seed": 7013,
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 24,
+  "resolution": [
+    1180,
+    738
+  ],
+  "views": [
+    {
+      "name": "driver-inland",
+      "positionThree": [
+        436,
+        1.2,
+        700
+      ],
+      "targetThree": [
+        436,
+        1.2,
+        580
+      ],
+      "fovDeg": 60,
+      "fovAxis": "vertical",
+      "projectionMeasuredFovXYDeg": [
+        85.42235390468187,
+        60.00000430567895
+      ],
+      "output": "driver-inland-raw.png",
+      "seconds": 11.324
+    }
+  ]
+}

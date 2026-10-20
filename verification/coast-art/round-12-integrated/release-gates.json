@@ -1,0 +1,85 @@
+{
+  "recordedUTC": "2026-10-20T20:11:57.443641+00:00",
+  "productionBaseline": "b9be05578bbcd3fc61e5d48d4d8fdf8e1c6c372b",
+  "sourceSha256": "e8e5b1b41290c10c662b7af69bb3d7cdd447c55e5217796b96bd6a13ca6600de",
+  "allFrozenFilesUnchanged": true,
+  "phoneAndNumericFilesExact": true,
+  "fullSerial": {
+    "pass": 683,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 975912.702393,
+    "startedUTC": "2026-10-20T19:51:25.061063+00:00",
+    "endedUTC": "2026-10-20T20:07:41.031661+00:00",
+    "log": "all-tests-serial.tap"
+  },
+  "additionalGates": {
+    "identity": 29,
+    "mirror": 3,
+    "contract": 6,
+    "oldMaps": {
+      "cases": 96,
+      "steps": 17280,
+      "objectIsComparisons": 846720,
+      "fields": 49
+    },
+    "lua": 24,
+    "check": true,
+    "build": true,
+    "independentReadOnlyReleaseBlocker": false
+  },
+  "numericalCoreSha256": "ef66db3f74dccc04be14e6f8f7424347d622de191e0a349166586d30c20bdb67",
+  "spawnSceneMetrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 39,
+    "ownedMaterials": 49,
+    "ownedTextures": 15,
+    "textureBytes": 862891,
+    "ownedGeometryBufferBytes": 415396,
+    "ownedInstanceBufferBytes": 1759864,
+    "staticMeshDraws": 78,
+    "staticTriangles": 153378,
+    "maximumStaticTriangles": 177770,
+    "nearPalms": 10,
+    "farPalms": 90,
+    "foliageRefreshes": 1,
+    "nearDetailInstances": 18,
+    "nearDetailCapacity": 768,
+    "nearDetailMatrixBytes": 49152,
+    "detailRefreshes": 1,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 99048,
+    "maximumShadowCasterTriangles": 123440,
+    "instances": 26581,
+    "buildings": 132,
+    "palms": 100,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "cpuOnly": {
+    "coldFirstMs": 188.297281,
+    "warmMedianMs": 138.42262200000005,
+    "warmP95Ms": 151.63349300000027,
+    "tick": {
+      "stationary": {
+        "frames": 6000,
+        "totalMs": 22.491156000000046
+      },
+      "moving": {
+        "frames": 6000,
+        "totalMs": 74.30818499999987
+      }
+    },
+    "heapBeforeBytes": 9141896,
+    "heapAfterGcBytes": 11212640
+  },
+  "performanceBoundary": "Node CPU construction/tick only; first milestone warm median90.475ms versus current138.423ms observed. Different-time same-environment samples do not isolate an individual feature or measure GPU/mobile/FPS. Initialization regression is retained, not disguised as triangle optimization.",
+  "sourceGzipBytes": 29858,
+  "browserEvidence": "WebGL context unavailable; publication will verify exact shipped DOM source/CSS identity only"
+}

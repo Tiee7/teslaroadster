@@ -16,3 +16,11 @@ Official Three r128 source was read2026-10-20 to verify map-local texture/shadow
 - https://raw.githubusercontent.com/mrdoob/three.js/r128/src/renderers/webgl/WebGLShadowMap.js — shadow render-target ownership and instanced-batch submission boundary.
 
 No new third-party art/code files were downloaded into the application. New textures, canopy/roof meshes, signs and furniture are original deterministic project code. The official pre-existing QA runtime remains an inspection dependency, not a newly shipped asset.
+
+## Round10 original water fields
+
+The128×128 RGBA tangent normal field is original project code, analytically summing four periodic sine slopes;65,536 source bytes, mipmapped and map-owned, no network file. Continuous water/sand vertex colors, the sea-side cut closure and broken opaque foam ribbons are also original deterministic geometry, not photographs, downloaded shaders or copied art. Existing Three native MeshStandard normal mapping is reused; no new software/art dependency.
+
+## Rounds11–12 original architectural/street kit
+
+Curved parapets, balcony-door/platform assemblies, split flat plinths, corner storefronts/glyphs, forked courtyard trees, small reflecting basin, dogleg beach walks and second-boulevard markings are all original deterministic project geometry. No external asset pack, texture or software was downloaded. They reuse existing owned texture/material batches where possible; the courtyard surface shares the original water-normal texture instead of adding another image.
