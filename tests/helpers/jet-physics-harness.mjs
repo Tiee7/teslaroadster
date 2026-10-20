@@ -1,3 +1,4 @@
+import * as threeMathUtils from './vendor/three-r128-MathUtils.mjs';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 const source = name => readFileSync(new URL(`../../src/${name}`, import.meta.url), 'utf8');
@@ -6,7 +7,7 @@ export function installJetPhysics(context) {
   const section = (start, end) => { const a=physics.indexOf(start),b=physics.indexOf(end,a+start.length); if(a<0||b<a)throw Error(start);return physics.slice(a,b); };
   Object.assign(context,{cityBuildings:[],scrollingProps:[],sound:{speakAlert(){},playSonicBoom(){}},showBanner(){},triggerPhysicsCollision(){},cameraModeIndex:0});
   context.document.getElementById ||= () => ({classList:{add(){},remove(){}}});
-  context.THREE.MathUtils = {clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),lerp:(a,b,t)=>a+(b-a)*t};
+  context.THREE.MathUtils = threeMathUtils;
   vm.runInContext(`${source('driving-score.js')}\n${source('config.js')}\nconst keys={};\n${section('function wrapAnglePi(', 'function updateSimulation(')}
   function testJetFrame(dt) {
     const t=I18N[currentLang];

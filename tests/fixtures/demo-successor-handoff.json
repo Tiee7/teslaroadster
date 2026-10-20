@@ -1,0 +1,1332 @@
+{
+  "schemaVersion": 1,
+  "controllerSha256": "ec48e92822cd646aeaa64ea1b8039162a72f3ec5378ea22e25d91238bf2a890b",
+  "sourceVersions": {
+    "src/highway-demo.js": "ec48e92822cd646aeaa64ea1b8039162a72f3ec5378ea22e25d91238bf2a890b",
+    "src/highway-traffic.js": "de5c7edf116bbae8125ab1f96999cdb2f53c52c7d3c7190fa04658f38bba75be",
+    "src/physics-main.js": "819609828f2e0f295fa08616ee9751bbf0438ee9c476a2ae50eae906eb49f932",
+    "src/ui-hud.js": "60a63ba8dece14c8efec292054dbe1aa0554a56f5618afeb9f8db9e475440e9d",
+    "src/config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "tests/helpers/demo-harness.mjs": "4c9393288588eca26c45640e2856f87f63d3f27e3880d4948cbf1cb8da3d27b7",
+    "scripts/verify-demo.mjs": "999753cabe31d0944615c401ba5282b27b552ac4d2548c2e2333440ac87c2d3a"
+  },
+  "originalSeconds": 33.08333333333274,
+  "dt": 0.016666666666666666,
+  "actualState": {
+    "x": -2.4450094846497836,
+    "y": 0,
+    "z": 0,
+    "vx": -0.7616125070694502,
+    "vy": 0,
+    "vz": -70.37009833636766,
+    "airStrafeSpeed": 0,
+    "speed": 70.38117294122992,
+    "maxSpeed": 55.55555555555556,
+    "airMaxSpeed": 31.5,
+    "physicsMode": "realistic",
+    "insaneMode": false,
+    "speedUnit": "kmh",
+    "hudMode": "full",
+    "hudMinimal": false,
+    "speedMilestone": 0,
+    "tireTemp": 35,
+    "gasMassKg": 86.5,
+    "dragCoeffCd": 0.44,
+    "suspensionVelocity": 0.020458936216507264,
+    "downforceN": 0,
+    "brakeHeat": 0,
+    "wasAirBraking": false,
+    "camZoom": 0.75,
+    "isDrifting": false,
+    "driftAngle": 0,
+    "isAltitudeHold": false,
+    "holdTargetY": 0,
+    "isJumping6m": false,
+    "jumpTargetY": 7.5,
+    "driftTimer": 0,
+    "steerInput": -0.01540243405598153,
+    "steerAngle": 0.005852924941272981,
+    "roll": 0.002837881192670366,
+    "pitch": 0,
+    "attitudeIdleSeconds": 0,
+    "wasAirborne": false,
+    "jumpInertiaSeconds": null,
+    "yaw": 0.014503475351184745,
+    "vRoll": 0,
+    "vPitch": 0,
+    "vYaw": 0,
+    "accumulatedRoll": 0,
+    "airRemaining": 6.065174669817262,
+    "airUsedContinuous": 3.934825330182738,
+    "isAutoDescending8s": false,
+    "isFreefalling": false,
+    "autoStabilizer": true,
+    "hullIntegrity": 100,
+    "lastImpactG": 0,
+    "lastImpactDvKmh": 0,
+    "lastImpactEnergyKj": 0,
+    "impactCooldown": 0,
+    "isDestroyed": false,
+    "destroyReasonKey": "crashReasonThreshold",
+    "carsCleared": 0,
+    "blastedCarsCount": 0,
+    "score": 0,
+    "finalDrivingResult": null,
+    "distanceMeters": 0,
+    "distanceBySpeed": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "bannerTimer": 0,
+    "bannerType": null,
+    "hasTriggeredHelipad": false,
+    "isAutoLandingSave": false,
+    "lastAutoSaveAlt": 2.2,
+    "wasSupersonic": false,
+    "cameraShake": 0,
+    "longitudinalG": 0,
+    "lateralG": 0,
+    "prevSpeed": 42,
+    "lightningTimer": 6.5,
+    "lightningFlash": 0,
+    "jumpInertiaGraceSeconds": null,
+    "wasHandbraking": false,
+    "jumpStartY": 0,
+    "suspensionSquash": 0.017901569189443856
+  },
+  "actualCars": [
+    {
+      "mode": "highway",
+      "laneIdx": 3,
+      "targetX": 2.5,
+      "speed": 22.268042425190153,
+      "desiredSpeed": 28.07474420988001,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -22.268042425190153,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 2.5,
+          "y": 0,
+          "z": -264.6331913648936
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 3,
+      "laneChange": null,
+      "laneChangeCooldown": 0.45000000000000556,
+      "blockedTime": 1.649999999999999,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 5,
+      "targetX": 12.5,
+      "speed": 22.565119864220772,
+      "desiredSpeed": 27.755399368470535,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -22.565119864220772,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 12.5,
+          "y": 0,
+          "z": -211.08236006921797
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 3,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 2.1833333333333305,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 4,
+      "targetX": 7.5,
+      "speed": 18.877835635461725,
+      "desiredSpeed": 19.992047944752912,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -18.877835635461725,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 7.5,
+          "y": 0,
+          "z": -290.2026050749078
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0.9166666666666735,
+      "blockedTime": 0,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 3,
+      "targetX": 2.5,
+      "speed": 19.57409228148289,
+      "desiredSpeed": 23.403654790147105,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -19.57409228148289,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 2.5,
+          "y": 0,
+          "z": -54.8752670565235
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 1.5833333333333326,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 2,
+      "targetX": -2.5,
+      "speed": 19.736974027887985,
+      "desiredSpeed": 21.882721098760765,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -19.736974027887985,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -2.5,
+          "y": 0,
+          "z": -79.91058298417883
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 3.9666666666666575,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 0,
+      "targetX": -12.5,
+      "speed": 18.652941811619094,
+      "desiredSpeed": 20.570893577920895,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -18.652941811619094,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -12.5,
+          "y": 0,
+          "z": -159.526292694358
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 2.883333333333328,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 1,
+      "targetX": -7.5,
+      "speed": 19.37578757459615,
+      "desiredSpeed": 20.267584022884773,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -19.37578757459615,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -7.5,
+          "y": 0,
+          "z": -220.80997475727767
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0.08333333333333898,
+      "blockedTime": 0,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 0,
+      "targetX": -12.5,
+      "speed": 23.96500977973211,
+      "desiredSpeed": 48.32793725395782,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -23.96500977973211,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -12.5,
+          "y": 0,
+          "z": -102.35539065733876
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "racer",
+      "speedBand": 0,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 3.6333333333333253,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 2,
+      "targetX": -2.5,
+      "speed": 18.438580202176098,
+      "desiredSpeed": 19.874011194850834,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -18.438580202176098,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -2.5,
+          "y": 0,
+          "z": -13.760446355173634
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 0,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 0,
+      "targetX": -12.5,
+      "speed": 18.864659486213693,
+      "desiredSpeed": 20.160598780623534,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -18.864659486213693,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -12.5,
+          "y": 0,
+          "z": -222.0839951371045
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0.1166666666666723,
+      "blockedTime": 0,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 2,
+      "targetX": -2.5,
+      "speed": 19.812220966274968,
+      "desiredSpeed": 20.132037761828137,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -19.812220966274968,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -2.5,
+          "y": 0,
+          "z": -342.05695390169427
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 1.4833333333333387,
+      "blockedTime": 0,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 5,
+      "targetX": 12.5,
+      "speed": 19.204921115120634,
+      "desiredSpeed": 20.884451515869134,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -19.204921115120634,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 12.5,
+          "y": 0,
+          "z": -283.7075626121406
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0.8166666666666732,
+      "blockedTime": 0.09999999999999999,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 3,
+      "targetX": 2.5,
+      "speed": 20.6905420969203,
+      "desiredSpeed": 24.338538041855724,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -20.6905420969203,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 2.5,
+          "y": 0,
+          "z": -332.9442279231871
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 1.3500000000000059,
+      "blockedTime": 0.8666666666666677,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 2,
+      "targetX": -2.5,
+      "speed": 21.23564161353646,
+      "desiredSpeed": 24.11136363257861,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -21.23564161353646,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -2.5,
+          "y": 0,
+          "z": -273.5127940701447
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0.5833333333333391,
+      "blockedTime": 1.5166666666666662,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 3,
+      "targetX": 2.5,
+      "speed": 21.50800073258882,
+      "desiredSpeed": 23.94895787195613,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -21.50800073258882,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 2.5,
+          "y": 0,
+          "z": -197.64245347561993
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 2.549999999999996,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 2,
+      "targetX": -2.5,
+      "speed": 20.177186881863605,
+      "desiredSpeed": 22.278266984115664,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -20.177186881863605,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -2.5,
+          "y": 0,
+          "z": -208.3547856954958
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 0.966666666666668,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 4,
+      "targetX": 7.5,
+      "speed": 19.050378759984167,
+      "desiredSpeed": 22.16096140133838,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -19.050378759984167,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 7.5,
+          "y": 0,
+          "z": -167.97663186950032
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 2.7833333333333283,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 1,
+      "targetX": -7.5,
+      "speed": 28.76707640353587,
+      "desiredSpeed": 47.341362602957005,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -28.76707640353587,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -7.5,
+          "y": 0,
+          "z": -94.76852763791643
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "racer",
+      "speedBand": 0,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 4.583333333333322,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 2,
+      "targetX": -2.5,
+      "speed": 20.782427473479974,
+      "desiredSpeed": 24.781124611359296,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -20.782427473479974,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -2.5,
+          "y": 0,
+          "z": -143.69904409877302
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 3.099999999999994,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 1,
+      "targetX": -7.5,
+      "speed": 22.528247317337573,
+      "desiredSpeed": 24.905526954939383,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -22.528247317337573,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -7.5,
+          "y": 0,
+          "z": -275.84950072833124
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0.7500000000000063,
+      "blockedTime": 1.3000000000000003,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 4,
+      "targetX": 7.5,
+      "speed": 18.224276645199915,
+      "desiredSpeed": 19.843492739083658,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -18.224276645199915,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 7.5,
+          "y": 0,
+          "z": -228.78445618779918
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 1,
+      "laneChange": null,
+      "laneChangeCooldown": 0.21666666666667228,
+      "blockedTime": 2.083333333333331,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 1,
+      "targetX": -7.5,
+      "speed": 26.57701670208767,
+      "desiredSpeed": 44.78865698652549,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -26.57701670208767,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -7.5,
+          "y": 0,
+          "z": -147.37566634750493
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "racer",
+      "speedBand": 0,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 2.916666666666661,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 3,
+      "targetX": 2.5,
+      "speed": 21.492592523304882,
+      "desiredSpeed": 24.75816863330288,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -21.492592523304882,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": 2.5,
+          "y": 0,
+          "z": -131.49582341464026
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 2,
+      "laneChange": null,
+      "laneChangeCooldown": 0,
+      "blockedTime": 3.3333333333333264,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    },
+    {
+      "mode": "highway",
+      "laneIdx": 0,
+      "targetX": -12.5,
+      "speed": 20.82294760583606,
+      "desiredSpeed": 28.555964197342593,
+      "length": 4.62,
+      "height": 1.25,
+      "vx": 0,
+      "vz": -20.82294760583606,
+      "y": 0,
+      "blastTimer": 0,
+      "mesh": {
+        "position": {
+          "x": -12.5,
+          "y": 0,
+          "z": -285.16326453096957
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "visible": true,
+        "userData": {
+          "wheels": []
+        }
+      },
+      "driverType": "cruise",
+      "speedBand": 3,
+      "laneChange": null,
+      "laneChangeCooldown": 0.7833333333333398,
+      "blockedTime": 1.3833333333333333,
+      "highwayPassedThisFrame": false,
+      "highwaySpeedInitialized": true,
+      "blastVz": 0,
+      "blastVy": 0,
+      "blastVx": 0
+    }
+  ],
+  "originalCarIndices": [
+    0,
+    1,
+    2,
+    5,
+    6,
+    7,
+    10,
+    12,
+    14,
+    16,
+    20,
+    25,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    40,
+    41,
+    44,
+    46,
+    49
+  ],
+  "privateState": {
+    "target": 2,
+    "changing": true,
+    "dwell": 0.03333333333333333,
+    "jumpCooldown": 0.016666666666667437,
+    "charging": false,
+    "decisionCooldown": 0,
+    "refillTarget": 0,
+    "landingLane": null,
+    "previousSpeeds": [
+      22.269602586845576,
+      22.575202807516856,
+      18.87629098123698,
+      19.574981726306493,
+      19.735628825969197,
+      18.654528303412835,
+      19.376062334278963,
+      23.988097866064066,
+      18.43754879876796,
+      18.863773564143496,
+      19.811177132263047,
+      19.206080955599347,
+      20.692718958411458,
+      21.24180843825792,
+      21.507640387064765,
+      20.1760502876806,
+      19.053213046384958,
+      28.785880841425342,
+      20.782652861841928,
+      22.542517819584923,
+      18.22556984434911,
+      26.599529575653925,
+      21.492713211609598,
+      20.823008853095736
+    ]
+  },
+  "expectedB": {
+    "lane": 1,
+    "height": 2.3,
+    "duration": 0.9000000000000011,
+    "preparation": 0.3
+  },
+  "originalCaptureDecision": {
+    "input": {
+      "steer": -0.008454944998371933,
+      "throttle": 1,
+      "boost": 0,
+      "brake": 0,
+      "reverse": 0,
+      "handbrake": 0,
+      "lift": 0,
+      "descend": 0,
+      "strafe": 0,
+      "roll": 0,
+      "pitch": 0
+    },
+    "jump": false,
+    "status": "merge",
+    "targetLane": 2
+  },
+  "prefixReconstruction": {
+    "startSeconds": 30.933333333332858,
+    "durationSeconds": 2.1499999999998813,
+    "maxStateDifference": 0,
+    "differences": {
+      "x": 0,
+      "y": 0,
+      "speed": 0,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "yaw": 0,
+      "airRemaining": 0
+    }
+  },
+  "minimization": {
+    "originalCars": 52,
+    "retainedCars": 24,
+    "trials": 125,
+    "criterion": "After retaining the one-frame epsilon delay, old frame2 refuses a safe B because all36 C candidates fail. One-car deletion minimal under this criterion."
+  },
+  "originalCertifiedB": {
+    "lane": 1,
+    "height": 2.3,
+    "duration": 0.9000000000000011,
+    "preparation": 0.3,
+    "endpoint": {
+      "x": -7.4879126922557795,
+      "y": 0,
+      "z": 0,
+      "vx": -0.16775282504375016,
+      "vy": 0,
+      "vz": -69.39285422574929,
+      "airStrafeSpeed": 0,
+      "speed": 69.39340998365148,
+      "maxSpeed": 55.55555555555556,
+      "airMaxSpeed": 31.5,
+      "physicsMode": "realistic",
+      "insaneMode": false,
+      "speedUnit": "kmh",
+      "hudMode": "full",
+      "hudMinimal": false,
+      "speedMilestone": 0,
+      "tireTemp": 35,
+      "gasMassKg": 119.4,
+      "dragCoeffCd": 0.44,
+      "suspensionVelocity": 0.01684613712398188,
+      "downforceN": 0,
+      "brakeHeat": 0,
+      "wasAirBraking": false,
+      "camZoom": 0.75,
+      "isDrifting": false,
+      "driftAngle": 0,
+      "isAltitudeHold": false,
+      "holdTargetY": 0,
+      "isJumping6m": false,
+      "jumpTargetY": 2.3,
+      "driftTimer": 0,
+      "steerInput": 0.09349548051129233,
+      "steerAngle": -0.03552828259429109,
+      "roll": -0.013944312423584293,
+      "pitch": 0,
+      "attitudeIdleSeconds": 0,
+      "wasAirborne": false,
+      "jumpInertiaSeconds": null,
+      "yaw": 0.003272993444020719,
+      "vRoll": 0,
+      "vPitch": 0,
+      "vYaw": 0,
+      "accumulatedRoll": 0,
+      "airRemaining": 5.548536668954721,
+      "airUsedContinuous": 1.651296993304765,
+      "isAutoDescending8s": false,
+      "isFreefalling": false,
+      "autoStabilizer": true,
+      "hullIntegrity": 100,
+      "lastImpactG": 0,
+      "lastImpactDvKmh": 0,
+      "lastImpactEnergyKj": 0,
+      "impactCooldown": 0,
+      "isDestroyed": false,
+      "destroyReasonKey": "crashReasonThreshold",
+      "carsCleared": 0,
+      "blastedCarsCount": 0,
+      "score": 0,
+      "finalDrivingResult": null,
+      "distanceMeters": 0,
+      "distanceBySpeed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "bannerTimer": 0,
+      "bannerType": null,
+      "hasTriggeredHelipad": false,
+      "isAutoLandingSave": false,
+      "lastAutoSaveAlt": 2.2,
+      "wasSupersonic": false,
+      "cameraShake": 0,
+      "longitudinalG": 0,
+      "lateralG": 0,
+      "prevSpeed": 42,
+      "lightningTimer": 6.5,
+      "lightningFlash": 0,
+      "jumpInertiaGraceSeconds": null,
+      "wasHandbraking": false,
+      "jumpStartY": 0,
+      "suspensionSquash": 0.014740369983484145
+    }
+  },
+  "handoffRevalidatedB": {
+    "lane": 1,
+    "height": 2.3,
+    "duration": 0.9000000000000011,
+    "preparation": 0.3,
+    "endpoint": {
+      "x": -7.487943162648039,
+      "y": 0,
+      "z": 0,
+      "vx": -0.1673301386289316,
+      "vy": 0,
+      "vz": -69.48071005427359,
+      "airStrafeSpeed": 0,
+      "speed": 69.48126483249467,
+      "maxSpeed": 55.55555555555556,
+      "airMaxSpeed": 31.5,
+      "physicsMode": "realistic",
+      "insaneMode": false,
+      "speedUnit": "kmh",
+      "hudMode": "full",
+      "hudMinimal": false,
+      "speedMilestone": 0,
+      "tireTemp": 35,
+      "gasMassKg": 86.5,
+      "dragCoeffCd": 0.44,
+      "suspensionVelocity": 0.020458936216507264,
+      "downforceN": 0,
+      "brakeHeat": 0,
+      "wasAirBraking": false,
+      "camZoom": 0.75,
+      "isDrifting": false,
+      "driftAngle": 0,
+      "isAltitudeHold": false,
+      "holdTargetY": 0,
+      "isJumping6m": false,
+      "jumpTargetY": 7.5,
+      "driftTimer": 0,
+      "steerInput": -0.01540243405598153,
+      "steerAngle": 0.005852924941272981,
+      "roll": 0.002837881192670366,
+      "pitch": 0,
+      "attitudeIdleSeconds": 0,
+      "wasAirborne": false,
+      "jumpInertiaSeconds": null,
+      "yaw": 0.003267343004760736,
+      "vRoll": 0,
+      "vPitch": 0,
+      "vYaw": 0,
+      "accumulatedRoll": 0,
+      "airRemaining": 5.620215556161677,
+      "airUsedContinuous": 3.934825330182738,
+      "isAutoDescending8s": false,
+      "isFreefalling": false,
+      "autoStabilizer": true,
+      "hullIntegrity": 100,
+      "lastImpactG": 0,
+      "lastImpactDvKmh": 0,
+      "lastImpactEnergyKj": 0,
+      "impactCooldown": 0,
+      "isDestroyed": false,
+      "destroyReasonKey": "crashReasonThreshold",
+      "carsCleared": 0,
+      "blastedCarsCount": 0,
+      "score": 0,
+      "finalDrivingResult": null,
+      "distanceMeters": 0,
+      "distanceBySpeed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "bannerTimer": 0,
+      "bannerType": null,
+      "hasTriggeredHelipad": false,
+      "isAutoLandingSave": false,
+      "lastAutoSaveAlt": 2.2,
+      "wasSupersonic": false,
+      "cameraShake": 0,
+      "longitudinalG": 0,
+      "lateralG": 0,
+      "prevSpeed": 42,
+      "lightningTimer": 6.5,
+      "lightningFlash": 0,
+      "jumpInertiaGraceSeconds": null,
+      "wasHandbraking": false,
+      "jumpStartY": 0,
+      "suspensionSquash": 0.017901569189443856
+    }
+  },
+  "notes": "Initial private control variables and previous-speed observations reproduce the old policy. The first epsilon-timer skip is retained; frame2 is the C-rejection witness. The reduced car set is one-deletion minimal under the stated criterion, not proven globally minimum."
+}

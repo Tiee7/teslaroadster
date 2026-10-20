@@ -1,0 +1,346 @@
+{
+  "runtime": "128",
+  "limits": "CPU production-geometry raycasts and direct scalar evaluation of production GLSL alpha. No depth occlusion by car/road: footprint is a conservative effect-only upper bound. No GPU shader compilation, transparent blend ordering or FPS claim.",
+  "sourceHashes": {
+    "vehicles": "751bac778783a9890226fb9cc6e8f83b8aa7268c5908a086382cc35931c011f8",
+    "baselineVehicles": "976aa618031cae85d4e776508ede79afbfa14196768ba7352c94d16442ac728e",
+    "physicalSection": "70f6157e17fdd104363cef4f0e24379ab09cad80807e16133ebe32f5582227b9"
+  },
+  "physicalSectionUnchanged": true,
+  "visualUpdateIdentical": true,
+  "geometry": [
+    {
+      "label": "before",
+      "outlets": 18,
+      "sharedGeometries": 1,
+      "vertices": 169,
+      "triangles": 288,
+      "mouthRadius": 0.038080000162124636,
+      "wakeRadius": 0.08296000194549562,
+      "rearLength": 1.35,
+      "opacity": 0.34
+    },
+    {
+      "label": "after",
+      "outlets": 18,
+      "sharedGeometries": 1,
+      "vertices": 169,
+      "triangles": 288,
+      "mouthRadius": 0.038080000162124636,
+      "wakeRadius": 0.20128000259399415,
+      "rearLength": 2.35,
+      "opacity": 0.5
+    }
+  ],
+  "shaderArithmetic": {
+    "oldSinCalls": 2,
+    "newSinCalls": 3,
+    "textureReads": 0,
+    "additionalDraws": 0,
+    "additionalVertices": 0,
+    "additionalTriangles": 0
+  },
+  "projection": [
+    {
+      "label": "before",
+      "scenario": "rear",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0,
+      "denseFraction": 0,
+      "averageAlpha": 0,
+      "maxAlpha": 0,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "rear",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.008203125,
+      "denseFraction": 0,
+      "averageAlpha": 0.0017420799558373657,
+      "maxAlpha": 0.41490800085573687,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "retro",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.00078125,
+      "denseFraction": 0,
+      "averageAlpha": 0.000024429708092432202,
+      "maxAlpha": 0.031806694732015806,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "retro",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.000390625,
+      "denseFraction": 0,
+      "averageAlpha": 0.00013191044034479085,
+      "maxAlpha": 0.3376907272826646,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "lift",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.0078125,
+      "denseFraction": 0,
+      "averageAlpha": 0.002043940256041546,
+      "maxAlpha": 0.44865103097630754,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "lift",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.004296875,
+      "denseFraction": 0,
+      "averageAlpha": 0.000568892453747637,
+      "maxAlpha": 0.2549403404047801,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "combined",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.020703125,
+      "denseFraction": 0,
+      "averageAlpha": 0.005213660307826561,
+      "maxAlpha": 0.4395258155285152,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "combined",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.01640625,
+      "denseFraction": 0,
+      "averageAlpha": 0.003135599001972981,
+      "maxAlpha": 0.4828547306092398,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "sonic",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.088671875,
+      "denseFraction": 0,
+      "averageAlpha": 0.005223320093566923,
+      "maxAlpha": 0.13565422512285896,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "before",
+      "scenario": "sonic",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.033203125,
+      "denseFraction": 0,
+      "averageAlpha": 0.0032042877568140443,
+      "maxAlpha": 0.42058140201160954,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "rear",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0,
+      "denseFraction": 0,
+      "averageAlpha": 0,
+      "maxAlpha": 0,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "rear",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.0234375,
+      "denseFraction": 0.008203125,
+      "averageAlpha": 0.0090262763731635,
+      "maxAlpha": 0.8074400184095458,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "retro",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.00234375,
+      "denseFraction": 0,
+      "averageAlpha": 0.00033498065679155194,
+      "maxAlpha": 0.2659092885442289,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "retro",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.00234375,
+      "denseFraction": 0,
+      "averageAlpha": 0.0003441022153025239,
+      "maxAlpha": 0.3645102826077048,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "lift",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.0203125,
+      "denseFraction": 0.0015625,
+      "averageAlpha": 0.006586041999162606,
+      "maxAlpha": 0.5808194595471752,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "lift",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.015234375,
+      "denseFraction": 0.0015625,
+      "averageAlpha": 0.004524332015994534,
+      "maxAlpha": 0.6589151927696526,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "combined",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.06875,
+      "denseFraction": 0.005078125,
+      "averageAlpha": 0.017791740599366397,
+      "maxAlpha": 0.7078610864880479,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0.07313794954349773,
+        "anyVisible": 2
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "combined",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.0484375,
+      "denseFraction": 0.01015625,
+      "averageAlpha": 0.015787815599488997,
+      "maxAlpha": 0.8562525380091951,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "sonic",
+      "view": "default-highway-chase",
+      "samples": 2560,
+      "footprintFraction": 0.09453125,
+      "denseFraction": 0,
+      "averageAlpha": 0.006536512968479629,
+      "maxAlpha": 0.16956778140357365,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    },
+    {
+      "label": "after",
+      "scenario": "sonic",
+      "view": "rear-quarter",
+      "samples": 2560,
+      "footprintFraction": 0.04921875,
+      "denseFraction": 0.0078125,
+      "averageAlpha": 0.010887905731001499,
+      "maxAlpha": 0.8113842936402457,
+      "forwardRoadAndVehicleTargets": {
+        "samples": 84,
+        "maxAlpha": 0,
+        "anyVisible": 0
+      }
+    }
+  ],
+  "passed": true
+}

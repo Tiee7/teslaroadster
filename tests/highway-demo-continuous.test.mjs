@@ -1,0 +1,161 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {simulation,car,lanes} from './helpers/demo-harness.mjs';
+import {source} from './helpers/demo-lifecycle-harness.mjs';
+import {pool} from '../scripts/verify-demo.mjs';
+import {candidateHarness} from './helpers/demo-candidate-harness.mjs';
+const drain=iterator=>{let next;do{next=iterator.next();}while(!next.done);return next.value;};
+const intervals=[1/30,1/80,1/144,1/45,1/60];
+for(const fps of [30,60,144,'irregular'])test(`two-lane escape holds one final target and steering through the intermediate center at ${fps}`,()=>{
+ const h=simulation({speed:65,vz:-65},[car(3,-40,22),car(2,-40,22),car(4,0,65)]);
+ let elapsed=0,initialTarget=null,crossed=false,peakStep=0,oldX=h.state.x,commands=[];
+ while(elapsed<1.5&&!h.state.isDestroyed){
+  const dt=fps==='irregular'?intervals[Math.floor(elapsed*97)%intervals.length]:1/fps;
+  const f=h.step(dt);elapsed+=dt;
+  if(initialTarget===null){initialTarget=f.frame.targetLane;assert.equal(initialTarget,1,'choose final free lane directly');}
+  assert.equal(f.frame.targetLane,initialTarget,'no intermediate retarget/reselection');
+  if(oldX>-2.5&&h.state.x<=-2.5){crossed=true;assert.ok(h.state.vx < -15,'cross intermediate center without centering');assert.ok(f.frame.input.steer<-.5);assert.equal(h.stats().completed,0);}
+  peakStep=Math.max(peakStep,Math.abs(h.state.x-oldX));assert.ok(Math.abs(h.state.x-oldX)<=24*dt+1e-8);oldX=h.state.x;
+  if(h.state.x>-5)commands.push(f.frame.input.steer);
+  assert.ok(h.state.speed*3.6>=220);
+ }
+ assert.equal(crossed,true);assert.ok(commands.every(v=>v<0));assert.equal(h.stats().started,1);assert.equal(h.stats().completed,1);
+ assert.equal(h.stats().multiLane,1);assert.equal(h.stats().maxLaneSpan,2);
+ assert.equal(h.impacts.length,0);assert.equal(h.launches.length,0);assert.equal(h.state.isDestroyed,false);
+});
+
+test('full final-lane sweep rejects an intermediate hazard beyond the old short validation prefix',()=>{
+ const h=simulation({x:12.5,speed:65,vz:-65},[car(1,-80,22)]);
+ const production=source('highway-demo.js').split('// UI/lifecycle adapter.')[0]
+  .replace('const RoadsterHighwayDemoPlanner =','globalThis.finalSweepFactory =')
+  .replace(/const currentThreat\s*=[^;]+;/,m=>m+' if(!globalThis.finalSweepProbe)globalThis.finalSweepProbe={trajectory,collisionTime,safePath};');
+ vm.runInContext(production,h.context);h.context.finalSweepFactory.create(lanes,1.65).step(h.state,h.cars,1/60);
+ const {trajectory,collisionTime,safePath}=h.context.finalSweepProbe;
+ const path=trajectory([0],2.4,false),prefix=path.filter(p=>p.t<=.75);
+ assert.ok(path.arrival>1.4);assert.equal(collisionTime(prefix),Infinity);
+ assert.ok(collisionTime(path)>.75&&collisionTime(path)<path.arrival,'intervening lane hit before final arrival');
+ assert.equal(drain(safePath(0)),false,'clear final lane is insufficient');
+});
+
+for(const count of [20,36,52])test(`demo starts from zero normally with ${count} real seeded traffic drivers`,()=>{
+ const h=simulation({speed:0,vz:0},[],{seed:7});pool(h,count,7);
+ assert.equal(h.state.speed,0);let previous=0;
+ for(let i=0;i<120&&!h.state.isDestroyed;i++){
+  h.step(1/60);assert.ok(h.state.speed-previous<=40/60+.01,'no initial speed injection');previous=h.state.speed;
+  assert.ok(h.state.airRemaining>=0&&h.state.airRemaining<=10);
+ }
+ assert.equal(h.state.isDestroyed,false);assert.ok(h.state.speed>0);
+});
+
+test('high-speed low hop selects a reachable clear landing lane instead of chaining into the next car',()=>{
+ const h=simulation({x:12.5,y:.3358333333,vy:20.15,speed:69,vz:-69,vx:0,isJumping6m:true,jumpStartY:0,jumpTargetY:2.3,jumpInertiaSeconds:0,jumpInertiaGraceSeconds:.95},[car(5,-120,20)]);
+ const first=h.step(1/60);assert.equal(first.frame.targetLane,4,'high speed does not disable landing-gap selection');
+ assert.ok(first.frame.input.strafe<0);
+ let landed=false,minimum=Infinity;
+ for(let i=0;i<120&&!h.state.isDestroyed;i++){
+  const f=h.step(1/60);minimum=Math.min(minimum,h.state.speed*3.6);
+  if(f.isAirborne){assert.equal(f.frame.input.throttle,0);assert.equal(f.frame.input.boost,0);assert.equal(f.frame.input.lift,0);}
+  if(h.state.y===0)landed=true;
+ }
+ assert.equal(landed,true);assert.equal(h.impacts.length,0);assert.equal(h.launches.length,0);assert.equal(h.state.isDestroyed,false);
+ assert.ok(minimum>=220);assert.ok(Math.abs(h.state.x-7.5)<.4);
+});
+
+test('a late final arrival cannot borrow unpredicted hold time beyond the fixed horizon',()=>{
+ const h=simulation({x:14.75,speed:0,vz:0,vx:24,airRemaining:0,isFreefalling:true},[]);
+ const production=source('highway-demo.js').split('// UI/lifecycle adapter.')[0]
+  .replace('const RoadsterHighwayDemoPlanner =','globalThis.horizonFactory =')
+  .replace(/const currentThreat\s*=[^;]+;/,m=>m+' if(!globalThis.horizonProbe)globalThis.horizonProbe={trajectory,safePath};');
+ vm.runInContext(production,h.context);h.context.horizonFactory.create(lanes,1.65).step(h.state,h.cars,1/60);
+ const p=h.context.horizonProbe,path=p.trajectory([0],2.4,false);
+ assert.ok(path.arrival>2.15&&path.arrival<2.4);assert.equal(drain(p.safePath(0)),false);
+});
+
+test('landing sweep rejects the roof-rebound band even while the body envelope is clear',()=>{
+ const h=simulation({x:2.5,y:1.3,vy:-.1,vx:20,vz:-69,speed:Math.hypot(20,69),airRemaining:10},[car(3,0,69)]);
+ const production=source('highway-demo.js').split('// UI/lifecycle adapter.')[0]
+  .replace('const RoadsterHighwayDemoPlanner =','globalThis.roofFactory =')
+  .replace('        if (landingLane === null && room(target) < 18)','        globalThis.roofProbe={landingSweepClear};if (landingLane === null && room(target) < 18)');
+ vm.runInContext(production,h.context);h.context.roofFactory.create(lanes,1.65).step(h.state,h.cars,1/60);
+ assert.equal(h.context.roofProbe.landingSweepClear(4),false,'0.30m roof-contact band must not be called clear');
+ // Observe the unchanged real roof response with neutral input; this confirms
+ // why a body-only 1.10m filter was insufficient for touchdown selection.
+ h.context.demoPlanner.step=()=>({input:h.context.roofFactory.neutral(),jump:false,status:'jump',targetLane:4});
+ h.step(1/60);assert.equal(h.state.y,1.4);assert.equal(h.state.vy,5.5);
+});
+
+test('dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end with a complete planned arc',()=>{
+ const h=simulation({speed:0,vz:0},[],{seed:7});pool(h,52,7);
+ let landings=0,previousY=0,longAir=0,air=0,peak=0,warmMin=Infinity,higher=false;
+ for(let i=0;i<20*60;i++){
+  const f=h.step(1/60);assert.ok(f,'fixed failing seed remains live');
+  if(f.frame.jump){assert.ok(f.frame.jumpHeight>=2.3&&f.frame.jumpHeight<=10);higher ||= f.frame.jumpHeight>2.3;}
+  if(f.isAirborne){assert.equal(f.frame.input.throttle,0);assert.equal(f.frame.input.boost,0);assert.equal(f.frame.input.lift,0);}
+  air=h.state.y>.005?air+1/60:0;longAir=Math.max(longAir,air);peak=Math.max(peak,h.state.y);
+  if(previousY>.005&&h.state.y===0)landings++;previousY=h.state.y;
+  if(i>=300)warmMin=Math.min(warmMin,h.state.speed*3.6);
+ }
+ assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(higher);assert.ok(landings>=3);
+ assert.ok(longAir<2.4);assert.ok(peak<=10);assert.ok(warmMin>=220);
+});
+
+test('complete candidate real-O unit: low-tank landing reserves the real refill wait before the next launch can clear a roof',()=>{
+ const dt=1/60,u=candidateHarness({speed:65,vz:-65,airRemaining:4,isFreefalling:false},lanes.map((_,i)=>car(i,-20,22))),h=u.h;
+ const {option}=u.candidate(2.3,3);assert.ok(option,'pure complete paid candidate exists');u.dispatch(option);
+ const first=h.step(dt),plan=first.frame;assert.equal(plan.jump,true);assert.equal(plan.jumpHeight,2.3);
+ assert.ok(plan.nextJumpAir>=3.6);assert.ok(plan.groundPreparationSeconds>.40,'cooldown alone is insufficient');
+ let landingGas=null;
+ for(let i=0;i<120&&landingGas===null;i++){h.step(dt);if(h.state.y===0)landingGas=h.state.airRemaining;}
+ assert.notEqual(landingGas,null);
+ const rise=Math.ceil(1.45/(20.15*dt))*dt,refill=Math.max(0,plan.nextJumpAir-landingGas)/3.4;
+ assert.ok(plan.groundPreparationSeconds>=Math.max(.12,refill)+rise+3*dt-1e-8,'validated window covers paid refill, discrete rise and frame buffer');
+ while(h.state.airRemaining<plan.nextJumpAir){
+  const gas=h.state.airRemaining,f=h.step(dt);assert.ok(f);assert.equal(f.frame.input.boost,0);
+  assert.ok(Math.abs(h.state.airRemaining-gas-3.4*dt)<1e-9,'recovery uses ordinary ground recharge');
+ }
+ assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);
+});
+
+test('speculative hop traffic uses independent reservations, poses and spawn state',()=>{
+ const cars=lanes.map((_,i)=>car(i,-20,22));
+ cars.push(car(1,-510,25,{highwayWaitingToSpawn:true}));cars.at(-1).mesh.visible=false;
+ const u=candidateHarness({speed:65,vz:-65,airRemaining:10},cars),h=u.h;
+ const beforeCars=JSON.stringify(cars),beforePlayer=JSON.stringify(h.state);
+ const {option}=u.candidate(2.3,3);
+ assert.ok(option,'pure complete arc exists; no claim of first-tick autonomous admission');assert.equal(JSON.stringify(cars),beforeCars,'speculation cannot mutate actual NPC, mesh or reservation');
+ assert.equal(JSON.stringify(h.state),beforePlayer,'speculation cannot mutate player');
+});
+
+test('complete candidate real-O unit: pending real refill cannot be interrupted by optional paid braking',()=>{
+ const dt=1/60,u=candidateHarness({speed:65,vz:-65,airRemaining:4},lanes.map((_,i)=>car(i,-20,22))),h=u.h;
+ const {option}=u.candidate(2.3,3);assert.ok(option);u.dispatch(option);
+ const plan=h.step(dt).frame;assert.equal(plan.jump,true);
+ for(let i=0;i<120&&h.state.y>0;i++)h.step(dt);
+ assert.ok(h.state.airRemaining<plan.nextJumpAir);
+ Object.assign(h.state,{speed:75,vz:-75,vx:0,x:2.5,y:0,vy:0,isJumping6m:false});
+ h.cars.splice(0,h.cars.length,...lanes.map((_,i)=>car(i,-80,62)));
+ const gas=h.state.airRemaining,result=h.step(dt);
+ assert.equal(result.frame.jump,false);assert.equal(result.frame.input.boost,0);assert.equal(result.frame.input.brake,0);
+ assert.equal(result.frame.input.throttle,1);assert.ok(Math.abs(h.state.airRemaining-gas-3.4*dt)<1e-9);
+});
+
+test('complete candidate real-O unit: the admitted preparation interval stays unpowered and conservatively transfers paid successor state',()=>{
+ const dt=1/60,u=candidateHarness({speed:65,vz:-65,airRemaining:8},lanes.map((_,i)=>car(i,-20,22))),h=u.h;
+ const {option}=u.candidate(2.3,3);assert.ok(option);u.dispatch(option);
+ const first=h.step(dt);assert.equal(first.frame.jump,true);const predicted=option;
+ assert.ok(predicted.groundWait<predicted.preparation,'rise clearance and frame buffer are validation, not extra ground waiting');
+ const remembered=predicted.endpoint.distanceBySpeed[0];h.state.distanceBySpeed[0]=123;assert.equal(predicted.endpoint.distanceBySpeed[0],remembered,'handoff evidence cannot alias mutable actual state');
+ const steps=Math.round((predicted.duration+predicted.groundWait)/dt);let groundFrames=0;
+ for(let i=1;i<steps;i++){
+  const gas=h.state.airRemaining,f=h.step(dt);assert.ok(f);
+  assert.equal(f.frame.input.boost,0);assert.equal(f.frame.input.brake,0);
+  if(f.frame.input.throttle===1){groundFrames++;assert.ok(Math.abs(h.state.airRemaining-gas-3.4*dt)<1e-9);}
+ }
+ assert.ok(groundFrames>=Math.floor(predicted.groundWait/dt)-2);assert.equal(h.launches.length,1);assert.equal(h.impacts.length,0);
+ assert.ok(h.state.airRemaining>=predicted.endpoint.airRemaining-1e-9,'successor cannot count nonexistent refill gas');
+ assert.ok(h.state.airRemaining-predicted.endpoint.airRemaining<=3.4*dt+1e-8);
+ assert.ok(Math.abs(h.state.speed-predicted.endpoint.speed)<.10);
+ assert.ok(Math.abs(h.state.x-predicted.endpoint.x)<.10);assert.ok(Math.abs(h.state.yaw-predicted.endpoint.yaw)<.01);
+ for(let i=0;i<h.cars.length;i++){assert.ok(predicted.forecast[i].mesh.position.z>0&&predicted.forecast[i].mesh.position.z<65,'handoff precedes the respawn in the later validation tail');assert.ok(Math.abs(h.cars[i].mesh.position.z-predicted.forecast[i].mesh.position.z)<.2);}
+});

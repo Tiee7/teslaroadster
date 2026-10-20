@@ -1,3 +1,4 @@
+import * as threeMathUtils from './vendor/three-r128-MathUtils.mjs';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
@@ -101,7 +102,7 @@ export function lifecycleHarness() {
     localStorage: { getItem: () => null, setItem() {} }, history: { state: {}, pushState(value) { this.state = value; } },
     fetch: async (url, options) => { calls.push({ url, options }); return network(url, options); },
     sound: { init() {}, beep() {}, speakAlert() {}, playCrash() {}, simulatedEngineEnabled: true },
-    THREE: { MathUtils: { clamp: (v, a, b) => Math.max(a, Math.min(b, v)), lerp: (a, b, t) => a + (b - a) * t } },
+    THREE: { MathUtils: threeMathUtils },
     cityBuildings: [], trafficCars: [], frontWheelSteerGroups: [], carMeshGroup: {}, cameraModeIndex: 0,
     highwayEnvGroup: {}, cityEnvGroup: {}, hoverRingMat: {},
     showBanner() {}, renderBannerText() {}, clearDebris() {}, updateDestroyedModalText() {},
@@ -139,7 +140,10 @@ export function lifecycleHarness() {
   vm.runInContext(source('mobile-controls.js'), context);
   vm.runInContext(source('leaderboard.js'), context);
   const keyboardHandlersBeforeDemo = (window.listeners.keydown || []).length;
-  vm.runInContext(source('highway-demo.js'), context);
+  vm.runInContext(source('highway-traffic.js'), context);
+  const demoSource=source('highway-demo.js'),plannerAnchor='  const planner = RoadsterHighwayDemoPlanner.create(LANE_CENTERS, WORLD_SPEED_SCALE);';
+  assert.equal(demoSource.split(plannerAnchor).length,2);
+  vm.runInContext(demoSource.replace(plannerAnchor,plannerAnchor+'globalThis.adapterPlannerForTest=planner;'), context);
   // Execute the real paint-entry function in its adapter's expected lexical scope.
   vm.runInContext(`(() => {
     const $=id=>document.getElementById(id), picker=$('paint-picker'), vehicleButton=$('btn-paint');

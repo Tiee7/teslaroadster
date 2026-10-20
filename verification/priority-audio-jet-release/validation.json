@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-20T11:53:31Z",
+  "status": "passed-for-authorized-audiovisual-release",
+  "node": {
+    "tests": 561,
+    "pass": 561,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 973989.132544,
+    "mode": "node --test --test-concurrency=1 --test-reporter=tap tests/*.test.mjs",
+    "firstParallelAttempt": {
+      "pass": 498,
+      "fileLevelFailures": 5,
+      "specificReason": "not supplied by first reporter; unchanged serial rerun passes"
+    }
+  },
+  "focusedSoundMusicJetsReference": {
+    "tests": 39,
+    "pass": 39
+  },
+  "lua": {
+    "tests": 24,
+    "pass": 24
+  },
+  "sourceIdentity": {
+    "staticCases": 29,
+    "srcMirrorCases": 3,
+    "allPassed": true,
+    "physicsStepsExecutedByIdentityChecks": 0
+  },
+  "jetRays": {
+    "rays": 10368,
+    "bodyHits": 0
+  },
+  "allMode60SecondDrivingAcceptance": false,
+  "webglVisualHearingFpsAcceptance": false,
+  "userAcceptedDisclosedBrowserLimitation": true,
+  "v12Implemented": false,
+  "failedDrivingPrototypesPromoted": false,
+  "sourceSha256": {
+    "src/audio.js": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+    "src/vehicles.js": "751bac778783a9890226fb9cc6e8f83b8aa7268c5908a086382cc35931c011f8",
+    "src/highway-demo.js": "3cd0dca79b78ae6a7a85bd92443a2340cd9273f02f15e993af5489e9353a466a",
+    "src/demo-numeric-projection.js": "4e65b3faea52fa1d27f20ada46071e803384ec56a2874a703da19e1f8bbe4e64",
+    "src/physics-main.js": "548a8bb80f984ddafa5da17a75e71d7f703a77890af90c88fba9c40924053df2",
+    "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "src/ui-hud.js": "60a63ba8dece14c8efec292054dbe1aa0554a56f5618afeb9f8db9e475440e9d",
+    "index.html": "0ad61427cba2a8f5508c7f7ea432d1cff4d3f75edcb4a9863635d7afef225094"
+  },
+  "checkBuildBundle": true,
+  "whitespace": {
+    "nonGeneratedChanges": "passed",
+    "exactIdentityDeclarationArtifact": "two inherited trailing-whitespace lines retained because exact original function source is its identity contract; not normalized to hide them"
+  }
+}

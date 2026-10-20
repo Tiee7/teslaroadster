@@ -15,12 +15,46 @@ test('one open shared envelope per outlet has finite bounded topology, unlit alp
  assert.equal(read(f,'allThrusterPlumes.length'),18);
  assert.equal(read(f,'new Set(allThrusterPlumes.map(p=>p.children[0].geometry)).size'),1);
  assert.equal(read(f,'allThrusterPlumes.every(p=>p.children.length===1)'),true);
- assert.equal(read(f,'allThrusterPlumes.every(p=>p.children[0].material.depthWrite===false&&p.children[0].material.side===THREE.DoubleSide&&p.children[0].material.uniforms.uOpacity.value<=.34)'),true);
+ assert.equal(read(f,'allThrusterPlumes.every(p=>p.children[0].material.depthWrite===false&&p.children[0].material.depthTest===true&&p.children[0].material.side===THREE.DoubleSide&&p.children[0].material.uniforms.uOpacity.value<=.50)'),true);
  assert.equal(read(f,'coldGasEnvelopeGeometry.index.array.length/3'),288);
  const positions=read(f,'Array.from(coldGasEnvelopeGeometry.attributes.position.array)');
  assert.ok(positions.every(Number.isFinite));
  for(let i=2;i<positions.length;i+=3)assert.ok(positions[i]>=0&&positions[i]<=1,'envelopes start at mouth and only extend outward');
  assert.doesNotMatch(src,/machDiamondMat|heatShimmerMat|machVaporRing|Math.random\(\).*plume/);
+});
+
+test('pressure wake opens downstream while every physical mouth and draw count stay fixed',()=>{
+ const f=fixture(),positions=read(f,'Array.from(coldGasEnvelopeGeometry.attributes.position.array)');
+ const radiusAt=row=>Math.hypot(positions[row*13*3],positions[row*13*3+1]);
+ assert.ok(Math.abs(radiusAt(0)-.56)<1e-6,'unchanged narrow mouth avoids body clipping');
+ assert.ok(radiusAt(6)>2.4&&radiusAt(12)<=2.960001,'downstream air expands into a substantial wake');
+ assert.equal(read(f,'allThrusterPlumes.length'),18);
+ assert.equal(read(f,'coldGasEnvelopeGeometry.attributes.position.count'),169);
+ assert.equal(read(f,'rearPlumes.every(p=>thrusterPlumeState.get(p).length===2.35)'),true);
+ assert.equal(read(f,'liftPlumes.every(p=>thrusterPlumeState.get(p).length===1.65)'),true);
+ assert.equal(read(f,'allThrusterPlumes.every(p=>p.children[0].castShadow===false&&p.children[0].receiveShadow===false)'),true);
+ assert.doesNotMatch(read(f,'coldGasFragmentShader'),/texture2D|sampler|for\s*\(|while\s*\(/,'no texture lookups, loops or particle passes');
+ assert.equal((read(f,'coldGasFragmentShader').match(/\bsin\(/g)||[]).length,3,'bounded pressure/filament arithmetic');
+});
+
+test('stronger gas remains power-sensitive, finite and completely cleared on release',()=>{
+ const f=fixture();let previous=0;
+ for(const power of [.01,.1,.22,.5,1]){
+  read(f,`setThrusterPlumePower(rearPlumes[0],${power})`);
+  const p=read(f,'rearPlumes[0].children[0]');
+  assert.equal(p.material.uniforms.uPower.value,power);
+  assert.ok(p.scale.z>previous&&p.scale.z<=2.35);previous=p.scale.z;
+  assert.ok(p.scale.x>0&&p.scale.x<=.092);
+ }
+ for(const power of ['NaN','Infinity','-1','0']){
+  read(f,`setThrusterPlumePower(rearPlumes[0],${power})`);
+  assert.equal(read(f,'rearPlumes[0].visible'),false);
+  assert.equal(read(f,'thrusterPlumeState.get(rearPlumes[0]).power'),0);
+ }
+ read(f,'setThrusterPlumePower(rearPlumes[0],1,true)');
+ assert.equal(read(f,'rearPlumes[0].visible'),false);
+ assert.equal(read(f,'thrusterPlumeState.get(rearPlumes[0]).power'),1,'FPV visibility never changes paid power');
+ read(f,'clearThrusterVisuals()');assert.ok(active(f,'allThrusterPlumes').every(p=>p===0));
 });
 
 test('body selection places actual mouth coordinates; view changes preserve selected layout',()=>{
@@ -97,7 +131,7 @@ test('analog requests scale the correct longitudinal axis, release immediately a
  const f=fixture(),h=installJetPhysics(f.context);let touch={};f.window.RoadsterTouch={readInput:()=>touch};
  for(const p of [.1,.25,.5,1]){
   h.reset({y:0});touch={boost:p};h.step(1/60);assert.ok(active(f,'rearPlumes').every(power=>power===p));
-  const scales=read(f,'rearPlumes[0].children[0].scale');assert.ok(scales.z>.3&&scales.z<=1.35);assert.ok(scales.y<=.092);
+  const scales=read(f,'rearPlumes[0].children[0].scale');assert.ok(scales.z>.6&&scales.z<=2.35);assert.ok(scales.y<=.092);
   touch={};h.step(1/60);assert.ok(h.powers().every(p=>!p.visible));
  }
  h.setView(3);h.reset();touch={throttle:1,lift:1,strafe:1,pitch:1,roll:1};h.step(1/60);

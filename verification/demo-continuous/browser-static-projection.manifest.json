@@ -1,0 +1,230 @@
+{
+  "schema": "verification-browser-static-projection-v1",
+  "numericalProgramSourceSha256": "cb4aa0c07c2eb14414aef08ae9856ceb884eb0cf7057f4cd23653f0fc448eeb4",
+  "sourceHashes": {
+    "src/config.js": "673b27df78fc6fbd40e72b88784a3347cf3962877497cf69c70919ae27c4ba8f",
+    "src/physics-main.js": "548a8bb80f984ddafa5da17a75e71d7f703a77890af90c88fba9c40924053df2",
+    "src/highway-demo.js": "3cd0dca79b78ae6a7a85bd92443a2340cd9273f02f15e993af5489e9353a466a",
+    "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "src/ui-hud.js": "60a63ba8dece14c8efec292054dbe1aa0554a56f5618afeb9f8db9e475440e9d",
+    "src/audio.js": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+    "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+    "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
+  },
+  "nodeGeneratorSha256": "0c2d10eb3890eb9d627959ed653e8b093d7f35d33e4fb8fa43b01ed7107a34cb",
+  "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
+  "mathProfiles": [
+    {
+      "id": "three-r128-cpu-vendor-uncompressed",
+      "bundleSha256": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
+    },
+    {
+      "id": "three-r128-browser-bundle-minified",
+      "bundleSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+    }
+  ],
+  "functionSources": {
+    "updateSimulation": {
+      "sha256": "eacc8e209a836262a99f6af48f661bf6aa8f07e84abae13e1acce0c12412a125",
+      "length": 79572
+    },
+    "wrapAnglePi": {
+      "sha256": "4a43189ee76d5927e870e14a61a5de8fe71d91dcb8c3a5996d52adc61fa19c52",
+      "length": 115
+    },
+    "getAirCoastSpeed": {
+      "sha256": "a28838d75ef7eb311382889019adb04a0392039d602d57c4a1fa8e1f98702db1",
+      "length": 267
+    },
+    "advanceAirHandling": {
+      "sha256": "666321f0cafd62302defc849466ac1b91a25a7c13503a3e1717409e7c9a2194a",
+      "length": 1083
+    },
+    "getResponsiveAirCoastSpeed": {
+      "sha256": "4ba61ba3a0538edfe2dc6fe63a956e2a01485170ce5a4a81a5b5c2a62227d01d",
+      "length": 790
+    },
+    "addAirThrust": {
+      "sha256": "1d1613fbc72b5abd17e81d1342e86518a6163e9fb05801e233aa92e9c9ce117f",
+      "length": 609
+    },
+    "getGroundCoastSpeed": {
+      "sha256": "119b5e596df0f96db75fcc8e4dbc1c29e9dca12fdf5ecb82b4d5e050f75e013a",
+      "length": 1009
+    },
+    "accelerateGroundSpeed": {
+      "sha256": "665c7b6007346970dc442806dc72c40aba6876bb77521676c4a1929877ca51d1",
+      "length": 440
+    },
+    "getRetroBrakeDemand": {
+      "sha256": "d17e531a89053170e6a39cadd0af7bc814415b7c826c33d0b67a631d4f1707b2",
+      "length": 489
+    },
+    "integrateFreefall": {
+      "sha256": "7137e52a2fe6232f082a5005dcdbcab6dfe2d3447fd0feff151346e5ea19de21",
+      "length": 394
+    },
+    "readDriveInput": {
+      "sha256": "1952a40c7ef5a01c84c8068067d105255a0c0b31481f64ad144b930a25424b0e",
+      "length": 964
+    },
+    "readAttitudeInput": {
+      "sha256": "17388c049d61ae0971a299fc465d961777796d339226e4539fb6c0a980a1b1eb",
+      "length": 1256
+    },
+    "advanceAttitudeIdle": {
+      "sha256": "30ec9a47d560129ad4d035e1510538a917b16360b067e1586c7279770f249fb6",
+      "length": 363
+    },
+    "triggerJump6m": {
+      "sha256": "08cb484ae4d2632645a7c4b642eb3eec58600c194ea8e90144633fe2e9bd81fe",
+      "length": 1815
+    },
+    "trafficStep": {
+      "sha256": "a09bb5404a88da21e75f44917fe53d0cfb2b5a4d59f561046c16f2dac7bbf2fb",
+      "length": 8283
+    },
+    "trafficForecastStep": {
+      "sha256": "b9139b47a65aa989b55ee97a3b4ef0f8ab8ca71b66f8c2b7d8b9928f4d0920df",
+      "length": 284
+    },
+    "demoSweptContact": {
+      "sha256": "6f92640e8a8b99e27bcdf2d521b7720af099dd1ee72378349b2b15138acbddc5",
+      "length": 668
+    }
+  },
+  "numericalSegments": [
+    {
+      "name": "world-tank-mass-constants",
+      "file": "src/config.js",
+      "begin": 20518,
+      "end": 21763,
+      "firstLine": 355,
+      "lastLine": 382,
+      "sourceSha256": "fbbc9807cb03242b60adc3537656b21efa2e300389abd4da647cd96dee27e14b",
+      "emittedSha256": "fbbc9807cb03242b60adc3537656b21efa2e300389abd4da647cd96dee27e14b",
+      "transformations": []
+    },
+    {
+      "name": "numeric-and-busy-input-helpers",
+      "file": "src/physics-main.js",
+      "begin": 12672,
+      "end": 21706,
+      "firstLine": 344,
+      "lastLine": 514,
+      "sourceSha256": "e60eb55296b95a14fa9111aa6b8be5dc9e9a409641d81750121a5bd0f22b853b",
+      "emittedSha256": "e60eb55296b95a14fa9111aa6b8be5dc9e9a409641d81750121a5bd0f22b853b",
+      "transformations": []
+    },
+    {
+      "name": "motion-gas-altitude-attitude-body",
+      "file": "src/physics-main.js",
+      "begin": 25312,
+      "end": 68459,
+      "firstLine": 606,
+      "lastLine": 1491,
+      "sourceSha256": "70f6157e17fdd104363cef4f0e24379ab09cad80807e16133ebe32f5582227b9",
+      "emittedSha256": "995b630eac864488aee40635d9bf13fcaa4903fbbc4424213be0d1a102880508",
+      "transformations": [
+        "insert fail-closed guard at true highway rail branch before correction"
+      ]
+    },
+    {
+      "name": "npc-contact-body",
+      "file": "src/physics-main.js",
+      "begin": 77039,
+      "end": 79823,
+      "firstLine": 1659,
+      "lastLine": 1715,
+      "sourceSha256": "b14f6ea0bda1201de516ac49e95dc11e4b259fb53f037d458ded23a8dd918cd8",
+      "emittedSha256": "754ae3665325819ea25519584bf84587f80b34a76d8cdc99e723fa138054b621",
+      "transformations": [
+        "remove enclosing production trafficCars.forEach terminator only",
+        "insert fail-closed guard at true roof-bounce branch before response",
+        "insert fail-closed guard at true body-contact branch before response"
+      ]
+    },
+    {
+      "name": "real-g-feedback-tail",
+      "file": "src/physics-main.js",
+      "begin": 80781,
+      "end": 81228,
+      "firstLine": 1735,
+      "lastLine": 1740,
+      "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
+      "emittedSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
+      "transformations": []
+    },
+    {
+      "name": "complete-highway-traffic-module",
+      "file": "src/highway-traffic.js",
+      "begin": 0,
+      "end": 25704,
+      "firstLine": 1,
+      "lastLine": 449,
+      "sourceSha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+      "emittedSha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+      "transformations": []
+    },
+    {
+      "name": "demo-handling-and-swept-contact-only",
+      "file": "src/highway-demo.js",
+      "begin": 583,
+      "end": 1503,
+      "firstLine": 9,
+      "lastLine": 34,
+      "sourceSha256": "be8dbba5158270e41c9a7cb4126704e89ba326fcdbcf9669b84f1e0521f32cb7",
+      "emittedSha256": "be8dbba5158270e41c9a7cb4126704e89ba326fcdbcf9669b84f1e0521f32cb7",
+      "transformations": []
+    },
+    {
+      "name": "numeric-jump-trigger",
+      "file": "src/ui-hud.js",
+      "begin": 40283,
+      "end": 42100,
+      "firstLine": 882,
+      "lastLine": 918,
+      "sourceSha256": "5a3f01743654bade9246b3e7394402bb2cd5df64546a663a976d9726d9b38911",
+      "emittedSha256": "5a3f01743654bade9246b3e7394402bb2cd5df64546a663a976d9726d9b38911",
+      "transformations": []
+    },
+    {
+      "name": "banner-state-write-before-dom",
+      "file": "src/ui-hud.js",
+      "begin": 9373,
+      "end": 9501,
+      "firstLine": 257,
+      "lastLine": 263,
+      "sourceSha256": "3ff17448794a377bbf396e0a8a9840d79ea315465e36b20b8f89a56af0a33d9a",
+      "emittedSha256": "3ff17448794a377bbf396e0a8a9840d79ea315465e36b20b8f89a56af0a33d9a",
+      "transformations": []
+    },
+    {
+      "name": "official-r128-clamp",
+      "file": "tests/helpers/vendor/three-r128-MathUtils.mjs",
+      "begin": 1071,
+      "end": 1248,
+      "firstLine": 32,
+      "lastLine": 40,
+      "sourceSha256": "2b4faee78e40819cbede5285ac90f501de5a8a97d0796b6ce23c772118a2f392",
+      "emittedSha256": "2b4faee78e40819cbede5285ac90f501de5a8a97d0796b6ce23c772118a2f392",
+      "transformations": []
+    },
+    {
+      "name": "official-r128-lerp",
+      "file": "tests/helpers/vendor/three-r128-MathUtils.mjs",
+      "begin": 1806,
+      "end": 1954,
+      "firstLine": 69,
+      "lastLine": 76,
+      "sourceSha256": "c99a3f41efd33e5fd7efdbc3519e3db58c78d380a1d98b51c6ea62423d9a72e1",
+      "emittedSha256": "c99a3f41efd33e5fd7efdbc3519e3db58c78d380a1d98b51c6ea62423d9a72e1",
+      "transformations": []
+    }
+  ],
+  "buildRule": "All complete source bytes and the frozen generator must match. Any mismatch requires an explicit new epoch; do not refresh automatically.",
+  "runtimeRule": "First bind exact Function.prototype.toString for actual named functions plus exact constant/handling values and one audited math pair; every later entry checks cached function/math/handling references and constant values.",
+  "snapshotContract": "Trusted plain internal lossless data only; no hostile Proxy/accessor/prototype/observer input. Browser JavaScript has no isProxy intrinsic; this does not widen the Node adversarial-input proof.",
+  "oracleBoundary": "CPU harness may declare the complete updateSimulation function for source identity only; its numerical oracle still executes only the established extracted body/contact/G regions, not full updateSimulation or page rendering.",
+  "productionAuthority": "Prototype only. Existing strict bridge scope and every phase/route/history/NPC/ownership/budget condition remain required. This module never independently grants reuse authority."
+}

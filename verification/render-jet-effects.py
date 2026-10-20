@@ -106,14 +106,17 @@ for part in data['meshes']:
   # Vertex-sampling differs from WebGL per-fragment interpolation and blending.
   material=next(m for m in data['materials'] if m['id']==part['material'][0]);sh=material['shader']
   alpha=mesh.attributes.new('effect_alpha','FLOAT','POINT');uv=part['uv'];camera=Vector((7,-8,3.2+data.get('studioHeight',0))) if 'effects-three-quarter' in requested_views else Vector((10,0,1.3+data.get('studioHeight',0)))
+  if 'effects-chase' in requested_views:camera=Vector((0,-3.9,2.2675+data.get('studioHeight',0)))
   def smooth(a,b,x):
    t=max(0,min(1,(x-a)/(b-a)));return t*t*(3-2*t)
   normal_matrix=M.to_3x3().inverted_safe().transposed()
   for i,pnt in enumerate(verts):
    u,v=uv[i*2:i*2+2];n=(normal_matrix@Vector(normals[i*3:i*3+3])).normalized();facing=abs(n.dot((camera-pnt).normalized()))
    if sh['kind']=='cold-gas':
-    axial=smooth(0,.035,v)*(1-smooth(.12,1,v));wisps=.78+.22*math.sin(v*30-sh['time']*17+math.sin(u*37))
-    value=sh['opacity']*sh['power']*axial*(.20+.80*facing**.65)*wisps
+    axial=smooth(0,.018,v)*(1-smooth(.26,1,v))
+    filaments=.77+.23*math.sin(u*37.6991+math.sin(v*31-sh['time']*29))
+    pressure=.86+.14*math.sin(v*56-sh['time']*46)
+    value=sh['opacity']*sh['power']*axial*(.30+.70*facing**.65)*filaments*pressure
    else:
     band=math.exp(-((v-.42)/.25)**2);gaps=smooth(.18,.82,.5+.5*math.sin(u*43.9823+math.sin(v*13)+sh['time']*2))
     value=sh['opacity']*band*gaps*facing**.5
@@ -136,6 +139,11 @@ if inspection_fill:area('Optional low rear inspection fill',(2.2,-5.5,.9),85,2,t
 cam_data=bpy.data.cameras.new('Inspection camera');cam=bpy.data.objects.new('Inspection camera',cam_data);bpy.context.collection.objects.link(cam);scene.camera=cam
 height=data.get('studioHeight',0);offset_y=.5 if data['scenario']=='retro' else -.7
 views=[('effects-side',(10,0,1.3+height),(0,offset_y,.65+height),'ORTHO',7.5),('effects-three-quarter',(7,-8,3.2+height),(0,0,.65+height),'ORTHO',7.5)]
+if 'effects-pressure-side' in requested_views:
+ views.append(('effects-pressure-side',(10,0,1.3+height),(0,-.95,.65+height),'ORTHO',8.8))
+if 'effects-chase' in requested_views:
+ # Exact default highway chase offsets at x=0, zoom=.75, zero pitch/shake.
+ views.append(('effects-chase',(0,-3.9,2.2675+height),(0,9,.65+height),'PERSP',None))
 if 'reference-side-left' in requested_views:
  views.append(('reference-side-left',(-10,0,.55),(0,0,.55),'ORTHO',7.38))
 if 'tail-side-left' in requested_views:
@@ -169,6 +177,8 @@ for name,location,target,typ,scale in views:
  if previous_audit and any(v['name']==name for v in stats['renderedViews']):continue
  cam.location=location;point_at(cam,target);cam_data.type=typ;cam_data.lens=65;cam_data.sensor_width=36;cam_data.sensor_fit='AUTO';cam_data.shift_y=0;cam_data.shift_x=0
  scene.render.resolution_x=1000;scene.render.resolution_y=620
+ if name=='effects-chase':
+  scene.render.resolution_y=625;cam_data.lens=18/(math.tan(math.pi/6)*1.6);cam_data.sensor_fit='HORIZONTAL'
  if name=='reference-front':
   scene.render.resolution_x=1040;scene.render.resolution_y=585
   cam_data.lens=56.7414768;cam_data.sensor_fit='HORIZONTAL';cam_data.shift_y=-.0804165091;cam_data.shift_x=-16/1040

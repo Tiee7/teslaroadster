@@ -899,7 +899,7 @@ function triggerJump6m() {
   // restart it and disable normal flight handling.
   if (currentAgl <= 0.15) {
     state.jumpInertiaSeconds = 0;
-    state.jumpInertiaGraceSeconds = globalThis.window?.RoadsterDemo?.isRequestingJump() ? 0.95 : null;
+    state.jumpInertiaGraceSeconds = globalThis.window?.RoadsterDemo?.isRequestingJump() ? (window.RoadsterDemo.jumpGraceSeconds?.() ?? 0.95) : null;
   }
   // Jump to 6.0m above ground/rooftop (or +6.0m if already flying above 5.5m)
   state.jumpStartY = state.y;
