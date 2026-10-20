@@ -3,6 +3,7 @@ This is not WebGL gameplay and does not validate GPU FPS. Geometry is not edited
 Usage: blender -b --factory-startup --python ... -- EXPORT_DIR [view ...]
 """
 import bpy,sys,os,json,math,time,base64
+from array import array
 from mathutils import Matrix,Vector
 start=sys.argv.index('--')+1;folder=os.path.abspath(sys.argv[start]);requested=sys.argv[start+1:]
 with open(os.path.join(folder,'scene.json')) as f:data=json.load(f)
@@ -22,7 +23,7 @@ for t in data['textures']:
  if t.get('kind')=='cube':continue
  img=bpy.data.images.new(t['id'],width=t['width'],height=t['height'],alpha=True)
  raw=base64.b64decode(t['bytes']);channels=len(raw)//(t['width']*t['height'])
- px=[]
+ px=array('f')
  for i in range(0,len(raw),channels):
   values=raw[i:i+channels];px.extend([v/255 for v in values[:3]]+[values[3]/255 if channels==4 else 1])
  img.pixels.foreach_set(px);img.update();textures[t['id']]=(img,t)
@@ -74,7 +75,8 @@ for part in data['meshes']:
   for group in g.get('groups',[]):
    if group['start']<=i<group['start']+group['count']:material_index=group.get('materialIndex',0);break
   mid=part['materials'][min(material_index,len(part['materials'])-1)]
-  bucket=batches.setdefault(mid,{'vertices':[],'normals':[],'uv':[],'colors':[],'faces':[]})
+  bucket_key=mid+('::cast' if part['castShadow'] else '::no-cast')
+  bucket=batches.setdefault(bucket_key,{'material':mid,'castShadow':part['castShadow'],'vertices':[],'normals':[],'uv':[],'colors':[],'faces':[]})
   triangle=idx[i:i+3]
   if M.determinant()<0:triangle=[triangle[0],triangle[2],triangle[1]]
   face=[]
@@ -93,7 +95,10 @@ for mid,bucket in batches.items():
  for loop in mesh.loops:colors.data[loop.index].color=(*bucket['colors'][loop.vertex_index],1)
  mesh.normals_split_custom_set_from_vertices(bucket['normals'])
  for poly in mesh.polygons:poly.use_smooth=True
- mesh.materials.append(materials[mid]);obj=bpy.data.objects.new(mid,mesh);bpy.context.collection.objects.link(obj)
+ mesh.materials.append(materials[bucket['material']]);obj=bpy.data.objects.new(mid,mesh);obj.visible_shadow=bool(bucket['castShadow']);bpy.context.collection.objects.link(obj)
+# Native Blender meshes now own exact copied data. Drop temporary Python
+# expansion before sampling; retaining every transformed triangle doubled RAM.
+batches.clear();data['meshes'].clear();data['geometries'].clear();source_geometries.clear()
 # This inspection sun deliberately does NOT imply in-game shadow acceptance.
 sun_data=bpy.data.lights.new('Disclosed inspection sun','SUN');sun_data.energy=2.2;sun_data.angle=math.radians(6)
 sun=bpy.data.objects.new('Disclosed inspection sun',sun_data);bpy.context.collection.objects.link(sun);sun.rotation_euler=(math.radians(27),math.radians(-24),math.radians(-36))
@@ -117,7 +122,7 @@ views={
  'shore-ground':((-317,1.8,650),(-110,2,100),68),
  'coast-panorama':((-450,90,1000),(-150,0,-150),72),
 }
-audit={'generatedAtUTC':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'renderer':'Blender '+bpy.app.version_string+' Cycles CPU','warning':'Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test','source':data['source'],'metrics':data['metrics'],'coordinateMapping':data['coordinateMapping'],'exactGeometry':True,'normalMapMaterials':sum(bool(m.get('normalMap')) for m in data['materials']),'convertedTriangleCount':converted_triangles,'threads':scene.render.threads,'seed':scene.cycles.seed,'geometryNotes':'All original vertices/triangles, instance matrices, instance-color × material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.','lighting':{'worldStrength':.55,'sunEnergy':2.2,'sunAngleDeg':6,'sunEulerDeg':[27,-24,-36]},'samples':scene.cycles.samples,'resolution':[scene.render.resolution_x,scene.render.resolution_y],'views':[]}
+audit={'generatedAtUTC':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'renderer':'Blender '+bpy.app.version_string+' Cycles CPU','warning':'Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test','source':data['source'],'metrics':data['metrics'],'coordinateMapping':data['coordinateMapping'],'exactGeometry':True,'nativeCastShadowFlagsHonored':True,'normalMapMaterials':sum(bool(m.get('normalMap')) for m in data['materials']),'convertedTriangleCount':converted_triangles,'threads':scene.render.threads,'seed':scene.cycles.seed,'memoryHandling':'Packed float32 texture staging; transient Python triangle expansion released after exact native mesh creation. No geometry, samples, resolution, threads or safety settings reduced.','geometryNotes':'All original vertices/triangles, instance matrices, instance-color × material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. Native per-part castShadow flags are honored; receiver/material/light/color mapping still approximates Three, not a pixel reference.','lighting':{'worldStrength':.55,'sunEnergy':2.2,'sunAngleDeg':6,'sunEulerDeg':[27,-24,-36]},'samples':scene.cycles.samples,'resolution':[scene.render.resolution_x,scene.render.resolution_y],'views':[]}
 for name in (requested or ['sample-street','sample-frontage','sample-aerial']):
  loc,target,fov=views[name];cam.location=C@Vector(loc);t=C@Vector(target);cam.rotation_euler=(t-cam.location).to_track_quat('-Z','Y').to_euler();cam_data.type='PERSP';cam_data.sensor_fit='VERTICAL' if name in ('driver-spawn','driver-inland') else 'HORIZONTAL';cam_data.lens=(cam_data.sensor_height if name in ('driver-spawn','driver-inland') else cam_data.sensor_width)/(2*math.tan(math.radians(fov)/2));cam_data.clip_start=.1;cam_data.clip_end=6000
  projection=cam.calc_matrix_camera(bpy.context.evaluated_depsgraph_get(),x=scene.render.resolution_x,y=scene.render.resolution_y)

@@ -24,3 +24,7 @@ The128×128 RGBA tangent normal field is original project code, analytically sum
 ## Rounds11–12 original architectural/street kit
 
 Curved parapets, balcony-door/platform assemblies, split flat plinths, corner storefronts/glyphs, forked courtyard trees, small reflecting basin, dogleg beach walks and second-boulevard markings are all original deterministic project geometry. No external asset pack, texture or software was downloaded. They reuse existing owned texture/material batches where possible; the courtyard surface shares the original water-normal texture instead of adding another image.
+
+## Rounds13–14 original low-frequency ground and window atlas
+
+The original world color field is generated once asRGBA256² (65,536 source pixels/262,144 bytes), clamp-to-edge with independent original-ground-boxUVs. Its CPU pixel cache is separately metered; eachGPUTexture remains map-entry-owned and disposed.512² was an inspected intermediate, not a shipped photo/download. Two original64px sash glyph families share128×64 albedo/emission atlases with synchronized glass masks. LimitedL front courts reuse the original project paver image/union geometry. All are original deterministic project art; no external art files, services, payment or credentials were introduced.

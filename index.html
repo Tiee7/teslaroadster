@@ -2886,7 +2886,9 @@ const RoadsterCoast = (() => {
   let active=null,builds=0,disposals=0,failedBuilds=0;
   // Whole-district art budget, including100 sculpted palms and later facade LODs.
   // This is a conservative structural ceiling, not measured draw calls or FPS.
-  const artBudget=Object.freeze({sourceGzipBytes:32*1024,staticMeshDraws:96,staticTriangles:180000,textureBytes:4*1024*1024,geometryAndInstanceBytes:8*1024*1024});
+  const artBudget=Object.freeze({sourceGzipBytes:32*1024,staticMeshDraws:96,staticTriangles:180000,textureBytes:4*1024*1024,geometryAndInstanceBytes:8*1024*1024,cpuPixelCacheBytes:1024*1024});
+  // Bounded immutable CPU bitmap only; no Texture/GPU object survives leave().
+  let groundFieldCache=null;
   function restoreSceneState(owner){
     const previous=owner.previousScene;
     if(!previous)return;
@@ -3068,7 +3070,41 @@ const RoadsterCoast = (() => {
       const mat=material(color,extra),items=[{p:[x,y,z],s:[w,h,d]}];
       return extra.map?flatBatch(name,items,mat,extra.map.userData?.coastTileMetres||(extra.map===paverTexture?2.4:4)):batch(name,box,mat,items,{receiveShadow:true,flat:true});
     };
-    slab('coast-inland-ground',527.5,0,1345,2400,0x87917b);
+    // Same original unit box/instance transform; only its independent UV changes.
+    const groundBox=own(box.clone()),groundUV=groundBox.attributes.uv,groundPosition=groundBox.attributes.position;
+    for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,groundPosition.getX(i)+.5,groundPosition.getZ(i)+.5);
+    const groundMaterial=material(0xffffff,{roughness:1}),inlandGround=batch('coast-inland-ground',groundBox,groundMaterial,[{p:[527.5,-.12,0],s:[1345,.16,2400]}],{receiveShadow:true,flat:true});
+    // Original, once-built world color field; geometry/height are untouched.
+    function groundToneField(){
+      const size=256,width=1345,depth=2400,minX=-145,minZ=-1200;
+      if(!groundFieldCache){const bytes=new Uint8Array(size*size*4),regions=[];
+      const row=new Uint8Array(size*4),worldX=new Float64Array(size),worldZ=new Float64Array(size);
+      for(let x=0;x<size;x++){const i=x*4,t=x/(size-1);row[i]=135+((t*3+.5)|0);row[i+1]=145;row[i+2]=123-((t*2+.5)|0);row[i+3]=255;worldX[x]=minX+(x+.5)*width/size;worldZ[x]=minZ+(x+.5)*depth/size;}
+      for(let y=0;y<size;y++)bytes.set(row,y*size*4);
+      function tint(x0,x1,z0,z1,color,blend=8,strength=.85){
+        if(x1<=x0||z1<=z0)return;
+        regions.push({x0,x1,z0,z1,color,blend});const c=new THREE.Color(color),rgb=[c.r*255,c.g*255,c.b*255];
+        const left=Math.max(0,Math.floor((x0-blend-minX)/width*size)),right=Math.min(size-1,Math.ceil((x1+blend-minX)/width*size)),bottom=Math.max(0,Math.floor((z0-blend-minZ)/depth*size)),top=Math.min(size-1,Math.ceil((z1+blend-minZ)/depth*size));
+        for(let y=bottom;y<=top;y++)for(let x=left;x<=right;x++){
+          const wx=worldX[x],wz=worldZ[y],dx=wx<x0?x0-wx:wx>x1?wx-x1:0,dz=wz<z0?z0-wz:wz>z1?wz-z1:0;
+          if(dx>=blend||dz>=blend)continue;const t=1-Math.sqrt(dx*dx+dz*dz)/blend;if(t<=0)continue;const a=t*t*(3-2*t)*strength,i=(y*size+x)*4;
+          for(let k=0;k<3;k++)bytes[i+k]=bytes[i+k]+(rgb[k]-bytes[i+k])*a+.5;
+        }
+      }
+      // Address existing street-front parcels only, rather than coloring random lots.
+      for(const e of districtEntryMeta){
+        if(!e.linkedToSidewalk)continue;const b=buildings[e.buildingIndex],axis=e.axis,side=e.side,face=axis==='x'?b.x+side*b.w/2:b.z+side*b.d/2;
+        const lo=Math.min(face,e.pathEnd),hi=Math.max(face,e.pathEnd),along=axis==='x'?b.z:b.x,half=(axis==='x'?b.d:b.w)/2;
+        if(axis==='x')tint(lo,hi,along-half,along+half,0xa7a393,8,.8);else tint(along-half,along+half,lo,hi,0xa7a393,8,.8);
+      }
+      // Courtyard soil stays local to the composed garden, not a checkerboard.
+      tint(69,111,349,381,0x9a927e,7,.65);
+      for(const r of cornerCourts)tint(r.minX,r.maxX,r.minZ,r.maxZ,0xa7a393,6,.8);
+      groundFieldCache=Object.freeze({pixels:bytes,regions:Object.freeze(regions.map(r=>Object.freeze(r)))});}
+      const texture=new THREE.DataTexture(groundFieldCache.pixels,size,size,THREE.RGBAFormat);texture.wrapS=texture.wrapT=THREE.ClampToEdgeWrapping;texture.magFilter=THREE.LinearFilter;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.generateMipmaps=true;texture.needsUpdate=true;textures.add(texture);
+      texture.userData={coastWorldField:true,bounds:[minX,minX+width,minZ,minZ+depth]};group.userData.coastGroundField={size,bounds:texture.userData.bounds,regions:groundFieldCache.regions,scope:'Visual color only, not traversability/physical material'};return texture;
+    }
+
     // Continuous, opaque color fields preserve exact original surface bounds.
     function coastalSurface(kind,mat){
       const water=kind==='water',shore=spec.shorelineX,half=spec.halfBound;
@@ -3296,24 +3332,26 @@ const RoadsterCoast = (() => {
     // The rest of the district uses the same architectural grammar, with actual
     // four-sided apertures and doors rather than one continuous black ribbon.
     function sashTexture(emission=false){
-      const size=64,bytes=new Uint8Array(size*size*4);
-      for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-        const inner=x>=8&&x<56&&y>=8&&y<56,mullion=(x>=31&&x<=32)||(y>=44&&y<=45),glass=inner&&!mullion;
-        const tint=glass?[39+Math.floor(y/20),64+Math.floor(y/14),74+Math.floor(y/10)]:inner?[194,194,177]:x<5||x>58||y<5||y>58?[219,215,197]:[55,72,72];
-        const color=emission?(glass?[255,245,224]:[0,0,0]):tint,i=(y*size+x)*4;
+      const size=64,width=size*2,bytes=new Uint8Array(width*size*4);
+      for(let y=0;y<size;y++)for(let x=0;x<width;x++){
+        const localX=x%size,family=x>=size?1:0,inner=localX>=8&&localX<56&&y>=8&&y<56,mullion=family?(y>=44&&y<=45):(localX>=31&&localX<=32),glass=inner&&!mullion;
+        const tint=glass?[39+Math.floor(y/20),64+Math.floor(y/14),74+Math.floor(y/10)]:inner?[194,194,177]:localX<5||localX>58||y<5||y>58?[219,215,197]:[55,72,72];
+        const color=emission?(glass?[255,245,224]:[0,0,0]):tint,i=(y*width+x)*4;
         for(let c=0;c<3;c++)bytes[i+c]=color[c];bytes[i+3]=255;
       }
-      const texture=new THREE.DataTexture(bytes,size,size,THREE.RGBAFormat);texture.magFilter=THREE.LinearFilter;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.generateMipmaps=true;texture.needsUpdate=true;textures.add(texture);return texture;
+      const texture=new THREE.DataTexture(bytes,width,size,THREE.RGBAFormat);texture.magFilter=THREE.LinearFilter;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.generateMipmaps=true;texture.needsUpdate=true;textures.add(texture);return texture;
     }
     const sashMap=sashTexture(),sashEmission=sashTexture(true);
+    const sashPlanes=[0,1].map(family=>{const geo=own(windowPlane.clone()),uv=geo.attributes.uv;for(let i=0;i<uv.count;i++)uv.setX(i,(uv.getX(i)+family)/2);return geo;});
     const facadeWindowMaterial=material(0xffffff,{map:sashMap,roughness:.7,metalness:.04});
     const facadeLitMaterial=material(0xffffff,{map:sashMap,emissiveMap:sashEmission,emissive:0xa17e4f,emissiveIntensity:.42,roughness:.7,metalness:.04});
-    const districtWindows=[],districtLitWindows=[],facadeRecords=[],districtPaths=[],districtEntryMeta=[],districtBalconies=[],curvedParapets=[],districtPlinths=[],cornerStorePanels=[],cornerStores=[];
+    const districtWindows=[[],[]],districtLitWindows=[[],[]],facadeFamilies=[],cornerCourts=[],facadeRecords=[],districtPaths=[],districtEntryMeta=[],districtBalconies=[],curvedParapets=[],districtPlinths=[],cornerStorePanels=[],cornerStores=[];
     function facePose(b,axis,side,along,y,w,h){
       return {p:axis==='x'?[b.x+side*(b.w/2+.065),y,along]:[along,y,b.z+side*(b.d/2+.065)],s:[1,h,w],r:[0,axis==='z'?-side*Math.PI/2:side<0?Math.PI:0,0],axis,side,w,h};
     }
     for(const [bi,b] of buildings.entries()){
       if(hero.includes(b))continue;
+      const facadeFamily=(Math.floor((b.z+1000)/560)+(b.x>=430?1:0))%2;facadeFamilies.push({buildingIndex:bi,family:facadeFamily});
       const cornerStore=[355,485].includes(b.x)&&[440,580].includes(b.z),storeSide=b.x<430?1:-1;
       const storeAlong=b.z+b.d/2-6.2,storeEndAlong=b.x+storeSide*(b.w/2-6.2);
       const entries=[];
@@ -3341,12 +3379,12 @@ const RoadsterCoast = (() => {
       Object.assign(entry,selected||{along:alongCenter,end:fromFace,linked:false});
       const record={building:b,windows:[],entry};facadeRecords.push(record);
       for(const axis of ['x','z'])for(const side of [-1,1]){
-        const length=axis==='x'?b.d:b.w,center=axis==='x'?b.z:b.x,bays=Math.max(4,Math.floor((length-2.4)/4.7));
+        const length=axis==='x'?b.d:b.w,center=axis==='x'?b.z:b.x,baseBays=Math.max(4,Math.floor((length-2.4)/4.7));
         for(let level=0;level<9;level++){
-          const y=level===0?1.55:4.9+(level-1)*3.25,h=level===0?2.35:bi%3===0?1.72:1.9;
+          const y=level===0?1.55:4.9+(level-1)*3.25,h=level===0?2.35:facadeFamily?1.65:1.9,bays=level===0?baseBays:Math.max(4,Math.floor((length-2.4)/(facadeFamily?6.5:4.7)));
           if(y+h/2+.5>b.height)break;
           for(let bay=0;bay<bays;bay++){
-            const along=center-length/2+1.2+(length-2.4)*(bay+.5)/bays,w=level===0?2.65:bi%3===1?2.4:1.92;
+            const along=center-length/2+1.2+(length-2.4)*(bay+.5)/bays,w=level===0?2.65:facadeFamily?2.7:1.75;
             if(level===0&&cornerStore&&((axis==='x'&&side===storeSide&&Math.abs(along-storeAlong)<6.1)||(axis==='z'&&side===1&&Math.abs(along-storeEndAlong)<6.1)))continue;
             if(level===0&&axis===entry.axis&&side===entry.side&&Math.abs(along-entry.along)<w/2+1.0)continue;
             // Selected single vertical stacks become genuine full-height balcony
@@ -3362,7 +3400,7 @@ const RoadsterCoast = (() => {
             }
             const pose=facePose(b,axis,side,along,y,w,h);record.windows.push(pose);
             const lit=(bi*11+level*7+bay*3+(axis==='x'?0:17)+(side===1?1:0))%7<2;
-            (lit?districtLitWindows:districtWindows).push(pose);
+            (lit?districtLitWindows:districtWindows)[facadeFamily].push(pose);
           }
         }
       }
@@ -3433,10 +3471,22 @@ const RoadsterCoast = (() => {
     group.userData.coastCornerStores=cornerStores;
     batch('coast-corner-store-ground-panels',windowPlane,material(0xffffff,{roughness:.95}),cornerStorePanels,{receiveShadow:true,visualOnly:true});
     batch('coast-district-ground-plinths',windowPlane,cream,districtPlinths,{receiveShadow:true,visualOnly:true});
+    // Only the four curated corner shops get a bounded L-shaped hard front.
+    // The leg joins the ORIGINAL door path; no new entrance or raised prop.
+    for(const r of cornerStores)if(r.axis==='z'){
+      const b=buildings[r.buildingIndex],e=districtEntryMeta.find(e=>e.buildingIndex===r.buildingIndex);if(!e?.linkedToSidewalk||e.axis!=='x')continue;
+      const face=b.x+e.side*b.w/2,outer=face+e.side*6,z0=e.door[2]-1.3,z1=b.maxZ+7;
+      for(const rect of [{minX:Math.min(face,outer),maxX:Math.max(face,outer),minZ:z0,maxZ:z1},{minX:Math.min(r.along-r.width/2,outer),maxX:Math.max(r.along+r.width/2,outer),minZ:b.maxZ,maxZ:z1}]){
+        cornerCourts.push({...rect,buildingIndex:r.buildingIndex});districtPaths.push({p:[(rect.minX+rect.maxX)/2,-.005,(rect.minZ+rect.maxZ)/2],s:[rect.maxX-rect.minX,.07,rect.maxZ-rect.minZ]});
+      }
+    }
+    group.userData.coastCornerCourts=cornerCourts;
     flatBatch('coast-district-entry-paving',unionRectangles(districtPaths.map(v=>({x:v.p[0],z:v.p[2],w:v.s[0],d:v.s[2]}))).map(r=>({p:[(r.minX+r.maxX)/2,-.005,(r.minZ+r.maxZ)/2],s:[r.maxX-r.minX,.07,r.maxZ-r.minZ]})),material(0xbdb9a9,{map:paverTexture,roughness:.94}),2.4);
-    group.userData.coastArtDistrict={windowCount:districtWindows.length+districtLitWindows.length,entryCount:districtEntryMeta.length,entries:districtEntryMeta};
-    batch('coast-district-window-sashes',windowPlane,facadeWindowMaterial,districtWindows,{receiveShadow:true,visualOnly:true});
-    batch('coast-district-selected-lit-windows',windowPlane,facadeLitMaterial,districtLitWindows,{receiveShadow:true,visualOnly:true});
+    group.userData.coastArtDistrict={windowCount:districtWindows.reduce((n,a)=>n+a.length,0)+districtLitWindows.reduce((n,a)=>n+a.length,0),entryCount:districtEntryMeta.length,entries:districtEntryMeta,families:facadeFamilies};
+    groundMaterial.map=groundToneField();groundMaterial.needsUpdate=true;
+    for(const family of [0,1])for(const [name,mat,items] of [['coast-district-window-sashes',facadeWindowMaterial,districtWindows],['coast-district-selected-lit-windows',facadeLitMaterial,districtLitWindows]]){
+      const mesh=batch(name+(family?'-transom':''),sashPlanes[family],mat,items[family],{receiveShadow:true,visualOnly:true});mesh.userData.coastArt.facadeFamily=family;
+    }
     // A bounded near-detail overlay: fixed GPU capacity, refreshed only after20m
     // visual-focus travel. Far apertures remain; no building/collision disappears.
     const detailCapacity=768,detailRings=new THREE.InstancedMesh(revealGeometry,cream,detailCapacity);instances.add(detailRings);
@@ -3823,7 +3873,7 @@ const RoadsterCoast = (() => {
     const buffers=new Set();let geometryBufferBytes=0,instanceBufferBytes=0;
     for(const geo of active?.geometries||[])for(const attribute of [...Object.values(geo.attributes),geo.index].filter(Boolean)){const array=attribute.isInterleavedBufferAttribute?attribute.data.array:attribute.array;if(!buffers.has(array)){buffers.add(array);geometryBufferBytes+=array.byteLength;}}
     for(const mesh of active?.instances||[])for(const attribute of [mesh.instanceMatrix,mesh.instanceColor].filter(Boolean))instanceBufferBytes+=attribute.array.byteLength;
-    return {active:Boolean(active),builds,disposals,failedBuilds,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?768:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:buildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
+    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?768:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:buildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
   }
   return Object.freeze({spec,artBudget,roads:Object.freeze(roads),nodes:Object.freeze(nodes),edges:Object.freeze(edges),routes:Object.freeze(routes),pose,onRoad,surface,
     layout:()=>({buildings,palms,obstacles}),buildings:()=>active?obstacles:[],enter,leave,tick,weather,metrics,createTraffic,stepTraffic,recoverTraffic,respawn,hit,sweptBox,clipBuildings,contactBounds,trafficContact});

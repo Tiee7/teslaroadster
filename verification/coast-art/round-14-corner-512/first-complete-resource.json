@@ -1,0 +1,22 @@
+{
+  "startedUTC": "2026-10-20T20:36:44.023068+00:00",
+  "endedUTC": "2026-10-20T20:37:16.238080+00:00",
+  "seconds": 32.215024799021194,
+  "command": [
+    "blender",
+    "-b",
+    "--factory-startup",
+    "--python",
+    "verification/coast-art/render-scene.py",
+    "--",
+    "verification/coast-art/round-14-corner-512",
+    "inland-corner"
+  ],
+  "returnCode": 0,
+  "childMaxRssKiB": 448988,
+  "childUserSeconds": 58.581776,
+  "childSystemSeconds": 1.045366,
+  "sourceSha256": "bf7f1f44ed63913a513c156fa37d2f424c856c2db349d0fd837905e2b07cb8a6",
+  "adapterSha256": "1d95c4276b081f84573816ec06d33f42979d6cc05918dfcdeadcadd59cb9397f",
+  "warning": "CPU offline inspection resource report, NOT WebGL/GPU/FPS evidence; no safety settings changed."
+}

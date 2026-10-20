@@ -1,0 +1,90 @@
+{
+  "generatedAtUTC": "2026-10-20T20:29:38Z",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "warning": "Offline exact-geometry art inspection, NOT a WebGL gameplay screenshot or FPS test",
+  "source": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_coast_art_20261020/src/coast-map.js",
+    "sha256": "55a618ffea62c27f323d446315680bc3e2a7b38907fa3d34a9f3f49a9f647ddd",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "metrics": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "cachedCpuPixelBytes": 1048576,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 40,
+    "ownedMaterials": 49,
+    "ownedTextures": 16,
+    "textureBytes": 2260992,
+    "ownedGeometryBufferBytes": 416236,
+    "ownedInstanceBufferBytes": 1759864,
+    "staticMeshDraws": 78,
+    "staticTriangles": 160826,
+    "maximumStaticTriangles": 177770,
+    "nearPalms": 6,
+    "farPalms": 94,
+    "foliageRefreshes": 1,
+    "nearDetailInstances": 377,
+    "nearDetailCapacity": 768,
+    "nearDetailMatrixBytes": 49152,
+    "detailRefreshes": 1,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 106496,
+    "maximumShadowCasterTriangles": 123440,
+    "instances": 26940,
+    "buildings": 132,
+    "palms": 100,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "coordinateMapping": "Three (X,Y,Z) -> Blender (X,-Z,Y)",
+  "exactGeometry": true,
+  "normalMapMaterials": 2,
+  "convertedTriangleCount": 160826,
+  "threads": 2,
+  "seed": 7013,
+  "memoryHandling": "Packed float32 texture staging; transient Python triangle expansion released after exact native mesh creation. No geometry, samples, resolution, threads or safety settings reduced.",
+  "geometryNotes": "All original vertices/triangles, instance matrices, instance-color \u00d7 material-color and UVs retained. No mesh artistic edits. Materials/sky/light/color mapping approximate Three rendering. All Blender objects cast shadows, unlike current game baseline.",
+  "lighting": {
+    "worldStrength": 0.55,
+    "sunEnergy": 2.2,
+    "sunAngleDeg": 6,
+    "sunEulerDeg": [
+      27,
+      -24,
+      -36
+    ]
+  },
+  "samples": 24,
+  "resolution": [
+    1180,
+    738
+  ],
+  "views": [
+    {
+      "name": "driver-inland",
+      "positionThree": [
+        436,
+        1.2,
+        700
+      ],
+      "targetThree": [
+        436,
+        1.2,
+        580
+      ],
+      "fovDeg": 60,
+      "fovAxis": "vertical",
+      "projectionMeasuredFovXYDeg": [
+        85.42235390468187,
+        60.00000430567895
+      ],
+      "output": "driver-inland-raw.png",
+      "seconds": 15.451
+    }
+  ]
+}

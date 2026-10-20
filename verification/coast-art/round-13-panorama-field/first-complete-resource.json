@@ -1,0 +1,22 @@
+{
+  "startedUTC": "2026-10-20T20:30:25.707721+00:00",
+  "endedUTC": "2026-10-20T20:30:42.143169+00:00",
+  "seconds": 16.435460357984994,
+  "command": [
+    "blender",
+    "-b",
+    "--factory-startup",
+    "--python",
+    "verification/coast-art/render-scene.py",
+    "--",
+    "verification/coast-art/round-13-panorama-field",
+    "coast-panorama"
+  ],
+  "returnCode": 0,
+  "childMaxRssKiB": 447420,
+  "childUserSeconds": 27.691091,
+  "childSystemSeconds": 1.0405,
+  "sourceSha256": "55a618ffea62c27f323d446315680bc3e2a7b38907fa3d34a9f3f49a9f647ddd",
+  "adapterSha256": "1d95c4276b081f84573816ec06d33f42979d6cc05918dfcdeadcadd59cb9397f",
+  "warning": "CPU offline inspection resource report, NOT WebGL/GPU/FPS evidence; no safety settings changed."
+}

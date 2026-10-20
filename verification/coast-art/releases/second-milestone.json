@@ -1,0 +1,67 @@
+{
+  "recordedUTC": "2026-10-20T20:20:16.242Z",
+  "pr": 6,
+  "url": "https://github.com/Tiee7/teslaroadster/pull/6",
+  "head": "14106f7ab8bcb95430ff7899eda83e0ee61e13aa",
+  "main": "25f5feb1e0fd49cbf3301093500cafcba6027d37",
+  "tree": "b30a8b14e2a176a6d77bbfb65c7f04a24943880f",
+  "localHead": "05770c8f51911d1006ebec1185dc2f453922b3d7",
+  "preview": {
+    "deployment": "dpl_HZ7kE85njLyqWGck6J2DiVxNvuBL",
+    "readback": {
+      "url": "https://teslaroadster-9x06shi6p-tiee1.vercel.app/",
+      "scripts": [
+        {
+          "utf16Length": 98,
+          "utf8Bytes": 98,
+          "sha256": "b4b5394413070838555bfb7e08bd97882882d63d8fd4cdafb3625ba37d38b47f"
+        },
+        {
+          "utf16Length": 4725975,
+          "utf8Bytes": 4737035,
+          "sha256": "af4a119603ea3d2a2f10a1aa805f838ffa10c6a75d467d768305185412ce23ca"
+        }
+      ],
+      "sourceStyle": {
+        "utf16Length": 37255,
+        "utf8Bytes": 37259,
+        "sha256": "635952f4b91e641ee44471676f956ce342692b591dc4f67ec8c34321fed524f7"
+      }
+    },
+    "exact": true
+  },
+  "production": {
+    "deployment": "dpl_3RbWcftkzUhm91MuAwkmyUU7MgfM",
+    "readyState": "READY",
+    "aliasError": null,
+    "readback": {
+      "url": "https://tesla.tiee.xyz/",
+      "scripts": [
+        {
+          "utf16Length": 98,
+          "utf8Bytes": 98,
+          "sha256": "b4b5394413070838555bfb7e08bd97882882d63d8fd4cdafb3625ba37d38b47f"
+        },
+        {
+          "utf16Length": 4725975,
+          "utf8Bytes": 4737035,
+          "sha256": "af4a119603ea3d2a2f10a1aa805f838ffa10c6a75d467d768305185412ce23ca"
+        }
+      ],
+      "sourceStyle": {
+        "utf16Length": 37255,
+        "utf8Bytes": 37259,
+        "sha256": "635952f4b91e641ee44471676f956ce342692b591dc4f67ec8c34321fed524f7"
+      }
+    },
+    "exact": true
+  },
+  "fullSerial": {
+    "pass": 683,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 975912.702393
+  },
+  "phoneAndNumericFilesExact": true,
+  "warning": "Source identity only; browser WebGL context unavailable, offline CPU art views are not gameplay/FPS evidence. Authorized art iteration remains ongoing until2026-10-20T23:23:18Z."
+}
