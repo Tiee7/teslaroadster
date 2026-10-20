@@ -86,7 +86,7 @@ tesla_roadster_simulator_package/
 | **C** | 第一人称座舱视角 (FPV) | 进入超清战机级座舱（实时仪表屏、Yoke转动、HUD十字线） |
 | **V** | 3D 展厅特写视角 (Showroom) | 镜头环绕欣赏 1:1 车身工业细节 |
 | **T** | 天气与时间切换 | 暗夜 ⇄ 赛博霓虹雨夜 ⇄ 火星落日黄昏 |
-| **M** | 切换世界地图 | 高架高速 (Elevated Highway) ⇄ 赛博都市 (Mega Cyber City) |
+| **M** | 选择世界地图 | 高架高速 / 赛博都市 / 海滨街区（原创压缩片区） |
 | **X** | RCS 自动回正开关 | 开启时在松开姿态控制满 2 秒后平滑回正 |
 | **R** | 修复并重置车辆 | 重置车辆姿态、补满空气槽与完整修复受损车身 |
 | **[ / ] 或 滚轮** | 镜头远近调节 | 紧凑近景 (75%) / 标准追视 (100%) / 广角远景 (125%) |
@@ -330,3 +330,13 @@ Safe ground acceleration keeps the rear jet requested even at its physical speed
 The silent session-only infinite-air sandbox flag applies to every shared thruster and can change while autopilot is active or preparing. Enabling refills the shared tank; disabling preserves its current level and restores normal consumption. Both directions discard all future fuel-dependent proofs without changing the current pose or airborne landing lane. All three approximate predictions and the exact static/Node numerical mirrors use the same flag, including retro impulse and full-tank mass. Infinite mode cancels/blocks ranked runs; old immutable completed results remain separate. No new banner, speech, sound, key badge or settings prompt is added. Reset/map changes do not silently flip the flag; page reload starts finite again.
 
 Fresh checks and the explicit numerical-epoch proof are in `verification/controls-city-scale/`. They do not constitute WebGL/listening/FPS acceptance or all-mode60-second collision-free acceptance.
+
+## Map 3 · Original Coastal District / 原创海滨街区
+
+The third map is an original, compressed seaside district inspired by the broad beach/pier atmosphere of Vespucci Beach and Del Perro Pier. It is **not GTA map data, a replica, or an imported Rockstar asset**. All buildings, palms, boardwalks and the slow-moving Ferris wheel are generated locally from simple geometry; there are no new map downloads, third-party map credentials or asset requests. Choose **Coastal District / 海滨街区** in the existing map menu and launch normally.
+
+- The bounded2400m district has a west-facing sea/sand/promenade, two30m boulevards, cross streets and an inland loop.132 pastel low-rise buildings,100 palms, an original560m pier and approximately60m wheel make up the main landmarks. The spawn boulevard connects directly to the pier approach; this is a drivable scene, not only a menu card.
+- Player/NPC movement uses1 world metre per metre. Independent12/16/20-car road routes exclude beach, water and pier. Ground contact with the sea safely respawns on the road; flight may cross water without invisible road recharge. The pier is solid. Map-local geometry, materials and instance buffers are built on entry and disposed on exit, without disposing shared car/NPC assets.
+- Coast is initially **unranked**; the existing four highway/city leaderboard categories and city-only taxi job remain unchanged. Highway autopilot is not silently repurposed as a city/coast navigator. Existing map1/2 physics and the previously published controls/effects remain isolated.
+
+`verification/coastal-district/` records exact-source regression, road/surface/contact/lifecycle checks and CPU scene structure. Static triangle/mesh counts exclude vehicles, shadows and renderer passes; they are **not measured FPS, total draw calls, a WebGL visual acceptance, or a promise of60fps/30fps**. Severe low-frame-rate simulation still has the existing50ms step cap. The original all-mode60-second collision-free autopilot target is not claimed complete.

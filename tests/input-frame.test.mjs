@@ -10,7 +10,7 @@ test('driving key events update state synchronously and are consumed before the 
   const context = vm.createContext({ keys, keyBadgeMap: {}, Element: class {},
     document: { getElementById: () => ({ classList: { contains: name => name === 'hidden' } }) },
     window: { addEventListener: (name, listener) => { listeners[name] = listener; } },
-    sound: { init() {} }, lastTime: 1000, state: { isDestroyed: false }, scene: {}, camera: {},
+    sound: { init() {} }, lastTime: 1000, currentMap:'highway', state: { isDestroyed: false }, scene: {}, camera: {},
     requestAnimationFrame: callback => frames.push(callback),
     updateSimulation: dt => observations.push({ type: 'simulation', dt, keys: { ...keys } }),
     renderer: { render: () => observations.push({ type: 'render' }) }

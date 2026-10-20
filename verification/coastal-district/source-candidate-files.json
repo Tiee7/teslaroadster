@@ -1,0 +1,195 @@
+{
+  "createdAt": "2026-10-20T15:17:37.403021+00:00",
+  "baselineProductionCommit": "20d0d2cf237595df3d9060faf2f4a6a95a618928",
+  "baselineTree": "647d6b797cf31afa3884906fe70a776e777a3d9a",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "51961d320c67140775ca33453f122f84e0dd290db38fb0d7b8c3ded4b22b9522",
+      "bytes": 49642,
+      "gitBlob": "128a0aa9bd158c9c24dd7fcefac1c4eef5397e08"
+    },
+    {
+      "path": "bundle_app.py",
+      "sha256": "2068de321d7892b404f61dd4f9150f04267b6c397035270dad7674fea7f83276",
+      "bytes": 1919,
+      "gitBlob": "2d2a7a9771d61cb0279b9eb7406c218fd12a2368"
+    },
+    {
+      "path": "index.html",
+      "sha256": "e7bc764173b4db835dbfc018be9becdad98b63803ea2089a7790583aa86457fe",
+      "bytes": 4742695,
+      "gitBlob": "e70db95ff98281fc539030522684b67c53a51924"
+    },
+    {
+      "path": "src/coast-map.js",
+      "sha256": "22debfaa373996972472d1d47c02360e3c22ebd1a0b0a41d73a18311b1300e73",
+      "bytes": 17561,
+      "gitBlob": "1a4b82d1b3a70e90816d68a9366ab018afbca66d"
+    },
+    {
+      "path": "src/config.js",
+      "sha256": "fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306",
+      "bytes": 34400,
+      "gitBlob": "34d546aaa4c306ff680b286a1465ee3e1e87634e"
+    },
+    {
+      "path": "src/demo-numeric-projection.js",
+      "sha256": "e18e4301790a4fff5ef4a8218c8503787cac62d0f74800cb4cc434b90abe2dfd",
+      "bytes": 232906,
+      "gitBlob": "bc108fb037b5c41b8deb4121d35c68e78b9a3acb"
+    },
+    {
+      "path": "src/index.html",
+      "sha256": "dacfaa2ac436e145e00b99ea3d6f4f586574fa41e51bbc933b646de5e194c453",
+      "bytes": 52004,
+      "gitBlob": "98407834c16f69e0ce9f216f558421d1e5f62543"
+    },
+    {
+      "path": "src/leaderboard.js",
+      "sha256": "aaa1c0bff102f87c0fc6428cf6a80ecfb09c8bc7fc6bb4164076d4f92367264d",
+      "bytes": 26783,
+      "gitBlob": "1926f73a223458842254b674d7ca3aa48eea7953"
+    },
+    {
+      "path": "src/physics-main.js",
+      "sha256": "3f9a43d8becbd51cc79f490d87b4ca23887f79a8872a783fb0154277f8a8bf81",
+      "bytes": 109553,
+      "gitBlob": "40c95ffc4999bb567bc179606b3b47e9012074cf"
+    },
+    {
+      "path": "src/start-screen.js",
+      "sha256": "c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d",
+      "bytes": 14322,
+      "gitBlob": "ecc255187d04d2c89bcc8108ab1b88451f12e245"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "fd6eb451a1e93b2cd24e8a102853396bbde09b3d44b1bc7787d8faef95f54f8d",
+      "bytes": 33858,
+      "gitBlob": "66db670f5b91a6d5b5037cc6529917f370e36762"
+    },
+    {
+      "path": "src/ui-hud.js",
+      "sha256": "0f0b07d9228b27a6a1aef36de069cf6616c2d98b323fc4b1a657acb1c53d6c4b",
+      "bytes": 58968,
+      "gitBlob": "f2068333e1d21a9c402b0cd93cd33a7e1e7cba3c"
+    },
+    {
+      "path": "src/vehicles.js",
+      "sha256": "cdd8d2e37e49cc3a43f642919c9f383c14a042225041b29979cd59f38940d5aa",
+      "bytes": 92926,
+      "gitBlob": "e80d0d7d0a01d0e19c87def23df53cb60e137c5a"
+    },
+    {
+      "path": "tests/attitude.test.mjs",
+      "sha256": "97658703d19b3e7ac36b2b0f487afc3a0af7b5c033b6db4d4d16dae2b8adfe39",
+      "bytes": 24675,
+      "gitBlob": "6537d1ca04cf26c21fc25e398882d65cdd099909"
+    },
+    {
+      "path": "tests/braking.test.mjs",
+      "sha256": "742b712fd626883d13623ac58c1ce005e811cec38fc53d7027ca94f5477c1dfb",
+      "bytes": 26119,
+      "gitBlob": "1605df19076ba7d0cd395ca45c40a6958a9d724d"
+    },
+    {
+      "path": "tests/camera-stability.test.mjs",
+      "sha256": "a871e781e1976c11aecec8d5e707f4e36b235599eca605bed82ca09958416f99",
+      "bytes": 7811,
+      "gitBlob": "11239dceb28c5b35b223a1f337597d4afc3b41aa"
+    },
+    {
+      "path": "tests/city-scale.test.mjs",
+      "sha256": "051d11610fd9cabc8af039f811b71b432e986d5cabfbcfa004c7c2be769beb61",
+      "bytes": 2959,
+      "gitBlob": "1acf3c87034b2752db34717477bf52de1ee24097"
+    },
+    {
+      "path": "tests/coast-map.test.mjs",
+      "sha256": "a407d1ef6aa6daa113a585edf7ed6f7c116065026d38234de881bdc72e8fc070",
+      "bytes": 16578,
+      "gitBlob": "e34644470d79a68cc73c77fa21659e8a5b54661d"
+    },
+    {
+      "path": "tests/engine-sound.test.mjs",
+      "sha256": "ef891c9f5ee92d5ec50244cb3e7565a0081179d5121b406caabdcff0cc9a2d65",
+      "bytes": 18397,
+      "gitBlob": "2252fef15b2ea1865208653dd7fe7a3f483f0014"
+    },
+    {
+      "path": "tests/helpers/motion-harness.mjs",
+      "sha256": "f8d03131cf84c290b7fa04260a74d5e235ac3f3f301731da8f4ef5b15b18c353",
+      "bytes": 1825,
+      "gitBlob": "fd03691563d090d64e3611e8d632267f35d92e4d"
+    },
+    {
+      "path": "tests/input-frame.test.mjs",
+      "sha256": "0200461830f32f260e43b94d66e50b13aeda6d14532227a120201ba48326b035",
+      "bytes": 2359,
+      "gitBlob": "e44ce398c92f0d20e4be0cefc3da5a8a62a533b7"
+    },
+    {
+      "path": "tests/start-screen.test.mjs",
+      "sha256": "9a810a3e5d75b98f92789affd57698a7e1cf5719f3a46d109449165047a39278",
+      "bytes": 25490,
+      "gitBlob": "f11e2436f37a3898f754c9b17b190ca767ff15c8"
+    },
+    {
+      "path": "verification/coastal-district/numeric-kernel-contract.test.mjs",
+      "sha256": "dc0b2ecfd1da3aaa6f2d35171ef7012e82a5ca2f96a1f4ee43f4325afe1b6846",
+      "bytes": 4299,
+      "gitBlob": "6d636bcd0f5ab4d391126d351e41b9bacb507827"
+    },
+    {
+      "path": "verification/coastal-district/verify-existing-maps.mjs",
+      "sha256": "3bb0913bf99c5e7c2c97acd55267142e215f0ccb5d30cd19727d6c4a0d0df626",
+      "bytes": 2953,
+      "gitBlob": "4aee2e10f62a4fd5437431f3d9163ef8ad8a53f4"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection-identity.generated.mjs",
+      "sha256": "775e33b34ad2d541807bc09cc16b1a41667029ffaf25622b94e8261cc9cdf00c",
+      "bytes": 86692,
+      "gitBlob": "ef9cb85ddcdc6b75be559e82b8dedeb99be7174d"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.js",
+      "sha256": "e18e4301790a4fff5ef4a8218c8503787cac62d0f74800cb4cc434b90abe2dfd",
+      "bytes": 232906,
+      "gitBlob": "bc108fb037b5c41b8deb4121d35c68e78b9a3acb"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.generated.mjs",
+      "sha256": "5e7ad0b2ed08f84d3c70b0ceeef31ee3991ef72d3b953d4798fc955cd4f4dc87",
+      "bytes": 232949,
+      "gitBlob": "28322384d6a9bd6944c3962f3173010532ae4091"
+    },
+    {
+      "path": "verification/demo-continuous/browser-static-projection.manifest.json",
+      "sha256": "4ddae8e2efe72c7b754f25fc95741ccfb77967ad96bd8fdf11f0e7c9845d397a",
+      "bytes": 9617,
+      "gitBlob": "b73028fc4c27853efbcc89572d1d03e197db9dcd"
+    },
+    {
+      "path": "verification/demo-continuous/emit-browser-static-projection.mjs",
+      "sha256": "245b0c9795ec1e9f8f52e27b08ccf3e219ad60631c10606caa20b6811ba1ae36",
+      "bytes": 18454,
+      "gitBlob": "50b2617ec7af4bc438326f499cda4f2e65b846bb"
+    },
+    {
+      "path": "verification/demo-continuous/generate-numeric-projection-kernel.mjs",
+      "sha256": "443e84f62d4108f6792bcb8e4b0e7af32f7cc3d2b75809b8485bf6a2ae88502b",
+      "bytes": 23202,
+      "gitBlob": "354c7d3ca391d17b39b465d0b5d801ea333ba861"
+    },
+    {
+      "path": "verification/demo-continuous/static-projection-identity-only-tests.json",
+      "sha256": "37a9b8c1169502e76e5e34afd5858e4803a55ff1cd156d7b9f8fade779430d0f",
+      "bytes": 6702,
+      "gitBlob": "37ba8404b649d4ae67fca80cadee2a986df0a44d"
+    }
+  ],
+  "finalizedAt": "2026-10-20T15:18:57.725015+00:00",
+  "note": "Runtime/tests frozen before the full run; finalization adds an independent verification-only test and refreshes identity-only report evidence, without changing the frozen application."
+}

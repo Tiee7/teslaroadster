@@ -44,7 +44,7 @@ function harness({ saved = null, storageBlocked = false, failPreview = false, as
   els['start-traffic'].options = ['0', '1', '2'].map(value => ({ value }));
   els['start-model'].options = ['reference', 'classic'].map(value => ({ value }));
   els['start-cockpit'].options = ['reference', 'classic'].map(value => ({ value }));
-  els['modal-map-select'].controls = ['btn-map-audio-settings', 'btn-map-modal-lang', 'btn-start-paint', 'start-model', 'start-cockpit', 'card-map-highway', 'card-map-city', 'start-physics', 'start-traffic', 'btn-launch-selected-map'].map(id => els[id]);
+  els['modal-map-select'].controls = ['btn-map-audio-settings', 'btn-map-modal-lang', 'btn-start-paint', 'start-model', 'start-cockpit', 'card-map-highway', 'card-map-city', 'card-map-coast', 'start-physics', 'start-traffic', 'btn-launch-selected-map'].map(id => els[id]);
   const window = new Element('window'); window.devicePixelRatio = 3;
   const writes = []; const storage = new Map(saved ? [['roadster-paint-finish', saved]] : []);
   const renders = []; const created = [];
@@ -211,6 +211,21 @@ test('world/weather use keyboard-native pressed buttons, and mode/traffic select
   assert.equal(h.els['ui-btn-launch-map'].textContent, '进入游戏');
   assert.equal(h.els['start-physics'].options[0].textContent, '常规物理');
   assert.match(h.els['btn-start-paint'].getAttribute('aria-label'), /更换涂装/);
+});
+
+test('third original coast card is keyboard-native and uses its actual bilingual traffic densities',()=>{
+ const h=harness();h.context.highlightSelectedMapCard('coast');
+ assert.equal(h.els['card-map-coast'].tagName,'BUTTON');assert.equal(h.els['card-map-coast'].getAttribute('aria-pressed'),'true');
+ for(const id of ['highway','city'])assert.equal(h.els[`card-map-${id}`].getAttribute('aria-pressed'),'false');
+ assert.equal(h.els['summary-map-chip'].textContent,'Original Coastal District');
+ assert.deepEqual(h.els['start-traffic'].options.map(x=>x.textContent),['Normal · 12','Heavy · 16','Busy · 20']);
+ h.key(h.els['card-map-coast'],'Enter');h.key(h.els['card-map-coast'],'Space');assert.equal(h.launched(),0);
+ h.context.currentMap='coast';h.select('start-traffic','2');assert.equal(h.traffic(),20);
+ h.context.currentLang='zh';h.context.highlightSelectedMapCard('coast');
+ assert.equal(h.els['card-coast-title'].textContent,'海滨街区');assert.equal(h.els['card-coast-spec'].textContent,'沙滩 · 码头 · 原创');
+ assert.deepEqual(h.els['start-traffic'].options.map(x=>x.textContent),['普通 · 12 辆','密集 · 16 辆','繁忙 · 20 辆']);
+ h.context.currentMap='city';h.context.highlightSelectedMapCard('city');h.select('start-traffic','0');assert.equal(h.traffic(),20);
+ assert.match(h.els['start-traffic'].options[2].textContent,/52/);
 });
 
 test('optional preview failure cannot block configuration, and initial paint collection is in a separate native dialog', () => {

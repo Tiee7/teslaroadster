@@ -1713,7 +1713,9 @@ function populateTraffic(count) {
   trafficCars.forEach(c => trafficGroup.remove(c.mesh));
   trafficCars = [];
 
-  if (currentMap === 'highway') {
+  if (currentMap === 'coast') {
+    trafficCars = window.RoadsterCoast.createTraffic(count,createTrafficVehicleMesh,trafficGroup,state);
+  } else if (currentMap === 'highway') {
     const drivers = highwayTraffic.createDrivers(count);
     const player = typeof state === 'object' ? { x: state.x, y: state.y, z: 0, vz: state.vz } : null;
     for (let i = 0; i < count; i++) {

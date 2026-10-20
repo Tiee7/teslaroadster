@@ -1,0 +1,66 @@
+{
+  "acceptedAt": "2026-10-20T15:28:53.392240+00:00",
+  "status": "all required local checks passed; remote tree/ref mutation currently permission-blocked; production remains prior release",
+  "localRuntimeCommit": "ed8f2f41bcec364aa0ab3aca598cf639eda6f16e",
+  "reviewedRuntimeTree": "a1ba58efa63724c361ee44030b2595a913e6c6ae",
+  "applicationHtmlSha256": "e7bc764173b4db835dbfc018be9becdad98b63803ea2089a7790583aa86457fe",
+  "sourceManifest": "source-candidate-files.json",
+  "frozenRows": 31,
+  "allFrozenRowsExact": true,
+  "node": {
+    "command": "ROADSTER_THREE_RUNTIME=/tmp/roadster-three.min.js node --test --test-concurrency=2 --test-reporter=tap tests/*.test.mjs",
+    "exitCode": 0,
+    "tests": 647,
+    "pass": 647,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 608714.285397,
+    "log": "all-tests-two-workers.tap"
+  },
+  "otherGates": {
+    "quickRegression": 506,
+    "lua": 24,
+    "staticIdentity": 29,
+    "sourceMirrorIdentity": 3,
+    "numericKernelContract": 6,
+    "baselineMapCases": 96,
+    "baselinePhysicalSteps": 17280,
+    "strictObjectIsPhysicalComparisons": 846720,
+    "physicalFields": 49,
+    "independentTreeReview": "passed"
+  },
+  "map": {
+    "id": "coast",
+    "originalProcedural": true,
+    "noGTAOrOSMAssetOrDataImport": true,
+    "buildings": 132,
+    "palms": 100,
+    "pierLengthM": 560,
+    "approxWheelHeightM": 60,
+    "npcCounts": [
+      12,
+      16,
+      20
+    ],
+    "ranked": false,
+    "moduleGzipBytes": 6617,
+    "staticTriangles": 22972,
+    "staticMeshDrawUnits": 39
+  },
+  "preservation": [
+    "Previous silent infinite jets and synchronized predictors",
+    "Continuous safe autopilot jets and original220+ constraint",
+    "Repeating body-side condensation and original single boom",
+    "Flight-only freefall alarm and hidden port hardware",
+    "Applied autopilot key badges",
+    "Highway/city exact paired physical fields and alerts"
+  ],
+  "boundaries": [
+    "Static geometry is not total draw calls/FPS or full WebGL visual acceptance",
+    "No hearing acceptance",
+    "No all-mode60-second collision-free autopilot claim",
+    "Existing severe-low-FPS50ms step cap retained",
+    "No branch/PR/merge/deploy created after the permission refusal"
+  ]
+}

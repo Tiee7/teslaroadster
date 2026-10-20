@@ -32,7 +32,7 @@ const blastScroll = physics.match(/      car\.mesh\.position\.z \+= \(currentMap
 const collision = section(physics, 'function triggerPhysicsCollision(', 'function destroyVehicle(');
 const trafficCollision = section(physics, '        const relVx = state.vx', '\n      }\n    }\n  });');
 const buildingCollision = section(physics, '          const impactSpeed = Math.hypot', '\n        }\n      }\n    }\n  }');
-const attitude = section(physics, '  // Requirement 3: All airborne attitude RCS jets', "  if (currentMap === 'city') {");
+const attitude = section(physics, '  // Requirement 3: All airborne attitude RCS jets', "  if (currentMap === 'city' || currentMap === 'coast') {");
 const emergency = section(physics, '  if (needsEmergencyLandingSave) {', '  } else {\n    state.isAutoLandingSave = false;').replace('  if (needsEmergencyLandingSave) {', '');
 const inputHandlers = section(hud, 'const keys = {};', 'function showBanner(');
 const reset = section(hud, 'function resetCar(', 'function applyTranslations(');
