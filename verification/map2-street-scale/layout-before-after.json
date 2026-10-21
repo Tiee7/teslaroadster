@@ -1,0 +1,32 @@
+{
+  "baseCommit": "907a7029925d70ac1ebcd3e4e766767d599739e3",
+  "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+  "before": {
+    "roadWidthMetres": 32,
+    "laneWidthMetres": 5.333333333333333,
+    "buildings": 128,
+    "sceneMeshObjects": 10175,
+    "shadowCasters": 128,
+    "lights": 0,
+    "triangles": 55354,
+    "instances": 10175,
+    "bridges": 2,
+    "worldSourceSha256": "4f6ffc9700e9e383c81ad7db6d511eedf24ce98bd436811903ee6986059e33fd",
+    "configSourceSha256": "fb431bc976139101e4ea4025e5ae6a8a28d22b1b68f045cf689c917808a27306"
+  },
+  "after": {
+    "roadWidthMetres": 21,
+    "laneWidthMetres": 3.5,
+    "buildings": 128,
+    "sceneMeshObjects": 1903,
+    "shadowCasters": 128,
+    "lights": 0,
+    "triangles": 55410,
+    "instances": 10203,
+    "bridges": 2,
+    "worldSourceSha256": "ac2efaef8ab33e6bc5749b1b6e7ccf260fbd8c2006ddd6ad46c15e1c5402cd08",
+    "configSourceSha256": "d4a61b0ce448fd05acfcd4e100ad3fac5c3ae05886949810155524a7265c93f1"
+  },
+  "meshObjectReduction": 8272,
+  "boundary": "Actual Three r128 CPU scene graph and geometry. Mesh objects are potential rendering submissions before culling, not measured GPU draw calls, browser or phone FPS."
+}

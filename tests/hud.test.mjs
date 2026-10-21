@@ -199,6 +199,7 @@ test('actual continuous consumption, depletion and reset immediately update the 
     groundHopActive: false, jumpInertiaSeconds: null };
   const alerts = [];
   const context = vm.createContext({ state, MAX_AIR_SECONDS: 10, AUTO_DESCENT_USED_SECONDS: 8, isAirborne: true,
+    CITY_DEFAULT_LANE_OFFSET: 21 / 6 * 1.5,
     showBanner() {}, sound: { speakAlert: type => alerts.push(type), beep() {} }, window: {}, clearDebris() {}, carMeshGroup: {},
     currentMap: 'city', renderBannerText() {}, document: { getElementById: () => ({ classList: { add() {}, remove() {} } }) },
   });

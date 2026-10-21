@@ -12,7 +12,7 @@ export function installJetPhysics(context) {
   function testJetFrame(dt) {
     const t=I18N[currentLang];
     ${section('  const isRealMode =', '  const playerWorldZ =')}
-    ${section('  const isCockpitFpv = (cameraModeIndex === 3);', '  let activeCount = 0;')}
+    ${section('  const isCockpitFpv = (cameraModeIndex === 3);', '  if (presentFrame) {')}
     return {isAirborne,isRearThrusterFiring,isLiftFiring,isDescendFiring,isRetroBrakeFiring,retroImpulseSeconds,retroBrakeDemand,retroUsesRearNozzles,airConsumedThisFrame,rollInput,pitchInput,yawInput,airJetLeft,airJetRight};
   }
   globalThis.jetTest={state,keys,step:testJetFrame,setMap(value){currentMap=value},setView(value){cameraModeIndex=value},powers(){return allThrusterPlumes.map(p=>({power:thrusterPlumeState.get(p).power,visible:p.visible}));},resetVisuals(){clearThrusterVisuals();}};`,context);

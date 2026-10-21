@@ -1,0 +1,9 @@
+{
+  "baseCommit": "907a7029925d70ac1ebcd3e4e766767d599739e3",
+  "oldProgramSha256": "ef66db3f74dccc04be14e6f8f7424347d622de191e0a349166586d30c20bdb67",
+  "newProgramSha256": "cdfdde9664c81e8e9ffc77295870c729d26535c53ab3741251016d5da8579fb5",
+  "onlyCityLayoutConstantsChanged": true,
+  "completeCoastSourceByteIdentical": true,
+  "highwayTrafficSourceByteIdentical": true,
+  "boundary": "Source-generation equivalence proof, not WebGL/FPS acceptance"
+}

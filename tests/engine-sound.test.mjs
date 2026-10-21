@@ -157,7 +157,7 @@ test('settings loads saved state before WebGL, translates and toggles only engin
 
 test('production map switches and repeated vehicle or challenge resets retain the engine preference', () => {
   const h = harness(); h.sound.setSimulatedEngineEnabled(false); h.sound.init();
-  Object.assign(h.context, { state: {}, currentMap: 'highway', MAX_AIR_SECONDS: 10, carMeshGroup: {}, highwayEnvGroup: {}, cityEnvGroup: {}, trafficLevelIndex: 1,
+  Object.assign(h.context, { state: {}, currentMap: 'highway', MAX_AIR_SECONDS: 10, CITY_DEFAULT_LANE_OFFSET: 5.25, carMeshGroup: {}, highwayEnvGroup: {}, cityEnvGroup: {}, trafficLevelIndex: 1,
     clearDebris() {}, renderBannerText() {}, populateTraffic() {}, applyTranslations() {} });
   vm.runInContext(readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8'), h.context);
   const config=readFileSync(new URL('../src/config.js',import.meta.url),'utf8');

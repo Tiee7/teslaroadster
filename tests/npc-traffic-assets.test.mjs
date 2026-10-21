@@ -83,7 +83,7 @@ test('LOD caps nearby detail and each style preserves normal traffic dimensions'
  assert.ok(f.window.RoadsterTrafficAssets.stats().cachedGeometries<=assets.geometryPool.length);
 });
 test('both maps cap repeated populations without growing shared geometry or retaining removed instances',()=>{
- const f=fixture();vm.runInContext('const LANE_COUNT=6,LANE_CENTERS=[-8.75,-5.25,-1.75,1.75,5.25,8.75],CITY_ROAD_COORDS=[-240,-120,0,120,240];this.population=populateTraffic;this.cars=()=>trafficCars;this.group=trafficGroup;',f.context);
+ const f=fixture();vm.runInContext('const state={x:5.25,z:0},CITY_LANE_WIDTH=3.5,LANE_COUNT=6,LANE_CENTERS=[-8.75,-5.25,-1.75,1.75,5.25,8.75],CITY_ROAD_COORDS=[-240,-120,0,120,240];this.population=populateTraffic;this.cars=()=>trafficCars;this.group=trafficGroup;',f.context);
  for(const map of ['highway','city']){
   vm.runInContext(`currentMap='${map}'`,f.context);
   for(const count of [20,36,52,200,0,52]){

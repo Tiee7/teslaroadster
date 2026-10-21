@@ -1,5 +1,6 @@
 // Identity-only CPU declarations. NEVER execute these functions.
-export const declaredUpdateSimulation = function updateSimulation(dt) {
+export const declaredUpdateSimulation = function updateSimulation(dt, presentationDt = dt) {
+  const presentFrame = presentationDt !== null;
   globalThis.window?.RoadsterDemo?.step(dt);
   const t = I18N[currentLang];
 
@@ -1053,6 +1054,9 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
     liftVisualPower, isDescendFiring ? driveInput.descend : 0,
     rollInput, pitchInput, yawInput, strafeVisualPower, retroVisualVx, retroVisualVy, retroVisualVz);
 
+  const rcsRollPitchActive = canUseRCS && (rollInput !== 0 || pitchInput !== 0);
+  const rcsYawRetroActive = (canUseRCS && (yawInput !== 0 || airJetLeft || airJetRight)) || isDescendFiring || isFrontRetroFiring;
+  if (presentFrame) {
   let activeCount = 0;
   for (let i = 1; i <= 4; i++) {
     const el = document.getElementById(`noz-${i}`);
@@ -1064,8 +1068,6 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
     if (el) el.classList.toggle('firing', isLiftFiring);
     if (isLiftFiring) activeCount++;
   }
-  const rcsRollPitchActive = canUseRCS && (rollInput !== 0 || pitchInput !== 0);
-  const rcsYawRetroActive = (canUseRCS && (yawInput !== 0 || airJetLeft || airJetRight)) || isDescendFiring || isFrontRetroFiring;
   const noz9 = document.getElementById('noz-9');
   const noz10 = document.getElementById('noz-10');
   if (noz9) noz9.classList.toggle('firing', rcsRollPitchActive);
@@ -1073,6 +1075,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
   if (rcsRollPitchActive) activeCount++;
   if (rcsYawRetroActive) activeCount++;
   document.getElementById('val-active-nozzles').textContent = `${activeCount}${t.activeSuffix}`;
+  }
 
   if (currentMap === 'highway') {
     highwayTraffic.step(trafficCars, { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, dt, LANE_CENTERS, WORLD_SPEED_SCALE);
@@ -1373,7 +1376,19 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
     state.lightningFlash = Math.max(0, state.lightningFlash - dt * 3.2);
   }
 
+  // The physics, contact, scoring, G/thermal/downforce feedback above still run
+  // every city tick. Expensive canvas/DOM/camera presentation runs once per
+  // rendered frame, not six times on a 10 fps phone.
+  if (!presentFrame) {
+    if (state.bannerTimer > 0) {
+      state.bannerTimer = Math.max(0, state.bannerTimer - dt);
+      if (state.bannerTimer === 0) renderBannerText();
+    }
+    return;
+  }
+
   // Requirement 7: Constant 60° FOV and zero camera zoom/flicker in Cockpit FPV
+  const cameraDt = typeof presentationDt === 'number' ? presentationDt : dt;
   const isAnyThrust = isLiftFiring || rearActive || isFrontRetroFiring;
   if (camera.fov !== 60) {
     camera.fov = 60;
@@ -1383,7 +1398,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
   const targetShake = isCockpitFpv
     ? 0.0
     : ((isAnyThrust ? 0.025 : 0.0) + (isSupersonic ? 0.032 : 0.0) + (state.impactCooldown > 0 ? 0.14 : 0.0));
-  state.cameraShake = isCockpitFpv ? 0.0 : THREE.MathUtils.lerp(state.cameraShake || 0, targetShake, 1.0 - Math.exp(-12.0 * dt));
+  state.cameraShake = isCockpitFpv ? 0.0 : THREE.MathUtils.lerp(state.cameraShake || 0, targetShake, 1.0 - Math.exp(-12.0 * cameraDt));
   const shakeX = (Math.random() - 0.5) * state.cameraShake;
   const shakeY = (Math.random() - 0.5) * state.cameraShake;
   const shakeZ = (Math.random() - 0.5) * state.cameraShake;
@@ -1444,7 +1459,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
         { x: state.x, y: visualY, z: playerWorldZ },
         { x: -state.x * 0.18, y: 1.48 + 1.05 * zoom + Math.min(1.8, airOffset * 0.12) + Math.sin(state.pitch) * 0.85, z: Math.max(3.6, 5.2 * zoom) },
         { x: 0, y: 0.65 + Math.sin(state.pitch) * 2.2, z: -9 },
-        dt, { x: shakeX, y: shakeY, z: shakeZ }
+        cameraDt, { x: shakeX, y: shakeY, z: shakeZ }
       );
     } else {
       camera.position.set(state.x * 0.5 + shakeX, state.y + 8.5 * zoom + shakeY, 11.5 * zoom + shakeZ);
@@ -1461,7 +1476,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
         { x: state.x, y: visualY, z: playerWorldZ },
         { x: sinY * distBack, y: 1.54 + 1.05 * zoom + Math.min(1.8, airOffset * 0.12) + Math.sin(state.pitch) * 0.85, z: cosY * distBack },
         { x: -sinY * 10, y: 0.65 + Math.sin(state.pitch) * 2.2, z: -cosY * 10 },
-        dt, { x: shakeX, y: shakeY, z: shakeZ }
+        cameraDt, { x: shakeX, y: shakeY, z: shakeZ }
       );
     } else {
       camera.position.set(state.x + sinY * 11.5 * zoom + shakeX, state.y + 10.5 * zoom + shakeY, state.z + cosY * 11.5 * zoom + shakeZ);
@@ -1486,7 +1501,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt) {
 
   // Update Live Cockpit Center Touchscreen & Speed/Rain Overlay Canvas
   updateCockpitHudScreen(mph, kmh, rearActive, isLiftFiring, isFrontRetroFiring, rcsRollPitchActive, rcsYawRetroActive);
-  updateSpeedAndWeatherOverlay(dt, mph, isAnyThrust, isSupersonic);
+  updateSpeedAndWeatherOverlay(cameraDt, mph, isAnyThrust, isSupersonic);
 
   const speedEl = document.getElementById('val-speed');
   const unitEl = document.getElementById('val-speed-unit');

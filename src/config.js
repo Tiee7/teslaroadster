@@ -361,7 +361,11 @@ const LANE_CENTERS = [-12.5, -7.5, -2.5, 2.5, 7.5, 12.5];
 const CITY_HALF_BOUND = 1200;
 const MAX_FLIGHT_ALTITUDE = 380.0;
 const CITY_ROAD_COORDS = [-900, -600, -300, 0, 300, 600, 900];
-const CITY_ROAD_WIDTH = 32;
+const CITY_ROAD_WIDTH = 21; // Six 3.5 m lanes; vehicle and map coordinates remain metres.
+const CITY_LANE_WIDTH = CITY_ROAD_WIDTH / 6;
+const CITY_DEFAULT_LANE_OFFSET = CITY_LANE_WIDTH * 1.5;
+const CITY_TAXI_STOP_OFFSET = CITY_ROAD_WIDTH / 2 - 4; // Full 3 m beam + 1 m clearance on asphalt.
+const CITY_BUILDING_SETBACK = 6; // Existing towers move to street corners, not a rescaled city.
 const WORLD_SPEED_SCALE = 1.65; // Preserve the highway arcade traversal / traffic calibration.
 const CITY_WORLD_SPEED_SCALE = 1.0; // City geometry, navigation distances and velocity all use metres.
 // Vertical coordinates are meters and vertical velocity is m/s. The horizontal

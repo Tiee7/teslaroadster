@@ -205,6 +205,6 @@ test('actual map switching isolates coast ownership/counts, blocks ranked starts
  await h.click('ranked-start');assert.equal(h.requests('/api/run').length,0);
  await h.click('btn-leaderboard');assert.equal(h.get('ranked-category').value,'highway-realistic');
  assert.ok(h.requests('/api/leaderboard').every(r=>!r.url.includes('coast')));
- h.context.switchMap('city');assert.equal(leaves,1);assert.equal(h.context.trafficCount,36);assert.equal(h.state.x,5.5);
+ h.context.switchMap('city');assert.equal(leaves,1);assert.equal(h.context.trafficCount,36);assert.equal(h.state.x,5.25);
  h.context.switchMap('highway');assert.equal(h.context.trafficCount,36);assert.equal(h.state.x,2.5);
 });

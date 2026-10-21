@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 const source = readFileSync(new URL('../src/taxi.js', import.meta.url), 'utf8');
 const config = readFileSync(new URL('../src/config.js', import.meta.url), 'utf8');
 const roadCoords = JSON.parse(config.match(/const CITY_ROAD_COORDS = (\[[^;]+\]);/)[1]);
-const origin = { x: 5.5, y: 0, z: 0 };
+const origin = { x: 5.25, y: 0, z: 0 };
 function model() {
   const context = vm.createContext({});
   vm.runInContext(source.split('// Scene adapter:')[0], context);
@@ -49,14 +49,14 @@ test('pickup stops and every drivable route edge clear the actual generated city
   const world = readFileSync(new URL('../src/world.js', import.meta.url), 'utf8');
   const generation = world.slice(world.indexOf('  const blockCenters = '), world.indexOf('  // High-Altitude Glass Pedestrian Skybridges'));
   const boundsContext = vm.createContext({
-    cityEnvGroup: new Object3D(), cityBuildings: [], bldgMats: [{}, {}, {}], neonTrimMats: [{}, {}, {}],
+    CITY_ROAD_WIDTH: 21, CITY_BUILDING_SETBACK: 6, cityEnvGroup: new Object3D(), cityBuildings: [], bldgMats: [{}, {}, {}], neonTrimMats: [{}, {}, {}],
     windowLitMat: {}, windowWarmMat: {}, titaniumMaterial: {}, helipadRingMat: {}, helipadMarkMat: {},
     THREE: { Mesh, BoxGeometry: Geometry, CylinderGeometry: Geometry, SphereGeometry: Geometry,
       PlaneGeometry: Geometry, RingGeometry: Geometry, MeshBasicMaterial: Material },
   });
   vm.runInContext(generation, boundsContext);
   assert.equal(boundsContext.cityBuildings.length, 128);
-  const actualGraph = core.buildRoadGraph(roadCoords, 11.5, boundsContext.cityBuildings, 1200);
+  const actualGraph = core.buildRoadGraph(roadCoords, 6.5, boundsContext.cityBuildings, 1200);
   assert.equal(actualGraph.nodes.length, 49);
   for (const node of actualGraph.nodes) {
     assert.equal(core.isStopClear(node, boundsContext.cityBuildings, 1200), true);
@@ -241,7 +241,7 @@ function harness() {
   const state = { ...origin, yaw: 0, isDestroyed: false, score: 123, carsCleared: 10 };
   const context = vm.createContext({ window, document, Element, state, currentLang: 'en', currentMap: 'city', lastTime: 1,
     Math: Object.assign(Object.create(Math), { random: random(1) }),
-    CITY_ROAD_COORDS: roadCoords, cityBuildings: [], CITY_HALF_BOUND: 1200, cityEnvGroup: group, performance: { now: () => 9999 },
+    CITY_TAXI_STOP_OFFSET: 6.5, CITY_ROAD_COORDS: roadCoords, cityBuildings: [], CITY_HALF_BOUND: 1200, cityEnvGroup: group, performance: { now: () => 9999 },
     sound: { beep() {} }, clearAllInputKeys: () => { context.clears = (context.clears || 0) + 1; },
     THREE: { DoubleSide: 2, Group: Object3D, Mesh, CylinderGeometry: Geometry, RingGeometry: Geometry, MeshBasicMaterial: Material },
   });
@@ -474,8 +474,9 @@ test('integration exposes a city entry, retains zoom brackets and keeps taxi far
   assert.doesNotMatch(source, /state\.score\s*[+\-*/]?=|\/api\/|fetch\(/);
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
   assert.match(physics, /state\.isDestroyed = true;\s*window\.RoadsterTaxi\?\.onDestroyed\(\);\s*RoadsterDrivingScore\.freeze\(state\)/);
-  assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else \{\s*updateSimulation\(dt\);\s*\}/);
-  assert.match(physics, /updateSimulation\(dt\);\s*\}\s*window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/);
+  assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else if \(currentMap === 'city'\)/);
+  assert.match(physics, /cityFrameClock\.advance\(frameSeconds, \(step, presentationDt\) => \{\s*updateSimulation\(step, presentationDt\);\s*window\.RoadsterTaxi\?\.tick\(false\);\s*\}, cityFrameActive\)/);
+  assert.match(physics, /updateSimulation\(dt\);\s*\}\s*if \(currentMap === 'city'\) window\.RoadsterTaxi\?\.present\?\.\(\);\s*else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/);
 
   const bundler = readFileSync(new URL('../bundle_app.py', import.meta.url), 'utf8');
   assert.ok(bundler.indexOf("'vehicles.js'") < bundler.indexOf("'taxi.js'"));

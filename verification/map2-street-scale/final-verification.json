@@ -1,0 +1,22 @@
+{
+  "tested_commit": "77bc35a9ca9da3b642cf4009db9d6f64bc0f20a8",
+  "node": {
+    "tests": 730,
+    "passed": 730,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "duration_ms": 305025.040426,
+    "finished_at": "2026-10-21T00:51:19.079650+00:00",
+    "log_sha256": "1a18223918cd716e63e5456e60927c2cbe56f36295ec53621c1145ba687304df"
+  },
+  "check": "passed",
+  "build": "passed; generated index unchanged",
+  "checked_at": "2026-10-21T00:52:40.573928+00:00",
+  "publication": "pending original approval; not published",
+  "limits": [
+    "No real-phone FPS measurement",
+    "No claim to contain missing coast sixth candidate",
+    "Earlier aggregate failures were isolated harness loading failures; fixed without removing assertions"
+  ]
+}
