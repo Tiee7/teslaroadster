@@ -257,6 +257,7 @@ test('production physics passes actual analog drive load without changing the ex
       rollInput: 0, pitchInput: 0, yawInput: 0, airJetLeft: false, airJetRight: false, canUseRCS: true,
       isLiftFiring: false, rearActive: true, isFrontRetroFiring: false, tireScreechIntensity: .42,
       sound: {update(...values) { args = values; }},
+      cityOwnsDrivingSound: () => false,
     });
     vm.runInContext(callSite, context);
     assert.deepEqual(args, [.5, true, false, false, .42, Math.max(...Object.values(driveInput))]);

@@ -51,7 +51,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
         car.mesh.rotation.z += car.blastVRoll * dt;
       }
     });
-    sound.update(0, false, false, true);
+    if (!cityOwnsDrivingSound()) sound.update(0, false, false, true);
     document.getElementById('ui-flight-mode').textContent = t.modeDestroyed;
     document.getElementById('ui-flight-mode').className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300';
     document.getElementById('val-hull-pct').textContent = '0%';
@@ -1376,6 +1376,16 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     state.lightningFlash = Math.max(0, state.lightningFlash - dt * 3.2);
   }
 
+  // Capture resolved thrust, not Web Audio automation, on each city physics tick.
+  // The render owner below samples fresh speed/input even on a zero-tick frame.
+  if (cityOwnsDrivingSound()) {
+    citySoundFrame = {
+      thrust: isLiftFiring || rearActive || isFrontRetroFiring,
+      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || isFrontRetroFiring,
+      tires: tireScreechIntensity
+    };
+  }
+
   // The physics, contact, scoring, G/thermal/downforce feedback above still run
   // every city tick. Expensive canvas/DOM/camera presentation runs once per
   // rendered frame, not six times on a 10 fps phone.
@@ -1490,7 +1500,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   }
 
   const anyAttitude = (rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS;
-  sound.update(
+  if (!cityOwnsDrivingSound()) sound.update(
     Math.abs(state.speed) / state.maxSpeed,
     isLiftFiring || rearActive || isFrontRetroFiring,
     anyAttitude || isFrontRetroFiring,

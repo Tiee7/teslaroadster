@@ -3,7 +3,7 @@
   "numericalProgramSourceSha256": "cdfdde9664c81e8e9ffc77295870c729d26535c53ab3741251016d5da8579fb5",
   "sourceHashes": {
     "src/config.js": "d4a61b0ce448fd05acfcd4e100ad3fac5c3ae05886949810155524a7265c93f1",
-    "src/physics-main.js": "83d8c42b46b16dee50afdeccd35c40fe15ccee07360da1dd040c103aafeecd45",
+    "src/physics-main.js": "bd17ffa1413ec5fdf166214827873c2314a87ba7fad93b1bfd3feebd8577f035",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
     "src/ui-hud.js": "b74ac2fdb4e30e27e4cd7532aa70e43de61675d70566df546970ffc65fc2e39e",
@@ -11,7 +11,7 @@
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "nodeGeneratorSha256": "224474ea0998bc859b9ef0bfc6b1a0526f4d1d73c499c949d7d047d45c7b7aff",
+  "nodeGeneratorSha256": "0f0aa7e66e409fa3e7ded5f2872d88d5d3e9f55e58c784c18365cabd93f4fec7",
   "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
   "mathProfiles": [
     {
@@ -25,8 +25,8 @@
   ],
   "functionSources": {
     "updateSimulation": {
-      "sha256": "eddd902637a50d6359dcb9792f433f370d1e315ebeb8e81a4f8bb4329d133c33",
-      "length": 84523
+      "sha256": "21314ea2ddf7413ff2797d5fd5b4365e70f1fc1d5bda09b036c01d2af8e68389",
+      "length": 85049
     },
     "wrapAnglePi": {
       "sha256": "4a43189ee76d5927e870e14a61a5de8fe71d91dcb8c3a5996d52adc61fa19c52",
@@ -119,8 +119,8 @@
     {
       "name": "motion-gas-altitude-attitude-body",
       "file": "src/physics-main.js",
-      "begin": 25381,
-      "end": 70946,
+      "begin": 25410,
+      "end": 70975,
       "firstLine": 607,
       "lastLine": 1520,
       "sourceSha256": "ad65bee80f1406a53e6aa0f2e3d95ce149111e8e45528e11991f6847608f2ba1",
@@ -132,8 +132,8 @@
     {
       "name": "npc-contact-body",
       "file": "src/physics-main.js",
-      "begin": 79984,
-      "end": 84169,
+      "begin": 80013,
+      "end": 84198,
       "firstLine": 1694,
       "lastLine": 1762,
       "sourceSha256": "86b4b288ec931d6d8e2e8d5adc60946bcb177fc9ae9473c1633e080c9130afa8",
@@ -147,8 +147,8 @@
     {
       "name": "real-g-feedback-tail",
       "file": "src/physics-main.js",
-      "begin": 85127,
-      "end": 85574,
+      "begin": 85156,
+      "end": 85603,
       "firstLine": 1782,
       "lastLine": 1787,
       "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
