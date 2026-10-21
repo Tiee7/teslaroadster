@@ -47,15 +47,16 @@ test('all stops and shortest-route segments stay on the connected city asphalt g
 
 test('pickup stops and every drivable route edge clear the actual generated city building collision boxes', () => {
   const world = readFileSync(new URL('../src/world.js', import.meta.url), 'utf8');
-  const generation = world.slice(world.indexOf('  const blockCenters = '), world.indexOf('  // High-Altitude Glass Pedestrian Skybridges'));
+  const generation = world.slice(world.indexOf('  const towersForSkybridges = []', world.indexOf('function buildOpenWorldCity()')), world.indexOf('  // High-Altitude Glass Pedestrian Skybridges'));
   const boundsContext = vm.createContext({
-    CITY_ROAD_WIDTH: 21, CITY_BUILDING_SETBACK: 6, cityEnvGroup: new Object3D(), cityBuildings: [], bldgMats: [{}, {}, {}], neonTrimMats: [{}, {}, {}],
+    CITY_ROAD_WIDTH: 21, CITY_BUILDING_SETBACK: 12, cityEnvGroup: new Object3D(), cityBuildings: [], bldgMats: [{}, {}, {}], trimMat: {}, landmarkTrimMat: {},
     windowLitMat: {}, windowWarmMat: {}, titaniumMaterial: {}, helipadRingMat: {}, helipadMarkMat: {},
     THREE: { Mesh, BoxGeometry: Geometry, CylinderGeometry: Geometry, SphereGeometry: Geometry,
       PlaneGeometry: Geometry, RingGeometry: Geometry, MeshBasicMaterial: Material },
   });
   vm.runInContext(generation, boundsContext);
-  assert.equal(boundsContext.cityBuildings.length, 128);
+  assert.equal(boundsContext.cityBuildings.length, 99);
+  assert.equal(boundsContext.cityBuildings.filter(b => b.isHelipad).length, 35);
   const actualGraph = core.buildRoadGraph(roadCoords, 6.5, boundsContext.cityBuildings, 1200);
   assert.equal(actualGraph.nodes.length, 49);
   for (const node of actualGraph.nodes) {

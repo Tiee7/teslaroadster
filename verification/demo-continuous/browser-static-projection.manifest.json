@@ -1,8 +1,8 @@
 {
   "schema": "verification-browser-static-projection-v1",
-  "numericalProgramSourceSha256": "cdfdde9664c81e8e9ffc77295870c729d26535c53ab3741251016d5da8579fb5",
+  "numericalProgramSourceSha256": "59530c9a5abc20a0410939b44e5c431ea17504ab3aa70db54da5a33d3b1844a7",
   "sourceHashes": {
-    "src/config.js": "d4a61b0ce448fd05acfcd4e100ad3fac5c3ae05886949810155524a7265c93f1",
+    "src/config.js": "7aeb13fafed9d742fc62cbafe029624ddd769e8da381569ca7c1a3f364d13d8b",
     "src/physics-main.js": "c45d58b9fce4fb19b5928ca5d96700f7c332a9d737b60ba9b0ceee72dde007db",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
@@ -11,7 +11,7 @@
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "nodeGeneratorSha256": "01df01f059daa8382641b6c82fdfc80c7e64e7c603ac5a257204b5d0302571c9",
+  "nodeGeneratorSha256": "700707d382c21979818c4d36c5c65385957d2dc1b795b30278e50a8bf163cf70",
   "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
   "mathProfiles": [
     {
@@ -98,11 +98,11 @@
       "name": "world-tank-mass-constants",
       "file": "src/config.js",
       "begin": 20636,
-      "end": 22337,
+      "end": 22328,
       "firstLine": 357,
       "lastLine": 389,
-      "sourceSha256": "6e04fdf61cf51d84960273b7bfb264c41cbfbc667f52562faec88e3e38bd2f8b",
-      "emittedSha256": "6e04fdf61cf51d84960273b7bfb264c41cbfbc667f52562faec88e3e38bd2f8b",
+      "sourceSha256": "512b1811fe5ab7b19fd3a78083e296706dd1e79f6f26480489784c7ac8bf8615",
+      "emittedSha256": "512b1811fe5ab7b19fd3a78083e296706dd1e79f6f26480489784c7ac8bf8615",
       "transformations": []
     },
     {
