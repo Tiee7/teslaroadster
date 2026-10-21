@@ -57,6 +57,7 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
   }
   h.root.updateMatrixWorld(true);
   for (const b of h.buildings) {
+    assert.ok(b.minX >= -1200 && b.maxX <= 1200 && b.minZ >= -1200 && b.maxZ <= 1200, 'all actual building boxes stay inside city boundaries');
     const mesh = h.root.getObjectByName(`city-building-${b.id}`), bounds = new h.c.THREE.Box3().setFromObject(mesh);
     for (const [actual, expected] of [[bounds.min.x,b.minX],[bounds.max.x,b.maxX],[bounds.min.z,b.minZ],[bounds.max.z,b.maxZ],[bounds.max.y,b.height]]) assert.ok(Math.abs(actual - expected) < 1e-6, 'rendered and collision boxes are identical');
     if (b.kind === 'low') {

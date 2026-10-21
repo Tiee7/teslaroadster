@@ -1,0 +1,45 @@
+✔ city keeps metre scale, six real 3.5 m lanes and a matching reset/NPC/stop contract (2.122972ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (338.915646ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (618.792125ms)
+✔ all stops and shortest-route segments stay on the connected city asphalt grid (82.931277ms)
+✔ pickup stops and every drivable route edge clear the actual generated city building collision boxes (15.180082ms)
+✔ five distinct spaced waiting passengers have long reachable trips on every refill (171.978278ms)
+✔ green destination arrival stays exactly 2m in 3D, including swept motion (0.414028ms)
+✔ white pickup radius doubles to 4m without widening destination or permitting airborne arrivals (319.7793ms)
+✔ public entry explains pickup radius and independent fares in both languages (3.310859ms)
+✔ single-passenger state machine pays once, refills five and ignores other pickup points while occupied (76.858822ms)
+✔ distance-based fares are integral, monotonic and bounded at 1000–3000 (0.369273ms)
+✔ repeated starts do not duplicate passengers; reset settles loss then clears the new round (78.886524ms)
+✔ public shortcut is city-only, repeat-safe, focus-safe and never reopens an active game (110.800114ms)
+✔ public city button starts and exits cleanly in every HUD, while other maps never expose or start it (69.307508ms)
+✔ real shared keyboard handler delegates = exclusively, preserves typing, and retains ] zoom (72.328911ms)
+✔ scene has five readable double-sided white beams and only one green destination while occupied (71.581632ms)
+✔ map exit and repeated stops fully remove and dispose markers and the active-only score display (80.819572ms)
+✔ bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets (66.39902ms)
+✔ numeric passenger score survives language and HUD/camera changes without adding visual text (65.749396ms)
+✔ menus pause transitions; destruction clears the occupied ride before any payout (76.748981ms)
+✔ integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state (2.282101ms)
+✔ stop clearance rejects the entire column footprint, trim margin and city boundary (0.519053ms)
+✔ landing and low altitude flight never sweep a pickup or destination (131.50799ms)
+✔ crashes settle a single double-fare penalty and freeze the result until a new round (67.696118ms)
+✔ empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn (69.179124ms)
+✔ taxi model itself blocks all payouts after death and applies nonnegative loss only once (107.345768ms)
+✔ bottom-right passenger HUD participates in footer bounds and releases its active layout (66.469855ms)
+✔ cockpit passenger strip shows live destination distance and local score without covering speed or tank (68.437889ms)
+✔ destination bearing maps vehicle-forward up and left/right correctly at every heading (0.668343ms)
+✔ top-left navigation shows only arrow and live meters across every HUD mode and camera (75.859708ms)
+✔ corner arrow and meters clear safe areas, header controls and rotation on phone and desktop (0.833696ms)
+✔ corner arrow and meter digits have silhouette contrast without a background, border or card (72.54606ms)
+✔ meter digits follow the occupied destination live, round once and reset between passengers (72.053191ms)
+✔ navigation crosses north and +/-180 smoothly without a reverse full-turn jump (275.842196ms)
+✔ menus pause passenger transitions without freezing the live vehicle-relative bearing (79.001473ms)
+✔ delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space (313.266573ms)
+✔ short landscape notice space is bounded by the header, footer and occupied-trip row (0.61225ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2920.17379

@@ -1,0 +1,32 @@
+{
+  "full_tested_production_commit": "c7a50316db0ae3fc42acef47a39b966009fdcd9d",
+  "production_source_still_identical": true,
+  "node_full": {
+    "tests": 750,
+    "passed": 750,
+    "failed": 0,
+    "skipped": 0,
+    "duration_ms": 320326.006782,
+    "log_sha256": "624c2f8484c2a58de15fb7541c750d8054f5c041a32bc4ec2527460944bd593f"
+  },
+  "post_review_focused": {
+    "tests": 37,
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0,
+    "all_carriageway_sight_rays": 42336,
+    "production_roof_landings": 99,
+    "test_source_sha256": "6c46d019203a68dbb9970417a6e1c89582d93e0fc2606bf6f6a5e226d54160f1",
+    "log_sha256": "1cb8ff004ea2fed8e0d184c0c138b5e076d54a9cff03936a7adbc08387f9df49",
+    "meaning": "Only tests, CPU diagram and documentation strengthened after full run; no production source changes."
+  },
+  "check": "passed after audit additions",
+  "build": "passed; generated index unchanged",
+  "checked_at": "2026-10-21T04:01:11.135139+00:00",
+  "publication": "not yet published",
+  "limits": [
+    "CPU geometry/projection only; not WebGL game screenshots or actual material/weather/phone validation",
+    "Mesh object counts are not measured GPU draw calls or FPS",
+    "Original skybridges remain visual, not new collision/landing support"
+  ]
+}
