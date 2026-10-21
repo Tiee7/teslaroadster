@@ -1,0 +1,15 @@
+{
+  "schema": "quiet-h-brake-source-epoch-v1",
+  "baseMain": "42db2bb744c8b4c42bebb34360030ff05cd10484",
+  "inheritedSourceEpoch": "verification/driving-feedback-20261021/source-epoch.json",
+  "inheritedSourceEpochSha256": "f90be7573af8846bbc1db2194a1f0f7717943249ff0d1270bd7bc40a9ec7e16e",
+  "authorizedSourceSha256": {
+    "physics-main": "c1825f62ab06be97fc5a7cddfa5f14e03813d533cf5f0a54d58ab4f2a9d02735"
+  },
+  "baselinePhysicsSha256": "6f2581748cc2a9b50d06b8aa69b5d23a5117188da2c036757eeaa75a223c55fa",
+  "unchangedAudioSha256": {
+    "audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e"
+  },
+  "scope": "Only H/foot-brake-derived retro sound flags; S reverse and independent thrust/attitude sounds remain. All physical and visible nozzle code exact."
+}

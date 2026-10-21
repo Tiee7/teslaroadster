@@ -13,7 +13,7 @@ export function motionHarness(overrides = {}, map = 'city', sources = null) {
     triggerPhysicsCollision(...args) { impacts.push(args); } });
   vm.runInContext(`${source('driving-score.js')}\n${source('config.js')}\nconst keys = {};\n${part('function wrapAnglePi(', 'function updateSimulation(')}
     function motionStep(dt) { const t = I18N[currentLang]; ${part('  const isRealMode =', '  const playerWorldZ =')}
-      return { isAirborne, isRearThrusterFiring, isLiftFiring, isDescendFiring, isRetroBrakeFiring, retroImpulseSeconds, airConsumedThisFrame };
+      return { isAirborne, isRearThrusterFiring, isLiftFiring, isDescendFiring, isRetroBrakeFiring, retroImpulseSeconds, airConsumedThisFrame, audioState: { driveInput, isRearThrusterFiring, isLiftFiring, isRetroBrakeFiring, retroUsesRearNozzles, rollInput, pitchInput, yawInput, airJetLeft, airJetRight, canUseRCS } };
     }
     globalThis.motionApi = { state, keys, step: motionStep, setMap(value) { currentMap = value; } };
   `, context);

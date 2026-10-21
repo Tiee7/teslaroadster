@@ -1,0 +1,20 @@
+{
+  "baseMain": "42db2bb744c8b4c42bebb34360030ff05cd10484",
+  "testSourceClosureUnchanged": {
+    "src/coast-map.js": {
+      "bytes": 105044,
+      "sha256": "4242c4c6a739c1e5026e2bd013c282f80dc15cd69db74254dcfafcd4b0328c6e"
+    },
+    "src/coast-road-network.js": {
+      "bytes": 23769,
+      "sha256": "7ae61f2735a9b0106b2eaf288d1b322f42affa032c423fe0a65a54c97ca2c187"
+    },
+    "tests/coast-traffic-3d.test.mjs": {
+      "bytes": 3116,
+      "sha256": "c62cf20765a939a6e1cb63ee85ec6164cb8b8a4564c2c2e5aff2272d30b5b67f"
+    }
+  },
+  "originalLongRunLog": "verification/driving-feedback-20261021/full-test-integration-872.log",
+  "selectedPassEvidence": "verification/driving-feedback-20261021/final-candidate-1800s-traffic-extract.log",
+  "note": "Reuse these3tests only; not a claim of rerunning. Original full integration had3obsolete unrelated fixture failures subsequently fixed before42db release."
+}

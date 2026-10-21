@@ -255,7 +255,7 @@ test('production physics passes actual analog drive load without changing the ex
     const context = vm.createContext({
       state: {speed: -40, maxSpeed: 80}, driveInput,
       rollInput: 0, pitchInput: 0, yawInput: 0, airJetLeft: false, airJetRight: false, canUseRCS: true,
-      isLiftFiring: false, rearActive: true, isFrontRetroFiring: false, tireScreechIntensity: .42,
+      isLiftFiring: false, isRearThrusterFiring: true, isRetroBrakeFiring: false, rearActive: true, isFrontRetroFiring: false, tireScreechIntensity: .42,
       sound: {update(...values) { args = values; }},
       cityOwnsDrivingSound: () => false, coastOwnsDrivingSound: () => false,
     });

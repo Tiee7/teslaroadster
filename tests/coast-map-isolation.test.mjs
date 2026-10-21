@@ -4,7 +4,8 @@ const baseline=Object.fromEntries(['physics-main.js','config.js'].map(file=>[fil
 const hash=s=>createHash('sha256').update(s).digest('hex');
 test('driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline',()=>{
  const contract=JSON.parse(readFileSync(new URL('../verification/driving-feedback-20261021/source-epoch.json',import.meta.url)));
- for(const[file,expected]of Object.entries(contract.currentSourceSha256))assert.equal(hash(readFileSync(new URL(`../src/${file}.js`,import.meta.url))),expected,file);
+ const quiet=JSON.parse(readFileSync(new URL('../verification/quiet-h-brake-20261021/source-epoch.json',import.meta.url)));assert.equal(quiet.baseMain,'42db2bb744c8b4c42bebb34360030ff05cd10484');assert.equal(hash(readFileSync(new URL('../'+quiet.inheritedSourceEpoch,import.meta.url))),quiet.inheritedSourceEpochSha256);
+ for(const[file,expected]of Object.entries({...contract.currentSourceSha256,...quiet.authorizedSourceSha256}))assert.equal(hash(readFileSync(new URL(`../src/${file}.js`,import.meta.url))),expected,file);
  for(const[file,expected]of Object.entries(contract.baselineFixtureSha256))assert.equal(hash(baseline[file]),expected,file);
  assert.equal(contract.baseMain,'2efc2477d329b4aaef873a014f2dc8331a13fbc3');
 });

@@ -38,7 +38,7 @@ test('production sound uses absolute road speed, so 200/370 performance caps can
       let args;
       vm.runInNewContext(call, { state: { speed: kmh / 3.6, maxSpeed: maxKmh / 3.6 }, driveInput: { throttle: 1, boost: 0, reverse: 0 },
         rollInput: 0, pitchInput: 0, yawInput: 0, airJetLeft: false, airJetRight: false, canUseRCS: true,
-        isLiftFiring: false, rearActive: false, isFrontRetroFiring: false, tireScreechIntensity: 0,
+        isLiftFiring: false, isRearThrusterFiring: false, isRetroBrakeFiring: false, rearActive: false, isFrontRetroFiring: false, tireScreechIntensity: 0,
         cityOwnsDrivingSound: () => false, coastOwnsDrivingSound: () => false, sound: { update(...values) { args = values; } } });
       close(args[0], kmh / 200); pitches.push(voice(args[0], args[5]).rpm);
     }
