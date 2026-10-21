@@ -442,6 +442,9 @@ function resetCar() {
   window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
   window.RoadsterCityFrame?.reset();
+  window.RoadsterCoastFrame?.reset();
+  let coastSpawn=null;
+  state.coastSupportId=null;state.coastDetached=false;
   globalThis.window?.RoadsterDemo?.stop();
   if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
@@ -463,8 +466,7 @@ function resetCar() {
 
   if (currentMap === 'coast') {
     clearAllInputKeys();
-    const spawn=window.RoadsterCoast.respawn(trafficCars);
-    state.x=spawn.x;state.y=0;state.z=spawn.z;state.speed=spawn.speed;state.vx=0;state.vy=0;state.vz=-spawn.speed;
+    coastSpawn=window.RoadsterCoast.respawn(trafficCars);
   } else if (currentMap === 'highway') {
     state.x = 2.5;
     state.y = 0.0;
@@ -513,6 +515,9 @@ function resetCar() {
   renderBannerText();
   sound.beep(520, 0.1);
   window.RoadsterTaxi?.onReset();
+  if(coastSpawn){
+    const p=coastSpawn;Object.assign(state,{x:p.x,y:p.y,z:p.z,yaw:p.yaw,pitch:p.pitch,roll:p.roll,speed:p.speed,vx:p.vx*p.speed,vy:p.vy*p.speed,vz:p.vz*p.speed,coastSupportId:p.supportId,coastDetached:false});
+  }
   if (currentMap === 'coast') window.RoadsterCoast?.recoverTraffic(trafficCars,state);
   // Every new round starts clean immediately, including mobile/button resets.
   if (typeof updateDestroyedScores === 'function') updateDestroyedScores();
@@ -931,7 +936,7 @@ function triggerJump6m() {
   if (globalThis.window?.RoadsterDemo?.isBusy() && !window.RoadsterDemo.isRequestingJump()) return;
   if (state.isDestroyed || state.isFreefalling || state.airRemaining <= 0.15) return;
   sound.init();
-  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.surface(state.x,state.z).height ?? 0) : 0;
+  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.support({...state,grounded:!state.wasAirborne}).height ?? 0) : 0;
   if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
     const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
@@ -946,7 +951,7 @@ function triggerJump6m() {
   const currentAgl = Math.max(0.0, state.y - groundElev);
   // Only a fresh ground/roof takeoff gets launch grace. Midair O taps cannot
   // restart it and disable normal flight handling.
-  if (currentAgl <= 0.15) {
+  if (currentAgl <= 0.15 && (currentMap!=='coast'||(!state.wasAirborne&&!state.coastDetached))) {
     state.groundHopActive = true;
     state.jumpInertiaSeconds = 0;
     state.jumpInertiaGraceSeconds = globalThis.window?.RoadsterDemo?.isRequestingJump() ? (window.RoadsterDemo.jumpGraceSeconds?.() ?? 0.95) : null;
@@ -956,6 +961,7 @@ function triggerJump6m() {
   const demoJumpHeight = globalThis.window?.RoadsterDemo?.isRequestingJump() ? window.RoadsterDemo.jumpHeight() : 6.0;
   state.jumpTargetY = (currentAgl < 5.5) ? (groundElev + demoJumpHeight) : Math.min(MAX_FLIGHT_ALTITUDE, state.y + 6.0);
   state.isJumping6m = true;
+  if(currentMap==='coast'){state.coastDetached=true;state.coastSupportId=null;}
   state.isAltitudeHold = false;
   const nBadge = document.getElementById('key-n');
   if (nBadge) nBadge.classList.remove('active');
@@ -969,7 +975,7 @@ function toggleAltitudeHold() {
   if (globalThis.window?.RoadsterDemo?.isBusy()) return;
   if (state.isDestroyed) return;
   sound.init();
-  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.surface(state.x,state.z).height ?? 0) : 0;
+  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.support({...state,grounded:!state.wasAirborne}).height ?? 0) : 0;
   if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
     const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {

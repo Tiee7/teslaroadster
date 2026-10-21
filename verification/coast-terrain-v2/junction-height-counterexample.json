@@ -1,0 +1,13 @@
+{
+  "beforeCommit": "7b5b28439ac9312d02339b1cc25fb8fe93329fd3",
+  "route": 3,
+  "distance": 1053.2,
+  "point": {
+    "x": 257.170659,
+    "y": 0,
+    "z": 895.279717
+  },
+  "otherNonbridgeTopY": 0.3696767,
+  "counterexampleFixture": "tests/fixtures/coast-terrain-v2-baseline/road-network-before-level-junctions.js",
+  "fix": "Primary horizontal profile stays at0 until1550 to level pier T; completes descent at5000 before C crossing. Max grade6%. Every nonbridge triangle vertex/centroid and four directed NPC lanes at.5m are checked against all overlapping nonbridge surfaces."
+}

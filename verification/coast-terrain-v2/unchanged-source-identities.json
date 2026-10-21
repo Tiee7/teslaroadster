@@ -1,0 +1,13 @@
+{
+  "baseMain": "a88cedf657b3cc066a63063bde9aa1caeb606445",
+  "sha256": {
+    "audio": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+    "config": "7aeb13fafed9d742fc62cbafe029624ddd769e8da381569ca7c1a3f364d13d8b",
+    "city-clock": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "world": "b61a55b91e66f3a1e8c3dedb069e1814a7e3064fc5860543254eaae46df0aceb",
+    "taxi": "a8110538f48c2f5fd5ffbcd4583c57c930bf0479ef7f7c7498fa33ed2c42c6da",
+    "vehicles": "712d3963556d330085952fcaa938109728a9a1ad4fe1275d0e12a090446b9331",
+    "highway-demo": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "highway-traffic": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+  }
+}

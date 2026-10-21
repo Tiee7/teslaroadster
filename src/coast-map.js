@@ -1,78 +1,56 @@
-// Original compressed seaside district. No GTA/OSM geometry, imagery or assets.
+// Original seaside routes; no third-party map assets.
 // Data and traffic are renderer-independent; owned GPU resources are lazy/map-local.
 const RoadsterCoast = (() => {
   'use strict';
   const spec = Object.freeze({ id:'coast', halfBound:1200, shorelineX:-330, waterY:-.4,
     spawn:Object.freeze({x:-64,z:700,speed:18}), counts:Object.freeze([12,16,20]),
     pier:Object.freeze({minX:-810,maxX:-250,minZ:-668,maxZ:-632}), wheelHeight:60 });
-  const xs=[-70,430,950],zs=[-850,-300,300,850];
-  const roads=[...xs.map((x,i)=>({x,z:0,w:i<2?30:22,d:1740})),
-    ...zs.map(z=>({x:440,z,w:1060,d:22}))];
-  const junctions=xs.flatMap(x=>zs.map(z=>({x,z,w:34,d:34})));
+  const network=RoadsterCoastRoads;
+  const xs=[-70],zs=[-850,-300,300,850];
+  // Rectangles describe the retained coastal access only. Curved roads use
+  // exact triangle membership, not a giant rectangular driveable shortcut.
+  const roads=[{x:-70,z:200,w:9,d:1300},{x:(network.access.stations[0].x+network.access.stations.at(-1).x)/2,z:-650,w:network.access.stations.at(-1).x-network.access.stations[0].x,d:9}];
+  const junctions=[];
   const contains=(b,x,z,pad=0)=>x>=b.minX-pad&&x<=b.maxX+pad&&z>=b.minZ-pad&&z<=b.maxZ+pad;
-  const onRoad=(x,z,margin=0)=>[...roads,...junctions].some(r=>Math.abs(x-r.x)<=r.w/2-margin&&Math.abs(z-r.z)<=r.d/2-margin);
-  const surface=(x,z)=>{
-    const pier=contains(spec.pier,x,z);
-    const water=x<spec.shorelineX&&!pier;
-    return {solid:!water,water,pier,height:water?spec.waterY:0};
+  const onRoad=(x,z,margin=0)=>network.candidates(x,z).some(c=>c.road)&&(!margin||network.nearestSegment(x,z)?.distance<=4.5-margin);
+  const support=q=>{
+    let below=network.querySupport({...q,previousSupportId:q.coastSupportId||q.previousSupportId});
+    for(const b of buildings)if(q.x>b.minX-1.1&&q.x<b.maxX+1.1&&q.z>b.minZ-1.8&&q.z<b.maxZ+1.8&&q.y>=b.height-.55&&b.height>below.height)below={id:'roof',height:b.height,normal:{x:0,y:1,z:0},solid:true,water:false};
+    return {...below,pier:Boolean(below.pier)};
   };
-  const nodes=xs.flatMap((x,ix)=>zs.map((z,iz)=>({id:ix*zs.length+iz,x,z})));
-  const edges=[];
-  for(const a of nodes)for(const b of nodes)if((a.x===b.x&&Math.abs(a.id-b.id)===1)||
-    (a.z===b.z&&Math.abs(a.id-b.id)===zs.length))edges.push({from:a.id,to:b.id,length:Math.hypot(a.x-b.x,a.z-b.z)});
+  const surface=(x,z,pose={y:0})=>support({...pose,x,z});
+  const nodes=[...network.routes.map(r=>({id:r.id,...r.stations[0]})),{id:2,...network.access.stations[0]}];
+  const edges=[{from:0,to:1},{from:1,to:0},{from:0,to:2},{from:2,to:0}];
   let seed=90173;
   const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
   const buildings=[];
   for(const x of [-5,95,195,295,355,485,585,685,785,865,1035,1115])for(const z of [-1000,-720,-580,-440,-160,0,160,440,580,720,1000]){
-    const w=30+rand()*16,d=28+rand()*14,height=(x<430?8:12)+rand()*(z>600?10:16);
-    buildings.push(Object.freeze({x,z,w,d,height,minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,color:Math.floor(rand()*6)}));
+    const w=30+rand()*16,d=28+rand()*14,height=(x<430?8:12)+rand()*(z>600?10:16),color=Math.floor(rand()*6);
+    if(x<430&&!(x===95&&z===-720||x===355&&z===1000)&&[-w/2,0,w/2].every(dx=>[-d/2,0,d/2].every(dz=>network.terrainSupport(x+dx,z+dz).height<=.15))&&(!network.nearestSegment(x,z)||network.nearestSegment(x,z).distance>Math.hypot(w,d)/2+18))buildings.push(Object.freeze({x,z,w,d,height,minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,color}));
   }
   const palms=[];
   for(const x of [-120,-190])for(let z=-1020;z<=1020;z+=60)palms.push({x,z,h:9+rand()*4});
   for(const x of [380,480])for(let z=-990;z<=990;z+=110)if(zs.every(c=>Math.abs(z-c)>32))palms.push({x,z,h:9+rand()*4});
+  palms.splice(0,palms.length,...palms.filter(p=>network.terrainSupport(p.x,p.z).height<=.15&&!(p.z===990&&p.x>=380)));
   const obstacles=[...buildings,...palms.map(p=>({minX:p.x-.6,maxX:p.x+.6,minZ:p.z-.6,maxZ:p.z+.6,height:p.h,kind:'palm'}))];
 
-  // Rounded directed loops on the connected road graph, with distinct opposing lanes.
-  function route(left,right,reverse){
-    const lane=reverse?-4:4,top=-850+lane,bottom=850-lane,r=8;
-    left+=lane;right-=lane;
-    const pieces=[];
-    const line=(x,z,dx,dz,length)=>pieces.push({x,z,dx,dz,length});
-    const arc=(x,z,angle)=>pieces.push({x,z,angle,r,length:Math.PI*r/2});
-    line(left,bottom-r,0,-1,bottom-top-2*r);arc(left+r,top+r,Math.PI);
-    line(left+r,top,1,0,right-left-2*r);arc(right-r,top+r,Math.PI*1.5);
-    line(right,top+r,0,1,bottom-top-2*r);arc(right-r,bottom-r,0);
-    line(right-r,bottom,-1,0,right-left-2*r);arc(left+r,bottom-r,Math.PI/2);
-    return {pieces,length:pieces.reduce((n,p)=>n+p.length,0),reverse};
-  }
-  const routes=[route(-70,430,false),route(-70,430,true),route(430,950,false),route(430,950,true)];
-  function pose(routeId,distance){
-    const path=routes[((routeId%routes.length)+routes.length)%routes.length];
-    let s=((distance%path.length)+path.length)%path.length;
-    if(path.reverse)s=(path.length-s)%path.length;
-    for(const p of path.pieces){
-      if(s>p.length){s-=p.length;continue;}
-      let x,z,dx,dz;
-      if(p.r){const a=p.angle+s/p.r;x=p.x+p.r*Math.cos(a);z=p.z+p.r*Math.sin(a);dx=-Math.sin(a);dz=Math.cos(a);}
-      else{x=p.x+p.dx*s;z=p.z+p.dz*s;dx=p.dx;dz=p.dz;}
-      if(path.reverse){dx=-dx;dz=-dz;}
-      return {x,z,dx,dz,yaw:Math.atan2(-dx,-dz)};
-    }
-    throw Error('Invalid coastal route distance');
-  }
-  const safe=(p,cars,player,except)=>Math.hypot(p.x-player.x,p.z-player.z)>32&&cars.every(c=>c===except||c.mesh.visible===false||Math.hypot(p.x-c.mesh.position.x,p.z-c.mesh.position.z)>20);
+  const routes=[0,1,2,3].map(id=>network.trafficPath(id));
+  const pose=(routeId,distance)=>network.sampleRoute(routeId,distance);
+  const junctionTraffic=network.createTrafficJunctions();
+  const safe=(p,cars,player,except)=>junctionTraffic.canSpawn(p)&&(Math.abs(p.y-(player.y||0))>3||Math.hypot(p.x-player.x,p.z-player.z)>32)&&cars.every(c=>c===except||c.mesh.visible===false||Math.abs(p.y-c.mesh.position.y)>3||Math.hypot(p.x-c.mesh.position.x,p.z-c.mesh.position.z)>20);
   function place(car,cars,player){
     const path=routes[car.coastRoute];
     for(let i=0;i<32;i++){
       const s=(car.coastSpawnCursor+i*113)%path.length,p=pose(car.coastRoute,s);
       if(!safe(p,cars,player,car))continue;
       car.coastDistance=s;car.coastWaiting=false;car.coastCooldown=0;car.speed=car.desiredSpeed;
-      car.y=0;car.blastTimer=0;car.mesh.position.set(p.x,0,p.z);car.mesh.rotation.set(0,p.yaw,0);car.mesh.visible=true;
-      car.vx=p.dx*car.speed;car.vz=p.dz*car.speed;car.coastSpawnCursor=s+97;return true;
+      car.y=p.y;car.coastSupportId=p.supportId;car.blastTimer=0;car.mesh.position.set(p.x,p.y,p.z);car.mesh.rotation.order='YXZ';car.mesh.rotation.set(p.pitch,p.yaw,p.roll);car.mesh.visible=true;
+      car.vx=p.vx*car.speed;car.vy=p.vy*car.speed;car.vz=p.vz*car.speed;car.coastSpawnCursor=s+97;return true;
     }
     car.coastSpawnCursor+=79;car.coastWaiting=true;car.mesh.visible=false;car.speed=0;car.vx=car.vz=0;return false;
   }
   function createTraffic(count,createMesh,group,player){
+    junctionTraffic.reset();
     const cars=[];count=Math.max(0,Math.min(20,Math.floor(count)));
     for(let i=0;i<count;i++){
       const mesh=createMesh(i),routeId=i%routes.length,path=routes[routeId];group.add(mesh);mesh.visible=false;
@@ -86,11 +64,10 @@ const RoadsterCoast = (() => {
   function hit(car){car.coastCooldown=1.8;car.speed=0;car.vx=car.vz=0;}
   function respawn(cars=[]){
     const live=cars.filter(c=>c.mode==='coast'&&c.mesh.visible!==false&&!c.coastWaiting);
-    for(const x of [spec.spawn.x,436,956])for(let i=0;i<39;i++){
-      const z=700-i*40;
-      if(live.every(c=>Math.hypot(c.mesh.position.x-x,c.mesh.position.z-z)>32))return {x,z,speed:spec.spawn.speed};
+    for(let i=0;i<120;i++){
+      const p=pose(0,150+i*39);
+      if(live.every(c=>Math.abs(c.y-p.y)>3||Math.hypot(c.mesh.position.x-p.x,c.mesh.position.z-p.z)>32))return {...p,speed:spec.spawn.speed};
     }
-    // With at most20 cars and117 candidates this cannot be fully occupied.
     throw Error('No safe coastal road respawn');
   }
   function recoverTraffic(cars,player){
@@ -101,28 +78,33 @@ const RoadsterCoast = (() => {
   }
   function stepTraffic(cars,player,dt){
     dt=Math.max(0,Math.min(.1,Number.isFinite(dt)?dt:0));
-    const before=cars.map(c=>({car:c,x:c.mesh.position.x,z:c.mesh.position.z,vx:c.vx,vz:c.vz,speed:c.speed,visible:c.mesh.visible}));
+    const before=cars.map(c=>({car:c,x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,vx:c.vx,vz:c.vz,speed:c.speed,visible:c.mesh.visible}));
+    junctionTraffic.prepare(cars,dt);
     for(const car of cars){
       if(car.mode!=='coast')continue;
       if(car.blastTimer>0){
         car.blastTimer=Math.max(0,car.blastTimer-dt);car.mesh.position.x+=car.blastVx*dt;car.mesh.position.z+=car.blastVz*dt;
-        car.y=Math.max(0,(car.y||0)+car.blastVy*dt);car.blastVy-=22*dt;
+        car.y=(car.y||0)+car.blastVy*dt;car.blastVy-=22*dt;
         car.mesh.position.y=car.y;car.mesh.rotation.x+=(car.blastVPitch||0)*dt;car.mesh.rotation.z+=(car.blastVRoll||0)*dt;
         if(car.blastTimer===0){car.coastWaiting=true;car.mesh.visible=false;car.speed=0;car.vx=car.vz=0;}
         continue;
       }
       if(car.coastWaiting){place(car,cars,player);continue;}
       if(car.coastCooldown>0){car.coastCooldown=Math.max(0,car.coastCooldown-dt);car.speed=0;car.vx=car.vz=0;continue;}
-      const p=pose(car.coastRoute,car.coastDistance);let target=car.desiredSpeed;
+      const p=pose(car.coastRoute,car.coastDistance),aheadPose=pose(car.coastRoute,car.coastDistance+25);
+      const bend=Math.acos(Math.max(-1,Math.min(1,p.dx*aheadPose.dx+p.dz*aheadPose.dz)))/25;
+      let target=Math.min(car.desiredSpeed,Math.sqrt(3.5/Math.max(.001,bend)));
       for(const b of before){
-        if(b.car===car||!b.visible)continue;
+        if(b.car===car||!b.visible||Math.abs(b.y-p.y)>3)continue;
         const x=b.x-p.x,z=b.z-p.z,ahead=x*p.dx+z*p.dz,lateral=Math.abs(x*p.dz-z*p.dx);
         if(ahead>0&&ahead<42&&lateral<2.6)target=Math.min(target,Math.max(0,(ahead-10)/1.6));
       }
+      target=Math.min(target,junctionTraffic.targetSpeed(car));
       car.speed+=Math.max(-7*dt,Math.min(2.2*dt,target-car.speed));
-      car.coastDistance=(car.coastDistance+car.speed*dt)%routes[car.coastRoute].length;
-      const next=pose(car.coastRoute,car.coastDistance);car.mesh.position.set(next.x,0,next.z);car.mesh.rotation.y=next.yaw;
-      car.vx=next.dx*car.speed;car.vz=next.dz*car.speed;
+      const nextDistance=(car.coastDistance+car.speed*dt)%routes[car.coastRoute].length,next=pose(car.coastRoute,nextDistance);
+      if(!junctionTraffic.canAdvance(car,next)){car.speed=0;car.vx=car.vy=car.vz=0;continue;}
+      car.coastDistance=nextDistance;car.y=next.y;car.coastSupportId=next.supportId;car.mesh.position.set(next.x,next.y,next.z);car.mesh.rotation.set(next.pitch,next.yaw,next.roll);
+      car.vx=next.vx*car.speed;car.vy=next.vy*car.speed;car.vz=next.vz*car.speed;
     }
   }
   function sweptInterval(ax,az,bx,bz,box,padX,padZ){
@@ -141,17 +123,19 @@ const RoadsterCoast = (() => {
       car.mesh.position.x-state.x,car.mesh.position.z-state.z,
       {minX:-bounds.x,maxX:bounds.x,minZ:-bounds.z,maxZ:bounds.z},0,0);
     if(!interval)return null;
-    const dy=state.y-previous.y,ceiling=car.height+.15;
-    let t=interval.enter,y=previous.y+dy*t;
-    if(y>ceiling){
-      if(dy>=0)return null;
-      t=(ceiling-previous.y)/dy;
-      if(t>interval.exit||t>1)return null;
-      y=ceiling;
-    }
-    // Height is evaluated at actual contact, not horizontal entry or frame end.
-    return {t,y,body:y<car.height-.15};
+    // Intersect relative vertical intervals over the SAME swept XZ interval.
+    // Equal-height bridge cars collide; bridge/ground cars cannot collide.
+    const oldY=oldCar.y||0,newY=car.mesh.position.y||0;
+    const start=previous.y-oldY,delta=(state.y-previous.y)-(newY-oldY);
+    let enter=interval.enter,exit=interval.exit;
+    const lo=-1.25,hi=car.height+.15;
+    if(Math.abs(delta)<1e-12){if(start<lo||start>hi)return null;}
+    else{const a=(lo-start)/delta,b=(hi-start)/delta;enter=Math.max(enter,Math.min(a,b));exit=Math.min(exit,Math.max(a,b));}
+    if(enter>exit||enter>1)return null;
+    const y=previous.y+(state.y-previous.y)*enter,npcY=oldY+(newY-oldY)*enter,relativeY=y-npcY;
+    return {t:enter,y,npcY,relativeY,body:relativeY<car.height-.15};
   }
+
   function clipBuildings(previous,state){
     let earliest=null;
     for(const b of obstacles){
@@ -184,7 +168,6 @@ const RoadsterCoast = (() => {
   }
 
   let active=null,builds=0,disposals=0,failedBuilds=0;
-  // Whole-district art budget, including100 sculpted palms and later facade LODs.
   // This is a conservative structural ceiling, not measured draw calls or FPS.
   const artBudget=Object.freeze({sourceGzipBytes:32*1024,staticMeshDraws:96,staticTriangles:180000,textureBytes:4*1024*1024,geometryAndInstanceBytes:8*1024*1024,cpuPixelCacheBytes:1024*1024});
   // Bounded immutable CPU bitmap only; no Texture/GPU object survives leave().
@@ -368,11 +351,19 @@ const RoadsterCoast = (() => {
       const mat=material(color,extra),items=[{p:[x,y,z],s:[w,h,d]}];
       return extra.map?flatBatch(name,items,mat,extra.map.userData?.coastTileMetres||(extra.map===paverTexture?2.4:4)):batch(name,box,mat,items,{receiveShadow:true,flat:true});
     };
-    // Same original unit box/instance transform; only its independent UV changes.
-    const groundBox=own(box.clone()),groundUV=groundBox.attributes.uv,groundPosition=groundBox.attributes.position;
-    for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,groundPosition.getX(i)+.5,groundPosition.getZ(i)+.5);
-    const groundMaterial=material(0xffffff,{roughness:1}),inlandGround=batch('coast-inland-ground',groundBox,groundMaterial,[{p:[527.5,-.12,0],s:[1345,.16,2400]}],{receiveShadow:true,flat:true});
-    // Original, once-built world color field; geometry/height are untouched.
+    function triangleMesh(name,triangles,mat){
+      const positions=[],uvs=[];
+      for(const t of triangles){
+        const cross=(t.b.z-t.a.z)*(t.c.x-t.a.x)-(t.b.x-t.a.x)*(t.c.z-t.a.z);
+        for(const p of cross<0?[t.a,t.c,t.b]:[t.a,t.b,t.c]){positions.push(p.x,p.y,p.z);uvs.push(p.x/4,p.z/4);}
+      }
+      const geometry=own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.computeVertexNormals();
+      const mesh=new THREE.Mesh(geometry,mat);mesh.name=name;mesh.receiveShadow=true;mesh.userData.coastTerrainVersion=2;group.add(mesh);return mesh;
+    }
+    const groundMaterial=material(0xffffff,{roughness:1});
+    const terrainTriangles=[];for(let i=0;i<network.terrain.indices.length;i+=3){const ids=network.terrain.indices.slice(i,i+3);terrainTriangles.push({a:network.terrain.vertices[ids[0]],b:network.terrain.vertices[ids[1]],c:network.terrain.vertices[ids[2]]});}
+    const inlandGround=triangleMesh('coast-inland-ground',terrainTriangles,groundMaterial),groundUV=inlandGround.geometry.attributes.uv,groundPosition=inlandGround.geometry.attributes.position;
+    for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,(groundPosition.getX(i)+145)/1345,(groundPosition.getZ(i)+1200)/2400);
     function groundToneField(){
       const size=256,width=1345,depth=2400,minX=-145,minZ=-1200;
       if(!groundFieldCache){const bytes=new Uint8Array(size*size*4),regions=[];
@@ -403,7 +394,6 @@ const RoadsterCoast = (() => {
       texture.userData={coastWorldField:true,bounds:[minX,minX+width,minZ,minZ+depth]};group.userData.coastGroundField={size,bounds:texture.userData.bounds,regions:groundFieldCache.regions,scope:'Visual color only, not traversability/physical material'};return texture;
     }
 
-    // Continuous, opaque color fields preserve exact original surface bounds.
     function coastalSurface(kind,mat){
       const water=kind==='water',shore=spec.shorelineX,half=spec.halfBound;
       const stations=water?[-half,shore-370,shore-170,shore-90,shore-40,shore-15,shore]:[shore,shore+2,shore+6,shore+12,shore+24,-145];
@@ -429,14 +419,12 @@ const RoadsterCoast = (() => {
     coastalSurface('water',waterMaterial);
     const sandMaterial=material(0xffffff,{vertexColors:true,map:sandTexture,roughness:.95});
     coastalSurface('sand',sandMaterial);
-    // Close the original38cm visual cut without moving either physical boundary.
     const shoreGeometry=own(new THREE.BufferGeometry()),shoreX=spec.shorelineX;
     shoreGeometry.setAttribute('position',new THREE.Float32BufferAttribute([shoreX,-.42,-1200,shoreX,-.04,-1200,shoreX,-.04,1200,shoreX,-.42,1200],3));
     shoreGeometry.setAttribute('uv',new THREE.Float32BufferAttribute([-300,-.105,-300,-.01,300,-.01,300,-.105],2));
     const shoreColors=[];for(const color of [0x7c8d80,0x9c987e,0x9c987e,0x7c8d80]){const c=new THREE.Color(color);shoreColors.push(c.r,c.g,c.b);}
     shoreGeometry.setAttribute('color',new THREE.Float32BufferAttribute(shoreColors,3));shoreGeometry.setIndex([0,2,1,0,3,2]);shoreGeometry.computeVertexNormals();
     const shoreCut=new THREE.Mesh(shoreGeometry,sandMaterial);shoreCut.name='coast-shore-cut-face';shoreCut.receiveShadow=true;shoreCut.userData.coastArt={visualOnly:true,shoreClosure:true};group.add(shoreCut);
-    // Opaque surf stays water-side of the unchanged shoreline.
     const foamPositions=[],foamIndices=[];
     for(let z=-1188;z<1180;z+=36)for(let section=0;section<4;section++){
       const a=z+section*6,b=a+6;if(b>=-680&&a<=-620)continue;const x0=-330.48+.12*Math.sin(a*.08),x1=-330.48+.12*Math.sin(b*.08),width=.11+.035*Math.sin(z*.21),i=foamPositions.length/3;
@@ -447,52 +435,42 @@ const RoadsterCoast = (() => {
 
     slab('coast-promenade',-134,0,22,2200,0xc2b9a5,-.02,.10,{map:paverTexture,roughness:.92});
     const roadMat=material(0x343c40,{map:asphaltTexture,roughness:.94});
-    const roadRects=unionRectangles([...roads,...junctions]);
-    flatBatch('coast-road-surfaces',roadRects.map(r=>({p:[(r.minX+r.maxX)/2,-.015,(r.minZ+r.maxZ)/2],s:[r.maxX-r.minX,.08,r.maxZ-r.minZ]})),roadMat,4);
-    const markings=[];
-    for(const r of roads)if(r.d>r.w){for(let z=-800;z<850;z+=30)if(![-70,430].includes(r.x)&&zs.every(c=>Math.abs(c-z)>22))markings.push({p:[r.x,.035,z],s:[.22,.012,9]});}
-    else for(let x=-40;x<950;x+=30)if(xs.every(c=>Math.abs(c-x)>22))markings.push({p:[x,.035,r.z],s:[9,.012,.22]});
-    batch('coast-lane-markings',paintPlane,material(0xc6b681,{roughness:.95}),markings);
-    // Paint only: all original30m road geometry/height, traversability and NPC
-    // routes are untouched. A5m through band each side contains NPC±4m and the
-    // complete conservative±1.1m body envelope of the default+6m spawn.
-    const whitePaint=[],ochrePaint=[],bikeLaneFill=[],cycleWheels=[];
-    for(const boulevardX of [-70,430]){
-    const paintGaps=[...zs.map(z=>[z-34,z+34]),...(boulevardX===-70?[[-680,-620]]:[])],paintStart=-810,paintEnd=810;
-    const cuts=[paintStart,paintEnd,...paintGaps.flat()].filter(z=>z>=paintStart&&z<=paintEnd).sort((a,b)=>a-b),paintSegments=[];
-    for(let i=0;i<cuts.length-1;i++){const a=cuts[i],b=cuts[i+1],middle=(a+b)/2;if(!paintGaps.some(([lo,hi])=>middle>lo&&middle<hi)&&b>a)paintSegments.push([a,b]);}
-    const paintClear=(z,halfDepth=0)=>z-halfDepth>=paintStart&&z+halfDepth<=paintEnd&&paintGaps.every(([lo,hi])=>z+halfDepth<=lo||z-halfDepth>=hi);
-    for(const [a,b] of paintSegments)for(const side of [-1,1]){
-      ochrePaint.push({p:[boulevardX+side*2.5,.0252,(a+b)/2],s:[.12,1,b-a]});
-      for(const offset of [7.5,10.2,11,13,14.65])whitePaint.push({p:[boulevardX+side*offset,.0253,(a+b)/2],s:[.105,1,b-a]});
-      bikeLaneFill.push({p:[boulevardX+side*12,.02505,(a+b)/2],s:[2,.0001,b-a]});
+    triangleMesh('coast-road-surfaces',network.triangles.filter(t=>t.id.startsWith('road')),roadMat);
+    triangleMesh('coast-road-earth-banks',network.banks,material(0x8d967c,{map:sandTexture,roughness:1}));
+    const paint=[],decks=[];
+    const strip=(a,b,offset,width,y=.015)=>{
+      const corners=[{x:a.x+a.rx*(offset-width/2),y:a.y+y,z:a.z+a.rz*(offset-width/2)},{x:a.x+a.rx*(offset+width/2),y:a.y+y,z:a.z+a.rz*(offset+width/2)},{x:b.x+b.rx*(offset-width/2),y:b.y+y,z:b.z+b.rz*(offset-width/2)},{x:b.x+b.rx*(offset+width/2),y:b.y+y,z:b.z+b.rz*(offset+width/2)}];
+      paint.push({a:corners[0],b:corners[1],c:corners[2]},{a:corners[1],b:corners[3],c:corners[2]});
+    };
+    for(const s of network.segments){
+      if(s.shared)continue;
+      for(const offset of[-3.5,3.5])strip(s.a,s.b,offset,.12);
+      if(Math.floor(s.a.s/9)%2===0)strip(s.a,s.b,0,.12);
+      if(s.bridge){
+        const down=p=>({...p,y:p.y-network.SLAB_DEPTH}),[a,b]=s.rows;
+        decks.push({a:down(a[0]),b:down(b[0]),c:down(a[4])},{a:down(a[4]),b:down(b[0]),c:down(b[4])});
+        for(const edge of[0,4])decks.push({a:a[edge],b:down(a[edge]),c:b[edge]},{a:b[edge],b:down(a[edge]),c:down(b[edge])});
+      }
     }
-    for(let z=paintStart;z<=paintEnd;z+=9)if(paintClear(z,2.5))ochrePaint.push({p:[boulevardX,.0252,z],s:[.11,1,Math.SQRT2*4.5],r:[0,Math.PI/4,0]});
-    // Parallel parking pockets sit inside a0.8m painted door buffer; the2m
-    // cycle lane is curb-side, so entering parking never crosses a cycle lane.
-    for(const centre of [-720,-580,-440,-160,0,160,420,510,600,690,780])for(const side of [-1,1])for(let bay=-3;bay<=3;bay++){
-      const z=centre+bay*6.4;if(paintClear(z,.15))whitePaint.push({p:[boulevardX+side*9,.0253,z],s:[2.4,1,.10]});
+    const arrowRecords=[];
+    for(const id of[0,1,2,3])for(let distance=90;distance<routes[id].length;distance+=160){
+      const p=pose(id,distance),right={x:-p.dz,z:p.dx},vertices=[[-.20,-2.7],[.20,-2.7],[.20,.5],[.85,.5],[0,2.7],[-.85,.5],[-.20,.5]].map(([x,z])=>{
+        const wx=p.x+right.x*x+p.dx*z,wz=p.z+right.z*x+p.dz*z,surface=network.candidates(wx,wz).find(s=>s.road&&Math.abs(s.height-p.y)<.5);
+        return{x:wx,y:(surface?.height??p.y)+.018,z:wz};
+      });
+      for(const [a,b,c]of[[0,1,2],[0,2,6],[6,2,3],[6,3,5],[3,4,5]])paint.push({a:vertices[a],b:vertices[b],c:vertices[c]});
+      arrowRecords.push({routeId:id,distance,x:p.x,y:p.y,z:p.z,dx:p.dx,dz:p.dz});
     }
-    function paintStroke(ax,az,bx,bz){const dx=bx-ax,dz=bz-az;whitePaint.push({p:[(ax+bx)/2,.0254,(az+bz)/2],s:[.07,1,Math.hypot(dx,dz)],r:[0,Math.atan2(dx,dz),0]});}
-    for(const z of [-750,-550,-450,-150,50,150,450,550,710])for(const side of [-1,1]){
-      if(!paintClear(z,3))continue;const x=boulevardX+side*5,direction=-side;paintStroke(x,z-direction*1.5,x,z+direction*1.5);paintStroke(x,z+direction*1.5,x-.65,z+direction*.75);paintStroke(x,z+direction*1.5,x+.65,z+direction*.75);
-    }
-    // Original small bicycle stencils; no bike gameplay or traffic rules added.
-    for(const z of [-750,-550,-450,-150,50,150,450,550,710])for(const side of [-1,1]){
-      const x=boulevardX+side*12;if(!paintClear(z,1.4))continue;
-      cycleWheels.push({p:[x-.40,.0254,z-.17],s:[1,1,1]},{p:[x+.40,.0254,z-.17],s:[1,1,1]});
-      for(const [a,b] of [[[-.40,-.17],[-.12,.32]],[[-.12,.32],[.11,-.17]],[[.11,-.17],[-.40,-.17]],[[.11,-.17],[.28,.40]],[[.28,.40],[.40,-.17]],[[-.24,.34],[.02,.34]],[[.23,.43],[.47,.43]]])paintStroke(x+a[0],z+a[1],x+b[0],z+b[1]);
-      const direction=-side;paintStroke(x,z+direction*1.0,x,z+direction*1.55);paintStroke(x,z+direction*1.55,x-.18,z+direction*1.3);paintStroke(x,z+direction*1.55,x+.18,z+direction*1.3);
-    }
-    }
-    const cycleFill=flatBatch('coast-boulevard-painted-cycle-lanes',bikeLaneFill,material(0x4a6964,{map:asphaltTexture,roughness:.97,polygonOffset:true,polygonOffsetFactor:-.5,polygonOffsetUnits:-1,depthWrite:false}),4);cycleFill.renderOrder=.5;
-    const roadWhite=material(0xd2d1bd,{roughness:.95,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2,depthWrite:false});
-    batch('coast-boulevard-white-road-paint',paintPlane,roadWhite,whitePaint,{receiveShadow:true,visualOnly:true,flat:true,renderOrder:1});
-    batch('coast-boulevard-ochre-road-paint',paintPlane,material(0xc5b680,{roughness:.95,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2,depthWrite:false}),ochrePaint,{receiveShadow:true,visualOnly:true,flat:true,renderOrder:1});
-    const wheelStencil=own(new THREE.RingGeometry(.24,.29,12));wheelStencil.rotateX(-Math.PI/2);
-    batch('coast-boulevard-cycle-stencil-wheels',wheelStencil,roadWhite,cycleWheels,{receiveShadow:true,visualOnly:true,flat:true,renderOrder:1});
+    group.userData.coastRouteArrows=arrowRecords;
+    triangleMesh('coast-terrain-road-paint',paint,material(0xd0c4a0,{roughness:.95,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));
+    triangleMesh('coast-viaduct-deck',decks,material(0x96998c,{roughness:.96,side:THREE.DoubleSide}));
+    const rails=network.structures.filter(b=>b.kind==='rail').map(b=>{
+      const dx=b.b.x-b.a.x,dy=b.b.y-b.a.y,dz=b.b.z-b.a.z;
+      return{p:[(b.a.x+b.b.x)/2,(b.a.y+b.b.y)/2+.515,(b.a.z+b.b.z)/2],s:[.24,.87,Math.hypot(dx,dy,dz)],r:[-Math.atan2(dy,Math.hypot(dx,dz)),Math.atan2(dx,dz),0,'YXZ']};
+    });
+    batch('coast-viaduct-rails',box,material(0xc1bba6),rails,{receiveShadow:true});
+    batch('coast-viaduct-piers',box,material(0x96998c),network.structures.filter(b=>b.kind==='pier').map(b=>({p:[(b.minX+b.maxX)/2,(b.minY+b.maxY)/2,(b.minZ+b.maxZ)/2],s:[b.maxX-b.minX,b.maxY-b.minY,b.maxZ-b.minZ]})),{castShadow:true,receiveShadow:true});
 
-    // Six facade signatures: exact visual partitions of the original hull.
     const wallPieces=[],wallRoles=[],signatureHouses=[];
     for(const [index,b] of buildings.entries()){
       const selected=[355,485].includes(b.x)&&[440,580,720].includes(b.z);
@@ -550,6 +528,11 @@ const RoadsterCoast = (() => {
       I:['11111','00100','00100','00100','00100','00100','11111'],O:['01110','10001','10001','10001','10001','10001','01110'],
       T:['11111','00100','00100','00100','00100','00100','00100'],U:['10001','10001','10001','10001','10001','10001','01110'],R:['11110','10001','10001','11110','10100','10010','10001']
     };
+    Object.assign(signGlyphs,{
+      N:['10001','11001','11001','10101','10011','10011','10001'],D:['11110','10001','10001','10001','10001','10001','11110'],
+      V:['10001','10001','10001','10001','10001','01010','00100'],G:['01111','10000','10000','10111','10001','10001','01110'],
+      W:['10001','10001','10001','10101','10101','11011','10001'],'>':['10000','01000','00100','00010','00100','01000','10000']
+    });
     function sign(text,x,y,z,target=signPixels,pixel=.046,direction=1){
       const width=(text.length*6-1)*pixel,cells=[];
       [...text].forEach((letter,k)=>signGlyphs[letter].forEach((row,iy)=>[...row].forEach((bit,ix)=>{
@@ -558,6 +541,23 @@ const RoadsterCoast = (() => {
       // Union the original glyph cells into continuous painted strokes, not LED dots.
       for(const r of unionRectangles(cells))target.push({p:[x,y+(r.minZ+r.maxZ)*pixel/2,z+direction*(-width/2+(r.minX+r.maxX)*pixel/2)],s:[1,(r.maxZ-r.minZ)*pixel,(r.maxX-r.minX)*pixel]});
     }
+    const routeSigns=[],routeBoards=[],routePosts=[],routeLetters=[];
+    const signSpecs=[{id:0,s:180,text:'MOUNTAIN',color:0x355e53},{id:0,s:590,text:'GROUND>',color:0x355e53},{id:0,s:1350,text:'<PIER',color:0x355f78},
+      {id:0,s:1530,text:'CLIMB',color:0x8e7038},{id:0,s:2570,text:'BENDS',color:0x8e7038},{id:0,s:3100,text:'VIADUCT',color:0x355f78},
+      {id:0,s:3400,text:'DOWNHILL',color:0x8e7038},{id:0,s:5010,text:'COAST',color:0x355e53},{id:1,s:110,text:'BENDS',color:0x8e7038},
+      {id:1,s:600,text:'GROUND',color:0x355e53},{id:1,s:980,text:'UNDERPASS',color:0x355f78}];
+    for(const spec of signSpecs){
+      const p=pose(spec.id,spec.s),offset=p.bridge?4.35:10,x=p.x-p.dz*offset,z=p.z+p.dx*offset;
+      const floor=p.bridge?p.y:network.querySupport({x,z,y:p.y+.1}).height,y=Number.isFinite(floor)?floor:p.y,angle=Math.atan2(p.dz,-p.dx),cos=Math.cos(angle),sin=Math.sin(angle);
+      routePosts.push({p:[x,y+1.3,z],s:[.13,2.6,.13]});routeBoards.push({p:[x,y+3.6,z],s:[.16,2.3,6.3],r:[0,angle,0],color:spec.color});
+      const letterStart=routeLetters.length,letters=[];sign(spec.text,.10,3.6,0,letters,.11,-1);
+      for(const v of letters)routeLetters.push({...v,p:[x+cos*v.p[0]+sin*v.p[2],y+v.p[1],z-sin*v.p[0]+cos*v.p[2]],r:[0,angle,0]});
+      routeSigns.push({...spec,x,y,z,bridge:p.bridge,letterStart,letterCount:routeLetters.length-letterStart});
+    }
+    batch('coast-route-sign-posts',box,metal,routePosts,{receiveShadow:true});
+    batch('coast-route-sign-boards',box,material(0xffffff,{roughness:.94}),routeBoards,{receiveShadow:true});
+    batch('coast-route-sign-lettering',windowPlane,material(0xeee9d4,{roughness:.95}),routeLetters);
+    group.userData.coastRouteSigns=routeSigns;
     for(const [hi,b] of hero.entries()){
       const front=b.minX-.055,bays=hi===1?4:3,bayWidth=(b.d-3.4)/bays;
       const floors=Math.max(2,1+Math.floor((b.height-3.4)/3.25));
@@ -804,7 +804,7 @@ const RoadsterCoast = (() => {
       const mesh=batch(name+(family?'-transom':''),sashPlanes[family],mat,items[family],{receiveShadow:true,visualOnly:true});mesh.userData.coastArt.facadeFamily=family;
     }
     // Fixed near-frame capacity; refresh after20m. Far apertures/hulls remain.
-    const detailCapacity=768,detailRings=new THREE.InstancedMesh(revealGeometry,cream,detailCapacity);instances.add(detailRings);
+    const detailCapacity=384,detailRings=new THREE.InstancedMesh(revealGeometry,cream,detailCapacity);instances.add(detailRings);
     detailRings.name='coast-district-near-window-reveals';detailRings.count=0;detailRings.castShadow=true;detailRings.receiveShadow=true;
     detailRings.instanceMatrix.setUsage(THREE.DynamicDrawUsage);detailRings.userData.coastArt={visualOnly:true,flat:false,capacity:detailCapacity};group.add(detailRings);
     const detailDummy=new THREE.Object3D();let detailX=NaN,detailZ=NaN;
@@ -935,7 +935,6 @@ const RoadsterCoast = (() => {
     flatBatch('coast-street-sidewalks',walks,material(0xbcb8a8,{map:paverTexture,roughness:.93}),2.4);
     batch('coast-street-low-curbs',box,cream,curbs,{receiveShadow:true,visualOnly:true,flat:true});
     batch('coast-street-crosswalk-paint',paintPlane,material(0xd8d8c9,{roughness:.95}),crosswalks,{visualOnly:true,flat:true});
-    // Original leaning palms with folded pinnate crowns; no alpha cards.
     function palmTrunkGeometry(){
       const pos=[],uv=[],idx=[],sides=6,rings=3;
       for(let j=0;j<=rings;j++)for(let k=0;k<=sides;k++){
@@ -1141,7 +1140,6 @@ const RoadsterCoast = (() => {
     batch('coast-promenade-lamp-globes',own(new THREE.IcosahedronGeometry(1,0)),lampMaterial,bulbs,{visualOnly:true});
     batch('coast-promenade-lamp-shades',own(new THREE.ConeGeometry(1,1,8,1,true)),cream,shadeCaps,{castShadow:true,visualOnly:true});
     slab('coast-pier-boardwalk',-530,-650,560,36,0x94734f,-.04,.12,{map:deckTexture,roughness:.94});
-    slab('coast-pier-approach',-160,-650,180,18,0xb7a17b,-.03,.10);
     batch('coast-pier-rails',box,material(0xc0b18e),[-668,-632].flatMap(z=>[{p:[-530,.8,z],s:[560,.15,.15]},...Array.from({length:29},(_,i)=>({p:[-810+i*20,.4,z],s:[.15,.8,.15]}))]));
     batch('coast-pier-piles',box,material(0x675b4b),Array.from({length:15},(_,i)=>[-660,-640].map(z=>({p:[-800+i*38,-1.8,z],s:[1.1,3.6,1.1]}))).flat());
     slab('coast-court',-195,540,45,70,0x446c6b,-.015,.10);
@@ -1180,6 +1178,7 @@ const RoadsterCoast = (() => {
     } catch(error){restoreSceneState(owner);disposeResources(owner);failedBuilds++;throw error;}
   }
   function leave(){
+    junctionTraffic.reset();
     if(!active)return;const owner=active;active=null;
     restoreSceneState(owner);disposeResources(owner);disposals++;
   }
@@ -1197,9 +1196,9 @@ const RoadsterCoast = (() => {
     const buffers=new Set();let geometryBufferBytes=0,instanceBufferBytes=0;
     for(const geo of active?.geometries||[])for(const attribute of [...Object.values(geo.attributes),geo.index].filter(Boolean)){const array=attribute.isInterleavedBufferAttribute?attribute.data.array:attribute.array;if(!buffers.has(array)){buffers.add(array);geometryBufferBytes+=array.byteLength;}}
     for(const mesh of active?.instances||[])for(const attribute of [mesh.instanceMatrix,mesh.instanceColor].filter(Boolean))instanceBufferBytes+=attribute.array.byteLength;
-    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?768:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:buildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
+    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?384:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:buildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
   }
-  return Object.freeze({spec,artBudget,roads:Object.freeze(roads),nodes:Object.freeze(nodes),edges:Object.freeze(edges),routes:Object.freeze(routes),pose,onRoad,surface,
-    layout:()=>({buildings,palms,obstacles}),buildings:()=>active?obstacles:[],enter,leave,tick,weather,metrics,createTraffic,stepTraffic,recoverTraffic,respawn,hit,sweptBox,clipBuildings,contactBounds,trafficContact});
+  return Object.freeze({spec,artBudget,roads:Object.freeze(roads),nodes:Object.freeze(nodes),edges:Object.freeze(edges),routes:Object.freeze(routes),pose,onRoad,surface,support,network,
+    layout:()=>({buildings,palms,obstacles}),buildings:()=>active?obstacles:[],enter,leave,tick,weather,metrics,trafficJunctionStats:junctionTraffic.stats,createTraffic,stepTraffic,recoverTraffic,respawn,hit,sweptBox,clipBuildings,contactBounds,trafficContact});
 })();
 if(typeof window!=='undefined')window.RoadsterCoast=RoadsterCoast;

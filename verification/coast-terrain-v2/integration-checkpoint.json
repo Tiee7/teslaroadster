@@ -1,0 +1,10 @@
+{
+  "stage":"runtime integration checkpoint, NOT a release candidate",
+  "dataCommit":"adf71865d495d291c08e3fcf1c2616e9318e009e",
+  "baseMain":"a88cedf657b3cc066a63063bde9aa1caeb606445",
+  "implemented":["same-mesh terrain/road support","slope tire attitude and coast-only gravity","layered deck top/bottom/rail/pier contacts","3D arc-length NPC poses","independent coast 60Hz clock and per-render unchanged V8 owner","support-aware reset and jump"],
+  "focusedVerification":"integration-focused.log",
+  "remaining":["version obsolete flat-city/132-building art contracts","update pinned highway projection epoch with numeric-equivalence proof","full route and 3D traffic/collision regression","final bundle/check/build/full tests","remote PR/CI/production publication"],
+  "productionUnchanged":true,
+  "browserWebGLEvidence":false
+}

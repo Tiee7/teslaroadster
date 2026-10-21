@@ -1,0 +1,25 @@
+✔ production motion follows true terrain/bridge tire plane at 0m/s without false gravity, damage or fuel burn (3093.732005ms)
+✔ production motion follows true terrain/bridge tire plane at 15m/s without false gravity, damage or fuel burn (2766.769933ms)
+✔ production motion follows true terrain/bridge tire plane at 55.55555555555556m/s without false gravity, damage or fuel burn (2455.350872ms)
+✔ production motion follows true terrain/bridge tire plane at 102.77777777777777m/s without false gravity, damage or fuel burn (2644.739051ms)
+✔ slope-only gravity distinguishes coast uphill/downhill without changing EV constants (14.423745ms)
+✔ Space really detaches and keeps lifting from the 1700m slope/bridge (141.071839ms)
+✔ Space really detaches and keeps lifting from the 3800m slope/bridge (108.821612ms)
+✔ O targets six metres above actual attached bridge or the ground BELOW it, never the highest xz layer (203.875853ms)
+✔ the production cabin hits bridge underside; upward impact cannot become a bridge-top landing (8.790025ms)
+✔ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (442.027699ms)
+✔ continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall (16.559542ms)
+✔ a roof has exactly one original 4s/s recharge owner, not both road and roof owners (5.611382ms)
+✔ a true airborne rooftop touchdown restores ground EV ownership instead of staying an invisible aircraft (23.834871ms)
+✔ a fast shallow deck-bottom scrape pays only normal impact, not the unrelated 50m/s tangential speed (7.612815ms)
+✔ a swept pier landing uses its contact material/position, not water at the frame endpoint (6.002718ms)
+✔ an already airborne low-altitude O tap cannot restart ground-hop inertia grace (1.891662ms)
+✔ a vehicle below the pier still contacts real water instead of falling forever below world zero (4.966503ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12628.521561

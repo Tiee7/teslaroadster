@@ -1,0 +1,21 @@
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (3.888467ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (3083.254638ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (323.088455ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (17.733513ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.296376ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (76.281423ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (3942.971105ms)
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (5.647333ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (38.867685ms)
+✔ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.361121ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (2.972821ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.614764ms)
+✔ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (6.211513ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8024.635074

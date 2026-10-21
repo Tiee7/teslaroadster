@@ -54,7 +54,7 @@ test('city pauses, invalid clocks and suspended tabs discard debt instead of rep
   clock.advance(.1, () => { ticks++; active = false; }, () => active);
   assert.equal(ticks, 2); assert.equal(clock.stats().accumulator, 0);
 });
-test('production render integration leaves map 1/3 and autopilot ownership unchanged', () => {
+test('production render integration gives map3 an independent fixed clock while map1/autopilot ownership stays unchanged', () => {
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
   const code = physics.slice(physics.indexOf('// Scope the fixed clock'), physics.indexOf("window.addEventListener('resize'"));
   const events = {}, overlays = new Set(), steps = [], taxi = [], coast = [], demo = [], presentations = [], taxiPresent = [];
@@ -79,7 +79,7 @@ test('production render integration leaves map 1/3 and autopilot ownership uncha
   context.document.hidden = true; events.visibilitychange(); frame(100); assert.equal(steps.length, 18);
   context.document.hidden = false; events.visibilitychange(); frame(100); assert.equal(steps.length, 24);
   context.currentMap = 'highway'; frame(100); close(steps.at(-1), .05);
-  context.currentMap = 'coast'; frame(100); close(coast.at(-1), .05); close(steps.at(-1), .05);
+  context.currentMap = 'coast'; const coastBefore=steps.length; frame(100); close(coast.at(-1), .05); assert.equal(steps.length-coastBefore,6); close(steps.at(-1),1/60);
   const before = steps.length;
   context.window.RoadsterDemo.isActive = () => true; frame(100);
   assert.equal(steps.length, before); close(demo.at(-1), .1);

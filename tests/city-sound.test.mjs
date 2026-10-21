@@ -72,7 +72,7 @@ function harness(map = 'city') {
   context.updateSimulation = (dt, presentationDt) => {
     steps.push(dt);
     if (context.state.isDestroyed) {
-      vm.runInContext('if (!cityOwnsDrivingSound()) sound.update(0, false, false, true);', context);
+      vm.runInContext('if (!cityOwnsDrivingSound() && !coastOwnsDrivingSound()) sound.update(0, false, false, true);', context);
     } else context.recordPhysicsSound(presentationDt);
   };
   return { context, calls, steps, renders, overlays,
@@ -94,8 +94,9 @@ test('V8 pulse-bank waveform remains byte-identical to the original; capture pre
   assert.equal(createHash('sha256').update(wave).digest('hex'), 'eff5640ecbfa2ebb1ee925003968d0fe863ad068395107ad3aaf69ed80f270d9');
   assert.ok(physics.indexOf(capture) < physics.indexOf('  if (!presentFrame) {'));
 });
-for (const fps of [10, 15, 60, 144]) test(`production city animate+clock updates original V8 once per ${fps} fps render`, () => {
-  const h = harness(); h.context.keys.KeyW = true;
+for(const map of ['city','coast']) {
+for (const fps of [10, 15, 60, 144]) test(`production ${map} animate+clock updates original V8 once per ${fps} fps render`, () => {
+  const h = harness(map); h.context.keys.KeyW = true;
   for (let i = 0; i < fps; i++) h.frame(1000 / fps);
   assert.equal(h.steps.length, 60); assert.equal(h.calls.length, fps); assert.equal(h.renders.length, fps);
   assert.ok(h.renders.every((count, i) => count === i + 1), 'audio update occurs before each render');
@@ -103,7 +104,7 @@ for (const fps of [10, 15, 60, 144]) test(`production city animate+clock updates
   assert.ok(h.calls.slice(2).every(args => args[5] === 1));
 });
 test('144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics', () => {
-  const h = harness(); h.context.keys.KeyW = true;
+  const h = harness(map); h.context.keys.KeyW = true;
   for (let i = 0; i < 3; i++) h.frame(1000 / 144);
   assert.equal(h.steps.length, 1); assert.equal(h.context.audio.engineVoice.load, 1);
   h.context.keys.KeyW = false; h.frame(1000 / 144);
@@ -112,7 +113,7 @@ test('144 fps zero-tick frames consume fresh throttle release and SFX mute witho
   h.context.audio.enabled = false; h.frame(0); silent(h);
 });
 for (const event of ['blur', 'hidden']) test(`${event} mutes immediately without RAF or resuming a suspended context`, () => {
-  const h = harness(); h.context.keys.KeyW = h.context.keys.Semicolon = true; h.frame(100);
+  const h = harness(map); h.context.keys.KeyW = h.context.keys.Semicolon = true; h.frame(100);
   assert.ok(h.context.audio.thrusterGain.gain.value > 0);
   h.context.audio.ctx.state = 'suspended';
   if (event === 'hidden') { h.context.document.hidden = true; h.emit('visibilitychange'); } else h.emit('blur');
@@ -123,21 +124,22 @@ for (const event of ['blur', 'hidden']) test(`${event} mutes immediately without
   h.frame(17); assert.equal(h.context.audio.engineVoice.load, 0); assert.equal(h.context.audio.thrusterGain.gain.value, 0);
 });
 for (const kind of ['modal-map-select', 'modal-help', 'ranked', 'music']) test(`${kind} pause clears the city sound snapshot and resumes without old boost`, () => {
-  const h = harness(); h.context.keys.Semicolon = true; h.frame(100);
+  const h = harness(map); h.context.keys.Semicolon = true; h.frame(100);
   h.pause(kind, true); const steps = h.steps.length; h.frame(100); silent(h); assert.equal(h.steps.length, steps);
   h.context.keys.Semicolon = false; h.pause(kind, false); h.frame(1); silent(h);
   h.frame(17); assert.equal(h.context.audio.engineVoice.load, 0); assert.equal(h.context.audio.thrusterGain.gain.value, 0);
 });
 test('suspended frames, reset and destruction never keep the last active city voice', () => {
-  const h = harness(); h.context.keys.Semicolon = true; h.frame(100);
+  const h = harness(map); h.context.keys.Semicolon = true; h.frame(100);
   const steps = h.steps.length; h.frame(1500); assert.equal(h.steps.length, steps); silent(h);
   h.context.keys.Semicolon = false; h.frame(1); silent(h); h.frame(17);
-  h.context.keys.Semicolon = true; h.frame(100); h.context.window.RoadsterCityFrame.reset(); silent(h);
+  h.context.keys.Semicolon = true; h.frame(100); h.context.window[map==='city'?'RoadsterCityFrame':'RoadsterCoastFrame'].reset(); silent(h);
   h.frame(1); silent(h);
   h.context.state.isDestroyed = true; h.frame(100); silent(h);
   assert.equal(h.calls.at(-1)[3], true);
 });
-for (const map of ['highway', 'coast']) test(`${map} retains one legacy sound update per render and no city event mute`, () => {
+}
+for (const map of ['highway']) test(`${map} retains one legacy sound update per render and no city event mute`, () => {
   const h = harness(map); h.context.keys.KeyW = true;
   for (let i = 0; i < 144; i++) h.frame(1000 / 144);
   assert.equal(h.steps.length, 144); assert.equal(h.calls.length, 144);

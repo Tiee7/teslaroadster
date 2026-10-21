@@ -4,7 +4,7 @@ import vm from 'node:vm';
 import { readFileSync, existsSync } from 'node:fs';
 import { motionHarness } from './helpers/motion-harness.mjs';
 import { lifecycleHarness } from './helpers/demo-lifecycle-harness.mjs';
-const source=readFileSync(new URL('../src/coast-map.js',import.meta.url),'utf8');
+const source=readFileSync(new URL('../src/coast-road-network.js',import.meta.url),'utf8')+'\n'+readFileSync(new URL('../src/coast-map.js',import.meta.url),'utf8');
 const ui=readFileSync(new URL('../src/ui-hud.js',import.meta.url),'utf8');
 const physics=readFileSync(new URL('../src/physics-main.js',import.meta.url),'utf8');
 function api(){const context=vm.createContext({window:{}});vm.runInContext(source,context);return {context,coast:context.window.RoadsterCoast};}
@@ -15,11 +15,11 @@ const group=()=>({children:[],add(x){this.children.push(x);}});
 test('original map data is lazy, meter-scale, connected and explicitly separate from city/highway',()=>{
  const {coast}=api(),layout=coast.layout();
  assert.equal(coast.metrics().active,false);assert.equal(coast.metrics().builds,0);
- assert.equal(coast.spec.halfBound,1200);assert.equal(layout.buildings.length,132);
+ assert.equal(coast.spec.halfBound,1200);assert.equal(layout.buildings.length,44);
  assert.ok(layout.palms.length>=80&&layout.palms.length<=140);
- assert.equal(coast.nodes.length,12);assert.equal(coast.edges.length,34);
+ assert.equal(coast.nodes.length,3);assert.equal(coast.edges.length,4);
  const seen=new Set([0]);for(let i=0;i<12;i++)for(const e of coast.edges)if(seen.has(e.from))seen.add(e.to);
- assert.equal(seen.size,12);
+ assert.equal(seen.size,3);
  for(const b of layout.buildings){assert.ok(!coast.onRoad(b.x,b.z));assert.ok(!coast.surface(b.x,b.z).water);}
  assert.doesNotMatch(source,/fetch\(|XMLHttpRequest|GLTFLoader|TextureLoader|https?:\/\/|setInterval|new THREE\.(?:WebGLRenderer|WebGLRenderTarget|PointLight)/);
 });
@@ -28,7 +28,7 @@ test('all directed routes and complete vehicle corners stay on legal roads, not 
  const {coast}=api();
  coast.routes.forEach((r,id)=>{for(let s=0;s<r.length;s+=1.3){
   const p=coast.pose(id,s);assert.ok(Math.abs(Math.hypot(p.dx,p.dz)-1)<1e-10);
-  assert.ok(coast.onRoad(p.x,p.z));assert.equal(coast.surface(p.x,p.z).water,false);assert.equal(coast.surface(p.x,p.z).pier,false);
+  assert.ok(coast.onRoad(p.x,p.z));assert.equal(coast.surface(p.x,p.z,p).water,false);assert.equal(coast.surface(p.x,p.z,p).pier,false);
   for(const a of [-2.31,2.31])for(const b of [-.98,.98])assert.ok(coast.onRoad(p.x+p.dx*a-p.dz*b,p.z+p.dz*a+p.dx*b),'whole vehicle inside road/junction');
  }});
 });
@@ -70,7 +70,7 @@ test('actualr128 low-poly model owns bounded geometry, creates lazily and dispos
   for(const name of ['coast-water','coast-sand','coast-promenade','coast-pier-boardwalk','coast-original-ferris-wheel','coast-palm-trunks'])assert.ok(root.getObjectByName(name),`${name} is actual owned scene geometry`);
   root.updateMatrixWorld(true);const wheelBox=new THREE.Box3().setFromObject(root.getObjectByName('coast-original-ferris-wheel'));
   assert.ok(wheelBox.max.y>58&&wheelBox.min.x< -640&&wheelBox.max.x< -640);
-  const m=coast.metrics();assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(m.buildings,132);
+  const m=coast.metrics();assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(m.buildings,44);
   let instanceCount=0;
   root.traverse(o=>{if(o.isInstancedMesh){instanceCount++;o.addEventListener('dispose',()=>instancesDisposed++);for(const x of o.instanceMatrix.array)assert.ok(Number.isFinite(x));}if(!o.geometry)return;for(const x of o.geometry.attributes.position.array)assert.ok(Number.isFinite(x));});
   const before=instancesDisposed;
@@ -200,7 +200,7 @@ test('actual map switching isolates coast ownership/counts, blocks ranked starts
  h.context.scene={};h.window.RoadsterCoast={...coast,enter(){enters++;},leave(){leaves++;},weather(){},buildings:()=>[]};
  await h.demo.toggle();await h.click('card-map-coast');assert.equal(vm.runInContext('currentMap',h.context),'highway');
  assert.equal(h.get('card-map-coast').getAttribute('aria-pressed'),'true');await h.click('btn-launch-selected-map');assert.equal(h.demo.isBusy(),false);assert.equal(enters,1);
- assert.equal(h.context.trafficCount,16);assert.equal(h.state.x,coast.spec.spawn.x);assert.equal(h.get('ranked-start').disabled,true);
+ assert.equal(h.context.trafficCount,16);assert.equal(h.state.x,coast.respawn().x);assert.equal(h.get('ranked-start').disabled,true);
  assert.match(h.get('ui-traffic-btn').textContent,/16/);assert.doesNotMatch(h.get('ui-traffic-btn').textContent,/36/);
  await h.click('ranked-start');assert.equal(h.requests('/api/run').length,0);
  await h.click('btn-leaderboard');assert.equal(h.get('ranked-category').value,'highway-realistic');

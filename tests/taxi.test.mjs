@@ -475,7 +475,7 @@ test('integration exposes a city entry, retains zoom brackets and keeps taxi far
   assert.doesNotMatch(source, /state\.score\s*[+\-*/]?=|\/api\/|fetch\(/);
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
   assert.match(physics, /state\.isDestroyed = true;\s*window\.RoadsterTaxi\?\.onDestroyed\(\);\s*RoadsterDrivingScore\.freeze\(state\)/);
-  assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else if \(currentMap === 'city'\)/);
+  assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*coastFrameClock\.clear\(\);coastSoundFrame=null;\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else if \(currentMap === 'city'\)/);
   assert.match(physics, /cityFrameClock\.advance\(frameSeconds, \(step, presentationDt\) => \{\s*updateSimulation\(step, presentationDt\);\s*window\.RoadsterTaxi\?\.tick\(false\);\s*\}, cityFrameActive\)/);
   assert.match(physics, /updateSimulation\(dt\);\s*\}\s*if \(currentMap === 'city'\) window\.RoadsterTaxi\?\.present\?\.\(\);\s*else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/);
 

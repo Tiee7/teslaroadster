@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import {EXPECTED_SOURCE_HASHES} from '../verification/demo-continuous/generate-numeric-projection-kernel.mjs';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
-const world=read('src/world.js'),source=read('src/coast-map.js'),ui=read('src/ui-hud.js'),config=read('src/config.js');
+const world=read('src/world.js'),source=read('src/coast-road-network.js')+'\n'+read('src/coast-map.js'),ui=read('src/ui-hud.js'),config=read('src/config.js');
 const runtime=process.env.ROADSTER_THREE_RUNTIME||'/tmp/roadster-three.min.js';
 const skip=existsSync(runtime)?false:'Official production Three r128 required';
 const bridgeSource=`// Explicit renderer-only bridge: coast consumes focus without writing camera/physics.\nscene.userData.coastArtBridge = Object.freeze({\n  getFocus: () => camera.position,\n  sharedLights: Object.freeze([ambientLight, dirLight, rimLight])\n});\n\n`;

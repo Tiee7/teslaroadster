@@ -1,0 +1,6 @@
+{
+  "baseMain": "a88cedf657b3cc066a63063bde9aa1caeb606445",
+  "oldProgramSha256": "59530c9a5abc20a0410939b44e5c431ea17504ab3aa70db54da5a33d3b1844a7",
+  "newProgramSha256": "f8882f7817b5ee8fe496c69aa2ac5de406611dc9f985814e1f2b43dc3080364f",
+  "proof": "tests/coast-map-isolation.test.mjs executes frozen original production motion against current production: map1/map2 × realistic/fantasy × ten controls ×300 ticks, every numeric/boolean state field Object.is each tick and identical collision events; unchanged V8/config/world/taxi/vehicles/city-clock/highway sources explicitly pinned. Original fail-closed projection collision guards remain."
+}

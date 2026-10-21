@@ -1,17 +1,17 @@
 {
   "schema": "verification-browser-static-projection-v1",
-  "numericalProgramSourceSha256": "59530c9a5abc20a0410939b44e5c431ea17504ab3aa70db54da5a33d3b1844a7",
+  "numericalProgramSourceSha256": "f8882f7817b5ee8fe496c69aa2ac5de406611dc9f985814e1f2b43dc3080364f",
   "sourceHashes": {
     "src/config.js": "7aeb13fafed9d742fc62cbafe029624ddd769e8da381569ca7c1a3f364d13d8b",
-    "src/physics-main.js": "c45d58b9fce4fb19b5928ca5d96700f7c332a9d737b60ba9b0ceee72dde007db",
+    "src/physics-main.js": "1013eb34d0c71954d66b132bea0840a91b2daeb546acdac630e74932bb277047",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
-    "src/ui-hud.js": "b74ac2fdb4e30e27e4cd7532aa70e43de61675d70566df546970ffc65fc2e39e",
+    "src/ui-hud.js": "9aab2f00f071b00f26c0baeba3a426785fab8eed3f88722c53a69c25f3e73c17",
     "src/audio.js": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "nodeGeneratorSha256": "700707d382c21979818c4d36c5c65385957d2dc1b795b30278e50a8bf163cf70",
+  "nodeGeneratorSha256": "b4b3ca0fb39fe838fd7feb39d6758b37b2a3af69872a6db88ffecbfa654c9195",
   "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
   "mathProfiles": [
     {
@@ -25,8 +25,8 @@
   ],
   "functionSources": {
     "updateSimulation": {
-      "sha256": "9307a8bf32f8ffa2a9e05197d23b96ac2d81106b6c39923353a79f84a2590483",
-      "length": 85130
+      "sha256": "3bb88dc4f9b869b2df3aa3d90696ed58853fe34ca95be8961d2afdcb6b2ff636",
+      "length": 90294
     },
     "wrapAnglePi": {
       "sha256": "4a43189ee76d5927e870e14a61a5de8fe71d91dcb8c3a5996d52adc61fa19c52",
@@ -77,8 +77,8 @@
       "length": 363
     },
     "triggerJump6m": {
-      "sha256": "3c2bde8b04bdcbc8c124f1a85d6c1c72c9855217165958caadcb6529691e343b",
-      "length": 2094
+      "sha256": "bb1dc3d56a2cbebab21d0bc0511cfadf6aa02f006166650515a36371ba72e424",
+      "length": 2267
     },
     "trafficStep": {
       "sha256": "a09bb5404a88da21e75f44917fe53d0cfb2b5a4d59f561046c16f2dac7bbf2fb",
@@ -119,12 +119,12 @@
     {
       "name": "motion-gas-altitude-attitude-body",
       "file": "src/physics-main.js",
-      "begin": 25410,
-      "end": 70975,
+      "begin": 25438,
+      "end": 75255,
       "firstLine": 607,
-      "lastLine": 1520,
-      "sourceSha256": "ad65bee80f1406a53e6aa0f2e3d95ce149111e8e45528e11991f6847608f2ba1",
-      "emittedSha256": "b8b382da2f152da603cd8b92a12052a8e5a48b41bce5b88d458af73b5e3b6794",
+      "lastLine": 1567,
+      "sourceSha256": "6ec49465f3f1496dc82965dc89e026666bdd49cd676b34677fa7e97fada93992",
+      "emittedSha256": "5ba1769675eab05f6e5b3653ac704a45e77f0362f5401373fa61759b15945cd8",
       "transformations": [
         "insert fail-closed guard at true highway rail branch before correction"
       ]
@@ -132,12 +132,12 @@
     {
       "name": "npc-contact-body",
       "file": "src/physics-main.js",
-      "begin": 80013,
-      "end": 84198,
-      "firstLine": 1694,
-      "lastLine": 1762,
-      "sourceSha256": "86b4b288ec931d6d8e2e8d5adc60946bcb177fc9ae9473c1633e080c9130afa8",
-      "emittedSha256": "93108d9966499992385c1857a16fb56eee438a1a61349489ba9ae82e0c228fae",
+      "begin": 84387,
+      "end": 88808,
+      "firstLine": 1741,
+      "lastLine": 1810,
+      "sourceSha256": "b0ae7e34808f24642591cb620f807270b007862fb07013144c18e084b9f876c3",
+      "emittedSha256": "1c1201605fd662b2eaa56781d2fe2a3d3158a7bccd8dbaed72b676e0f56c0106",
       "transformations": [
         "remove enclosing production trafficCars.forEach terminator only",
         "insert fail-closed guard at true roof-bounce branch before response",
@@ -147,10 +147,10 @@
     {
       "name": "real-g-feedback-tail",
       "file": "src/physics-main.js",
-      "begin": 85156,
-      "end": 85603,
-      "firstLine": 1782,
-      "lastLine": 1787,
+      "begin": 89849,
+      "end": 90296,
+      "firstLine": 1830,
+      "lastLine": 1835,
       "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "emittedSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "transformations": []
@@ -180,12 +180,12 @@
     {
       "name": "numeric-jump-trigger",
       "file": "src/ui-hud.js",
-      "begin": 43828,
-      "end": 45924,
-      "firstLine": 930,
-      "lastLine": 968,
-      "sourceSha256": "8c8cf06f70c8308cf51f6e31c24ca757830afbeab8f35e3e25f32b75f9098938",
-      "emittedSha256": "8c8cf06f70c8308cf51f6e31c24ca757830afbeab8f35e3e25f32b75f9098938",
+      "begin": 44060,
+      "end": 46329,
+      "firstLine": 935,
+      "lastLine": 974,
+      "sourceSha256": "0bcbd7f94da3b526024c50005065efe27c00c5c62078039577063af000c881e6",
+      "emittedSha256": "0bcbd7f94da3b526024c50005065efe27c00c5c62078039577063af000c881e6",
       "transformations": []
     },
     {
