@@ -1,0 +1,43 @@
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (3.999873ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (3049.07677ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (412.00513ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (25.21195ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.872033ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (93.126918ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (4383.177965ms)
+✔ viaduct is two-way six 3.5m lanes with metre-wide shoulders and smooth same-source widening (1601.961842ms)
+✔ real approach guide rails converge from the bank onto both deck edges with no open bank-end mouth (0.808259ms)
+✔ preserved published grass→asphalt→slope continuous-driving counterexample cuts through the road (4172.879305ms)
+✔ real production controls hand off grass to asphalt and follow the complete climb into the bridge, never resetting support per frame (38119.145387ms)
+✔ coincident ground can hand off but a distant bridge top never magnetizes terrain from below (616.364951ms)
+✔ production motion follows true terrain/bridge tire plane at 0m/s without false gravity, damage or fuel burn (3731.392219ms)
+✔ production motion follows true terrain/bridge tire plane at 15m/s without false gravity, damage or fuel burn (3196.581279ms)
+✔ production motion follows true terrain/bridge tire plane at 55.55555555555556m/s without false gravity, damage or fuel burn (3443.123846ms)
+✔ production motion follows true terrain/bridge tire plane at 102.77777777777777m/s without false gravity, damage or fuel burn (3667.523223ms)
+✔ slope-only gravity distinguishes coast uphill/downhill without changing EV constants (20.952728ms)
+✔ Space really detaches and keeps lifting from the 1700m slope/bridge (197.046861ms)
+✔ Space really detaches and keeps lifting from the 3800m slope/bridge (153.331444ms)
+✔ O targets six metres above actual attached bridge or the ground BELOW it, never the highest xz layer (272.775645ms)
+✔ the production cabin hits bridge underside; upward impact cannot become a bridge-top landing (11.186944ms)
+✔ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (728.896804ms)
+✔ continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall (20.982651ms)
+✔ a roof has exactly one original 4s/s recharge owner, not both road and roof owners (7.973389ms)
+✔ a true airborne rooftop touchdown restores ground EV ownership instead of staying an invisible aircraft (31.90802ms)
+✔ a fast shallow deck-bottom scrape pays only normal impact, not the unrelated 50m/s tangential speed (8.447435ms)
+✔ a swept pier landing uses its contact material/position, not water at the frame endpoint (9.084111ms)
+✔ an already airborne low-altitude O tap cannot restart ground-hop inertia grace (3.108503ms)
+✔ a vehicle below the pier still contacts real water instead of falling forever below world zero (7.822947ms)
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (4.108021ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (100.552749ms)
+✔ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.408321ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (3.010948ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.573344ms)
+✔ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (5.056247ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43051.102015

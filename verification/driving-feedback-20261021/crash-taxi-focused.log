@@ -1,0 +1,29 @@
+✔ highway: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn (14.677272ms)
+✔ highway: crashReasonGround freezes final scores through wreck frames and clears only on respawn (2.786427ms)
+✔ highway: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn (4.436744ms)
+✔ highway: surviving collisions preserve scores and do not create a final snapshot (1.926804ms)
+✔ highway: keyboard reset starts mileage and passenger totals from zero (4.414853ms)
+✔ highway: button reset starts mileage and passenger totals from zero (1.989185ms)
+✔ highway: caller reset starts mileage and passenger totals from zero (2.010146ms)
+✔ city: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn (91.388514ms)
+✔ city: crashReasonGround freezes final scores through wreck frames and clears only on respawn (66.229139ms)
+✔ city: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn (72.797763ms)
+✔ city: surviving collisions preserve scores and do not create a final snapshot (69.381645ms)
+✔ city: keyboard reset starts mileage and passenger totals from zero (72.004806ms)
+✔ city: button reset starts mileage and passenger totals from zero (74.68565ms)
+✔ city: caller reset starts mileage and passenger totals from zero (87.756413ms)
+✔ an empty taxi retains settled fares through death and clears them on the next round (80.692437ms)
+✔ late callbacks cannot change frozen mileage, final score or clear/blast counts (1.949207ms)
+✔ highway: crash releases ranked session immediately while final score remains until restart (21.043534ms)
+✔ highway: completed ranked payload survives later death and R before explicit submission (3.379329ms)
+✔ city: crash releases ranked session immediately while final score remains until restart (3.867367ms)
+✔ city: completed ranked payload survives later death and R before explicit submission (2.925532ms)
+✔ crash summary preserves ranked notice, language switching and small-screen scrolling (2.158965ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 779.382024

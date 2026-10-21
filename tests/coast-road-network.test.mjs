@@ -72,3 +72,32 @@ test('the preserved pre-fix C-junction counterexample cuts through NPC wheels; f
  for(const p of points.values())for(const s of n.candidates(p.x,p.z))if(s.road&&!s.bridge)near(s.height,p.y,.02);
  for(let id=0;id<4;id++)for(let s=0;s<n.trafficPath(id).length;s+=.5){const p=n.sampleRoute(id,s);for(const top of n.candidates(p.x,p.z))if(top.road&&!top.bridge)assert.ok(top.height<=p.y+.02,'no other nonbridge asphalt cuts any NPC wheel/body');}
 });
+test('viaduct is two-way six 3.5m lanes with metre-wide shoulders and smooth same-source widening',()=>{
+ assert.equal(n.BRIDGE_ROAD_WIDTH,23);let wide=0,transitions=0;
+ for(const segment of n.segments.filter(s=>s.routeId===0)){
+  for(const p of[segment.a,segment.b]){assert.ok(p.halfWidth>=4.5&&p.halfWidth<=11.5);if(p.bridge){near(p.halfWidth,11.5);wide++;}if(p.halfWidth>4.51&&p.halfWidth<11.49)transitions++;}
+  assert.ok(Math.abs(segment.a.halfWidth-segment.b.halfWidth)<.35,'gradual approach taper, not a width step');
+ }
+ assert.ok(wide>500&&transitions>100);
+ for(const id of[0,2])for(const lane of[1.75,5.25,8.75])for(let s=3300;s<4600;s+=17){const p=n.sampleRoute(id,s,lane);if(!p.bridge)continue;
+  for(const forward of[-2.31,2.31])for(const right of[-.98,.98])assert.ok(n.candidates(p.x+p.dx*forward-p.dz*right,p.z+p.dz*forward+p.dx*right).some(c=>c.id==='road-0'&&Math.abs(c.height-p.y)<.5),'all six full-size vehicle footprints share visible deck support');
+  assert.equal(n.sweepStructures(p,n.sampleRoute(id,s+.2,lane)),null,'no lane is blocked by rendered/collision rail');
+ }
+});
+test('real approach guide rails converge from the bank onto both deck edges with no open bank-end mouth',()=>{
+ const bridge=n.segments.filter(s=>s.bridge),first=bridge[0],last=bridge.at(-1),guides=n.structures.filter(s=>s.guide);assert.ok(guides.length>100);
+ for(const p of[first.a,last.b])for(const side of[-1,1]){const target={x:p.x+p.rx*side*p.halfWidth,z:p.z+p.rz*side*p.halfWidth};assert.ok(guides.some(g=>[g.a,g.b].some(q=>Math.hypot(q.x-target.x,q.z-target.z)<.001&&Math.abs(q.y-p.y)<.001)),'guide physically closes at the exact visible deck-edge station');}
+});
+test('additional real hill masses enrich the inland terrain while road/underpass geometry stays unchanged',()=>{
+ const old=vm.runInNewContext(readFileSync(new URL('./fixtures/coast-terrain-v2-baseline/road-network-before-surface-handoff.js',import.meta.url),'utf8')+';RoadsterCoastRoads;');
+ for(const[x,z]of[[1120,-1000],[720,650]])assert.ok(n.terrainSupport(x,z).height>old.terrainSupport(x,z).height+15);
+ near(n.routes[0].length,old.routes[0].length);near(n.stats().maxHeight,old.stats().maxHeight);
+});
+test('all traffic lane station boundaries and micro-perturbations keep real road support, never fall back to terrain',()=>{
+ const old=vm.runInNewContext(readFileSync(new URL('./fixtures/driving-feedback-baseline/road-network-before-station-neighbours.js',import.meta.url),'utf8')+';RoadsterCoastRoads;');
+ const bad=old.sampleRoute(0,3767.198502582747,5.25);assert.ok(old.candidates(bad.x,bad.z).some(c=>c.id==='road-0'&&c.height>bad.y+46),'preserve exact station46.56m drop witness');
+ let checked=0;for(const route of[0,1,2,3])for(const lane of[1.75,5.25,8.75])for(const station of n.trafficPath(route,lane).stations)for(const delta of[-.001,-.00001,0,.00001,.001]){
+  const p=n.sampleRoute(route,station.s+delta,lane),surfaces=n.candidates(p.x,p.z).filter(c=>c.road&&Math.abs(c.height-station.y)<.01);
+  assert.ok(p.supportId.startsWith('road-'),'legitimate NPC lane never silently uses terrain');assert.ok(surfaces.length,`independent road candidate route${route} lane${lane} s${station.s}`);assert.ok(surfaces.some(c=>Math.abs(c.height-p.y)<1e-7));near(p.y,station.y,.001);checked++;
+ }assert.ok(checked>45000);
+});

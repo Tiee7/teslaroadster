@@ -1,0 +1,16 @@
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (4.646723ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (80.80682ms)
+✔ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.156991ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (2.08768ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.27133ms)
+✔ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (3.943759ms)
+✔ actual flat terrain, bank and asphalt render tops have no substantive coplanar overlap; world heights are not raised (273.782195ms)
+ℹ {"flatTriangles":[7894,4661,7552],"crossLayerTrianglePairs":1445873,"maxOverlapSquareMetres":0.0004671940705485156}
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1654.574578

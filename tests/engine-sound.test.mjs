@@ -156,8 +156,8 @@ test('settings loads saved state before WebGL, translates and toggles only engin
 });
 
 test('production map switches and repeated vehicle or challenge resets retain the engine preference', () => {
-  const h = harness(); h.sound.setSimulatedEngineEnabled(false); h.sound.init();
-  Object.assign(h.context, { state: {}, currentMap: 'highway', MAX_AIR_SECONDS: 10, CITY_DEFAULT_LANE_OFFSET: 5.25, carMeshGroup: {}, highwayEnvGroup: {}, cityEnvGroup: {}, trafficLevelIndex: 1,
+  const h = harness(); h.sound.setSimulatedEngineEnabled(false); h.sound.init(); let weatherChanges=0;
+  Object.assign(h.context, { state: {}, weatherIndex: 0, selectWeatherMode(index,notify){assert.equal(index,0);assert.equal(notify,false);weatherChanges++;}, currentMap: 'highway', MAX_AIR_SECONDS: 10, CITY_DEFAULT_LANE_OFFSET: 6, carMeshGroup: {}, highwayEnvGroup: {}, cityEnvGroup: {}, trafficLevelIndex: 1,
     clearDebris() {}, renderBannerText() {}, populateTraffic() {}, applyTranslations() {} });
   vm.runInContext(readFileSync(new URL('../src/driving-score.js', import.meta.url), 'utf8'), h.context);
   const config=readFileSync(new URL('../src/config.js',import.meta.url),'utf8');
@@ -167,7 +167,7 @@ test('production map switches and repeated vehicle or challenge resets retain th
     vm.runInContext(command, h.context); h.sound.update(.8, true, false, false, .5);
     assert.equal(h.sound.simulatedEngineEnabled, false); assert.equal(h.sound.simulatedEngineGain.gain.value, 0);
   }
-  assert.equal(h.saved.length, 1); assert.equal(h.contexts.length, 1);
+  assert.equal(h.saved.length, 1); assert.equal(h.contexts.length, 1); assert.equal(weatherChanges,2);
 });
 
 
@@ -231,9 +231,9 @@ test('invalid inputs and extreme speed keep V8 pitch, filter, and level finite a
     for (const load of [undefined, NaN, Infinity, -10, 0, .3, .7, 1, 100]) {
       sound.update(speed, false, false, false, 0, load);
       assert.ok(Object.values(sound.engineVoice).every(Number.isFinite));
-      assert.ok(sound.engineGain.gain.value >= 0 && sound.engineGain.gain.value <= .084);
-      assert.ok(sound.engineVoice.rpm >= 850 && sound.engineVoice.rpm < 4100);
-      assert.ok(sound.engineFilter.frequency.value >= 360 && sound.engineFilter.frequency.value <= 1450);
+      assert.ok(sound.engineGain.gain.value >= 0 && sound.engineGain.gain.value <= .047);
+      assert.ok(sound.engineVoice.rpm >= 780 && sound.engineVoice.rpm < 2300);
+      assert.ok(sound.engineFilter.frequency.value >= 240 && sound.engineFilter.frequency.value <= 680);
     }
   }
   sound.update(.8, false, false, false); assert.ok(sound.engineGain.gain.value > 0);

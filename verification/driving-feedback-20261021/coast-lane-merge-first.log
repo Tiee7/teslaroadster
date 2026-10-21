@@ -1,0 +1,20 @@
+✔ three parallel lanes safely merge: route0, stagger-0.2, orderfalse (782.710689ms)
+✔ three parallel lanes safely merge: route0, stagger-0.2, ordertrue (619.729273ms)
+✔ three parallel lanes safely merge: route0, stagger0, orderfalse (619.157862ms)
+✔ three parallel lanes safely merge: route0, stagger0, ordertrue (595.97887ms)
+✔ three parallel lanes safely merge: route0, stagger0.2, orderfalse (669.413069ms)
+✔ three parallel lanes safely merge: route0, stagger0.2, ordertrue (647.826087ms)
+✔ three parallel lanes safely merge: route2, stagger-0.2, orderfalse (677.428105ms)
+✔ three parallel lanes safely merge: route2, stagger-0.2, ordertrue (550.558758ms)
+✔ three parallel lanes safely merge: route2, stagger0, orderfalse (621.428626ms)
+✔ three parallel lanes safely merge: route2, stagger0, ordertrue (566.389799ms)
+✔ three parallel lanes safely merge: route2, stagger0.2, orderfalse (583.209462ms)
+✔ three parallel lanes safely merge: route2, stagger0.2, ordertrue (596.93402ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8133.203823

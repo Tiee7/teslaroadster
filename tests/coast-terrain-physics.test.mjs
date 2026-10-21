@@ -45,7 +45,7 @@ test('the production cabin hits bridge underside; upward impact cannot become a 
 test('full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does',()=>{
  let checked=0;for(let s=3250;s<4500;s+=11){const a=coast.pose(0,s),b=coast.pose(0,s+1);assert.equal(n.sweepStructures(a,b),null);checked++;}
  assert.ok(checked>100);
- const p=coast.pose(0,3800),q={...p,x:p.x-p.dz*8,z:p.z+p.dx*8};assert.equal(n.sweepStructures(p,q).kind,'rail');
+ const p=coast.pose(0,3800),q={...p,x:p.x-p.dz*(p.halfWidth+3),z:p.z+p.dx*(p.halfWidth+3)};assert.equal(n.sweepStructures(p,q).kind,'rail');
 });
 test('continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall',()=>{
  const pier=n.structures.find(b=>b.kind==='pier');assert.ok(pier);const z=(pier.minZ+pier.maxZ)/2,y=pier.minY+.2;
@@ -75,4 +75,12 @@ test('an already airborne low-altitude O tap cannot restart ground-hop inertia g
 test('a vehicle below the pier still contacts real water instead of falling forever below world zero',()=>{
  const h=motion({x:-600,y:-.39,z:-650,vy:-4,wasAirborne:true,coastSupportId:null,airRemaining:0,isFreefalling:true});let resets=0;h.context.resetCar=()=>resets++;
  h.step(1/60);assert.equal(resets,1);assert.ok(h.state.y<=-.4);
+});
+test('new hillside houses use absolute base/roof heights and solid foundations, not sea-level stretched walls',()=>{
+ const houses=coast.layout().hillsideBuildings;assert.equal(houses.length,8);
+ for(const b of houses){assert.ok(b.baseY>6&&b.height>b.baseY+8);const nearRoad=n.nearestSegment(b.x,b.z);assert.ok(!nearRoad||nearRoad.distance>nearRoad.halfWidth+45);
+  for(const dx of[-b.w/2,0,b.w/2])for(const dz of[-b.d/2,0,b.d/2]){const ground=n.terrainSupport(b.x+dx,b.z+dz).height;assert.ok(b.baseY>=ground&&b.minY<=ground,'foundation covers all actual terrain under the footprint');}
+  const h=motion({x:b.x,z:b.z,y:b.height+.001,vy:-.1,airRemaining:5});h.step(1/60);near(h.state.y,b.height,1e-8);assert.equal(h.state.vy,0);assert.equal(h.impacts.length,0);near(h.state.airRemaining,5+4/60,1e-8);
+  const s={x:b.maxX+10,z:b.z,y:b.minY-3,vx:20,vz:0,speed:20};assert.equal(coast.clipBuildings({x:b.minX-10,z:b.z,y:s.y},s),null,'no hidden wall extends below the foundation');
+ }
 });

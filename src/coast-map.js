@@ -1,5 +1,3 @@
-// Original seaside routes; no third-party map assets.
-// Data and traffic are renderer-independent; owned GPU resources are lazy/map-local.
 const RoadsterCoast = (() => {
   'use strict';
   const spec = Object.freeze({ id:'coast', halfBound:1200, shorelineX:-330, waterY:-.4,
@@ -7,15 +5,13 @@ const RoadsterCoast = (() => {
     pier:Object.freeze({minX:-810,maxX:-250,minZ:-668,maxZ:-632}), wheelHeight:60 });
   const network=RoadsterCoastRoads;
   const xs=[-70],zs=[-850,-300,300,850];
-  // Rectangles describe the retained coastal access only. Curved roads use
-  // exact triangle membership, not a giant rectangular driveable shortcut.
   const roads=[{x:-70,z:200,w:9,d:1300},{x:(network.access.stations[0].x+network.access.stations.at(-1).x)/2,z:-650,w:network.access.stations.at(-1).x-network.access.stations[0].x,d:9}];
   const junctions=[];
   const contains=(b,x,z,pad=0)=>x>=b.minX-pad&&x<=b.maxX+pad&&z>=b.minZ-pad&&z<=b.maxZ+pad;
-  const onRoad=(x,z,margin=0)=>network.candidates(x,z).some(c=>c.road)&&(!margin||network.nearestSegment(x,z)?.distance<=4.5-margin);
+  const onRoad=(x,z,margin=0)=>{const near=network.nearestSegment(x,z);return network.candidates(x,z).some(c=>c.road)&&(!margin||near&&near.distance<=near.halfWidth-margin);};
   const support=q=>{
     let below=network.querySupport({...q,previousSupportId:q.coastSupportId||q.previousSupportId});
-    for(const b of buildings)if(q.x>b.minX-1.1&&q.x<b.maxX+1.1&&q.z>b.minZ-1.8&&q.z<b.maxZ+1.8&&q.y>=b.height-.55&&b.height>below.height)below={id:'roof',height:b.height,normal:{x:0,y:1,z:0},solid:true,water:false};
+    for(const b of roofBuildings)if(q.x>b.minX-1.1&&q.x<b.maxX+1.1&&q.z>b.minZ-1.8&&q.z<b.maxZ+1.8&&q.y>=b.height-.55&&b.height>below.height)below={id:'roof',height:b.height,normal:{x:0,y:1,z:0},solid:true,water:false};
     return {...below,pier:Boolean(below.pier)};
   };
   const surface=(x,z,pose={y:0})=>support({...pose,x,z});
@@ -28,20 +24,26 @@ const RoadsterCoast = (() => {
     const w=30+rand()*16,d=28+rand()*14,height=(x<430?8:12)+rand()*(z>600?10:16),color=Math.floor(rand()*6);
     if(x<430&&!(x===95&&z===-720||x===355&&z===1000)&&[-w/2,0,w/2].every(dx=>[-d/2,0,d/2].every(dz=>network.terrainSupport(x+dx,z+dz).height<=.15))&&(!network.nearestSegment(x,z)||network.nearestSegment(x,z).distance>Math.hypot(w,d)/2+18))buildings.push(Object.freeze({x,z,w,d,height,minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,color}));
   }
+  const hillsideBuildings=[];
+  for(const [i,[x,z]] of [[620,-920],[680,-710],[740,-710],[800,-640],[860,-780],[860,-570],[860,-360],[740,60]].entries()){
+    const w=14,d=12,levels=[8,11,14][i%3],heights=[-w/2,0,w/2].flatMap(dx=>[-d/2,0,d/2].map(dz=>network.terrainSupport(x+dx,z+dz).height)),baseY=Math.max(...heights)+.05;
+    hillsideBuildings.push(Object.freeze({x,z,w,d,baseY,minY:Math.min(...heights)-.1,wallHeight:levels,height:baseY+levels+.3,minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,kind:'hillside'}));
+  }
+  const roofBuildings=[...buildings,...hillsideBuildings];
   const palms=[];
   for(const x of [-120,-190])for(let z=-1020;z<=1020;z+=60)palms.push({x,z,h:9+rand()*4});
   for(const x of [380,480])for(let z=-990;z<=990;z+=110)if(zs.every(c=>Math.abs(z-c)>32))palms.push({x,z,h:9+rand()*4});
   palms.splice(0,palms.length,...palms.filter(p=>network.terrainSupport(p.x,p.z).height<=.15&&!(p.z===990&&p.x>=380)));
-  const obstacles=[...buildings,...palms.map(p=>({minX:p.x-.6,maxX:p.x+.6,minZ:p.z-.6,maxZ:p.z+.6,height:p.h,kind:'palm'}))];
+  const obstacles=[...roofBuildings,...palms.map(p=>({minX:p.x-.6,maxX:p.x+.6,minZ:p.z-.6,maxZ:p.z+.6,height:p.h,kind:'palm'}))];
 
   const routes=[0,1,2,3].map(id=>network.trafficPath(id));
-  const pose=(routeId,distance)=>network.sampleRoute(routeId,distance);
+  const pose=(routeId,distance,lane)=>network.sampleRoute(routeId,distance,lane);
   const junctionTraffic=network.createTrafficJunctions();
   const safe=(p,cars,player,except)=>junctionTraffic.canSpawn(p)&&(Math.abs(p.y-(player.y||0))>3||Math.hypot(p.x-player.x,p.z-player.z)>32)&&cars.every(c=>c===except||c.mesh.visible===false||Math.abs(p.y-c.mesh.position.y)>3||Math.hypot(p.x-c.mesh.position.x,p.z-c.mesh.position.z)>20);
   function place(car,cars,player){
-    const path=routes[car.coastRoute];
+    const path=network.trafficPath(car.coastRoute,car.coastLane);car.coastRouteLength=path.length;
     for(let i=0;i<32;i++){
-      const s=(car.coastSpawnCursor+i*113)%path.length,p=pose(car.coastRoute,s);
+      const s=(car.coastSpawnCursor+i*113)%path.length,p=pose(car.coastRoute,s,car.coastLane);
       if(!safe(p,cars,player,car))continue;
       car.coastDistance=s;car.coastWaiting=false;car.coastCooldown=0;car.speed=car.desiredSpeed;
       car.y=p.y;car.coastSupportId=p.supportId;car.blastTimer=0;car.mesh.position.set(p.x,p.y,p.z);car.mesh.rotation.order='YXZ';car.mesh.rotation.set(p.pitch,p.yaw,p.roll);car.mesh.visible=true;
@@ -53,8 +55,8 @@ const RoadsterCoast = (() => {
     junctionTraffic.reset();
     const cars=[];count=Math.max(0,Math.min(20,Math.floor(count)));
     for(let i=0;i<count;i++){
-      const mesh=createMesh(i),routeId=i%routes.length,path=routes[routeId];group.add(mesh);mesh.visible=false;
-      const car={mesh,mode:'coast',coastRoute:routeId,coastDistance:0,coastSpawnCursor:(Math.floor(i/routes.length)+.35)*path.length/Math.max(1,Math.ceil(count/routes.length)),
+      const mesh=createMesh(i),routeId=i%routes.length,lane=1.75+3.5*(Math.floor(i/4)%3),path=network.trafficPath(routeId,lane);group.add(mesh);mesh.visible=false;
+      const car={mesh,mode:'coast',coastRoute:routeId,coastLane:lane,coastRouteLength:path.length,coastDistance:0,coastSpawnCursor:(Math.floor(i/routes.length)+.35)*path.length/Math.max(1,Math.ceil(count/routes.length)),
         coastWaiting:true,coastCooldown:0,desiredSpeed:12+(i%4)*1.5,speed:0,vx:0,vz:0,y:0,blastTimer:0,
         blastVx:0,blastVy:0,blastVz:0,blastVRoll:0,blastVPitch:0,blastVYaw:0,length:mesh.userData.length||4.62,height:mesh.userData.height||1.25};
       cars.push(car);place(car,cars,player);
@@ -78,7 +80,7 @@ const RoadsterCoast = (() => {
   }
   function stepTraffic(cars,player,dt){
     dt=Math.max(0,Math.min(.1,Number.isFinite(dt)?dt:0));
-    const before=cars.map(c=>({car:c,x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,vx:c.vx,vz:c.vz,speed:c.speed,visible:c.mesh.visible}));
+    const before=cars.map((c,index)=>({car:c,index,p:pose(c.coastRoute,c.coastDistance,c.coastLane),x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,vx:c.vx,vz:c.vz,speed:c.speed,visible:c.mesh.visible}));
     junctionTraffic.prepare(cars,dt);
     for(const car of cars){
       if(car.mode!=='coast')continue;
@@ -91,17 +93,20 @@ const RoadsterCoast = (() => {
       }
       if(car.coastWaiting){place(car,cars,player);continue;}
       if(car.coastCooldown>0){car.coastCooldown=Math.max(0,car.coastCooldown-dt);car.speed=0;car.vx=car.vz=0;continue;}
-      const p=pose(car.coastRoute,car.coastDistance),aheadPose=pose(car.coastRoute,car.coastDistance+25);
+      const own=before[cars.indexOf(car)],p=own.p,aheadPose=pose(car.coastRoute,car.coastDistance+25,car.coastLane),merge=p.wide>.001&&pose(car.coastRoute,car.coastDistance+120,car.coastLane).wide<p.wide-.001;
       const bend=Math.acos(Math.max(-1,Math.min(1,p.dx*aheadPose.dx+p.dz*aheadPose.dz)))/25;
       let target=Math.min(car.desiredSpeed,Math.sqrt(3.5/Math.max(.001,bend)));
       for(const b of before){
         if(b.car===car||!b.visible||Math.abs(b.y-p.y)>3)continue;
+        if(merge&&b.car.coastRoute===car.coastRoute){const length=network.routes[car.coastRoute%2].stations.at(-1).sxz,gap=(car.coastRoute>=2?-1:1)*(b.p.referenceS-p.referenceS),ahead=(gap+length)%length;
+          if(ahead>.25&&ahead<60||Math.abs(gap)<=.25&&(b.car.coastLane<car.coastLane||b.car.coastLane===car.coastLane&&b.index<own.index))target=Math.min(target,Math.max(0,((Math.abs(gap)<=.25?0:ahead)-12)/1.6));}
         const x=b.x-p.x,z=b.z-p.z,ahead=x*p.dx+z*p.dz,lateral=Math.abs(x*p.dz-z*p.dx);
         if(ahead>0&&ahead<42&&lateral<2.6)target=Math.min(target,Math.max(0,(ahead-10)/1.6));
       }
       target=Math.min(target,junctionTraffic.targetSpeed(car));
       car.speed+=Math.max(-7*dt,Math.min(2.2*dt,target-car.speed));
-      const nextDistance=(car.coastDistance+car.speed*dt)%routes[car.coastRoute].length,next=pose(car.coastRoute,nextDistance);
+      car.coastRouteLength=network.trafficPath(car.coastRoute,car.coastLane).length;
+      const nextDistance=(car.coastDistance+car.speed*dt)%car.coastRouteLength,next=pose(car.coastRoute,nextDistance,car.coastLane);
       if(!junctionTraffic.canAdvance(car,next)){car.speed=0;car.vx=car.vy=car.vz=0;continue;}
       car.coastDistance=nextDistance;car.y=next.y;car.coastSupportId=next.supportId;car.mesh.position.set(next.x,next.y,next.z);car.mesh.rotation.set(next.pitch,next.yaw,next.roll);
       car.vx=next.vx*car.speed;car.vy=next.vy*car.speed;car.vz=next.vz*car.speed;
@@ -123,8 +128,6 @@ const RoadsterCoast = (() => {
       car.mesh.position.x-state.x,car.mesh.position.z-state.z,
       {minX:-bounds.x,maxX:bounds.x,minZ:-bounds.z,maxZ:bounds.z},0,0);
     if(!interval)return null;
-    // Intersect relative vertical intervals over the SAME swept XZ interval.
-    // Equal-height bridge cars collide; bridge/ground cars cannot collide.
     const oldY=oldCar.y||0,newY=car.mesh.position.y||0;
     const start=previous.y-oldY,delta=(state.y-previous.y)-(newY-oldY);
     let enter=interval.enter,exit=interval.exit;
@@ -139,7 +142,7 @@ const RoadsterCoast = (() => {
   function clipBuildings(previous,state){
     let earliest=null;
     for(const b of obstacles){
-      // A roof is support, not a side wall. Allow driving/jumping across it.
+      if(Math.max(previous.y,state.y)+1.25<(b.minY??0))continue;
       if(previous.y>=b.height-.08&&state.y>=b.height-.08)continue;
       const t=sweptBox(previous.x,previous.z,state.x,state.z,b,1.1,1.8);
       if(t===null||previous.y+(state.y-previous.y)*t>=b.height+.08)continue;
@@ -168,9 +171,7 @@ const RoadsterCoast = (() => {
   }
 
   let active=null,builds=0,disposals=0,failedBuilds=0;
-  // This is a conservative structural ceiling, not measured draw calls or FPS.
   const artBudget=Object.freeze({sourceGzipBytes:32*1024,staticMeshDraws:96,staticTriangles:180000,textureBytes:4*1024*1024,geometryAndInstanceBytes:8*1024*1024,cpuPixelCacheBytes:1024*1024});
-  // Bounded immutable CPU bitmap only; no Texture/GPU object survives leave().
   let groundFieldCache=null;
   function restoreSceneState(owner){
     const previous=owner.previousScene;
@@ -185,7 +186,6 @@ const RoadsterCoast = (() => {
     for(const geo of owner.geometries)geo.dispose();
     for(const mat of owner.materials)mat.dispose();
     for(const texture of owner.textures)texture.dispose();
-    // A caller may retain a detached review root; do not retain its dead CPU buffers.
     owner.group.clear();owner.instances.clear();owner.lights.clear();owner.geometries.clear();owner.materials.clear();owner.textures.clear();
   }
   function followCoastFocus(owner){
@@ -195,23 +195,19 @@ const RoadsterCoast = (() => {
     owner.sun.position.set(x+dx,dy,z+dz);owner.sun.target.position.set(x,0,z);owner.updateFoliage?.(x,z);owner.updateDetails?.(x,z);
   }
   function applyCoastWeather(owner,preset={}){
-    // UI changes the scene's current (coast-owned) Color/Fog before this hook.
-    // Update the saved shared objects to the LAST selected weather, not entry weather.
     const previous=owner.previousScene;
     if(Number.isFinite(preset.bgColor)&&previous.background?.isColor)previous.background.setHex(preset.bgColor);
     if(Number.isFinite(preset.fogColor)&&previous.fog?.color)previous.fog.color.setHex(preset.fogColor);
     if(Number.isFinite(preset.fogDensity)&&previous.fog&&'density' in previous.fog)previous.fog.density=preset.fogDensity;
     if(owner.scene.environment!==owner.skyTexture)previous.environment=owner.scene.environment;
     const sunset=Boolean(preset.marsSun),rain=Boolean(preset.rain);
-    const settings=sunset?{background:0xc6a48a,fog:0xb99582,density:.00065,sky:0xe0b49a,ground:0x8c7266,fill:.62,key:0xffd09b,strength:1.25,offset:[-68,44,35],top:[120,151,169],horizon:[213,179,155],bottom:[84,83,74]}:
+    const settings=preset.daylight?{background:0xc7dfed,fog:0xc7dfed,density:.0002,sky:0xdbe9f4,ground:0x9a9b82,fill:1.05,key:0xfff5df,strength:1.7,offset:[-55,100,48],top:[178,210,231],horizon:[219,234,240],bottom:[143,153,144]}:sunset?{background:0xc6a48a,fog:0xb99582,density:.00065,sky:0xe0b49a,ground:0x8c7266,fill:.62,key:0xffd09b,strength:1.25,offset:[-68,44,35],top:[120,151,169],horizon:[213,179,155],bottom:[84,83,74]}:
       rain?{background:0x101e29,fog:0x263c47,density:.00085,sky:0x8da4af,ground:0x565c58,fill:.38,key:0x9bb4bf,strength:.68,offset:[-55,90,48],top:[12,25,36],horizon:[48,67,76],bottom:[10,19,24]}:
       {background:0x0d1c29,fog:0x263f4b,density:.00055,sky:0x9bb5c5,ground:0x655d4c,fill:.46,key:0xb2cbd5,strength:.92,offset:[-55,90,48],top:[11,22,35],horizon:[52,78,91],bottom:[10,20,27]};
     owner.background.setHex(settings.background);owner.fog.color.setHex(settings.fog);owner.fog.density=settings.density;
     owner.scene.background=owner.background;owner.scene.fog=owner.fog;owner.scene.environment=owner.skyTexture;
     owner.hemi.color.setHex(settings.sky);owner.hemi.groundColor.setHex(settings.ground);owner.hemi.intensity=settings.fill;
     owner.sun.color.setHex(settings.key);owner.sun.intensity=settings.strength;owner.sunOffset=settings.offset;followCoastFocus(owner);
-    // A direct CubeTexture avoids r128's one-shot equirectangular→cube cache.
-    // Six owned DataTexture payloads are uploaded only through the cube texture.
     owner.skyTexture.image.forEach((face,faceIndex)=>{
       const image=face.image,data=image.data;
       for(let y=0;y<image.height;y++)for(let x=0;x<image.width;x++){
@@ -222,7 +218,7 @@ const RoadsterCoast = (() => {
       }
     });
     owner.waterMaterial.roughness=sunset?.29:rain?.42:.32;owner.waterMaterial.envMapIntensity=sunset?.62:rain?.55:.75;
-    owner.skyTexture.needsUpdate=true;owner.facadeLitMaterial.emissiveIntensity=sunset?.06:rain?.34:.42;owner.lampMaterial.emissiveIntensity=sunset?.18:rain?.8:.65;owner.roadMat.roughness=rain?.76:.94;owner.roadMat.metalness=.02;owner.roadMat.envMapIntensity=rain?.25:.4;
+    owner.skyTexture.needsUpdate=true;owner.facadeLitMaterial.emissiveIntensity=preset.daylight?.02:sunset?.06:rain?.34:.42;owner.lampMaterial.emissiveIntensity=sunset?.18:rain?.8:.65;owner.roadMat.roughness=rain?.76:.94;owner.roadMat.metalness=.02;owner.roadMat.envMapIntensity=rain?.25:.4;
   }
   function enter(scene,THREE=globalThis.THREE){
     if(active)return active.group;
@@ -230,8 +226,6 @@ const RoadsterCoast = (() => {
     const geometries=new Set(),materials=new Set(),textures=new Set(),instances=new Set(),lights=new Set(),own=g=>(geometries.add(g),g);
     const owner={group,geometries,materials,textures,instances,lights,scene};
     try {
-    // Original deterministic microtextures. Small, map-local, no network requests.
-    // Independent seed: never change the collision/layout generator's rand sequence.
     function grainTexture(kind,size=kind==='sand'?256:128){
       const bytes=new Uint8Array(size*size*4);let value=kind==='asphalt'?991:kind==='sand'?771:kind==='plaster'?331:551;
       for(let y=0;y<size;y++)for(let x=0;x<size;x++){
@@ -264,13 +258,11 @@ const RoadsterCoast = (() => {
     const box=own(new THREE.BoxGeometry(1,1,1)),paintPlane=own(new THREE.PlaneGeometry(1,1)),windowPlane=own(new THREE.PlaneGeometry(1,1));
     paintPlane.rotateX(-Math.PI/2);windowPlane.rotateY(Math.PI/2);
     const palette=[0xe3dbca,0xc1d0c3,0xdcc9b7,0xd6d4ca,0xaac1ba,0xd4bea6];
-    // Quiet groups of warm/cool plaster, not a random checkerboard of assets.
     function districtWallColor(b,index){
       const coastal=[0xe2dbc9,0xc0d0c6,0xd8c8b6,0xd8cbb8],inland=[0xd0d2c2,0xc2c9bc,0xd8c9b8,0xb4c8be];
       const sector=(Math.floor((b.z+1000)/560)+Math.floor(Math.max(0,b.x)/300))%4;
       return new THREE.Color((b.x<430?coastal:inland)[sector]).multiplyScalar([.97,1,.985][index%3]).getHex();
     }
-    // Deco parapet: roof trim, not physical support.
     function curvedParapetGeometry(){
       const positions=[],indices=[],sections=8;
       function quad(a,b,c,d,target){
@@ -288,7 +280,6 @@ const RoadsterCoast = (() => {
       for(const side of [-1,1])quad([-.5,0,side*.5],[.5,0,side*.5],[.5,.3,side*.5],[-.5,.3,side*.5],[0,0,side]);
       const geo=own(new THREE.BufferGeometry());geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geo.setIndex(indices);geo.computeVertexNormals();return geo;
     }
-    // Open-backed24-triangle reveal, without coplanar bar corners.
     function windowRevealGeometry(){
       const points=[],indices=[],outer=[[.6,.6],[-.6,.6],[-.6,-.6],[.6,-.6]],inner=[[.5,.5],[-.5,.5],[-.5,-.5],[.5,-.5]];
       function quad(a,b,c,d,normal){
@@ -333,7 +324,6 @@ const RoadsterCoast = (() => {
      }
      return result;
     }
-    // Exact world-metre UVs, disjoint single top surfaces.
     function flatBatch(name,items,mat,tileMetres=2.4){
       const positions=[],uvs=[],indices=[];
       for(const v of items){
@@ -360,9 +350,41 @@ const RoadsterCoast = (() => {
       const geometry=own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.computeVertexNormals();
       const mesh=new THREE.Mesh(geometry,mat);mesh.name=name;mesh.receiveShadow=true;mesh.userData.coastTerrainVersion=2;group.add(mesh);return mesh;
     }
+    function exclusiveTop(subjects,masks){
+      const grid=new Map(),cell=(x,z)=>`${Math.floor(x/64)},${Math.floor(z/64)}`;
+      for(const m of masks)for(let x=Math.floor(m.minX/64);x<=Math.floor(m.maxX/64);x++)for(let z=Math.floor(m.minZ/64);z<=Math.floor(m.maxZ/64);z++){const k=`${x},${z}`;if(!grid.has(k))grid.set(k,[]);grid.get(k).push(m);}
+      const clip=(poly,distance)=>{const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],u=distance(a),v=distance(b),A=u>=-1e-9,B=v>=-1e-9;if(A)out.push(a);if(A!==B){const t=u/(u-v);out.push({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,z:a.z+(b.z-a.z)*t});}}const clean=out.filter((p,i)=>!i||Math.hypot(p.x-out[i-1].x,p.z-out[i-1].z)>1e-7);if(clean.length>1&&Math.hypot(clean[0].x-clean.at(-1).x,clean[0].z-clean.at(-1).z)<1e-7)clean.pop();return clean;};
+      const valid=p=>p.length>=3&&Math.abs(p.slice(1,-1).reduce((n,a,i)=>{const b=p[i+2],o=p[0];return n+(a.x-o.x)*(b.z-o.z)-(b.x-o.x)*(a.z-o.z);},0))>1e-6;
+      const output=[];
+      for(const t of subjects){
+        if([t.a,t.b,t.c].some(p=>Math.abs(p.y)>1e-5)){output.push(t);continue;}
+        const minX=Math.min(t.a.x,t.b.x,t.c.x),maxX=Math.max(t.a.x,t.b.x,t.c.x),minZ=Math.min(t.a.z,t.b.z,t.c.z),maxZ=Math.max(t.a.z,t.b.z,t.c.z),near=new Set();
+        for(let x=Math.floor(minX/64);x<=Math.floor(maxX/64);x++)for(let z=Math.floor(minZ/64);z<=Math.floor(maxZ/64);z++)for(const m of grid.get(`${x},${z}`)||[])if(m.maxX>=minX&&m.minX<=maxX&&m.maxZ>=minZ&&m.minZ<=maxZ)near.add(m);
+        let pieces=[[t.a,t.b,t.c]];
+        for(const m of near){
+          if(!pieces.length)break;
+          const mask=m.poly;
+          const area=mask.reduce((n,a,i)=>{const b=mask[(i+1)%mask.length];return n+a.x*b.z-b.x*a.z;},0),sign=area>=0?1:-1,next=[];if(Math.abs(area)<1e-7)continue;
+          for(const part of pieces){let intersection=part;for(let i=0;i<mask.length&&valid(intersection);i++){const a=mask[i],b=mask[(i+1)%mask.length];intersection=clip(intersection,p=>sign*((b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x)));}if(!valid(intersection)){next.push(part);continue;}let inside=part;for(let i=0;i<mask.length&&inside.length>=3;i++){const a=mask[i],b=mask[(i+1)%mask.length],side=p=>sign*((b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x)),outside=clip(inside,p=>-side(p));if(valid(outside))next.push(outside);inside=clip(inside,side);if(!valid(inside))break;}}
+          if(next.length>256)throw Error('excessive surface fragmentation');pieces=next;
+        }
+        for(const poly of pieces)for(let i=1;i+1<poly.length;i++){const a=poly[0],b=poly[i],c=poly[i+1];if(Math.abs((b.x-a.x)*(c.z-a.z)-(b.z-a.z)*(c.x-a.x))>1e-7)output.push({a,b,c});}
+      }
+      return output;
+    }
+    const roadTops=network.triangles.filter(t=>t.id.startsWith('road'));
+    const flatMask=poly=>({poly,minX:Math.min(...poly.map(p=>p.x)),maxX:Math.max(...poly.map(p=>p.x)),minZ:Math.min(...poly.map(p=>p.z)),maxZ:Math.max(...poly.map(p=>p.z))});
+    const roadMasks=[],earthMasks=[];
+    for(const s of network.segments){if(s.shared||s.bridge||s.a.y!==0||s.b.y!==0)continue;
+      roadMasks.push(flatMask([s.rows[0][0],s.rows[0][4],s.rows[1][4],s.rows[1][0]]));
+      const poly=[[-1,s.a],[1,s.a],[1,s.b],[-1,s.b]].map(([side,p])=>({x:p.x+p.rx*side*32,y:0,z:p.z+p.rz*side*32}));
+      if(poly.every(p=>Math.abs(network.terrainSupport(p.x,p.z).height)<1e-5))earthMasks.push(flatMask(poly));
+    }
+    earthMasks.push(...roadMasks,...network.banks.filter(t=>[t.a,t.b,t.c].every(p=>Math.abs(p.y)<1e-5)).map(t=>flatMask([t.a,t.b,t.c])));
+    const bankTops=exclusiveTop(network.banks,roadMasks);
     const groundMaterial=material(0xffffff,{roughness:1});
     const terrainTriangles=[];for(let i=0;i<network.terrain.indices.length;i+=3){const ids=network.terrain.indices.slice(i,i+3);terrainTriangles.push({a:network.terrain.vertices[ids[0]],b:network.terrain.vertices[ids[1]],c:network.terrain.vertices[ids[2]]});}
-    const inlandGround=triangleMesh('coast-inland-ground',terrainTriangles,groundMaterial),groundUV=inlandGround.geometry.attributes.uv,groundPosition=inlandGround.geometry.attributes.position;
+    const inlandGround=triangleMesh('coast-inland-ground',exclusiveTop(terrainTriangles,earthMasks),groundMaterial),groundUV=inlandGround.geometry.attributes.uv,groundPosition=inlandGround.geometry.attributes.position;
     for(let i=0;i<groundUV.count;i++)groundUV.setXY(i,(groundPosition.getX(i)+145)/1345,(groundPosition.getZ(i)+1200)/2400);
     function groundToneField(){
       const size=256,width=1345,depth=2400,minX=-145,minZ=-1200;
@@ -380,13 +402,11 @@ const RoadsterCoast = (() => {
           for(let k=0;k<3;k++)bytes[i+k]=bytes[i+k]+(rgb[k]-bytes[i+k])*a+.5;
         }
       }
-      // Address existing street-front parcels only, rather than coloring random lots.
       for(const e of districtEntryMeta){
         if(!e.linkedToSidewalk)continue;const b=buildings[e.buildingIndex],axis=e.axis,side=e.side,face=axis==='x'?b.x+side*b.w/2:b.z+side*b.d/2;
         const lo=Math.min(face,e.pathEnd),hi=Math.max(face,e.pathEnd),along=axis==='x'?b.z:b.x,half=(axis==='x'?b.d:b.w)/2;
         if(axis==='x')tint(lo,hi,along-half,along+half,0xa7a393,8,.8);else tint(along-half,along+half,lo,hi,0xa7a393,8,.8);
       }
-      // Courtyard soil stays local to the composed garden, not a checkerboard.
       tint(69,111,349,381,0x9a927e,7,.65);
       for(const r of cornerCourts)tint(r.minX,r.maxX,r.minZ,r.maxZ,0xa7a393,6,.8);
       groundFieldCache=Object.freeze({pixels:bytes,regions:Object.freeze(regions.map(r=>Object.freeze(r)))});}
@@ -434,9 +454,9 @@ const RoadsterCoast = (() => {
     const foam=new THREE.Mesh(foamGeo,material(0xa1b9b4,{roughness:.88,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1,depthWrite:false}));foam.name='coast-broken-surf-ribbons';foam.renderOrder=1;foam.userData.coastArt={visualOnly:true,flat:true};group.add(foam);
 
     slab('coast-promenade',-134,0,22,2200,0xc2b9a5,-.02,.10,{map:paverTexture,roughness:.92});
-    const roadMat=material(0x343c40,{map:asphaltTexture,roughness:.94});
-    triangleMesh('coast-road-surfaces',network.triangles.filter(t=>t.id.startsWith('road')),roadMat);
-    triangleMesh('coast-road-earth-banks',network.banks,material(0x8d967c,{map:sandTexture,roughness:1}));
+    const roadMat=material(0x343c40,{map:asphaltTexture,roughness:.94,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+    triangleMesh('coast-road-surfaces',roadTops,roadMat);
+    triangleMesh('coast-road-earth-banks',bankTops,material(0x8d967c,{map:sandTexture,roughness:1,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));
     const paint=[],decks=[];
     const strip=(a,b,offset,width,y=.015)=>{
       const corners=[{x:a.x+a.rx*(offset-width/2),y:a.y+y,z:a.z+a.rz*(offset-width/2)},{x:a.x+a.rx*(offset+width/2),y:a.y+y,z:a.z+a.rz*(offset+width/2)},{x:b.x+b.rx*(offset-width/2),y:b.y+y,z:b.z+b.rz*(offset-width/2)},{x:b.x+b.rx*(offset+width/2),y:b.y+y,z:b.z+b.rz*(offset+width/2)}];
@@ -444,7 +464,10 @@ const RoadsterCoast = (() => {
     };
     for(const s of network.segments){
       if(s.shared)continue;
-      for(const offset of[-3.5,3.5])strip(s.a,s.b,offset,.12);
+      for(const side of[-1,1]){
+        const a={...s.a},b={...s.b},offset=side*(a.halfWidth-1),end=side*(b.halfWidth-1);b.x+=b.rx*(end-offset);b.z+=b.rz*(end-offset);strip(a,b,offset,.12);
+        if(Math.floor(s.a.s/9)%2===0)for(const lane of[3.5,7])if(Math.min(s.a.halfWidth,s.b.halfWidth)>lane+3.4)strip(s.a,s.b,side*lane,.12);
+      }
       if(Math.floor(s.a.s/9)%2===0)strip(s.a,s.b,0,.12);
       if(s.bridge){
         const down=p=>({...p,y:p.y-network.SLAB_DEPTH}),[a,b]=s.rows;
@@ -470,6 +493,7 @@ const RoadsterCoast = (() => {
     });
     batch('coast-viaduct-rails',box,material(0xc1bba6),rails,{receiveShadow:true});
     batch('coast-viaduct-piers',box,material(0x96998c),network.structures.filter(b=>b.kind==='pier').map(b=>({p:[(b.minX+b.maxX)/2,(b.minY+b.maxY)/2,(b.minZ+b.maxZ)/2],s:[b.maxX-b.minX,b.maxY-b.minY,b.maxZ-b.minZ]})),{castShadow:true,receiveShadow:true});
+    batch('coast-bridge-abutments',box,material(0x96998c),network.structures.filter(b=>b.kind==='abutment').map(b=>({p:[(b.a.x+b.b.x)/2,(b.minY+b.maxY)/2,(b.a.z+b.b.z)/2],s:[b.thickness,b.maxY-b.minY,Math.hypot(b.b.x-b.a.x,b.b.z-b.a.z)],r:[0,Math.atan2(b.b.x-b.a.x,b.b.z-b.a.z),0]})),{castShadow:true,receiveShadow:true});
 
     const wallPieces=[],wallRoles=[],signatureHouses=[];
     for(const [index,b] of buildings.entries()){
@@ -478,11 +502,9 @@ const RoadsterCoast = (() => {
       if(!selected){push([b.x,b.height/2,b.z],[b.w,b.height,b.d],districtWallColor(b,index),'body');continue;}
       const family=(Math.floor((b.z+1000)/560)+(b.x>=430?1:0))%2;
       const highest=Math.min(8,1+Math.floor((b.height-.5-(family?1.65:1.9)/2-4.9)/3.25));
-      // Common gap between full balcony door reveals, not through a window row.
       const top=highest<2?6.6:3.15+(highest-1)*3.25;
       const colors=b.z===580?(b.x===355?[0x8b9c8e,0xc0ccbe,0xd4d9c8]:[0x9d8c7c,0xc9ac99,0xd9c6b4]):[0x8b9c8e,b.x===355?0xe3dcca:0xd8d8c7,b.x===355?0xe9e2d1:0xe0dfce];
       const cuts=[0,3.2,top,b.height];for(let i=0;i<3;i++)push([b.x,(cuts[i]+cuts[i+1])/2,b.z],[b.w,cuts[i+1]-cuts[i],b.d],colors[i],'body');
-      // Two upper corner piers butt at the corner; begin above existing signs.
       const side=b.x<430?1:-1,face=b.x+side*b.w/2,z=b.z+b.d/2,y=(4.05+b.height-.34)/2,h=b.height-4.39;
       push([face+side*.07,y,z-.3],[.14,h,.6],colors[0],'pier');
       push([face-side*.3,y,z+.07],[.6,h,.14],colors[0],'pier');
@@ -492,7 +514,6 @@ const RoadsterCoast = (() => {
     houseWalls.userData.coastWallPieces=wallRoles;group.userData.coastSignatureHouses=signatureHouses;
     batch('coast-roof-terraces',box,material(0xa39f8d),buildings.map(b=>({p:[b.x,b.height+.04,b.z],s:[b.w,.08,b.d]})),{receiveShadow:true});
     const hero=buildings.filter(b=>b.x===-5&&[440,580,720].includes(b.z));
-    // Three sample houses; original collision hulls/roof support unchanged.
     const cream=material(0xe5dfcf,{roughness:.9}),metal=material(0x425b5b,{roughness:.55,metalness:.32});
     const dark=material(0x24434f,{roughness:.45,metalness:.08,side:THREE.DoubleSide}),wood=material(0x987754,{roughness:.91});
     const trims=[],glazing=[],railings=[],awnings=[],timber=[],pavement=[],planters=[],greenery=[],contact=[],signPixels=[];
@@ -503,10 +524,7 @@ const RoadsterCoast = (() => {
       const i=roofParapetPositions.length/3;roofParapetPositions.push(...a,...b,...c,...d);roofParapetIndices.push(i,i+1,i+2,i,i+2,i+3);
     }
     for(const b of buildings){
-      // Continuous cornice + open roof parapet gives a readable stepped silhouette.
       for(const y of [3.4,b.height-.18])trims.push({p:[b.x,y,b.z],s:[b.w+.5,.26,b.d+.5]});
-      // Exact union of the former four boxes: same .28m wall/.64m top,
-      // but32 triangles instead of48 and no hidden/overlapping corner faces.
       const corners=[[-1,-1],[1,-1],[1,1],[-1,1]],outer=corners.map(([x,z])=>[b.x+x*b.w/2,b.z+z*b.d/2]),inner=corners.map(([x,z])=>[b.x+x*(b.w/2-.28),b.z+z*(b.d/2-.28)]);
       const point=(v,top)=>[v[0],b.height+(top?.64:0),v[1]];
       for(let i=0;i<4;i++){
@@ -538,7 +556,6 @@ const RoadsterCoast = (() => {
       [...text].forEach((letter,k)=>signGlyphs[letter].forEach((row,iy)=>[...row].forEach((bit,ix)=>{
         if(bit==='1')cells.push({x:k*6+ix+.5,z:3-iy,w:1,d:1});
       })));
-      // Union the original glyph cells into continuous painted strokes, not LED dots.
       for(const r of unionRectangles(cells))target.push({p:[x,y+(r.minZ+r.maxZ)*pixel/2,z+direction*(-width/2+(r.minX+r.maxX)*pixel/2)],s:[1,(r.maxZ-r.minZ)*pixel,(r.maxX-r.minX)*pixel]});
     }
     const routeSigns=[],routeBoards=[],routePosts=[],routeLetters=[];
@@ -547,7 +564,7 @@ const RoadsterCoast = (() => {
       {id:0,s:3400,text:'DOWNHILL',color:0x8e7038},{id:0,s:5010,text:'COAST',color:0x355e53},{id:1,s:110,text:'BENDS',color:0x8e7038},
       {id:1,s:600,text:'GROUND',color:0x355e53},{id:1,s:980,text:'UNDERPASS',color:0x355f78}];
     for(const spec of signSpecs){
-      const p=pose(spec.id,spec.s),offset=p.bridge?4.35:10,x=p.x-p.dz*offset,z=p.z+p.dx*offset;
+      const p=pose(spec.id,spec.s),offset=p.bridge?p.halfWidth-.15:Math.max(10,p.halfWidth+1.5),x=p.x-p.dz*offset,z=p.z+p.dx*offset;
       const floor=p.bridge?p.y:network.querySupport({x,z,y:p.y+.1}).height,y=Number.isFinite(floor)?floor:p.y,angle=Math.atan2(p.dz,-p.dx),cos=Math.cos(angle),sin=Math.sin(angle);
       routePosts.push({p:[x,y+1.3,z],s:[.13,2.6,.13]});routeBoards.push({p:[x,y+3.6,z],s:[.16,2.3,6.3],r:[0,angle,0],color:spec.color});
       const letterStart=routeLetters.length,letters=[];sign(spec.text,.10,3.6,0,letters,.11,-1);
@@ -571,7 +588,6 @@ const RoadsterCoast = (() => {
         if(level===0){
           awnings.push({p:[front-1.05,3.15,z],s:[2.05,.16,w+.8],r:[0,0,-.08],color:hi===1?0x7b9e92:0xb99775});
           timber.push({p:[front-.18,.18,z],s:[.45,.36,w+.55]});
-          // Door leaf, transom, handle and store fascia distinguish entries from display glass.
           const doorZ=z-w/2+.82;
           trims.push({p:[front-.17,1.28,doorZ-.57],s:[.25,2.42,.10]},{p:[front-.17,1.28,doorZ+.57],s:[.25,2.42,.10]},
             {p:[front-.17,2.53,doorZ],s:[.25,.10,1.24]});
@@ -580,7 +596,6 @@ const RoadsterCoast = (() => {
           awnings.push({p:[front-2.03,3.03,z],s:[.12,.25,w+.8],color:hi===1?0x7b9e92:0xb99775});
           awnings.push({p:[front-.21,3.66,z],s:[.25,.52,w+.58],color:hi===1?0x668b80:0x8e806b});
           sign(['PALM','CAFE','SURF'][(hi+bay)%3],front-.35,3.67,z);
-          // Two restrained cafe terraces; no new road collision or per-shop lights.
           if((hi===0&&bay===1)||(hi===2&&bay===0)){
             const tx=front-6.2;
             timber.push({p:[tx,.78,z],s:[1.25,.11,1.25]});railings.push({p:[tx,.38,z],s:[.12,.76,.12]});
@@ -596,12 +611,10 @@ const RoadsterCoast = (() => {
           for(const sign of [-1,1])railings.push({p:[front-.65,y-h/2+.75,z+sign*(w/2+.19)],s:[1.2,.075,.075]});
         }
       }
-      // Secondary windows fill each upper-floor bay; all four facades read as architecture.
       const standardWindow=(x,y,z,w,h,side=1)=>{
         const face=side<0?b.minZ-.055:b.maxZ+.055;
         glazing.push({p:[x,y,face],s:[w,h,.075],outward:side,axis:'z'});
 
-        // Projecting brow is geometry, not painted fake shadow.
         trims.push({p:[x,y+h/2+.22,face+side*.48],s:[w+.58,.12,1.05]});
       };
       for(let level=0;level<floors;level++){
@@ -609,18 +622,15 @@ const RoadsterCoast = (() => {
         const count=Math.max(4,Math.floor((b.w-3)/4.25));
         for(let k=0;k<count;k++)for(const side of [-1,1])standardWindow(b.minX+2.1+(b.w-4.2)*(k+.5)/count,y,b.z,level===0?2.45:1.9,level===0?2.4:1.85,side);
         if(level===0)continue;
-        // Paired smaller windows between the main west-facing balcony bays.
         for(let bay=0;bay<bays-1;bay++){
           const z=b.minZ+1.7+bayWidth*(bay+1),w=1.65,h=1.85;
           glazing.push({p:[front,y,z],s:[.075,h,w],outward:-1});
         }
-        // Inland rear elevation uses the same modest window scale, not one black ribbon.
         for(let k=0;k<Math.floor(b.d/4);k++){
           const z=b.minZ+2+(b.d-4)*(k+.5)/Math.floor(b.d/4),back=b.maxX+.055;
           glazing.push({p:[back,y,z],s:[.075,1.85,1.8],outward:1});
         }
       }
-      // A low corner lantern/tower and a wraparound brow interrupt the box silhouette.
       trims.push({p:[b.minX+2.3,b.height+1.05,b.minZ+2.3],s:[4.8,2.1,4.8]});
       trims.push({p:[b.minX+2.3,b.height+2.21,b.minZ+2.3],s:[5.3,.22,5.3]});
       dark.color.setHex(0x294651);
@@ -628,7 +638,6 @@ const RoadsterCoast = (() => {
         glazing.push({p:[b.minX+2.3,b.height+1.14,b.minZ+2.3+side*2.405],s:[3.6,.68,.035]});
         glazing.push({p:[b.minX+2.3+side*2.405,b.height+1.14,b.minZ+2.3],s:[.035,.68,3.6]});
       }
-      // Three thin Deco corner fins make the corners legible from a moving car.
       for(let k=0;k<3;k++)trims.push({p:[front-.15,b.height*.64,b.minZ+.9+k*.55],s:[.32,b.height*.49,.18]});
       const plazaMin=-45,plazaMax=b.minX-.5,cx=(plazaMin+plazaMax)/2;
       pavement.push({p:[cx,-.005,b.z],s:[plazaMax-plazaMin,.07,b.d+17]});
@@ -639,12 +648,10 @@ const RoadsterCoast = (() => {
         timber.push({p:[-44,.52,z-sign*2.1],s:[.65,.15,4.1]});
         for(const dz of [-1.55,1.55])railings.push({p:[-44,.24,z-sign*2.1+dz],s:[.5,.48,.12]});
       }
-      // Slatted rooftop pergola is visual-only and never changes roof collision.
       const roofX=b.x+b.w*.12,roofZ=b.z+b.d*.12;
       for(const sx of [-1,1])for(const sz of [-1,1])timber.push({p:[roofX+sx*3.7,b.height+1.25,roofZ+sz*3.1],s:[.18,2.5,.18]});
       for(let k=0;k<7;k++)timber.push({p:[roofX-4+k*1.34,b.height+2.6,roofZ],s:[.15,.18,6.8]});
     }
-    // District: four-sided apertures and real linked doors.
     function sashTexture(emission=false){
       const size=64,width=size*2,bytes=new Uint8Array(width*size*4);
       for(let y=0;y<size;y++)for(let x=0;x<width;x++){
@@ -676,12 +683,9 @@ const RoadsterCoast = (() => {
       }
       let entry=entries.sort((a,b)=>a.distance-b.distance)[0];
       if(!entry){
-        // Outer-corner parcels face a local garden, not an imaginary extension of a road.
         const nearest=roads.map(r=>{const x=Math.max(r.x-r.w/2,Math.min(r.x+r.w/2,b.x)),z=Math.max(r.z-r.d/2,Math.min(r.z+r.d/2,b.z));return {x,z,distance:(x-b.x)**2+(z-b.z)**2};}).sort((a,b)=>a.distance-b.distance)[0];
         const axis=Math.abs(nearest.x-b.x)>Math.abs(nearest.z-b.z)?'x':'z';entry={axis,side:Math.sign(axis==='x'?nearest.x-b.x:nearest.z-b.z)||-1,road:null,kind:'garden'};
       }
-      // Pick a visible door axis before placing ground-floor windows. Original
-      // palms are real collision obstacles too; never draw an access path through one.
       const alongCenter=entry.axis==='x'?b.z:b.x,alongHalf=entry.axis==='x'?b.d/2:b.w/2,fromFace=(entry.axis==='x'?b.x:b.z)+entry.side*((entry.axis==='x'?b.w:b.d)/2+.065);
       const road=entry.road,roadCenter=road?(entry.axis==='x'?road.x:road.z):0,walkInner=road?(entry.axis==='x'?road.w/2+10:21):0,streetEnd=road?roadCenter-entry.side*walkInner:fromFace+entry.side*12;
       const offsets=[0,4,-4,8,-8,12,-12].filter(v=>Math.abs(v)<=alongHalf-2);
@@ -689,7 +693,6 @@ const RoadsterCoast = (() => {
       let selected=null;
       for(const offset of offsets){const along=alongCenter+offset;if(pathFree(along,streetEnd)){selected={along,end:streetEnd,linked:Boolean(road)};break;}}
       if(!selected)for(const offset of offsets){const along=alongCenter+offset,end=fromFace+entry.side*12;if(pathFree(along,end)){selected={along,end,linked:false};break;}}
-      // Extremely constrained parcels get an honest threshold, not a false path.
       Object.assign(entry,selected||{along:alongCenter,end:fromFace,linked:false});
       const record={building:b,windows:[],entry};facadeRecords.push(record);
       for(const axis of ['x','z'])for(const side of [-1,1]){
@@ -701,8 +704,6 @@ const RoadsterCoast = (() => {
             const along=center-length/2+1.2+(length-2.4)*(bay+.5)/bays,w=level===0?2.65:facadeFamily?2.7:1.75;
             if(level===0&&cornerStore&&((axis==='x'&&side===storeSide&&Math.abs(along-storeAlong)<6.1)||(axis==='z'&&side===1&&Math.abs(along-storeEndAlong)<6.1)))continue;
             if(level===0&&axis===entry.axis&&side===entry.side&&Math.abs(along-entry.along)<w/2+1.0)continue;
-            // Selected single vertical stacks become genuine full-height balcony
-            // doors, not a railing placed in front of an unreachable window sill.
             if((b.x===-5||b.x===355||b.x===485)&&axis===entry.axis&&side===entry.side&&level>0&&level<=3&&bay===Math.floor(bays/2)){
               const floor=3.55+(level-1)*3.25,door=facePose(b,axis,side,along,floor+1.225,2.1,2.45),face=axis==='x'?b.x+side*b.w/2:b.z+side*b.d/2;
               glazing.push({p:door.p,s:axis==='x'?[.075,2.45,2.1]:[2.1,2.45,.075],axis,outward:side});
@@ -719,7 +720,6 @@ const RoadsterCoast = (() => {
         }
       }
       if(cornerStore){
-        // Corner displays retain the original linked entrance.
         const color=b.x<430?0x78958a:0xad8d72;
         for(const [axis,side,along] of [['x',storeSide,storeAlong],['z',1,storeEndAlong]]){
           const panel=facePose(b,axis,side,along,1.7,11.6,3.3);panel.p[axis==='x'?0:2]-=side*.045;panel.color=color;cornerStorePanels.push(panel);
@@ -727,7 +727,6 @@ const RoadsterCoast = (() => {
           const face=(axis==='x'?b.x:b.z)+side*((axis==='x'?b.w:b.d)/2+.7),edge=face+side*.65;
           awnings.push({p:axis==='x'?[face,3.07,along]:[along,3.07,face],s:axis==='x'?[1.45,.13,11.6]:[11.6,.13,1.45],color},
             {p:axis==='x'?[edge,2.93,along]:[along,2.93,edge],s:axis==='x'?[.08,.22,11.6]:[11.6,.22,.08],color});
-          // Existing original glyph vocabulary: restrained painted CAFE / SURF.
           const fascia=(axis==='x'?b.x:b.z)+side*((axis==='x'?b.w:b.d)/2+.34);
           awnings.push({p:axis==='x'?[fascia,3.7,along]:[along,3.7,fascia],s:axis==='x'?[.12,.5,4]:[4,.5,.12],color});
           const text=b.x<430?'CAFE':'SURF',letters=[],signStart=signPixels.length;sign(text,0,3.7,0,letters,.06,axis==='x'?-side:side);
@@ -736,7 +735,6 @@ const RoadsterCoast = (() => {
         }
       }
       const along=entry.along,door=facePose(b,entry.axis,entry.side,along,1.29,1.2,2.4);
-      // Door cores join the existing real-reveal batch, not the distant atlas.
       glazing.push({p:door.p,s:entry.axis==='x'?[.075,2.4,1.2]:[1.2,2.4,.075],axis:entry.axis,outward:entry.side});
       const front=door.p.slice(),threshold=door.p.slice(),handle=door.p.slice();front[entry.axis==='x'?0:2]+=entry.side*.45;front[1]=2.72;
       threshold[entry.axis==='x'?0:2]+=entry.side*.22;threshold[1]=.065;
@@ -747,7 +745,6 @@ const RoadsterCoast = (() => {
         const edge=front.slice();edge[entry.axis==='x'?0:2]+=entry.side*.7;edge[1]-=.13;
         awnings.push({p:edge,s:entry.axis==='x'?[.075,.25,2.65]:[2.65,.25,.075],color});
       }else trims.push({p:front,s:entry.axis==='x'?[1,.16,2.15]:[2.15,.16,1]});
-      // Split low stone base around the real door; never cover the opening.
       const centre=entry.axis==='x'?b.z:b.x,half=entry.axis==='x'?b.d/2:b.w/2;
       for(const [lo,hi] of [[centre-half+.15,entry.along-.88],[entry.along+.88,centre+half-.15]])if(hi>lo){
         const face=(entry.axis==='x'?b.x:b.z)+entry.side*((entry.axis==='x'?b.w:b.d)/2+.025);
@@ -759,7 +756,6 @@ const RoadsterCoast = (() => {
       const length=Math.abs(end-from),pathCenter=(from+end)/2;
       if(length>.1)districtPaths.push({p:entry.axis==='x'?[pathCenter,-.005,alongValue]:[alongValue,-.005,pathCenter],s:entry.axis==='x'?[length,.07,2.6]:[2.6,.07,length]});
       districtEntryMeta.push({buildingIndex:bi,axis:entry.axis,side:entry.side,kind:entry.kind,roadIndex:entry.road?roads.indexOf(entry.road):-1,linkedToSidewalk:linked,door:door.p.slice(),pathEnd:end});
-      // Six restrained roof/corner families share the original palette and kit.
       const family=bi%6;
       if(family===0){
         const pose=facePose(b,entry.axis,entry.side,entry.axis==='x'?b.z:b.x,b.height+.64,Math.min(13,(entry.axis==='x'?b.d:b.w)*.4),1.6);
@@ -784,8 +780,6 @@ const RoadsterCoast = (() => {
     group.userData.coastCornerStores=cornerStores;
     batch('coast-corner-store-ground-panels',windowPlane,material(0xffffff,{roughness:.95}),cornerStorePanels,{receiveShadow:true,visualOnly:true});
     batch('coast-district-ground-plinths',windowPlane,cream,districtPlinths,{receiveShadow:true,visualOnly:true});
-    // Only the four curated corner shops get a bounded L-shaped hard front.
-    // The leg joins the ORIGINAL door path; no new entrance or raised prop.
     for(const r of cornerStores)if(r.axis==='z'){
       const b=buildings[r.buildingIndex],e=districtEntryMeta.find(e=>e.buildingIndex===r.buildingIndex);if(!e?.linkedToSidewalk||e.axis!=='x')continue;
       const face=b.x+e.side*b.w/2,outer=face+e.side*6,z0=e.door[2]-1.3,z1=b.maxZ+7;
@@ -803,7 +797,6 @@ const RoadsterCoast = (() => {
     for(const family of [0,1])for(const [name,mat,items] of [['coast-district-window-sashes',facadeWindowMaterial,districtWindows],['coast-district-selected-lit-windows',facadeLitMaterial,districtLitWindows]]){
       const mesh=batch(name+(family?'-transom':''),sashPlanes[family],mat,items[family],{receiveShadow:true,visualOnly:true});mesh.userData.coastArt.facadeFamily=family;
     }
-    // Fixed near-frame capacity; refresh after20m. Far apertures/hulls remain.
     const detailCapacity=384,detailRings=new THREE.InstancedMesh(revealGeometry,cream,detailCapacity);instances.add(detailRings);
     detailRings.name='coast-district-near-window-reveals';detailRings.count=0;detailRings.castShadow=true;detailRings.receiveShadow=true;
     detailRings.instanceMatrix.setUsage(THREE.DynamicDrawUsage);detailRings.userData.coastArt={visualOnly:true,flat:false,capacity:detailCapacity};group.add(detailRings);
@@ -822,7 +815,6 @@ const RoadsterCoast = (() => {
       }
       detailRings.count=count;detailRings.instanceMatrix.needsUpdate=true;
     }
-    // A continuous4m pedestrian band ties three original forecourts into one street.
     pavement.push({p:[-43,-.005,580],s:[4,.07,330]});
     for(let i=0;i<hero.length-1;i++){
       const a=hero[i].maxZ+18,b=hero[i+1].minZ-18;
@@ -857,7 +849,6 @@ const RoadsterCoast = (() => {
         shrubClusters.push({p,s:alongX?[long,hedge.s[1]*(.54+wobble),wide]:[wide,hedge.s[1]*(.54+wobble),long],color:[0x71855e,0x617c54,0x829067][k%3]});
       }
     }
-    // Opaque coastal shrubs: irregular core and six folded sprays.
     function coastalShrubGeometry(){
       const positions=[],colors=[];const core=new THREE.IcosahedronGeometry(1,0),p=core.attributes.position;
       for(let i=0;i<p.count;i++){positions.push(p.getX(i)*.72,p.getY(i)*.55-.25,p.getZ(i)*.72);colors.push(.69,.78,.61);}core.dispose();
@@ -874,7 +865,6 @@ const RoadsterCoast = (() => {
     const arrivalShrubStart=shrubClusters.length;
     for(const [x,z] of [[471.5,604.3],[471.5,605.2],[471.5,606.1],[471.5,607],[468.1,607],[469,607],[469.9,607],[470.8,607]])shrubClusters.push({p:[x,.27,z],s:[.55,.36,.55],color:0x829067});
     const shrubs=batch('coast-sample-planter-shrubs',shrubGeometry,shrubMaterial,shrubClusters,{castShadow:true,receiveShadow:true,visualOnly:true});shrubs.userData.coastArrivalStart=arrivalShrubStart;
-    // Composed courtyard; physical ground/obstacles unchanged.
     const courtyard={x:90,z:365,width:48,depth:38},parkRects=[
       {x:90,z:347.3,w:48,d:2.6},{x:90,z:382.7,w:48,d:2.6},
       {x:67.3,z:365,w:2.6,d:32.8},{x:112.7,z:365,w:2.6,d:32.8},
@@ -894,7 +884,6 @@ const RoadsterCoast = (() => {
       add(0,.48,0,[width,.12,.5]);add(0,.77,.24,[width,.55,.10]);
       for(const dx of [-.62,.62])add(dx,.23,0,[.12,.46,.5]);
     }
-    // Low mulch surfaces share the existing warm rough timber material.
     parkWood.push({p:[469.8,.035,607],s:[4.6,.04,1.2]},{p:[471.5,.035,605.05],s:[1.2,.04,2.7]});
     const seats=batch('coast-courtyard-seating-and-open-pergola',box,wood,parkWood,{castShadow:true,receiveShadow:true,visualOnly:true});seats.userData.coastArrivalStart=arrivalWoodStart;
     function stem(a,b,width){
@@ -942,7 +931,6 @@ const RoadsterCoast = (() => {
         pos.push(Math.cos(a)*r+.18*Math.sin(t*Math.PI*.7),t,Math.sin(a)*r+.1*Math.sin(t*Math.PI*1.4));uv.push(k/sides,t);
       }
       for(let j=0;j<rings;j++)for(let k=0;k<sides;k++){const a=j*(sides+1)+k,b=a+sides+1;idx.push(a,b,a+1,a+1,b,b+1);}
-      // Crown/base caps are small and opaque; top remains at the original obstacle height.
       for(const j of [0,rings]){const t=j/rings,center=pos.length/3;pos.push(.18*Math.sin(t*Math.PI*.7),t,.1*Math.sin(t*Math.PI*1.4));uv.push(.5,.5);
         for(let k=0;k<sides;k++){const a=j*(sides+1)+k;if(j===0)idx.push(center,a,a+1);else idx.push(center,a+1,a);}}
       const geo=own(new THREE.BufferGeometry());geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geo.setIndex(idx);geo.computeVertexNormals();return geo;
@@ -961,7 +949,6 @@ const RoadsterCoast = (() => {
         }
         for(let j=0;j<segments;j++){const a=start+j*3,b=a+3;idx.push(a,b,a+1,a+1,b,b+1,a+1,b+1,a+2,a+2,b+1,b+2);}
       }
-      // Collapsed first/last leaf sections need only their nonzero triangles.
       const kept=[],av=new THREE.Vector3(),bv=new THREE.Vector3(),cv=new THREE.Vector3();
       for(let i=0;i<idx.length;i+=3){av.fromArray(pos,idx[i]*3);bv.fromArray(pos,idx[i+1]*3);cv.fromArray(pos,idx[i+2]*3);if(bv.sub(av).cross(cv.sub(av)).lengthSq()>1e-12)kept.push(idx[i],idx[i+1],idx[i+2]);}
       const geo=own(new THREE.BufferGeometry());geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geo.setIndex(kept);geo.computeVertexNormals();return geo;
@@ -991,12 +978,8 @@ const RoadsterCoast = (() => {
       }
       for(let variant=0;variant<2;variant++)for(const [meshes,counts] of [[palmNear,nearCounts],[palmFar,farCounts]]){const mesh=meshes[variant];mesh.count=counts[variant];mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;}
     }
-    // Curated amenity pockets use the same chalk, teal, timber and blue-grey kit.
-    // All are visual-only, off the published road/junction and clear pier centreline.
     const beachCream=[],beachMetal=[],beachTimber=[],beachBodies=[],beachRoofs=[],beachGlass=[],beachFrames=[],beachSigns=[],bulbs=[],shadeCaps=[];
     const parasols=[],parasolPoles=[],beachFabric=[];
-    // Three real access nodes, not uniformly scattered beach decoration. The
-    // north spur doglegs around the original palm at(-190,600).
     const beachEntryRects=[],beachEntryPlants=[];
     for(const [centreZ,spurZ] of [[600,620],[80,80],[-440,-440]]){
       beachEntryRects.push({x:(-145.2-246)/2,z:spurZ,w:100.8,d:2.4},{x:-243.25,z:centreZ,w:5.5,d:8.5});
@@ -1031,7 +1014,6 @@ const RoadsterCoast = (() => {
       }
       const geo=own(new THREE.BufferGeometry());geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geo.computeVertexNormals();return geo;
     }
-    // Nine small amenity pockets leave broad open sand rather than random scattering.
     for(const [site,centerZ] of [-920,-700,-440,-180,80,340,600,800,1000].entries()){
       for(let row=0;row<2;row++)for(let col=0;col<2;col++){
         const x=-254-row*12,z=centerZ+(col-.5)*9;
@@ -1046,7 +1028,6 @@ const RoadsterCoast = (() => {
         }
       }
     }
-    // Three supervised lifeguard stations share the same small original module.
     for(const [site,z] of [790,220,-500].entries()){
       const x=-296;
       for(const dx of [-1.9,1.9])for(const dz of [-1.6,1.6])beachTimber.push({p:[x+dx,1.03,z+dz],s:[.22,2.06,.22]});
@@ -1062,7 +1043,6 @@ const RoadsterCoast = (() => {
       }
       for(let i=0;i<7;i++)beachTimber.push({p:[x-4.9-(6-i)*.42,.15+i*.285,z],s:[.52,.15,1.5]});
     }
-    // The public promenade keeps a clear6m centre band between lamps/benches.
     for(let z=-1020;z<=1020;z+=60){
       beachMetal.push({p:[-143,1.94,z],s:[.10,3.88,.10]},{p:[-142.67,3.87,z],s:[.73,.10,.10]});
       bulbs.push({p:[-142.31,3.8,z],s:[.20,.24,.20]});shadeCaps.push({p:[-142.31,4.04,z],s:[.47,.38,.47]});
@@ -1071,20 +1051,17 @@ const RoadsterCoast = (() => {
         for(const dz of [-.82,.82])beachMetal.push({p:[-126,.23,z+5+dz],s:[.54,.46,.09]});
       }
     }
-    // Pier gateway: an open4.15m-high central passage, posts outside the entire original36m pier width.
     const gateX=-272;
     for(const side of [-1,1]){
       beachCream.push({p:[gateX,4,-650+side*19.2],s:[.65,8,.65]});
       beachBodies.push({p:[gateX-.02,2.2,-650+side*19.2],s:[.72,2.8,.72],color:0x75998b});
     }
-    // A catenary-suspended sign avoids an implausible39m solid timber beam.
     const gateCablePoints=Array.from({length:17},(_,i)=>{const z=-19.2+i*2.4;return new THREE.Vector3(gateX,6.4+1.6*(z/19.2)**2,-650+z);});
     const gateCable=new THREE.Mesh(own(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(gateCablePoints),32,.035,4,false)),metal);gateCable.name='coast-pier-sign-suspension';gateCable.userData.coastArt={visualOnly:true,flat:false};group.add(gateCable);
     for(const side of [-1,1])beachMetal.push({p:[gateX,6.4,-650+side*2.6],s:[.04,.32,.04]});
     beachBodies.push({p:[gateX,5.7,-650],s:[.32,1.2,6.6],color:0x78998a});
     sign('PIER',gateX+.175,5.72,-650,beachSigns,.16,-1);
     sign('COAST',gateX-.175,5.72,-650,beachSigns,.16,1);
-    // Modest pitched kiosks sit on the sandy forecourt, outside the entire original pier/approach.
     for(const [i,x] of [-228,-194,-160].entries())for(const side of [-1,1]){
       const z=-650+side*18,front=z-side*2.12;
       beachBodies.push({p:[x,1.48,z],s:[5.2,2.92,4.2],color:i%2?0xb7c9b7:0xd6cbb5});
@@ -1094,8 +1071,6 @@ const RoadsterCoast = (() => {
       beachFrames.push({p:[x,1.65,front-side*.13],s:[.24,1.65,3.55],r:[0,-side*Math.PI/2,0]});
       beachCream.push({p:[x,2.7,front-side*.40],s:[4.2,.13,1.15]});
     }
-    // Human-scale rhythm on the two existing coast-boulevard sidewalks. Raised
-    // planting stays2.5m beyond the unchanged road edge and leaves5.5m walk clear.
     const streetShrubs=[];
     for(const side of [-1,1])for(let z=-810;z<=810;z+=45){
       if(zs.some(c=>Math.abs(c-z)<32)||Math.abs(z+650)<25)continue;
@@ -1105,7 +1080,6 @@ const RoadsterCoast = (() => {
       const poleZ=z+3.05,lampX=x+side*.95;
       beachMetal.push({p:[x,2.28,poleZ],s:[.10,4.56,.10]},{p:[x+side*.49,4.49,poleZ],s:[1.06,.10,.10]});
       bulbs.push({p:[lampX,4.42,poleZ],s:[.19,.22,.19]});shadeCaps.push({p:[lampX,4.64,poleZ],s:[.46,.34,.46]});
-      // A low pale stone plinth/seafoam band is visible from a moving car.
       beachBodies.push({p:[x,.26,poleZ],s:[.27,.52,.27],color:0x78998a});
     }
     for(const side of [-1,1])for(const z of [465,525,585,645,705,765]){
@@ -1115,7 +1089,6 @@ const RoadsterCoast = (() => {
       beachBodies.push({p:[x,.26,z],s:[.27,.52,.27],color:0x78998a});
     }
     batch('coast-boulevard-low-planting',shrubGeometry,shrubMaterial,streetShrubs,{castShadow:true,receiveShadow:true,visualOnly:true});
-    // Three original wayfinding markers establish use and scale at the sample street.
     for(const z of [780,620,460]){
       const x=-51.5;
       beachMetal.push({p:[x,1.5,z],s:[.11,3,.11]});
@@ -1136,6 +1109,18 @@ const RoadsterCoast = (() => {
     batch('coast-beach-parasols',umbrellaGeometry(),material(0xffffff,{vertexColors:true,roughness:.96,side:THREE.DoubleSide}),parasols,{castShadow:true,receiveShadow:true,visualOnly:true});
     batch('coast-beach-parasol-poles',own(new THREE.CylinderGeometry(.04,.04,1,6)),metal,parasolPoles,{castShadow:true,visualOnly:true});
     batch('coast-beach-chaise-canvas',paintPlane,material(0xc4c8b1,{roughness:.98,side:THREE.DoubleSide}),beachFabric,{receiveShadow:true,visualOnly:true});
+    const hillVolumes=[],hillWindows=[];
+    for(const [i,b] of hillsideBuildings.entries()){
+      hillVolumes.push({p:[b.x,(b.minY+b.baseY)/2,b.z],s:[b.w+.3,b.baseY-b.minY,b.d+.3],color:0x7f887d},
+        {p:[b.x,b.baseY+b.wallHeight/2,b.z],s:[b.w,b.wallHeight,b.d],color:[0xc9d2c9,0xc4baa8,0xaebab9][i%3]},
+        {p:[b.x,b.height-.15,b.z],s:[b.w+.4,.3,b.d+.4],color:0x82958d},
+        {p:[b.x,b.baseY+1.2,b.minZ-.04],s:[1.5,2.4,.08],color:0x405652});
+      for(let y=b.baseY+2.1;y<b.height-1;y+=3)for(const side of[-1,1])for(const offset of[-4,0,4]){
+        hillWindows.push(facePose(b,'z',side,b.x+offset,y,1.8,1.5),facePose(b,'x',side,b.z+offset,y,1.8,1.5));
+      }
+    }
+    batch('coast-hillside-volumes',box,material(0xffffff,{roughness:.94}),hillVolumes,{castShadow:true,receiveShadow:true});
+    batch('coast-hillside-windows',windowPlane,facadeWindowMaterial,hillWindows,{visualOnly:true});
     const lampMaterial=material(0xe8d9b6,{emissive:0xffd59c,emissiveIntensity:.6,roughness:.55});
     batch('coast-promenade-lamp-globes',own(new THREE.IcosahedronGeometry(1,0)),lampMaterial,bulbs,{visualOnly:true});
     batch('coast-promenade-lamp-shades',own(new THREE.ConeGeometry(1,1,8,1,true)),cream,shadeCaps,{castShadow:true,visualOnly:true});
@@ -1156,7 +1141,6 @@ const RoadsterCoast = (() => {
     for(let i=0;i<16;i++){const a=i*Math.PI/8;cabinAnchors.push({x:Math.cos(a)*28,y:Math.sin(a)*28});cabinDummy.position.set(cabinAnchors[i].x,cabinAnchors[i].y,0);cabinDummy.scale.set(2.6,2.8,3.8);cabinDummy.updateMatrix();cabins.setMatrixAt(i,cabinDummy.matrix);cabins.setColorAt(i,new THREE.Color(palette[i%palette.length]));}
     cabins.instanceMatrix.needsUpdate=true;cabins.instanceColor.needsUpdate=true;
     batch('coast-wheel-supports',box,ferrisMat,[{p:[-650,14,-655],s:[1.4,30,1.4],r:[.18,0,0]},{p:[-650,14,-645],s:[1.4,30,1.4],r:[-.18,0,0]}]);
-    // Install temporary atmosphere only after all geometry succeeds.
     const hemi=new THREE.HemisphereLight(0x9bb5c5,0x655d4c,.46);lights.add(hemi);hemi.name='coast-hemisphere-light';group.add(hemi);
     const sun=new THREE.DirectionalLight(0xb2cbd5,.92);lights.add(sun);sun.name='coast-key-light';sun.castShadow=true;
     sun.target.name='coast-shadow-target';group.add(sun,sun.target);
@@ -1196,9 +1180,9 @@ const RoadsterCoast = (() => {
     const buffers=new Set();let geometryBufferBytes=0,instanceBufferBytes=0;
     for(const geo of active?.geometries||[])for(const attribute of [...Object.values(geo.attributes),geo.index].filter(Boolean)){const array=attribute.isInterleavedBufferAttribute?attribute.data.array:attribute.array;if(!buffers.has(array)){buffers.add(array);geometryBufferBytes+=array.byteLength;}}
     for(const mesh of active?.instances||[])for(const attribute of [mesh.instanceMatrix,mesh.instanceColor].filter(Boolean))instanceBufferBytes+=attribute.array.byteLength;
-    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?384:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:buildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
+    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?384:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:roofBuildings.length,retainedCoastalBuildings:buildings.length,hillsideBuildings:hillsideBuildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
   }
   return Object.freeze({spec,artBudget,roads:Object.freeze(roads),nodes:Object.freeze(nodes),edges:Object.freeze(edges),routes:Object.freeze(routes),pose,onRoad,surface,support,network,
-    layout:()=>({buildings,palms,obstacles}),buildings:()=>active?obstacles:[],enter,leave,tick,weather,metrics,trafficJunctionStats:junctionTraffic.stats,createTraffic,stepTraffic,recoverTraffic,respawn,hit,sweptBox,clipBuildings,contactBounds,trafficContact});
+    layout:()=>({buildings,hillsideBuildings,palms,obstacles}),buildings:()=>active?obstacles:[],enter,leave,tick,weather,metrics,trafficJunctionStats:junctionTraffic.stats,createTraffic,stepTraffic,recoverTraffic,respawn,hit,sweptBox,clipBuildings,contactBounds,trafficContact});
 })();
 if(typeof window!=='undefined')window.RoadsterCoast=RoadsterCoast;

@@ -624,6 +624,7 @@ function updateSimulation(dt, presentationDt = dt) {
     const mapBuildings = coastObstacles || cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
+      if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
       if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElevation = Math.max(groundElevation, b.height);
@@ -1174,6 +1175,7 @@ function updateSimulation(dt, presentationDt = dt) {
     const mapBuildings = coastObstacles || cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
+      if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
       if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElevation = Math.max(groundElevation, b.height);
@@ -1496,6 +1498,7 @@ function updateSimulation(dt, presentationDt = dt) {
     const mapBuildings = coastObstacles || cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
+      if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
       if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y > b.height + 0.08) {
           // Flying freely in the air above the building roof — do NOT teleport or snap down!

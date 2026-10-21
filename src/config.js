@@ -52,7 +52,7 @@ const I18N = {
       "Rose Titanium", "Matte Nardo Gray", "Hyper Sonic Yellow"
     ],
     weatherPrefix: "Sky: ",
-    weathers: ["Cyber Night (T)", "Cyber Neon Rain (T)", "Mars Sunset Dusk (T)"],
+    weathers: ["Cyber Night (T)", "Cyber Neon Rain (T)", "Mars Sunset Dusk (T)", "Daylight (T)"],
     trafficPrefix: "Traffic: ",
     trafficLevels: ["Normal (20)", "Heavy (36)", "Insane (52)"],
     camPrefix: "Cam: ",
@@ -218,7 +218,7 @@ const I18N = {
       "玫瑰钛金属 (Rose Titanium)", "纳多战机灰 (Nardo Gray)", "极速破音黄 (Sonic Yellow)"
     ],
     weatherPrefix: "天气: ",
-    weathers: ["星际暗夜 (T)", "赛博霓虹雨夜 (T)", "火星落日黄昏 (T)"],
+    weathers: ["星际暗夜 (T)", "赛博霓虹雨夜 (T)", "火星落日黄昏 (T)", "清朗日间 (T)"],
     trafficPrefix: "车流密度: ",
     trafficLevels: ["标准 (20辆)", "密集 (36辆)", "极限 (52辆)"],
     camPrefix: "视角: ",
@@ -361,7 +361,7 @@ const LANE_CENTERS = [-12.5, -7.5, -2.5, 2.5, 7.5, 12.5];
 const CITY_HALF_BOUND = 1200;
 const MAX_FLIGHT_ALTITUDE = 380.0;
 const CITY_ROAD_COORDS = [-900, -600, -300, 0, 300, 600, 900];
-const CITY_ROAD_WIDTH = 21; // Six 3.5 m lanes; vehicle and map coordinates remain metres.
+const CITY_ROAD_WIDTH = 24; // Six 4 m lanes; vehicle and map coordinates remain metres.
 const CITY_LANE_WIDTH = CITY_ROAD_WIDTH / 6;
 const CITY_DEFAULT_LANE_OFFSET = CITY_LANE_WIDTH * 1.5;
 const CITY_TAXI_STOP_OFFSET = CITY_ROAD_WIDTH / 2 - 4; // Full 3 m beam + 1 m clearance on asphalt.
@@ -552,5 +552,16 @@ const WEATHER_PRESETS = [
     roadEnvIntensity: 1.35,
     rain: false,
     marsSun: true
+  },
+  {
+    id: 'clear-day', icon: '🏙️', nameEn: 'Clear Day', nameZh: '清朗日间',
+    descEn: 'Readable daylight, soft sky and matte roads; no visible sun disc',
+    descZh: '清朗天光、柔和天空与哑光道路，不显示太阳模型',
+    bgColor: 0xc7dfed, fogColor: 0xc7dfed, fogDensity: 0.00020,
+    ambientColor: 0xdbe9f4, ambientIntensity: 1.2,
+    dirColor: 0xfff5df, dirIntensity: 2.0, dirPos: [65, 100, 45],
+    rimColor: 0xc1d9e8, rimIntensity: 0.3,
+    roadRoughness: 0.86, roadMetalness: 0.03, roadEnvIntensity: 0.25,
+    rain: false, marsSun: false, daylight: true
   }
 ];

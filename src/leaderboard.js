@@ -444,7 +444,7 @@
     await pendingStart;
     await finishPendingEnds();
   }
-  window.RoadsterRanked = { prepareForDemo, abort, tick, render, isDialogOpen: () => dialog.open };
+  window.RoadsterRanked = { prepareForDemo, abort, tick, render, isActive: isInFlight, isDialogOpen: () => dialog.open };
   setInterval(() => tick(), 200);
   render();
 })();

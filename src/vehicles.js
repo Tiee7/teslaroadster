@@ -1779,7 +1779,7 @@ function populateTraffic(count) {
         rotY = dir > 0 ? 0 : Math.PI;
       } else {
         x = travelPos;
-        z = roadCoord + laneOffset;
+        z = roadCoord - laneOffset; // E-W right side is opposite the N-S offset.
         if (Math.abs(x - state.x) < 25 && Math.abs(z - state.z) < 4) x -= 45;
         vx = -dir * spd;
         rotY = dir > 0 ? Math.PI / 2 : -Math.PI / 2;

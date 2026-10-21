@@ -179,7 +179,6 @@ function toggleInfiniteJet() {
 window.addEventListener('keydown', (e) => {
   // Text entry and the leaderboard dialog must never steer the car or trigger shortcuts.
   if ((e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) || window.RoadsterRanked?.isDialogOpen() || window.RoadsterMusic?.isSettingsOpen() || window.RoadsterStart?.isPaintOpen()) return;
-  if (window.RoadsterTaxi?.handleKeydown(e)) return;
   const mapModalEl = document.getElementById('modal-map-select');
   if (mapModalEl && !mapModalEl.classList.contains('hidden')) {
     // Native buttons/selects handle Enter and Space themselves. Menu keys must
@@ -431,6 +430,7 @@ function switchMap(targetMap) {
   selectedMapInModal = currentMap;
   highwayEnvGroup.visible = (currentMap === 'highway');
   cityEnvGroup.visible = (currentMap === 'city');
+  selectWeatherMode(weatherIndex, false);
 
   const counts = mapTrafficCounts();
   resetCar();
@@ -819,6 +819,7 @@ function selectWeatherMode(idx, playAudio = true) {
   // Isolate wet asphalt from the car's studio lighting, on both maps/road axes.
   [roadMat, cityAsphaltMat, cityAsphaltEWMat].forEach(material => applyRoadWeather(material, wp));
   window.RoadsterCoast?.weather(wp);
+  if (typeof cityEnvGroup !== 'undefined') cityEnvGroup.userData?.applyWeather?.(wp);
 
 
   if (typeof headlightSpotL !== 'undefined' && typeof headlightSpotR !== 'undefined') {
@@ -848,7 +849,7 @@ function renderModalWeatherGrid() {
   const grid = document.getElementById('modal-weather-grid');
   if (!grid) return;
   const isZh = currentLang === 'zh';
-  const shortNames = isZh ? ['星际暗夜', '霓虹雨夜', '火星落日'] : ['Cyber Night', 'Neon Rain', 'Mars Sunset'];
+  const shortNames = isZh ? ['星际暗夜', '霓虹雨夜', '火星落日', '清朗日间'] : ['Cyber Night', 'Neon Rain', 'Mars Sunset', 'Clear Day'];
   WEATHER_PRESETS.forEach((wp, idx) => {
     let button = grid.children[idx];
     if (!button) {

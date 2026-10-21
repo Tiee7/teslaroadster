@@ -1,0 +1,36 @@
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (2.71326ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (3734.063727ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (541.653738ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (21.733627ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (2.587274ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (123.425581ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (5429.309858ms)
+✔ viaduct is two-way six 3.5m lanes with metre-wide shoulders and smooth same-source widening (2192.307944ms)
+✔ real approach guide rails converge from the bank onto both deck edges with no open bank-end mouth (1.002504ms)
+✔ additional real hill masses enrich the inland terrain while road/underpass geometry stays unchanged (369.53202ms)
+✔ production motion follows true terrain/bridge tire plane at 0m/s without false gravity, damage or fuel burn (4119.797053ms)
+✔ production motion follows true terrain/bridge tire plane at 15m/s without false gravity, damage or fuel burn (3488.711216ms)
+✔ production motion follows true terrain/bridge tire plane at 55.55555555555556m/s without false gravity, damage or fuel burn (4082.813512ms)
+✔ production motion follows true terrain/bridge tire plane at 102.77777777777777m/s without false gravity, damage or fuel burn (3269.926293ms)
+✔ slope-only gravity distinguishes coast uphill/downhill without changing EV constants (19.346708ms)
+✔ Space really detaches and keeps lifting from the 1700m slope/bridge (187.284736ms)
+✔ Space really detaches and keeps lifting from the 3800m slope/bridge (154.875145ms)
+✔ O targets six metres above actual attached bridge or the ground BELOW it, never the highest xz layer (257.95459ms)
+✔ the production cabin hits bridge underside; upward impact cannot become a bridge-top landing (9.534553ms)
+✔ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (625.739882ms)
+✔ continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall (21.751198ms)
+✔ a roof has exactly one original 4s/s recharge owner, not both road and roof owners (7.630635ms)
+✔ a true airborne rooftop touchdown restores ground EV ownership instead of staying an invisible aircraft (31.743034ms)
+✔ a fast shallow deck-bottom scrape pays only normal impact, not the unrelated 50m/s tangential speed (8.742979ms)
+✔ a swept pier landing uses its contact material/position, not water at the frame endpoint (10.289613ms)
+✔ an already airborne low-altitude O tap cannot restart ground-hop inertia grace (3.284928ms)
+✔ a vehicle below the pier still contacts real water instead of falling forever below world zero (7.604286ms)
+✔ new hillside houses use absolute base/roof heights and solid foundations, not sea-level stretched walls (57.306595ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17163.301176

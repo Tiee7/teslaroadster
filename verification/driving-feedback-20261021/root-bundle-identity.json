@@ -1,0 +1,17 @@
+{
+  "bytes": 4884970,
+  "sha256": "566be6efa44479dfc8446f1394b60b5683ab2e52870047c4d0d14afbee973d7b",
+  "gitBlob": "66156b723a2c5d6c70d858926f83cb7e5660393f",
+  "sourceProductionCommit": "06e76df8005b883c255c6f400eaabe9a7f076212",
+  "checks": {
+    "city24m": true,
+    "metres1": true,
+    "day": true,
+    "noTaxiToggle": true,
+    "EWRight": true,
+    "stationReject": true,
+    "actualNPCLane": true,
+    "bridge23m": true
+  },
+  "qualification": "Exact root bundle content checks, not browser gameplay."
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "driving-feedback-source-epoch-v1",
+  "baseMain": "2efc2477d329b4aaef873a014f2dc8331a13fbc3",
+  "scope": "Authorized deep V8, city markings/right-hand traffic/default taxi/day-night/skyline, coast layered support/six-lane bridges/abutments/hillside architecture. Historical unchanged-source-identities.json remains a historical terrain-v2 release contract, not a claim that these newly authorized files stayed unchanged.",
+  "currentSourceSha256": {
+    "audio": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "config": "732f4907703138076149d7af989e18f378c64893fd0426eeecccf7ce162beff8",
+    "city-clock": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "world": "b10de6aecd84f504a899a2fbdfc5799262afc5611b074959702ae7279c2e6109",
+    "taxi": "b7a3a20b83188c803a2af296c37f474f6784c766e5a30211f7a3ed730d48e8dd",
+    "vehicles": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "highway-demo": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "highway-traffic": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "physics-main": "6f2581748cc2a9b50d06b8aa69b5d23a5117188da2c036757eeaa75a223c55fa",
+    "ui-hud": "db402fb60ebdd4cbf46959b3ca5e4483df23b45552223359a8a490bff731825f",
+    "leaderboard": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "coast-road-network": "7ae61f2735a9b0106b2eaf288d1b322f42affa032c423fe0a65a54c97ca2c187",
+    "coast-map": "4242c4c6a739c1e5026e2bd013c282f80dc15cd69db74254dcfafcd4b0328c6e"
+  },
+  "baselineFixtureSha256": {
+    "physics-main.js": "1013eb34d0c71954d66b132bea0840a91b2daeb546acdac630e74932bb277047",
+    "config.js": "7aeb13fafed9d742fc62cbafe029624ddd769e8da381569ca7c1a3f364d13d8b"
+  },
+  "proof": "Forty highway/city realistic/fantasy/control scenarios compare each numeric/boolean field with Object.is and impacts over 300 ticks against exact prior-main config and physics. City spawn width/taxi/world/render and audio are intentional separate changes."
+}

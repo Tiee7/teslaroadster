@@ -185,18 +185,10 @@ const CityTaxiModel = (() => {
   const position = () => ({ x: state.x, y: state.y, z: state.z });
   const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
   function renderEntry() {
-    const button = document.getElementById('btn-city-taxi');
-    if (!button) return;
-    const active = snapshot().active;
-    button.hidden = currentMap !== 'city';
-    button.disabled = Boolean(state.isDestroyed);
-    button.setAttribute('aria-pressed', String(active));
-    button.textContent = isZh() ? (active ? '退出接客' : '接客游戏') : (active ? 'Exit passengers' : 'Passenger game');
     const help = document.getElementById('city-taxi-help');
     const instructions = isZh()
-      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活、重置或退出接客后从零开始。`
-      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning, resetting or exiting starts from zero.`;
-    button.setAttribute('title', instructions);
+      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2默认开启接客，无需开关。`
+      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning or resetting starts from zero. Passengers are enabled automatically in the city.`;
     if (help) help.textContent = instructions;
   }
   function blockedByUi() {
@@ -333,9 +325,8 @@ const CityTaxiModel = (() => {
     ctx.restore();
   }
   function start() {
-    if (currentMap !== 'city' || snapshot().active || state.isDestroyed) return false;
+    if (currentMap !== 'city' || snapshot().active || state.isDestroyed || window.RoadsterRanked?.isActive?.()) return false;
     if (!session) session = CityTaxiModel.createSession(CityTaxiModel.buildRoadGraph(CITY_ROAD_COORDS, CITY_TAXI_STOP_OFFSET, cityBuildings, CITY_HALF_BOUND));
-    window.RoadsterRanked?.abort('invalid');
     session.start(position()); lastEvent = null; createScene(); syncMarkers(); render();
     return true;
   }
@@ -360,8 +351,9 @@ const CityTaxiModel = (() => {
     renderEntry();
   }
   function onReset() {
-    if (!snapshot().active || state.isDestroyed) return;
+    if (state.isDestroyed) return;
     if (currentMap !== 'city') { stop(); return; }
+    if (!snapshot().active) { ensureDefault(); return; }
     session.reset(position());
     lastEvent = null;
     syncMarkers(); render();
@@ -372,20 +364,13 @@ const CityTaxiModel = (() => {
     if (event) lastEvent = event;
     syncMarkers(); render();
   }
-  function handleKeydown(event) {
-    const equals = (event.code === 'Equal' || event.code === 'NumpadEqual' || event.key === '=') &&
-      !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey && !event.isComposing;
-    if (!equals) return false;
-    if (textEntry(event)) return true;
-    event.preventDefault();
-    if (event.repeat || currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || snapshot().active) return true;
-    clearAllInputKeys(); lastTime = performance.now();
-    start();
-    return true;
+  function ensureDefault() {
+    if (currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || window.RoadsterRanked?.isActive?.()) return false;
+    return snapshot().active || start();
   }
   function tick(presentFrame = true) {
-    if (!snapshot().active) return;
-    if (currentMap !== 'city') { stop(); return; }
+    if (currentMap !== 'city' || window.RoadsterRanked?.isActive?.()) { if (snapshot().active) stop(); return; }
+    if (!snapshot().active && !ensureDefault()) return;
     if (state.isDestroyed) { onDestroyed(); return; }
     if (document.hidden || blockedByUi()) { session.pause(position()); if (presentFrame) renderNavigation(); return; }
     const event = session.advance(position(), !state.wasAirborne && Math.abs(state.y) <= CityTaxiModel.GROUND_TOLERANCE);
@@ -395,12 +380,7 @@ const CityTaxiModel = (() => {
     syncMarkers(); render();
     sound.beep(event.type === 'delivered' ? 960 : 720, 0.12);
   }
-  document.getElementById('btn-city-taxi')?.addEventListener('click', () => {
-    if (currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi()) return;
-    clearAllInputKeys(); lastTime = performance.now();
-    if (snapshot().active) stop(); else start();
-  });
   const present = () => { if (snapshot().active) renderNavigation(); };
-  window.RoadsterTaxi = Object.freeze({ handleKeydown, tick, present, stop, onReset, onDestroyed, render, drawCockpit, snapshot });
+  window.RoadsterTaxi = Object.freeze({ ensureDefault, tick, present, stop, onReset, onDestroyed, render, drawCockpit, snapshot });
   renderEntry();
 })();
