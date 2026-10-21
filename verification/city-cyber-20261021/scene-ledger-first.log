@@ -1,0 +1,6 @@
+{"title":"FPV spawn / night","triangles":4200,"qualification":"CPU textured geometry study, not GPU/PBR/exposure acceptance"}
+{"title":"FPV avenue / night","triangles":13594,"qualification":"CPU textured geometry study, not GPU/PBR/exposure acceptance"}
+{"title":"FPV crossing / day","triangles":13385,"qualification":"CPU textured geometry study, not GPU/PBR/exposure acceptance"}
+{"title":"High view / night","triangles":16448,"qualification":"CPU textured geometry study, not GPU/PBR/exposure acceptance"}
+{"title":"FPV spawn / day","triangles":4200,"qualification":"CPU textured geometry study, not GPU/PBR/exposure acceptance"}
+{"architecture":{"version":3,"families":["graphite-server","copper-foundry","violet-glass","ceramic-grid","teal-data","indigo-ribs"],"buildings":418,"solidParts":797,"infillBuildings":255,"lowBuildings":128,"silhouettes":["stepped-server","split-shoulder","slim-spire","commerce-stack","foundry-core","terraced-data"],"signs":450,"featureSigns":3,"facadeTextureBytes":1048576,"source":"original procedural geometry, glyphs and pixels; no third-party assets"},"meshes":63,"triangles":69332,"parts":59}

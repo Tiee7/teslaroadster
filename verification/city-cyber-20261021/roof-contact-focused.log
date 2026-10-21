@@ -1,0 +1,31 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (41.628418ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (23.473328ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (9.773353ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (91.250267ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (219.862532ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (2.37003ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (601.013017ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (2.200999ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (11.446728ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (9.664923ms)
+✔ finite city wall initial overlap depenetrates once and preserves a departing rebound; parallel motion has no false impact (18.166192ms)
+✔ fast descending car cannot die inside the gentle roof cushion before any actual3D body contact (9.357897ms)
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (3.404031ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (838.156487ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (728.954105ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (72.063515ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.614392ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (1.721827ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (1.568429ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (56.231214ms)
+✔ exact prior production pitched roof air-impact is rejected for both actual model bounds (821.451124ms)
+✔ all four roof sides reject the same pitched outside trajectory with yaw and roll changes (223.197174ms)
+✔ real gentle roof contact remains stable, keeps35pad semantics and true fast roof impact still damages (245.103354ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1844.054841

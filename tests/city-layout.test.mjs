@@ -31,7 +31,7 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
 }, () => {
   const h = layout(); assert.equal(h.c.THREE.REVISION, '128');
   assert.equal(h.width, 24); assert.equal(h.lane, 4); assert.equal(h.spawn, 6); assert.equal(h.stop, 8);
-  assert.equal(h.buildings.length, 163);
+  assert.equal(h.root.userData.cityArchitecture.buildings,418);assert.equal(h.buildings.length,797);assert.equal(new Set(h.buildings.map(b=>b.logicalId)).size,418);
   assert.equal(h.buildings.filter(b => b.kind === 'low').length, 128);
   assert.equal(h.buildings.filter(b => b.isHelipad).length, 35, 'retain all 35 rooftop refill functions');
   const landmarks = h.buildings.filter(b => b.kind === 'landmark');
@@ -48,9 +48,9 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     if (o.geometry?.type === 'BoxGeometry' && o.castShadow) boxes++;
     if (o.geometry?.type === 'CylinderGeometry' && o.geometry.parameters.height === 14) { beams+=o.count||1; assert.equal(o.material.opacity, .10); }
   });
-  assert.equal(bridges, 2); assert.equal(beams, 35); assert.equal(lights, 0); assert.equal(boxes, 3);
+  assert.equal(bridges, 2); assert.equal(beams, 35); assert.equal(lights, 0); assert.equal(boxes, 6);
   assert.ok(meshes < 100, 'batch the denser city rather than multiplying per-window/roof scene work');
-  assert.equal(h.root.userData.cityArchitecture.families.length,3);assert.equal(new Set(h.buildings.map(b=>b.family)).size,3);
+  assert.equal(h.root.userData.cityArchitecture.families.length,6);assert.equal(new Set(h.buildings.map(b=>b.family)).size,6);
   for (const pair of [-1050, -750]) {
     const endpoints = h.buildings.filter(b => b.bridgePair === pair);
     assert.equal(endpoints.length, 2); assert.ok(endpoints.every(b => b.blockX === -750 && b.blockZ === pair));
@@ -61,19 +61,19 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     assert.ok(b.minX >= -1200 && b.maxX <= 1200 && b.minZ >= -1200 && b.maxZ <= 1200, 'all actual building boxes stay inside city boundaries');
     const mesh = h.root.getObjectByName(b.renderBatch),matrix=new h.c.THREE.Matrix4();mesh.getMatrixAt(b.renderIndex,matrix);mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox.clone().applyMatrix4(matrix);
     assert.equal(mesh.userData.cityInstances[b.renderIndex],b.id);
-    for (const [actual, expected] of [[bounds.min.x,b.minX],[bounds.max.x,b.maxX],[bounds.min.z,b.minZ],[bounds.max.z,b.maxZ],[bounds.max.y,b.height]]) assert.ok(Math.abs(actual - expected) < 1e-6, 'rendered and collision boxes are identical');
+    for (const [actual, expected] of [[bounds.min.x,b.minX],[bounds.max.x,b.maxX],[bounds.min.z,b.minZ],[bounds.max.z,b.maxZ],[bounds.min.y,b.minY||0],[bounds.max.y,b.height]]) assert.ok(Math.abs(actual - expected) < 1e-6, 'rendered and collision boxes are identical');
     if (b.kind === 'low') {
-      assert.ok(b.height >= 14 && b.height <= 28);
+      assert.ok(b.height >= 24 && b.height <= 42);
       assert.ok(b.w === 30 || b.d === 30);
       assert.ok(b.x === b.blockX || b.z === b.blockZ, 'frontage sits at street-segment midpoint, not at a corner');
-    } else if (b.kind !== 'landmark') assert.ok(b.height >= 76 && b.height <= 120);
+    } else if (b.kind === 'tower') assert.ok(b.height >= 76 && b.height <= 120);
     for (const road of h.roads) {
       assert.ok(b.minX > road + h.width / 2 || b.maxX < road - h.width / 2, 'collision box never blocks a north/south avenue');
       assert.ok(b.minZ > road + h.width / 2 || b.maxZ < road - h.width / 2, 'collision box never blocks an east/west avenue');
     }
     const dx = Math.min(...h.roads.map(r => Math.min(Math.abs(b.minX - r), Math.abs(b.maxX - r)))) - h.width / 2;
     const dz = Math.min(...h.roads.map(r => Math.min(Math.abs(b.minZ - r), Math.abs(b.maxZ - r)))) - h.width / 2;
-    assert.ok(Math.min(dx, dz) >= (b.kind === 'low' ? 12 : b.avenueAccent ? 28 : 75), 'type-specific real road-edge setback');
+    assert.ok(Math.min(dx, dz) >= (b.kind.startsWith('cyber-') ? 24 : b.kind === 'low' ? 12 : b.avenueAccent ? 28 : 75), 'type-specific real road-edge setback');
     for (const rx of h.roads) for (const rz of h.roads) {
       const cx = Math.min(Math.abs(b.minX - rx), Math.abs(b.maxX - rx)) - h.width / 2;
       const cz = Math.min(Math.abs(b.minZ - rz), Math.abs(b.maxZ - rz)) - h.width / 2;
@@ -81,12 +81,13 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     }
   }
   for (let i = 0; i < h.buildings.length; i++) for (let j = i + 1; j < h.buildings.length; j++) {
-    const a = h.buildings[i], b = h.buildings[j];
+    const a = h.buildings[i], b = h.buildings[j];if(a.logicalId===b.logicalId){assert.ok(a.height<=b.minY||b.height<=a.minY,'layered masses share a closed face, never intersecting solid interiors');continue;}
     assert.ok(a.maxX <= b.minX || a.minX >= b.maxX || a.maxZ <= b.minZ || a.minZ >= b.maxZ, 'no tower/frontage box overlaps');
   }
+  const driving=motionHarness({airRemaining:5}),defaultState={...driving.state};driving.context.cityBuildings.push(...h.buildings);
   for (const b of h.buildings) {
-    const driving = motionHarness({x:b.x,z:b.z,y:b.height+.001,vy:-.1,airRemaining:5});
-    driving.context.cityBuildings.push(...h.buildings);
+    const points=[-.42,0,.42].flatMap(x=>[-.42,0,.42].map(z=>({x:b.x+x*b.w,z:b.z+z*b.d})));const p=points.find(p=>h.buildings.every(o=>o.height<=b.height||p.x<o.minX-1.1||p.x>o.maxX+1.1||p.z<o.minZ-2.4||p.z>o.maxZ+2.4));assert.ok(p,'every solid part has an exposed reachable roof terrace');
+    Object.assign(driving.state,defaultState,{x:p.x,z:p.z,y:b.height+.001,vy:-.1,airRemaining:5});driving.impacts.length=0;driving.alerts.length=0;
     driving.step(1/60);
     assert.ok(Math.abs(driving.state.y-b.height)<1e-8, 'production motion lands on the same rendered roof');
     assert.equal(driving.state.vy,0); assert.equal(driving.impacts.length,0);

@@ -1,0 +1,128 @@
+{
+  "baseMain": "e95abccd1c0931cfa82c936415f517d3282edba3",
+  "fullRegressionProductionCommit": "1d6bf3894bf711e1b41d24e92f5188172d17c113",
+  "finalProductionCommit": "36e9966fd595a259dba3f7394f7fc0e2c223c35b",
+  "checkedAt": "2026-10-21T15:48:09.326372+00:00",
+  "fullRegression": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "log": "full-test-final.log",
+    "terminalExitCode": 1,
+    "tests": 967,
+    "pass": 947,
+    "fail": 20,
+    "cancelled": 0,
+    "skipped": 0,
+    "duration_ms": 1104258.637785,
+    "note": "All20 failures are19 missing-window freefall fixture errors and one obsolete120-character frontend source slice; not a single green full run."
+  },
+  "fixtureResolution": {
+    "commit": "e21ebf2bc7f4feb2c332ee9a846d1310537f133e",
+    "files": [
+      "tests/freefall.test.mjs",
+      "tests/frontend.test.mjs"
+    ],
+    "command": "node --test --test-concurrency=2 tests/freefall.test.mjs tests/frontend.test.mjs",
+    "log": "freefall-frontend-fixtures-final.log",
+    "tests": 43,
+    "pass": 43,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "duration_ms": 5482.255596,
+    "assertionPolicy": "Browser window supplied. Entire setting functions verified: unique unconditional ranked abort before state mutations; diagnostic reset separately asserted. No numeric/business assertion removed."
+  },
+  "signUvResolution": {
+    "productionDiff": "one city sign local UV assignment in src/world.js; bundled index mirrors it",
+    "log": "sign-uv-city-final.log",
+    "tests": 25,
+    "pass": 25,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "duration_ms": 26437.009644,
+    "glyphCells": 2100,
+    "frozenOldInvertedRWitness": true,
+    "firstTargetedFailure": "sign-uv-city-first.log preserves24/25; epoch helper incorrectly compared current pins to historical fixture. Correct source-boundary test restored; final25/25."
+  },
+  "combinedCoverage": {
+    "uniqueTests": 968,
+    "resolvedPass": 968,
+    "unresolvedFailures": 0,
+    "singleFullGreenRun": false,
+    "newTestBeyondOriginalFullRun": "actual Plane UV and every original atlas glyph cell read upright"
+  },
+  "unchangedToFullRegressionCandidate": {
+    "physics-main": {
+      "sha256": "3fea6cc7589cab0b0adcbb6edda5b7692263697d83f29de4af1a6a08ae0cf681",
+      "exactToFullRegressionCandidate": true
+    },
+    "ui-hud": {
+      "sha256": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+      "exactToFullRegressionCandidate": true
+    },
+    "audio": {
+      "sha256": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+      "exactToFullRegressionCandidate": true
+    },
+    "coast-map": {
+      "sha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+      "exactToFullRegressionCandidate": true
+    },
+    "coast-road-network": {
+      "sha256": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+      "exactToFullRegressionCandidate": true
+    },
+    "taxi": {
+      "sha256": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+      "exactToFullRegressionCandidate": true
+    },
+    "vehicles": {
+      "sha256": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+      "exactToFullRegressionCandidate": true
+    },
+    "config": {
+      "sha256": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+      "exactToFullRegressionCandidate": true
+    },
+    "demo-numeric-projection": {
+      "sha256": "a2b9707a836001b9bb6a826b5ace6d007453ea52566c38a269b619a4b7d56483",
+      "exactToFullRegressionCandidate": true
+    }
+  },
+  "lua": {
+    "pass": 24,
+    "fail": 0,
+    "log": "lua-final.log"
+  },
+  "projection": {
+    "identityGuards": 29,
+    "mirrorChecks": 3,
+    "numericOldNewExactTicks": 840,
+    "artifactSHA256": "a2b9707a836001b9bb6a826b5ace6d007453ea52566c38a269b619a4b7d56483"
+  },
+  "check": {
+    "passed": true,
+    "log": "check-release.log"
+  },
+  "build": {
+    "passed": true,
+    "log": "build-release.log"
+  },
+  "nativeCityLedger": {
+    "logicalBuildings": 418,
+    "solidParts": 797,
+    "staticMeshBatches": 63,
+    "maximumTriangles": 69332,
+    "bodyShadowBatches": 6,
+    "bodyShadowTriangles": 9564,
+    "facadeAtlasRawPixelBytes": 1048576,
+    "pads": 35,
+    "skybridges": 2,
+    "addedLights": 0
+  },
+  "gpuValidation": {
+    "passed": false,
+    "reason": "Own cloud WebGL initialization failed; no authorized user-device task executor. Whole-street CPU studies are approximate, not GPU/exposure/driving/temperature QA."
+  },
+  "screenshotCauseBoundary": "No coordinates or contact category in submitted screenshot. A distinct real prior-production roof non-contact fatal path was reproduced and fixed; exact screenshot incident is not claimed identified."
+}

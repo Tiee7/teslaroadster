@@ -1,0 +1,45 @@
+{
+  "schema": "city-cyber-source-epoch-v1",
+  "baseMain": "e95abccd1c0931cfa82c936415f517d3282edba3",
+  "inheritedSourceEpoch": "verification/city-contact-skyline-20261021/source-epoch.json",
+  "inheritedSourceEpochSha256": "0168298643de9b09c9ec7f4147eeba63c4918b17737f4b34d2278972c69d802e",
+  "authorizedSourceSha256": {
+    "physics-main": "3fea6cc7589cab0b0adcbb6edda5b7692263697d83f29de4af1a6a08ae0cf681",
+    "ui-hud": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "world": "1d8337d5100df16d6173586207eb1046a4730d02d07c720e2faca006103988fb",
+    "city-diagnostics": "5a5dcfa4daf3d26545ca6b2a647e0d6fb972b71dbd6eb3173af56f34d7cd63fc",
+    "demo-numeric-projection": "a2b9707a836001b9bb6a826b5ace6d007453ea52566c38a269b619a4b7d56483"
+  },
+  "baselineFixtureSha256": {
+    "physics-main.js": "001bf2c423646732cb08c3b55c4ef4db12247e7384a5fa0dab18b465098d02d0",
+    "ui-hud.js": "ca9b987ee6f2e6a70c79694b9f0297eb58a9952fddc9b5099ba64f9608c539a5",
+    "demo-numeric-projection.js": "d8e84ccea869fd0f45eb9036051fa2943680f7a47b76f74a00459623598d4d64",
+    "reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "world.js": "4024d390f95d79874e011bc4f693360b0a4503197bb4b7cf75ae0ae2c6e04ca2"
+  },
+  "unchangedSourceSha256": {
+    "audio": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "taxi": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "vehicles": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "config": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "coast-map": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "city-clock": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "highway-demo": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "highway-traffic": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "reference-traffic": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a"
+  },
+  "scope": "City tire-plane roof certificate rejects a frozen prior-production fatal non-contact witness, retaining real roof landings. Bounded local-only contact/pose/input incident trace, no upload/storage.418 logical layered cyber buildings/797 exact minY-to-roof solid boxes;6 related facades, static atlas/signs/night cube,64m static broad phase.35pads/2bridges preserved. No new lights, per-frame instance uploads or extra render pass.",
+  "numericProof": "Highway-only emitted projection explicit new source epoch;840 steps compared field-for-field to previous e95 production kernel.40 highway/city empty-scene motion scenarios retain all numeric/boolean fields Object.is for300ticks.",
+  "validationBoundary": "Native Three CPU geometry, local incident tests, continuous production-motion contact/non-contact and explicitly approximate whole-street CPU images. Own cloud WebGL failed: no claim of actual GPU exposure, driving, user-device heat or FPS validation.",
+  "lateCorrection": {
+    "kind": "static sign atlas local UV direction",
+    "fullRegressionProductionCommit": "1d6bf3894bf711e1b41d24e92f5188172d17c113",
+    "changedProductionFiles": [
+      "src/world.js",
+      "index.html"
+    ],
+    "unchangedPhysicsAudioCoast": true,
+    "targetedProof": "2100 actual Plane/shader/atlas glyph cells including preserved old inverted-R pixel witness;25 focused checks"
+  }
+}

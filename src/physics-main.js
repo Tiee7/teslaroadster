@@ -227,6 +227,7 @@ function clearDebris() {
 function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz) {
   if (state.isDestroyed || state.impactCooldown > 0) return;
   state.impactCooldown = 0.32;
+  if(currentMap==='city')window.RoadsterCityDiagnostics?.impact(state,deltaV,reasonKey);
 
   const peakG = (deltaV / CRITICAL_IMPACT_DV) * CRITICAL_G_LIMIT;
   const energyKj = 0.5 * VEHICLE_MASS_KG * deltaV * deltaV / 1000;
@@ -274,6 +275,7 @@ function destroyVehicle(reasonKey) {
   globalThis.window?.RoadsterDemo?.stop();
   window.RoadsterRanked?.abort('crash');
   state.hullIntegrity = 0;
+  if(currentMap==='city')window.RoadsterCityDiagnostics?.destroy(state,reasonKey);
   state.destroyReasonKey = reasonKey || 'crashReasonThreshold';
   carMeshGroup.visible = false;
   if (typeof headlightSpotL !== 'undefined') headlightSpotL.intensity = 0.0;
@@ -333,6 +335,11 @@ function updateDestroyedModalText() {
   document.getElementById('crash-val-energy').textContent = `${Math.round(state.lastImpactEnergyKj)} kJ`;
   document.getElementById('crash-btn-respawn').textContent = t.crashBtnRespawn;
   document.getElementById('crash-btn-map').textContent = t.crashBtnMap;
+  const report=currentMap==='city'?window.RoadsterCityDiagnostics?.snapshot():null;
+  const source=document.getElementById('crash-collision-source'),details=document.getElementById('crash-diagnostics'),data=document.getElementById('crash-diagnostic-data'),label=document.getElementById('crash-diagnostics-label');
+  if(source){source.hidden=!report;if(report){const names=currentLang==='zh'?{'ground':'地面','boundary':'边界','building-roof':'楼顶','building-wall':'楼体','traffic-roof':'车顶','traffic-body':'车辆','unclassified':'未分类'}:{'ground':'Ground','boundary':'Boundary','building-roof':'Roof','building-wall':'Building','traffic-roof':'Traffic roof','traffic-body':'Traffic','unclassified':'Unclassified'};source.textContent=`${names[report.contact.kind]||report.contact.kind}${report.contact.id!==undefined?' #'+report.contact.id:''} · x ${report.pose.x.toFixed(2)} / y ${report.pose.y.toFixed(2)} / z ${report.pose.z.toFixed(2)}`;}}
+  if(details)details.hidden=!report;if(data)data.value=report?JSON.stringify(report,null,2):'';
+  if(label)label.textContent=currentLang==='zh'?'本地碰撞诊断（不自动上传，可复制）':'Local collision diagnostic (not uploaded; copyable)';
 }
 
 // =========================================================================
@@ -356,7 +363,7 @@ function cityContactBody(pose,length=4.62,width=1.96,height=1.25,bounds=null,ord
   const local=bounds?[(bounds.minX+bounds.maxX)/2,(bounds.minY+bounds.maxY)/2,(bounds.minZ+bounds.maxZ)/2]:[0,height/2,0];
   const center=[pose.x||0,pose.y||0,pose.z||0];for(let i=0;i<3;i++)for(let j=0;j<3;j++)center[j]+=axes[i][j]*local[i];
   const body={x:center[0],y:center[1],z:center[2],center,half,axes,horizontal:[]};
-  body.rx=cityContactProjection(body,[1,0,0]);body.rz=cityContactProjection(body,[0,0,1]);
+  body.ry=cityContactProjection(body,[0,1,0]);body.rx=cityContactProjection(body,[1,0,0]);body.rz=cityContactProjection(body,[0,0,1]);
   body.horizontal.push([1,0],[0,1]);for(const edge of axes){const n=Math.hypot(edge[0],edge[2]);if(n>1e-10)body.horizontal.push([edge[2]/n,-edge[0]/n]);}
   return body;
 }
@@ -398,6 +405,19 @@ function cityContactDetails(a,b){
   const axes=[...a.axes,...b.axes];for(const u of a.axes)for(const v of b.axes){const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(Math.hypot(...n)>1e-8)axes.push(n);}
   let result=null;for(const raw of axes){const length=Math.hypot(...raw),n=raw.map(v=>v/length);let offset=0;for(let j=0;j<3;j++)offset+=(a.center[j]-b.center[j])*n[j];const depth=cityContactProjection(a,n)+cityContactProjection(b,n)-Math.abs(offset);if(depth<=1e-8)return null;if(!result||depth<result.depth){const sign=offset<0?-1:1;result={depth,x:n[0]*sign,y:n[1]*sign,z:n[2]*sign};}}return result;
 }
+// Static 64 m buckets bound broad-phase work as the district gets denser.
+// Reuse the candidate array until the vehicle crosses a bucket boundary; no
+// scene traversal, instance upload or city-wide SAT scan per physics substep.
+let cityBuildingGridSource=null,cityBuildingGridLength=-1,cityBuildingGrid=null,cityBuildingQueryKey='',cityBuildingQuery=[];
+function cityNearbyBuildings(pose){
+  if(cityBuildingGridSource!==cityBuildings||cityBuildingGridLength!==cityBuildings.length){
+    cityBuildingGridSource=cityBuildings;cityBuildingGridLength=cityBuildings.length;cityBuildingGrid=new Map();cityBuildingQueryKey='';
+    for(const b of cityBuildings)for(let x=Math.floor(b.minX/64);x<=Math.floor(b.maxX/64);x++)for(let z=Math.floor(b.minZ/64);z<=Math.floor(b.maxZ/64);z++){const key=x+','+z,list=cityBuildingGrid.get(key)||[];list.push(b);cityBuildingGrid.set(key,list);}
+  }
+  const body=cityPlayerBody(pose),x0=Math.floor((body.x-body.rx)/64),x1=Math.floor((body.x+body.rx)/64),z0=Math.floor((body.z-body.rz)/64),z1=Math.floor((body.z+body.rz)/64),key=x0+','+x1+','+z0+','+z1;
+  if(key!==cityBuildingQueryKey){const found=new Set();for(let x=x0;x<=x1;x++)for(let z=z0;z<=z1;z++)for(const b of cityBuildingGrid.get(x+','+z)||[])found.add(b);cityBuildingQuery=[...found];cityBuildingQueryKey=key;}
+  return cityBuildingQuery;
+}
 function cityTouchesBuilding(pose,box) {
   const body=cityPlayerBody(pose);
   // Cheap broad phase rejects virtually all city blocks without arrays/SAT work.
@@ -406,9 +426,33 @@ function cityTouchesBuilding(pose,box) {
   for(const[x,z]of body.horizontal)if(Math.abs(dx*x+dz*z)>=cityContactRadius(body,x,z)+hx*Math.abs(x)+hz*Math.abs(z)-1e-8)return false;
   return true;
 }
+// Roof support is the actual OBB slice at the vehicle root/tire plane, not
+// its whole XZ shadow. A pitched nose can project over a roof while all of it
+// remains above that roof and the tires are still outside the building.
+let cityRoofSliceBody=null,cityRoofSlice=null;
+function cityTouchesRoof(pose,box){
+  if(!cityTouchesBuilding(pose,box))return false;
+  const body=cityPlayerBody(pose);
+  if(body!==cityRoofSliceBody){
+    const vertices=[],points=[];for(let bits=0;bits<8;bits++){const v=body.center.slice();for(let axis=0;axis<3;axis++)for(let k=0;k<3;k++)v[k]+=body.axes[axis][k]*body.half[axis]*(bits&(1<<axis)?1:-1);vertices.push(v);}
+    const add=v=>{if(!points.some(p=>Math.abs(p[0]-v[0])<1e-8&&Math.abs(p[1]-v[2])<1e-8))points.push([v[0],v[2]]);};
+    for(let i=0;i<8;i++){const a=vertices[i];if(Math.abs(a[1]-pose.y)<1e-7)add(a);for(let axis=0;axis<3;axis++){const j=i^(1<<axis);if(j<i)continue;const b=vertices[j],d=b[1]-a[1];if(Math.abs(d)<1e-12)continue;const t=(pose.y-a[1])/d;if(t>0&&t<1)add(a.map((v,k)=>v+(b[k]-v)*t));}}
+    if(points.length>=3){const center=points.reduce((a,p)=>[a[0]+p[0]/points.length,a[1]+p[1]/points.length],[0,0]);points.sort((a,b)=>Math.atan2(a[1]-center[1],a[0]-center[0])-Math.atan2(b[1]-center[1],b[0]-center[0]));}
+    cityRoofSliceBody=body;cityRoofSlice=points;
+  }
+  const p=cityRoofSlice;if(p.length<3)return false;
+  const axes=[[1,0],[0,1]];for(let i=0;i<p.length;i++){const q=p[(i+1)%p.length],dx=q[0]-p[i][0],dz=q[1]-p[i][1],length=Math.hypot(dx,dz);if(length>1e-8)axes.push([-dz/length,dx/length]);}
+  for(const[x,z]of axes){let min=Infinity,max=-Infinity;for(const q of p){const n=q[0]*x+q[1]*z;min=Math.min(min,n);max=Math.max(max,n);}const c=(box.minX+box.maxX)/2*x+(box.minZ+box.maxZ)/2*z,r=(box.maxX-box.minX)/2*Math.abs(x)+(box.maxZ-box.minZ)/2*Math.abs(z);if(max<c-r-1e-7||min>c+r+1e-7)return false;}
+  return true;
+}
+function cityCanLandOnRoof(pose,box){
+  if(!cityTouchesRoof(pose,box))return false;
+  const minY=box.minY||0,solid=cityContactBody({x:(box.minX+box.maxX)/2,y:minY,z:(box.minZ+box.maxZ)/2},box.maxZ-box.minZ,box.maxX-box.minX,box.height-minY+.002);
+  return cityContactInterval(cityPlayerBody(pose),solid)!==null;
+}
 function cityBuildingContact(pose,box) {
   const body=cityPlayerBody(pose);
-  const solid=cityContactBody({x:(box.minX+box.maxX)/2,y:0,z:(box.minZ+box.maxZ)/2},box.maxZ-box.minZ,box.maxX-box.minX,box.height);
+  const minY=box.minY||0,solid=cityContactBody({x:(box.minX+box.maxX)/2,y:minY,z:(box.minZ+box.maxZ)/2},box.maxZ-box.minZ,box.maxX-box.minX,box.height-minY);
   // A pitched nose may project over a roof while every actual part clears it.
   // Roof support queries stay separate; only a real 3D wall overlap may damage.
   if(cityContactInterval(body,solid)===null)return null;
@@ -704,11 +748,11 @@ function updateSimulation(dt, presentationDt = dt) {
   let coastSupport = coastWorld?.support({...state,grounded:!state.wasAirborne});
   let groundElevation = coastSupport && Number.isFinite(coastSupport.height) ? coastSupport.height : 0;
   if (currentMap === 'city' || currentMap === 'coast') {
-    const mapBuildings = coastObstacles || cityBuildings;
+    const mapBuildings = coastObstacles || cityNearbyBuildings(state);
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
       if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
-      if (currentMap === 'city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap === 'city' ? cityTouchesRoof(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElevation = Math.max(groundElevation, b.height);
         }
@@ -767,6 +811,7 @@ function updateSimulation(dt, presentationDt = dt) {
 
   // Requirement 4: ';' (Semicolon) triggers Rear Cold-Gas Rocket Boost in Realistic (Standard) mode!
   const driveInput = readDriveInput();
+  if(currentMap==='city')window.RoadsterCityDiagnostics?.begin(state,dt,driveInput);
   // Deliberate lift/hold leaves a road hop for actual flight; W held while
   // driving over a hop alone must not accidentally arm the flight alarm.
   if (isAirborne && (driveInput.lift > 0 || state.isAltitudeHold)) state.groundHopActive = false;
@@ -1225,7 +1270,7 @@ function updateSimulation(dt, presentationDt = dt) {
         state[axis]+=cityWall.sign*CITY_HALF_BOUND+n*(1+radius+.005)-body[axis];
         const key=axis==='x'?'vx':'vz',impactV=Math.max(0,-state[key]*n);
         if(impactV>0){state[key]+=1.35*impactV*n;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);}
-        if(impactV>10)triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);
+        if(impactV>10){window.RoadsterCityDiagnostics?.contact({kind:'boundary',axis,sign:cityWall.sign,height:45.3,normal:n});triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);}
       } else {
         const impactV = Math.abs(state.speed);
         state.x = THREE.MathUtils.clamp(state.x, -limit, limit);state.z = THREE.MathUtils.clamp(state.z, -limit, limit);
@@ -1263,11 +1308,11 @@ function updateSimulation(dt, presentationDt = dt) {
   // Recompute surface elevation after horizontal (x, z) movement
   groundElevation = Number.isFinite(coastSurface?.height) ? coastSurface.height : 0.0;
   if (currentMap === 'city' || currentMap === 'coast') {
-    const mapBuildings = coastObstacles || cityBuildings;
+    const mapBuildings = coastObstacles || cityNearbyBuildings(state);
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
       if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
-      if (currentMap === 'city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap === 'city' ? cityTouchesRoof(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElevation = Math.max(groundElevation, b.height);
         }
@@ -1470,6 +1515,7 @@ function updateSimulation(dt, presentationDt = dt) {
     const cosTilt = Math.cos(state.roll) * Math.cos(state.pitch);
     if (downImpactSpeed > 15.5 || (downImpactSpeed > 7.5 && cosTilt < 0.25)) {
       const effectiveDv = downImpactSpeed * (cosTilt < 0.25 ? 1.85 : 1.15);
+      if(currentMap==='city')window.RoadsterCityDiagnostics?.contact({kind:'ground',height:0,previousY:prevY,downImpactSpeed,cosTilt});
       triggerPhysicsCollision(effectiveDv, 'crashReasonGround', 0, 3.0, 0);
       if (state.isDestroyed) return;
     }
@@ -1586,7 +1632,7 @@ function updateSimulation(dt, presentationDt = dt) {
   }
 
   if (currentMap === 'city' || currentMap === 'coast') {
-    const mapBuildings = coastObstacles || cityBuildings;
+    const mapBuildings = coastObstacles || cityNearbyBuildings(state);
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
       if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
@@ -1594,7 +1640,7 @@ function updateSimulation(dt, presentationDt = dt) {
         if (state.y > b.height + 0.08) {
           // Flying freely in the air above the building roof — do NOT teleport or snap down!
           continue;
-        } else if (prevY >= b.height - 0.55 && state.y <= b.height && state.vy <= 0) {
+        } else if (prevY >= b.height - 0.55 && state.y <= b.height && state.vy <= 0 && (currentMap!=='city'||cityCanLandOnRoof(state,b))) {
           // Actually touching down onto or resting on the building roof
           const downImpactSpeed = -prevVy;
           if (downImpactSpeed > 0.8) {
@@ -1615,6 +1661,7 @@ function updateSimulation(dt, presentationDt = dt) {
 
           if (downImpactSpeed > 15.5 || (downImpactSpeed > 7.5 && cosTilt < 0.25)) {
             const effectiveDv = downImpactSpeed * (cosTilt < 0.25 ? 1.85 : 1.15);
+            if(currentMap==='city')window.RoadsterCityDiagnostics?.contact({kind:'building-roof',id:b.id,logicalId:b.logicalId,bounds:{minX:b.minX,maxX:b.maxX,minZ:b.minZ,maxZ:b.maxZ,minY:b.minY||0,height:b.height},verifiedSolid:true,downImpactSpeed,cosTilt});
             triggerPhysicsCollision(effectiveDv, 'crashReasonGround', 0, 3.0, 0);
             if (state.isDestroyed) return;
           }
@@ -1640,6 +1687,7 @@ function updateSimulation(dt, presentationDt = dt) {
             if(normalSpeed>.1){
               state.vx+=1.3*normalSpeed*contact.x;state.vz+=1.3*normalSpeed*contact.z;
               state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);
+              window.RoadsterCityDiagnostics?.contact({kind:'building-wall',id:b.id,logicalId:b.logicalId,bounds:{minX:b.minX,maxX:b.maxX,minZ:b.minZ,maxZ:b.maxZ,minY:b.minY||0,height:b.height},verifiedSolid:true,normal:contact});
               triggerPhysicsCollision(Math.max(12,normalSpeed),'crashReasonThreshold',0,2,0);if(state.isDestroyed)return;
             }
             continue;
@@ -1875,6 +1923,7 @@ function updateSimulation(dt, presentationDt = dt) {
       if(coastSweptHit)clearanceY=coastContact.relativeY-car.height;
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0 && (currentMap!=='city'||citySolidContact)) {
+          if(currentMap==='city')window.RoadsterCityDiagnostics?.contact({kind:'traffic-roof',variant:car.mesh.userData?.trafficVariant,position:{...car.mesh.position},verifiedSolid:citySolidContact});
           triggerPhysicsCollision(Math.abs(state.vy), 'crashReasonThreshold', 0, 5.0, 0);
         } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {
           if(coastSweptHit){const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;}
@@ -1889,7 +1938,7 @@ function updateSimulation(dt, presentationDt = dt) {
           const contact=cityContactDetails(cityPlayerBody(state),cityTrafficBody(car));if(!contact)return;
           state.x+=contact.x*(contact.depth+.005);state.y+=contact.y*(contact.depth+.005);state.z+=contact.z*(contact.depth+.005);
           const npcVy=car.blastTimer?(car.blastVy||0):0,normalSpeed=Math.max(0,-relVx*contact.x-(state.vy-npcVy)*contact.y-relVz*contact.z);
-          if(normalSpeed>.1){state.vx+=1.35*normalSpeed*contact.x;state.vy+=1.35*normalSpeed*contact.y;state.vz+=1.35*normalSpeed*contact.z;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);triggerPhysicsCollision(normalSpeed,'crashReasonThreshold',0,0,0);}
+          if(normalSpeed>.1){window.RoadsterCityDiagnostics?.contact({kind:'traffic-body',variant:car.mesh.userData?.trafficVariant,position:{x:car.mesh.position.x,y:car.mesh.position.y,z:car.mesh.position.z},verifiedSolid:true,normal:contact});state.vx+=1.35*normalSpeed*contact.x;state.vy+=1.35*normalSpeed*contact.y;state.vz+=1.35*normalSpeed*contact.z;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);triggerPhysicsCollision(normalSpeed,'crashReasonThreshold',0,0,0);}
           return;
         }
         const deltaV = Math.hypot(relVx, relVz, (state.vy-(currentMap==='coast'?(car.vy||0):0)) * 0.5);

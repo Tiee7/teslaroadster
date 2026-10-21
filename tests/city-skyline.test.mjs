@@ -32,16 +32,16 @@ test('city daylight is a direction-continuous cached six-face sky, not a flat co
  const cloudRow=new Set(Array.from({length:128},(_,x)=>pixel(2,x,64).join(',')));assert.ok(cloudRow.size>12,'non-flat cloud variation within one elevation row');
  // Adjacent +Z/+X, +Z/-X, +Z/+Y, +Z/-Y pixel centres approach the same 3D direction.
  for(let i=0;i<128;i++)for(const[a,b]of[[pixel(4,127,i),pixel(0,0,i)],[pixel(4,0,i),pixel(1,127,i)],[pixel(4,i,0),pixel(2,i,127)],[pixel(4,i,127),pixel(3,i,0)]])assert.ok(Math.max(...a.map((v,k)=>Math.abs(v-b[k])))<35,'no independent face-colour seam');
- const version=sky.version,images=sky.image.slice();for(let i=0;i<10;i++){h.select('city',0);assert.equal(h.scene.background.isColor,true);assert.equal(h.scene.environment,h.studio);h.select('city',3);assert.equal(h.scene.background,sky);assert.equal(sky.version,version);images.forEach((face,j)=>assert.equal(sky.image[j],face));}
+ const version=sky.version,images=sky.image.slice();for(let i=0;i<10;i++){h.select('city',0);assert.equal(h.scene.background.isCubeTexture,true);assert.equal(h.scene.background.name,'city-cyber-night-sky');assert.equal(h.scene.environment,h.studio);h.select('city',3);assert.equal(h.scene.background,sky);assert.equal(sky.version,version);images.forEach((face,j)=>assert.equal(sky.image[j],face));}
  assert.equal(h.root.children.some(o=>/sun/i.test(o.name)),false);assert.ok(h.lights[0].intensity<=.6&&h.lights[1].intensity<=.9);
 });
 test('day sky never leaks to highway/coast weather, and city shells, glazing and paving restore night without uploads',{skip},()=>{
  const h=city(),bodies=h.root.children.filter(o=>o.name.startsWith('city-building-batch-')),paving=h.root.getObjectByName('city-avenue-paving');
- assert.equal(bodies.length,3);assert.equal(h.buildings.length,163);assert.equal(h.buildings.filter(b=>b.isHelipad).length,35);
+ assert.equal(bodies.length,6);assert.equal(h.buildings.length,797);assert.equal(h.buildings.filter(b=>b.isHelipad).length,35);
  assert.equal(paving.castShadow,false);assert.equal(paving.position.y,0);const versions=bodies.map(o=>[o.instanceMatrix.version,o.material.map.version,o.material.emissiveMap.version]);
- h.select('city',3);const sky=h.scene.background;assert.ok(bodies.every(o=>o.material.emissiveIntensity===0&&o.material.roughness>=.44));const day=paving.material.color.getHex();
+ h.select('city',3);const sky=h.scene.background;assert.ok(bodies.every(o=>o.material.emissiveIntensity===.035&&o.material.roughness>=.44));const day=paving.material.color.getHex();
  for(const map of['highway','coast']){h.select(map,3);assert.equal(h.scene.background.isColor,true);assert.notEqual(h.scene.environment,sky);assert.equal(h.scene.environment,h.studio);}
- h.select('city',0);assert.ok(bodies.every(o=>o.material.emissiveIntensity===.22));assert.notEqual(paving.material.color.getHex(),day);
+ h.select('city',0);assert.ok(bodies.every(o=>o.material.emissiveIntensity===.42));assert.notEqual(paving.material.color.getHex(),day);
  bodies.forEach((o,i)=>assert.deepEqual([o.instanceMatrix.version,o.material.map.version,o.material.emissiveMap.version],versions[i]));
  h.select('city',3);assert.equal(h.scene.background,sky);
 });

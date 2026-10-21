@@ -440,6 +440,7 @@ function switchMap(targetMap) {
 
 function resetCar() {
   window.RoadsterTouch?.clear();
+  window.RoadsterCityDiagnostics?.reset();
   window.RoadsterRanked?.abort('reset');
   window.RoadsterCityFrame?.reset();
   window.RoadsterCoastFrame?.reset();
@@ -821,10 +822,10 @@ function selectWeatherMode(idx, playAudio = true) {
   [roadMat, cityAsphaltMat, cityAsphaltEWMat].forEach(material => applyRoadWeather(material, wp));
   window.RoadsterCoast?.weather(wp);
   if (typeof cityEnvGroup !== 'undefined') cityEnvGroup.userData?.applyWeather?.(wp);
-  if(typeof currentMap!=='undefined'&&currentMap==='city'&&wp.daylight&&typeof cityEnvGroup!=='undefined'&&cityEnvGroup.userData?.daySky){
-    const sky=cityEnvGroup.userData.daySky();scene.background=sky;scene.environment=sky;
-    scene.fog.color.setHex(0xbed3e0);scene.fog.density=.00018;
-    ambientLight.intensity=.58;dirLight.intensity=.88;rimLight.intensity=.10;
+  if(typeof currentMap!=='undefined'&&currentMap==='city'&&typeof cityEnvGroup!=='undefined'){
+    if(wp.daylight&&cityEnvGroup.userData?.daySky){const sky=cityEnvGroup.userData.daySky();scene.background=sky;scene.environment=sky;
+      scene.fog.color.setHex(0xbed3e0);scene.fog.density=.00018;ambientLight.intensity=.58;dirLight.intensity=.88;rimLight.intensity=.10;
+    }else if(!wp.marsSun&&cityEnvGroup.userData?.nightSky){scene.background=cityEnvGroup.userData.nightSky();scene.fog.color.setHex(0x17283c);scene.fog.density=wp.rain?.00030:.00022;}
   }
 
 
@@ -946,10 +947,10 @@ function triggerJump6m() {
   sound.init();
   let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.support({...state,grounded:!state.wasAirborne}).height ?? 0) : 0;
   if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
-    const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
+    const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityNearbyBuildings(state);
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
-      if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap==='city'?cityTouchesRoof(state,b):state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElev = Math.max(groundElev, b.height);
         }
@@ -985,10 +986,10 @@ function toggleAltitudeHold() {
   sound.init();
   let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.support({...state,grounded:!state.wasAirborne}).height ?? 0) : 0;
   if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
-    const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
+    const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityNearbyBuildings(state);
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
-      if (currentMap==='city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap==='city' ? cityTouchesRoof(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElev = Math.max(groundElev, b.height);
         }
