@@ -1,0 +1,406 @@
+{
+  "verification": "Engine-only deterministic CPU reference of real before/after graphs, not native OfflineAudioContext or subjective/device listening. The separate cold-gas thruster graph is unchanged and is not mixed into these WAVs.",
+  "cases": [
+    {
+      "name": "normal-200",
+      "kmh": 200,
+      "maxKmh": 200,
+      "load": 1,
+      "before": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/normal-200/before",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.07048621773719788,
+        "rms": 0.027398329271284858,
+        "mean": -0.00022086021674244688,
+        "maxStep": 0.008732799338758923,
+        "segments": {
+          "steady": {
+            "rms": 0.027998028658571865,
+            "peak": 0.07048621773719788
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 1,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 2,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 3,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.027997150535288645,
+          "centroidHz": 260.09059819660996,
+          "powerAbove1000HzFraction": 0.03072086486000868,
+          "powerAbove2000HzFraction": 0.003482179741692405,
+          "dominantHz": 81.57894736842105
+        }
+      },
+      "after": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/normal-200/after",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.07102182507514954,
+        "rms": 0.02965936180438981,
+        "mean": -0.00020393986834393686,
+        "maxStep": 0.0060036985378246754,
+        "segments": {
+          "steady": {
+            "rms": 0.030329903403769315,
+            "peak": 0.07102182507514954
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 3963.884216278554,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 1,
+            "rpm": 3963.884216278554,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 2,
+            "rpm": 3963.884216278554,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 3,
+            "rpm": 3963.884216278554,
+            "gain": 0.08399999999999999
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.03032896301484501,
+          "centroidHz": 175.09563142118162,
+          "powerAbove1000HzFraction": 0.015602277908316869,
+          "powerAbove2000HzFraction": 0.0005921544540742642,
+          "dominantHz": 66.3157894736842
+        }
+      }
+    },
+    {
+      "name": "boost-370",
+      "kmh": 370,
+      "maxKmh": 370,
+      "load": 1,
+      "before": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/boost-370/before",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.07048621773719788,
+        "rms": 0.027398329271284858,
+        "mean": -0.00022086021674244688,
+        "maxStep": 0.008732799338758923,
+        "segments": {
+          "steady": {
+            "rms": 0.027998028658571865,
+            "peak": 0.07048621773719788
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 1,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 2,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 3,
+            "rpm": 4900,
+            "gain": 0.08399999999999999
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.027997150535288645,
+          "centroidHz": 260.09059819660996,
+          "powerAbove1000HzFraction": 0.03072086486000868,
+          "powerAbove2000HzFraction": 0.003482179741692405,
+          "dominantHz": 81.57894736842105
+        }
+      },
+      "after": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/boost-370/after",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.07098188996315002,
+        "rms": 0.029627761992143738,
+        "mean": -0.00016021285428330603,
+        "maxStep": 0.005955532193183899,
+        "segments": {
+          "steady": {
+            "rms": 0.030302667141347762,
+            "peak": 0.07091107219457626
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 1,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 2,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 3,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.030301709793721696,
+          "centroidHz": 178.79673608159862,
+          "powerAbove1000HzFraction": 0.015569420732793753,
+          "powerAbove2000HzFraction": 0.0007392193651202682,
+          "dominantHz": 67.89473684210526
+        }
+      }
+    },
+    {
+      "name": "released-boost-W-held-370",
+      "kmh": 370,
+      "maxKmh": 200,
+      "load": 1,
+      "before": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/released-boost-W-held-370/before",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.06911927461624146,
+        "rms": 0.0271417120692049,
+        "mean": -0.00020468006242057581,
+        "maxStep": 0.009900668286718428,
+        "segments": {
+          "steady": {
+            "rms": 0.02776141098367849,
+            "peak": 0.06911927461624146
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 6450,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 1,
+            "rpm": 6450,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 2,
+            "rpm": 6450,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 3,
+            "rpm": 6450,
+            "gain": 0.08399999999999999
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.027760629591092257,
+          "centroidHz": 320.99082490553036,
+          "powerAbove1000HzFraction": 0.057379303538396376,
+          "powerAbove2000HzFraction": 0.006859807497599357,
+          "dominantHz": 107.36842105263158
+        }
+      },
+      "after": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/released-boost-W-held-370/after",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.07098188996315002,
+        "rms": 0.029627761992143738,
+        "mean": -0.00016021285428330603,
+        "maxStep": 0.005955532193183899,
+        "segments": {
+          "steady": {
+            "rms": 0.030302667141347762,
+            "peak": 0.07091107219457626
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 1,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 2,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          },
+          {
+            "time": 3,
+            "rpm": 4075.680374643912,
+            "gain": 0.08399999999999999
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.030301709793721696,
+          "centroidHz": 178.79673608159862,
+          "powerAbove1000HzFraction": 0.015569420732793753,
+          "powerAbove2000HzFraction": 0.0007392193651202682,
+          "dominantHz": 67.89473684210526
+        }
+      }
+    },
+    {
+      "name": "coast-370",
+      "kmh": 370,
+      "maxKmh": 200,
+      "load": 0,
+      "before": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/coast-370/before",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.030541934072971344,
+        "rms": 0.011411378819828144,
+        "mean": -6.923043680677575e-05,
+        "maxStep": 0.0024544938933104277,
+        "segments": {
+          "steady": {
+            "rms": 0.011637220000230599,
+            "peak": 0.03048231266438961
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 5500,
+            "gain": 0.046
+          },
+          {
+            "time": 1,
+            "rpm": 5500,
+            "gain": 0.046
+          },
+          {
+            "time": 2,
+            "rpm": 5500,
+            "gain": 0.046
+          },
+          {
+            "time": 3,
+            "rpm": 5500,
+            "gain": 0.046
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.011636810498176935,
+          "centroidHz": 289.4737743780264,
+          "powerAbove1000HzFraction": 0.037113946928855404,
+          "powerAbove2000HzFraction": 0.001039570142766579,
+          "dominantHz": 91.57894736842104
+        }
+      },
+      "after": {
+        "outputDirectory": "/workspace/shared/map2-v8-high-speed-20261021/coast-370/after",
+        "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+        "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+        "sourceSha256": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+        "sampleRate": 44100,
+        "duration": 3,
+        "peak": 0.032950304448604584,
+        "rms": 0.012852467002341874,
+        "mean": -7.483506050262748e-05,
+        "maxStep": 0.00205610494595021,
+        "segments": {
+          "steady": {
+            "rms": 0.013122663620700838,
+            "peak": 0.032950304448604584
+          }
+        },
+        "voices": [
+          {
+            "time": 0,
+            "rpm": 4030.115826466872,
+            "gain": 0.046
+          },
+          {
+            "time": 1,
+            "rpm": 4030.115826466872,
+            "gain": 0.046
+          },
+          {
+            "time": 2,
+            "rpm": 4030.115826466872,
+            "gain": 0.046
+          },
+          {
+            "time": 3,
+            "rpm": 4030.115826466872,
+            "gain": 0.046
+          }
+        ],
+        "spectral": {
+          "steadyRms": 0.013122292002573659,
+          "centroidHz": 187.942986682192,
+          "powerAbove1000HzFraction": 0.009615066062237266,
+          "powerAbove2000HzFraction": 0.00017454768142733632,
+          "dominantHz": 67.36842105263158
+        }
+      }
+    }
+  ],
+  "spectralMethod": "Mono PCM16 CPU reference; steady 1.0\u20132.9s; Hann-windowed numpy rfft power, unnormalized absolute digital gain. No native browser or subjective listening verification."
+}

@@ -65,7 +65,7 @@ function harness(map = 'city') {
       if (presentationDt === null) return;
       ${legacyCall}
     }
-    sound.init(); globalThis.audio = sound;
+    sound.init(); globalThis.audio = sound; globalThis.expectedVoice = getRoadsterEngineVoice;
   `, context);
   const originalUpdate = context.audio.update.bind(context.audio);
   context.audio.update = (...args) => { calls.push(args); originalUpdate(...args); };
@@ -89,8 +89,9 @@ const silent = h => {
   assert.equal(h.context.audio.screechGain.gain.value, 0);
 };
 
-test('V8 source remains byte-identical to the published original; capture precedes the presentation return', () => {
-  assert.equal(createHash('sha256').update(audio).digest('hex'), '5ef67352c4680a1b24c2f3e10a9caa584f8280ed2196bf7fbda67a4cfc35e2ee');
+test('V8 pulse-bank waveform remains byte-identical to the original; capture precedes the presentation return', () => {
+  const wave = section(audio, 'function createRoadsterV8Wave(', '\nfunction getRoadsterEngineVoice(');
+  assert.equal(createHash('sha256').update(wave).digest('hex'), 'eff5640ecbfa2ebb1ee925003968d0fe863ad068395107ad3aaf69ed80f270d9');
   assert.ok(physics.indexOf(capture) < physics.indexOf('  if (!presentFrame) {'));
 });
 for (const fps of [10, 15, 60, 144]) test(`production city animate+clock updates original V8 once per ${fps} fps render`, () => {
@@ -98,7 +99,7 @@ for (const fps of [10, 15, 60, 144]) test(`production city animate+clock updates
   for (let i = 0; i < fps; i++) h.frame(1000 / fps);
   assert.equal(h.steps.length, 60); assert.equal(h.calls.length, fps); assert.equal(h.renders.length, fps);
   assert.ok(h.renders.every((count, i) => count === i + 1), 'audio update occurs before each render');
-  assert.equal(h.context.audio.engineVoice.rpm, 2885);
+  assert.equal(h.context.audio.engineVoice.rpm, h.context.expectedVoice(35 / (200 / 3.6), 1).rpm);
   assert.ok(h.calls.slice(2).every(args => args[5] === 1));
 });
 test('144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics', () => {
@@ -107,7 +108,7 @@ test('144 fps zero-tick frames consume fresh throttle release and SFX mute witho
   assert.equal(h.steps.length, 1); assert.equal(h.context.audio.engineVoice.load, 1);
   h.context.keys.KeyW = false; h.frame(1000 / 144);
   assert.equal(h.steps.length, 1); assert.equal(h.context.audio.engineVoice.load, 0);
-  assert.equal(h.context.audio.engineVoice.rpm, 1935);
+  assert.equal(h.context.audio.engineVoice.rpm, h.context.expectedVoice(35 / (200 / 3.6), 0).rpm);
   h.context.audio.enabled = false; h.frame(0); silent(h);
 });
 for (const event of ['blur', 'hidden']) test(`${event} mutes immediately without RAF or resuming a suspended context`, () => {

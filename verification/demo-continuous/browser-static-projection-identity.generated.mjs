@@ -1501,7 +1501,8 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
   const anyAttitude = (rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS;
   if (!cityOwnsDrivingSound()) sound.update(
-    Math.abs(state.speed) / state.maxSpeed,
+    // Stable 200 km/h audio reference: boost changes performance, not rev ratio.
+    Math.abs(state.speed) / (200.0 / 3.6),
     isLiftFiring || rearActive || isFrontRetroFiring,
     anyAttitude || isFrontRetroFiring,
     false,

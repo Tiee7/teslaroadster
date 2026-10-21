@@ -1,0 +1,8 @@
+{
+  "baseCommit": "3db131b8d754870b40008e927a84a376b3327e82",
+  "baseProgramSha256": "cdfdde9664c81e8e9ffc77295870c729d26535c53ab3741251016d5da8579fb5",
+  "newProgramSha256": "cdfdde9664c81e8e9ffc77295870c729d26535c53ab3741251016d5da8579fb5",
+  "numericalProgramByteIdentical": true,
+  "originalV8WaveFunctionSha256": "eff5640ecbfa2ebb1ee925003968d0fe863ad068395107ad3aaf69ed80f270d9",
+  "limits": "Audio controls/timbre changed as requested. No physical-motion change, no native/browser listening claim."
+}

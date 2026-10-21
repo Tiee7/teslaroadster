@@ -31,14 +31,17 @@ function getRoadsterEngineVoice(speedRatio, engineLoad, isThrusting = false) {
   const load = Number.isFinite(engineLoad)
     ? Math.max(0, Math.min(1, engineLoad)) : (isThrusting ? 0.9 : 0.28);
   const activity = Math.max(Math.min(1, speed / 0.045), Number.isFinite(engineLoad) ? load * 0.65 : 0);
-  const rpm = Math.min(6800, 850 + speed * 3100 + load * 950);
+  // A soft speed knee keeps the original V8 pulse banks in a low exhaust
+  // register at high road speed, rather than stretching them into a whine.
+  const rawRpm = 850 + speed * 3100 + load * 950;
+  const rpm = rawRpm <= 3200 ? rawRpm : 3200 + 900 * (1 - Math.exp(-(rawRpm - 3200) / 900));
   return {
     speed, load, rpm,
     cycleFrequency: rpm / 120,
-    cutoff: Math.min(2200, 360 + speed * 580 + load * 1120),
+    cutoff: Math.min(1450, 360 + speed * 420 + load * 800),
     gain: activity * (0.021 + Math.min(1, speed) * 0.025 + load * 0.038),
-    textureGain: 0.018 + load * 0.105,
-    bodyGain: 0.18 + load * 0.08,
+    textureGain: 0.018 + load * 0.075,
+    bodyGain: 0.22 + load * 0.08,
     bankGain: 0.44 + load * 0.10,
   };
 }
@@ -232,7 +235,7 @@ class SoundEngine {
     this.engineOvertoneOsc.frequency.setTargetAtTime(voice.cycleFrequency, now, 0.10);
     this.engineBodyOsc.frequency.setTargetAtTime(voice.cycleFrequency * 2, now, 0.10);
     this.engineFilter.frequency.setTargetAtTime(voice.cutoff, now, 0.08);
-    this.engineTextureFilter.frequency.setTargetAtTime(450 + voice.load * 850 + voice.speed * 180, now, 0.10);
+    this.engineTextureFilter.frequency.setTargetAtTime(400 + voice.load * 650 + voice.speed * 140, now, 0.10);
     this.engineTextureGain.gain.setTargetAtTime(voice.textureGain, now, 0.08);
     this.engineBodyGain.gain.setTargetAtTime(voice.bodyGain, now, 0.08);
     this.engineOvertoneGain.gain.setTargetAtTime(voice.bankGain, now, 0.08);

@@ -81,8 +81,9 @@ function rangeMetrics(samples, sampleRate, from, to) {
   for (let i = first; i < end; i++) { power += samples[i] ** 2; peak = Math.max(peak, Math.abs(samples[i])); }
   return {rms: Math.sqrt(power / (end - first)), peak};
 }
-export async function renderEngineSoundPreview(outputDirectory = 'verification/engine-sound-preview') {
-  const source = await readFile(new URL('../src/audio.js', import.meta.url), 'utf8');
+export async function renderEngineSoundPreview(outputDirectory = 'verification/engine-sound-preview', options = {}) {
+  const source = options.source ?? await readFile(new URL('../src/audio.js', import.meta.url), 'utf8');
+  const duration = options.duration ?? 12;
   const context = new Context();
   let seed = 91827;
   const seededMath = Object.create(Math);
@@ -92,18 +93,20 @@ export async function renderEngineSoundPreview(outputDirectory = 'verification/e
   const sound = sandbox.engineForRender; sound.init(); assert.ok(sound.initialized);
   let muted = false;
   const voices = [];
-  for (let frame = 0; frame <= 12 * 60; frame++) {
+  for (let frame = 0; frame <= duration * 60; frame++) {
     const t = context.currentTime = frame / 60;
     let speed = 0, load = 0;
     if (t >= .5 && t < 2.5) { speed = .08; load = .45; }
     else if (t >= 2.5 && t < 6.5) { speed = .08 + (t - 2.5) / 4 * .92; load = .95; }
     else if (t >= 6.5) { speed = .8; load = t < 8 ? 0 : .85; }
-    const shouldMute = t >= 8 && t < 9.1;
+    const controls = options.controls?.(t);
+    if (controls) { speed = controls.speed; load = controls.load; }
+    const shouldMute = !options.controls && t >= 8 && t < 9.1;
     if (muted !== shouldMute) { sound.setSimulatedEngineEnabled(!shouldMute); muted = shouldMute; }
-    sound.update(speed, false, false, t >= 10 && t < 11, 0, load);
+    sound.update(speed, false, false, !options.controls && t >= 10 && t < 11, 0, load);
     if (frame % 60 === 0) voices.push({time: t, rpm: sound.engineVoice?.rpm, gain: sound.engineGain.gain.events.at(-1).value});
   }
-  const sampleRate = context.sampleRate, samples = new Float32Array(sampleRate * 12);
+  const sampleRate = context.sampleRate, samples = new Float32Array(sampleRate * duration);
   const left = oscillator(sound.engineOsc, sampleRate), right = oscillator(sound.engineOvertoneOsc, sampleRate), bass = oscillator(sound.engineBodyOsc, sampleRate);
   const airFilter = filter(sound.engineTextureFilter, sampleRate), exhaustFilter = filter(sound.engineFilter, sampleRate);
   const noise = sound.noiseBuffer.getChannelData(0), curve = sound.engineSaturator.curve;
@@ -121,17 +124,20 @@ export async function renderEngineSoundPreview(outputDirectory = 'verification/e
     peak = Math.max(peak, Math.abs(samples[i])); power += samples[i] ** 2; mean += samples[i];
     if (i) maxStep = Math.max(maxStep, Math.abs(samples[i] - samples[i - 1]));
   }
-  const segments = Object.fromEntries([['rest', .1, .4], ['lowLoad', 1.3, 2.2], ['highLoad', 5.6, 6.3], ['coast', 7.1, 7.8], ['muted', 8.5, 9], ['restarted', 9.6, 9.95], ['destroyed', 10.6, 10.95], ['recovered', 11.6, 11.95]].map(([name, start, end]) => [name, rangeMetrics(samples, sampleRate, start, end)]));
+  const segments = Object.fromEntries((options.segments ?? [['rest', .1, .4], ['lowLoad', 1.3, 2.2], ['highLoad', 5.6, 6.3], ['coast', 7.1, 7.8], ['muted', 8.5, 9], ['restarted', 9.6, 9.95], ['destroyed', 10.6, 10.95], ['recovered', 11.6, 11.95]]).map(([name, start, end]) => [name, rangeMetrics(samples, sampleRate, start, end)]));
   const audit = {
     verification: 'CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.',
     limits: '4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.',
-    sourceSha256: createHash('sha256').update(source).digest('hex'), sampleRate, duration: 12, peak, rms: Math.sqrt(power / samples.length), mean: mean / samples.length, maxStep, segments, voices,
+    sourceSha256: createHash('sha256').update(source).digest('hex'), sampleRate, duration, peak, rms: Math.sqrt(power / samples.length), mean: mean / samples.length, maxStep, segments, voices,
   };
   assert.ok(peak > .025 && peak <= .08401, 'bounded digital peak'); assert.ok(Math.abs(audit.mean) < .001, 'no material DC offset');
-  assert.ok(maxStep < .025, 'no reference-render discontinuity spike'); assert.equal(segments.rest.rms, 0);
+  assert.ok(maxStep < .025, 'no reference-render discontinuity spike');
+  if (!options.controls) {
+  assert.equal(segments.rest.rms, 0);
   assert.ok(segments.highLoad.rms > segments.lowLoad.rms * 1.5); assert.ok(segments.highLoad.rms > segments.coast.rms * 1.5);
   for (const name of ['muted', 'destroyed']) assert.ok(segments[name].rms < 1e-6, `${name} fades to silence`);
   for (const name of ['restarted', 'recovered']) assert.ok(segments[name].rms > .01, `${name} resumes`);
+  }
   const wav = Buffer.alloc(44 + samples.length * 2);
   wav.write('RIFF', 0); wav.writeUInt32LE(wav.length - 8, 4); wav.write('WAVEfmt ', 8); wav.writeUInt32LE(16, 16);
   wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22); wav.writeUInt32LE(sampleRate, 24); wav.writeUInt32LE(sampleRate * 2, 28);
