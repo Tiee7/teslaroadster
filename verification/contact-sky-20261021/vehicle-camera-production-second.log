@@ -1,0 +1,12 @@
+✔ approved player/NPC geometry, materials, models, scale and loading sources are frozen, not replaced to repair rendering (13.221348ms)
+✔ native close showroom preserves real roof triangles at altitude instead of cutting the car with the near plane (614.137936ms)
+✔ near cap follows actual model attitude/zoom/height, retaining far-view precision and unchanged asset payloads (21.237616ms)
+✔ actual production external camera branch applies the safe cap after camera placement; old branch clips the frozen car (16.887284ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 791.971716

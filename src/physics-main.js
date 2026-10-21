@@ -405,6 +405,95 @@ function cityContactDetails(a,b){
   const axes=[...a.axes,...b.axes];for(const u of a.axes)for(const v of b.axes){const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(Math.hypot(...n)>1e-8)axes.push(n);}
   let result=null;for(const raw of axes){const length=Math.hypot(...raw),n=raw.map(v=>v/length);let offset=0;for(let j=0;j<3;j++)offset+=(a.center[j]-b.center[j])*n[j];const depth=cityContactProjection(a,n)+cityContactProjection(b,n)-Math.abs(offset);if(depth<=1e-8)return null;if(!result||depth<result.depth){const sign=offset<0?-1:1;result={depth,x:n[0]*sign,y:n[1]*sign,z:n[2]*sign};}}return result;
 }
+// Coastal broad AABBs are rejection-only. The final certificate is the real
+// YXZ player/NPC OBB, with conservative advancement through their full poses.
+function coastTrafficBody(car,pose) {
+  const b=car.mesh.userData?.cityContactBounds||globalThis.window?.RoadsterTrafficAssets?.cityContactBounds?.(car.mesh);
+  return cityContactBody(pose,car.length,car.width||car.mesh.userData?.width||1.96,car.height,b,'YXZ');
+}
+function coastContactSeparation(a,b){
+  const axes=[...a.axes,...b.axes];for(const u of a.axes)for(const v of b.axes){const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(Math.hypot(...n)>1e-8)axes.push(n);}
+  let result=null;for(const raw of axes){const length=Math.hypot(...raw),n=raw.map(v=>v/length);let offset=0;for(let j=0;j<3;j++)offset+=(a.center[j]-b.center[j])*n[j];const gap=Math.abs(offset)-cityContactProjection(a,n)-cityContactProjection(b,n);if(!result||gap>result.gap){const sign=offset<0?-1:1;result={gap,depth:Math.max(0,-gap),x:n[0]*sign,y:n[1]*sign,z:n[2]*sign};}}return result;
+}
+function coastVehicleContact(previous,next,oldCar,car){
+  const p=car.mesh.position,r=car.mesh.rotation||{},npc={x:p.x,y:p.y||0,z:p.z,yaw:r.y||0,pitch:r.x||0,roll:r.z||0};
+  const interpolate=(a,b,t)=>{const q={};for(const k of['x','y','z'])q[k]=(a[k]||0)+((b[k]||0)-(a[k]||0))*t;for(const k of['pitch','yaw','roll'])q[k]=(a[k]||0)+wrapAnglePi((b[k]||0)-(a[k]||0))*t;return q;};
+  const model=globalThis.window?.RoadsterVehicle?.getPreviewModel?.();if(model&&model!==cityPlayerBoundsSource&&THREE.Box3)cityPlayerBody(previous);
+  const npcBounds=car.mesh.userData?.cityContactBounds||globalThis.window?.RoadsterTrafficAssets?.cityContactBounds?.(car.mesh);
+  const rootRadius=(bounds,length,width,height)=>bounds?Math.hypot(...['X','Y','Z'].map(k=>Math.max(Math.abs(bounds['min'+k]),Math.abs(bounds['max'+k])))):Math.hypot(width/2,height,length/2);
+  // Root-centered swept spheres reject far traffic before constructing any
+  // pose OBBs/SAT arrays. The radii contain every native collider vertex.
+  const ra=rootRadius(cityPlayerBounds,4.62,1.96,1.25),rb=rootRadius(npcBounds,car.length,car.width||1.96,car.height);
+  const d0=[(previous.x||0)-(oldCar.x||0),(previous.y||0)-(oldCar.y||0),(previous.z||0)-(oldCar.z||0)],dv=[next.x-previous.x-(npc.x-oldCar.x),next.y-previous.y-(npc.y-(oldCar.y||0)),next.z-previous.z-(npc.z-oldCar.z)],v2=dv.reduce((sum,v)=>sum+v*v,0),near=v2?Math.max(0,Math.min(1,-d0.reduce((sum,v,i)=>sum+v*dv[i],0)/v2)):0;
+  if(Math.hypot(...d0.map((v,i)=>v+dv[i]*near))>ra+rb)return null;
+  const a0=cityPlayerBody(previous),b0=coastTrafficBody(car,oldCar),a1=cityPlayerBody(next),b1=coastTrafficBody(car,npc);
+  const angle=(a,b)=>['pitch','yaw','roll'].reduce((s,k)=>s+Math.abs(wrapAnglePi((b[k]||0)-(a[k]||0))),0);
+  const angularBound=angle(previous,next)*ra+angle(oldCar,npc)*rb;
+  const angularProjectionBound=(from,to,radius,n)=>{
+    const yaw=Math.abs(wrapAnglePi((to.yaw||0)-(from.yaw||0))),pitch=Math.abs(wrapAnglePi((to.pitch||0)-(from.pitch||0))),roll=Math.abs(wrapAnglePi((to.roll||0)-(from.roll||0))),cross=axis=>Math.hypot(axis[1]*n[2]-axis[2]*n[1],axis[2]*n[0]-axis[0]*n[2],axis[0]*n[1]-axis[1]*n[0]);
+    const pitchAxis=p=>[Math.cos(p.yaw||0),0,-Math.sin(p.yaw||0)],rollAxis=p=>[Math.cos(p.pitch||0)*Math.sin(p.yaw||0),-Math.sin(p.pitch||0),Math.cos(p.pitch||0)*Math.cos(p.yaw||0)];
+    // YXZ: yaw rotates about world Y, pitch about yawed X, roll about
+    // yawed/pitched Z. Bound their projection changes, not a whole sphere.
+    // A pure yaw cannot close even a tiny positive vertical deck gap.
+    return radius*(yaw*Math.hypot(n[0],n[2])+pitch*Math.min(1,Math.max(cross(pitchAxis(from)),cross(pitchAxis(to)))+yaw)+roll*Math.min(1,Math.max(cross(rollAxis(from)),cross(rollAxis(to)))+yaw+pitch));
+  };
+  const directionalBound=c=>{const n=[c.x,c.y,c.z];return Math.abs(dv[0]*c.x+dv[1]*c.y+dv[2]*c.z)+angularProjectionBound(previous,next,ra,n)+angularProjectionBound(oldCar,npc,rb,n);};
+  const evaluate=t=>{const player=interpolate(previous,next,t),other=interpolate(oldCar,npc,t);return {player,other,contact:coastContactSeparation(cityPlayerBody(player),coastTrafficBody(car,other))};};
+  const certify=(t,{player,other,contact})=>{
+      // Velocity at the contacting feature, not total angular speed. Keeping
+      // its local coordinates fixed avoids a derivative of the support-map
+      // corner switching, which would fabricate a tangential impact.
+      const angularNormal=(body,pose,from,to,side)=>{
+        const n=[contact.x,contact.y,contact.z],offset=body.center.map((v,i)=>v-(pose[['x','y','z'][i]]||0)),local=body.axes.map((axis,i)=>axis.reduce((sum,v,j)=>sum+v*offset[j],0)+body.half[i]*Math.sign(axis.reduce((sum,v,j)=>sum+v*n[j],0))*side);
+        const lo=Math.max(0,t-1e-4),hi=Math.min(1,t+1e-4),at=q=>{const axes=cityContactBody(interpolate(from,to,q),1,1,1,null,'YXZ').axes;return axes.reduce((sum,axis,i)=>sum+local[i]*axis.reduce((v,x,j)=>v+x*n[j],0),0);};
+        return hi>lo?(at(hi)-at(lo))/(hi-lo):0;
+      };
+      const angularClosingPerFraction=angularNormal(coastTrafficBody(car,other),other,oldCar,npc,1)-angularNormal(cityPlayerBody(player),player,previous,next,-1);
+      return {...contact,t,player,npc:other,angularClosingPerFraction};
+  };
+  // Constant orientations have an exact swept SAT solution. In particular a
+  // long tangential chord must not exhaust a conservative-advance budget.
+  if(angularBound<1e-12){const t=cityContactInterval(a1,b1,a0,b0);return t===null?null:certify(t,evaluate(t));}
+  let t=0;for(let iteration=0;iteration<96;iteration++){
+    const q=evaluate(t),c=q.contact;if(c.gap<=1e-7)return certify(t,q);
+    const bound=directionalBound(c);if(bound<1e-12)return null;
+    const step=c.gap/bound*.9;if(t+step>1)return null;t+=step;
+  }
+  // Rare rotating/grazing fallback: reject temporal intervals only when a
+  // separating plane certifies all their poses clear. Search left-to-right,
+  // never reinterpret an iteration limit as proof of no contact.
+  const search=(lo,hi,depth)=>{const mid=(lo+hi)/2,q=evaluate(mid),c=q.contact,bound=directionalBound(c);if(c.gap>bound*(hi-lo)/2+1e-7)return null;if(depth>=36||bound*(hi-lo)<1e-7){for(const at of[lo,mid,hi]){const r=evaluate(at);if(r.contact.gap<=1e-7)return certify(at,r);}return null;}return search(lo,mid,depth+1)||search(mid,hi,depth+1);};
+  return search(t,1,0);
+}
+
+// A city seam is a respawn, not continuous travel. Wait at the old seam if the
+// opposite end is occupied; never teleport a solid vehicle into the player.
+function advanceCityTraffic(car,dt){
+  const p=car.mesh.position,limit=CITY_HALF_BOUND-10,pending=car.cityWrapPending;
+  const vx=pending?pending.vx:car.vx,vz=pending?pending.vz:car.vz;
+  const next=pending?pending.target:{x:p.x+vx*CITY_WORLD_SPEED_SCALE*dt,z:p.z+vz*CITY_WORLD_SPEED_SCALE*dt};
+  const wraps=pending||Math.abs(next.x)>limit||Math.abs(next.z)>limit;
+  if(!wraps){p.x=next.x;p.z=next.z;return;}
+  const target=pending?next:{x:next.x>limit?-limit:next.x< -limit?limit:next.x,z:next.z>limit?-limit:next.z< -limit?limit:next.z};
+  const npc=cityTrafficBody(car),player=cityPlayerBody(state),verticalClear=body=>body.y-body.ry>npc.y+npc.ry+2||npc.y-npc.ry>body.y+body.ry+2;
+  const playerClear=Math.hypot(target.x-state.x,target.z-state.z)>Math.max(80,Math.hypot(state.vx,state.vz)*1.5+8)||verticalClear(player);
+  const trafficClear=trafficCars.every(other=>other===car||other.mesh.visible===false||Math.hypot(target.x-other.mesh.position.x,target.z-other.mesh.position.z)>20||verticalClear(cityTrafficBody(other)));
+  if(!playerClear||!trafficClear){
+    if(!pending)car.cityWrapPending={target,vx,vz,speed:car.speed};
+    p.x=Math.max(-limit,Math.min(limit,p.x));p.z=Math.max(-limit,Math.min(limit,p.z));car.vx=car.vz=car.speed=0;return;
+  }
+  p.x=target.x;p.z=target.z;if(pending){car.vx=pending.vx;car.vz=pending.vz;car.speed=pending.speed;}car.cityWrapPending=null;
+}
+
+// Near/far precision must never clip the approved car in a close external
+// view. Only cap the requested near plane; geometry/materials/zoom stay intact.
+function vehicleSafeCameraNear(requested,camera,pose){
+  if(!camera.matrixWorld?.elements||typeof camera.updateMatrixWorld!=='function')return requested;
+  camera.updateMatrixWorld(true);const m=camera.matrixWorld.elements,n=[-m[8],-m[9],-m[10]],body=cityPlayerBody(pose);
+  const nearest=(body.x-camera.position.x)*n[0]+(body.y-camera.position.y)*n[1]+(body.z-camera.position.z)*n[2]-cityContactProjection(body,n);
+  return Math.min(requested,Math.max(.08,nearest-.05));
+}
+
 // Static 64 m buckets bound broad-phase work as the district gets denser.
 // Reuse the candidate array until the vehicle crosses a bucket boundary; no
 // scene traversal, instance upload or city-wide SAT scan per physics substep.
@@ -732,9 +821,10 @@ function updateSimulation(dt, presentationDt = dt) {
   const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
   const isRealMode = (state.physicsMode === 'realistic');
   const cityMotionStart = currentMap === 'city' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:state.pitch,roll:state.roll} : null;
-  const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,vy:state.vy} : null;
+  const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:state.pitch,roll:state.roll,vy:state.vy} : null;
+  if(coastMotionStart&&typeof playerWrapper!=='undefined'&&typeof roadsterAttitudeGroup!=='undefined')coastMotionStart.contactPose={x:state.x,y:playerWrapper.position.y,z:state.z,pitch:roadsterAttitudeGroup.rotation.x,yaw:roadsterAttitudeGroup.rotation.y,roll:roadsterAttitudeGroup.rotation.z};
   const coastObstacles = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : null;
-  const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,yaw:c.mesh.rotation.y,visible:c.mesh.visible}])) : null;
+  const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,yaw:c.mesh.rotation.y,pitch:c.mesh.rotation.x,roll:c.mesh.rotation.z,visible:c.mesh.visible}])) : null;
   state.gasMassKg = Number((144.0 * (state.airRemaining / MAX_AIR_SECONDS)).toFixed(1));
   const currentVehicleMass = VEHICLE_MASS_KG + (state.gasMassKg || 0);
   const fuelBurnThrustFactor = (VEHICLE_MASS_KG + 144.0) / Math.max(1850.0, currentVehicleMass);
@@ -1884,12 +1974,7 @@ function updateSimulation(dt, presentationDt = dt) {
         }
       }
     } else {
-      car.mesh.position.x += car.vx * CITY_WORLD_SPEED_SCALE * dt;
-      car.mesh.position.z += car.vz * CITY_WORLD_SPEED_SCALE * dt;
-      if (car.mesh.position.x > CITY_HALF_BOUND - 10) car.mesh.position.x = -CITY_HALF_BOUND + 10;
-      if (car.mesh.position.x < -CITY_HALF_BOUND + 10) car.mesh.position.x = CITY_HALF_BOUND - 10;
-      if (car.mesh.position.z > CITY_HALF_BOUND - 10) car.mesh.position.z = -CITY_HALF_BOUND + 10;
-      if (car.mesh.position.z < -CITY_HALF_BOUND + 10) car.mesh.position.z = CITY_HALF_BOUND - 10;
+      advanceCityTraffic(car,dt);
     }
 
     const dx = Math.abs(state.x - car.mesh.position.x);
@@ -1907,10 +1992,21 @@ function updateSimulation(dt, presentationDt = dt) {
       ? RoadsterHighwayDemoPlanner.sweptContact(demoPreviousCar.x-demoGroundSweep.x,demoPreviousCar.z,
         car.mesh.position.x-state.x,car.mesh.position.z,1.85,car.length/2+2.15)!==null : false;
     const coastOld = currentMap === 'coast' ? coastTrafficStart?.get(car) : null;
-    const coastBounds = currentMap === 'coast' ? globalThis.window?.RoadsterCoast?.contactBounds(state.yaw,car.mesh.rotation.y,car.length,coastMotionStart.yaw,coastOld?.yaw) : null;
-    const coastContact = coastOld?.visible !== false && coastOld && car.mode === 'coast' && !car.blastTimer
-      ? globalThis.window?.RoadsterCoast?.trafficContact(coastMotionStart,state,coastOld,car,coastBounds) : null;
-    const coastSweptHit = coastContact !== null;
+    const coastVisualEnd=currentMap==='coast'?{...state,y:state.y-(state.suspensionSquash||0)-(state.aeroSquash||0),pitch:state.pitch+(!isAirborne?(typeof isAccelerating!=='undefined'&&isAccelerating?(typeof isRearThrusterFiring!=='undefined'&&isRearThrusterFiring ? .032 : .016):(typeof isFootBraking!=='undefined'&&isFootBraking||typeof isReversing!=='undefined'&&isReversing)?-.026:0):0),roll:state.roll+(!isAirborne?-(state.steerInput||0)*.032:0)}:null;
+    const coastContact=currentMap==='coast'&&coastOld&&coastOld.visible!==false&&car.mode==='coast'&&!car.blastTimer?coastVehicleContact(coastMotionStart.contactPose||coastMotionStart,coastVisualEnd,coastOld,car):null;
+    if(coastContact){
+      const relVx=state.vx-(car.vx||0),relVy=state.vy-(car.vy||0),relVz=state.vz-(car.vz||0),closing=Math.max(0,-relVx*coastContact.x-relVy*coastContact.y-relVz*coastContact.z+coastContact.angularClosingPerFraction/Math.max(dt,1e-6));
+      // Rewind only the player to certified first contact. NPC route distance
+      // remains authoritative; a normal impulse does not reverse tangent speed.
+      const t=Math.max(0,coastContact.t-1e-6);for(const k of['x','y','z'])state[k]=coastMotionStart[k]+(state[k]-coastMotionStart[k])*t;
+      const endContact=coastContactSeparation(cityPlayerBody({...state,y:state.y-(state.suspensionSquash||0)-(state.aeroSquash||0),pitch:coastVisualEnd.pitch,roll:coastVisualEnd.roll}),coastTrafficBody(car,{x:car.mesh.position.x,y:car.mesh.position.y,z:car.mesh.position.z,pitch:car.mesh.rotation.x,yaw:car.mesh.rotation.y,roll:car.mesh.rotation.z}));
+      const push=endContact.gap<0?endContact.depth+.0001:.0001,pushNormal=endContact.gap<0?endContact:coastContact;state.x+=pushNormal.x*push;state.y+=pushNormal.y*push;state.z+=pushNormal.z*push;
+      if(coastContact.y>.65&&state.vy<0&&closing<=18){state.vy=Math.max(5.5,state.vy+closing*coastContact.y);sound.beep(520,.08);}
+      else if(closing>.1){globalThis.window?.RoadsterCoast?.hit(car);state.vx+=1.35*closing*coastContact.x;state.vy+=1.35*closing*coastContact.y;state.vz+=1.35*closing*coastContact.z;triggerPhysicsCollision(closing,'crashReasonThreshold',0,0,0);}
+      state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);return;
+    }
+    // No other coastal AABB/roof-cushion path may promote a broad-phase gap.
+    if(currentMap==='coast')return;
     const cityNear=currentMap==='city'&&dx<10&&dz<10&&Math.abs(state.y-npcWorldY)<10;
     const cityPlayer=cityNear?cityPlayerBody(state):null,cityNpc=cityNear?cityTrafficBody(car):null;
     // Preserve the existing gentle roof-touch cushion separately from solid-body
@@ -1918,16 +2014,14 @@ function updateSimulation(dt, presentationDt = dt) {
     const cityRoofTouch=cityNear&&clearanceY>=-.15&&clearanceY<.15&&state.vy<0&&state.vy>=-18&&cityHorizontalContact(cityPlayer,cityNpc);
     const citySolidContact=cityNear&&cityContactInterval(cityPlayer,cityNpc)!==null;
     const cityBodyOverlap=cityNear&&(cityRoofTouch||citySolidContact);
-    const bodyOverlap = currentMap==='city'?cityBodyOverlap:coastBounds ? dx < coastBounds.x && dz < coastBounds.z && state.y+1.25>npcWorldY && state.y<npcWorldY+car.height+.15 : dx < 1.85 && dz < (car.length / 2 + 2.15);
-    if (bodyOverlap || demoSweptHit || coastSweptHit) {
-      if(coastSweptHit)clearanceY=coastContact.relativeY-car.height;
+    const bodyOverlap = currentMap==='city'?cityBodyOverlap:dx < 1.85 && dz < (car.length / 2 + 2.15);
+    if (bodyOverlap || demoSweptHit) {
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0 && (currentMap!=='city'||citySolidContact)) {
           if(currentMap==='city')window.RoadsterCityDiagnostics?.contact({kind:'traffic-roof',variant:car.mesh.userData?.trafficVariant,position:{...car.mesh.position},verifiedSolid:citySolidContact});
           triggerPhysicsCollision(Math.abs(state.vy), 'crashReasonThreshold', 0, 5.0, 0);
-        } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {
-          if(coastSweptHit){const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;}
-          state.y = (coastSweptHit?coastContact.npcY:npcWorldY) + car.height + 0.15;
+        } else if (state.vy < 0 && clearanceY < 0.15) {
+          state.y = npcWorldY + car.height + 0.15;
           state.vy = 5.5;
           sound.beep(520, 0.08);
         }
@@ -1955,10 +2049,6 @@ function updateSimulation(dt, presentationDt = dt) {
           } else {
             state.speed = Math.max(14.0, state.speed * 0.58);
           }
-        } else if (currentMap === 'coast') {
-          globalThis.window?.RoadsterCoast?.hit(car);
-          if (coastSweptHit) { const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;state.y=coastMotionStart.y+(state.y-coastMotionStart.y)*t; }
-          state.vx *= -.35;state.vz *= -.35;state.speed = isAirborne ? Math.hypot(state.vx,state.vz) : state.speed * -.35;
         } else {
           car.mesh.position.x += Math.sign(car.mesh.position.x - state.x || 1) * 5.0;
           car.mesh.position.z += Math.sign(car.mesh.position.z - state.z || 1) * 5.0;
@@ -2187,10 +2277,6 @@ function updateSimulation(dt, presentationDt = dt) {
   const desiredNear = isCockpitFpv
     ? 0.08
     : THREE.MathUtils.clamp(0.38 + Math.max(0.0,currentMap==='coast'?state.y-groundElevation:state.y) * 0.045, 0.38, 3.2);
-  if (Math.abs(camera.near - desiredNear) > 0.02) {
-    camera.near = desiredNear;
-    camera.updateProjectionMatrix();
-  }
   roadsterCanopyMesh.visible = !isCockpitFpv;
   setCockpitPerspective(isCockpitFpv);
   setCockpitExteriorDetailsVisible(!isCockpitFpv);
@@ -2260,6 +2346,11 @@ function updateSimulation(dt, presentationDt = dt) {
       camera.lookAt(state.x, state.y, state.z);
     }
   }
+
+  const resolvedNear=isCockpitFpv?desiredNear:vehicleSafeCameraNear(desiredNear,camera,{x:state.x,y:visualY,z:playerWorldZ,pitch:roadsterAttitudeGroup.rotation.x,yaw:roadsterAttitudeGroup.rotation.y,roll:roadsterAttitudeGroup.rotation.z});
+  // Apply once after the final camera transform; avoid two projection updates
+  // per frame when altitude precision and close-up visibility disagree.
+  if(Math.abs(camera.near-resolvedNear)>1e-5){camera.near=resolvedNear;camera.updateProjectionMatrix();}
 
   if (state.bannerTimer > 0) {
     state.bannerTimer -= dt;

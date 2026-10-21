@@ -1,0 +1,31 @@
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 30Hz (1265.182967ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 30Hz (36.770662ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 30Hz (40.341074ms)
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 60Hz (79.903407ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 60Hz (43.76872ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 60Hz (50.570895ms)
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 144Hz (112.038277ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 144Hz (93.146018ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 144Hz (100.944284ms)
+✔ native true same-lane head-on collision still destroys at 30Hz (20.007999ms)
+✔ native true same-lane head-on collision still destroys at 60Hz (16.069455ms)
+✔ native true same-lane head-on collision still destroys at 144Hz (30.165647ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 30Hz; true nearby collision remains (94.14525ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 60Hz; true nearby collision remains (66.384959ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 144Hz; true nearby collision remains (67.507871ms)
+✔ city seam queue waits for player and NPC space, then restores the same right-lane velocity without ghosts (2.245853ms)
+✔ city seam clearance uses actual pitched height, not a root-height exemption (2.210622ms)
+✔ coast narrow phase certifies real 3D YXZ contacts and rejects rotated broad-box corners and different decks (7.85318ms)
+✔ exact shallow-angle sweep cannot spend its budget and miss an overlapping endpoint (3.833588ms)
+✔ a real touching coast side does not convert huge tangential velocity into fatal normal damage (3.194869ms)
+✔ rotation-only coast sweep catches real contact but never treats the AABB envelope as a hit (8.148725ms)
+✔ far coast traffic rejects before OBB/SAT work; rotating sweeps return only certified contacts (71.182666ms)
+✔ pure coast yaw cannot spend recursive work on a constant positive vertical gap (3.071768ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2041.858363

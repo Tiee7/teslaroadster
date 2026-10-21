@@ -1,0 +1,11 @@
+✔ city daylight is a direction-continuous cached six-face sky, not a flat colour or a sun object (1660.392716ms)
+✔ day sky never leaks to highway/coast weather, and city shells, glazing and paving restore night without uploads (1786.882438ms)
+✔ night and rain background cube upload format matches every RGBA pixel, preserving sky hues instead of alpha-channel RGB stripes (280.470455ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3873.272122

@@ -1,0 +1,29 @@
+✔ src projection artifact passes complete build identity and equals verification mirror (28.84412ms)
+✔ src projection stale-byte mutation rejects without changing verification mirror (28.69485ms)
+✔ emitter --check rejects src-versus-verification mirror desynchronization (112.999427ms)
+{
+  "passed": true,
+  "totalTests": 29,
+  "byKind": {
+    "positive-identity": 3,
+    "first-bind-rejection": 9,
+    "cached-reference-or-value-rejection": 5,
+    "positive-build": 1,
+    "build-source-rejection": 8,
+    "build-generator-rejection": 1,
+    "build-profile-rejection": 1,
+    "build-artifact-rejection": 1
+  },
+  "physicsStepsExecuted": 0,
+  "sourceAndArtifactsUnchanged": true,
+  "numericalCoreSha256": "b09f024d19b1d206e2614cd744e2934b9aca0d526a3f027e96c6b95b2b88be60"
+}
+✔ verification/demo-continuous/test-static-projection-identity-only.mjs (269.533059ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 286.097998

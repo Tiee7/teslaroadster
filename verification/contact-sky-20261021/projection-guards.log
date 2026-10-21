@@ -1,0 +1,112 @@
+✖ src projection artifact passes complete build identity and equals verification mirror (4.887473ms)
+✖ src projection stale-byte mutation rejects without changing verification mirror (11.274162ms)
+✖ emitter --check rejects src-versus-verification mirror desynchronization (119.878057ms)
+file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/generate-numeric-projection-kernel.mjs:218
+    if (text.split(from).length !== 2) throw Error(`Unsupported instrumentation boundary: ${description}`);
+                                             ^
+
+Error: Unsupported instrumentation boundary: insert fail-closed guard at true roof-bounce branch before response
+    at inject (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/generate-numeric-projection-kernel.mjs:218:46)
+    at generateNumericProjectionKernel (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/generate-numeric-projection-kernel.mjs:225:13)
+    at emitBrowserStaticProjection (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/emit-browser-static-projection.mjs:119:58)
+    at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-static-projection-identity-only.mjs:109:18
+    at test (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-static-projection-identity-only.mjs:44:3)
+    at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-static-projection-identity-only.mjs:108:3
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+✖ verification/demo-continuous/test-static-projection-identity-only.mjs (193.225286ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 259.687633
+
+✖ failing tests:
+
+test at verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:36:1
+✖ src projection artifact passes complete build identity and equals verification mirror (4.887473ms)
+  Error: Stale static projection source: src/physics-main.js
+      at verifyBrowserStaticProjectionBuild (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/emit-browser-static-projection.mjs:205:76)
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:37:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:42:1
+✖ src projection stale-byte mutation rejects without changing verification mirror (11.274162ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Static projection artifact differs from exact current emission/. Input:
+  
+  'Error: Stale static projection source: src/physics-main.js'
+  
+      at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:47:12
+      at withMirror (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:32:12)
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:43:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Stale static projection source: src/physics-main.js
+        at verifyBrowserStaticProjectionBuild (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/emit-browser-static-projection.mjs:205:76)
+        at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:47:25
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:47:12
+        at withMirror (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:32:12)
+        at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:43:3)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18),
+    expected: /Static projection artifact differs from exact current emission/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:53:1
+✖ emitter --check rejects src-versus-verification mirror desynchronization (119.878057ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Static projection artifact differs from exact current emission|Production projection artifact differs from verification mirror/. Input:
+  
+  '\n' +
+    'file:///tmp/roadster-src-mirror-identity-only-437OHi/verification/demo-continuous/emit-browser-static-projection.mjs:205\n' +
+    "    if (sha256(readFileSync(join(repo, name), 'utf8')) !== expected) throw Error(`Stale static projection source: ${name}`);\n" +
+    '                                                                           ^\n' +
+    '\n' +
+    'Error: Stale static projection source: src/physics-main.js\n' +
+    '    at verifyBrowserStaticProjectionBuild (file:///tmp/roadster-src-mirror-identity-only-437OHi/verification/demo-continuous/emit-browser-static-projection.mjs:205:76)\n' +
+    '    at file:///tmp/roadster-src-mirror-identity-only-437OHi/verification/demo-continuous/emit-browser-static-projection.mjs:216:20\n' +
+    '    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n' +
+    '    at async node:internal/modules/esm/loader:643:26\n' +
+    '    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n' +
+    '\n' +
+    'Node.js v24.19.0\n'
+  
+      at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:66:12
+      at withMirror (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:32:12)
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/test-src-projection-mirror-identity-only.mjs:54:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "\nfile:///tmp/roadster-src-mirror-identity-only-437OHi/verification/demo-continuous/emit-browser-static-projection.mjs:205\n    if (sha256(readFileSync(join(repo, name), 'utf8')) !== expected) throw Error(`Stale static projection source: ${name}`);\n                                                                           ^\n\nError: Stale static projection source: src/physics-main.js\n    at verifyBrowserStaticProjectionBuild (file:///tmp/roadster-src-mirror-identity-only-437OHi/verification/demo-continuous/emit-browser-static-projection.mjs:205:76)\n    at file:///tmp/roadster-src-mirror-identity-only-437OHi/verification/demo-continuous/emit-browser-static-projection.mjs:216:20\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n",
+    expected: /Static projection artifact differs from exact current emission|Production projection artifact differs from verification mirror/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at verification/demo-continuous/test-static-projection-identity-only.mjs:1:1
+✖ verification/demo-continuous/test-static-projection-identity-only.mjs (193.225286ms)
+  'test failed'

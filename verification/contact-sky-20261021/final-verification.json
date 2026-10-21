@@ -1,0 +1,125 @@
+{
+  "baseMain": "13b9f5372034cd6ba3e14144433792c525989f63",
+  "fullRegressionInitialCommit": "82804bdd23636e4fa04429de2e377e650b578f01",
+  "finalProductionCommit": "2afc61102202764feb711015790080c26b73c4f8",
+  "checkedAt": "2026-10-21T17:30:58.062807+00:00",
+  "fullRegression": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "terminalExitCode": 1,
+    "log": "full-test-final.log",
+    "tests": 963,
+    "pass": 960,
+    "fail": 3,
+    "cancelled": 0,
+    "skipped": 0,
+    "duration_ms": 1057838.137812,
+    "note": "Not a single all-green frozen final run. One obsolete city inline-spelling assertion, one highway fixture missing extracted helper, and one file-level coast-art subprocess failure without signal detail. Late user car feedback added a camera-only repair while the original run continued; affected complete files rerun on final source."
+  },
+  "resolution": {
+    "city-scale-helper-final.log": {
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 2707.509262
+    },
+    "coast-art-isolated-final.log": {
+      "tests": 30,
+      "pass": 30,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 31962.144268
+    },
+    "highway-traffic-helper-final.log": {
+      "tests": 29,
+      "pass": 29,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 43777.775386
+    },
+    "camera-contact-epoch-final.log": {
+      "tests": 94,
+      "pass": 94,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 6889.284538
+    },
+    "vehicle-camera-production-lexical-final.log": {
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 773.056852
+    }
+  },
+  "combinedCoverage": {
+    "uniqueTests": 996,
+    "resolvedPass": 996,
+    "unresolvedFailures": 0,
+    "singleFullGreenRun": false,
+    "arithmetic": "963 raw records minus one coast-art failed-file placeholder plus30 real isolated art cases plus4 late camera/asset cases =996; two actual failed cases pass in their complete corrected fixture files."
+  },
+  "lateProductionChange": {
+    "files": [
+      "src/physics-main.js",
+      "src/demo-numeric-projection.js",
+      "index.html"
+    ],
+    "scope": "Only external-camera near cap after final pose; regenerated identity projection and bundle. No change to contact solver/forces/audio/assets/layout from frozen828; patch saved as late-camera-only-source.patch.",
+    "affectedCompleteFileChecks": 94
+  },
+  "projection": {
+    "exactOldNewHighwayTicks": 840,
+    "sameNumericFields": true,
+    "identityGuards": 29,
+    "sourceMirrorGuards": 3,
+    "sourceEpoch": "source-epoch.json"
+  },
+  "lua": {
+    "command": "python3 tests/lua_runtime.py",
+    "tests": 24,
+    "pass": 24
+  },
+  "checks": {
+    "npm run check": "passed after final runtime",
+    "npm run build": "passed after final runtime"
+  },
+  "sourceSha256": {
+    "physics-main": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "world": "f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae",
+    "audio": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "vehicles": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "reference-exterior": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "taxi": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "ui-hud": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "config": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "coast-map": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "demo-numeric-projection": "f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b"
+  },
+  "artifacts": {
+    "index": {
+      "bytes": 4963379,
+      "sha256": "7299c220753795c599d60a522af68349b33173fe23ed50c1b28cc2ed7004f2ab"
+    },
+    "inlineStyle": {
+      "bytes": 37425,
+      "sha256": "f76c4c82495c8664ffe2eba838dd0f4c89175e43c9c2d3571f669e71dc7d0f42"
+    }
+  },
+  "releaseBoundary": {
+    "branchAndPreviewOnly": true,
+    "mainMergeAllowed": false,
+    "productionAllowed": false,
+    "reason": "Main merge auto-deploys. Specific new production authorization is pending; previous production denial is not a temporary failure."
+  },
+  "visualBoundary": "No WebGL/GPU driving, sky/exposure or device heat acceptance. User exact collision/car-camera state remains unknown. Independently reproduced defects fixed; no all-incidents/all-poses promise."
+}

@@ -554,7 +554,7 @@ function buildOpenWorldCity() {
         const haze=Math.exp(-Math.abs(h)*7),cloud=h>0?Math.pow(.5+.5*Math.sin(d[0]/len*6+d[2]/len*3+h*11),3)*Math.exp(-Math.pow((h-.32)*5,2)):0,i=(y*size+x)*4;
         const top=[7,8,25],horizon=[29,49,68];for(let k=0;k<3;k++)data[i+k]=Math.round(top[k]+(horizon[k]-top[k])*haze+[8,5,13][k]*cloud);data[i+3]=255;
       }const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);texture.needsUpdate=true;faces.push(texture);
-    }cityNightSky=new THREE.CubeTexture(faces);cityNightSky.name='city-cyber-night-sky';cityNightSky.generateMipmaps=true;cityNightSky.minFilter=THREE.LinearMipmapLinearFilter;cityNightSky.magFilter=THREE.LinearFilter;cityNightSky.needsUpdate=true;return cityNightSky;
+    }cityNightSky=new THREE.CubeTexture(faces);cityNightSky.name='city-cyber-night-sky';cityNightSky.format=THREE.RGBAFormat;cityNightSky.generateMipmaps=true;cityNightSky.minFilter=THREE.LinearMipmapLinearFilter;cityNightSky.magFilter=THREE.LinearFilter;cityNightSky.needsUpdate=true;return cityNightSky;
   };
   const windowLitMat = new THREE.MeshBasicMaterial({ color: 0x648391 });
   const windowWarmMat = new THREE.MeshBasicMaterial({ color: 0x918b75 });

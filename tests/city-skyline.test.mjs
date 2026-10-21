@@ -45,3 +45,9 @@ test('day sky never leaks to highway/coast weather, and city shells, glazing and
  bodies.forEach((o,i)=>assert.deepEqual([o.instanceMatrix.version,o.material.map.version,o.material.emissiveMap.version],versions[i]));
  h.select('city',3);assert.equal(h.scene.background,sky);
 });
+
+test('night and rain background cube upload format matches every RGBA pixel, preserving sky hues instead of alpha-channel RGB stripes',{skip},()=>{
+ const h=city();for(const mode of[0,1]){h.select('city',mode);const sky=h.scene.background;assert.equal(sky.isCubeTexture,true);assert.equal(sky.format,h.T.RGBAFormat);for(const face of sky.image){assert.equal(face.format,h.T.RGBAFormat);assert.equal(face.image.data.byteLength,128*128*4);const data=face.image.data;for(let i=0;i<data.length;i+=4){assert.equal(data[i+3],255);assert.ok(Math.max(data[i],data[i+1],data[i+2])<90,'stored night colours are bounded, not neon-primary alpha misreads');}}}
+ const sky=h.scene.background,data=sky.image[0].image.data;assert.equal(new h.T.CubeTexture([]).format,h.T.RGBFormat,'freeze actual r128 default that caused the upload bug');
+ const legacy=Array.from(data.slice(3,6)),correct=Array.from(data.slice(4,7));assert.equal(legacy[0],255);assert.ok(Math.max(...correct)<90);assert.notDeepEqual(legacy,correct,'old second RGB pixel read alpha255 as red');
+});

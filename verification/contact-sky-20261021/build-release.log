@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> tesla-roadster-simulator@1.1.0 build
+> node scripts/build.mjs
+
+Static game copied to public/index.html; Vercel builds api/ separately.

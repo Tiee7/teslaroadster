@@ -1,0 +1,38 @@
+✖ city seam wrap cannot spawn a fatal car into the player at 30Hz; true nearby collision remains (23.772897ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 60Hz; true nearby collision remains (52.770465ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 144Hz; true nearby collision remains (61.030203ms)
+✔ city seam queue waits for player and NPC space, then restores the same right-lane velocity without ghosts (2.126739ms)
+✔ city seam clearance uses actual pitched height, not a root-height exemption (2.465607ms)
+✔ coast narrow phase certifies real 3D YXZ contacts and rejects rotated broad-box corners and different decks (5.891448ms)
+✔ exact shallow-angle sweep cannot spend its budget and miss an overlapping endpoint (2.68497ms)
+✔ a real touching coast side does not convert huge tangential velocity into fatal normal damage (3.462604ms)
+✔ rotation-only coast sweep catches real contact but never treats the AABB envelope as a hit (6.306519ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 287.366878
+
+✖ failing tests:
+
+test at tests/contact-sky-traffic.test.mjs:6:29
+✖ city seam wrap cannot spawn a fatal car into the player at 30Hz; true nearby collision remains (23.772897ms)
+  AssertionError [ERR_ASSERTION]: frozen production false-wrap/true-contact witness
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/contact-sky-traffic.test.mjs:11:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

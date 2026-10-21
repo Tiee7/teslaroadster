@@ -1,0 +1,26 @@
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 30Hz (1067.494482ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 30Hz (38.476833ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 30Hz (32.303571ms)
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 60Hz (53.089883ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 60Hz (40.677207ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 60Hz (50.002404ms)
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 144Hz (111.08742ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 144Hz (74.654284ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 144Hz (90.205668ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 30Hz; true nearby collision remains (91.200751ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 60Hz; true nearby collision remains (67.210583ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 144Hz; true nearby collision remains (86.359425ms)
+✔ city seam queue waits for player and NPC space, then restores the same right-lane velocity without ghosts (3.412549ms)
+✔ city seam clearance uses actual pitched height, not a root-height exemption (5.507664ms)
+✔ coast narrow phase certifies real 3D YXZ contacts and rejects rotated broad-box corners and different decks (7.108606ms)
+✔ exact shallow-angle sweep cannot spend its budget and miss an overlapping endpoint (3.166181ms)
+✔ a real touching coast side does not convert huge tangential velocity into fatal normal damage (2.708054ms)
+✔ rotation-only coast sweep catches real contact but never treats the AABB envelope as a hit (5.710384ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1717.226887
