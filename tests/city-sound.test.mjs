@@ -58,7 +58,7 @@ function harness(map = 'city') {
   vm.runInContext(`${audio}\n${read('city-clock.js')}\n${readInput}\n${clearKeys}\n${renderLoop}
     function recordPhysicsSound(presentationDt) {
       const input = readDriveInput();
-      const isLiftFiring = input.lift > 0, rearActive = input.boost > 0, isFrontRetroFiring = false;
+      const isLiftFiring = input.lift > 0, isRearThrusterFiring = input.boost > 0, rearActive = isRearThrusterFiring, isRetroBrakeFiring = false, isFrontRetroFiring = false;
       const rollInput = 0, pitchInput = 0, yawInput = 0, airJetLeft = false, airJetRight = false, canUseRCS = true;
       const tireScreechIntensity = 0, driveInput = input;
       ${capture}

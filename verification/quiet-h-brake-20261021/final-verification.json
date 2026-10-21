@@ -1,0 +1,96 @@
+{
+  "schema": "quiet-h-brake-final-verification-v1",
+  "recordedAt": "2026-10-21T08:50:55.355325+00:00",
+  "baseMain": "42db2bb744c8b4c42bebb34360030ff05cd10484",
+  "productionSourceCommit": "c1ae3c2e4bcebc12d25f07624e306e168592fc63",
+  "productionUnchangedSinceCheckpoint": true,
+  "baselinePhysicsBlob": "b3ea880a6ce62e8702c5390d442e2a83e21c67a2",
+  "coverage": {
+    "businessTestInstances": 927,
+    "passedInstances": 927,
+    "remainingFailures": 0,
+    "method": "Exact multiset of924current non-long business test instances covered by aggregate passes OR focused final passes, plus3byte-identical-closure prior long-run passes. Not a single all-green full npm-test run."
+  },
+  "aggregate": {
+    "command": "node --test --test-skip-pattern='1800s full-lap' tests/*.test.mjs",
+    "runnerTests": 925,
+    "pass": 924,
+    "fail": 1,
+    "skipped": 0,
+    "milliseconds": 377933.411252,
+    "log": "aggregate-except-unchanged-coast-long.log",
+    "note": "Includes1empty-filter file runner;924business instances. One obsolete isolated engine-call fixture lacked isRearThrusterFiring/isRetroBrakeFiring, not a runtime production failure."
+  },
+  "fixtureCorrection": {
+    "changed": "Test-only explicit resolved rear-thrust and retro flags; all existing engine/rocket/load assertions retained.",
+    "finalRunTests": 65,
+    "pass": 65,
+    "fail": 0,
+    "milliseconds": 28302.226943,
+    "log": "engine-fixture-final.log"
+  },
+  "focusedFirst": {
+    "tests": 107,
+    "pass": 107,
+    "milliseconds": 22500.44065,
+    "log": "focused-first.log"
+  },
+  "reusedLongClosure": {
+    "baseMain": "42db2bb744c8b4c42bebb34360030ff05cd10484",
+    "testSourceClosureUnchanged": {
+      "src/coast-map.js": {
+        "bytes": 105044,
+        "sha256": "4242c4c6a739c1e5026e2bd013c282f80dc15cd69db74254dcfafcd4b0328c6e"
+      },
+      "src/coast-road-network.js": {
+        "bytes": 23769,
+        "sha256": "7ae61f2735a9b0106b2eaf288d1b322f42affa032c423fe0a65a54c97ca2c187"
+      },
+      "tests/coast-traffic-3d.test.mjs": {
+        "bytes": 3116,
+        "sha256": "c62cf20765a939a6e1cb63ee85ec6164cb8b8a4564c2c2e5aff2272d30b5b67f"
+      }
+    },
+    "originalLongRunLog": "verification/driving-feedback-20261021/full-test-integration-872.log",
+    "selectedPassEvidence": "verification/driving-feedback-20261021/final-candidate-1800s-traffic-extract.log",
+    "note": "Reuse these3tests only; not a claim of rerunning. Original full integration had3obsolete unrelated fixture failures subsequently fixed before42db release."
+  },
+  "invariants": {
+    "handwrittenProductionChange": "Six audio Boolean expressions only; whole-source exact allowed-diff test.",
+    "numericProjectionProgramSha256": "03384f04166142255cc51b06f40a6843dc5069cf13ab93c7b4652190c87a2284",
+    "numericProgramUnchanged": true,
+    "audioAndMusicByteIdentical": true,
+    "HImpulseFuelSafetyAndVisibleNozzlesUnchanged": true,
+    "mixedIndependentSoundsPreserved": [
+      "W",
+      "Semicolon",
+      "Space",
+      "manual RCS/strafe",
+      "S"
+    ],
+    "actualMaps": [
+      "highway",
+      "city",
+      "coast"
+    ]
+  },
+  "otherGates": {
+    "check": "check-final.log",
+    "build": "build-final.log",
+    "projection": "projection-check.log",
+    "lua": {
+      "tests": 24,
+      "pass": 24
+    }
+  },
+  "root": {
+    "bytes": 4885366,
+    "sha256": "f4fe939b84632fb0829a2deda36970f0d36ed26956b6cd8986f5896753972385",
+    "gitBlob": "0c0a5d08fd2e9d91d880ef5f7bf4fca19fa6d7ab"
+  },
+  "limits": [
+    "Audio tests validate actual control/gain targets with Web Audio mocks, not subjective listening/native playback.",
+    "No new WebGL/phone-FPS acceptance is claimed.",
+    "Local gates do not prove publication; preview and formal exact-source readback required."
+  ]
+}

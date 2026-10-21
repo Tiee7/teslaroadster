@@ -1974,15 +1974,15 @@ function updateSimulation(dt, presentationDt = dt) {
   // The render owner below samples fresh speed/input even on a zero-tick frame.
   if (cityOwnsDrivingSound()) {
     citySoundFrame = {
-      thrust: isLiftFiring || rearActive || isFrontRetroFiring,
-      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || isFrontRetroFiring,
+      thrust: isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),
+      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || (isFrontRetroFiring && driveInput.reverse > 0),
       tires: tireScreechIntensity
     };
   }
   if (coastOwnsDrivingSound()) {
     coastSoundFrame = {
-      thrust: isLiftFiring || rearActive || isFrontRetroFiring,
-      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || isFrontRetroFiring,
+      thrust: isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),
+      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || (isFrontRetroFiring && driveInput.reverse > 0),
       tires: tireScreechIntensity
     };
   }
@@ -2104,8 +2104,8 @@ function updateSimulation(dt, presentationDt = dt) {
   if (!cityOwnsDrivingSound() && !coastOwnsDrivingSound()) sound.update(
     // Stable 200 km/h audio reference: boost changes performance, not rev ratio.
     Math.abs(state.speed) / (200.0 / 3.6),
-    isLiftFiring || rearActive || isFrontRetroFiring,
-    anyAttitude || isFrontRetroFiring,
+    isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),
+    anyAttitude || (isFrontRetroFiring && driveInput.reverse > 0),
     false,
     tireScreechIntensity,
     Math.max(driveInput.throttle, driveInput.boost, driveInput.reverse)

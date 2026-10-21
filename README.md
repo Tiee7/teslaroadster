@@ -388,3 +388,8 @@ The retained 44 coastal buildings and 94 palms preserve their exact published di
 - **Coast landscape:** exclusive flat terrain/bank/asphalt top faces remove large coplanar overlaps instead of raising the physical road. Two additional real inland hill masses and eight terrain-grounded hillside buildings extend the retained44 coastal buildings/94 palms. Separate foundation base and absolute roof heights preserve collisions and roof refill. Current CPU structure is85 mesh batches/167,110 maximum static triangles under the unchanged96/180,000 budget; this is not GPU draw calls/FPS.
 
 `verification/driving-feedback-20261021/` contains exact baseline fixtures, failed witnesses, numerical epoch proof, real 6-lane merge/long-run OBB regressions, source-to-bundle checks, and clearly labelled CPU flat-colour projections. These do not replace a supported browser/phone WebGL and listening check. Historical milestone records above retain their own measured counts and source identities; they are not claims that newly authorized source files stayed byte-identical.
+
+
+### Quiet H/foot brake · 2026-10-21
+
+H and the equivalent foot-brake touch input no longer add synthesized retro-jet/attitude noise. Braking forces, gas use, safety handling and visible retro nozzles are unchanged. Separately requested W/boost/lift/RCS and S reverse still retain their normal sounds; the low V8, collision effects and music are unchanged. Exact old-source comparison, actual motion-to-audio control tests and qualified verification evidence are in `verification/quiet-h-brake-20261021/`.
