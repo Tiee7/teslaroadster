@@ -61,7 +61,7 @@ test('production render integration leaves map 1/3 and autopilot ownership uncha
   let now = 0;
   const context = vm.createContext({ currentMap: 'city', lastTime: 0, state: {}, trafficCars: [], camera: { position: {} },
     RoadsterCityClock: api, performance: { now: () => now }, requestAnimationFrame() {}, updateSimulation: (dt, present) => { steps.push(dt); presentations.push(present); },
-    updateDestroyedScores() {}, renderer: { render() {} }, scene: {},
+    updateDestroyedScores() {}, renderer: { render() {} }, scene: {}, sound: { update() {} },
     document: { hidden: false, getElementById: id => ({ classList: { contains: () => !overlays.has(id) } }),
       addEventListener: (id, fn) => { events[id] = fn; } },
     window: { addEventListener: (id, fn) => { events[id] = fn; }, RoadsterRanked: { tick() {} },

@@ -232,8 +232,8 @@ test('invalid inputs and extreme speed keep V8 pitch, filter, and level finite a
       sound.update(speed, false, false, false, 0, load);
       assert.ok(Object.values(sound.engineVoice).every(Number.isFinite));
       assert.ok(sound.engineGain.gain.value >= 0 && sound.engineGain.gain.value <= .084);
-      assert.ok(sound.engineVoice.rpm >= 850 && sound.engineVoice.rpm <= 6800);
-      assert.ok(sound.engineFilter.frequency.value >= 360 && sound.engineFilter.frequency.value <= 2200);
+      assert.ok(sound.engineVoice.rpm >= 850 && sound.engineVoice.rpm < 4100);
+      assert.ok(sound.engineFilter.frequency.value >= 360 && sound.engineFilter.frequency.value <= 1450);
     }
   }
   sound.update(.8, false, false, false); assert.ok(sound.engineGain.gain.value > 0);
@@ -257,9 +257,10 @@ test('production physics passes actual analog drive load without changing the ex
       rollInput: 0, pitchInput: 0, yawInput: 0, airJetLeft: false, airJetRight: false, canUseRCS: true,
       isLiftFiring: false, rearActive: true, isFrontRetroFiring: false, tireScreechIntensity: .42,
       sound: {update(...values) { args = values; }},
+      cityOwnsDrivingSound: () => false,
     });
     vm.runInContext(callSite, context);
-    assert.deepEqual(args, [.5, true, false, false, .42, Math.max(...Object.values(driveInput))]);
+    assert.deepEqual(args, [40 / (200 / 3.6), true, false, false, .42, Math.max(...Object.values(driveInput))]);
     const {sound} = harness(); sound.init(); sound.update(...args);
     assert.equal(sound.engineVoice.load, args[5]);
     assert.equal(sound.thrusterGain.gain.value, .24, 'engine load does not redefine the existing rocket audio');

@@ -594,7 +594,7 @@ function updateSimulation(dt, presentationDt = dt) {
         car.mesh.rotation.z += car.blastVRoll * dt;
       }
     });
-    sound.update(0, false, false, true);
+    if (!cityOwnsDrivingSound()) sound.update(0, false, false, true);
     document.getElementById('ui-flight-mode').textContent = t.modeDestroyed;
     document.getElementById('ui-flight-mode').className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300';
     document.getElementById('val-hull-pct').textContent = '0%';
@@ -1919,6 +1919,16 @@ function updateSimulation(dt, presentationDt = dt) {
     state.lightningFlash = Math.max(0, state.lightningFlash - dt * 3.2);
   }
 
+  // Capture resolved thrust, not Web Audio automation, on each city physics tick.
+  // The render owner below samples fresh speed/input even on a zero-tick frame.
+  if (cityOwnsDrivingSound()) {
+    citySoundFrame = {
+      thrust: isLiftFiring || rearActive || isFrontRetroFiring,
+      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || isFrontRetroFiring,
+      tires: tireScreechIntensity
+    };
+  }
+
   // The physics, contact, scoring, G/thermal/downforce feedback above still run
   // every city tick. Expensive canvas/DOM/camera presentation runs once per
   // rendered frame, not six times on a 10 fps phone.
@@ -2033,8 +2043,9 @@ function updateSimulation(dt, presentationDt = dt) {
   }
 
   const anyAttitude = (rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS;
-  sound.update(
-    Math.abs(state.speed) / state.maxSpeed,
+  if (!cityOwnsDrivingSound()) sound.update(
+    // Stable 200 km/h audio reference: boost changes performance, not rev ratio.
+    Math.abs(state.speed) / (200.0 / 3.6),
     isLiftFiring || rearActive || isFrontRetroFiring,
     anyAttitude || isFrontRetroFiring,
     false,
@@ -2234,6 +2245,22 @@ function updateSimulation(dt, presentationDt = dt) {
 // existing frame ownership and physics path. UI pauses discard only paused time.
 const cityFrameClock = RoadsterCityClock.createClock();
 let cityFocusLost = false;
+let citySoundFrame = null;
+function cityOwnsDrivingSound() {
+  return currentMap === 'city' && !window.RoadsterDemo?.isActive?.();
+}
+function updateCityFrameSound(active) {
+  if (!active) citySoundFrame = null;
+  if (!active || !citySoundFrame || state.isDestroyed) {
+    // This existing mute path does not resume a suspended AudioContext.
+    sound.update(0, false, false, true);
+    return;
+  }
+  const input = readDriveInput();
+  sound.update(Math.abs(state.speed) / (200.0 / 3.6),
+    citySoundFrame.thrust, citySoundFrame.attitude, false, citySoundFrame.tires,
+    Math.max(input.throttle, input.boost, input.reverse));
+}
 function cityFrameActive() {
   return currentMap === 'city' && !document.hidden && !cityFocusLost &&
     !['modal-map-select', 'modal-help'].some(id => {
@@ -2243,7 +2270,11 @@ function cityFrameActive() {
 }
 function resetCityFrameClock() {
   cityFrameClock.clear();
-  if (currentMap === 'city') lastTime = performance.now();
+  if (currentMap === 'city') {
+    lastTime = performance.now();
+    citySoundFrame = null;
+    if (cityOwnsDrivingSound()) updateCityFrameSound(false);
+  }
 }
 window.RoadsterCityFrame = Object.freeze({ reset: resetCityFrameClock, stats: cityFrameClock.stats });
 window.addEventListener('blur', () => { cityFocusLost = true; resetCityFrameClock(); });
@@ -2261,10 +2292,11 @@ function animate(now) {
   if (window.RoadsterDemo?.isActive()) {
     window.RoadsterDemo.advanceFrame(frameSeconds, updateSimulation);
   } else if (currentMap === 'city') {
-    cityFrameClock.advance(frameSeconds, (step, presentationDt) => {
+    const cityFrame = cityFrameClock.advance(frameSeconds, (step, presentationDt) => {
       updateSimulation(step, presentationDt);
       window.RoadsterTaxi?.tick(false);
     }, cityFrameActive);
+    updateCityFrameSound(!cityFrame.suspended && cityFrameActive());
   } else {
     cityFrameClock.clear();
     updateSimulation(dt);

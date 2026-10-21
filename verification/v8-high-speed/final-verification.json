@@ -1,0 +1,21 @@
+{
+  "tested_commit": "d3a3722e9a55567bf949cbf269bb03d3148f049c",
+  "node": {
+    "tests": 749,
+    "passed": 749,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "duration_ms": 321941.289509,
+    "log_sha256": "21a4a0f93d7e26ab78c24945ae2a0d4d2c66f8867269583b92b8343c48875776"
+  },
+  "check": "passed",
+  "build": "passed; generated index unchanged",
+  "checked_at": "2026-10-21T03:40:10.829462+00:00",
+  "publication": "not yet published",
+  "limits": [
+    "CPU reference audio only, not subjective or native OfflineAudioContext listening",
+    "Cloud read-only evaluation scope did not expose offline audio constructors",
+    "No WebGL or real-phone FPS acceptance claim"
+  ]
+}
