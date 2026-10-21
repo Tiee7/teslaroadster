@@ -4,9 +4,11 @@ Base: live audio release main `affe5aae0b78b52bd25feaba582e27f85bf8cc7c`.
 
 - 99 buildings: 64 low mid-block buildings (18–28 m, 12 m road-edge setback)
   plus 35 recessed towers (76–120 m, one 180 m landmark, >=75 m road setback).
-  No tall corner walls. All 49 junctions clear 40 m sight triangles and 10584
+  No tall corner walls. All 49 junctions clear 40 m sight triangles and 42336
   tested cross-traffic sight segments at 45/30/15 m approach: three ego lanes ×
-  three cross-traffic lanes, both cross-street sides and four approach directions.
+  three cross-traffic lanes, both carriageway offsets for each vehicle, both
+  cross-street sides and four approach directions. Production motion also lands
+  and recharges correctly at all 99 roof centers, without collision impacts.
 - Preserve 35 rooftop refill functions and two visual skybridge groups within
   the original two blocks. Tower positions and bridge centers change; bridge
   collision/landing support was not implemented before and is not claimed here.

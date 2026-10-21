@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync, existsSync } from 'node:fs';
+import { motionHarness } from './helpers/motion-harness.mjs';
 const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 const config = read('src/config.js'), world = read('src/world.js'), vehicles = read('src/vehicles.js');
 const runtime = process.env.ROADSTER_THREE_RUNTIME || '/tmp/roadster-three.min.js';
@@ -80,6 +81,14 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     const a = h.buildings[i], b = h.buildings[j];
     assert.ok(a.maxX <= b.minX || a.minX >= b.maxX || a.maxZ <= b.minZ || a.minZ >= b.maxZ, 'no tower/frontage box overlaps');
   }
+  for (const b of h.buildings) {
+    const driving = motionHarness({x:b.x,z:b.z,y:b.height+.001,vy:-.1,airRemaining:5});
+    driving.context.cityBuildings.push(...h.buildings);
+    driving.step(1/60);
+    assert.ok(Math.abs(driving.state.y-b.height)<1e-8, 'production motion lands on the same rendered roof');
+    assert.equal(driving.state.vy,0); assert.equal(driving.impacts.length,0);
+    assert.ok(driving.state.airRemaining>5, 'existing landed roof recharge still works');
+  }
 });
 function segmentHitsBox(a, b, box) {
   let low = 0, high = 1;
@@ -95,11 +104,11 @@ test('all 49 city junctions expose cross traffic from four driving approaches be
   skip: !existsSync(runtime) && 'Official Three r128 is required for geometry checks',
 }, () => {
   const h = layout(); let rays = 0;
-  for (const x of h.roads) for (const z of h.roads) for (const axis of ['x','z']) for (const sign of [-1,1]) for (const distance of [45,30,15]) for (const crossSign of [-1,1]) for (const lane of [1.75,5.25,8.75]) for (const crossLane of [1.75,5.25,8.75]) {
+  for (const x of h.roads) for (const z of h.roads) for (const axis of ['x','z']) for (const sign of [-1,1]) for (const distance of [45,30,15]) for (const crossSign of [-1,1]) for (const lane of [1.75,5.25,8.75]) for (const crossLane of [1.75,5.25,8.75]) for (const ownSide of [-1,1]) for (const crossSide of [-1,1]) {
     const other = axis === 'x' ? 'z' : 'x';
-    const eye = {x,z}, target = {x,z}; eye[axis] += sign * distance; eye[other] += sign * lane;
-    target[other] += crossSign * 80; target[axis] -= crossSign * crossLane;
+    const eye = {x,z}, target = {x,z}; eye[axis] += sign * distance; eye[other] += ownSide * sign * lane;
+    target[other] += crossSign * 80; target[axis] += crossSide * crossSign * crossLane;
     assert.ok(h.buildings.every(box => !segmentHitsBox(eye, target, box)), `occluded ${x},${z} ${axis}${sign} distance ${distance}`); rays++;
   }
-  assert.equal(rays, 10584, 'three ego lanes × three cross-traffic lanes, both sides and four approaches');
+  assert.equal(rays, 42336, 'three lanes on both ego and cross-traffic carriageways, both sides and four approaches');
 });
