@@ -30,7 +30,7 @@ function harness() {
     EquirectangularReflectionMapping: 303, RGBAFormat: 1023, RepeatWrapping: 1000,
     LinearFilter: 1006, LinearMipmapLinearFilter: 1008,
     MathUtils: { clamp: (n, low, high) => Math.min(high, Math.max(low, n)) } };
-  const color = () => ({ setHex(hex) { this.hex = hex; } });
+  const color = () => ({ isColor:true, setHex(hex) { this.hex = hex; } });
   const light = () => ({ color: color(), position: { set(...values) { this.values = values; } } });
   const scene = { background: color(), fog: { color: color() } };
   const context = vm.createContext({ THREE, Uint8Array, scene, window: {},

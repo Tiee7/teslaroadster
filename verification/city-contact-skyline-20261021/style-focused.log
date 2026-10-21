@@ -1,0 +1,57 @@
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.671501ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (778.066594ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (851.567296ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (86.884887ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.518613ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (2.113915ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (2.128797ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (57.361242ms)
+✔ all stops and shortest-route segments stay on the connected city asphalt grid (92.126699ms)
+✔ pickup stops and every drivable route edge clear the actual generated city building collision boxes (99.989834ms)
+✔ five distinct spaced waiting passengers have long reachable trips on every refill (199.606568ms)
+✔ green destination arrival stays exactly 2m in 3D, including swept motion (0.431072ms)
+✔ white pickup radius doubles to 4m without widening destination or permitting airborne arrivals (337.792388ms)
+✔ public entry explains pickup radius and independent fares in both languages (3.304666ms)
+✔ multi-passenger state machine refills five immediately, preserves its primary and pays each ride once (85.505555ms)
+✔ distance-based fares are integral, monotonic and bounded at 1000–3000 (0.23876ms)
+✔ repeated starts do not duplicate passengers; reset settles loss then clears the new round (86.521325ms)
+✔ city passengers automatically start once after map/reset, with no user switch or off preference (233.101555ms)
+✔ automatic passengers respect hidden/menu/destruction and ranked ownership without abort loops (130.448403ms)
+✔ real shared keyboard preserves typing and bracket zoom without an equals passenger switch (95.29321ms)
+✔ scene has five readable double-sided white beams and only one green destination while occupied (91.40144ms)
+✔ map exit and repeated stops fully remove and dispose markers and the active-only score display (120.977188ms)
+✔ bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets (133.739916ms)
+✔ numeric passenger score survives language and HUD/camera changes without adding visual text (73.517492ms)
+✔ menus pause transitions; destruction clears the occupied ride before any payout (62.964913ms)
+✔ integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state (2.105412ms)
+✔ stop clearance rejects the entire column footprint, trim margin and city boundary (0.581643ms)
+✔ landing and low altitude flight never sweep a pickup or destination (121.040573ms)
+✔ crashes settle a single double-fare penalty and freeze the result until a new round (72.292081ms)
+✔ empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn (83.618262ms)
+✔ taxi model itself blocks all payouts after death and applies nonnegative loss only once (108.075762ms)
+✔ bottom-right passenger HUD participates in footer bounds and releases its active layout (67.217309ms)
+✔ cockpit passenger strip shows live destination distance and local score without covering speed or tank (81.60283ms)
+✔ destination bearing maps vehicle-forward up and left/right correctly at every heading (0.577297ms)
+✔ top-left navigation shows only arrow and live meters across every HUD mode and camera (74.042485ms)
+✔ corner arrow and meters clear safe areas, header controls and rotation on phone and desktop (0.477017ms)
+✔ corner arrow and meter digits have silhouette contrast without a background, border or card (73.653956ms)
+✔ meter digits follow the occupied destination live, round once and reset between passengers (79.81224ms)
+✔ navigation crosses north and +/-180 smoothly without a reverse full-turn jump (253.497353ms)
+✔ menus pause passenger transitions without freezing the live vehicle-relative bearing (58.660198ms)
+✔ delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space (376.325987ms)
+✔ short landscape notice space is bounded by the header, footer and occupied-trip row (0.986301ms)
+✔ coast defaults use real elevated stops, true Y, bounded six marker pools and map-owned cleanup (396.380271ms)
+✔ coast reset starts passengers after the actual elevated spawn and traffic recovery, never at stale city Y (0.531478ms)
+✔ coherent163-city architecture preserves original99 collider/functions and stays below prior227-city draw/triangle budgets (158.963293ms)
+ℹ {"scope":"Actual Three r128 scene structure; not measured GPU renderer calls/FPS","baseline":{"meshes":758,"triangles":45000,"casters":99,"shadowTriangles":1188,"geometries":721,"materials":53,"textureBytes":0},"candidate":{"meshes":59,"triangles":48128,"casters":3,"shadowTriangles":1956,"geometries":51,"materials":21,"textureBytes":393216}}
+✔ coast details exist at all distances with lower maximum/shadow budgets, never proximity upload churn (1209.422268ms)
+ℹ {"active":true,"builds":1,"disposals":0,"failedBuilds":0,"cachedCpuPixelBytes":262144,"ownedLights":2,"shadowMapResolution":1024,"shadowSpanMetres":160,"ownedGeometries":41,"ownedMaterials":53,"ownedTextures":16,"textureBytes":1256107,"ownedGeometryBufferBytes":4371088,"ownedInstanceBufferBytes":703836,"staticMeshDraws":83,"staticTriangles":153958,"maximumStaticTriangles":153958,"nearPalms":0,"farPalms":94,"foliageRefreshes":0,"nearDetailInstances":248,"nearDetailCapacity":248,"nearDetailMatrixBytes":15872,"detailRefreshes":0,"shadowCasterBatches":30,"shadowCasterTriangles":75158,"maximumShadowCasterTriangles":75158,"instances":10878,"buildings":52,"retainedCoastalBuildings":44,"hillsideBuildings":8,"palms":94,"textureEstimateScope":"Owned sampled texture levels only; excludes shadow render target and driver allocations","performanceBoundary":"Static scene structure, not measured renderer draw calls or FPS"}
+✔ renderer pixels are explicitly bounded without changing camera FOV or world metres (4.584625ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3865.738118

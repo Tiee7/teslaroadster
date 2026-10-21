@@ -1,0 +1,44 @@
+{
+  "scope": "CPU emitted highway-only projection old39169/new source epoch; no GPU/page driving claim",
+  "base": "39169ed88babd1089954212c499c6b0a94eb55d8",
+  "oldProgram": "03384f04166142255cc51b06f40a6843dc5069cf13ab93c7b4652190c87a2284",
+  "newProgram": "b8a4530bb61a6e1d134142d0257a0abc3aa1730ba8abe6079ea637a2ba8fde47",
+  "rows": [
+    {
+      "scenario": "throttle",
+      "ticks": 120,
+      "everyFieldExact": true
+    },
+    {
+      "scenario": "coast",
+      "ticks": 120,
+      "everyFieldExact": true
+    },
+    {
+      "scenario": "brake",
+      "ticks": 120,
+      "everyFieldExact": true
+    },
+    {
+      "scenario": "steer",
+      "ticks": 120,
+      "everyFieldExact": true
+    },
+    {
+      "scenario": "reverse",
+      "ticks": 120,
+      "everyFieldExact": true
+    },
+    {
+      "scenario": "boost",
+      "ticks": 120,
+      "everyFieldExact": true
+    },
+    {
+      "scenario": "air-coast",
+      "ticks": 120,
+      "everyFieldExact": true
+    }
+  ],
+  "exactTicks": 840
+}

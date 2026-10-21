@@ -1,0 +1,10 @@
+✔ city daylight is a direction-continuous cached six-face sky, not a flat colour or a sun object (772.254398ms)
+✔ day sky never leaks to highway/coast weather, and city shells, glazing and paving restore night without uploads (741.627541ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1607.161022

@@ -1,0 +1,18 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (35.848474ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (15.984824ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (8.133515ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (68.029139ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (181.49275ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (3.911043ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (521.471561ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (2.121125ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (8.62527ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (10.824225ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 973.078338

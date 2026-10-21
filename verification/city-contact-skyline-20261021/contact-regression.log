@@ -1,0 +1,23 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (25.491105ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (11.452035ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (5.801014ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (49.911894ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (135.857303ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (1.766168ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (144.616609ms)
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.459397ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (1247.782143ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (763.724362ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (49.632222ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.070766ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (1.504884ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (2.31779ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (36.703123ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2216.501122

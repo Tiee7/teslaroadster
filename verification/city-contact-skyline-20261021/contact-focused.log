@@ -1,0 +1,16 @@
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.551253ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (1165.487251ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (718.222633ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (45.190498ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.028083ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (1.438697ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (1.537221ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (32.320796ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2081.972071

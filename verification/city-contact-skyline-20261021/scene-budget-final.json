@@ -1,0 +1,28 @@
+{
+  "scope": "actual native Three r128 CPU scene structure; not renderer draw-call/FPS/thermal measurement. Texture estimate excludes shadow render targets/driver allocations and shared road detail/studio environment.",
+  "baselineMain": "39169ed88babd1089954212c499c6b0a94eb55d8",
+  "baseline": {
+    "buildings": 227,
+    "pads": 35,
+    "meshes": 61,
+    "triangles": 51144,
+    "shadowMeshes": 6,
+    "shadowTriangles": 2724,
+    "materials": 23,
+    "facadeRaw": 393216,
+    "skyRaw": 0,
+    "ownedSampledMipEstimate": 524288
+  },
+  "candidate": {
+    "buildings": 163,
+    "pads": 35,
+    "meshes": 59,
+    "triangles": 48128,
+    "shadowMeshes": 3,
+    "shadowTriangles": 1956,
+    "materials": 21,
+    "facadeRaw": 393216,
+    "skyRaw": 393216,
+    "ownedSampledMipEstimate": 1048576
+  }
+}

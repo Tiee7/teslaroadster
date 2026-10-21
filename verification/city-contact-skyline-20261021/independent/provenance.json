@@ -1,0 +1,27 @@
+[
+  {
+    "file": "d72-key-contact-review.md",
+    "source": "/workspace/shared/city-air-collision-audit-20261021/candidate-d72efc47/README.md",
+    "sha256": "f0197da47d434fd43e1c6a1c2784b56e84ac715c324ffdd8ad75997f0549bc8f"
+  },
+  {
+    "file": "24b-key-contact-summary.json",
+    "source": "/workspace/shared/city-air-collision-audit-20261021/candidate-24b582be/core-summary.json",
+    "sha256": "306953e27befdfafc7980dedfefe557de1c07260820656e7a3965bd617549624"
+  },
+  {
+    "file": "24b-fast-roof-FAILED.json",
+    "source": "/workspace/shared/city-air-collision-audit-20261021/candidate-24b582be/npc-review/roof-fast-cushion-counterexample-summary.json",
+    "sha256": "f7341fbef224d18dc1f1a7df7ad965458010ea93a24ad4dd24fc71c5fba6b1f1"
+  },
+  {
+    "file": "cb4-final-fast-roof-review.md",
+    "source": "/workspace/shared/city-air-collision-audit-20261021/candidate-cb4ba244/README.md",
+    "sha256": "ee4fe2db11d882c751a89bc8b7786d93583161fd3a932805329d61b011876bb4"
+  },
+  {
+    "file": "cb4-final-fast-roof-summary.json",
+    "source": "/workspace/shared/city-air-collision-audit-20261021/candidate-cb4ba244/roof-final-summary.json",
+    "sha256": "c9206630ac73690f70de1aff7e42c763b87540f9f6d686984a25b16dfc84e157"
+  }
+]

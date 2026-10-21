@@ -1,0 +1,79 @@
+{
+  "baseMain": "39169ed88babd1089954212c499c6b0a94eb55d8",
+  "testedProductionCommit": "ac5db8d6bf05cb59941875f5aa164cb83c8893bc",
+  "sourcePinsExact": true,
+  "checkedAt": "2026-10-21T12:40:05.762418+00:00",
+  "fullRegression": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "log": "full-test-final.log",
+    "terminalExitCode": 1,
+    "tests": 960,
+    "pass": 958,
+    "fail": 2,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 1033897.637441,
+    "note": "Both failures were the incomplete jet-effects Three fixture, not runtime assertions; production source remained frozen."
+  },
+  "fixtureResolution": {
+    "onlyCodeChange": "tests/helpers/jet-physics-harness.mjs declares missing nativeBox3 unavailable instead of Proxy Geometry fallback",
+    "productionDiffSinceTestedCommit": false,
+    "command": "node --test tests/jet-effects.test.mjs",
+    "log": "jet-effects-harness-final.log",
+    "tests": 12,
+    "pass": 12,
+    "fail": 0,
+    "durationMs": 5527.521371
+  },
+  "combinedCoverage": {
+    "uniqueTests": 960,
+    "resolvedPass": 960,
+    "unresolvedFailures": 0,
+    "singleFullGreenRun": false
+  },
+  "lua": {
+    "pass": 24,
+    "fail": 0,
+    "log": "lua-final.log"
+  },
+  "projection": {
+    "identityGuards": 29,
+    "mirrorChecks": 3,
+    "numericOldNewExactTicks": 840,
+    "programSHA256": "b8a4530bb61a6e1d134142d0257a0abc3aa1730ba8abe6079ea637a2ba8fde47"
+  },
+  "check": {
+    "passed": true,
+    "log": "check-release.log"
+  },
+  "build": {
+    "passed": true,
+    "log": "build-final.log"
+  },
+  "rootBundle": {
+    "bytes": 4919337,
+    "sha256": "4544f0f5e2d932cdb732a5fa7b99d28ed0ca581eb78382d5c70685d68fd9b7e4",
+    "gitBlob": "3d46821699c391507369effe9cc90467a84c2e67"
+  },
+  "cssSource": {
+    "bytes": 37257,
+    "sha256": "7111fd1d4152604981e0026acdaaefb09ac4408298df51c5a83211f373392b75"
+  },
+  "styleContent": {
+    "bytes": 37259,
+    "sha256": "635952f4b91e641ee44471676f956ce342692b591dc4f67ec8c34321fed524f7"
+  },
+  "unchangedSourceSHA256": {
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/taxi.js": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "src/coast-map.js": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "src/coast-road-network.js": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/styles.css": "7111fd1d4152604981e0026acdaaefb09ac4408298df51c5a83211f373392b75"
+  },
+  "GPUVisualAcceptance": false,
+  "deviceTemperatureMeasured": false,
+  "visualBoundary": "Own cloud Three r128 WebGL context initialization failed2026-10-21T11:32:59Z. Included whole-street CPU geometry/texture studies use approximate lighting, not real game screenshots."
+}

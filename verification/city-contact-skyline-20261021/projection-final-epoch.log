@@ -1,0 +1,30 @@
+{"output":"/workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/numeric-projection-kernel.generated.mjs","generatedOnly":true,"programSourceSha256":"b8a4530bb61a6e1d134142d0257a0abc3aa1730ba8abe6079ea637a2ba8fde47"}
+{"output":"/workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/verification/demo-continuous/browser-static-projection.generated.js","productionOutput":"/workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/src/demo-numeric-projection.js","emittedOnly":true,"artifactSha256":"d8e84ccea869fd0f45eb9036051fa2943680f7a47b76f74a00459623598d4d64"}
+{
+  "passed": true,
+  "totalTests": 29,
+  "byKind": {
+    "positive-identity": 3,
+    "first-bind-rejection": 9,
+    "cached-reference-or-value-rejection": 5,
+    "positive-build": 1,
+    "build-source-rejection": 8,
+    "build-generator-rejection": 1,
+    "build-profile-rejection": 1,
+    "build-artifact-rejection": 1
+  },
+  "physicsStepsExecuted": 0,
+  "sourceAndArtifactsUnchanged": true,
+  "numericalCoreSha256": "b8a4530bb61a6e1d134142d0257a0abc3aa1730ba8abe6079ea637a2ba8fde47"
+}
+✔ src projection artifact passes complete build identity and equals verification mirror (19.562222ms)
+✔ src projection stale-byte mutation rejects without changing verification mirror (16.176849ms)
+✔ emitter --check rejects src-versus-verification mirror desynchronization (78.984829ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 120.08099

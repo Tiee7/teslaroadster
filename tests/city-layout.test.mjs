@@ -31,8 +31,8 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
 }, () => {
   const h = layout(); assert.equal(h.c.THREE.REVISION, '128');
   assert.equal(h.width, 24); assert.equal(h.lane, 4); assert.equal(h.spawn, 6); assert.equal(h.stop, 8);
-  assert.equal(h.buildings.length, 227);
-  assert.equal(h.buildings.filter(b => b.kind === 'low').length, 192);
+  assert.equal(h.buildings.length, 163);
+  assert.equal(h.buildings.filter(b => b.kind === 'low').length, 128);
   assert.equal(h.buildings.filter(b => b.isHelipad).length, 35, 'retain all 35 rooftop refill functions');
   const landmarks = h.buildings.filter(b => b.kind === 'landmark');
   assert.equal(landmarks.length, 1); assert.equal(landmarks[0].height, 180);
@@ -48,9 +48,9 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     if (o.geometry?.type === 'BoxGeometry' && o.castShadow) boxes++;
     if (o.geometry?.type === 'CylinderGeometry' && o.geometry.parameters.height === 14) { beams+=o.count||1; assert.equal(o.material.opacity, .10); }
   });
-  assert.equal(bridges, 2); assert.equal(beams, 35); assert.equal(lights, 0); assert.equal(boxes, 6);
+  assert.equal(bridges, 2); assert.equal(beams, 35); assert.equal(lights, 0); assert.equal(boxes, 3);
   assert.ok(meshes < 100, 'batch the denser city rather than multiplying per-window/roof scene work');
-  assert.equal(h.root.userData.cityArchitecture.families.length,6);assert.equal(new Set(h.buildings.map(b=>b.family)).size,6);
+  assert.equal(h.root.userData.cityArchitecture.families.length,3);assert.equal(new Set(h.buildings.map(b=>b.family)).size,3);
   for (const pair of [-1050, -750]) {
     const endpoints = h.buildings.filter(b => b.bridgePair === pair);
     assert.equal(endpoints.length, 2); assert.ok(endpoints.every(b => b.blockX === -750 && b.blockZ === pair));

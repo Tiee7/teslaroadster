@@ -33,6 +33,24 @@
     }
     return geometryCache.get(index);
   }
+  const cityBoundsCache=new Map(),cityGeometryBoundsCache=new Map();
+  function cityBounds(id){
+    if(!cityBoundsCache.has(id)){
+      const bounds={minX:Infinity,minY:Infinity,minZ:Infinity,maxX:-Infinity,maxY:-Infinity,maxZ:-Infinity};
+      const variant=variantsById.get(id),indices=new Set([...variant.levels.near.geometries,...variant.levels.far.geometries]);
+      for(const index of indices){
+        if(!cityGeometryBoundsCache.has(index)){
+          // Bounds only: do not decode/upload the near meshes for far NPCs.
+          const record=archivedTrafficAssets.geometryPool[index],bytes=atob(record.packed),local={minX:Infinity,minY:Infinity,minZ:Infinity,maxX:-Infinity,maxY:-Infinity,maxZ:-Infinity};
+          for(let vertex=0;vertex<record.vertexCount;vertex++)for(let j=0;j<3;j++){const offset=(vertex*3+j)*2,word=bytes.charCodeAt(offset)|(bytes.charCodeAt(offset+1)<<8),value=(word&32768?word-65536:word)/10000,axis=['X','Y','Z'][j];local['min'+axis]=Math.min(local['min'+axis],value);local['max'+axis]=Math.max(local['max'+axis],value);}
+          cityGeometryBoundsCache.set(index,local);
+        }
+        const b=cityGeometryBoundsCache.get(index);for(const axis of['X','Y','Z']){bounds['min'+axis]=Math.min(bounds['min'+axis],b['min'+axis]);bounds['max'+axis]=Math.max(bounds['max'+axis],b['max'+axis]);}
+      }
+      cityBoundsCache.set(id,Object.freeze(bounds));
+    }
+    return cityBoundsCache.get(id);
+  }
   function setDetail(car, level) {
     if (car.userData.trafficDetail === level) return;
     const definition = variantsById.get(car.userData.trafficVariant).levels[level];
@@ -84,6 +102,7 @@
   populateTraffic = function(count) {
     const bounded = Number.isFinite(count) ? Math.max(0, Math.min(MAX_TRAFFIC, Math.floor(count))) : 0;
     originalPopulate(bounded);
+    if(typeof currentMap!=='undefined'&&currentMap==='city')for(const car of trafficCars)car.mesh.userData.cityContactBounds=cityBounds(car.mesh.userData.trafficVariant);
   };
   function updateTrafficVehicleLods(cars, eye) {
     let kept = 0;
@@ -111,6 +130,7 @@
   }
   window.RoadsterTrafficAssets = Object.freeze({
     updateLods: updateTrafficVehicleLods,
+    cityContactBounds: mesh=>mesh.userData.cityContactBounds||(mesh.userData.cityContactBounds=cityBounds(mesh.userData.trafficVariant)),
     variants: Object.freeze(variants.map(variant => Object.freeze({ id: variant.id, label: variant.label,
       archiveEntries: Object.freeze([...variant.archiveEntries]), nearTriangles: variant.levels.near.triangles,
       farTriangles: variant.levels.far.triangles }))),

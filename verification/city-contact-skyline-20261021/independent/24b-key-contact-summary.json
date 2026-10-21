@@ -1,0 +1,105 @@
+{
+  "revision": "24b582be25ed884c3f59616e01f742fec631510d",
+  "finite": {
+    "x": 6,
+    "y": 51.76253649154296,
+    "z": -1197.8506018518713,
+    "hull": 100,
+    "impacts": 0,
+    "explosions": 0
+  },
+  "infinite": {
+    "x": 6,
+    "y": 70.70413100491234,
+    "z": 1198.2137500000274,
+    "hull": 100,
+    "explosions": 0
+  },
+  "grazing": [
+    {
+      "name": "ground_east_parallel_building_0_side_1_gap_1.5",
+      "frames": 182,
+      "hull": 100,
+      "contacts": 0,
+      "fatal": false
+    },
+    {
+      "name": "ground_east_parallel_building_0_side_1_gap_2",
+      "frames": 182,
+      "hull": 100,
+      "contacts": 0,
+      "fatal": false
+    },
+    {
+      "name": "ground_east_parallel_building_0_side_1_gap_0",
+      "frames": 128,
+      "hull": 0,
+      "contacts": 1,
+      "fatal": true
+    }
+  ],
+  "corner": {
+    "high": {
+      "pose": {
+        "x": -939,
+        "y": 17,
+        "z": -1030.8,
+        "yaw": 0,
+        "pitch": 0.7853981633974483,
+        "roll": 0
+      },
+      "projected": true,
+      "solidContact": null
+    },
+    "low": {
+      "pose": {
+        "x": -939,
+        "y": 15,
+        "z": -1030.8,
+        "yaw": 0,
+        "pitch": 0.7853981633974483,
+        "roll": 0
+      },
+      "projected": true,
+      "solidContact": {
+        "depth": 0.36001899080250865,
+        "x": 0,
+        "z": 1
+      }
+    }
+  },
+  "positives": [
+    {
+      "name": "actual_low_boundary_speed_8",
+      "hull": 45.13468100054853,
+      "impactG": 13.805357142857131,
+      "fatal": false,
+      "impactCount": 1,
+      "explosions": 0
+    },
+    {
+      "name": "actual_low_boundary_speed_40",
+      "hull": 0,
+      "impactG": 28.71964285714284,
+      "fatal": true,
+      "impactCount": 1,
+      "explosions": 1
+    },
+    {
+      "name": "real_roof_0",
+      "hull": 100,
+      "impactG": 0,
+      "fatal": false,
+      "impactCount": 0,
+      "explosions": 0
+    },
+    {
+      "name": "real_roof_2",
+      "hull": 100,
+      "impactG": 0,
+      "fatal": false,
+      "impactCount": 0,
+      "explosions": 0
+    }
+  ]
+}

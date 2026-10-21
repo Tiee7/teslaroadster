@@ -8,6 +8,10 @@ export function installJetPhysics(context) {
   Object.assign(context,{cityBuildings:[],scrollingProps:[],sound:{speakAlert(){},playSonicBoom(){}},showBanner(){},triggerPhysicsCollision(){},cameraModeIndex:0});
   context.document.getElementById ||= () => ({classList:{add(){},remove(){}}});
   context.THREE.MathUtils = threeMathUtils;
+  // This plume/input fixture intentionally has no native world-matrix/Box3
+  // implementation. Its proxy's generic Geometry fallback is not a real Box3.
+  // Actual visible-body bounds/contact are tested with native r128 elsewhere.
+  context.THREE.Box3 = undefined;
   vm.runInContext(`${source('driving-score.js')}\n${source('config.js')}\nconst keys={};\n${section('function wrapAnglePi(', 'function updateSimulation(')}
   function testJetFrame(dt) {
     const t=I18N[currentLang];
