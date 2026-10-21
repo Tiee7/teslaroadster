@@ -554,3 +554,5 @@ html, body {
   .mobile-utilities { grid-template-columns: 44px; left: calc(max(10px, env(safe-area-inset-left)) + var(--mobile-stick-size) + 35px); }
   .mobile-utilities button { min-height: 28px; }
 }
+/* Incident JSON stays selectable even when clipboard APIs are unavailable. */
+#crash-diagnostic-data { user-select: text; -webkit-user-select: text; cursor: text; }

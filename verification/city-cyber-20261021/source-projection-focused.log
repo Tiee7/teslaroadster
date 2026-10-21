@@ -1,0 +1,102 @@
+✔ authorized city layout and explicit renderer power/pixel policy preserve other shared world bytes and read-only coast bridge (6.119512ms)
+✔ actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles (11997.870114ms)
+✔ coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights (1806.864127ms)
+✔ r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets (3535.177679ms)
+✔ construction and final-attach faults restore scene atomically and dispose all returned partial private resources (3902.887191ms)
+✔ actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame (3822.347254ms)
+✔ direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion (1078.328455ms)
+✖ driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline (6.685113ms)
+✔ highway planner, traffic, and city clock remain byte-identical to terrain-v2 release (1.243529ms)
+✔ actual highway/realistic/coast retains every numeric field Object.is for 300 fixed ticks (72.192549ms)
+✔ actual highway/realistic/throttle retains every numeric field Object.is for 300 fixed ticks (65.025546ms)
+✔ actual highway/realistic/brake retains every numeric field Object.is for 300 fixed ticks (67.391491ms)
+✔ actual highway/realistic/boost retains every numeric field Object.is for 300 fixed ticks (62.71649ms)
+✔ actual highway/realistic/steer retains every numeric field Object.is for 300 fixed ticks (75.796149ms)
+✔ actual highway/realistic/reverse retains every numeric field Object.is for 300 fixed ticks (57.524552ms)
+✔ actual highway/realistic/jump retains every numeric field Object.is for 300 fixed ticks (59.781458ms)
+✔ actual highway/realistic/lift retains every numeric field Object.is for 300 fixed ticks (61.088541ms)
+✔ actual highway/realistic/freefall retains every numeric field Object.is for 300 fixed ticks (87.094531ms)
+✔ actual highway/realistic/retro retains every numeric field Object.is for 300 fixed ticks (61.940798ms)
+✔ actual highway/fantasy/coast retains every numeric field Object.is for 300 fixed ticks (63.947921ms)
+✔ actual highway/fantasy/throttle retains every numeric field Object.is for 300 fixed ticks (62.468635ms)
+✔ actual highway/fantasy/brake retains every numeric field Object.is for 300 fixed ticks (59.669909ms)
+✔ actual highway/fantasy/boost retains every numeric field Object.is for 300 fixed ticks (59.731258ms)
+✔ actual highway/fantasy/steer retains every numeric field Object.is for 300 fixed ticks (74.425793ms)
+✔ actual highway/fantasy/reverse retains every numeric field Object.is for 300 fixed ticks (56.82228ms)
+✔ actual highway/fantasy/jump retains every numeric field Object.is for 300 fixed ticks (47.648206ms)
+✔ actual highway/fantasy/lift retains every numeric field Object.is for 300 fixed ticks (54.691775ms)
+✔ actual highway/fantasy/freefall retains every numeric field Object.is for 300 fixed ticks (56.667723ms)
+✔ actual highway/fantasy/retro retains every numeric field Object.is for 300 fixed ticks (57.705909ms)
+✔ actual city/realistic/coast retains every numeric field Object.is for 300 fixed ticks (87.056551ms)
+✔ actual city/realistic/throttle retains every numeric field Object.is for 300 fixed ticks (90.803145ms)
+✔ actual city/realistic/brake retains every numeric field Object.is for 300 fixed ticks (75.621992ms)
+✔ actual city/realistic/boost retains every numeric field Object.is for 300 fixed ticks (88.090285ms)
+✔ actual city/realistic/steer retains every numeric field Object.is for 300 fixed ticks (86.519285ms)
+✔ actual city/realistic/reverse retains every numeric field Object.is for 300 fixed ticks (85.072276ms)
+✔ actual city/realistic/jump retains every numeric field Object.is for 300 fixed ticks (79.052559ms)
+✔ actual city/realistic/lift retains every numeric field Object.is for 300 fixed ticks (78.68334ms)
+✔ actual city/realistic/freefall retains every numeric field Object.is for 300 fixed ticks (78.485415ms)
+✔ actual city/realistic/retro retains every numeric field Object.is for 300 fixed ticks (78.444004ms)
+✔ actual city/fantasy/coast retains every numeric field Object.is for 300 fixed ticks (84.011875ms)
+✔ actual city/fantasy/throttle retains every numeric field Object.is for 300 fixed ticks (86.997578ms)
+✔ actual city/fantasy/brake retains every numeric field Object.is for 300 fixed ticks (79.601917ms)
+✔ actual city/fantasy/boost retains every numeric field Object.is for 300 fixed ticks (87.347273ms)
+✔ actual city/fantasy/steer retains every numeric field Object.is for 300 fixed ticks (89.884225ms)
+✔ actual city/fantasy/reverse retains every numeric field Object.is for 300 fixed ticks (87.364769ms)
+✔ actual city/fantasy/jump retains every numeric field Object.is for 300 fixed ticks (90.671634ms)
+✔ actual city/fantasy/lift retains every numeric field Object.is for 300 fixed ticks (80.247898ms)
+✔ actual city/fantasy/freefall retains every numeric field Object.is for 300 fixed ticks (75.470889ms)
+✔ actual city/fantasy/retro retains every numeric field Object.is for 300 fixed ticks (80.411358ms)
+✖ historical performance epoch is frozen; new city contact/skyline changes have an explicit authorized successor (12.299031ms)
+ℹ tests 50
+ℹ suites 0
+ℹ pass 48
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26336.913458
+
+✖ failing tests:
+
+test at tests/coast-map-isolation.test.mjs:5:1
+✖ driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline (6.685113ms)
+  AssertionError [ERR_ASSERTION]: world
+  + actual - expected
+  
+  + 'a9e6d7012cf068ef970fcfb906a8f4d30b02197381bcececdcbeb7faa8e7d2cf'
+  - '4024d390f95d79874e011bc4f693360b0a4503197bb4b7cf75ae0ae2c6e04ca2'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-map-isolation.test.mjs:10:180)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'a9e6d7012cf068ef970fcfb906a8f4d30b02197381bcececdcbeb7faa8e7d2cf',
+    expected: '4024d390f95d79874e011bc4f693360b0a4503197bb4b7cf75ae0ae2c6e04ca2',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/performance-source-boundary.test.mjs:3:1
+✖ historical performance epoch is frozen; new city contact/skyline changes have an explicit authorized successor (12.299031ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '3fea6cc7589cab0b0adcbb6edda5b7692263697d83f29de4af1a6a08ae0cf681'
+  - '001bf2c423646732cb08c3b55c4ef4db12247e7384a5fa0dab18b465098d02d0'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/performance-source-boundary.test.mjs:8:239)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '3fea6cc7589cab0b0adcbb6edda5b7692263697d83f29de4af1a6a08ae0cf681',
+    expected: '001bf2c423646732cb08c3b55c4ef4db12247e7384a5fa0dab18b465098d02d0',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

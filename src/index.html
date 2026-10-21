@@ -588,6 +588,11 @@
         </div>
       </div>
 
+      <p id="crash-collision-source" class="mono text-xs text-cyan-200 mb-3" hidden></p>
+      <details id="crash-diagnostics" class="text-left text-xs text-slate-300 mb-3" hidden>
+        <summary id="crash-diagnostics-label" class="cursor-pointer">Local collision diagnostic (not uploaded)</summary>
+        <textarea id="crash-diagnostic-data" readonly aria-label="Local collision diagnostic JSON" class="w-full h-24 mt-2 p-2 bg-slate-950 border border-slate-600 rounded mono text-xs"></textarea>
+      </details>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
         <button id="btn-crash-respawn" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-extrabold text-sm bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg hover:brightness-110 active:scale-95 transition cursor-pointer">
           <span id="crash-btn-respawn">↺ Repair & Respawn (R)</span>
@@ -731,6 +736,7 @@
   <!-- Modular Functional Scripts -->
   <script src="config.js"></script>
   <script src="city-clock.js"></script>
+  <script src="city-diagnostics.js"></script>
   <script src="driving-score.js"></script>
   <script src="audio.js"></script>
   <script src="music.js"></script>

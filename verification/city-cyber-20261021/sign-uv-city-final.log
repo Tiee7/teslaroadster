@@ -1,0 +1,37 @@
+✔ spatial broad phase never drops any rotated actual building candidate and bounds dense-city work (4375.676922ms)
+ℹ {"scope":"CPU broad phase, not device FPS/temperature","queries":1323,"allSolidParts":797,"maximumCandidates":8,"meanCandidates":2.5895691609977325,"verificationMs":4272.775635999999}
+✔ stepped tower empty shoulder volume remains driveable, while its real podium and upper wall remain solid (1826.994431ms)
+✔ all static cyber signs share one atlas, three forward landmarks and no time-dependent upload or added lights (1.151747ms)
+✔ actual Plane UV and every original atlas glyph cell read upright, including the frozen inverted-R witness (1.311663ms)
+ℹ {"scope":"native Plane + actual compiled shader address/atlas pixels; not GPU QA","cells":2100,"legacyRWrongPixel":240,"correctRPixel":9}
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.177475ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (518.5826ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (4464.784305ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (105.765248ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.684021ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (2.10817ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (2.388915ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (89.957513ms)
+✔ city daylight is a direction-continuous cached six-face sky, not a flat colour or a sun object (1688.476114ms)
+✔ day sky never leaks to highway/coast weather, and city shells, glazing and paving restore night without uploads (1571.425529ms)
+✔ authorized city layout and explicit renderer power/pixel policy preserve other shared world bytes and read-only coast bridge (8.364574ms)
+✔ actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles (9834.350503ms)
+✔ coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights (1303.705959ms)
+✔ r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets (2545.332658ms)
+✔ construction and final-attach faults restore scene atomically and dispose all returned partial private resources (2530.150811ms)
+✔ actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame (2723.493189ms)
+✔ direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion (965.054886ms)
+✔ historical performance epoch is frozen; new city contact/skyline changes have an explicit authorized successor (12.829053ms)
+✔ dense418-city layered architecture preserves35pads/two bridges with bounded batched geometry (157.136113ms)
+ℹ {"scope":"Actual Three r128 scene structure; not measured GPU renderer calls/FPS","baseline":{"meshes":758,"triangles":45000,"casters":99,"shadowTriangles":1188,"geometries":721,"materials":53,"textureBytes":0},"candidate":{"meshes":63,"triangles":69332,"casters":6,"shadowTriangles":9564,"geometries":52,"materials":25,"textureBytes":1048576}}
+✔ coast details exist at all distances with lower maximum/shadow budgets, never proximity upload churn (1117.823078ms)
+ℹ {"active":true,"builds":1,"disposals":0,"failedBuilds":0,"cachedCpuPixelBytes":262144,"ownedLights":2,"shadowMapResolution":1024,"shadowSpanMetres":160,"ownedGeometries":41,"ownedMaterials":53,"ownedTextures":16,"textureBytes":1256107,"ownedGeometryBufferBytes":4371088,"ownedInstanceBufferBytes":703836,"staticMeshDraws":83,"staticTriangles":153958,"maximumStaticTriangles":153958,"nearPalms":0,"farPalms":94,"foliageRefreshes":0,"nearDetailInstances":248,"nearDetailCapacity":248,"nearDetailMatrixBytes":15872,"detailRefreshes":0,"shadowCasterBatches":30,"shadowCasterTriangles":75158,"maximumShadowCasterTriangles":75158,"instances":10878,"buildings":52,"retainedCoastalBuildings":44,"hillsideBuildings":8,"palms":94,"textureEstimateScope":"Owned sampled texture levels only; excludes shadow render target and driver allocations","performanceBoundary":"Static scene structure, not measured renderer draw calls or FPS"}
+✔ renderer pixels are explicitly bounded without changing camera FOV or world metres (3.454387ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26437.009644

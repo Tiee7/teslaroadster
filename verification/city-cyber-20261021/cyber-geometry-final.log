@@ -1,0 +1,20 @@
+✔ spatial broad phase never drops any rotated actual building candidate and bounds dense-city work (4712.741991ms)
+ℹ {"scope":"CPU broad phase, not device FPS/temperature","queries":1323,"allSolidParts":797,"maximumCandidates":8,"meanCandidates":2.5895691609977325,"verificationMs":4590.056599}
+✔ stepped tower empty shoulder volume remains driveable, while its real podium and upper wall remain solid (1935.436023ms)
+✔ all static cyber signs share one atlas, three forward landmarks and no time-dependent upload or added lights (1.627854ms)
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.919904ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (503.506611ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (4843.708955ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (132.260645ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.633574ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (2.094481ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (2.327484ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (107.385703ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6845.942603

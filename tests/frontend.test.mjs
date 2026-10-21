@@ -206,7 +206,14 @@ test('English/Chinese, modal dismissal and retained finished result work', async
 test('integration guards every shared gameplay-setting pathway and ignores typing', () => {
   for (const [name, reason] of [['switchMap', 'map'], ['resetCar', 'reset'], ['togglePhysicsMode', 'physics'], ['togglePlaidMode', 'plaid'], ['toggleStabilizer', 'stabilizer']]) {
     assert.ok(hud.includes(`function ${name}(`));
-    assert.match(hud.slice(hud.indexOf(`function ${name}(`), hud.indexOf(`function ${name}(`) + 120), new RegExp(`abort\\('${reason}'\\)`));
+    const start=hud.indexOf(`function ${name}(`),next=hud.indexOf('\nfunction ',start+1);
+    assert.ok(next>start,`complete top-level function boundary for ${name}`);
+    const fn=hud.slice(start,next),needle=`window.RoadsterRanked?.abort('${reason}');`,abort=fn.indexOf(needle);
+    assert.ok(abort>=0&&fn.indexOf(needle,abort+1)===-1,'exactly one ranked cancellation in the complete function');
+    assert.doesNotMatch(fn.slice(fn.indexOf('{')+1,abort),/\b(?:if|switch|for|while|return|throw)\b/,'ranked cancellation cannot be hidden in a conditional or after an early exit');
+    const mutation=fn.search(/\b(?:state\.[A-Za-z_]\w*|currentMap)\s*=/);
+    assert.ok(mutation>abort,'ranked cancellation precedes the first gameplay-state mutation');
+    if(name==='resetCar')assert.match(fn,/window\.RoadsterCityDiagnostics\?\.reset\(\);/,'local trace reset is present without displacing ranked cancellation');
   }
   assert.match(hud, /selectWeatherMode[\s\S]{0,150}abort\('weather'\)/);
   assert.match(hud, /btn-traffic[\s\S]*?addEventListener\('click'[\s\S]{0,100}abort\('traffic'\)/);

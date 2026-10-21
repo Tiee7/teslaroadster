@@ -1,0 +1,26 @@
+diff --git a/index.html b/index.html
+index cfe9936..6b67727 100644
+--- a/index.html
++++ b/index.html
+@@ -4926,7 +4926,7 @@ function buildOpenWorldCity() {
+     for(let j=0;j<word.length;j++)for(let row=0;row<7;row++)for(let col=0;col<5;col++)if((glyphs[word[j]]||glyphs.I)[row]&(1<<(4-col)))for(let yy=0;yy<2;yy++)for(let xx=0;xx<2;xx++){const vertical=tile>=8,x=ox+(vertical?27+col*2+xx:Math.floor((64-word.length*12)/2)+j*12+col*2+xx),y=oy+(vertical?Math.floor((64-word.length*14)/2)+j*14+row*2+yy:25+row*2+yy),i=(y*256+x)*4;atlas[i]=atlas[i+1]=atlas[i+2]=240;}}
+   const signMap=new THREE.DataTexture(atlas,256,256,THREE.RGBAFormat);signMap.name='city-original-cyber-sign-atlas';signMap.magFilter=THREE.LinearFilter;signMap.minFilter=THREE.LinearMipmapLinearFilter;signMap.generateMipmaps=true;signMap.needsUpdate=true;
+   const signMat=new THREE.MeshBasicMaterial({color:0xffffff,map:signMap,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
+-  signMat.onBeforeCompile=shader=>{shader.vertexShader='attribute float citySignTile;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvUv=(uv+vec2(mod(citySignTile,4.0),floor(citySignTile/4.0)))/4.0;');};signMat.customProgramCacheKey=()=> 'city-original-sign-atlas-v1';
++  signMat.onBeforeCompile=shader=>{shader.vertexShader='attribute float citySignTile;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvUv=vec2(uv.x+mod(citySignTile,4.0),1.0-uv.y+floor(citySignTile/4.0))/4.0;');};signMat.customProgramCacheKey=()=> 'city-original-sign-atlas-v1';
+   const signGeometry=new THREE.PlaneGeometry(1,1);signGeometry.setAttribute('citySignTile',new THREE.InstancedBufferAttribute(new Float32Array(citySigns.map(s=>s.tile)),1));
+   cityInstances('city-cyber-signs',signGeometry,signMat,citySigns);
+   cityEnvGroup.userData.cityArchitecture={version:3,families:cityFamilies,buildings:new Set(cityBuildings.map(b=>b.logicalId)).size,solidParts:cityBuildings.length,infillBuildings:infill,lowBuildings:cityBuildings.filter(b=>b.kind==='low').length,silhouettes,signs:citySigns.length,featureSigns:citySigns.filter(s=>s.feature).length,facadeTextureBytes:12*128*128*4+atlas.byteLength,source:'original procedural geometry, glyphs and pixels; no third-party assets'};
+diff --git a/src/world.js b/src/world.js
+index 1f4acae..9256667 100644
+--- a/src/world.js
++++ b/src/world.js
+@@ -681,7 +681,7 @@ function buildOpenWorldCity() {
+     for(let j=0;j<word.length;j++)for(let row=0;row<7;row++)for(let col=0;col<5;col++)if((glyphs[word[j]]||glyphs.I)[row]&(1<<(4-col)))for(let yy=0;yy<2;yy++)for(let xx=0;xx<2;xx++){const vertical=tile>=8,x=ox+(vertical?27+col*2+xx:Math.floor((64-word.length*12)/2)+j*12+col*2+xx),y=oy+(vertical?Math.floor((64-word.length*14)/2)+j*14+row*2+yy:25+row*2+yy),i=(y*256+x)*4;atlas[i]=atlas[i+1]=atlas[i+2]=240;}}
+   const signMap=new THREE.DataTexture(atlas,256,256,THREE.RGBAFormat);signMap.name='city-original-cyber-sign-atlas';signMap.magFilter=THREE.LinearFilter;signMap.minFilter=THREE.LinearMipmapLinearFilter;signMap.generateMipmaps=true;signMap.needsUpdate=true;
+   const signMat=new THREE.MeshBasicMaterial({color:0xffffff,map:signMap,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
+-  signMat.onBeforeCompile=shader=>{shader.vertexShader='attribute float citySignTile;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvUv=(uv+vec2(mod(citySignTile,4.0),floor(citySignTile/4.0)))/4.0;');};signMat.customProgramCacheKey=()=> 'city-original-sign-atlas-v1';
++  signMat.onBeforeCompile=shader=>{shader.vertexShader='attribute float citySignTile;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvUv=vec2(uv.x+mod(citySignTile,4.0),1.0-uv.y+floor(citySignTile/4.0))/4.0;');};signMat.customProgramCacheKey=()=> 'city-original-sign-atlas-v1';
+   const signGeometry=new THREE.PlaneGeometry(1,1);signGeometry.setAttribute('citySignTile',new THREE.InstancedBufferAttribute(new Float32Array(citySigns.map(s=>s.tile)),1));
+   cityInstances('city-cyber-signs',signGeometry,signMat,citySigns);
+   cityEnvGroup.userData.cityArchitecture={version:3,families:cityFamilies,buildings:new Set(cityBuildings.map(b=>b.logicalId)).size,solidParts:cityBuildings.length,infillBuildings:infill,lowBuildings:cityBuildings.filter(b=>b.kind==='low').length,silhouettes,signs:citySigns.length,featureSigns:citySigns.filter(s=>s.feature).length,facadeTextureBytes:12*128*128*4+atlas.byteLength,source:'original procedural geometry, glyphs and pixels; no third-party assets'};

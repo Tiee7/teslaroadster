@@ -1,0 +1,45 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (47.102928ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (19.54067ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (10.203929ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (86.076787ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (259.796183ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (2.873809ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (621.659408ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (2.283923ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (8.707005ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (8.782708ms)
+✔ finite city wall initial overlap depenetrates once and preserves a departing rebound; parallel motion has no false impact (17.275324ms)
+✔ fast descending car cannot die inside the gentle roof cushion before any actual3D body contact (10.248025ms)
+✔ city incident trace is bounded, copyable and stays local across reset without leaking live references (17.678844ms)
+✔ exact prior production pitched roof air-impact is rejected for both actual model bounds (875.811873ms)
+✔ all four roof sides reject the same pitched outside trajectory with yaw and roll changes (194.569071ms)
+✔ real gentle roof contact remains stable, keeps35pad semantics and true fast roof impact still damages (235.572591ms)
+✔ highway: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn (20.648075ms)
+✔ highway: crashReasonGround freezes final scores through wreck frames and clears only on respawn (4.127402ms)
+✔ highway: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn (3.221396ms)
+✔ highway: surviving collisions preserve scores and do not create a final snapshot (2.674814ms)
+✔ highway: keyboard reset starts mileage and passenger totals from zero (5.554833ms)
+✔ highway: button reset starts mileage and passenger totals from zero (2.662695ms)
+✔ highway: caller reset starts mileage and passenger totals from zero (2.212137ms)
+✔ city: crashReasonThreshold freezes final scores through wreck frames and clears only on respawn (140.824942ms)
+✔ city: crashReasonGround freezes final scores through wreck frames and clears only on respawn (110.114148ms)
+✔ city: crashReasonCumulative freezes final scores through wreck frames and clears only on respawn (89.257332ms)
+✔ city: surviving collisions preserve scores and do not create a final snapshot (99.387087ms)
+✔ city: keyboard reset starts mileage and passenger totals from zero (111.38865ms)
+✔ city: button reset starts mileage and passenger totals from zero (100.308865ms)
+✔ city: caller reset starts mileage and passenger totals from zero (111.859766ms)
+✔ an empty taxi retains settled fares through death and clears them on the next round (100.91423ms)
+✔ late callbacks cannot change frozen mileage, final score or clear/blast counts (2.593754ms)
+✔ highway: crash releases ranked session immediately while final score remains until restart (19.636352ms)
+✔ highway: completed ranked payload survives later death and R before explicit submission (3.710572ms)
+✔ city: crash releases ranked session immediately while final score remains until restart (4.602788ms)
+✔ city: completed ranked payload survives later death and R before explicit submission (3.281806ms)
+✔ crash summary preserves ranked notice, language switching and small-screen scrolling (2.291625ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1474.275651

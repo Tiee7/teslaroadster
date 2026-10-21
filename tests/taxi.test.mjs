@@ -50,7 +50,7 @@ test('pickup stops and every drivable route edge clear the actual generated city
   const boundsContext=vm.createContext({console});vm.runInContext(readFileSync('/tmp/roadster-three.min.js','utf8'),boundsContext);vm.runInContext(config,boundsContext);
   const generation=world.slice(world.indexOf('function buildOpenWorldCity()'),world.indexOf('buildOpenWorldCity();')+21);
   vm.runInContext(`const cityEnvGroup=new THREE.Group();globalThis.cityBuildings=[];let cityAsphaltMat=null,cityAsphaltEWMat=null;const dashMat=new THREE.MeshBasicMaterial(),titaniumMaterial=new THREE.MeshStandardMaterial();const createWetRoadDetail=()=>({});${generation}`,boundsContext);
-  assert.equal(boundsContext.cityBuildings.length, 163);
+  assert.equal(boundsContext.cityBuildings.length,797);assert.equal(new Set(boundsContext.cityBuildings.map(b=>b.logicalId)).size,418);
   assert.equal(boundsContext.cityBuildings.filter(b => b.isHelipad).length, 35);
   const actualGraph = core.buildRoadGraph(roadCoords, 6.5, boundsContext.cityBuildings, 1200);
   assert.equal(actualGraph.nodes.length, 49);

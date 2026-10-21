@@ -1,0 +1,35 @@
+✔ spatial broad phase never drops any rotated actual building candidate and bounds dense-city work (4876.574385ms)
+ℹ {"scope":"CPU broad phase, not device FPS/temperature","queries":1323,"allSolidParts":797,"maximumCandidates":8,"meanCandidates":2.5895691609977325,"verificationMs":4725.181172}
+✔ stepped tower empty shoulder volume remains driveable, while its real podium and upper wall remain solid (7953.922436ms)
+✖ all static cyber signs share one atlas, three forward landmarks and no time-dependent upload or added lights (2.42258ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13035.12065
+
+✖ failing tests:
+
+test at tests/city-cyber-geometry.test.mjs:10:1
+✖ all static cyber signs share one atlas, three forward landmarks and no time-dependent upload or added lights (2.42258ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  449 !== 450
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-cyber-geometry.test.mjs:10:284)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 449,
+    expected: 450,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

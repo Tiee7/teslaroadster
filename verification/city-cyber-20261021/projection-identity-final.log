@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "totalTests": 29,
+  "byKind": {
+    "positive-identity": 3,
+    "first-bind-rejection": 9,
+    "cached-reference-or-value-rejection": 5,
+    "positive-build": 1,
+    "build-source-rejection": 8,
+    "build-generator-rejection": 1,
+    "build-profile-rejection": 1,
+    "build-artifact-rejection": 1
+  },
+  "physicsStepsExecuted": 0,
+  "sourceAndArtifactsUnchanged": true,
+  "numericalCoreSha256": "29f55068d4907035797b2a796742d9715bb3a27728a74c76767627f464b79a99"
+}

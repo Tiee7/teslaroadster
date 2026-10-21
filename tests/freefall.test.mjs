@@ -26,7 +26,7 @@ const close = (actual, expected, tolerance = 1e-8) =>
 function harness(overrides = {}, map = 'highway', buildings = []) {
   const banners = [], impacts = [], alerts = [];
   const context = vm.createContext({
-    cityBuildings: buildings, frontWheelSteerGroups: [], carMeshGroup: {},
+    window: {}, cityBuildings: buildings, frontWheelSteerGroups: [], carMeshGroup: {},
     THREE: { MathUtils: { clamp: (x, lo, hi) => Math.max(lo, Math.min(hi, x)), lerp: (a, b, t) => a + (b - a) * t } },
     document: { getElementById: () => ({ classList: { remove() {} } }) },
     sound: { init() {}, speakAlert: (...args) => alerts.push(args), beep() {}, playCrash() {} },

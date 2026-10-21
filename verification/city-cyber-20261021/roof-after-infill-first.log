@@ -1,0 +1,24 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (35.920373ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (18.521009ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (10.195588ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (90.58891ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (255.059333ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (3.041122ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (656.033198ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (2.389318ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (9.677429ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (9.787441ms)
+✔ finite city wall initial overlap depenetrates once and preserves a departing rebound; parallel motion has no false impact (23.845365ms)
+✔ fast descending car cannot die inside the gentle roof cushion before any actual3D body contact (12.100067ms)
+✔ city incident trace is bounded, copyable and stays local across reset without leaking live references (17.687587ms)
+✔ exact prior production pitched roof air-impact is rejected for both actual model bounds (919.432801ms)
+✔ all four roof sides reject the same pitched outside trajectory with yaw and roll changes (232.336747ms)
+✔ real gentle roof contact remains stable, keeps35pad semantics and true fast roof impact still damages (318.519131ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1643.985441

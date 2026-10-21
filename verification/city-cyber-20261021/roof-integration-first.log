@@ -1,0 +1,28 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (51.153613ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (28.575869ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (12.153677ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (92.126381ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (265.6546ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (3.298612ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (655.193101ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (1.958981ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (11.406912ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (10.84418ms)
+✔ finite city wall initial overlap depenetrates once and preserves a departing rebound; parallel motion has no false impact (15.636919ms)
+✔ fast descending car cannot die inside the gentle roof cushion before any actual3D body contact (10.610025ms)
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (2.10089ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (1028.850864ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (710.238873ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (73.426056ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.351688ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (2.177663ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (1.642406ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (57.995357ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2052.754655
