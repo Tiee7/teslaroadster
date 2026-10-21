@@ -1,0 +1,206 @@
+{
+  "status": "verified local candidate, not a deployment claim",
+  "baseMain": "a88cedf657b3cc066a63063bde9aa1caeb606445",
+  "testedProductionCommit": "4fed28bb99b1aa69152c8c77c28c3f321b9bbd00",
+  "testedProductionTree": "eea2d8479cdeeefed300857d13622aacad9ab72b",
+  "finalSuite": {
+    "command": "npm test",
+    "tests": 835,
+    "pass": 835,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 323821.490992,
+    "log": "node-tests-final.log",
+    "logSha256": "e7e437a54025dbf1720d872a0a24b8d9d1f343fa47df0b81a7a6400a003bbda4"
+  },
+  "check": "passed",
+  "build": "passed",
+  "traffic": [
+    {
+      "count": 12,
+      "seconds": 1800,
+      "minDistance": 21400.570358748122,
+      "maxStop": 10.833333333333451,
+      "maximumWait": 21.433333333333398,
+      "maximumHold": 12.850000000000218,
+      "zones": [
+        {
+          "id": 0,
+          "grants": 69,
+          "releases": 69,
+          "owned": false
+        },
+        {
+          "id": 1,
+          "grants": 71,
+          "releases": 70,
+          "owned": true
+        },
+        {
+          "id": 2,
+          "grants": 70,
+          "releases": 70,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "count": 16,
+      "seconds": 1800,
+      "minDistance": 21362.625612495383,
+      "maxStop": 6.883333333333314,
+      "maximumWait": 17.80000000000027,
+      "maximumHold": 13.016666666666893,
+      "zones": [
+        {
+          "id": 0,
+          "grants": 93,
+          "releases": 93,
+          "owned": false
+        },
+        {
+          "id": 1,
+          "grants": 92,
+          "releases": 92,
+          "owned": false
+        },
+        {
+          "id": 2,
+          "grants": 93,
+          "releases": 93,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "count": 20,
+      "seconds": 1800,
+      "minDistance": 21353.426189378268,
+      "maxStop": 6.2333333333333165,
+      "maximumWait": 16.233333333333693,
+      "maximumHold": 12.96666666666689,
+      "zones": [
+        {
+          "id": 0,
+          "grants": 117,
+          "releases": 117,
+          "owned": false
+        },
+        {
+          "id": 1,
+          "grants": 117,
+          "releases": 116,
+          "owned": true
+        },
+        {
+          "id": 2,
+          "grants": 118,
+          "releases": 117,
+          "owned": true
+        }
+      ]
+    }
+  ],
+  "trafficEvidence": "Each count uses final tested high-profile candidate, 1800 simulated seconds at 60 Hz; every-tick full 4.62\u00d71.96m OBB and height overlap checks; zero overlaps, every car completes at least a lap",
+  "numericalIsolation": {
+    "scenarios": 40,
+    "ticksEach": 300,
+    "maps": [
+      1,
+      2
+    ],
+    "comparison": "Object.is every numeric/boolean production state field, identical impacts",
+    "passed": 41
+  },
+  "scene": {
+    "network": {
+      "routes": 2,
+      "mainLength": 5481.110140050071,
+      "bypassLength": 3592.0384002760143,
+      "pierLinkLength": 213.44516372680664,
+      "stations": 1693,
+      "roadTriangles": 12576,
+      "bankTriangles": 5084,
+      "terrainTriangles": 8192,
+      "maxHeight": 63.9991569519043,
+      "maxGrade": 0.05999996851126807
+    },
+    "render": {
+      "active": true,
+      "builds": 1,
+      "disposals": 0,
+      "failedBuilds": 0,
+      "cachedCpuPixelBytes": 262144,
+      "ownedLights": 2,
+      "shadowMapResolution": 1024,
+      "shadowSpanMetres": 160,
+      "ownedGeometries": 43,
+      "ownedMaterials": 51,
+      "ownedTextures": 16,
+      "textureBytes": 1256107,
+      "ownedGeometryBufferBytes": 3702760,
+      "ownedInstanceBufferBytes": 685692,
+      "staticMeshDraws": 82,
+      "staticTriangles": 141422,
+      "maximumStaticTriangles": 157270,
+      "nearPalms": 10,
+      "farPalms": 84,
+      "foliageRefreshes": 1,
+      "nearDetailInstances": 14,
+      "nearDetailCapacity": 384,
+      "nearDetailMatrixBytes": 24576,
+      "detailRefreshes": 1,
+      "shadowCasterBatches": 31,
+      "shadowCasterTriangles": 77958,
+      "maximumShadowCasterTriangles": 93806,
+      "instances": 10202,
+      "buildings": 44,
+      "palms": 94,
+      "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+      "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+    }
+  },
+  "minimumHorizontalRadiusMetres": 44.848426852876834,
+  "maximumEarthBankGrade": 0.1377941356060358,
+  "junctionHeight": {
+    "oldCounterexampleMetres": 0.3696767,
+    "finalSharedRoadTopDifferenceMetres": 0,
+    "independentScan": "0.25m route1/3 C area; 313 candidate overlaps, all zero"
+  },
+  "independentReviews": [
+    "coast_slope_physics_review: support, collision, recharge, jump defects resolved",
+    "v8_lifecycle_review: 86/86 focused, no new audio or clock/UI blocker",
+    "plan_map3_terrain_routes: thin rail render, NPC joins, pier link, natural banks, actual signs, level cross-road confirmed; 30 valid simultaneous arrivals \u00d7120s zero OBB overlap"
+  ],
+  "sourceIdentity": {
+    "baseMain": "a88cedf657b3cc066a63063bde9aa1caeb606445",
+    "sha256": {
+      "audio": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+      "config": "7aeb13fafed9d742fc62cbafe029624ddd769e8da381569ca7c1a3f364d13d8b",
+      "city-clock": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+      "world": "b61a55b91e66f3a1e8c3dedb069e1814a7e3064fc5860543254eaae46df0aceb",
+      "taxi": "a8110538f48c2f5fd5ffbcd4583c57c930bf0479ef7f7c7498fa33ed2c42c6da",
+      "vehicles": "712d3963556d330085952fcaa938109728a9a1ad4fe1275d0e12a090446b9331",
+      "highway-demo": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+      "highway-traffic": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+    }
+  },
+  "afterFullSuite": "Only README/evidence and test-only optional Three runtime portability were changed; production source and root bundle remain exactly the fully tested commit. Six render tests rerun passed; absent-runtime path explicitly reports six skips instead of ENOENT. Full suite above had zero skips with official r128 present.",
+  "runtimeOracle": {
+    "pathOverride": "ROADSTER_THREE_RUNTIME",
+    "default": "/tmp/roadster-three.min.js",
+    "productionThreeVersion": "r128",
+    "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "limitations": [
+    "No native WebGL, phone/touch-device or FPS acceptance available",
+    "CPU geometry image excludes textures, cockpit, HUD, weather; it is not a game screenshot",
+    "Static scene budgets exclude shadow targets, driver allocations and extra render passes",
+    "New terrain-v2 does not contain or reconstruct lost sixth-art draft"
+  ],
+  "rootBundle": {
+    "bytes": 4880646,
+    "sha256": "6358906db25c332ba9ec5e1cf938c3f7001c2ccc15bb6c1c264c6e99041bd22b",
+    "gitBlob": "e745b0fc7b25e4aa3dddcc288b5a2444e99c281a"
+  }
+}

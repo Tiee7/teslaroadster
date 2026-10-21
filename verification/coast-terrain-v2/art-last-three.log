@@ -1,0 +1,11 @@
+✔ palm LOD keeps all94 retained original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout (866.836917ms)
+✔ original art payload remains below the explicit32KiB gzip ceiling with zero art fetches (479.312653ms)
+✔ six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors (825.207348ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2306.59102

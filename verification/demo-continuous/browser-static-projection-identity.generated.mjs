@@ -51,7 +51,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
         car.mesh.rotation.z += car.blastVRoll * dt;
       }
     });
-    if (!cityOwnsDrivingSound()) sound.update(0, false, false, true);
+    if (!cityOwnsDrivingSound() && !coastOwnsDrivingSound()) sound.update(0, false, false, true);
     document.getElementById('ui-flight-mode').textContent = t.modeDestroyed;
     document.getElementById('ui-flight-mode').className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-300';
     document.getElementById('val-hull-pct').textContent = '0%';
@@ -62,9 +62,9 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   
   const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
   const isRealMode = (state.physicsMode === 'realistic');
-  const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw} : null;
+  const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,vy:state.vy} : null;
   const coastObstacles = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : null;
-  const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,z:c.mesh.position.z,yaw:c.mesh.rotation.y,visible:c.mesh.visible}])) : null;
+  const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,yaw:c.mesh.rotation.y,visible:c.mesh.visible}])) : null;
   state.gasMassKg = Number((144.0 * (state.airRemaining / MAX_AIR_SECONDS)).toFixed(1));
   const currentVehicleMass = VEHICLE_MASS_KG + (state.gasMassKg || 0);
   const fuelBurnThrustFactor = (VEHICLE_MASS_KG + 144.0) / Math.max(1850.0, currentVehicleMass);
@@ -74,7 +74,9 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   let currentMaxClimbVy = 6.2 * 1.3;  // +30% Space climb speed (8.06 m/s)
   let tireScreechIntensity = 0.0;
 
-  let groundElevation = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.surface(state.x,state.z).height ?? 0) : 0;
+  const coastWorld = currentMap === 'coast' ? globalThis.window?.RoadsterCoast : null;
+  let coastSupport = coastWorld?.support({...state,grounded:!state.wasAirborne});
+  let groundElevation = coastSupport && Number.isFinite(coastSupport.height) ? coastSupport.height : 0;
   if (currentMap === 'city' || currentMap === 'coast') {
     const mapBuildings = coastObstacles || cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
@@ -88,7 +90,11 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   }
   // O has already supplied vertical launch velocity, even before this frame's
   // altitude integration. Do not run another tire-grip/drive frame on takeoff.
-  const isAirborne = (state.y - groundElevation) > 0.15 || (state.isJumping6m && state.vy > 0);
+  let isAirborne = coastWorld
+    ? Math.abs(state.y-groundElevation)>.15 || !coastSupport?.solid || (state.isJumping6m&&state.vy>0) || state.coastDetached===true || (state.wasAirborne&&!state.coastSupportId)
+    : (state.y - groundElevation) > 0.15 || (state.isJumping6m && state.vy > 0);
+  let coastGroundAttached = Boolean(coastWorld&&!isAirborne);
+  if(coastWorld){state.coastSupportId=coastGroundAttached?coastSupport.id:null;state.coastDetached=false;}
   if (!isAirborne) state.groundHopActive = false;
   const { rawRollInput, rawPitchInput, rawYawInput, hasManualAttitudeInput } = readAttitudeInput(isAirborne);
   const stabilizerDt = advanceAttitudeIdle(dt, hasManualAttitudeInput || !isAirborne);
@@ -189,7 +195,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   const isReversing = driveInput.reverse > 0 && !isAccelerating;
   const isHandbraking = driveInput.handbrake > 0;
   const isAirBrakingActive = isFootBraking || (isAirborne && isReversing);
-  const coastDragCoeff = (state.y > 0.2 || Math.abs(state.speed) > 33.0) ? 0.44 : 0.34;
+  const coastDragCoeff = ((currentMap === 'coast' ? state.y-groundElevation : state.y) > 0.2 || Math.abs(state.speed) > 33.0) ? 0.44 : 0.34;
   state.dragCoeffCd = isAirBrakingActive ? coastDragCoeff + (0.72 - coastDragCoeff) * Math.max(driveInput.brake, driveInput.reverse) : coastDragCoeff;
 
   // Determine if the 4 Rear SpaceX Cold-Gas Nozzles are firing this frame:
@@ -572,6 +578,12 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
     // A 300 m city block is traversed in 300 / velocity seconds, on ground or in air.
     const moveScale = CITY_WORLD_SPEED_SCALE;
+    if(coastGroundAttached){
+      // Gravity projected onto the actual plane, coast only. EV/jet drive and
+      // all map1/2 coefficients above remain untouched.
+      state.vx += EARTH_GRAVITY_MPS2*coastSupport.normal.x*coastSupport.normal.y*dt;
+      state.vz += EARTH_GRAVITY_MPS2*coastSupport.normal.z*coastSupport.normal.y*dt;
+    }
     state.x += state.vx * moveScale * dt;
     state.z += state.vz * moveScale * dt;
 
@@ -591,6 +603,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   }
 
   const wantsHover = driveInput.lift > 0;
+  if(coastGroundAttached&&wantsHover&&state.airRemaining>0&&!state.isFreefalling){coastGroundAttached=false;state.coastSupportId=null;state.coastDetached=true;isAirborne=true;state.wasAirborne=true;}
   const wantsDescend = driveInput.descend > 0;
   let isLiftFiring = false;
   let isDescendFiring = false;
@@ -602,10 +615,18 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     if (contact) { triggerPhysicsCollision(contact.speed,'crashReasonBuilding',0,2,0); if (state.isDestroyed) return; }
   }
   // Sea is not a road: no automatic landing save or recharge before real contact.
-  const coastSurface = currentMap === 'coast' ? globalThis.window?.RoadsterCoast?.surface(state.x,state.z) : null;
+  const coastSurface = coastWorld?.support({...state,previousY:coastMotionStart.y,grounded:coastGroundAttached});
+  if(coastGroundAttached){
+    const reachable=coastSurface?.solid&&Number.isFinite(coastSurface.height)&&Math.abs(coastSurface.height-state.y)<.5;
+    if(reachable){
+      coastSupport=coastSurface;state.y=coastSupport.height;
+      state.vy=-(coastSupport.normal.x*state.vx+coastSupport.normal.z*state.vz)/coastSupport.normal.y;
+      state.coastSupportId=coastSupport.id;
+    }else{coastGroundAttached=false;isAirborne=true;state.wasAirborne=true;state.coastSupportId=null;}
+  }
   if (coastSurface?.water) state.isAutoLandingSave = false;
   // Recompute surface elevation after horizontal (x, z) movement
-  groundElevation = coastSurface?.height ?? 0.0;
+  groundElevation = Number.isFinite(coastSurface?.height) ? coastSurface.height : 0.0;
   if (currentMap === 'city' || currentMap === 'coast') {
     const mapBuildings = coastObstacles || cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
@@ -753,14 +774,16 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
   // Tank contents and physics mode do not change Earth gravity. This also
   // runs if a lift/hold/jump/save request depleted its tank in this frame.
-  if (!isLiftFiring && (agl > 0 || state.vy > 0)) {
+  if (!coastGroundAttached && !isLiftFiring && (agl > 0 || state.vy > 0)) {
     freefallStartVy = state.vy;
     state.vy -= EARTH_GRAVITY_MPS2 * dt;
   }
 
   const prevY = state.y;
-  if (freefallStartVy !== null && !isDescendFiring) {
-    const next = integrateFreefall(state.y, freefallStartVy, dt, groundElevation);
+  if (coastGroundAttached && !isLiftFiring) {
+    state.y = coastSupport.height;
+  } else if (freefallStartVy !== null && !isDescendFiring) {
+    const next = integrateFreefall(state.y, freefallStartVy, dt, coastWorld?-Infinity:groundElevation);
     state.y = next.y;
     state.vy = next.vy;
   } else {
@@ -772,17 +795,35 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     state.vy = Math.min(0, state.vy);
   }
 
-  const contactFloorY = coastSurface?.water ? coastSurface.height : 0;
-  if (state.y <= contactFloorY && state.vy <= 0) {
-    if (coastSurface?.water) { resetCar(); return; }
+  // Top, bottom and bounded structural contacts are different events.
+  const coastStructureHit=coastWorld?.network?.sweepStructures(coastMotionStart,state);
+  if(coastStructureHit){
+    const h=coastStructureHit,t=Math.max(0,h.t-1e-5),n=h.normal;
+    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z,impact=Math.max(0,-inward);
+    state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;
+    state.y=h.kind==='ceiling'?h.height-.002:coastMotionStart.y+(state.y-coastMotionStart.y)*t;
+    if(inward<0){state.vx-=1.25*inward*n.x;state.vy-=1.25*inward*n.y;state.vz-=1.25*inward*n.z;}
+    if(h.kind==='ceiling'){state.isJumping6m=false;state.isAltitudeHold=false;}
+    state.speed=(state.vx*-Math.sin(state.yaw)+state.vz*-Math.cos(state.yaw)>=0?1:-1)*Math.hypot(state.vx,state.vz);
+    if(coastGroundAttached)state.vy=-(coastSupport.normal.x*state.vx+coastSupport.normal.z*state.vz)/coastSupport.normal.y;
+    triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
+  }
+  const coastLanding=coastWorld&&!coastGroundAttached?coastWorld.network.sweepLanding(coastMotionStart,state):null;
+  const contactFloorY = coastWorld ? (coastGroundAttached?coastSupport.height:coastLanding?.height??(coastSurface?.water?coastSurface.height:-Infinity)) : 0;
+  if ((coastGroundAttached || coastLanding || state.vy <= 0) && state.y <= contactFloorY+(coastWorld ? .00001 : 0)) {
+    if (coastSurface?.water&&!coastLanding) { resetCar(); return; }
     state.y = contactFloorY;
+    if(coastLanding){state.x=coastLanding.x;state.z=coastLanding.z;}
     state.jumpInertiaGraceSeconds = null;
-    const downImpactSpeed = -prevVy;
+    const downImpactSpeed = coastWorld
+      ? coastGroundAttached?0:Math.max(0,-(state.vx*(coastLanding?.normal.x||0)+prevVy*(coastLanding?.normal.y||1)+state.vz*(coastLanding?.normal.z||0)))
+      : -prevVy;
     if (downImpactSpeed > 0.8) {
       state.suspensionSquash = Math.min(0.048, downImpactSpeed * 0.0035);
       state.suspensionVelocity = downImpactSpeed * 0.004;
     }
     state.vy = 0.0;
+    if(coastWorld){coastSupport=coastLanding||coastSupport;coastGroundAttached=true;state.coastSupportId=coastSupport.id;state.wasAirborne=false;groundElevation=coastSupport.height;state.vy=-(coastSupport.normal.x*state.vx+coastSupport.normal.z*state.vz)/coastSupport.normal.y;}
     state.isAutoLandingSave = false;
     state.isJumping6m = false;
     if (state.isAltitudeHold) {
@@ -798,7 +839,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     }
 
     // A firing retro jet uses the same tank; never recharge over its burn.
-    if (!isRetroBrakeFiring && ((!wantsHover && !isRearThrusterFiring) || state.isFreefalling)) {
+    if (!(coastWorld&&coastSupport?.id==='roof') && !isRetroBrakeFiring && ((!wantsHover && !isRearThrusterFiring) || state.isFreefalling)) {
       state.airRemaining = Math.min(MAX_AIR_SECONDS, state.airRemaining + 3.4 * dt);
       state.airUsedContinuous = MAX_AIR_SECONDS - state.airRemaining;
       if (state.airRemaining > 2.2) state.isAutoDescending8s = false;
@@ -882,13 +923,18 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   state.pitch += state.vPitch * dt;
   state.yaw += state.vYaw * dt;
 
+  if(coastGroundAttached){
+    const plane=coastWorld.network.groundAttitude(coastSupport.normal,state.yaw);
+    state.pitch=plane.pitch;state.roll=plane.roll;state.vPitch=state.vRoll=0;
+  }
   const trueGroundAgl = Math.max(0.0, state.y - groundElevation);
   if (trueGroundAgl < 0.35) {
     const maxGroundPitch = THREE.MathUtils.lerp(0.14, 1.30, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
-    const groundPitch = wrapAnglePi(state.pitch);
+    const slope=coastGroundAttached?coastWorld.network.groundAttitude(coastSupport.normal,state.yaw):{pitch:0,roll:0};
+    const groundPitch = wrapAnglePi(state.pitch-slope.pitch);
     state.pitch += THREE.MathUtils.clamp(groundPitch, -maxGroundPitch, maxGroundPitch) - groundPitch;
     const maxGroundRoll = THREE.MathUtils.lerp(0.18, 3.14, THREE.MathUtils.clamp(trueGroundAgl / 0.35, 0.0, 1.0));
-    state.roll = THREE.MathUtils.clamp(state.roll, -maxGroundRoll, maxGroundRoll);
+    state.roll = slope.roll+THREE.MathUtils.clamp(state.roll-slope.roll, -maxGroundRoll, maxGroundRoll);
     if (currentMap === 'highway' && trueGroundAgl < 0.15) {
       const groundYaw = wrapAnglePi(state.yaw);
       state.yaw += THREE.MathUtils.clamp(groundYaw, -0.85, 0.85) - groundYaw;
@@ -921,6 +967,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
           const cosTilt = Math.cos(state.roll) * Math.cos(state.pitch);
           state.y = b.height;
           state.vy = 0;
+          if(coastWorld){coastSupport={id:'roof',height:b.height,solid:true,water:false,normal:{x:0,y:1,z:0}};coastGroundAttached=true;isAirborne=false;state.wasAirborne=false;state.coastSupportId='roof';}
           state.isAutoLandingSave = false;
           state.isJumping6m = false;
           if (state.isAltitudeHold) {
@@ -1023,8 +1070,8 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
   // Optimus Active Wing with Extreme Air-Brake Pitch (-0.72 rad / ~42°) on Foot Brake H
   // isAirBrakingActive already hoisted above
-  const targetWingY = (state.y > 0.2 || isAccelerating) ? 0.94 : (isAirBrakingActive ? 0.96 : 0.79);
-  const targetWingAngle = isAirBrakingActive ? -0.72 : ((state.y > 0.2) ? -0.28 : -0.05);
+  const targetWingY = ((currentMap==='coast'?state.y-groundElevation:state.y) > 0.2 || isAccelerating) ? 0.94 : (isAirBrakingActive ? 0.96 : 0.79);
+  const targetWingAngle = isAirBrakingActive ? -0.72 : (((currentMap==='coast'?state.y-groundElevation:state.y) > 0.2) ? -0.28 : -0.05);
   activeWingGroup.position.y += (targetWingY - activeWingGroup.position.y) * 8 * dt;
   activeWingGroup.rotation.x += (targetWingAngle - activeWingGroup.rotation.x) * 8 * dt;
 
@@ -1150,7 +1197,8 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
     const dx = Math.abs(state.x - car.mesh.position.x);
     const dz = Math.abs(playerWorldZ - car.mesh.position.z);
-    let clearanceY = state.y - car.height;
+    const npcWorldY=currentMap==='coast'?(car.mesh.position.y||0):0;
+    let clearanceY = state.y - npcWorldY - car.height;
 
     // The faster demo rack also checks the complete relative movement chord.
     // A narrow corner contact cannot disappear between frames. Respawn jumps
@@ -1166,22 +1214,22 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     const coastContact = coastOld?.visible !== false && coastOld && car.mode === 'coast' && !car.blastTimer
       ? globalThis.window?.RoadsterCoast?.trafficContact(coastMotionStart,state,coastOld,car,coastBounds) : null;
     const coastSweptHit = coastContact !== null;
-    const bodyOverlap = coastBounds ? dx < coastBounds.x && dz < coastBounds.z : dx < 1.85 && dz < (car.length / 2 + 2.15);
+    const bodyOverlap = coastBounds ? dx < coastBounds.x && dz < coastBounds.z && state.y+1.25>npcWorldY && state.y<npcWorldY+car.height+.15 : dx < 1.85 && dz < (car.length / 2 + 2.15);
     if (bodyOverlap || demoSweptHit || coastSweptHit) {
-      if(coastSweptHit)clearanceY=coastContact.y-car.height;
+      if(coastSweptHit)clearanceY=coastContact.relativeY-car.height;
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0) {
           triggerPhysicsCollision(Math.abs(state.vy), 'crashReasonThreshold', 0, 5.0, 0);
         } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {
           if(coastSweptHit){const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;}
-          state.y = car.height + 0.15;
+          state.y = (coastSweptHit?coastContact.npcY:npcWorldY) + car.height + 0.15;
           state.vy = 5.5;
           sound.beep(520, 0.08);
         }
       } else if (clearanceY < -0.15) {
         const relVx = state.vx - (car.vx || 0);
         const relVz = state.vz - (car.vz || 0);
-        const deltaV = Math.hypot(relVx, relVz, state.vy * 0.5);
+        const deltaV = Math.hypot(relVx, relVz, (state.vy-(currentMap==='coast'?(car.vy||0):0)) * 0.5);
 
         if (currentMap === 'highway') {
           car.mesh.position.z -= 8.0;
@@ -1218,7 +1266,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   });
 
   // Render the resolved pose after traffic contact (which can change state.y).
-  const visualY = Math.max(groundElevation, state.y - (state.suspensionSquash || 0) - (state.aeroSquash || 0));
+  const visualY = currentMap==='coast' ? state.y-(state.suspensionSquash||0)-(state.aeroSquash||0) : Math.max(groundElevation, state.y - (state.suspensionSquash || 0) - (state.aeroSquash || 0));
   playerWrapper.position.set(state.x, visualY, playerWorldZ);
 
   // Dynamic chassis weight transfer (Pitch Squat under acceleration & Dive under braking, plus roll under steering)
@@ -1334,7 +1382,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   state.tireGripMu = Number((thermalMu + downforceBonus).toFixed(2));
 
   // Dynamic Aerodynamic Downforce (Active Rear Wing + Venturi Ground-Effect Suction Fans)
-  const wingCl = isAirBrakingActive ? 0.72 : ((state.y > 0.2) ? 0.48 : 0.24);
+  const wingCl = isAirBrakingActive ? 0.72 : (((currentMap==='coast'?state.y-groundElevation:state.y) > 0.2) ? 0.48 : 0.24);
   const wingDownforce = 0.5 * 1.225 * wingCl * 1.64 * (state.speed * state.speed);
   const trueRideHeight = Math.max(0.0, state.y - groundElevation);
   // Ground effect suction decays inversely with ride height squared
@@ -1385,6 +1433,13 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       tires: tireScreechIntensity
     };
   }
+  if (coastOwnsDrivingSound()) {
+    coastSoundFrame = {
+      thrust: isLiftFiring || rearActive || isFrontRetroFiring,
+      attitude: ((rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS) || isFrontRetroFiring,
+      tires: tireScreechIntensity
+    };
+  }
 
   // The physics, contact, scoring, G/thermal/downforce feedback above still run
   // every city tick. Expensive canvas/DOM/camera presentation runs once per
@@ -1419,7 +1474,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   // precision remains ultra-crisp at 30m–380m altitude and completely prevents ground Z-fighting!
   const desiredNear = isCockpitFpv
     ? 0.08
-    : THREE.MathUtils.clamp(0.38 + Math.max(0.0, state.y) * 0.045, 0.38, 3.2);
+    : THREE.MathUtils.clamp(0.38 + Math.max(0.0,currentMap==='coast'?state.y-groundElevation:state.y) * 0.045, 0.38, 3.2);
   if (Math.abs(camera.near - desiredNear) > 0.02) {
     camera.near = desiredNear;
     camera.updateProjectionMatrix();
@@ -1500,7 +1555,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   }
 
   const anyAttitude = (rollInput !== 0 || pitchInput !== 0 || yawInput !== 0 || airJetLeft || airJetRight) && canUseRCS;
-  if (!cityOwnsDrivingSound()) sound.update(
+  if (!cityOwnsDrivingSound() && !coastOwnsDrivingSound()) sound.update(
     // Stable 200 km/h audio reference: boost changes performance, not rev ratio.
     Math.abs(state.speed) / (200.0 / 3.6),
     isLiftFiring || rearActive || isFrontRetroFiring,
@@ -1663,7 +1718,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     barFill.className = 'h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75';
     tankBadge.textContent = state.airRemaining < 9.95 ? t.badgeRecharging : t.badgeReady;
     tankBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30';
-    modeBadge.textContent = state.y > 0.15 ? t.modeHover : t.modeGround;
+    modeBadge.textContent = (currentMap==='coast'?state.y-groundElevation:state.y) > 0.15 ? t.modeHover : t.modeGround;
     modeBadge.className = 'text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
   }
 
@@ -1701,7 +1756,7 @@ export const declaredTriggerJump6m = function triggerJump6m() {
   if (globalThis.window?.RoadsterDemo?.isBusy() && !window.RoadsterDemo.isRequestingJump()) return;
   if (state.isDestroyed || state.isFreefalling || state.airRemaining <= 0.15) return;
   sound.init();
-  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.surface(state.x,state.z).height ?? 0) : 0;
+  let groundElev = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.support({...state,grounded:!state.wasAirborne}).height ?? 0) : 0;
   if ((currentMap === 'city' && typeof cityBuildings !== 'undefined') || currentMap === 'coast') {
     const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
@@ -1716,7 +1771,7 @@ export const declaredTriggerJump6m = function triggerJump6m() {
   const currentAgl = Math.max(0.0, state.y - groundElev);
   // Only a fresh ground/roof takeoff gets launch grace. Midair O taps cannot
   // restart it and disable normal flight handling.
-  if (currentAgl <= 0.15) {
+  if (currentAgl <= 0.15 && (currentMap!=='coast'||(!state.wasAirborne&&!state.coastDetached))) {
     state.groundHopActive = true;
     state.jumpInertiaSeconds = 0;
     state.jumpInertiaGraceSeconds = globalThis.window?.RoadsterDemo?.isRequestingJump() ? (window.RoadsterDemo.jumpGraceSeconds?.() ?? 0.95) : null;
@@ -1726,6 +1781,7 @@ export const declaredTriggerJump6m = function triggerJump6m() {
   const demoJumpHeight = globalThis.window?.RoadsterDemo?.isRequestingJump() ? window.RoadsterDemo.jumpHeight() : 6.0;
   state.jumpTargetY = (currentAgl < 5.5) ? (groundElev + demoJumpHeight) : Math.min(MAX_FLIGHT_ALTITUDE, state.y + 6.0);
   state.isJumping6m = true;
+  if(currentMap==='coast'){state.coastDetached=true;state.coastSupportId=null;}
   state.isAltitudeHold = false;
   const nBadge = document.getElementById('key-n');
   if (nBadge) nBadge.classList.remove('active');

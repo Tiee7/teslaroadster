@@ -1,0 +1,113 @@
+✔ terrain-v2 explicitly supersedes flat-layout byte identity while retaining network-free owned art (3.185175ms)
+✔ actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance (1165.541424ms)
+✔ five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets (1961.310511ms)
+✔ terrain road mesh has upward normals and world-metre UVs; landscape meets retained beach without overlap (796.838207ms)
+✔ batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion (780.306771ms)
+✔ original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes (892.131596ms)
+✔ curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages (952.398822ms)
+✔ palm LOD keeps all94 retained original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout (793.36629ms)
+✔ whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool (787.014261ms)
+✔ all41 retained entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building (828.979663ms)
+✔ boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded (889.881677ms)
+✔ new 9m road edge/center paint follows actual elevated support instead of obsolete flat30m boulevards (2472.523646ms)
+✔ western boulevard curb has an actual visual cut across the original pier approach (742.982668ms)
+✔ continuous water/sand grids retain exact original area, bounds, elevation and upward winding (814.448707ms)
+✔ native water normals drift by uniforms only, retain finite periodic offsets and dispose once (979.648479ms)
+✖ original art payload remains below the explicit32KiB gzip ceiling with zero art fetches (544.890636ms)
+✔ fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights (927.272555ms)
+✔ selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors (863.032809ms)
+✔ curved roof trim is a finite closed shallow parapet, not a new collidable full roof (834.772562ms)
+✔ composed courtyard and three beach entries retain original obstacles, shoulders and ground datum (804.462786ms)
+✔ driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles (728.718073ms)
+✔ corner storefront lettering reads left-to-right from actual outward X and Z viewpoints (768.209003ms)
+✔ continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles (798.297793ms)
+✔ world terrain field keeps metre-bounded landscape UV, uploads once and reuses only bounded CPU pixels (975.922005ms)
+✔ two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks (741.828956ms)
+✔ curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle (738.783447ms)
+✔ terrain-v2 retained entrances remain on their actual44 coastal building facades with finite explicit path ownership (733.890925ms)
+✔ six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors (761.93959ms)
+✔ signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance (1025.206697ms)
+✔ two driving-visible arrival places reuse flat paving/furniture batches and protect original and new footpaths (744.11431ms)
+✔ terrain-v2 preserves original V8 and existing world/taxi/vehicles/city-clock source identities (5.747399ms)
+✔ actual highway/realistic/coast retains every numeric field Object.is for 300 fixed ticks (124.499004ms)
+✔ actual highway/realistic/throttle retains every numeric field Object.is for 300 fixed ticks (51.191829ms)
+✔ actual highway/realistic/brake retains every numeric field Object.is for 300 fixed ticks (52.170536ms)
+✔ actual highway/realistic/boost retains every numeric field Object.is for 300 fixed ticks (56.776283ms)
+✔ actual highway/realistic/steer retains every numeric field Object.is for 300 fixed ticks (63.817759ms)
+✔ actual highway/realistic/reverse retains every numeric field Object.is for 300 fixed ticks (41.773289ms)
+✔ actual highway/realistic/jump retains every numeric field Object.is for 300 fixed ticks (51.065944ms)
+✔ actual highway/realistic/lift retains every numeric field Object.is for 300 fixed ticks (43.317609ms)
+✔ actual highway/realistic/freefall retains every numeric field Object.is for 300 fixed ticks (49.590535ms)
+✔ actual highway/realistic/retro retains every numeric field Object.is for 300 fixed ticks (49.732014ms)
+✔ actual highway/fantasy/coast retains every numeric field Object.is for 300 fixed ticks (48.216927ms)
+✔ actual highway/fantasy/throttle retains every numeric field Object.is for 300 fixed ticks (39.954272ms)
+✔ actual highway/fantasy/brake retains every numeric field Object.is for 300 fixed ticks (34.042381ms)
+✔ actual highway/fantasy/boost retains every numeric field Object.is for 300 fixed ticks (35.119742ms)
+✔ actual highway/fantasy/steer retains every numeric field Object.is for 300 fixed ticks (43.112397ms)
+✔ actual highway/fantasy/reverse retains every numeric field Object.is for 300 fixed ticks (37.002148ms)
+✔ actual highway/fantasy/jump retains every numeric field Object.is for 300 fixed ticks (43.745094ms)
+✔ actual highway/fantasy/lift retains every numeric field Object.is for 300 fixed ticks (39.627333ms)
+✔ actual highway/fantasy/freefall retains every numeric field Object.is for 300 fixed ticks (62.739741ms)
+✔ actual highway/fantasy/retro retains every numeric field Object.is for 300 fixed ticks (41.341809ms)
+✔ actual city/realistic/coast retains every numeric field Object.is for 300 fixed ticks (39.613453ms)
+✔ actual city/realistic/throttle retains every numeric field Object.is for 300 fixed ticks (39.183603ms)
+✔ actual city/realistic/brake retains every numeric field Object.is for 300 fixed ticks (51.087696ms)
+✔ actual city/realistic/boost retains every numeric field Object.is for 300 fixed ticks (39.370257ms)
+✔ actual city/realistic/steer retains every numeric field Object.is for 300 fixed ticks (67.820043ms)
+✔ actual city/realistic/reverse retains every numeric field Object.is for 300 fixed ticks (44.894105ms)
+✔ actual city/realistic/jump retains every numeric field Object.is for 300 fixed ticks (69.874597ms)
+✔ actual city/realistic/lift retains every numeric field Object.is for 300 fixed ticks (60.616435ms)
+✔ actual city/realistic/freefall retains every numeric field Object.is for 300 fixed ticks (39.626497ms)
+✔ actual city/realistic/retro retains every numeric field Object.is for 300 fixed ticks (44.905071ms)
+✔ actual city/fantasy/coast retains every numeric field Object.is for 300 fixed ticks (39.410421ms)
+✔ actual city/fantasy/throttle retains every numeric field Object.is for 300 fixed ticks (40.238511ms)
+✔ actual city/fantasy/brake retains every numeric field Object.is for 300 fixed ticks (42.506067ms)
+✔ actual city/fantasy/boost retains every numeric field Object.is for 300 fixed ticks (38.458469ms)
+✔ actual city/fantasy/steer retains every numeric field Object.is for 300 fixed ticks (45.341572ms)
+✔ actual city/fantasy/reverse retains every numeric field Object.is for 300 fixed ticks (38.945839ms)
+✔ actual city/fantasy/jump retains every numeric field Object.is for 300 fixed ticks (35.641667ms)
+✔ actual city/fantasy/lift retains every numeric field Object.is for 300 fixed ticks (37.703131ms)
+✔ actual city/fantasy/freefall retains every numeric field Object.is for 300 fixed ticks (33.702723ms)
+✔ actual city/fantasy/retro retains every numeric field Object.is for 300 fixed ticks (41.189861ms)
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (3.141279ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (2637.038731ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (324.048054ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (15.219199ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.271858ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (69.81363ms)
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (4.933297ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (32.138989ms)
+✔ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.238386ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (2.710796ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.613838ms)
+ℹ tests 82
+ℹ suites 0
+ℹ pass 81
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 27236.958682
+
+✖ failing tests:
+
+test at tests/coast-art.test.mjs:225:1
+✖ original art payload remains below the explicit32KiB gzip ceiling with zero art fetches (544.890636ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(gzipSync(artSource).byteLength<=coast.artBudget.sourceGzipBytes&&gzipSync(roadSource).byteLength<=8192)
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-art.test.mjs:226:178)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

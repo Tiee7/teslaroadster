@@ -4,16 +4,19 @@ import {readFileSync,existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import {gzipSync} from 'node:zlib';
-const source=readFileSync(new URL('../src/coast-map.js',import.meta.url),'utf8');
+const artSource=readFileSync(new URL('../src/coast-map.js',import.meta.url),'utf8'),roadSource=readFileSync(new URL('../src/coast-road-network.js',import.meta.url),'utf8');
+const source=roadSource+'\n'+artSource;
 const contract=JSON.parse(readFileSync(new URL('../verification/coast-art/collision-contract.json',import.meta.url)));
 const runtime=process.env.ROADSTER_THREE_RUNTIME||'/tmp/roadster-three.min.js';
 const sha=s=>createHash('sha256').update(s).digest('hex');
 function actual(){const c=vm.createContext({window:{},console});vm.runInContext(readFileSync(runtime,'utf8'),c);vm.runInContext(source,c);return {T:c.THREE,coast:c.window.RoadsterCoast};}
 
-test('coast art preserves the complete original road, collision, surface, respawn and traffic source byte for byte',()=>{
- assert.equal(sha(source.slice(0,source.indexOf('  let active=null'))),contract.prefixSha256);
+test('terrain-v2 explicitly supersedes flat-layout byte identity while retaining network-free owned art',()=>{
+ assert.equal(contract.terrainRevision.version,2);assert.equal(contract.terrainRevision.baseCommit,'a88cedf657b3cc066a63063bde9aa1caeb606445');
+ assert.match(artSource,/const network=RoadsterCoastRoads/);
  assert.doesNotMatch(source,/TextureLoader|GLTFLoader|fetch\(|XMLHttpRequest|https?:\/\//,'no new asset network requests');
 });
+
 
 test('actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
@@ -28,8 +31,7 @@ test('actual map art keeps a bounded sample street, separate texture ownership a
   for(let i=0;i<o.count;i++){
    o.getMatrixAt(i,matrix);world.multiplyMatrices(o.matrixWorld,matrix);const b=o.geometry.boundingBox.clone().applyMatrix4(world);
    // New raised props must not overlap actual drivable roads/junctions, including a 2m shoulder.
-   for(const r of coast.roads){const pad=2;assert.ok(b.max.x<=r.x-r.w/2-pad||b.min.x>=r.x+r.w/2+pad||b.max.z<=r.z-r.d/2-pad||b.min.z>=r.z+r.d/2+pad,`${o.name}[${i}] road clearance`);}
-   for(const n of coast.nodes){const h=17+2;assert.ok(b.max.x<=n.x-h||b.min.x>=n.x+h||b.max.z<=n.z-h||b.min.z>=n.z+h,`${o.name}[${i}] junction clearance`);}
+   for(const r of coast.roads){if(b.min.y>4)continue;const pad=2;assert.ok(b.max.x<=r.x-r.w/2-pad||b.min.x>=r.x+r.w/2+pad||b.max.z<=r.z-r.d/2-pad||b.min.z>=r.z+r.d/2+pad,`${o.name}[${i}] road clearance`);}
    props.push(b);
   }
  });assert.ok(props.length>500);
@@ -55,30 +57,14 @@ test('five map art entry/exit cycles dispose every owned texture/material/geomet
  assert.equal(shared,0);assert.equal(coast.metrics().builds,5);assert.equal(coast.metrics().disposals,5);
 });
 
-test('road render union is exact, non-overlapping and uses square world-metre texture UVs',{
- skip:existsSync(runtime)?false:'Official production Three r128 required'
-},()=>{
- const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),road=root.getObjectByName('coast-road-surfaces');
- assert.equal(road.isInstancedMesh,undefined,'road is one union surface, not stacked overlapping boxes');
- const g=road.geometry,p=g.attributes.position,n=g.attributes.normal,uv=g.attributes.uv,index=g.index.array,tile=road.material.userData.coastMetresPerTextureTile;
- assert.equal(tile,4);assert.equal(index.length/3,86);let area=0;const rects=[];
- for(let i=0;i<p.count;i++){
-  assert.ok(Math.abs(n.getY(i)-1)<1e-7,'front face points above the road');
-  assert.ok(Math.abs(uv.getX(i)*tile-p.getX(i))<2e-4);assert.ok(Math.abs(uv.getY(i)*tile-p.getZ(i))<2e-4);
- }
- for(let i=0;i<index.length;i+=3){const [a,b,c]=Array.from(index.slice(i,i+3)).map(i=>new T.Vector3().fromBufferAttribute(p,i));area+=new T.Vector3().subVectors(b,a).cross(new T.Vector3().subVectors(c,a)).length()/2;}
- assert.equal(area,229704,'analytical union area:235960−7216+960m²');
- for(let i=0;i<p.count;i+=4){const xs=[0,1,2,3].map(k=>p.getX(i+k)),zs=[0,1,2,3].map(k=>p.getZ(i+k));rects.push({minX:Math.min(...xs),maxX:Math.max(...xs),minZ:Math.min(...zs),maxZ:Math.max(...zs)});}
- for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++){const a=rects[i],b=rects[j];assert.ok(a.maxX<=b.minX||a.minX>=b.maxX||a.maxZ<=b.minZ||a.minZ>=b.maxZ,'no stacked coplanar road tops');}
- let seed=1729;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
- for(let i=0;i<20000;i++){const x=-100+rand()*1100,z=-900+rand()*1800;assert.equal(rects.some(r=>x>=r.minX&&x<=r.maxX&&z>=r.minZ&&z<=r.maxZ),coast.onRoad(x,z));}
- for(const name of ['coast-promenade','coast-sample-parcel-paving','coast-street-sidewalks']){
-  const o=root.getObjectByName(name),geo=o.geometry,t=o.material.userData.coastMetresPerTextureTile;assert.equal(t,2.4);
-  for(let i=0;i<geo.attributes.position.count;i++){assert.ok(Math.abs(geo.attributes.uv.getX(i)*t-geo.attributes.position.getX(i))<2e-4);assert.ok(Math.abs(geo.attributes.uv.getY(i)*t-geo.attributes.position.getZ(i))<2e-4);}
- }
- root.updateMatrixWorld(true);const inland=root.getObjectByName('coast-inland-ground'),matrix=new T.Matrix4();inland.getMatrixAt(0,matrix);inland.geometry.computeBoundingBox();const land=inland.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(inland.matrixWorld,matrix)),sand=new T.Box3().setFromObject(root.getObjectByName('coast-sand'));
- assert.equal(land.min.x,sand.max.x,'land and beach meet at one boundary instead of sharing185m of coplanar surface');coast.leave();
+test('terrain road mesh has upward normals and world-metre UVs; landscape meets retained beach without overlap',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),road=root.getObjectByName('coast-road-surfaces'),g=road.geometry,p=g.attributes.position,n=g.attributes.normal,uv=g.attributes.uv;
+ assert.equal(road.isInstancedMesh,undefined);assert.equal(p.count/3,coast.network.stats().roadTriangles);
+ for(let i=0;i<p.count;i++){assert.ok(n.getY(i)>.99);assert.ok(Math.abs(uv.getX(i)*4-p.getX(i))<2e-4);assert.ok(Math.abs(uv.getY(i)*4-p.getZ(i))<2e-4);}
+ for(const name of ['coast-promenade','coast-sample-parcel-paving','coast-street-sidewalks']){const o=root.getObjectByName(name),geo=o.geometry,t=o.material.userData.coastMetresPerTextureTile;assert.equal(t,2.4);for(let i=0;i<geo.attributes.position.count;i++){assert.ok(Math.abs(geo.attributes.uv.getX(i)*t-geo.attributes.position.getX(i))<2e-4);assert.ok(Math.abs(geo.attributes.uv.getY(i)*t-geo.attributes.position.getZ(i))<2e-4);}}
+ root.updateMatrixWorld(true);const land=new T.Box3().setFromObject(root.getObjectByName('coast-inland-ground')),sand=new T.Box3().setFromObject(root.getObjectByName('coast-sand'));assert.equal(land.min.x,sand.max.x);assert.ok(land.max.y>40);coast.leave();
 });
+
 
 test('batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
@@ -136,7 +122,7 @@ test('curated beach pockets, promenade furniture and pier gateway retain human s
  coast.leave();
 });
 
-test('palm LOD keeps all100 original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout',{
+test('palm LOD keeps all94 retained original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(-64,0,700);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T);
@@ -146,7 +132,7 @@ test('palm LOD keeps all100 original crown poses and bounded pools, caches stati
   for(const mesh of meshes){assert.ok(mesh.count<=mesh.userData.coastArt.capacity);if(mesh.name.includes('-far'))far+=mesh.count;else near+=mesh.count;
    for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);position.setFromMatrixPosition(matrix);const index=coast.layout().palms.findIndex(p=>Math.abs(position.x-p.x-.18*Math.sin(Math.PI*.7))<1e-4&&Math.abs(position.z-p.z-.1*Math.sin(Math.PI*1.4))<1e-4&&Math.abs(position.y-p.h)<1e-4);assert.ok(index>=0);assert.equal(seen.has(index),false,'no duplicate high/low crown');seen.add(index);}
   }
-  assert.equal(near+far,100);assert.equal(seen.size,100);assert.ok(near<=24);assert.equal(coast.metrics().nearPalms,near);assert.equal(coast.metrics().farPalms,far);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);
+  assert.equal(near+far,94);assert.equal(seen.size,94);assert.ok(near<=24);assert.equal(coast.metrics().nearPalms,near);assert.equal(coast.metrics().farPalms,far);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);
  };
  check();const versions=meshes.map(m=>m.instanceMatrix.version),refreshes=coast.metrics().foliageRefreshes;
  for(let i=0;i<600;i++)coast.tick(1/60);assert.deepEqual(meshes.map(m=>m.instanceMatrix.version),versions);assert.equal(coast.metrics().foliageRefreshes,refreshes);
@@ -159,9 +145,9 @@ test('whole-district apertures have four outward faces, selective masked emissio
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(430,0,0);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T),meta=root.userData.coastArtDistrict;
- assert.equal(root.getObjectByName('coast-dark-window-bands'),undefined);assert.equal(root.getObjectByName('coast-original-shop-houses').count,156);assert.equal(meta.entryCount,129);
+ assert.equal(root.getObjectByName('coast-dark-window-bands'),undefined);assert.equal(root.getObjectByName('coast-original-shop-houses').count,56);assert.equal(meta.entryCount,41);
  const windows=[root.getObjectByName('coast-district-window-sashes'),root.getObjectByName('coast-district-selected-lit-windows'),root.getObjectByName('coast-district-window-sashes-transom'),root.getObjectByName('coast-district-selected-lit-windows-transom')],pool=root.getObjectByName('coast-district-near-window-reveals');
- assert.equal(windows.reduce((n,m)=>n+m.count,0),meta.windowCount);assert.ok(meta.windowCount>14000&&meta.windowCount<19000);
+ assert.equal(windows.reduce((n,m)=>n+m.count,0),meta.windowCount);assert.ok(meta.windowCount>4000&&meta.windowCount<7000);
  const matrix=new T.Matrix4(),point=new T.Vector3(),normal=new T.Vector3(),coverage=new Map();
  for(const mesh of windows)for(let i=0;i<mesh.count;i++){
   mesh.getMatrixAt(i,matrix);point.setFromMatrixPosition(matrix);normal.set(1,0,0).transformDirection(matrix);
@@ -169,17 +155,17 @@ test('whole-district apertures have four outward faces, selective masked emissio
   assert.ok(bi>=0);assert.equal(mesh.userData.coastArt.facadeFamily,meta.families.find(r=>r.buildingIndex===bi).family,'one coherent atlas family per whole building');const b=coast.layout().buildings[bi];assert.ok(normal.dot(point.clone().sub(new T.Vector3(b.x,point.y,b.z)))>0,'front faces are not culled toward their own solid wall');
   const face=Math.abs(normal.x)>.9?(normal.x<0?'west':'east'):(normal.z<0?'north':'south');if(!coverage.has(bi))coverage.set(bi,new Set());coverage.get(bi).add(face);
  }
- assert.equal(coverage.size,129);for(const faces of coverage.values())assert.equal(faces.size,4);
+ assert.equal(coverage.size,41);for(const faces of coverage.values())assert.equal(faces.size,4);
  assert.equal(windows[1].material.emissiveMap.image.width,128);assert.equal(windows[0].material.map,windows[1].material.map);
  const mask=windows[1].material.emissiveMap.image.data;assert.equal(mask[(20*128+7)*4],0);assert.ok(mask[(20*128+8)*4]>0);assert.ok(mask[(20*128+55)*4]>0);assert.equal(mask[(20*128+56)*4],0);
- assert.equal(pool.userData.coastArt.capacity,768);assert.equal(pool.instanceMatrix.array.byteLength,49152);assert.ok(pool.count>0&&pool.count<=768);
+ assert.equal(pool.userData.coastArt.capacity,384);assert.equal(pool.instanceMatrix.array.byteLength,24576);assert.ok(pool.count>0&&pool.count<=384);
  const buffer=pool.instanceMatrix.array,version=pool.instanceMatrix.version,refreshes=coast.metrics().detailRefreshes;
  for(let i=0;i<600;i++)coast.tick(1/60);assert.equal(pool.instanceMatrix.version,version);focus.x+=19.99;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes);focus.x+=.02;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes+1);
- for(const [x,z] of [[-64,700],[950,850],[1115,1000],[-700,-650],[430,0]]){focus.set(x,999,z);coast.tick(1/60);assert.equal(pool.instanceMatrix.array,buffer);assert.ok(pool.count<=768);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);}
+ for(const [x,z] of [[-64,700],[950,850],[1115,1000],[-700,-650],[430,0]]){focus.set(x,999,z);coast.tick(1/60);assert.equal(pool.instanceMatrix.array,buffer);assert.ok(pool.count<=384);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);}
  assert.ok(coast.metrics().ownedGeometryBufferBytes+coast.metrics().ownedInstanceBufferBytes<=coast.artBudget.geometryAndInstanceBytes);coast.leave();
 });
 
-test('all129 new entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building',{
+test('all41 retained entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),meta=root.userData.coastArtDistrict,buildings=coast.layout().buildings;let linked=0,gardens=0;
@@ -191,8 +177,7 @@ test('all129 new entry doors face finite real street segments or explicit local 
   const lo=Math.min(from,entry.pathEnd),hi=Math.max(from,entry.pathEnd);
   for(const other of coast.layout().obstacles)if(other!==b)assert.ok(axis==='x'?other.maxX<=lo||other.minX>=hi||other.maxZ<=along-1.3||other.minZ>=along+1.3:other.maxZ<=lo||other.minZ>=hi||other.maxX<=along-1.3||other.minX>=along+1.3,'entry paving cannot draw through any original solid building or palm');
  }
- for(const index of [47,49,51]){const entry=meta.entries.find(e=>e.buildingIndex===index);assert.equal(entry.linkedToSidewalk,true);assert.ok(Math.abs(entry.door[2]-buildings[index].z)>2,'the three palm-conflicting doors actually moved along their facade');}
- assert.ok(linked>=30,'street-facing row doors actually reach original sidewalks');assert.equal(gardens,4,'outer corner parcels do not face imaginary road extensions');
+ assert.equal(linked,4,'remaining street-facing row doors reach retained sidewalks');assert.equal(gardens,11,'retired inland grid frontages become explicit gardens, not imaginary streets');
  assert.ok(root.getObjectByName('coast-district-entry-paving').geometry.index.count>0);coast.leave();
 });
 
@@ -204,21 +189,13 @@ test('boulevard planting and signs add scale only beyond unchanged road shoulder
  const maximum=coast.metrics().maximumStaticTriangles;coast.weather({rain:true});assert.equal(coast.metrics().maximumStaticTriangles,maximum);coast.leave();
 });
 
-test('boulevard calibration is flat paint only, retains full body clearance and leaves all intersections plus pier access unpainted',{
- skip:existsSync(runtime)?false:'Official production Three r128 required'
-},()=>{
- const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),matrix=new T.Matrix4(),point=new T.Vector3(),bounds=new T.Box3(),gaps=[...[-850,-300,300,850].map(z=>[z-34,z+34]),[-680,-620]],edges=[],centres=new Set();
- const checkBounds=box=>{const center=box.min.x>300?430:-70;centres.add(center);assert.ok(box.min.x>=center-14.75-1e-4&&box.max.x<=center+14.75+1e-4,'paint stays inside either unchanged30m boulevard');assert.ok(box.min.y>.025&&box.max.y<.026,'no raised divider/curb/obstacle');for(const [lo,hi] of (center===-70?gaps:gaps.slice(0,-1)))assert.ok(box.max.z<=lo+1e-4||box.min.z>=hi-1e-4,'turning, zebra and pier entrances stay blank');};
- for(const name of ['coast-boulevard-painted-cycle-lanes','coast-boulevard-white-road-paint','coast-boulevard-ochre-road-paint','coast-boulevard-cycle-stencil-wheels']){
-  const mesh=root.getObjectByName(name);assert.ok(mesh.userData.coastArt.flat);assert.equal(mesh.castShadow,false);assert.equal(mesh.material.depthWrite,false);assert.equal(mesh.material.polygonOffset,true);const p=mesh.geometry.attributes.position;
-  if(mesh.isInstancedMesh)for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);bounds.makeEmpty();for(let k=0;k<p.count;k++)bounds.expandByPoint(point.fromBufferAttribute(p,k).applyMatrix4(matrix));checkBounds(bounds);if(name.includes('white')&&Math.abs(matrix.elements[10])>100)edges.push(matrix.elements[12]-(matrix.elements[12]>300?430:-70));}
-  else for(let i=0;i<p.count;i+=4){bounds.makeEmpty();for(let k=0;k<4;k++)bounds.expandByPoint(point.fromBufferAttribute(p,i+k));checkBounds(bounds);}
- }
- assert.deepEqual([...centres].sort((a,b)=>a-b),[-70,430],'both existing30m boulevards get scale calibration, not the22m street');
- assert.ok(edges.some(x=>Math.abs(x-7.5)<1e-5)&&edges.some(x=>Math.abs(x+7.5)<1e-5));
- for(const center of [-4,4,6]){const lo=center>0?2.5:-7.5,hi=center>0?7.5:-2.5;assert.ok(center-1.1>lo&&center+1.1<hi,'NPCs and default spawn retain a complete conservative body envelope within the through band');}
- coast.leave();
+test('new 9m road edge/center paint follows actual elevated support instead of obsolete flat30m boulevards',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),mesh=root.getObjectByName('coast-terrain-road-paint'),p=mesh.geometry.attributes.position;
+ assert.equal(mesh.castShadow,false);assert.equal(mesh.material.polygonOffset,true);assert.ok(p.count>10000);
+ for(let i=0;i<p.count;i++)assert.ok(coast.network.candidates(p.getX(i),p.getZ(i)).some(s=>s.road&&Math.min(Math.abs(p.getY(i)-s.height-.015),Math.abs(p.getY(i)-s.height-.018))<1e-4),'paint follows the SAME collision mesh plus15mm');
+ assert.equal(root.getObjectByName('coast-boulevard-painted-cycle-lanes'),undefined,'removed30m lane layout must not remain over new terrain');coast.leave();
 });
+
 
 test('western boulevard curb has an actual visual cut across the original pier approach',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
@@ -246,7 +223,7 @@ test('native water normals drift by uniforms only, retain finite periodic offset
 
 
 test('original art payload remains below the explicit32KiB gzip ceiling with zero art fetches',()=>{
- const context=vm.createContext({window:{}});vm.runInContext(source,context);const coast=context.window.RoadsterCoast;assert.equal(coast.artBudget.sourceGzipBytes,32768);assert.ok(gzipSync(source).byteLength<=coast.artBudget.sourceGzipBytes);assert.doesNotMatch(source,/fetch\(|TextureLoader|GLTFLoader|https?:\/\//);
+ const context=vm.createContext({window:{}});vm.runInContext(source,context);const coast=context.window.RoadsterCoast;assert.equal(coast.artBudget.sourceGzipBytes,32768);assert.ok(gzipSync(artSource).byteLength<=coast.artBudget.sourceGzipBytes&&gzipSync(roadSource).byteLength<=8192);assert.doesNotMatch(source,/fetch\(|TextureLoader|GLTFLoader|https?:\/\//);
 });
 
 test('fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
@@ -259,14 +236,14 @@ test('fine surf stays strictly sea-side and the original38cm cut is closed witho
 
 test('selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),records=root.userData.coastBalconies,glass=root.getObjectByName('coast-sample-framed-glazing'),trim=root.getObjectByName('coast-architecture-limestone-trims'),matrix=new T.Matrix4(),p=new T.Vector3(),q=new T.Quaternion(),scale=new T.Vector3(),poses=[];
- assert.ok(records.length>=40&&records.length<=100);for(let i=0;i<glass.count;i++){glass.getMatrixAt(i,matrix);matrix.decompose(p,q,scale);poses.push({p:p.clone(),s:scale.clone()});}
+ assert.ok(records.length===33);for(let i=0;i<glass.count;i++){glass.getMatrixAt(i,matrix);matrix.decompose(p,q,scale);poses.push({p:p.clone(),s:scale.clone()});}
  for(const r of records){const b=coast.layout().buildings[r.buildingIndex];assert.ok([-5,355,485].includes(b.x));assert.equal(r.doorHeight,2.45);const face=(r.axis==='x'?b.x:b.z)+r.side*((r.axis==='x'?b.w:b.d)/2+.065),want=r.axis==='x'?new T.Vector3(face,r.floor+1.225,r.along):new T.Vector3(r.along,r.floor+1.225,face),door=poses.find(v=>v.p.distanceTo(want)<1e-3);assert.ok(door,'actual glass instance at each metadata door');assert.ok(Math.abs(door.s.y-2.45)<1e-6);assert.ok(Math.abs(door.p.y-door.s.y/2-r.floor)<1e-5,'door bottom meets the platform, not a raised window sill');let found=false;
   for(let i=0;i<trim.count;i++){trim.getMatrixAt(i,matrix);matrix.decompose(p,q,scale);const f=(r.axis==='x'?b.x:b.z)+r.side*(r.axis==='x'?b.w:b.d)/2+r.side*.78;if(Math.abs(p[r.axis]-f)<1e-3&&Math.abs(p[r.axis==='x'?'z':'x']-r.along)<1e-3&&Math.abs(p.y-(r.floor-.09))<1e-3&&Math.abs(scale.y-.18)<1e-5){assert.ok(Math.abs(p.y+scale.y/2-r.floor)<1e-5);found=true;break;}}assert.ok(found,'real platform geometry exists');
  }coast.leave();
 });
 
 test('curved roof trim is a finite closed shallow parapet, not a new collidable full roof',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
- const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),mesh=root.getObjectByName('coast-district-curved-parapets'),g=mesh.geometry,p=g.attributes.position,n=g.attributes.normal,a=new T.Vector3(),b=new T.Vector3(),c=new T.Vector3();assert.ok(mesh.count>=15&&mesh.count<=25);assert.equal(g.index.count/3,54);g.computeBoundingBox();assert.equal(g.boundingBox.min.y,0);assert.equal(g.boundingBox.max.y,1);
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),mesh=root.getObjectByName('coast-district-curved-parapets'),g=mesh.geometry,p=g.attributes.position,n=g.attributes.normal,a=new T.Vector3(),b=new T.Vector3(),c=new T.Vector3();assert.ok(mesh.count===7);assert.equal(g.index.count/3,54);g.computeBoundingBox();assert.equal(g.boundingBox.min.y,0);assert.equal(g.boundingBox.max.y,1);
  for(let i=0;i<p.count;i++){assert.ok(Math.abs(n.getX(i)**2+n.getY(i)**2+n.getZ(i)**2-1)<1e-6);assert.ok(Math.abs(p.getX(i))<=.5&&Math.abs(p.getZ(i))<=.5);}for(let i=0;i<g.index.count;i+=3){a.fromBufferAttribute(p,g.index.getX(i));b.fromBufferAttribute(p,g.index.getX(i+1));c.fromBufferAttribute(p,g.index.getX(i+2));assert.ok(b.sub(a).cross(c.sub(a)).lengthSq()>1e-12);}coast.leave();
 });
 
@@ -282,7 +259,7 @@ test('driving-visible inland corner shop windows replace ground sashes without i
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),records=root.userData.coastCornerStores,panels=root.getObjectByName('coast-corner-store-ground-panels');
- assert.equal(records.length,8);assert.equal(panels.count,8);assert.equal(new Set(records.map(r=>r.buildingIndex)).size,4);
+ assert.equal(records.length,4);assert.equal(panels.count,4);assert.equal(new Set(records.map(r=>r.buildingIndex)).size,2);
  for(const r of records){const b=coast.layout().buildings[r.buildingIndex];assert.ok([355,485].includes(b.x)&&[440,580].includes(b.z));assert.ok(r.entranceUnchanged);assert.ok(r.axis==='x'?r.side===(b.x<430?1:-1):r.side===1);assert.equal(r.width,11.6);}
  assert.ok(coast.metrics().maximumStaticTriangles<=180000,'driving-scale details fit the same fixed maximum capacity budget');coast.leave();
 });
@@ -319,14 +296,14 @@ test('continuous roof parapets preserve exact four-box union while removing2112 
 });
 
 
-test('world ground field retains exact full box/independent UV, uploads once and reuses only bounded CPU pixels',{
+test('world terrain field keeps metre-bounded landscape UV, uploads once and reuses only bounded CPU pixels',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),root=coast.enter(scene,T),ground=root.getObjectByName('coast-inland-ground'),texture=ground.material.map,meta=root.userData.coastGroundField;
  assert.equal(texture.image.width,256);assert.equal(texture.image.height,256);assert.equal(texture.wrapS,T.ClampToEdgeWrapping);assert.equal(texture.wrapT,T.ClampToEdgeWrapping);assert.equal(texture.repeat.x,1);assert.equal(texture.repeat.y,1);assert.equal(texture.offset.x,0);assert.equal(texture.offset.y,0);assert.equal(texture.generateMipmaps,true);
  assert.deepEqual(Array.from(meta.bounds),[-145,1200,-1200,1200]);assert.equal(meta.regions.length,root.userData.coastArtDistrict.entries.filter(e=>e.linkedToSidewalk).length+root.userData.coastCornerCourts.length+1);assert.equal(ground.material.color.getHex(),0xffffff);
- const p=ground.geometry.attributes.position,uv=ground.geometry.attributes.uv;for(let i=0;i<p.count;i++){assert.ok(Math.abs(uv.getX(i)-(p.getX(i)+.5))<1e-7);assert.ok(Math.abs(uv.getY(i)-(p.getZ(i)+.5))<1e-7);}
- const matrix=new T.Matrix4();ground.getMatrixAt(0,matrix);ground.geometry.computeBoundingBox();const bounds=ground.geometry.boundingBox.clone().applyMatrix4(matrix);for(const [a,b] of [[bounds.min.x,-145],[bounds.max.x,1200],[bounds.min.z,-1200],[bounds.max.z,1200],[bounds.min.y,-.20],[bounds.max.y,-.04]])assert.ok(Math.abs(a-b)<1e-5,'complete original box including bottom and side heights');
+ const p=ground.geometry.attributes.position,uv=ground.geometry.attributes.uv;for(let i=0;i<p.count;i++){assert.ok(Math.abs(uv.getX(i)-(p.getX(i)+145)/1345)<1e-7);assert.ok(Math.abs(uv.getY(i)-(p.getZ(i)+1200)/2400)<1e-7);}
+ ground.geometry.computeBoundingBox();const bounds=ground.geometry.boundingBox;for(const [a,b]of[[bounds.min.x,-145],[bounds.max.x,1200],[bounds.min.z,-1200],[bounds.max.z,1200]])assert.ok(Math.abs(a-b)<1e-5);assert.ok(bounds.max.y>40,'real triangulated landscape replaces flat box');
  const pixels=texture.image.data,version=texture.version,checksum=sha(pixels);let disposed=0;texture.addEventListener('dispose',()=>disposed++);for(let i=0;i<600;i++)coast.tick(1/60);coast.weather({rain:true});coast.weather({marsSun:true});assert.equal(texture.image.data,pixels);assert.equal(texture.version,version);assert.equal(sha(pixels),checksum);assert.equal(pixels.byteLength,256*256*4);assert.ok(coast.metrics().cachedCpuPixelBytes<=coast.artBudget.cpuPixelCacheBytes);
  coast.leave();assert.equal(disposed,1);assert.equal(coast.metrics().ownedTextures,0);assert.equal(coast.metrics().textureBytes,0);assert.equal(coast.metrics().cachedCpuPixelBytes,256*256*4,'explicit CPU bitmap cache, not a retained GPU texture');const again=coast.enter(scene,T).getObjectByName('coast-inland-ground').material.map;assert.notEqual(again,texture);assert.equal(again.image.data,pixels);coast.leave();
 });
@@ -336,7 +313,7 @@ test('two grouped aperture families use independent half-atlas UVs and synchroni
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),meta=root.userData.coastArtDistrict;
- assert.equal(meta.families.length,129);for(const r of meta.families){const b=coast.layout().buildings[r.buildingIndex];assert.equal(r.family,(Math.floor((b.z+1000)/560)+(b.x>=430?1:0))%2);}
+ assert.equal(meta.families.length,41);for(const r of meta.families){const b=coast.layout().buildings[r.buildingIndex];assert.equal(r.family,(Math.floor((b.z+1000)/560)+(b.x>=430?1:0))%2);}
  const first=root.getObjectByName('coast-district-window-sashes'),second=root.getObjectByName('coast-district-window-sashes-transom'),lit=root.getObjectByName('coast-district-selected-lit-windows');assert.equal(first.material,second.material);assert.notEqual(first.geometry,second.geometry);
  for(const [family,mesh] of [[0,first],[1,second]]){const uv=mesh.geometry.attributes.uv;for(let i=0;i<uv.count;i++)assert.ok(uv.getX(i)>=family/2&&uv.getX(i)<=(family+1)/2);}
  const albedo=first.material.map.image.data,mask=lit.material.emissiveMap.image.data;
@@ -350,23 +327,24 @@ test('two grouped aperture families use independent half-atlas UVs and synchroni
 test('curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
- const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),courts=root.userData.coastCornerCourts;assert.equal(courts.length,8);assert.equal(new Set(courts.map(r=>r.buildingIndex)).size,4);
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),courts=root.userData.coastCornerCourts;assert.equal(courts.length,0);assert.equal(new Set(courts.map(r=>r.buildingIndex)).size,0);
  for(const r of courts){const b=coast.layout().buildings[r.buildingIndex];assert.ok(r.minX<r.maxX&&r.minZ<r.maxZ);assert.ok((r.maxX-r.minX)*(r.maxZ-r.minZ)<300,'limited frontage, not a giant color rectangle');for(const o of coast.layout().obstacles)if(o!==b)assert.ok(r.maxX<=o.minX||r.minX>=o.maxX||r.maxZ<=o.minZ||r.minZ>=o.maxZ,'no false route through inherited palms/houses');for(const road of coast.roads)assert.ok(r.maxX<=road.x-road.w/2-2||r.minX>=road.x+road.w/2+2||r.maxZ<=road.z-road.d/2-2||r.minZ>=road.z+road.d/2+2);}
  assert.ok(root.getObjectByName('coast-district-entry-paving').userData.coastArt.flat);coast.leave();
 });
 
 
-test('window/forecourt refinements retain all129 published art entrance/path poses byte for byte',{
- skip:existsSync(runtime)?false:'Official production Three r128 required'
-},()=>{
- const expected=JSON.parse(readFileSync(new URL('../verification/coast-art/entry-pose-contract.json',import.meta.url)));const {T,coast}=actual(),root=coast.enter(new T.Scene(),T);assert.equal(root.userData.coastArtDistrict.entries.length,expected.entries);assert.equal(sha(JSON.stringify(root.userData.coastArtDistrict.entries)),expected.sha256);coast.leave();
+test('terrain-v2 retained entrances remain on their actual44 coastal building facades with finite explicit path ownership',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{
+ const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),entries=root.userData.coastArtDistrict.entries,buildings=coast.layout().buildings;
+ assert.equal(entries.length,41);for(const e of entries){const b=buildings[e.buildingIndex];assert.ok(b&&b.x<430);assert.ok(e.door.every(Number.isFinite)&&Number.isFinite(e.pathEnd));const wall=e.axis==='x'?b.x+e.side*b.w/2:b.z+e.side*b.d/2;assert.ok(Math.abs(e.door[e.axis==='x'?0:2]-wall)<.1);if(e.linkedToSidewalk)assert.ok(coast.roads[e.roadIndex]);}
+ coast.leave();
 });
+
 
 test('six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),walls=root.getObjectByName('coast-original-shop-houses'),roles=walls.userData.coastWallPieces,signatures=root.userData.coastSignatureHouses,layout=coast.layout();root.updateMatrixWorld(true);
- assert.equal(signatures.length,6);assert.equal(walls.count,156);assert.equal(roles.length,walls.count);assert.ok(walls.instanceColor);const matrix=new T.Matrix4(),color=new T.Color(),boxes=[];walls.geometry.computeBoundingBox();
+ assert.equal(signatures.length,3);assert.equal(walls.count,56);assert.equal(roles.length,walls.count);assert.ok(walls.instanceColor);const matrix=new T.Matrix4(),color=new T.Color(),boxes=[];walls.geometry.computeBoundingBox();
  for(let i=0;i<walls.count;i++){walls.getMatrixAt(i,matrix);boxes.push(walls.geometry.boundingBox.clone().applyMatrix4(matrix));walls.getColorAt(i,color);assert.ok(color.r>.2&&color.g>.2&&color.b>.2,'every body/pier color is initialized');}
  for(const [bi,b] of layout.buildings.entries()){
   const selected=signatures.find(s=>s.buildingIndex===bi),ids=roles.map((r,i)=>r.buildingIndex===bi&&r.role==='body'?i:-1).filter(i=>i>=0),segments=ids.map(i=>boxes[i]).sort((a,b)=>a.min.y-b.min.y);assert.equal(ids.length,selected?3:1);
@@ -374,14 +352,14 @@ test('six grouped facade signatures partition original wall hulls exactly with e
   assert.ok(Math.abs(last-b.height)<1e-4);assert.ok(Math.abs(volume-b.w*b.d*b.height)<.01,'sum of segment volumes is the original hull, not only its combined AABB');
   if(selected){assert.ok(Math.abs(segments[0].max.y-3.2)<1e-4);assert.ok(Math.abs(segments[1].max.y-selected.top)<1e-4);assert.ok(selected.top>3.2&&selected.top<b.height);for(let j=0;j<3;j++){walls.getColorAt(ids[j],color);assert.equal(color.getHex(),selected.colors[j]);}}
  }
- assert.equal(coast.metrics().staticMeshDraws,80);assert.equal(coast.metrics().maximumStaticTriangles,174634);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
+ assert.equal(coast.metrics().staticMeshDraws,82);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
 });
 
 test('signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(445,0,635);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T),walls=root.getObjectByName('coast-original-shop-houses'),roles=walls.userData.coastWallPieces,signatures=root.userData.coastSignatureHouses,layout=coast.layout(),matrix=new T.Matrix4();root.updateMatrixWorld(true);walls.geometry.computeBoundingBox();
- const piers=[];for(let i=0;i<walls.count;i++)if(roles[i].role==='pier'){walls.getMatrixAt(i,matrix);piers.push({box:walls.geometry.boundingBox.clone().applyMatrix4(matrix),buildingIndex:roles[i].buildingIndex});}assert.equal(piers.length,12);
+ const piers=[];for(let i=0;i<walls.count;i++)if(roles[i].role==='pier'){walls.getMatrixAt(i,matrix);piers.push({box:walls.geometry.boundingBox.clone().applyMatrix4(matrix),buildingIndex:roles[i].buildingIndex});}assert.equal(piers.length,6);
  const overlap=(a,b)=>Math.min(a.max.x,b.max.x)-Math.max(a.min.x,b.min.x)>1e-4&&Math.min(a.max.y,b.max.y)-Math.max(a.min.y,b.min.y)>1e-4&&Math.min(a.max.z,b.max.z)-Math.max(a.min.z,b.min.z)>1e-4;
  const touches=(a,b)=>['x','y','z'].every(k=>Math.min(a.max[k],b.max[k])-Math.max(a.min[k],b.min[k])>=-1e-5);
  for(const {box,buildingIndex} of piers){assert.ok(Math.abs(box.min.y-4.05)<1e-4,'above3.95m highest fascia');for(const r of coast.roads)assert.ok(box.max.x<=r.x-r.w/2-2||box.min.x>=r.x+r.w/2+2||box.max.z<=r.z-r.d/2-2||box.min.z>=r.z+r.d/2+2);for(const n of coast.nodes)assert.ok(box.max.x<=n.x-19||box.min.x>=n.x+19||box.max.z<=n.z-19||box.min.z>=n.z+19);for(const [bi,b] of layout.buildings.entries())if(bi!==buildingIndex)assert.ok(box.max.x<=b.minX||box.min.x>=b.maxX||box.max.z<=b.minZ||box.min.z>=b.maxZ);for(const p of layout.palms)assert.ok(box.max.x<=p.x-1.7||box.min.x>=p.x+1.7||box.max.z<=p.z-1.7||box.min.z>=p.z+1.7);}
@@ -408,5 +386,5 @@ test('two driving-visible arrival places reuse flat paving/furniture batches and
   const mesh=root.getObjectByName(name),start=mesh.userData.coastArrivalStart;assert.equal(mesh.count-start,count);mesh.geometry.computeBoundingBox();triangles+=count*(mesh.geometry.index?mesh.geometry.index.count:mesh.geometry.attributes.position.count)/3;
   for(let i=start;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const b=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));newProps.push(b);assert.ok(b.min.y>=-.01,'new geometry does not sink below original ground');if(name.includes('shrubs'))assert.ok(b.max.y<=.7,'shop display stays above low planting');if(b.min.x>450&&b.min.z>600)assert.ok(b.min.x>=459.7563&&b.max.x<=477.7564&&b.min.z>=600.7952&&b.max.z<=607.7954,'entire group remains on the existing original L court');for(const p of protectedPaths)assert.ok(b.max.x<=p.minX||b.min.x>=p.maxX||b.max.z<=p.minZ||b.min.z>=p.maxZ,'complete prop/canopy avoids old and new1.3m footpath bands');for(const o of layout.obstacles)assert.ok(b.max.x<=o.minX||b.min.x>=o.maxX||b.max.z<=o.minZ||b.min.z>=o.maxZ,'complete prop/canopy avoids inherited palm/house');for(const r of coast.roads)assert.ok(b.max.x<=r.x-r.w/2-2||b.min.x>=r.x+r.w/2+2||b.max.z<=r.z-r.d/2-2||b.min.z>=r.z+r.d/2+2);for(const n of coast.nodes)assert.ok(b.max.x<=n.x-19||b.min.x>=n.x+19||b.max.z<=n.z-19||b.min.z>=n.z+19);}
  }
- assert.equal(newProps.length,46);assert.equal(triangles,1064);assert.equal(coast.metrics().maximumStaticTriangles-173566,1068,'1064props+4flat union triangles, not an unbounded decoration pass');assert.equal(coast.metrics().staticMeshDraws,80);assert.equal(coast.metrics().ownedTextures,16);assert.equal(coast.metrics().ownedLights,2);coast.leave();
+ assert.equal(newProps.length,46);assert.equal(triangles,1064);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles,'whole-map replacement stays under unchanged triangle ceiling');assert.equal(coast.metrics().staticMeshDraws,82);assert.equal(coast.metrics().ownedTextures,16);assert.equal(coast.metrics().ownedLights,2);coast.leave();
 });

@@ -1,0 +1,14 @@
+﹣ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (0.706529ms) # Set ROADSTER_THREE_RUNTIME to the official Three r128 production build
+﹣ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (0.097563ms) # Set ROADSTER_THREE_RUNTIME to the official Three r128 production build
+﹣ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (0.069883ms) # Set ROADSTER_THREE_RUNTIME to the official Three r128 production build
+﹣ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (0.139475ms) # Set ROADSTER_THREE_RUNTIME to the official Three r128 production build
+﹣ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (0.124763ms) # Set ROADSTER_THREE_RUNTIME to the official Three r128 production build
+﹣ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (0.064275ms) # Set ROADSTER_THREE_RUNTIME to the official Three r128 production build
+ℹ tests 6
+ℹ suites 0
+ℹ pass 0
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 6
+ℹ todo 0
+ℹ duration_ms 88.733209

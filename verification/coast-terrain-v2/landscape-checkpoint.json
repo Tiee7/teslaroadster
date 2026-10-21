@@ -1,0 +1,11 @@
+{
+ "stage":"complete route/terrain/NPC/wayfinding candidate before full regression",
+ "previousCheckpoint":"88b852c32b667a342c54361062dd631a38cfd3b1",
+ "mainLoopMetres":5480.905534695883,"groundBypassMetres":3592.0384002760143,"pierLinkMetres":213.44541618513472,
+ "maxRoadGrade":0.053998594878222825,"minHorizontalRadiusMetres":44.848426852876834,"maxEarthBankGrade":0.28934545909636733,
+ "layout":{"retainedBuildings":44,"retainedPalms":94,"originalDimensionsColorsPreserved":true,"maximumStaticTriangles":157284,"meshBatches":82,"ownedLights":2,"signs":11,"laneArrows":112},
+ "traffic":{"counts":[12,16,20],"secondsEach":1800,"OBBChecks":"each1/60tick with vertical interval","overlaps":0,"allCarsCompleteFullLap":true,"minDistanceMetres":21353.5765306837,"maxStopSeconds":10.766666666666781,"maximumHoldSeconds":13.016666666666893},
+ "numericIsolation":{"test":"coast-map-isolation.test.mjs","scenarios":40,"ticksEach":300,"everyNumericBooleanField":"Object.is","passed":41},
+ "pending":["full regression and final build","remote PR/CI and production readback"],"deployed":false,
+ "visualEvidence":"cpu-driving-geometry.png is CPU-only actual-mesh projection; NOT WebGL, textures, cockpit, phone or FPS evidence"
+}

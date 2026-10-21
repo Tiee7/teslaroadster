@@ -56,7 +56,7 @@ test('remaining-time updates never require removed nodes during depletion, recha
       const elements = Object.fromEntries(['val-gas-mass', 'val-air-sec', 'air-bar-fill', 'ui-tank-state-badge', 'ui-flight-mode'].map(id => [id, { style: {} }]));
       const state = { airRemaining: remaining, airUsedContinuous: 10 - remaining,
         isAutoDescending8s: autoDescending, isFreefalling: freefalling, y: 0 };
-      vm.runInNewContext(update, { state, t: i18n[lang], getAirTankReadout,
+      vm.runInNewContext(update, { currentMap:'city',groundElevation:0,state, t: i18n[lang], getAirTankReadout,
         isRetroBrakeFiring: false, isLiftFiring: false, isAirborne: false,
         document: { getElementById: id => elements[id] ?? null },
       });
@@ -75,7 +75,7 @@ test('depleted mode caption distinguishes actual flight from a road O-hop withou
   for(const lang of ['en','zh'])for(const groundHopActive of [false,true]){
     const elements=Object.fromEntries(['val-gas-mass','val-air-sec','air-bar-fill','ui-tank-state-badge','ui-flight-mode'].map(id=>[id,{style:{}}]));
     const state={airRemaining:0,airUsedContinuous:10,isFreefalling:true,y:100,groundHopActive};
-    vm.runInNewContext(update,{state,t:i18n[lang],getAirTankReadout,isAirborne:true,isRetroBrakeFiring:false,isLiftFiring:false,document:{getElementById:id=>elements[id]??null}});
+    vm.runInNewContext(update,{currentMap:'city',groundElevation:0,state,t:i18n[lang],getAirTankReadout,isAirborne:true,isRetroBrakeFiring:false,isLiftFiring:false,document:{getElementById:id=>elements[id]??null}});
     assert.equal(elements['ui-flight-mode'].textContent,i18n[lang][groundHopActive?'modeHover':'modeFreefall']);
     assert.equal(elements['ui-tank-state-badge'].textContent,i18n[lang].badgeDepleted);
     assert.equal(state.airRemaining,0);

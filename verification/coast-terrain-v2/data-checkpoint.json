@@ -1,0 +1,14 @@
+{
+  "stage": "renderer-independent route/support data; not integrated or deployed",
+  "baseMain": "a88cedf657b3cc066a63063bde9aa1caeb606445",
+  "mainLoopMetres": 5480.905534695883,
+  "groundBypassMetres": 3592.0384002760143,
+  "maximumGrade": 0.053998594878222825,
+  "maximumHeightMetres": 63.9991569519043,
+  "minimumHorizontalRadiusMetres": 44.848426852876834,
+  "stations": 1653,
+  "roadTriangles": 12264,
+  "terrainTriangles": 8192,
+  "tests": {"command": "node --test tests/coast-road-network.test.mjs", "passed": 4, "failed": 0},
+  "notYetImplemented": ["runtime integration", "player terrain contact", "bridge underside/pier/rail collision", "3D traffic", "scene-budget replacement", "full regression"]
+}

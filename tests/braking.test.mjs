@@ -20,7 +20,7 @@ function section(source, start, end, from = 0) {
 // Run production input, air-tank, attitude and complete map-specific movement paths.
 // Scene geometry and the separate gravity/altitude controller are outside this focused harness.
 const helpers = section(physics, 'function wrapAnglePi(', 'function updateSimulation(');
-const input = section(physics, '  const isAirborne =', '  // Unified COPV Air Tank');
+const input = section(physics, '  let isAirborne =', '  // Unified COPV Air Tank');
 const airTank = section(physics, '  let airConsumedThisFrame =', '  let canUseRCS =');
 const movementSetup = section(physics, '  const isRealMode =', '  let groundElevation =');
 const movement = section(physics, '  let canUseRCS =', '  const wantsHover =');
@@ -73,6 +73,7 @@ function harness(overrides = {}, map = 'highway') {
   });
   vm.runInContext(`${traffic}\n${scoreRules}\n${config}\n${inputHandlers}\n${helpers}\n${reset}\n${collision}
     function stepAttitude(dt) {
+      const coastWorld=null,coastSupport=null;
       const groundElevation = testGroundElevation;
       ${input}
       ${airTank}
@@ -80,6 +81,7 @@ function harness(overrides = {}, map = 'highway') {
       ${attitude}
     }
     function stepEmergency(dt) {
+      const coastWorld=null,coastSupport=null;
       const groundElevation = testGroundElevation;
       ${input}
       ${airTank}

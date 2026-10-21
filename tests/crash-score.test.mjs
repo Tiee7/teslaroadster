@@ -237,6 +237,6 @@ test('crash summary preserves ranked notice, language switching and small-screen
   assert.match(html, /id="ranked-crash-status"/); assert.match(html, /class="crash-dialog-content/);
   assert.match(css, /\.crash-dialog-content \{[^}]*max-height: calc\(100dvh - 32px\);[^}]*overflow-y: auto;/);
   assert.match(html, /id="crash-passenger-score"[^>]* hidden/);
-  assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else if \(currentMap === 'city'\)/);
+  assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*coastFrameClock\.clear\(\);coastSoundFrame=null;\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else if \(currentMap === 'city'\)/);
   assert.match(physics, /else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);/);
 });

@@ -18,7 +18,7 @@ test('driving key events update state synchronously and are consumed before the 
   const input = hud.slice(hud.indexOf('function setKeyState('), hud.indexOf("document.querySelectorAll('[data-hold-key]')"));
   const animate = physics.slice(physics.indexOf('function animate('), physics.indexOf("window.addEventListener('resize'", physics.indexOf('function animate(')));
   const clock = readFileSync(new URL('../src/city-clock.js', import.meta.url), 'utf8');
-  vm.runInContext(clock + '\nconst cityFrameClock = RoadsterCityClock.createClock();\n' + input + '\n' + animate, context);
+  vm.runInContext(clock + '\nconst cityFrameClock = RoadsterCityClock.createClock(),coastFrameClock=RoadsterCityClock.createClock();let coastSoundFrame=null;\n' + input + '\n' + animate, context);
   const drivingKeys = ['KeyW','KeyA','KeyS','KeyD','KeyH','KeyU','Space','ShiftLeft','KeyQ','KeyE','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
   for (const code of drivingKeys) {
     listeners.keydown({ code, target: null, preventDefault() {} });

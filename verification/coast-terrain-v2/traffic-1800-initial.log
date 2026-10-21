@@ -1,0 +1,14 @@
+✔ 12 actual coast NPCs: 1800s full-lap 3D motion, exclusive joins, no OBB overlap, no deadlock (41227.397697ms)
+ℹ {"count":12,"seconds":1800,"minDistance":21399.589196855042,"maxStop":10.766666666666781,"maximumWait":21.3833333333334,"maximumHold":12.850000000000218,"zones":[{"id":0,"grants":70,"releases":69,"owned":true},{"id":1,"grants":71,"releases":70,"owned":true},{"id":2,"grants":70,"releases":70,"owned":false}]}
+✔ 16 actual coast NPCs: 1800s full-lap 3D motion, exclusive joins, no OBB overlap, no deadlock (55166.844899ms)
+ℹ {"count":16,"seconds":1800,"minDistance":21361.763275802146,"maxStop":6.883333333333314,"maximumWait":17.76666666666694,"maximumHold":13.016666666666893,"zones":[{"id":0,"grants":93,"releases":93,"owned":false},{"id":1,"grants":92,"releases":92,"owned":false},{"id":2,"grants":93,"releases":93,"owned":false}]}
+✔ 20 actual coast NPCs: 1800s full-lap 3D motion, exclusive joins, no OBB overlap, no deadlock (70133.57945ms)
+ℹ {"count":20,"seconds":1800,"minDistance":21353.5765306837,"maxStop":6.249999999999983,"maximumWait":16.25000000000036,"maximumHold":12.96666666666689,"zones":[{"id":0,"grants":117,"releases":117,"owned":false},{"id":1,"grants":117,"releases":116,"owned":true},{"id":2,"grants":118,"releases":117,"owned":true}]}
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 167078.849389
