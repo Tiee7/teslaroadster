@@ -128,7 +128,7 @@ test('reset teleport and map/view switches use the new vehicle anchor without a 
 
 test('traffic-roof contact resolves the rendered vehicle pose in the same frame used by the camera', () => {
   const h = harness(); Object.assign(h.state, { y: 1.25, vy: -1, vx: 0, vz: 0 });
-  h.context.trafficCars.push({ height: 1.2, length: 4, vx: 0, vz: 0, mesh: { userData: {}, position: point() } });
+  h.context.trafficCars.push({ height: 1.2, length: 4, vx: 0, vz: 0, mesh: { userData: {}, position: point(), rotation:{x:0,y:0,z:0} } });
   h.context.stepContact(1 / 60);
   close(h.state.y, 1.35); close(h.state.vy, 5.5);
   close(h.context.playerWrapper.position.y, h.state.y);

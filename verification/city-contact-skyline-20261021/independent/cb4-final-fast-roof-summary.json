@@ -1,0 +1,229 @@
+{
+  "revision": "cb4ba244cbade5d67991dc96cb01137c11be276e",
+  "allPassed": true,
+  "scope": "only three roof groups: old fast-cushion false fatal, three gentle heights +1s gravity, actual fast3D collision",
+  "cases": [
+    {
+      "name": "roof_fast_high_cushion_false_fatal",
+      "frames": 2,
+      "firstFrame": {
+        "y": 1.3913260416666666,
+        "vy": -30.08175,
+        "hull": 100,
+        "fatal": false,
+        "interval": null,
+        "horizontal": true,
+        "lazyBoundsWasAbsent": true,
+        "lazyBoundsNowPresent": true,
+        "nearDetail": "near",
+        "separatingAxes": [
+          {
+            "axis": "y",
+            "gap": 0.24252597257296227
+          }
+        ]
+      },
+      "contacts": [
+        {
+          "y": 1.1403041666666667,
+          "vy": -30.1635,
+          "clearanceY": -0.10969583333333333,
+          "cushion": false,
+          "solidBefore": 0,
+          "separatingAxes": []
+        }
+      ],
+      "finalHull": 0,
+      "finalFatal": true,
+      "finalG": 19.390821428571428,
+      "bounce": false,
+      "ballistic": null
+    },
+    {
+      "name": "roof_gentle_low_clearance",
+      "frames": 121,
+      "firstFrame": {
+        "y": 1.4,
+        "vy": 5.5,
+        "hull": 100,
+        "fatal": false,
+        "interval": null,
+        "horizontal": true,
+        "lazyBoundsWasAbsent": true,
+        "lazyBoundsNowPresent": true,
+        "nearDetail": "near",
+        "separatingAxes": [
+          {
+            "axis": "y",
+            "gap": 0.2511999309062958
+          }
+        ]
+      },
+      "contacts": [
+        {
+          "y": 1.1013260416666668,
+          "vy": -1.08175,
+          "clearanceY": -0.1486739583333332,
+          "cushion": true,
+          "solidBefore": 0,
+          "separatingAxes": []
+        }
+      ],
+      "finalHull": 100,
+      "finalFatal": false,
+      "finalG": 0,
+      "bounce": true,
+      "ballistic": {
+        "elapsed": 1,
+        "expectedY": 1.995,
+        "expectedVy": -4.3100000000000005,
+        "actualY": 1.994999999999972,
+        "actualVy": -4.3100000000000085
+      }
+    },
+    {
+      "name": "roof_gentle_mid_clearance",
+      "frames": 121,
+      "firstFrame": {
+        "y": 1.4,
+        "vy": 5.5,
+        "hull": 100,
+        "fatal": false,
+        "interval": null,
+        "horizontal": true,
+        "lazyBoundsWasAbsent": true,
+        "lazyBoundsNowPresent": true,
+        "nearDetail": "near",
+        "separatingAxes": [
+          {
+            "axis": "y",
+            "gap": 0.2511999309062958
+          }
+        ]
+      },
+      "contacts": [
+        {
+          "y": 1.2413260416666667,
+          "vy": -1.08175,
+          "clearanceY": -0.008673958333333287,
+          "cushion": true,
+          "solidBefore": null,
+          "separatingAxes": [
+            {
+              "axis": "y",
+              "gap": 0.09252597257296236
+            }
+          ]
+        }
+      ],
+      "finalHull": 100,
+      "finalFatal": false,
+      "finalG": 0,
+      "bounce": true,
+      "ballistic": {
+        "elapsed": 1,
+        "expectedY": 1.995,
+        "expectedVy": -4.3100000000000005,
+        "actualY": 1.994999999999972,
+        "actualVy": -4.3100000000000085
+      }
+    },
+    {
+      "name": "roof_gentle_high_clearance",
+      "frames": 121,
+      "firstFrame": {
+        "y": 1.4,
+        "vy": 5.5,
+        "hull": 100,
+        "fatal": false,
+        "interval": null,
+        "horizontal": true,
+        "lazyBoundsWasAbsent": true,
+        "lazyBoundsNowPresent": true,
+        "nearDetail": "near",
+        "separatingAxes": [
+          {
+            "axis": "y",
+            "gap": 0.2511999309062958
+          }
+        ]
+      },
+      "contacts": [
+        {
+          "y": 1.3913260416666666,
+          "vy": -1.08175,
+          "clearanceY": 0.14132604166666662,
+          "cushion": true,
+          "solidBefore": null,
+          "separatingAxes": [
+            {
+              "axis": "y",
+              "gap": 0.24252597257296227
+            }
+          ]
+        }
+      ],
+      "finalHull": 100,
+      "finalFatal": false,
+      "finalG": 0,
+      "bounce": true,
+      "ballistic": {
+        "elapsed": 1,
+        "expectedY": 1.995,
+        "expectedVy": -4.3100000000000005,
+        "actualY": 1.994999999999972,
+        "actualVy": -4.3100000000000085
+      }
+    },
+    {
+      "name": "roof_true_fast_vertical_fatal",
+      "frames": 1,
+      "firstFrame": {
+        "y": 1.139659375,
+        "vy": -30.08175,
+        "hull": 0,
+        "fatal": true,
+        "interval": 0,
+        "horizontal": true,
+        "lazyBoundsWasAbsent": true,
+        "lazyBoundsNowPresent": true,
+        "nearDetail": "near",
+        "separatingAxes": []
+      },
+      "contacts": [
+        {
+          "y": 1.139659375,
+          "vy": -30.08175,
+          "clearanceY": -0.11034062500000008,
+          "cushion": false,
+          "solidBefore": 0,
+          "separatingAxes": []
+        }
+      ],
+      "finalHull": 0,
+      "finalFatal": true,
+      "finalG": 19.33826785714286,
+      "bounce": false,
+      "ballistic": null
+    }
+  ],
+  "oldCounterexampleIdentity": {
+    "oldRevision": "24b582be25ed884c3f59616e01f742fec631510d",
+    "identicalInitial": true,
+    "identicalInput": true,
+    "physicalKeys": [
+      "x",
+      "y",
+      "z",
+      "vx",
+      "vy",
+      "vz",
+      "speed",
+      "yaw",
+      "pitch",
+      "roll",
+      "airRemaining"
+    ],
+    "oldPreResponseVsNewFirstFrameDifferences": []
+  }
+}

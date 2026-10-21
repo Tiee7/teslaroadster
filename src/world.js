@@ -454,6 +454,12 @@ function buildOpenWorldCity() {
   batchCityPaint('city-lane-paint', cityLanePaint, cityDashMat);
   batchCityPaint('city-crosswalk-paint', cityCrosswalkPaint, crosswalkWhiteMat);
 
+  // Flat mineral paving gives each avenue an ordered edge without adding raised
+  // curbs or invisible obstacles. Cross streets render above these ground strips.
+  const cityPavingMat=new THREE.MeshStandardMaterial({color:0x26343f,roughness:.94,metalness:.02});
+  const paving=[];CITY_ROAD_COORDS.forEach(c=>{for(const sign of[-1,1])paving.push([c+sign*(CITY_ROAD_WIDTH/2+4),-.13,0,8,CITY_HALF_BOUND*2],[0,-.13,c+sign*(CITY_ROAD_WIDTH/2+4),CITY_HALF_BOUND*2,8]);});
+  batchCityPaint('city-avenue-paving',paving,cityPavingMat);
+
   // City Energy Boundary Walls (Taller 45m perimeter shield)
   const wallHeight = 45;
   const wallMat = new THREE.MeshStandardMaterial({
@@ -481,27 +487,22 @@ function buildOpenWorldCity() {
 
   // Street-view hierarchy: low mid-block frontage, tall forms set well inside.
   // No per-frame occluder hiding and no extra lights: the geometry itself clears junctions.
-  // Original procedural façades: six distinct street-building families, no
+  // Original procedural façades: three related contemporary families, no
   // fetched game assets. World-metre UVs keep windows human-sized on tall slabs.
-  const cityFamilies = ['brick-shop', 'sandstone-commercial', 'glass-office', 'metal-warehouse', 'slab-apartment', 'vertical-hotel'];
-  const familyColors = [0xb49883, 0xc3baa5, 0x8fa9b6, 0x99a5a6, 0xb1b5b9, 0xb4aa98];
+  const cityFamilies = ['ceramic-tech', 'ribbed-concrete', 'blue-glass'];
+  const familyColors = [0xc3ced4, 0xa8b6c0, 0x91abbc];
   const bldgMats = cityFamilies.map((family, familyIndex) => {
-    const size = 128, pixels = new Uint8Array(size * size * 4);
-    for (let y=0;y<size;y++) for (let x=0;x<size;x++) {
-      const cx=x%64, cy=y%64;
-      const window = familyIndex===3 ? cy>20&&cy<39&&cx>10&&cx<54
-        : familyIndex===2 ? cx>5&&cx<59&&cy>5&&cy<59
-        : familyIndex===5 ? cx>20&&cx<44&&cy>10&&cy<55
-        : cx>15&&cx<49&&cy>14&&cy<51;
-      const seam=familyIndex===0 ? y%16<2||(x+(Math.floor(y/16)%2)*16)%32<2
-        : familyIndex===1 ? y%64<5 : familyIndex===3 ? y%12<2 : x%64<4;
-      const rgb=window ? (familyIndex===2?[86,107,119]:[74,88,96]) : seam?[145,145,142]:[207,207,202];
-      const i=(y*size+x)*4;pixels[i]=rgb[0];pixels[i+1]=rgb[1];pixels[i+2]=rgb[2];pixels[i+3]=255;
+    const size=128,pixels=new Uint8Array(size*size*4),emission=new Uint8Array(size*size*4);
+    for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+      const cx=x%64,cy=y%64;
+      const window=familyIndex===2?cx>5&&cx<59&&cy>5&&cy<59:familyIndex===1?cx>18&&cx<47&&cy>11&&cy<54:cx>11&&cx<54&&cy>12&&cy<53;
+      const seam=familyIndex===1?x%16<2:x%64<3||y%64<3;
+      const rgb=window?[64,84,101]:seam?[146,164,175]:[212,221,225],i=(y*size+x)*4;
+      for(let k=0;k<3;k++){pixels[i+k]=rgb[k];emission[i+k]=window&&((Math.floor(x/64)+Math.floor(y/64)*3+familyIndex)%3!==0)?190:0;}pixels[i+3]=emission[i+3]=255;
     }
-    const map=new THREE.DataTexture(pixels,size,size,THREE.RGBAFormat);
-    map.wrapS=map.wrapT=THREE.RepeatWrapping;map.magFilter=THREE.LinearFilter;map.minFilter=THREE.LinearMipmapLinearFilter;
-    map.generateMipmaps=true;map.needsUpdate=true;map.name=`city-original-${family}`;
-    const material=new THREE.MeshStandardMaterial({color:0x87929e,map,metalness:familyIndex===2?.30:.08,roughness:familyIndex===2?.46:.82});
+    const texture=data=>{const map=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);map.wrapS=map.wrapT=THREE.RepeatWrapping;map.magFilter=THREE.LinearFilter;map.minFilter=THREE.LinearMipmapLinearFilter;map.generateMipmaps=true;map.needsUpdate=true;return map;};
+    const map=texture(pixels),emissiveMap=texture(emission);map.name=`city-original-${family}`;
+    const material=new THREE.MeshStandardMaterial({color:0x8797a6,map,emissive:0x9ebbd0,emissiveMap,emissiveIntensity:.22,metalness:familyIndex===2?.22:.07,roughness:familyIndex===2?.44:.76});
     material.userData.cityFamily=family;
     material.onBeforeCompile=shader=>{
       shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>',`#include <uv_vertex>
@@ -512,9 +513,36 @@ function buildOpenWorldCity() {
 #endif
 #endif`);
     };
-    material.customProgramCacheKey=()=> 'city-world-metre-facade-v1';
+    material.customProgramCacheKey=()=> 'city-world-metre-facade-v2';
     return material;
   });
+  // The city is a coherent contemporary/cyber district, not six unrelated eras.
+  // Three glazing/shell signatures share a cool mineral palette and metre modules.
+  let cityDaySky=null;
+  cityEnvGroup.userData.daySky=()=>{
+    if(cityDaySky)return cityDaySky;
+    const size=128,faces=[],mix=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t);
+    const hash=(x,z)=>{const n=Math.sin(x*127.1+z*311.7)*43758.5453;return n-Math.floor(n);};
+    const noise=(x,z)=>{const ix=Math.floor(x),iz=Math.floor(z),u=smooth(x-ix),v=smooth(z-iz);return mix(mix(hash(ix,iz),hash(ix+1,iz),u),mix(hash(ix,iz+1),hash(ix+1,iz+1),u),v);};
+    for(let face=0;face<6;face++){
+      const data=new Uint8Array(size*size*4);
+      for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+        const u=(x+.5)/size*2-1,v=(y+.5)/size*2-1;
+        const d=face===0?[1,-v,-u]:face===1?[-1,-v,u]:face===2?[u,1,v]:face===3?[u,-1,-v]:face===4?[u,-v,1]:[-u,-v,-1],len=Math.hypot(...d),h=d[1]/len;
+        const top=[70,123,178],horizon=[190,211,224],ground=[69,86,99],w=Math.pow(Math.min(1,Math.abs(h)),.62),a=horizon,b=h>=0?top:ground;
+        const qx=d[0]/len/(Math.max(.02,h)+.22),qz=d[2]/len/(Math.max(.02,h)+.22);
+        // Rotate/warp the static cloud domain so scalar-noise cells do not read
+        // as axis-aligned tiles. Soft contrast, no sun disc or per-frame work.
+        const rx=qx*.866+qz*.5,rz=qz*.866-qx*.5,wx=rx+.45*noise(rx*1.3+9,rz*1.3+3),wz=rz+.45*noise(rx*1.3+31,rz*1.3+17);
+        const cloudNoise=(noise(wx*1.6+13,wz*1.6+7)+.5*noise(wx*3.3+41,wz*3.3+19)+.25*noise(wx*6.7,wz*6.7))/1.75;
+        const cloud=h>.025?smooth(Math.max(0,Math.min(1,(cloudNoise-.49)/.28)))*Math.min(1,(h-.025)/.15)*.43:0,i=(y*size+x)*4;
+        for(let k=0;k<3;k++)data[i+k]=Math.round(mix(mix(a[k],b[k],w),[226,234,239][k],cloud));data[i+3]=255;
+      }
+      const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);texture.needsUpdate=true;faces.push(texture);
+    }
+    cityDaySky=new THREE.CubeTexture(faces);cityDaySky.name='city-clear-day-sky';cityDaySky.format=THREE.RGBAFormat;cityDaySky.generateMipmaps=true;cityDaySky.minFilter=THREE.LinearMipmapLinearFilter;cityDaySky.magFilter=THREE.LinearFilter;cityDaySky.needsUpdate=true;
+    return cityDaySky;
+  };
   const windowLitMat = new THREE.MeshBasicMaterial({ color: 0x648391 });
   const windowWarmMat = new THREE.MeshBasicMaterial({ color: 0x918b75 });
   const trimMat = new THREE.MeshBasicMaterial({ color: 0x356678 });
@@ -523,7 +551,8 @@ function buildOpenWorldCity() {
   const helipadMarkMat = new THREE.MeshBasicMaterial({ color: 0xc6d1d9 });
   cityEnvGroup.userData.applyWeather = (preset) => {
     const day = Boolean(preset.daylight);
-    bldgMats.forEach(mat=>mat.color.setHex(day ? 0xc3c8cc : 0x87929e));
+    groundMesh.material.color.setHex(day?0x34434f:0x090d16);cityPavingMat.color.setHex(day?0x697a86:0x26343f);
+    bldgMats.forEach(mat=>{mat.color.setHex(day?0xc6d0d7:0x8797a6);mat.emissiveIntensity=day?0:.22;});
     windowLitMat.color.setHex(day ? 0x6b8191 : 0xb9c3bd);
     windowWarmMat.color.setHex(day ? 0x7e878a : 0xb9a17b);
     trimMat.color.setHex(day ? 0x596f7b : 0x456c7a);
@@ -542,7 +571,7 @@ function buildOpenWorldCity() {
   let bIdx = 0;
   function addCityBuilding(bx, bz, ox, oz, w, d, h, kind, district, bridgePair = null) {
     const isLandmark=kind==='landmark',isHelipadTower=kind!=='low';
-    const family=isHelipadTower?[2,4,5][district%3]:district%cityFamilies.length;
+    const family=district%cityFamilies.length;
     const renderBatch=`city-building-batch-${family}`,renderIndex=cityBodies[family].length;
     cityBodies[family].push({p:[ox,h/2,oz],s:[w,h,d],color:familyColors[family],id:bIdx});
     // A few broad architectural courses, not thousands of per-window scene nodes.
@@ -580,14 +609,14 @@ function buildOpenWorldCity() {
     });
   });
 
-  // Three staggered mid-block frontages per block leave the fourth side open.
+  // Two opposite mid-block frontages leave both cross-street sides open.
   // Keep the original 99 IDs and all35 pads/two bridge pairs intact.
   blockCenters.forEach((bx,ix)=>blockCenters.forEach((bz,iz)=>{
     const district=Math.floor(ix/2)+Math.floor(iz/2),side=ix%2===0?1:-1,alongX=(ix+iz)%2===0;
     const offset=150-CITY_ROAD_WIDTH/2-CITY_BUILDING_SETBACK-15;
-    const slots=alongX?[[-side*offset,0],[0,(iz%2===0?1:-1)*offset]]:[[0,-side*offset],[(iz%2===0?1:-1)*offset,0]];
+    const slots=alongX?[[-side*offset,0]]:[[0,-side*offset]];
     slots.forEach(([dx,dz],j)=>{const frontage=[36,42,48][(district+j+1)%3],h=[14,18,22,26][(district*2+j+1)%4];
-      addCityBuilding(bx,bz,bx+dx,bz+dz,dx?30:frontage,dx?frontage:30,h,'low',(ix*3+iz+j)%6);
+      addCityBuilding(bx,bz,bx+dx,bz+dz,dx?30:frontage,dx?frontage:30,h,'low',(ix*3+iz+j)%cityFamilies.length);
     });
   }));
   const cityBox=new THREE.BoxGeometry(1,1,1);
@@ -603,7 +632,7 @@ function buildOpenWorldCity() {
   cityInstances('city-rooftop-rings',new THREE.RingGeometry(.85,1,24).rotateX(-Math.PI/2),helipadRingMat,cityPadRings);
   cityInstances('city-rooftop-H',new THREE.PlaneGeometry(1,1).rotateX(-Math.PI/2),helipadMarkMat,cityPadLetters);
   cityInstances('city-rooftop-beacons',new THREE.CylinderGeometry(.25,1.2,14,12),new THREE.MeshBasicMaterial({color:0x38bdf8,transparent:true,opacity:.10,side:THREE.DoubleSide}),cityBeams);
-  cityEnvGroup.userData.cityArchitecture={version:1,families:cityFamilies,buildings:cityBuildings.length,lowBuildings:cityBuildings.filter(b=>b.kind==='low').length,facadeTextureBytes:6*128*128*4,source:'original procedural geometry and pixels; no third-party assets'};
+  cityEnvGroup.userData.cityArchitecture={version:2,families:cityFamilies,buildings:cityBuildings.length,lowBuildings:cityBuildings.filter(b=>b.kind==='low').length,facadeTextureBytes:6*128*128*4,source:'original procedural geometry and pixels; no third-party assets'};
 
   // High-Altitude Glass Pedestrian Skybridges (at 60m - 170m altitude)
   const skybridgeMat = new THREE.MeshStandardMaterial({

@@ -1,0 +1,18 @@
+{
+  "revision": "39169ed88babd1089954212c499c6b0a94eb55d8",
+  "threeRevision": "128",
+  "method": "No NPCs; production cityBuildings and continuously evolved production movement + damage/destruction. Native complete player geometry checks and all non-road visible city mesh/instance bounding boxes are inspected before building contact response. No repo edits or project test runner/build/check.",
+  "roads": {
+    "trajectories": 84,
+    "controls": "W from rest along each complete avenue, six lane centres, -1100m to+1100m",
+    "impacted": 0
+  },
+  "facades": {
+    "trajectories": 454,
+    "controls": "W from rest, 1.5m beyond each building z face, parallel along x, stop at first impact or passing target",
+    "zeroVisibleObstacleIntersectionContacts": 451,
+    "fatalZeroVisibleIntersection": 447
+  },
+  "fullSourceSha256": "7685f228804ea7a8dddd104d1be7a1e0d76ac3eed8530648ce77d0a609d4b75e",
+  "boundary": "This broad-domain run belongs ONLY to its explicitly named commit, not the final candidate. Final changed contacts receive narrower old-negative/true-positive regression and complete repository tests."
+}

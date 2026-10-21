@@ -1,0 +1,27 @@
+{
+  "schema": "city-contact-skyline-source-epoch-v1",
+  "baseMain": "39169ed88babd1089954212c499c6b0a94eb55d8",
+  "inheritedSourceEpoch": "verification/performance-passengers-20261021/source-epoch.json",
+  "inheritedSourceEpochSha256": "6c7e86d25cb76503857bf9a019141d638277d0cbad23c3bc5ac822afea017e09",
+  "authorizedSourceSha256": {
+    "physics-main": "001bf2c423646732cb08c3b55c4ef4db12247e7384a5fa0dab18b465098d02d0",
+    "ui-hud": "ca9b987ee6f2e6a70c79694b9f0297eb58a9952fddc9b5099ba64f9608c539a5",
+    "world": "4024d390f95d79874e011bc4f693360b0a4503197bb4b7cf75ae0ae2c6e04ca2",
+    "reference-traffic": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "demo-numeric-projection": "d8e84ccea869fd0f45eb9036051fa2943680f7a47b76f74a00459623598d4d64"
+  },
+  "baselineFixtureSha256": {
+    "physics-main.js": "8696d1d4140f1045f01c9c96ed8ef59b61c64c13cb449e0d8b1c1cc45ed23954",
+    "ui-hud.js": "0ef476a15079a45fd5e7b8292d81f2bc5962ee4376560ba90d01a68b90913b6a",
+    "config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "reference-traffic.js": "15f4d11c2efd4bd4b6f67e505862cf56849dbee1e01592a2c22015458ee8b114",
+    "world.js": "579eb3e4a001d75e05ea7f4a3fa5bb4e1aa30382a9f87560c6cb52bf2e811a24"
+  },
+  "scope": "City-only visible geometry collision (finite wall altitude, true NPC altitude, player YXZ/NPC XYZ oriented bounds, normal velocity response and no phantom roof corner), cached raw NPC extents; coherent163-building contemporary city, static daylight cube sky/paving. No engine/H/force/unit/clock/taxi/coast changes. Gentle NPC roof-contact cushion remains separate from damaging3D solid contact; finite-wall initial overlap resolves once with normal impulse and preserves tangential motion. Fast roof cushion ghost counterexample is frozen: lethal impact now requires actual3D solid contact; nonlethal roof cushion only vy>=-18.",
+  "validationBoundary": "Native Three CPU structures, deterministic continuous production-motion old-source failure/candidate pass and true-contact positive regressions. Whole-scene GPU/visual driving acceptance unavailable: own cloud WebGL initialization failed; CPU texture/geometry study is explicitly approximate.",
+  "numericProof": "40 highway/city production-motion scenarios \u00d7300 ticks preserve every numeric/boolean state Object.is; H force/gas safety180 ticks all3maps and resolved audio expressions exact. Explicit highway-only projection source epoch regenerated;29 identity/build negative guards+3 mirror checks pass. New projection program bytes include unreachable city-only geometry and are not claimed byte-identical.",
+  "extraBaselineFixtureSha256": {
+    "tests/fixtures/city-roof-cushion-baseline/npc-step.js": "c2e10b8143bbf33a724ee5c10dbca031ac878354f982571417e2693c69466ca5"
+  },
+  "extraBaselineFixtureCommit": "24b582be25ed884c3f59616e01f742fec631510d"
+}

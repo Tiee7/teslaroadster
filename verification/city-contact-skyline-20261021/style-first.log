@@ -1,0 +1,119 @@
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.759198ms)
+✖ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (90.908693ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (729.298075ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (114.537033ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (3.162392ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (2.332851ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (2.402965ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (69.449459ms)
+✔ all stops and shortest-route segments stay on the connected city asphalt grid (82.373553ms)
+✖ pickup stops and every drivable route edge clear the actual generated city building collision boxes (78.370556ms)
+✔ five distinct spaced waiting passengers have long reachable trips on every refill (138.705942ms)
+✔ green destination arrival stays exactly 2m in 3D, including swept motion (0.385127ms)
+✔ white pickup radius doubles to 4m without widening destination or permitting airborne arrivals (334.799242ms)
+✔ public entry explains pickup radius and independent fares in both languages (3.169553ms)
+✔ multi-passenger state machine refills five immediately, preserves its primary and pays each ride once (84.553991ms)
+✔ distance-based fares are integral, monotonic and bounded at 1000–3000 (0.303116ms)
+✔ repeated starts do not duplicate passengers; reset settles loss then clears the new round (86.855926ms)
+✔ city passengers automatically start once after map/reset, with no user switch or off preference (214.203261ms)
+✔ automatic passengers respect hidden/menu/destruction and ranked ownership without abort loops (163.157708ms)
+✔ real shared keyboard preserves typing and bracket zoom without an equals passenger switch (89.933945ms)
+✔ scene has five readable double-sided white beams and only one green destination while occupied (59.407883ms)
+✔ map exit and repeated stops fully remove and dispose markers and the active-only score display (158.552275ms)
+✔ bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets (129.66869ms)
+✔ numeric passenger score survives language and HUD/camera changes without adding visual text (64.568494ms)
+✔ menus pause transitions; destruction clears the occupied ride before any payout (67.420795ms)
+✔ integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state (2.566805ms)
+✔ stop clearance rejects the entire column footprint, trim margin and city boundary (0.60502ms)
+✔ landing and low altitude flight never sweep a pickup or destination (121.382757ms)
+✔ crashes settle a single double-fare penalty and freeze the result until a new round (73.443533ms)
+✔ empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn (63.660583ms)
+✔ taxi model itself blocks all payouts after death and applies nonnegative loss only once (104.627466ms)
+✔ bottom-right passenger HUD participates in footer bounds and releases its active layout (69.226996ms)
+✔ cockpit passenger strip shows live destination distance and local score without covering speed or tank (65.300891ms)
+✔ destination bearing maps vehicle-forward up and left/right correctly at every heading (0.500646ms)
+✔ top-left navigation shows only arrow and live meters across every HUD mode and camera (64.760466ms)
+✔ corner arrow and meters clear safe areas, header controls and rotation on phone and desktop (0.467167ms)
+✔ corner arrow and meter digits have silhouette contrast without a background, border or card (61.577194ms)
+✔ meter digits follow the occupied destination live, round once and reset between passengers (61.773973ms)
+✔ navigation crosses north and +/-180 smoothly without a reverse full-turn jump (288.045642ms)
+✔ menus pause passenger transitions without freezing the live vehicle-relative bearing (71.350519ms)
+✔ delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space (331.374268ms)
+✔ short landscape notice space is bounded by the header, footer and occupied-trip row (0.657788ms)
+✔ coast defaults use real elevated stops, true Y, bounded six marker pools and map-owned cleanup (315.210193ms)
+✔ coast reset starts passengers after the actual elevated spawn and traffic recovery, never at stale city Y (0.39455ms)
+✖ 227-city architecture preserves every original99 collider and function while batching richer original façades (197.373837ms)
+✔ coast details exist at all distances with lower maximum/shadow budgets, never proximity upload churn (1066.675299ms)
+ℹ {"active":true,"builds":1,"disposals":0,"failedBuilds":0,"cachedCpuPixelBytes":262144,"ownedLights":2,"shadowMapResolution":1024,"shadowSpanMetres":160,"ownedGeometries":41,"ownedMaterials":53,"ownedTextures":16,"textureBytes":1256107,"ownedGeometryBufferBytes":4371088,"ownedInstanceBufferBytes":703836,"staticMeshDraws":83,"staticTriangles":153958,"maximumStaticTriangles":153958,"nearPalms":0,"farPalms":94,"foliageRefreshes":0,"nearDetailInstances":248,"nearDetailCapacity":248,"nearDetailMatrixBytes":15872,"detailRefreshes":0,"shadowCasterBatches":30,"shadowCasterTriangles":75158,"maximumShadowCasterTriangles":75158,"instances":10878,"buildings":52,"retainedCoastalBuildings":44,"hillsideBuildings":8,"palms":94,"textureEstimateScope":"Owned sampled texture levels only; excludes shadow render target and driver allocations","performanceBoundary":"Static scene structure, not measured renderer draw calls or FPS"}
+✔ renderer pixels are explicitly bounded without changing camera FOV or world metres (4.604002ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 44
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3627.03817
+
+✖ failing tests:
+
+test at tests/city-layout.test.mjs:29:1
+✖ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (90.908693ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  163 !== 227
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-layout.test.mjs:34:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 163,
+    expected: 227,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/taxi.test.mjs:48:1
+✖ pickup stops and every drivable route edge clear the actual generated city building collision boxes (78.370556ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  163 !== 227
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/taxi.test.mjs:53:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 163,
+    expected: 227,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/world-performance-budget.test.mjs:5:1
+✖ 227-city architecture preserves every original99 collider and function while batching richer original façades (197.373837ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  163 !== 227
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/world-performance-budget.test.mjs:7:47)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 163,
+    expected: 227,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

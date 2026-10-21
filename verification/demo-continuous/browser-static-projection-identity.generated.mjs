@@ -62,6 +62,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   
   const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
   const isRealMode = (state.physicsMode === 'realistic');
+  const cityMotionStart = currentMap === 'city' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:state.pitch,roll:state.roll} : null;
   const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,vy:state.vy} : null;
   const coastObstacles = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : null;
   const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,yaw:c.mesh.rotation.y,visible:c.mesh.visible}])) : null;
@@ -82,7 +83,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
       if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
-      if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap === 'city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElevation = Math.max(groundElevation, b.height);
         }
@@ -589,16 +590,24 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     state.z += state.vz * moveScale * dt;
 
     const limit = CITY_HALF_BOUND - 2.2;
-    if (Math.abs(state.x) > limit || Math.abs(state.z) > limit) {
-      const impactV = Math.abs(state.speed);
-      state.x = THREE.MathUtils.clamp(state.x, -limit, limit);
-      state.z = THREE.MathUtils.clamp(state.z, -limit, limit);
-      state.vx *= -0.35;
-      state.vz *= -0.35;
-      state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * -0.35;
-      state.yaw -= wrapAnglePi(state.yaw) * (1.0 - Math.pow(0.10, dt));
-      if (impactV > 10.0) {
-        triggerPhysicsCollision(impactV, 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.4, 2.0, isAirborne ? 0 : -state.vz * 0.4);
+    const cityWall=currentMap==='city'?cityVisibleBoundaryHit(cityMotionStart,state):null;
+    if (currentMap==='city' ? cityWall!==null : Math.abs(state.x) > limit || Math.abs(state.z) > limit) {
+      if(cityWall){
+        const t=Math.max(0,cityWall.t-1e-5),contactAxis=cityWall.axis;state[contactAxis]=cityMotionStart[contactAxis]+(state[contactAxis]-cityMotionStart[contactAxis])*t;
+        // Resolve an initial overlap as well as a swept crossing, otherwise a
+        // resting edge can rebound repeatedly on successive frames.
+        const body=cityPlayerBody(state),axis=cityWall.axis,n=cityWall.normal,radius=axis==='x'?body.rx:body.rz;
+        state[axis]+=cityWall.sign*CITY_HALF_BOUND+n*(1+radius+.005)-body[axis];
+        const key=axis==='x'?'vx':'vz',impactV=Math.max(0,-state[key]*n);
+        if(impactV>0){state[key]+=1.35*impactV*n;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);}
+        if(impactV>10)triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);
+      } else {
+        const impactV = Math.abs(state.speed);
+        state.x = THREE.MathUtils.clamp(state.x, -limit, limit);state.z = THREE.MathUtils.clamp(state.z, -limit, limit);
+        state.vx *= -0.35;state.vz *= -0.35;
+        state.speed = isAirborne ? Math.hypot(state.vx, state.vz) : state.speed * -0.35;
+        state.yaw -= wrapAnglePi(state.yaw) * (1.0 - Math.pow(0.10, dt));
+        if (impactV > 10.0)triggerPhysicsCollision(impactV, 'crashReasonThreshold', isAirborne ? 0 : -state.vx * 0.4, 2.0, isAirborne ? 0 : -state.vz * 0.4);
       }
     }
   }
@@ -633,7 +642,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
       if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
-      if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap === 'city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElevation = Math.max(groundElevation, b.height);
         }
@@ -956,7 +965,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
       if (coastWorld && state.y + 1.25 < (b.minY ?? 0)) continue;
-      if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap === 'city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y > b.height + 0.08) {
           // Flying freely in the air above the building roof — do NOT teleport or snap down!
           continue;
@@ -999,6 +1008,17 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
             sound.speakAlert('helipad', 'Helipad touchdown. Release thrusters to recharge the tank.', '停机坪降落成功，松开喷气后补充高压气瓶。');
           }
         } else if (state.y < b.height - 0.55) {
+          if(currentMap==='city'){
+            const contact=cityBuildingContact(state,b);if(!contact)continue;
+            state.x+=contact.x*(contact.depth+.005);state.z+=contact.z*(contact.depth+.005);
+            const normalSpeed=Math.max(0,-state.vx*contact.x-state.vz*contact.z);
+            if(normalSpeed>.1){
+              state.vx+=1.3*normalSpeed*contact.x;state.vz+=1.3*normalSpeed*contact.z;
+              state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);
+              triggerPhysicsCollision(Math.max(12,normalSpeed),'crashReasonThreshold',0,2,0);if(state.isDestroyed)return;
+            }
+            continue;
+          }
           const impactSpeed = Math.hypot(state.vx, state.vz, state.vy * 0.5);
           const dLeft = Math.abs(state.x - (b.minX - 1.1));
           const dRight = Math.abs(state.x - (b.maxX + 1.1));
@@ -1147,6 +1167,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   if (currentMap === 'coast') globalThis.window?.RoadsterCoast?.stepTraffic(trafficCars,state,dt);
   trafficCars.forEach((car) => {
     if (car.mode === 'coast' && (car.coastWaiting || car.mesh.visible === false)) return;
+    if(currentMap==='city'&&car.mesh.visible===false)return;
     if (car.mesh.userData.wheels) {
       const wRot = (car.speed * (currentMap === 'highway' ? WORLD_SPEED_SCALE : CITY_WORLD_SPEED_SCALE) / 0.33) * dt;
       car.mesh.userData.wheels.forEach((w) => { w.rotation.x -= wRot; });
@@ -1200,7 +1221,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
     const dx = Math.abs(state.x - car.mesh.position.x);
     const dz = Math.abs(playerWorldZ - car.mesh.position.z);
-    const npcWorldY=currentMap==='coast'?(car.mesh.position.y||0):0;
+    const npcWorldY=currentMap==='coast'||currentMap==='city'?(car.mesh.position.y||0):0;
     let clearanceY = state.y - npcWorldY - car.height;
 
     // The faster demo rack also checks the complete relative movement chord.
@@ -1217,11 +1238,18 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     const coastContact = coastOld?.visible !== false && coastOld && car.mode === 'coast' && !car.blastTimer
       ? globalThis.window?.RoadsterCoast?.trafficContact(coastMotionStart,state,coastOld,car,coastBounds) : null;
     const coastSweptHit = coastContact !== null;
-    const bodyOverlap = coastBounds ? dx < coastBounds.x && dz < coastBounds.z && state.y+1.25>npcWorldY && state.y<npcWorldY+car.height+.15 : dx < 1.85 && dz < (car.length / 2 + 2.15);
+    const cityNear=currentMap==='city'&&dx<10&&dz<10&&Math.abs(state.y-npcWorldY)<10;
+    const cityPlayer=cityNear?cityPlayerBody(state):null,cityNpc=cityNear?cityTrafficBody(car):null;
+    // Preserve the existing gentle roof-touch cushion separately from solid-body
+    // contact. It may bounce a descending car, never trigger a side-gap crash.
+    const cityRoofTouch=cityNear&&clearanceY>=-.15&&clearanceY<.15&&state.vy<0&&state.vy>=-18&&cityHorizontalContact(cityPlayer,cityNpc);
+    const citySolidContact=cityNear&&cityContactInterval(cityPlayer,cityNpc)!==null;
+    const cityBodyOverlap=cityNear&&(cityRoofTouch||citySolidContact);
+    const bodyOverlap = currentMap==='city'?cityBodyOverlap:coastBounds ? dx < coastBounds.x && dz < coastBounds.z && state.y+1.25>npcWorldY && state.y<npcWorldY+car.height+.15 : dx < 1.85 && dz < (car.length / 2 + 2.15);
     if (bodyOverlap || demoSweptHit || coastSweptHit) {
       if(coastSweptHit)clearanceY=coastContact.relativeY-car.height;
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
-        if (state.vy < -18.0) {
+        if (state.vy < -18.0 && (currentMap!=='city'||citySolidContact)) {
           triggerPhysicsCollision(Math.abs(state.vy), 'crashReasonThreshold', 0, 5.0, 0);
         } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {
           if(coastSweptHit){const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;}
@@ -1232,6 +1260,13 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       } else if (clearanceY < -0.15) {
         const relVx = state.vx - (car.vx || 0);
         const relVz = state.vz - (car.vz || 0);
+        if(currentMap==='city'){
+          const contact=cityContactDetails(cityPlayerBody(state),cityTrafficBody(car));if(!contact)return;
+          state.x+=contact.x*(contact.depth+.005);state.y+=contact.y*(contact.depth+.005);state.z+=contact.z*(contact.depth+.005);
+          const npcVy=car.blastTimer?(car.blastVy||0):0,normalSpeed=Math.max(0,-relVx*contact.x-(state.vy-npcVy)*contact.y-relVz*contact.z);
+          if(normalSpeed>.1){state.vx+=1.35*normalSpeed*contact.x;state.vy+=1.35*normalSpeed*contact.y;state.vz+=1.35*normalSpeed*contact.z;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);triggerPhysicsCollision(normalSpeed,'crashReasonThreshold',0,0,0);}
+          return;
+        }
         const deltaV = Math.hypot(relVx, relVz, (state.vy-(currentMap==='coast'?(car.vy||0):0)) * 0.5);
 
         if (currentMap === 'highway') {

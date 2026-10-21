@@ -1,0 +1,20 @@
+✔ one open shared envelope per outlet has finite bounded topology, unlit alpha and no solid disks (461.215264ms)
+✔ pressure wake opens downstream while every physical mouth and draw count stay fixed (405.132609ms)
+✔ stronger gas remains power-sensitive, finite and completely cleared on release (366.241807ms)
+✔ body selection places actual mouth coordinates; view changes preserve selected layout (401.49448ms)
+✔ roll/pitch/yaw/strafe reuse the correctly directed physical ports without duplicate plumes (399.880353ms)
+✔ highway/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (528.680586ms)
+✔ highway/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (549.431135ms)
+✔ city/realistic: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (590.522891ms)
+✔ city/fantasy: accepted production requests, both bodies/cabins, 30/60/144/irregular frames and gas boundaries (570.225585ms)
+✔ analog requests scale the correct longitudinal axis, release immediately and hide every FPV plume (376.626552ms)
+✔ emergency lift uses its accepted full command at low tank, and 3D retro chooses paid travel components (368.168216ms)
+✔ top and side hardware stays hidden across body/cockpit/layout changes while paid plumes remain active (359.096391ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5527.521371

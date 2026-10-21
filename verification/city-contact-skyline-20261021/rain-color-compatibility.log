@@ -1,0 +1,14 @@
+✔ rain uses a dim road-only environment without studio softboxes; car environment is retained (10.442328ms)
+✔ all road axes have deterministic metre-scaled, mipmapped microdetail (10.462437ms)
+✔ wet roughness keeps a finite broad highlight instead of the old pin-sharp light peak (7.740927ms)
+✔ r128 GGX rim-light mirror-direction peak stays below a clipped cyan core (7.143539ms)
+✔ repeated weather changes restore both dry presets and reuse all road textures (8.849456ms)
+✔ road weather helper tolerates absent city materials without changing vehicle materials (7.500494ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.725649

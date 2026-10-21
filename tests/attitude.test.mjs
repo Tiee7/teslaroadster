@@ -29,6 +29,7 @@ const trafficScroll = 'highwayTraffic.step([car], { x: state.x, y: state.y, z: 0
 const blastScroll = physics.match(/      car\.mesh\.position\.z \+= \(currentMap === 'highway'[^\n]+/)[0];
 const collision = section(physics, 'function triggerPhysicsCollision(', 'function destroyVehicle(');
 const trafficCollision = section(physics, '        const relVx = state.vx', '\n      }\n    }\n  });');
+const cityBuildingResponse=section(physics,"          if(currentMap==='city'){",'          const impactSpeed',physics.indexOf('        } else if (state.y < b.height - 0.55)')).replaceAll('continue;','return;');
 const buildingCollision = section(physics, '          const impactSpeed = Math.hypot', '\n        }\n      }\n    }\n  }');
 const attitude = section(physics, '  // Requirement 3: All airborne attitude RCS jets', "  if (currentMap === 'city' || currentMap === 'coast') {");
 const emergency = section(physics, '  if (needsEmergencyLandingSave) {', '  } else {\n    state.isAutoLandingSave = false;').replace('  if (needsEmergencyLandingSave) {', '');
@@ -105,6 +106,7 @@ function harness(overrides = {}, map = 'highway') {
     }
     function collideBuilding(b) {
       const isAirborne = state.wasAirborne;
+      ${cityBuildingResponse}
       ${buildingCollision}
     }
     function setMap(map) { currentMap = map; }
@@ -400,7 +402,7 @@ test('highway road, traffic and blast scrolling follow actual vz rather than pos
 test('real airborne traffic collision slowdown/rebound survives the next movement frame on both maps', () => {
   for (const map of ['highway', 'city']) {
     const h = harness({ vz: -20, speed: 20, wasAirborne: true }, map);
-    const car = { vx: 0, vz: 0, mesh: { position: { x: h.state.x, z: 0 } } };
+    const car = {length:4.62,height:1.25,vx:0,vz:0,mesh:{userData:{},position:{x:h.state.x,y:h.state.y,z:h.state.z-4.45},rotation:{x:0,y:0,z:0}}};
     h.context.collideTraffic(car);
     assert.equal(h.state.isDestroyed, false);
     close(h.state.vz, map === 'highway' ? -14 : 7);
@@ -416,7 +418,7 @@ test('real airborne traffic collision slowdown/rebound survives the next movemen
 });
 
 test('real city building and outer-boundary rebounds keep authoritative airborne velocity and magnitude', () => {
-  const building = harness({ x: 5, z: 5, vz: -20, speed: 20, wasAirborne: true }, 'city');
+  const building = harness({ x: 5, z: 12, vz: -20, speed: 20, wasAirborne: true }, 'city');
   building.context.collideBuilding({ minX: 0, maxX: 10, minZ: 0, maxZ: 10, height: 200 });
   assert.equal(building.state.isDestroyed, false);
   close(building.state.vz, 6);
@@ -425,7 +427,7 @@ test('real city building and outer-boundary rebounds keep authoritative airborne
   assert.ok(building.state.vz > 0 && building.state.vz < 6);
   close(building.state.speed, Math.hypot(building.state.vx, building.state.vz));
 
-  const boundary = harness({ x: 1197.9, vz: -20, speed: 20 }, 'city');
+  const boundary = harness({ x:6,z:-1196.8,y:20,vz:-20,speed:20,wasAirborne:true }, 'city');
   boundary.move(1 / 60);
   assert.equal(boundary.state.isDestroyed, false);
   assert.ok(boundary.state.vz > 0 && boundary.state.vz < 7);
@@ -451,17 +453,17 @@ test('generic collision applies longitudinal bounce in air while preserving the 
   }
 });
 
-test('ground traffic and building collision scalar responses remain unchanged', () => {
+test('ground city normal-response vectors stay authoritative; highway legacy scalar response is unchanged', () => {
   for (const map of ['highway', 'city']) {
     const h = harness({ y: 0, vz: -20, speed: 20 }, map);
-    h.context.collideTraffic({ vx: 0, vz: 0, mesh: { position: { x: h.state.x, z: 0 } } });
+    h.context.collideTraffic({length:4.62,height:1.25,vx:0,vz:0,mesh:{userData:{},position:{x:h.state.x,y:h.state.y,z:h.state.z-4.45},rotation:{x:0,y:0,z:0}}});
     close(h.state.speed, map === 'highway' ? 14 : -7);
-    close(h.state.vz, -20);
+    close(h.state.vz, map==='city'?7:-20);
   }
-  const h = harness({ y: 0, vz: -20, speed: 20 }, 'city');
+  const h = harness({ x:5,z:12,y: 0, vz: -20, speed: 20 }, 'city');
   h.context.collideBuilding({ minX: 0, maxX: 10, minZ: 0, maxZ: 10, height: 200 });
   close(h.state.speed, -6);
-  close(h.state.vz, -20);
+  close(h.state.vz, 6);
 });
 
 

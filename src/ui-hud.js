@@ -800,7 +800,8 @@ function selectWeatherMode(idx, playAudio = true) {
   weatherIndex = THREE.MathUtils.clamp(idx, 0, WEATHER_PRESETS.length - 1);
   const wp = WEATHER_PRESETS[weatherIndex];
 
-  scene.background.setHex(wp.bgColor);
+  if(scene.background?.isColor)scene.background.setHex(wp.bgColor);
+  else scene.background=new THREE.Color(wp.bgColor);
   scene.fog.color.setHex(wp.fogColor);
   scene.fog.density = wp.fogDensity;
 
@@ -820,6 +821,12 @@ function selectWeatherMode(idx, playAudio = true) {
   [roadMat, cityAsphaltMat, cityAsphaltEWMat].forEach(material => applyRoadWeather(material, wp));
   window.RoadsterCoast?.weather(wp);
   if (typeof cityEnvGroup !== 'undefined') cityEnvGroup.userData?.applyWeather?.(wp);
+  if(typeof currentMap!=='undefined'&&currentMap==='city'&&wp.daylight&&typeof cityEnvGroup!=='undefined'&&cityEnvGroup.userData?.daySky){
+    const sky=cityEnvGroup.userData.daySky();scene.background=sky;scene.environment=sky;
+    scene.fog.color.setHex(0xbed3e0);scene.fog.density=.00018;
+    ambientLight.intensity=.58;dirLight.intensity=.88;rimLight.intensity=.10;
+  }
+
 
 
   if (typeof headlightSpotL !== 'undefined' && typeof headlightSpotR !== 'undefined') {
@@ -981,7 +988,7 @@ function toggleAltitudeHold() {
     const mapBuildings = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : cityBuildings;
     for (let i = 0; i < mapBuildings.length; i++) {
       const b = mapBuildings[i];
-      if (state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
+      if (currentMap==='city' ? cityTouchesBuilding(state,b) : state.x > b.minX - 1.1 && state.x < b.maxX + 1.1 && state.z > b.minZ - 1.8 && state.z < b.maxZ + 1.8) {
         if (state.y >= b.height - 0.55) {
           groundElev = Math.max(groundElev, b.height);
         }

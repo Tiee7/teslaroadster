@@ -1,0 +1,36 @@
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.286072ms)
+✖ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (69.440884ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (900.72339ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (62.6546ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.980906ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (2.169462ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (2.422905ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (50.281631ms)
+✔ city: ten real occupied seats, five replenished pickups, full rejection and stable FIFO target (64.32606ms)
+✔ city: many deterministic crowded refills never exhaust waiting stations or duplicate occupied IDs (770.426251ms)
+✔ coast: ten real occupied seats, five replenished pickups, full rejection and stable FIFO target (24.114939ms)
+✔ coast: many deterministic crowded refills never exhaust waiting stations or duplicate occupied IDs (212.872376ms)
+✔ coast graph uses only the real closed elevated road with bounded arc-cost routing and full marker clearance (21.129494ms)
+✔ elevated coast arrivals reject the ground beneath, airborne points and landing sweep, then accept the real road (13.850946ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 13
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1554.394395
+
+✖ failing tests:
+
+test at tests/city-layout.test.mjs:29:1
+✖ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (69.440884ms)
+  ReferenceError: cityMotionStart is not defined
+      at Object.motionStep [as step] (evalmachine.<anonymous>:1413:63)
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-layout.test.mjs:90:13)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
