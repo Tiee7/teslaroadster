@@ -79,7 +79,7 @@ test('production render integration gives map3 an independent fixed clock while 
   context.document.hidden = true; events.visibilitychange(); frame(100); assert.equal(steps.length, 18);
   context.document.hidden = false; events.visibilitychange(); frame(100); assert.equal(steps.length, 24);
   context.currentMap = 'highway'; frame(100); close(steps.at(-1), .05);
-  context.currentMap = 'coast'; const coastBefore=steps.length; frame(100); close(coast.at(-1), .05); assert.equal(steps.length-coastBefore,6); close(steps.at(-1),1/60);
+  context.currentMap = 'coast'; const coastBefore=steps.length,taxiBefore=taxi.length; frame(100); assert.equal(taxi.length-taxiBefore,6); close(coast.at(-1), .1); assert.equal(steps.length-coastBefore,6); close(steps.at(-1),1/60);
   const before = steps.length;
   context.window.RoadsterDemo.isActive = () => true; frame(100);
   assert.equal(steps.length, before); close(demo.at(-1), .1);

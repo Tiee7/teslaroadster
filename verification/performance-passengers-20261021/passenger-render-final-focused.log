@@ -1,0 +1,45 @@
+✔ V8 pulse-bank waveform remains byte-identical to the original; capture precedes the presentation return (1.57069ms)
+✔ production city animate+clock updates original V8 once per 10 Hz RAF while capping duplicate colour passes (9.771348ms)
+✔ production city animate+clock updates original V8 once per 15 Hz RAF while capping duplicate colour passes (5.696666ms)
+✔ production city animate+clock updates original V8 once per 30 Hz RAF while capping duplicate colour passes (4.727452ms)
+✔ production city animate+clock updates original V8 once per 60 Hz RAF while capping duplicate colour passes (5.468401ms)
+✔ production city animate+clock updates original V8 once per 144 Hz RAF while capping duplicate colour passes (8.274075ms)
+✔ paused open worlds draw one transition, then stop duplicate colour passes while sound and restore stay live (10.905156ms)
+✔ 144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics (3.507538ms)
+✔ blur mutes immediately without RAF or resuming a suspended context (3.790103ms)
+✔ hidden mutes immediately without RAF or resuming a suspended context (3.934145ms)
+✔ modal-map-select pause clears the city sound snapshot and resumes without old boost (3.275576ms)
+✔ modal-help pause clears the city sound snapshot and resumes without old boost (2.809431ms)
+✔ ranked pause clears the city sound snapshot and resumes without old boost (2.521217ms)
+✔ music pause clears the city sound snapshot and resumes without old boost (2.5088ms)
+✔ suspended frames, reset and destruction never keep the last active city voice (3.349065ms)
+✔ production coast animate+clock updates original V8 once per 10 Hz RAF while capping duplicate colour passes (5.843202ms)
+✔ production coast animate+clock updates original V8 once per 15 Hz RAF while capping duplicate colour passes (4.139762ms)
+✔ production coast animate+clock updates original V8 once per 30 Hz RAF while capping duplicate colour passes (4.683417ms)
+✔ production coast animate+clock updates original V8 once per 60 Hz RAF while capping duplicate colour passes (5.603269ms)
+✔ production coast animate+clock updates original V8 once per 144 Hz RAF while capping duplicate colour passes (8.002577ms)
+✔ paused open worlds draw one transition, then stop duplicate colour passes while sound and restore stay live (8.328076ms)
+✔ 144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics (3.18943ms)
+✔ blur mutes immediately without RAF or resuming a suspended context (4.792262ms)
+✔ hidden mutes immediately without RAF or resuming a suspended context (3.600854ms)
+✔ modal-map-select pause clears the city sound snapshot and resumes without old boost (3.423184ms)
+✔ modal-help pause clears the city sound snapshot and resumes without old boost (3.072107ms)
+✔ ranked pause clears the city sound snapshot and resumes without old boost (2.758747ms)
+✔ music pause clears the city sound snapshot and resumes without old boost (5.839006ms)
+✔ suspended frames, reset and destruction never keep the last active city voice (3.471695ms)
+✔ highway retains one legacy sound update per render and no city event mute (7.758093ms)
+✔ autopilot retains its original substep sound ownership without a second city render update (6.37315ms)
+✔ city: ten real occupied seats, five replenished pickups, full rejection and stable FIFO target (66.129439ms)
+✔ city: many deterministic crowded refills never exhaust waiting stations or duplicate occupied IDs (615.055083ms)
+✔ coast: ten real occupied seats, five replenished pickups, full rejection and stable FIFO target (22.980221ms)
+✔ coast: many deterministic crowded refills never exhaust waiting stations or duplicate occupied IDs (179.765053ms)
+✔ coast graph uses only the real closed elevated road with bounded arc-cost routing and full marker clearance (20.113065ms)
+✔ elevated coast arrivals reject the ground beneath, airborne points and landing sweep, then accept the real road (15.93347ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1368.395345

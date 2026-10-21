@@ -143,7 +143,7 @@ const RoadsterCoastRoads = (() => {
       return[{id:'water',height:-.4,normal:{x:0,y:1,z:0},solid:false,water:true}];
     }
     const found=[terrainSupport(x,z)];
-    for(const triangle of triangleGrid.get(key(x,z))||[]){const height=heightInTriangle(triangle,x,z);if(height!==null&&!found.some(s=>s.id===triangle.id&&Math.abs(s.height-height)<1e-5))found.push({id:triangle.id,height,normal:triangle.normal,solid:true,water:false,road:triangle.id.startsWith('road'),bank:triangle.id.startsWith('bank'),bridge:triangle.bridge,triangle});}
+    for(const triangle of triangleGrid.get(key(x,z))||[]){if(x<triangle.minX-.001||x>triangle.maxX+.001||z<triangle.minZ-.001||z>triangle.maxZ+.001)continue;const height=heightInTriangle(triangle,x,z);if(height!==null&&!found.some(s=>s.id===triangle.id&&Math.abs(s.height-height)<1e-5))found.push({id:triangle.id,height,normal:triangle.normal,solid:true,water:false,road:triangle.id.startsWith('road'),bank:triangle.id.startsWith('bank'),bridge:triangle.bridge,triangle});}
     return found;
   }
   function querySupport(q){
@@ -190,8 +190,9 @@ const RoadsterCoastRoads = (() => {
     return null;
   }
   function sweepStructures(previous,next,height=1.25){
-    let hit=null;
+    let hit=null;const minX=Math.min(previous.x,next.x)-3.4,maxX=Math.max(previous.x,next.x)+3.4,minZ=Math.min(previous.z,next.z)-3.4,maxZ=Math.max(previous.z,next.z)+3.4,minY=Math.min(previous.y,next.y),maxY=Math.max(previous.y,next.y)+height;
     for(const box of structures){
+      if(box.maxX<minX||box.minX>maxX||box.maxZ<minZ||box.minZ>maxZ||box.maxY<minY||box.minY>maxY)continue;
       let enter=0,exit=1,normal=null;
       const ranges=[['y',box.minY-height,box.maxY,{x:0,y:1,z:0}]];
       let from=previous,to=next;

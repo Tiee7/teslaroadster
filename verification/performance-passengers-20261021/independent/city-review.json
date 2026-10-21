@@ -1,0 +1,194 @@
+{
+  "revision": "07118b0",
+  "scope": "Read-only frozen-source CPU audit, not a browser/GPU render or shader compile; no repository edits, build/check/test-runner/deploy.",
+  "original99DefinitionChanges": [],
+  "renderAABBMismatches": [],
+  "count": 227,
+  "low": 192,
+  "pads": 35,
+  "families": {
+    "brick-shop": 28,
+    "glass-office": 47,
+    "sandstone-commercial": 32,
+    "slab-apartment": 46,
+    "vertical-hotel": 38,
+    "metal-warehouse": 36
+  },
+  "scene": {
+    "meshes": 61,
+    "triangles": 51144,
+    "lights": 0,
+    "casters": 6,
+    "geometries": 50,
+    "materials": 23
+  },
+  "shaderFacts": {
+    "revision": "128",
+    "uvPars": "#ifdef USE_UV\n\t#ifdef UVS_VERTEX_ONLY\n\t\tvec2 vUv;\n\t#else\n\t\tvarying vec2 vUv;\n\t#endif\n\tuniform mat3 uvTransform;\n#endif",
+    "uvChunk": "#ifdef USE_UV\n\tvUv = ( uvTransform * vec3( uv, 1 ) ).xy;\n#endif",
+    "standardHasUVInclude": true,
+    "patches": [
+      {
+        "family": "brick-shop",
+        "insertions": 1,
+        "uvIncludeCount": 1,
+        "guardsCorrect": true,
+        "sizesFromAllInstanceColumns": true
+      },
+      {
+        "family": "sandstone-commercial",
+        "insertions": 1,
+        "uvIncludeCount": 1,
+        "guardsCorrect": true,
+        "sizesFromAllInstanceColumns": true
+      },
+      {
+        "family": "glass-office",
+        "insertions": 1,
+        "uvIncludeCount": 1,
+        "guardsCorrect": true,
+        "sizesFromAllInstanceColumns": true
+      },
+      {
+        "family": "metal-warehouse",
+        "insertions": 1,
+        "uvIncludeCount": 1,
+        "guardsCorrect": true,
+        "sizesFromAllInstanceColumns": true
+      },
+      {
+        "family": "slab-apartment",
+        "insertions": 1,
+        "uvIncludeCount": 1,
+        "guardsCorrect": true,
+        "sizesFromAllInstanceColumns": true
+      },
+      {
+        "family": "vertical-hotel",
+        "insertions": 1,
+        "uvIncludeCount": 1,
+        "guardsCorrect": true,
+        "sizesFromAllInstanceColumns": true
+      }
+    ]
+  },
+  "textures": [
+    {
+      "family": "brick-shop",
+      "name": "city-original-brick-shop",
+      "bytes": 65536,
+      "hash": "6926767648ac0eb083e2a0d2386958605d61e82ebf5e1f6e8251af9bbfb20c70",
+      "repeat": true,
+      "opaqueAlpha": true,
+      "metalness": 0.08,
+      "roughness": 0.82
+    },
+    {
+      "family": "sandstone-commercial",
+      "name": "city-original-sandstone-commercial",
+      "bytes": 65536,
+      "hash": "bf52d74f35a4cce6d9fe15a976aeb87cd3b1c29ea7429f71df6a2c9518d97f92",
+      "repeat": true,
+      "opaqueAlpha": true,
+      "metalness": 0.08,
+      "roughness": 0.82
+    },
+    {
+      "family": "glass-office",
+      "name": "city-original-glass-office",
+      "bytes": 65536,
+      "hash": "c6e25b196cd83ef65659b45573212628034a4fd333bae46ac7fa6bf57b8aaa8c",
+      "repeat": true,
+      "opaqueAlpha": true,
+      "metalness": 0.3,
+      "roughness": 0.46
+    },
+    {
+      "family": "metal-warehouse",
+      "name": "city-original-metal-warehouse",
+      "bytes": 65536,
+      "hash": "252ea523b90e50fff117841801f9e0fcb85107f2a2192955ef6a66bffc6d024d",
+      "repeat": true,
+      "opaqueAlpha": true,
+      "metalness": 0.08,
+      "roughness": 0.82
+    },
+    {
+      "family": "slab-apartment",
+      "name": "city-original-slab-apartment",
+      "bytes": 65536,
+      "hash": "a1b777856aca1b18285e0a46069cb5007059e9811ddd2e0c727214d1ec7c24aa",
+      "repeat": true,
+      "opaqueAlpha": true,
+      "metalness": 0.08,
+      "roughness": 0.82
+    },
+    {
+      "family": "vertical-hotel",
+      "name": "city-original-vertical-hotel",
+      "bytes": 65536,
+      "hash": "20516b136d9508dbf1f0138acd417a15c2c86c6382b5de1d8736bb91198263d3",
+      "repeat": true,
+      "opaqueAlpha": true,
+      "metalness": 0.08,
+      "roughness": 0.82
+    }
+  ],
+  "weather": {
+    "dayColors": [
+      "c3c8cc",
+      "c3c8cc",
+      "c3c8cc",
+      "c3c8cc",
+      "c3c8cc",
+      "c3c8cc"
+    ],
+    "nightColors": [
+      "87929e",
+      "87929e",
+      "87929e",
+      "87929e",
+      "87929e",
+      "87929e"
+    ],
+    "allChanged": true,
+    "mapHashesUnchanged": true
+  },
+  "staticUploadVersions": [
+    {
+      "family": "brick-shop",
+      "matrix": 1,
+      "color": 1
+    },
+    {
+      "family": "sandstone-commercial",
+      "matrix": 1,
+      "color": 1
+    },
+    {
+      "family": "glass-office",
+      "matrix": 1,
+      "color": 1
+    },
+    {
+      "family": "metal-warehouse",
+      "matrix": 1,
+      "color": 1
+    },
+    {
+      "family": "slab-apartment",
+      "matrix": 1,
+      "color": 1
+    },
+    {
+      "family": "vertical-hotel",
+      "matrix": 1,
+      "color": 1
+    }
+  ],
+  "notes": [
+    "The 128px texture contains a 64px pattern, so /7.2 gives a 3.6m facade repeat; horizontal brick seams every16px give 0.9m courses.",
+    "City collider/top heights remain full rectangular boxes, so the current non-stepped silhouettes are safe; podium/setback geometry would need a separate collision design.",
+    "No image pixels or GPU compile observed; texture/colour readability remains unverified visually."
+  ]
+}

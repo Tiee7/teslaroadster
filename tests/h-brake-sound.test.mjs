@@ -20,8 +20,8 @@ function motion(map,keys,{air=false,backward=false,speed=80,touch=false}={},sour
  for(const key of keys)h.keys[key]=true;if(touch)h.context.window.RoadsterTouch={readInput:()=>({brake:1})};
  return h;
 }
-test('only the six H-derived audio arguments change; original audio/music and all physics/visual code stay exact',()=>{
- let expected=before;expected=expected.replaceAll('thrust: isLiftFiring || rearActive || isFrontRetroFiring,','thrust: isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),').replaceAll('&& canUseRCS) || isFrontRetroFiring,','&& canUseRCS) || (isFrontRetroFiring && driveInput.reverse > 0),').replace('    isLiftFiring || rearActive || isFrontRetroFiring,','    isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),').replace('    anyAttitude || isFrontRetroFiring,','    anyAttitude || (isFrontRetroFiring && driveInput.reverse > 0),');assert.equal(physics,expected);
+test('the six H-derived audio changes stay exact throughout the physical kernel; later render-only ownership is separate',()=>{
+ let expected=before;expected=expected.replaceAll('thrust: isLiftFiring || rearActive || isFrontRetroFiring,','thrust: isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),').replaceAll('&& canUseRCS) || isFrontRetroFiring,','&& canUseRCS) || (isFrontRetroFiring && driveInput.reverse > 0),').replace('    isLiftFiring || rearActive || isFrontRetroFiring,','    isLiftFiring || isRearThrusterFiring || (isRetroBrakeFiring && driveInput.reverse > 0),').replace('    anyAttitude || isFrontRetroFiring,','    anyAttitude || (isFrontRetroFiring && driveInput.reverse > 0),');assert.equal(physics.slice(0,physics.indexOf('// Scope the fixed clock')),expected.slice(0,expected.indexOf('// Scope the fixed clock')));
  const epoch=JSON.parse(read('verification/quiet-h-brake-20261021/source-epoch.json'));for(const[file,sha]of Object.entries(epoch.unchangedAudioSha256))assert.equal(createHash('sha256').update(read('src/'+file)).digest('hex'),sha);
 });
 for(const map of['highway','city','coast']){

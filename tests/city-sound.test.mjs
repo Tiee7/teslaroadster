@@ -14,6 +14,7 @@ const section = (source, from, to) => {
 const capture = section(physics, '  // Capture resolved thrust,', '  // The physics, contact, scoring,');
 const legacyCall = section(physics, '  const anyAttitude =', '  // Update Live Cockpit Center');
 const renderLoop = section(physics, '// Scope the fixed clock', "window.addEventListener('resize'");
+const resizeLoop = section(physics, "window.addEventListener('resize'", 'window.__gameTestHooks');
 const readInput = section(physics, 'function readDriveInput(', 'function readAttitudeInput(');
 const clearKeys = section(hud, '// Fix operational bug: clear all keys', '// Dynamic Camera Distance');
 
@@ -51,11 +52,11 @@ function harness(map = 'city') {
       RoadsterDemo: { isActive: () => demoActive, isBusy: () => false,
         advanceFrame(seconds, step) { for (let i = 0; i < 3; i++) step(seconds / 3); } },
       RoadsterCoast: { tick() {} }, RoadsterTaxi: { tick() {}, present() {} } },
-    trafficCars: [], camera: { position: {} }, scene: {}, requestAnimationFrame() {}, updateDestroyedScores() {},
-    renderer: { render() { renders.push(calls.length); } },
+    resizeVfxCanvas() {}, trafficCars: [], camera: { position: {}, updateProjectionMatrix() {} }, scene: {}, requestAnimationFrame() {}, updateDestroyedScores() {},
+    renderer: { setSize() {}, render() { renders.push(calls.length); } },
   });
   context.setKeyState = (key, value) => { context.keys[key] = value; };
-  vm.runInContext(`${audio}\n${read('city-clock.js')}\n${readInput}\n${clearKeys}\n${renderLoop}
+  vm.runInContext(`${audio}\n${read('city-clock.js')}\n${readInput}\n${clearKeys}\n${renderLoop}\n${resizeLoop}
     function recordPhysicsSound(presentationDt) {
       const input = readDriveInput();
       const isLiftFiring = input.lift > 0, isRearThrusterFiring = input.boost > 0, rearActive = isRearThrusterFiring, isRetroBrakeFiring = false, isFrontRetroFiring = false;
@@ -95,13 +96,21 @@ test('V8 pulse-bank waveform remains byte-identical to the original; capture pre
   assert.ok(physics.indexOf(capture) < physics.indexOf('  if (!presentFrame) {'));
 });
 for(const map of ['city','coast']) {
-for (const fps of [10, 15, 60, 144]) test(`production ${map} animate+clock updates original V8 once per ${fps} fps render`, () => {
+for (const fps of [10, 15, 30, 60, 144]) test(`production ${map} animate+clock updates original V8 once per ${fps} Hz RAF while capping duplicate colour passes`, () => {
   const h = harness(map); h.context.keys.KeyW = true;
   for (let i = 0; i < fps; i++) h.frame(1000 / fps);
-  assert.equal(h.steps.length, 60); assert.equal(h.calls.length, fps); assert.equal(h.renders.length, fps);
-  assert.ok(h.renders.every((count, i) => count === i + 1), 'audio update occurs before each render');
+  assert.equal(h.steps.length, 60); assert.equal(h.calls.length, fps); assert.equal(h.renders.length, fps > 60 ? 61 : fps);
+  assert.ok(h.renders.every((count, i) => count > (h.renders[i - 1] || 0) && count <= fps), 'fresh sound precedes every accepted colour pass even when zero-tick RAFs do not draw');
   assert.equal(h.context.audio.engineVoice.rpm, h.context.expectedVoice(35 / (200 / 3.6), 1).rpm);
   assert.ok(h.calls.slice(2).every(args => args[5] === 1));
+});
+test('paused open worlds draw one transition, then stop duplicate colour passes while sound and restore stay live',()=>{
+ const h=harness(map);for(let i=0;i<144;i++)h.frame(1000/144);const steps=h.steps.length,rendered=h.renders.length;
+ h.pause('modal-help',true);for(let i=0;i<144;i++)h.frame(1000/144);assert.equal(h.steps.length,steps);assert.equal(h.renders.length,rendered+1);silent(h);
+ h.emit('resize');h.frame(1);assert.equal(h.steps.length,steps);assert.equal(h.renders.length,rendered+2,'paused resize invalidates the cleared drawing buffer exactly once');h.frame(1);assert.equal(h.renders.length,rendered+2);
+ h.pause('modal-help',false);h.frame(17);assert.equal(h.steps.length,steps+1);assert.equal(h.renders.length,rendered+3);
+ h.context.currentMap='highway';h.frame(1);assert.equal(h.renders.length,rendered+4,'map1 still draws every RAF');
+ h.context.currentMap=map;h.frame(1);assert.equal(h.renders.length,rendered+5,'return to open world forces a fresh view even before its first tick');
 });
 test('144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics', () => {
   const h = harness(map); h.context.keys.KeyW = true;

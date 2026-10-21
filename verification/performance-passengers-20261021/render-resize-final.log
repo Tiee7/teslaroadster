@@ -1,0 +1,39 @@
+✔ V8 pulse-bank waveform remains byte-identical to the original; capture precedes the presentation return (1.58324ms)
+✔ production city animate+clock updates original V8 once per 10 Hz RAF while capping duplicate colour passes (10.578919ms)
+✔ production city animate+clock updates original V8 once per 15 Hz RAF while capping duplicate colour passes (5.576998ms)
+✔ production city animate+clock updates original V8 once per 30 Hz RAF while capping duplicate colour passes (4.558839ms)
+✔ production city animate+clock updates original V8 once per 60 Hz RAF while capping duplicate colour passes (5.033588ms)
+✔ production city animate+clock updates original V8 once per 144 Hz RAF while capping duplicate colour passes (8.15379ms)
+✔ paused open worlds draw one transition, then stop duplicate colour passes while sound and restore stay live (8.590132ms)
+✔ 144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics (3.07173ms)
+✔ blur mutes immediately without RAF or resuming a suspended context (3.932497ms)
+✔ hidden mutes immediately without RAF or resuming a suspended context (4.907492ms)
+✔ modal-map-select pause clears the city sound snapshot and resumes without old boost (3.607349ms)
+✔ modal-help pause clears the city sound snapshot and resumes without old boost (2.991423ms)
+✔ ranked pause clears the city sound snapshot and resumes without old boost (2.951494ms)
+✔ music pause clears the city sound snapshot and resumes without old boost (2.632755ms)
+✔ suspended frames, reset and destruction never keep the last active city voice (3.223814ms)
+✔ production coast animate+clock updates original V8 once per 10 Hz RAF while capping duplicate colour passes (4.949324ms)
+✔ production coast animate+clock updates original V8 once per 15 Hz RAF while capping duplicate colour passes (4.045463ms)
+✔ production coast animate+clock updates original V8 once per 30 Hz RAF while capping duplicate colour passes (4.32847ms)
+✔ production coast animate+clock updates original V8 once per 60 Hz RAF while capping duplicate colour passes (9.243804ms)
+✔ production coast animate+clock updates original V8 once per 144 Hz RAF while capping duplicate colour passes (11.985614ms)
+✔ paused open worlds draw one transition, then stop duplicate colour passes while sound and restore stay live (10.930647ms)
+✔ 144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics (3.797088ms)
+✔ blur mutes immediately without RAF or resuming a suspended context (2.734985ms)
+✔ hidden mutes immediately without RAF or resuming a suspended context (2.720173ms)
+✔ modal-map-select pause clears the city sound snapshot and resumes without old boost (2.676119ms)
+✔ modal-help pause clears the city sound snapshot and resumes without old boost (2.601298ms)
+✔ ranked pause clears the city sound snapshot and resumes without old boost (2.720533ms)
+✔ music pause clears the city sound snapshot and resumes without old boost (4.071152ms)
+✔ suspended frames, reset and destruction never keep the last active city voice (3.450408ms)
+✔ highway retains one legacy sound update per render and no city event mute (7.161049ms)
+✔ autopilot retains its original substep sound ownership without a second city render update (5.266581ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 265.06262

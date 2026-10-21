@@ -1,0 +1,50 @@
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.633702ms)
+✖ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (108.177321ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (795.691919ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (52.877319ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.542978ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (1.627863ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (1.622816ms)
+✖ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (35.19721ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 6
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1114.477354
+
+✖ failing tests:
+
+test at tests/city-layout.test.mjs:29:1
+✖ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (108.177321ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  227 !== 99
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-layout.test.mjs:34:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 227,
+    expected: 99,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/city-layout.test.mjs:135:1
+✖ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (35.19721ms)
+  TypeError: Cannot read properties of undefined (reading 'material')
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-layout.test.mjs:141:117)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

@@ -1,0 +1,19 @@
+{
+  "base": "17dda06f0c417c6c01f8e066cb7897be75969f1a",
+  "scope": "Source-only intermediate checkpoint; root index bundle and frozen source/projection epochs intentionally not regenerated until remaining city instancing is complete. Not published.",
+  "verified": [
+    "static-render-focused.log:109/109 (before taxi integration)",
+    "passenger-render-focused.log:107/107",
+    "passenger-render-final-focused.log: read terminal summary"
+  ],
+  "performanceBoundary": "CPU actual Three scene and Node logic only; no device-temperature, GPU frame or native browser acceptance claim.",
+  "newPassengerContract": "City and coast automatically enabled, capacity10 on board, five waiting, stable FIFO primary, one green destination, 3D arrival and per-physics-substep checks.",
+  "sources": {
+    "src/coast-map.js": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "src/config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "src/world.js": "2d774853a4d51b15e20f3192a3bdd8d549aa0a13e65ef823659cd986c9eb5214",
+    "src/physics-main.js": "2f0705662dbe020481f9bce7f3ae4c0bcd77b0c203de68c9a62ca5a2c0c0ebe1",
+    "src/taxi.js": "1f6fefd018879669113aef70ec3c6c22fb14825b37c1600030c7e574917ca3c3",
+    "src/ui-hud.js": "0ef476a15079a45fd5e7b8292d81f2bc5962ee4376560ba90d01a68b90913b6a"
+  }
+}

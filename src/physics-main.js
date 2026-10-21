@@ -2367,6 +2367,7 @@ window.addEventListener('blur', () => { cityFocusLost = true; resetCityFrameCloc
 window.addEventListener('focus', () => { cityFocusLost = false; resetCityFrameClock(); resetCoastFrameClock(); });
 document.addEventListener('visibilitychange', () => {resetCityFrameClock();resetCoastFrameClock();});
 
+let openWorldRenderMap=null, openWorldRenderActive=null, coastVisualSeconds=0;
 function animate(now) {
   requestAnimationFrame(animate);
   // Snapshot the score before any simulation step beyond the real-time deadline.
@@ -2374,7 +2375,7 @@ function animate(now) {
   const frameSeconds = (now - lastTime) / 1000;
   const dt = Math.min(0.05, (now - lastTime) / 1000);
   lastTime = now;
-  if (currentMap === 'coast') globalThis.window?.RoadsterCoast?.tick(dt);
+  let renderFrame=true;
   if(currentMap!=='coast'){coastFrameClock.clear();coastSoundFrame=null;}
   if (window.RoadsterDemo?.isActive()) {
     coastFrameClock.clear();coastSoundFrame=null;
@@ -2384,16 +2385,25 @@ function animate(now) {
       updateSimulation(step, presentationDt);
       window.RoadsterTaxi?.tick(false);
     }, cityFrameActive);
-    updateCityFrameSound(!cityFrame.suspended && cityFrameActive());
+    const active=!cityFrame.suspended && cityFrameActive();
+    updateCityFrameSound(active);
+    renderFrame=cityFrame.frameSteps>0||openWorldRenderMap!==currentMap||openWorldRenderActive!==active;
+    if(renderFrame){openWorldRenderMap=currentMap;openWorldRenderActive=active;}
   } else if(currentMap==='coast'){
     cityFrameClock.clear();
-    const frame=coastFrameClock.advance(frameSeconds,(step,presentationDt)=>updateSimulation(step,presentationDt),coastFrameActive);
-    updateCoastFrameSound(!frame.suspended&&coastFrameActive());
+    const frame=coastFrameClock.advance(frameSeconds,(step,presentationDt)=>{updateSimulation(step,presentationDt);window.RoadsterTaxi?.tick(false);},coastFrameActive);
+    const active=!frame.suspended&&coastFrameActive();
+    updateCoastFrameSound(active);
+    coastVisualSeconds=active?coastVisualSeconds+frameSeconds:0;
+    renderFrame=frame.frameSteps>0||openWorldRenderMap!==currentMap||openWorldRenderActive!==active;
+    if(renderFrame){openWorldRenderMap=currentMap;openWorldRenderActive=active;if(active)globalThis.window?.RoadsterCoast?.tick(coastVisualSeconds);coastVisualSeconds=0;}
   } else {
     cityFrameClock.clear();
     updateSimulation(dt);
   }
-  if (currentMap === 'city') window.RoadsterTaxi?.present?.();
+  if(currentMap!=='city'&&currentMap!=='coast'||window.RoadsterDemo?.isActive()){openWorldRenderMap=null;openWorldRenderActive=null;coastVisualSeconds=0;}
+  if(!renderFrame)return;
+  if (currentMap === 'city' || currentMap === 'coast') window.RoadsterTaxi?.present?.();
   else window.RoadsterTaxi?.tick();
   if (state.isDestroyed) updateDestroyedScores();
   window.RoadsterTrafficAssets?.updateLods(trafficCars, camera.position);
@@ -2401,6 +2411,8 @@ function animate(now) {
 }
 
 window.addEventListener('resize', () => {
+  // setSize clears the drawing buffer even while an open-world menu is paused.
+  openWorldRenderMap=null;
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);

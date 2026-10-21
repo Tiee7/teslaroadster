@@ -558,9 +558,9 @@ const WEATHER_PRESETS = [
     descEn: 'Readable daylight, soft sky and matte roads; no visible sun disc',
     descZh: '清朗天光、柔和天空与哑光道路，不显示太阳模型',
     bgColor: 0xc7dfed, fogColor: 0xc7dfed, fogDensity: 0.00020,
-    ambientColor: 0xdbe9f4, ambientIntensity: 1.2,
-    dirColor: 0xfff5df, dirIntensity: 2.0, dirPos: [65, 100, 45],
-    rimColor: 0xc1d9e8, rimIntensity: 0.3,
+    ambientColor: 0xdbe9f4, ambientIntensity: 0.62,
+    dirColor: 0xfff5df, dirIntensity: 1.0, dirPos: [65, 100, 45],
+    rimColor: 0xc1d9e8, rimIntensity: 0.16,
     roadRoughness: 0.86, roadMetalness: 0.03, roadEnvIntensity: 0.25,
     rain: false, marsSun: false, daylight: true
   }

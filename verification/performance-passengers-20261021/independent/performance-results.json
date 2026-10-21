@@ -1,0 +1,751 @@
+{
+  "commit": "eeddf7d93c0e21d492b0ba2e3b4d9732ec61d19d",
+  "three": "128",
+  "scope": "Production animate, fixed clock, motion kernel, audio class and actual coast queries; no WebGL/GPU/thermal/FPS measurement",
+  "rates": [
+    {
+      "map": "city",
+      "fps": 10,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.6666666666664,
+      "renders": 30,
+      "audioUpdates": 30,
+      "expensivePresentations": 30,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "city",
+      "fps": 15,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.6666666666664,
+      "renders": 45,
+      "audioUpdates": 45,
+      "expensivePresentations": 45,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "city",
+      "fps": 30,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.6666666666664,
+      "renders": 90,
+      "audioUpdates": 90,
+      "expensivePresentations": 90,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "city",
+      "fps": 60,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.6666666666664,
+      "renders": 180,
+      "audioUpdates": 180,
+      "expensivePresentations": 180,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "city",
+      "fps": 144,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.6666666666664,
+      "renders": 181,
+      "audioUpdates": 432,
+      "expensivePresentations": 180,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "coast",
+      "fps": 10,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.66666666667652,
+      "renders": 30,
+      "audioUpdates": 30,
+      "expensivePresentations": 30,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "coast",
+      "fps": 15,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.66666666667652,
+      "renders": 45,
+      "audioUpdates": 45,
+      "expensivePresentations": 45,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "coast",
+      "fps": 30,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.66666666667652,
+      "renders": 90,
+      "audioUpdates": 90,
+      "expensivePresentations": 90,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "coast",
+      "fps": 60,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.66666666667652,
+      "renders": 180,
+      "audioUpdates": 180,
+      "expensivePresentations": 180,
+      "taxiPhysicalTicks": 180
+    },
+    {
+      "map": "coast",
+      "fps": 144,
+      "physicsSteps": 180,
+      "simulatedSeconds": 2.9999999999999942,
+      "distance": 166.66666666667652,
+      "renders": 181,
+      "audioUpdates": 432,
+      "expensivePresentations": 180,
+      "taxiPhysicalTicks": 180
+    }
+  ],
+  "interruptions": [
+    {
+      "map": "city",
+      "kind": "modal-map-select",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "city",
+      "kind": "modal-help",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "city",
+      "kind": "ranked",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "city",
+      "kind": "music",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "city",
+      "kind": "blur",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 1
+    },
+    {
+      "map": "city",
+      "kind": "hidden",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 1
+    },
+    {
+      "map": "city",
+      "kind": "long-frame",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "coast",
+      "kind": "modal-map-select",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "coast",
+      "kind": "modal-help",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "coast",
+      "kind": "ranked",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "coast",
+      "kind": "music",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    },
+    {
+      "map": "coast",
+      "kind": "blur",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 1
+    },
+    {
+      "map": "coast",
+      "kind": "hidden",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 1
+    },
+    {
+      "map": "coast",
+      "kind": "long-frame",
+      "pausedPhysicsSteps": 0,
+      "pausedRenders": 1,
+      "resumePhysicsSteps": 1,
+      "staleBoost": false,
+      "audioResumeCalls": 0
+    }
+  ],
+  "mapSwitches": [
+    {
+      "from": "city",
+      "target": "highway",
+      "physicsStepDelta": 1,
+      "renderDelta": 1
+    },
+    {
+      "from": "city",
+      "target": "coast",
+      "physicsStepDelta": 0,
+      "renderDelta": 1
+    },
+    {
+      "from": "city",
+      "target": "city",
+      "physicsStepDelta": 0,
+      "renderDelta": 1
+    },
+    {
+      "from": "city",
+      "target": "coast",
+      "physicsStepDelta": 0,
+      "renderDelta": 1
+    },
+    {
+      "from": "coast",
+      "target": "highway",
+      "physicsStepDelta": 1,
+      "renderDelta": 1
+    },
+    {
+      "from": "coast",
+      "target": "coast",
+      "physicsStepDelta": 0,
+      "renderDelta": 1
+    },
+    {
+      "from": "coast",
+      "target": "city",
+      "physicsStepDelta": 0,
+      "renderDelta": 1
+    },
+    {
+      "from": "coast",
+      "target": "coast",
+      "physicsStepDelta": 0,
+      "renderDelta": 1
+    }
+  ],
+  "findings": [
+    {
+      "map": "city",
+      "case": "paused-resize",
+      "rendersBefore": 2,
+      "rendersAfter": 2,
+      "blankAfterResize": true,
+      "severity": "presentation invalidation omission"
+    },
+    {
+      "map": "coast",
+      "case": "paused-resize",
+      "rendersBefore": 2,
+      "rendersAfter": 2,
+      "blankAfterResize": true,
+      "severity": "presentation invalidation omission"
+    }
+  ],
+  "nonlinearMotion": [
+    {
+      "map": "city",
+      "mode": "accelerate",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "accelerate",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "accelerate",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "accelerate",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "accelerate",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "brake",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "brake",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "brake",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "brake",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "brake",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "boost",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "boost",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "boost",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "boost",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "boost",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "flight",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "flight",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "flight",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "flight",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "city",
+      "mode": "flight",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "accelerate",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "accelerate",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "accelerate",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "accelerate",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "accelerate",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "brake",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "brake",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "brake",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "brake",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "brake",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "boost",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "boost",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "boost",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "boost",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "boost",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "flight",
+      "fps": 10,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "flight",
+      "fps": 15,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "flight",
+      "fps": 30,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "flight",
+      "fps": 60,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    },
+    {
+      "map": "coast",
+      "mode": "flight",
+      "fps": 144,
+      "equalFixedStepReference": true,
+      "physicsSteps": 180
+    }
+  ],
+  "zeroStepAudio": [
+    {
+      "map": "city",
+      "noExtraPhysics": true,
+      "noExtraRender": true,
+      "freshReleasedThrottle": true,
+      "muteImmediate": true
+    },
+    {
+      "map": "coast",
+      "noExtraPhysics": true,
+      "noExtraRender": true,
+      "freshReleasedThrottle": true,
+      "muteImmediate": true
+    }
+  ],
+  "autopilotBranch": [
+    {
+      "map": "highway",
+      "stepOwner": "advanceFrame",
+      "steps": 3,
+      "soundUpdates": 3,
+      "renders": 1
+    }
+  ],
+  "sceneBuildCpuMs": 610.2907599999999,
+  "sceneInitial": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "cachedCpuPixelBytes": 262144,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 41,
+    "ownedMaterials": 53,
+    "ownedTextures": 16,
+    "textureBytes": 1256107,
+    "ownedGeometryBufferBytes": 4371088,
+    "ownedInstanceBufferBytes": 703836,
+    "staticMeshDraws": 83,
+    "staticTriangles": 153958,
+    "maximumStaticTriangles": 153958,
+    "nearPalms": 0,
+    "farPalms": 94,
+    "foliageRefreshes": 0,
+    "nearDetailInstances": 248,
+    "nearDetailCapacity": 248,
+    "nearDetailMatrixBytes": 15872,
+    "detailRefreshes": 0,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 75158,
+    "maximumShadowCasterTriangles": 75158,
+    "instances": 10878,
+    "buildings": 52,
+    "retainedCoastalBuildings": 44,
+    "hillsideBuildings": 8,
+    "palms": 94,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "changedInstanceBuffersAfterFocusMove": [
+    "coast-wheel-cabins"
+  ],
+  "sceneAfterMove": {
+    "active": true,
+    "builds": 1,
+    "disposals": 0,
+    "failedBuilds": 0,
+    "cachedCpuPixelBytes": 262144,
+    "ownedLights": 2,
+    "shadowMapResolution": 1024,
+    "shadowSpanMetres": 160,
+    "ownedGeometries": 41,
+    "ownedMaterials": 53,
+    "ownedTextures": 16,
+    "textureBytes": 1256107,
+    "ownedGeometryBufferBytes": 4371088,
+    "ownedInstanceBufferBytes": 703836,
+    "staticMeshDraws": 83,
+    "staticTriangles": 153958,
+    "maximumStaticTriangles": 153958,
+    "nearPalms": 0,
+    "farPalms": 94,
+    "foliageRefreshes": 0,
+    "nearDetailInstances": 248,
+    "nearDetailCapacity": 248,
+    "nearDetailMatrixBytes": 15872,
+    "detailRefreshes": 0,
+    "shadowCasterBatches": 30,
+    "shadowCasterTriangles": 75158,
+    "maximumShadowCasterTriangles": 75158,
+    "instances": 10878,
+    "buildings": 52,
+    "retainedCoastalBuildings": 44,
+    "hillsideBuildings": 8,
+    "palms": 94,
+    "textureEstimateScope": "Owned sampled texture levels only; excludes shadow render target and driver allocations",
+    "performanceBoundary": "Static scene structure, not measured renderer draw calls or FPS"
+  },
+  "lighting": {
+    "fill": 0.58,
+    "key": 1,
+    "roadEnv": 0.15
+  },
+  "dpr": [
+    {
+      "coarse": false,
+      "inputDpr": 1,
+      "actualDpr": 1,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": false,
+      "inputDpr": 1.5,
+      "actualDpr": 1.5,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": false,
+      "inputDpr": 2,
+      "actualDpr": 1.5,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": false,
+      "inputDpr": 3,
+      "actualDpr": 1.5,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": true,
+      "inputDpr": 1,
+      "actualDpr": 1,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": true,
+      "inputDpr": 1.5,
+      "actualDpr": 1.25,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": true,
+      "inputDpr": 2,
+      "actualDpr": 1.25,
+      "powerPreference": "default"
+    },
+    {
+      "coarse": true,
+      "inputDpr": 3,
+      "actualDpr": 1.25,
+      "powerPreference": "default"
+    }
+  ]
+}

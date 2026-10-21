@@ -86,7 +86,7 @@ test('original sculpted palms have finite nonzero folded leaves, real vertex col
 },()=>{
  const {T,coast}=actual(),root=coast.enter(new T.Scene(),T),trunk=root.getObjectByName('coast-palm-trunks');
  const p=trunk.geometry.attributes.position;for(let i=0;i<p.count;i++)assert.ok(Math.hypot(p.getX(i),p.getZ(i))<.6,'trunk remains inside the unchanged palm collision radius');
- for(const name of ['coast-palm-fans','coast-palm-fans-compact','coast-palm-fans-far','coast-palm-fans-far-compact']){
+ for(const name of ['coast-palm-fans-far','coast-palm-fans-far-compact']){
   const o=root.getObjectByName(name),g=o.geometry,p=g.attributes.position,n=g.attributes.normal,c=g.attributes.color;assert.ok(o.count<=o.userData.coastArt.capacity);assert.equal(o.material.vertexColors,true);assert.equal(o.material.side,T.DoubleSide);assert.equal(c.count,p.count);
   const a=new T.Vector3(),b=new T.Vector3(),v=new T.Vector3();let lo=Infinity,hi=-Infinity;
   for(let i=0;i<p.count;i++){lo=Math.min(lo,p.getY(i));hi=Math.max(hi,p.getY(i));for(let axis=0;axis<3;axis++){assert.ok(Number.isFinite(n.array[i*3+axis]));assert.ok(c.array[i*3+axis]>=0&&c.array[i*3+axis]<=1);}}
@@ -122,11 +122,11 @@ test('curated beach pockets, promenade furniture and pier gateway retain human s
  coast.leave();
 });
 
-test('palm LOD keeps all94 retained original crown poses and bounded pools, caches stationary frames and uses hysteresis without touching layout',{
+test('static palm crowns keep all94 original poses at every distance without rebuilds or near-distance popping',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(-64,0,700);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T);
- const meshes=['coast-palm-fans','coast-palm-fans-compact','coast-palm-fans-far','coast-palm-fans-far-compact'].map(n=>root.getObjectByName(n)),matrix=new T.Matrix4(),position=new T.Vector3();
+ const meshes=['coast-palm-fans-far','coast-palm-fans-far-compact'].map(n=>root.getObjectByName(n)),matrix=new T.Matrix4(),position=new T.Vector3();
  const check=()=>{
   const seen=new Set();let near=0,far=0;
   for(const mesh of meshes){assert.ok(mesh.count<=mesh.userData.coastArt.capacity);if(mesh.name.includes('-far'))far+=mesh.count;else near+=mesh.count;
@@ -136,12 +136,12 @@ test('palm LOD keeps all94 retained original crown poses and bounded pools, cach
  };
  check();const versions=meshes.map(m=>m.instanceMatrix.version),refreshes=coast.metrics().foliageRefreshes;
  for(let i=0;i<600;i++)coast.tick(1/60);assert.deepEqual(meshes.map(m=>m.instanceMatrix.version),versions);assert.equal(coast.metrics().foliageRefreshes,refreshes);
- focus.x+=19;coast.tick(1/60);assert.equal(coast.metrics().foliageRefreshes,refreshes);focus.x+=2;coast.tick(1/60);assert.equal(coast.metrics().foliageRefreshes,refreshes+1);check();
- for(const [x,z] of [[-310,-1000],[430,0],[950,850],[-650,-650],[-64,700]]){focus.set(x,999,z);coast.tick(1/60);check();}
+ focus.x+=19;coast.tick(1/60);assert.equal(coast.metrics().foliageRefreshes,refreshes);focus.x+=2;coast.tick(1/60);assert.equal(coast.metrics().foliageRefreshes,refreshes);check();
+ for(const [x,z] of [[-310,-1000],[430,0],[950,850],[-650,-650],[-64,700]]){focus.set(x,999,z);coast.tick(1/60);check();assert.deepEqual(meshes.map(m=>m.instanceMatrix.version),versions);}
  const count=coast.metrics().foliageRefreshes;focus.x=NaN;coast.tick(NaN);assert.equal(coast.metrics().foliageRefreshes,count);check();coast.leave();
 });
 
-test('whole-district apertures have four outward faces, selective masked emission and a correctly budgeted reusable near-frame pool',{
+test('whole-district apertures keep four outward faces and persistent ground-floor entry reveals, with no proximity rebuilding',{
  skip:existsSync(runtime)?false:'Official production Three r128 required'
 },()=>{
  const {T,coast}=actual(),scene=new T.Scene(),focus=new T.Vector3(430,0,0);scene.userData.coastArtBridge={getFocus:()=>focus,sharedLights:[]};const root=coast.enter(scene,T),meta=root.userData.coastArtDistrict;
@@ -158,10 +158,10 @@ test('whole-district apertures have four outward faces, selective masked emissio
  assert.equal(coverage.size,41);for(const faces of coverage.values())assert.equal(faces.size,4);
  assert.equal(windows[1].material.emissiveMap.image.width,128);assert.equal(windows[0].material.map,windows[1].material.map);
  const mask=windows[1].material.emissiveMap.image.data;assert.equal(mask[(20*128+7)*4],0);assert.ok(mask[(20*128+8)*4]>0);assert.ok(mask[(20*128+55)*4]>0);assert.equal(mask[(20*128+56)*4],0);
- assert.equal(pool.userData.coastArt.capacity,384);assert.equal(pool.instanceMatrix.array.byteLength,24576);assert.ok(pool.count>0&&pool.count<=384);
+ assert.equal(pool.userData.coastArt.capacity,248);assert.equal(pool.instanceMatrix.array.byteLength,248*64);assert.equal(pool.count,248);
  const buffer=pool.instanceMatrix.array,version=pool.instanceMatrix.version,refreshes=coast.metrics().detailRefreshes;
- for(let i=0;i<600;i++)coast.tick(1/60);assert.equal(pool.instanceMatrix.version,version);focus.x+=19.99;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes);focus.x+=.02;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes+1);
- for(const [x,z] of [[-64,700],[950,850],[1115,1000],[-700,-650],[430,0]]){focus.set(x,999,z);coast.tick(1/60);assert.equal(pool.instanceMatrix.array,buffer);assert.ok(pool.count<=384);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);}
+ for(let i=0;i<600;i++)coast.tick(1/60);assert.equal(pool.instanceMatrix.version,version);focus.x+=19.99;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes);focus.x+=.02;coast.tick(1/60);assert.equal(coast.metrics().detailRefreshes,refreshes);
+ for(const [x,z] of [[-64,700],[950,850],[1115,1000],[-700,-650],[430,0]]){focus.set(x,999,z);coast.tick(1/60);assert.equal(pool.instanceMatrix.array,buffer);assert.equal(pool.instanceMatrix.version,version);assert.equal(pool.count,248);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);}
  assert.ok(coast.metrics().ownedGeometryBufferBytes+coast.metrics().ownedInstanceBufferBytes<=coast.artBudget.geometryAndInstanceBytes);coast.leave();
 });
 
@@ -352,7 +352,7 @@ test('six grouped facade signatures partition original wall hulls exactly with e
   assert.ok(Math.abs(last-b.height)<1e-4);assert.ok(Math.abs(volume-b.w*b.d*b.height)<.01,'sum of segment volumes is the original hull, not only its combined AABB');
   if(selected){assert.ok(Math.abs(segments[0].max.y-3.2)<1e-4);assert.ok(Math.abs(segments[1].max.y-selected.top)<1e-4);assert.ok(selected.top>3.2&&selected.top<b.height);for(let j=0;j<3;j++){walls.getColorAt(ids[j],color);assert.equal(color.getHex(),selected.colors[j]);}}
  }
- assert.equal(coast.metrics().staticMeshDraws,85);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
+ assert.equal(coast.metrics().staticMeshDraws,83);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(coast.metrics().ownedTextures,16);coast.leave();
 });
 
 test('signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance',{
@@ -386,5 +386,5 @@ test('two driving-visible arrival places reuse flat paving/furniture batches and
   const mesh=root.getObjectByName(name),start=mesh.userData.coastArrivalStart;assert.equal(mesh.count-start,count);mesh.geometry.computeBoundingBox();triangles+=count*(mesh.geometry.index?mesh.geometry.index.count:mesh.geometry.attributes.position.count)/3;
   for(let i=start;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);const b=mesh.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(mesh.matrixWorld,matrix));newProps.push(b);assert.ok(b.min.y>=-.01,'new geometry does not sink below original ground');if(name.includes('shrubs'))assert.ok(b.max.y<=.7,'shop display stays above low planting');if(b.min.x>450&&b.min.z>600)assert.ok(b.min.x>=459.7563&&b.max.x<=477.7564&&b.min.z>=600.7952&&b.max.z<=607.7954,'entire group remains on the existing original L court');for(const p of protectedPaths)assert.ok(b.max.x<=p.minX||b.min.x>=p.maxX||b.max.z<=p.minZ||b.min.z>=p.maxZ,'complete prop/canopy avoids old and new1.3m footpath bands');for(const o of layout.obstacles)assert.ok(b.max.x<=o.minX||b.min.x>=o.maxX||b.max.z<=o.minZ||b.min.z>=o.maxZ,'complete prop/canopy avoids inherited palm/house');for(const r of coast.roads)assert.ok(b.max.x<=r.x-r.w/2-2||b.min.x>=r.x+r.w/2+2||b.max.z<=r.z-r.d/2-2||b.min.z>=r.z+r.d/2+2);for(const n of coast.nodes)assert.ok(b.max.x<=n.x-19||b.min.x>=n.x+19||b.max.z<=n.z-19||b.min.z>=n.z+19);}
  }
- assert.equal(newProps.length,46);assert.equal(triangles,1064);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles,'whole-map replacement stays under unchanged triangle ceiling');assert.equal(coast.metrics().staticMeshDraws,85);assert.equal(coast.metrics().ownedTextures,16);assert.equal(coast.metrics().ownedLights,2);coast.leave();
+ assert.equal(newProps.length,46);assert.equal(triangles,1064);assert.ok(coast.metrics().maximumStaticTriangles<=coast.artBudget.staticTriangles,'whole-map replacement stays under unchanged triangle ceiling');assert.equal(coast.metrics().staticMeshDraws,83);assert.equal(coast.metrics().ownedTextures,16);assert.equal(coast.metrics().ownedLights,2);coast.leave();
 });

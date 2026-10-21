@@ -5,7 +5,7 @@ import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {isProxy} from 'node:util/types';
 const DEFAULT_REPO=resolve(fileURLToPath(new URL('../..',import.meta.url)));
-export const EXPECTED_SOURCE_HASHES=Object.freeze({"src/config.js":"732f4907703138076149d7af989e18f378c64893fd0426eeecccf7ce162beff8","src/physics-main.js":"c1825f62ab06be97fc5a7cddfa5f14e03813d533cf5f0a54d58ab4f2a9d02735","src/highway-demo.js":"0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07","src/highway-traffic.js":"faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108","src/ui-hud.js":"db402fb60ebdd4cbf46959b3ca5e4483df23b45552223359a8a490bff731825f","src/audio.js":"b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662","tests/helpers/demo-harness.mjs":"69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff","tests/helpers/vendor/three-r128-MathUtils.mjs":"09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"});
+export const EXPECTED_SOURCE_HASHES=Object.freeze({"src/config.js":"fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4","src/physics-main.js":"8696d1d4140f1045f01c9c96ed8ef59b61c64c13cb449e0d8b1c1cc45ed23954","src/highway-demo.js":"0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07","src/highway-traffic.js":"faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108","src/ui-hud.js":"0ef476a15079a45fd5e7b8292d81f2bc5962ee4376560ba90d01a68b90913b6a","src/audio.js":"b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662","tests/helpers/demo-harness.mjs":"69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff","tests/helpers/vendor/three-r128-MathUtils.mjs":"09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"});
 export const CONTROL_PHYSICS_KEYS=Object.freeze(["x","y","z","vx","vy","vz","speed","maxSpeed","airMaxSpeed","physicsMode","insaneMode","gasMassKg","airStrafeSpeed","steerInput","steerAngle","roll","pitch","yaw","vRoll","vPitch","vYaw","attitudeIdleSeconds","accumulatedRoll","lateralG","longitudinalG","prevSpeed","airRemaining","airUsedContinuous","infiniteJet","isFreefalling","isAutoDescending8s","isJumping6m","isAltitudeHold","isAutoLandingSave","wasAirborne","jumpInertiaSeconds","jumpInertiaGraceSeconds","driftAngle","isDrifting","wasHandbraking","autoStabilizer","isDestroyed","hullIntegrity","impactCooldown","jumpStartY","jumpTargetY","holdTargetY","hudMode","hudMinimal"]);
 const sha256=value => createHash('sha256').update(value).digest('hex');
 export function verifyPinnedSources(repo = DEFAULT_REPO, textOverrides = {}) {
@@ -160,11 +160,11 @@ function instantiateProjectionKernel({ repo = DEFAULT_REPO, programSource, manif
 export const manifest=Object.freeze({
   "schema": "verification-numeric-projection-prototype-v1",
   "sourceHashes": {
-    "src/config.js": "732f4907703138076149d7af989e18f378c64893fd0426eeecccf7ce162beff8",
-    "src/physics-main.js": "c1825f62ab06be97fc5a7cddfa5f14e03813d533cf5f0a54d58ab4f2a9d02735",
+    "src/config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "src/physics-main.js": "8696d1d4140f1045f01c9c96ed8ef59b61c64c13cb449e0d8b1c1cc45ed23954",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
-    "src/ui-hud.js": "db402fb60ebdd4cbf46959b3ca5e4483df23b45552223359a8a490bff731825f",
+    "src/ui-hud.js": "0ef476a15079a45fd5e7b8292d81f2bc5962ee4376560ba90d01a68b90913b6a",
     "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"

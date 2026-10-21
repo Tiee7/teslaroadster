@@ -1,0 +1,61 @@
+evalmachine.<anonymous>:336
+    const length = network.routes[0].length, count = 32;
+                           ^
+
+TypeError: Cannot read properties of undefined (reading 'routes')
+    at Object.buildCoastGraph (evalmachine.<anonymous>:336:28)
+    at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/taxi-capacity-coast.test.mjs:7:142
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+✖ tests/taxi-capacity-coast.test.mjs (391.247151ms)
+✔ all stops and shortest-route segments stay on the connected city asphalt grid (75.081222ms)
+✔ pickup stops and every drivable route edge clear the actual generated city building collision boxes (16.271214ms)
+✔ five distinct spaced waiting passengers have long reachable trips on every refill (130.117422ms)
+✔ green destination arrival stays exactly 2m in 3D, including swept motion (0.446136ms)
+✔ white pickup radius doubles to 4m without widening destination or permitting airborne arrivals (218.911601ms)
+✔ public entry explains pickup radius and independent fares in both languages (2.529849ms)
+✔ multi-passenger state machine refills five immediately, preserves its primary and pays each ride once (55.157327ms)
+✔ distance-based fares are integral, monotonic and bounded at 1000–3000 (0.301323ms)
+✔ repeated starts do not duplicate passengers; reset settles loss then clears the new round (52.053284ms)
+✔ city passengers automatically start once after map/reset, with no user switch or off preference (135.098746ms)
+✔ automatic passengers respect hidden/menu/destruction and ranked ownership without abort loops (131.11571ms)
+✔ real shared keyboard preserves typing and bracket zoom without an equals passenger switch (74.092313ms)
+✔ scene has five readable double-sided white beams and only one green destination while occupied (70.199359ms)
+✔ map exit and repeated stops fully remove and dispose markers and the active-only score display (116.682829ms)
+✔ bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets (126.712175ms)
+✔ numeric passenger score survives language and HUD/camera changes without adding visual text (69.183986ms)
+✔ menus pause transitions; destruction clears the occupied ride before any payout (62.686097ms)
+✔ integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state (1.667672ms)
+✔ stop clearance rejects the entire column footprint, trim margin and city boundary (0.494257ms)
+✔ landing and low altitude flight never sweep a pickup or destination (111.533628ms)
+✔ crashes settle a single double-fare penalty and freeze the result until a new round (62.704655ms)
+✔ empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn (65.143561ms)
+✔ taxi model itself blocks all payouts after death and applies nonnegative loss only once (122.772479ms)
+✔ bottom-right passenger HUD participates in footer bounds and releases its active layout (68.780618ms)
+✔ cockpit passenger strip shows live destination distance and local score without covering speed or tank (58.889099ms)
+✔ destination bearing maps vehicle-forward up and left/right correctly at every heading (0.519353ms)
+✔ top-left navigation shows only arrow and live meters across every HUD mode and camera (64.266937ms)
+✔ corner arrow and meters clear safe areas, header controls and rotation on phone and desktop (0.563308ms)
+✔ corner arrow and meter digits have silhouette contrast without a background, border or card (62.791233ms)
+✔ meter digits follow the occupied destination live, round once and reset between passengers (64.851011ms)
+✔ navigation crosses north and +/-180 smoothly without a reverse full-turn jump (247.778509ms)
+✔ menus pause passenger transitions without freezing the live vehicle-relative bearing (58.735904ms)
+✔ delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space (313.989509ms)
+✔ short landscape notice space is bounded by the header, footer and occupied-trip row (0.490672ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 34
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2780.437283
+
+✖ failing tests:
+
+test at tests/taxi-capacity-coast.test.mjs:1:1
+✖ tests/taxi-capacity-coast.test.mjs (391.247151ms)
+  'test failed'

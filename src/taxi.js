@@ -1,8 +1,9 @@
-// City passenger sandbox. Its session and score never enter ranked scoring.
+// Open-world passenger sandbox. Its session and score never enter ranked scoring.
 // The model is renderer-independent so route, proximity, and lifecycle rules are testable.
 const CityTaxiModel = (() => {
   'use strict';
   const WAITING_COUNT = 5;
+  const CAPACITY = 10;
   const ARRIVAL_RADIUS = 2;
   const PICKUP_RADIUS = ARRIVAL_RADIUS * 2;
   const MARKER_RADIUS = 3;
@@ -35,6 +36,18 @@ const CityTaxiModel = (() => {
       (other.col === node.col && Math.abs(other.row - node.row) === 1) ||
       (other.row === node.row && Math.abs(other.col - node.col) === 1)
     ).map(other => ({ id: other.id, meters: Math.hypot(other.x - node.x, other.z - node.z) })));
+    return { nodes, edges };
+  }
+
+  // Thirty-two real, connected stop stations keep all-pairs routing bounded.
+  // Preserve true road elevation: a stop below a bridge is not its destination.
+  function buildCoastGraph(network) {
+    const length = network.routes[0].length, count = 32;
+    const nodes = Array.from({ length: count }, (_, id) => {
+      const p = network.sampleRoute(0, id * length / count, 0);
+      return Object.freeze({ id, x: p.x, y: p.y, z: p.z, supportId: p.supportId, distance: id * length / count });
+    });
+    const edges = nodes.map((_, id) => [-1, 1].map(sign => ({ id: (id + sign + count) % count, meters: length / count })));
     return { nodes, edges };
   }
 
@@ -97,7 +110,7 @@ const CityTaxiModel = (() => {
       return route && route.meters >= MIN_ROUTE_METERS && Math.hypot(from.x - to.x, from.z - to.z) >= MIN_DIRECT_METERS;
     }));
     if (graph.nodes.length < WAITING_COUNT || destinations.some(stops => stops.length === 0)) throw new Error('City grid cannot support passenger routes');
-    let active = false, waiting = [], passenger = null, score = 0, delivered = 0, sequence = 0, previousPosition = null, finished = false;
+    let active = false, waiting = [], passengers = [], score = 0, delivered = 0, sequence = 0, previousPosition = null, finished = false;
     const pick = choices => choices[Math.min(choices.length - 1, Math.max(0, Math.floor(random() * choices.length)))];
     function newTrip(position) {
       let pickups = graph.nodes.filter(node =>
@@ -117,21 +130,21 @@ const CityTaxiModel = (() => {
     }
     function start(position) {
       if (active || !validPosition(position)) return false;
-      active = true; score = 0; delivered = 0; waiting = []; passenger = null; finished = false;
+      active = true; score = 0; delivered = 0; waiting = []; passengers = []; finished = false;
       previousPosition = copyPosition(position); refill(position);
       return true;
     }
     function stop() {
-      active = false; waiting = []; passenger = null; score = 0; delivered = 0; previousPosition = null; finished = false;
+      active = false; waiting = []; passengers = []; score = 0; delivered = 0; previousPosition = null; finished = false;
     }
     function pause(position) { previousPosition = validPosition(position) ? copyPosition(position) : null; }
     function losePassenger(position, reason = 'destroyed') {
-      if (!active || !passenger) return null;
-      const trip = passenger, penalty = trip.fare * 2, before = score;
-      // Clear the passenger before any later reset/frame can charge this trip again.
-      passenger = null; score = Math.max(0, score - penalty);
+      if (!active || !passengers.length) return null;
+      const trips = passengers, trip = trips[0], penalty = trips.reduce((sum, ride) => sum + ride.fare * 2, 0), before = score;
+      // Clear every occupied seat atomically before a later reset/frame can charge again.
+      passengers = []; score = Math.max(0, score - penalty);
       pause(position); refill(validPosition(position) ? position : trip.pickup);
-      return { type: 'passenger-lost', trip, penalty, deducted: before - score, reason };
+      return { type: 'passenger-lost', trip, trips, penalty, deducted: before - score, reason };
     }
     function destroy(position) {
       if (!active || finished) return null;
@@ -154,41 +167,48 @@ const CityTaxiModel = (() => {
       if (!grounded) { previousPosition = null; return null; }
       const from = previousPosition || position;
       previousPosition = copyPosition(position);
-      if (passenger) {
-        if (!withinArrival(from, position, passenger.destination)) return null;
-        const trip = passenger; passenger = null; score += trip.fare; delivered += 1;
-        refill(position);
-        return { type: 'delivered', trip };
+      const trips = passengers.filter(trip => withinArrival(from, position, trip.destination));
+      if (trips.length) {
+        const ids = new Set(trips.map(trip => trip.id));
+        passengers = passengers.filter(trip => !ids.has(trip.id));
+        score += trips.reduce((sum, trip) => sum + trip.fare, 0); delivered += trips.length;
+        return { type: 'delivered', trip: trips[0], trips };
       }
+      if (passengers.length >= CAPACITY) return null;
       const index = waiting.findIndex(trip => withinArrival(from, position, trip.pickup, PICKUP_RADIUS));
       if (index === -1) return null;
-      passenger = waiting.splice(index, 1)[0];
-      return { type: 'picked-up', trip: passenger };
+      const trip = waiting.splice(index, 1)[0]; passengers.push(trip);
+      refill(position);
+      return { type: 'picked-up', trip, trips: [trip] };
     }
-    const snapshot = () => ({ active, waiting: [...waiting], passenger, score, delivered, finished });
+    // FIFO primary remains stable until delivered; one green marker avoids ten
+    // overlapping transparent destination columns and a jumping navigation arrow.
+    const snapshot = () => ({ active, waiting: [...waiting], passengers: [...passengers], capacity: CAPACITY,
+      passenger: passengers[0] || null, score, delivered, finished });
     return { start, stop, reset, destroy, pause, advance, losePassenger, snapshot };
   }
-  return Object.freeze({ WAITING_COUNT, ARRIVAL_RADIUS, PICKUP_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
+  return Object.freeze({ WAITING_COUNT, CAPACITY, ARRIVAL_RADIUS, PICKUP_RADIUS, MARKER_RADIUS, STOP_CLEARANCE, GROUND_TOLERANCE,
     MIN_ROUTE_METERS, MAX_ROUTE_METERS, MIN_DIRECT_METERS, PICKUP_SPACING_METERS,
-    isStopClear, buildRoadGraph, shortestRoute, fareForDistance, destinationBearing, withinArrival, createSession });
+    isStopClear, buildRoadGraph, buildCoastGraph, shortestRoute, fareForDistance, destinationBearing, withinArrival, createSession });
 })();
 
-// Scene adapter: the public city-only entry creates no scene resources until started.
+// Scene adapter: resources belong only to the active open-world map.
 (() => {
   'use strict';
-  let session = null, markerGroup = null, hud = null, scoreLabel = null, instrumentHost = null;
+  let session = null, sessionMap = null, markerParent = null, markerGroup = null, hud = null, scoreLabel = null, instrumentHost = null;
   let beamGeometry = null, coreGeometry = null, ringGeometry = null;
   let whiteMaterial = null, greenMaterial = null, whiteCoreMaterial = null, greenCoreMaterial = null;
   let pickupMarkers = [], destinationMarker = null, lastEvent = null;
   let navigation = null, navigationArrow = null, navigationDistance = null, navigationRotation = null;
+  const isPassengerMap = () => currentMap === 'city' || currentMap === 'coast';
   const isZh = () => currentLang === 'zh';
   const position = () => ({ x: state.x, y: state.y, z: state.z });
-  const snapshot = () => session?.snapshot() || { active: false, waiting: [], passenger: null, score: 0, delivered: 0 };
+  const snapshot = () => session?.snapshot() || { active: false, waiting: [], passengers: [], capacity: CityTaxiModel.CAPACITY, passenger: null, score: 0, delivered: 0 };
   function renderEntry() {
     const help = document.getElementById('city-taxi-help');
     const instructions = isZh()
-      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2默认开启接客，无需开关。`
-      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning or resetting starts from zero. Passengers are enabled automatically in the city.`;
+      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2、地图3默认开启接客，最多同时载10位；白柱始终补充5位，满载暂停接人。绿柱依上车顺序指向下一位目的地，经过其他已载乘客目的地也会自动送达。`
+      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning or resetting starts from zero. Passengers are enabled automatically in the city and coast: carry up to 10, with five waiting stops replenished after pickup. Green guides the oldest ride; other on-board rides can also be delivered en route.`;
     if (help) help.textContent = instructions;
   }
   function blockedByUi() {
@@ -213,7 +233,8 @@ const CityTaxiModel = (() => {
   }
   function createScene() {
     markerGroup = new THREE.Group();
-    cityEnvGroup.add(markerGroup);
+    markerParent = currentMap === 'city' ? cityEnvGroup : scene;
+    markerParent.add(markerGroup);
     beamGeometry = new THREE.CylinderGeometry(CityTaxiModel.MARKER_RADIUS, CityTaxiModel.MARKER_RADIUS, 1100, 24, 1, true);
     coreGeometry = new THREE.CylinderGeometry(0.75, 0.75, 1100, 12, 1, true);
     ringGeometry = new THREE.RingGeometry(1.65, CityTaxiModel.MARKER_RADIUS, 32);
@@ -258,7 +279,7 @@ const CityTaxiModel = (() => {
   function renderNavigation() {
     if (!navigation) return;
     const data = snapshot();
-    const bearing = data.active && data.passenger && currentMap === 'city' && !state.isDestroyed
+    const bearing = data.active && data.passenger && isPassengerMap() && !state.isDestroyed
       ? CityTaxiModel.destinationBearing(position(), state.yaw, data.passenger.destination) : null;
     const top = document.getElementById('hud-top-container');
     navigation.hidden = !bearing;
@@ -284,11 +305,11 @@ const CityTaxiModel = (() => {
     const data = snapshot();
     pickupMarkers.forEach((marker, index) => {
       const trip = data.waiting[index];
-      marker.visible = data.active && !data.finished && !data.passenger && Boolean(trip);
-      if (trip) marker.position.set(trip.pickup.x, 0, trip.pickup.z);
+      marker.visible = data.active && !data.finished && data.passengers.length < data.capacity && Boolean(trip);
+      if (trip) marker.position.set(trip.pickup.x, trip.pickup.y, trip.pickup.z);
     });
     destinationMarker.visible = data.active && !data.finished && Boolean(data.passenger);
-    if (data.passenger) destinationMarker.position.set(data.passenger.destination.x, 0, data.passenger.destination.z);
+    if (data.passenger) destinationMarker.position.set(data.passenger.destination.x, data.passenger.destination.y, data.passenger.destination.z);
   }
   function render() {
     renderEntry();
@@ -309,8 +330,8 @@ const CityTaxiModel = (() => {
       : `${data.score} PTS · ${data.delivered} DELIVERED`, 22, 176, 468);
     const remaining = data.passenger ? Math.round(Math.hypot(state.x - data.passenger.destination.x, state.z - data.passenger.destination.z)) : null;
     const detail = data.passenger
-      ? (isZh() ? `载客中 · 绿色目的地 ${remaining} 米 · 送达 +${data.passenger.fare}`
-        : `ON BOARD · ${remaining}m · +${data.passenger.fare}`)
+      ? (isZh() ? `载客 ${data.passengers.length}/${data.capacity} · 绿色目的地 ${remaining} 米 · +${data.passenger.fare}`
+        : `ON BOARD ${data.passengers.length}/${data.capacity} · ${remaining}m · +${data.passenger.fare}`)
       : data.finished && lastEvent?.type !== 'passenger-lost'
         ? (isZh() ? '本局结束 · 成绩已保留 · 复活后从零开始' : 'ROUND FINISHED · FINAL SCORE KEPT · RESPAWN TO RESTART')
       : lastEvent?.type === 'passenger-lost'
@@ -325,14 +346,17 @@ const CityTaxiModel = (() => {
     ctx.restore();
   }
   function start() {
-    if (currentMap !== 'city' || snapshot().active || state.isDestroyed || window.RoadsterRanked?.isActive?.()) return false;
-    if (!session) session = CityTaxiModel.createSession(CityTaxiModel.buildRoadGraph(CITY_ROAD_COORDS, CITY_TAXI_STOP_OFFSET, cityBuildings, CITY_HALF_BOUND));
+    if (!isPassengerMap() || snapshot().active || state.isDestroyed || window.RoadsterRanked?.isActive?.()) return false;
+    if (currentMap === 'coast' && !window.RoadsterCoast?.network) return false;
+    const graph = currentMap === 'city' ? CityTaxiModel.buildRoadGraph(CITY_ROAD_COORDS, CITY_TAXI_STOP_OFFSET, cityBuildings, CITY_HALF_BOUND) : CityTaxiModel.buildCoastGraph(window.RoadsterCoast.network);
+    session = CityTaxiModel.createSession(graph); sessionMap = currentMap;
     session.start(position()); lastEvent = null; createScene(); syncMarkers(); render();
     return true;
   }
   function stop() {
-    session?.stop(); lastEvent = null;
-    if (markerGroup) cityEnvGroup.remove(markerGroup);
+    session?.stop(); session = null; sessionMap = null; lastEvent = null;
+    if (markerGroup) markerParent?.remove(markerGroup);
+    markerParent = null;
     for (const resource of [beamGeometry, coreGeometry, ringGeometry, whiteMaterial, greenMaterial, whiteCoreMaterial, greenCoreMaterial]) resource?.dispose();
     hud?.remove();
     navigation?.remove();
@@ -352,7 +376,7 @@ const CityTaxiModel = (() => {
   }
   function onReset() {
     if (state.isDestroyed) return;
-    if (currentMap !== 'city') { stop(); return; }
+    if (!isPassengerMap()) { stop(); return; }
     if (!snapshot().active) { ensureDefault(); return; }
     session.reset(position());
     lastEvent = null;
@@ -365,15 +389,16 @@ const CityTaxiModel = (() => {
     syncMarkers(); render();
   }
   function ensureDefault() {
-    if (currentMap !== 'city' || document.hidden || state.isDestroyed || blockedByUi() || window.RoadsterRanked?.isActive?.()) return false;
+    if (!isPassengerMap() || document.hidden || state.isDestroyed || blockedByUi() || window.RoadsterRanked?.isActive?.()) return false;
     return snapshot().active || start();
   }
   function tick(presentFrame = true) {
-    if (currentMap !== 'city' || window.RoadsterRanked?.isActive?.()) { if (snapshot().active) stop(); return; }
+    if (!isPassengerMap() || window.RoadsterRanked?.isActive?.()) { if (snapshot().active) stop(); return; }
+    if (sessionMap && sessionMap !== currentMap) stop();
     if (!snapshot().active && !ensureDefault()) return;
     if (state.isDestroyed) { onDestroyed(); return; }
     if (document.hidden || blockedByUi()) { session.pause(position()); if (presentFrame) renderNavigation(); return; }
-    const event = session.advance(position(), !state.wasAirborne && Math.abs(state.y) <= CityTaxiModel.GROUND_TOLERANCE);
+    const event = session.advance(position(), !state.wasAirborne && (currentMap === 'coast' ? !state.coastDetached && /^road-/.test(state.coastSupportId || '') : Math.abs(state.y) <= CityTaxiModel.GROUND_TOLERANCE));
     if (presentFrame) renderNavigation();
     if (!event) return;
     lastEvent = event;

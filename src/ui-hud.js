@@ -514,11 +514,11 @@ function resetCar() {
   state.bannerTimer = 0;
   renderBannerText();
   sound.beep(520, 0.1);
-  window.RoadsterTaxi?.onReset();
   if(coastSpawn){
     const p=coastSpawn;Object.assign(state,{x:p.x,y:p.y,z:p.z,yaw:p.yaw,pitch:p.pitch,roll:p.roll,speed:p.speed,vx:p.vx*p.speed,vy:p.vy*p.speed,vz:p.vz*p.speed,coastSupportId:p.supportId,coastDetached:false});
   }
   if (currentMap === 'coast') window.RoadsterCoast?.recoverTraffic(trafficCars,state);
+  window.RoadsterTaxi?.onReset();
   // Every new round starts clean immediately, including mobile/button resets.
   if (typeof updateDestroyedScores === 'function') updateDestroyedScores();
   if (typeof updateCockpitHudScreen === 'function') {
