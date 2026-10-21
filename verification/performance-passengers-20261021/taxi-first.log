@@ -1,0 +1,422 @@
+✔ all stops and shortest-route segments stay on the connected city asphalt grid (79.036073ms)
+✔ pickup stops and every drivable route edge clear the actual generated city building collision boxes (13.961723ms)
+✔ five distinct spaced waiting passengers have long reachable trips on every refill (137.580859ms)
+✔ green destination arrival stays exactly 2m in 3D, including swept motion (0.383654ms)
+✔ white pickup radius doubles to 4m without widening destination or permitting airborne arrivals (229.407516ms)
+✖ public entry explains pickup radius and independent fares in both languages (4.145475ms)
+✖ single-passenger state machine pays once, refills five and ignores other pickup points while occupied (57.56431ms)
+✔ distance-based fares are integral, monotonic and bounded at 1000–3000 (0.309285ms)
+✔ repeated starts do not duplicate passengers; reset settles loss then clears the new round (52.542287ms)
+✔ city passengers automatically start once after map/reset, with no user switch or off preference (141.367361ms)
+✔ automatic passengers respect hidden/menu/destruction and ranked ownership without abort loops (134.629845ms)
+✔ real shared keyboard preserves typing and bracket zoom without an equals passenger switch (81.300225ms)
+✖ scene has five readable double-sided white beams and only one green destination while occupied (71.722607ms)
+✔ map exit and repeated stops fully remove and dispose markers and the active-only score display (126.855885ms)
+✔ bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets (113.406668ms)
+✔ numeric passenger score survives language and HUD/camera changes without adding visual text (63.873823ms)
+✔ menus pause transitions; destruction clears the occupied ride before any payout (71.06691ms)
+✖ integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state (2.638089ms)
+✔ stop clearance rejects the entire column footprint, trim margin and city boundary (0.551001ms)
+✔ landing and low altitude flight never sweep a pickup or destination (119.61315ms)
+✔ crashes settle a single double-fare penalty and freeze the result until a new round (69.74501ms)
+✔ empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn (71.90752ms)
+✔ taxi model itself blocks all payouts after death and applies nonnegative loss only once (120.214634ms)
+✔ bottom-right passenger HUD participates in footer bounds and releases its active layout (63.495031ms)
+✔ cockpit passenger strip shows live destination distance and local score without covering speed or tank (63.798396ms)
+✔ destination bearing maps vehicle-forward up and left/right correctly at every heading (0.489159ms)
+✔ top-left navigation shows only arrow and live meters across every HUD mode and camera (73.072809ms)
+✔ corner arrow and meters clear safe areas, header controls and rotation on phone and desktop (0.657316ms)
+✔ corner arrow and meter digits have silhouette contrast without a background, border or card (67.735494ms)
+✔ meter digits follow the occupied destination live, round once and reset between passengers (70.170816ms)
+✔ navigation crosses north and +/-180 smoothly without a reverse full-turn jump (265.80538ms)
+✔ menus pause passenger transitions without freezing the live vehicle-relative bearing (63.194789ms)
+✔ delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space (390.664558ms)
+✔ short landscape notice space is bounded by the header, footer and occupied-trip row (0.481007ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 30
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2960.680867
+
+✖ failing tests:
+
+test at tests/taxi.test.mjs:139:1
+✖ public entry explains pickup radius and independent fares in both languages (4.145475ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /默认开启接客/. Input:
+  
+  '白色光柱是乘客，地面靠近 4 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2、地图3默认开启，最多同时载10位；白柱始终补充5位，满载暂停接人。绿柱依上车顺序指向下一位目的地，经过其他已载乘客目的地也会自动送达。'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/taxi.test.mjs:144:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '白色光柱是乘客，地面靠近 4 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2、地图3默认开启，最多同时载10位；白柱始终补充5位，满载暂停接人。绿柱依上车顺序指向下一位目的地，经过其他已载乘客目的地也会自动送达。',
+    expected: /默认开启接客/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests/taxi.test.mjs:150:1
+✖ single-passenger state machine pays once, refills five and ignores other pickup points while occupied (57.56431ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  5 !== 4
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/taxi.test.mjs:156:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 5,
+    expected: 4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/taxi.test.mjs:297:1
+✖ scene has five readable double-sided white beams and only one green destination while occupied (71.722607ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  6 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/taxi.test.mjs:316:65)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 6,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/taxi.test.mjs:427:1
+✖ integration exposes a city entry, retains zoom brackets and keeps taxi fares out of ranked state (2.638089ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /updateSimulation\(dt\);\s*\}\s*if \(currentMap === 'city'\) window\.RoadsterTaxi\?\.present\?\.\(\);\s*else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/. Input:
+  
+  '// =========================================================================\n' +
+    '// 7. PHYSICS COLLISION, 18G DESTRUCTION THRESHOLD & SHATTER DEBRIS SYSTEM\n' +
+    '// =========================================================================\n' +
+    'const debrisGroup = new THREE.Group();\n' +
+    'scene.add(debrisGroup);\n' +
+    'let debrisPieces = [];\n' +
+    '\n' +
+    'const explosionGroup = new THREE.Group();\n' +
+    'scene.add(explosionGroup);\n' +
+    'let activeExplosions = [];\n' +
+    '\n' +
+    'function spawnExplosionEffect(x, y, z, scale = 1.0) {\n' +
+    '  const expRoot = new THREE.Group();\n' +
+    '  expRoot.position.set(x, Math.max(0.5, y + 0.6), z);\n' +
+    '  explosionGroup.add(expRoot);\n' +
+    '\n' +
+    '  // 1. Expanding Outer Fireball Sphere\n' +
+    '  const fireballMat = new THREE.MeshBasicMaterial({\n' +
+    '    color: 0xffaa00,\n' +
+    '    transparent: true,\n' +
+    '    opacity: 0.95,\n' +
+    '    side: THREE.DoubleSide\n' +
+    '  });\n' +
+    '  const fireballMesh = new THREE.Mesh(new THREE.SphereGeometry(1.35 * scale, 20, 16), fireballMat);\n' +
+    '  expRoot.add(fireballMesh);\n' +
+    '\n' +
+    '  // 2. White-Hot Inner Plasma Core\n' +
+    '  const coreMat = new THREE.MeshBasicMaterial({\n' +
+    '    color: 0xffffff,\n' +
+    '    transparent: true,\n' +
+    '    opacity: 1.0\n' +
+    '  });\n' +
+    '  const coreMesh = new THREE.Mesh(new THREE.SphereGeometry(0.85 * scale, 16, 12), coreMat);\n' +
+    '  expRoot.add(coreMesh);\n' +
+    '\n' +
+    '  // 3. Supersonic Horizontal Shockwave Blast Ring\n' +
+    '  const ringMat = new THREE.MeshBasicMaterial({\n' +
+    '    color: 0xf97316,\n' +
+    '    transparent: true,\n' +
+    '    opacity: 0.9,\n' +
+    '    side: THREE.DoubleSide\n' +
+    '  });\n' +
+    '  const ringMesh = new THREE.Mesh(\n' +
+    '    new THREE.RingGeometry(0.9 * scale, 1.65 * scale, 36).rotateX(-Math.PI / 2),\n' +
+    '    ringMat\n' +
+    '  );\n' +
+    '  ringMesh.position.y = -0.35;\n' +
+    '  expRoot.add(ringMesh);\n' +
+    '\n' +
+    '  // 4. High-Intensity Transient Explosion Flash Light\n' +
+    '  const flashLight = new THREE.PointLight(0xff6600, 10.0 * scale, 80.0 * scale);\n' +
+    '  expRoot.add(flashLight);\n' +
+    '\n' +
+    '  // 5. Radial Fire Sparks & Dark Smoke Plume Particles\n' +
+    '  const particles = [];\n' +
+    '  const sparkColors = [0xfef08a, 0xf97316, 0xef4444, 0x38bdf8, 0x1e293b];\n' +
+    '  const pCount = Math.round(28 * Math.min(1.6, Math.max(0.7, scale)));\n' +
+    '  for (let i = 0; i < pCount; i++) {\n' +
+    '    const isSmoke = (i % 3 === 0);\n' +
+    '    const pMat = new THREE.MeshBasicMaterial({\n' +
+    '      color: isSmoke ? 0x334155 : sparkColors[i % 4],\n' +
+    '      transparent: true,\n' +
+    '      opacity: 0.95\n' +
+    '    });\n' +
+    '    const r = isSmoke ? (0.35 + Math.random() * 0.45) * scale : (0.14 + Math.random() * 0.25) * scale;\n' +
+    '    const pMesh = new THREE.Mesh(\n' +
+    '      isSmoke ? new THREE.SphereGeometry(r, 8, 8) : new THREE.BoxGeometry(r, r, r),\n' +
+    '      pMat\n' +
+    '    );\n' +
+    '    const theta = Math.random() * Math.PI * 2;\n' +
+    '    const phi = Math.random() * Math.PI * 0.65;\n' +
+    '    const spd = (10 + Math.random() * 28) * scale;\n' +
+    '    expRoot.add(pMesh);\n' +
+    '    particles.push({\n' +
+    '      mesh: pMesh,\n' +
+    '      mat: pMat,\n' +
+    '      isSmoke,\n' +
+    '      vx: Math.cos(theta) * Math.sin(phi) * spd,\n' +
+    '      vy: Math.cos(phi) * spd + (isSmoke ? 6.0 : 2.0),\n' +
+    '      vz: Math.sin(theta) * Math.sin(phi) * spd\n' +
+    '    });\n' +
+    '  }\n' +
+    '\n' +
+    '  activeExplosions.push({\n' +
+    '    root: expRoot,\n' +
+    '    fireballMesh,\n' +
+    '    fireballMat,\n' +
+    '    coreMesh,\n' +
+    '    coreMat,\n' +
+    '    ringMesh,\n' +
+    '    ringMat,\n' +
+    '    flashLight,\n' +
+    '    particles,\n' +
+    '    age: 0.0,\n' +
+    '    duration: 1.45 * Math.max(0.85, Math.min(1.35, scale)),\n' +
+    '    scale\n' +
+    '  });\n' +
+    '}\n' +
+    '\n' +
+    'function updateExplosions(dt) {\n' +
+    '  for (let i = activeExplosions.length - 1; i >= 0; i--) {\n' +
+    '    const ex = activeExplosions[i];\n' +
+    '    ex.age += dt;\n' +
+    '    const t = ex.age / ex.duration;\n' +
+    '    if (t >= 1.0) {\n' +
+    '      explosionGroup.remove(ex.root);\n' +
+    '      activeExplosions.splice(i, 1);\n' +
+    '      continue;\n' +
+    '    }\n' +
+    '    // Expand fireball & transition color from yellow -> orange -> crimson -> dark smoke\n' +
+    '    const fbScale = 1.0 + Math.pow(t, 0.55) * 6.8;\n' +
+    '    ex.fireballMesh.scale.set(fbScale, fbScale, fbScale);\n' +
+    '    if (t < 0.25) {\n' +
+    '      ex.fireballMat.color.setHex(0xfef08a);\n' +
+    '    } else if (t < 0.55) {\n' +
+    '      ex.fireballMat.color.setHex(0xf97316);\n' +
+    '    } else if (t < 0.8) {\n' +
+    '      ex.fireballMat.color.setHex(0xdc2626);\n' +
+    '    } else {\n' +
+    '      ex.fireballMat.color.setHex(0x1e293b);\n' +
+    '    }\n' +
+    '    ex.fireballMat.opacity = Math.max(0, (1.0 - t) * 0.92);\n' +
+    '\n' +
+    '    const coreScale = 1.0 + t * 3.5;\n' +
+    '    ex.coreMesh.scale.set(coreScale, coreScale, coreScale);\n' +
+    '    ex.coreMat.opacity = Math.max(0, 1.0 - t * 2.2);\n' +
+    '\n' +
+    '    // Supersonic shockwave ring expands rapidly\n' +
+    '    const ringScale = 1.0 + Math.pow(t, 0.48) * 16.5;\n' +
+    '    ex.ringMesh.scale.set(ringScale, ringScale, 1.0);\n' +
+    '    ex.ringMat.opacity = Math.max(0, (1.0 - t) * 0.85);\n' +
+    '\n' +
+    '    ex.flashLight.intensity = Math.max(0, (1.0 - t * 1.4) * 10.0 * ex.scale);\n' +
+    '\n' +
+    '    ex.particles.forEach((p) => {\n' +
+    '      p.mesh.position.x += p.vx * dt;\n' +
+    '      p.mesh.position.y += p.vy * dt;\n' +
+    '      p.mesh.position.z += p.vz * dt;\n' +
+    '      if (p.isSmoke) {\n' +
+    '        p.vy += 3.5 * dt;\n' +
+    '        const s = 1.0 + t * 2.6;\n' +
+    '        p.mesh.scale.set(s, s, s);\n' +
+    '      } else {\n' +
+    '        p.vy -= 20.0 * dt;\n' +
+    '        p.mesh.rotation.x += 8.0 * dt;\n' +
+    '        p.mesh.rotation.y += 8.0 * dt;\n' +
+    '      }\n' +
+    '      p.mat.opacity = Math.max(0, 1.0 - t);\n' +
+    '    });\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'function applyExplosionBlastToTraffic(bx, by, bz, blastRadius, blastStrength) {\n' +
+    '  let affected = 0;\n' +
+    '  trafficCars.forEach((car) => {\n' +
+    '    const dx = car.mesh.position.x - bx;\n' +
+    '    const dz = car.mesh.position.z - bz;\n' +
+    '    const dy = (car.mesh.position.y || 0) - by;\n' +
+    '    const dist = Math.hypot(dx, dz, dy * 0.5);\n' +
+    '    if (dist < blastRadius) {\n' +
+    '      const falloff = Math.pow(1.0 - dist / blastRadius, 1.15);\n' +
+    '      const dirX = dist > 0.05 ? dx / dist : (Math.random() - 0.5);\n' +
+    '      const dirZ = dist > 0.05 ? dz / dist : -1.0;\n' +
+    '      const impulse = blastStrength * (0.45 + 0.55 * falloff);\n' +
+    '\n' +
+    '      car.blastVx = (car.blastVx || 0) + dirX * impulse * 1.15 + (Math.random() - 0.5) * 8.0;\n' +
+    '      car.blastVz = (car.blastVz || 0) + dirZ * impulse * 1.15;\n' +
+    '      car.blastVy = Math.max(car.blastVy || 0, (6.5 + falloff * 14.5) * (blastStrength / 32.0));\n' +
+    '      car.blastVRoll = (Math.random() - 0.5) * 11.0 * falloff;\n' +
+    '      car.blastVPitch = (Math.random() - 0.5) * 9.0 * falloff;\n' +
+    '      car.blastVYaw = (Math.random() - 0.5) * 10.0 * falloff;\n' +
+    '      car.blastTimer = 3.2;\n' +
+    '\n' +
+    '      // Sympathetic secondary explosion on close cars\n' +
+    '      if (dist < 14.0) {\n' +
+    '        spawnExplosionEffect(car.mesh.position.x, (car.mesh.position.y || 0) + 0.8, car.mesh.position.z, 0.65);\n' +
+    '      }\n' +
+    '      affected++;\n' +
+    '    }\n' +
+    '  });\n' +
+    '  if (affected > 0 && !state.isDestroyed) {\n' +
+    '    state.blastedCarsCount += affected;\n' +
+    '    state.carsCleared += affected;\n' +
+    '  }\n' +
+    '  return affected;\n' +
+    '}\n' +
+    '\n' +
+    'function spawnDestructionDebris(x, y, z, baseVx, baseVy, baseVz) {\n' +
+    '  clearDebris();\n' +
+    '  const pieceColors = [bodyMaterial.color.getHex(), 0x111827, 0x38bdf8, 0xf97316, 0xef4444];\n' +
+    '  for (let i = 0; i < 34; i++) {\n' +
+    '    const sx = 0.25 + Math.random() * 0.65;\n' +
+    '    const sy = 0.08 + Math.random() * 0.28;\n' +
+    '    const sz = 0.25 + Math.random() * 0.75;\n' +
+    '    const mat = new THREE.MeshStandardMaterial({\n' +
+    '      color: pieceColors[i % pieceColors.length],\n' +
+    '      metalness: 0.7,\n' +
+    '      roughness: 0.3\n' +
+    '    });\n' +
+    '    const mesh = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), mat);\n' +
+    '    mesh.position.set(\n' +
+    '      x + (Math.random() - 0.5) * 1.8,\n' +
+    '      Math.max(0.2, y + Math.random() * 1.1),\n' +
+    '      z + (Math.random() - 0.5) * 2.8\n' +
+    '    );\n' +
+    '    debrisGroup.add(mesh);\n' +
+    '    debrisPieces.push({\n' +
+    '      mesh,\n' +
+    '      vx: baseVx * 0.35 + (Math.random() - 0.5) * 28,\n' +
+    '      vy: Math.max(5, baseVy * 0.3 + Math.random() * 20),\n' +
+    '      vz: baseVz * 0.35 + (Math.random() - 0.5) * 28,\n' +
+    '      rx: (Math.random() - 0.5) * 14,\n' +
+    '      ry: (Math.random() - 0.5) * 14,\n' +
+    '      rz: (Math.random() - 0.5) * 14\n' +
+    '    });\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'function clearDebris() {\n' +
+    '  debrisPieces.forEach(p => debrisGroup.remove(p.mesh));\n' +
+    '  debrisPieces = [];\n' +
+    '  activeExplosions.forEach(ex => explosionGroup.remove(ex.root));\n' +
+    '  activeExplosions = [];\n' +
+    "  if (typeof clearTireSmoke === 'function') clearTireSmoke();\n" +
+    '}\n' +
+    '\n' +
+    'function triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz) {\n' +
+    '  if (state.isDestroyed || state.impactCooldown > 0) return;\n' +
+    '  state.impactCooldown = 0.32;\n' +
+    '\n' +
+    '  const peakG = (deltaV / CRITICAL_IMPACT_DV) * CRITICAL_G_LIMIT;\n' +
+    '  const energyKj = 0.5 * VEHICLE_MASS_KG * deltaV * deltaV / 1000;\n' +
+    '  const dvKmh = deltaV * 3.6;\n' +
+    '\n' +
+    '  state.lastImpactG = peakG;\n' +
+    '  state.lastImpactDvKmh = dvKmh;\n' +
+    '  state.lastImpactEnergyKj = energyKj;\n' +
+    '\n' +
+    "  const worldZ = currentMap === 'highway' ? 0 : state.z;\n" +
+    '\n' +
+    '  if (peakG >= CRITICAL_G_LIMIT) {\n' +
+    '    destroyVehicle(reasonKey);\n' +
+    '    return;\n' +
+    '  }\n' +
+    '\n' +
+    '  // Requirement 1: Ordinary non-fatal collisions do NOT trigger explosion VFX (only vehicle destruction explodes)\n' +
+    '  const damage = Math.max(6, Math.pow(deltaV / CRITICAL_IMPACT_DV, 1.65) * 85);\n' +
+    '  state.hullIntegrity = Math.max(0, state.hullIntegrity - damage);\n' +
+    '\n' +
+    '  if (state.hullIntegrity <= 0.1) {\n' +
+    '    state.hullIntegrity = 0;\n' +
+    "    destroyVehicle('crashReasonCumulative');\n" +
+    '    return;\n' +
+    '  }\n' +
+    '\n' +
+    '  state.vx += bounceVx;\n' +
+    '  if (state.wasAirborne) {\n' +
+    '    state.vz += bounceVz || 0;\n' +
+    '    state.speed = Math.hypot(state.vx, state.vz);\n' +
+    '  }\n' +
+    '  state.vy = Math.max(state.vy, bounceVy);\n' +
+    '  state.vRoll += (Math.random() - 0.5) * 3.5;\n' +
+    '  state.vPitch += (Math.random() - 0.5) * 2.5;\n' +
+    '  state.vYaw += (Math.random() - 0.5) * 3.0;\n' +
+    '  sound.playCrash(false);\n' +
+    "  showBanner('impact', 2.0);\n" +
+    '}\n' +
+    '\n' +
+    'function destroyVehicle(reasonKey) {\n' +
+    '  if (state.isDestroyed) return;\n' +
+    '  state.isDestroyed = true;\n' +
+    '  window.RoadsterTaxi?.onDestroyed();\n' +
+    '  RoadsterDrivingScore.freeze(state);\n' +
+    '  globalThis.window?.RoadsterDemo?.stop();\n' +
+    "  window.RoadsterRanked?.abort('crash');\n" +
+    '  state.hullIntegrity = 0;\n' +
+    "  state.destroyReasonKey = reasonKey || 'crashReasonThreshold';\n" +
+    '  carMeshGroup.visible = false;\n' +
+    "  if (typeof headlightSpotL !== 'undefined') headlightSpotL.intensity = 0.0;\n" +
+    "  if (typeof headlightSpotR !== 'undefined') headlightSpotR.intensity = 0.0;\n" +
+    '  hoverRingMat.opacity = 0;\n' +
+    '\n' +
+    "  const worldZ = currentMap === 'highway' ? 0 : state.z;\n" +
+    '  spawnDestructionDebris(state.x, state.y, worldZ, state.vx, state.vy, state.vz);\n' +
+    '  spawnExplosionEffect(state.x, state.y, worldZ, 1.75);\n' +
+    '  applyExplosionBlastToTraffic(state.x, state.y, worldZ, 55.0, 46.0);\n' +
+    '  sound.playCrash(true);\n' +
+    '\n' +
+    '  updateDestroyedModalText();\n' +
+    "  document.getElementById('modal-destroyed').classList.remove('hidden');\n" +
+    '}\n' +
+    '\n' +
+    'function updateDestroyedScores() {\n' +
+    '  // Keep the completed run visible throughout the wreck animation. Any late\n' +
+    '  // '... 110704 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/taxi.test.mjs:446:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "// =========================================================================\n// 7. PHYSICS COLLISION, 18G DESTRUCTION THRESHOLD & SHATTER DEBRIS SYSTEM\n// =========================================================================\nconst debrisGroup = new THREE.Group();\nscene.add(debrisGroup);\nlet debrisPieces = [];\n\nconst explosionGroup = new THREE.Group();\nscene.add(explosionGroup);\nlet activeExplosions = [];\n\nfunction spawnExplosionEffect(x, y, z, scale = 1.0) {\n  const expRoot = new THREE.Group();\n  expRoot.position.set(x, Math.max(0.5, y + 0.6), z);\n  explosionGroup.add(expRoot);\n\n  // 1. Expanding Outer Fireball Sphere\n  const fireballMat = new THREE.MeshBasicMaterial({\n    color: 0xffaa00,\n    transparent: true,\n    opacity: 0.95,\n    side: THREE.DoubleSide\n  });\n  const fireballMesh = new THREE.Mesh(new THREE.SphereGeometry(1.35 * scale, 20, 16), fireballMat);\n  expRoot.add(fireballMesh);\n\n  // 2. White-Hot Inner Plasma Core\n  const coreMat = new THREE.MeshBasicMaterial({\n    color: 0xffffff,\n    transparent: true,\n    opacity: 1.0\n  });\n  const coreMesh = new THREE.Mesh(new THREE.SphereGeometry(0.85 * scale, 16, 12), coreMat);\n  expRoot.add(coreMesh);\n\n  // 3. Supersonic Horizontal Shockwave Blast Ring\n  const ringMat = new THREE.MeshBasicMaterial({\n    color: 0xf97316,\n    transparent: true,\n    opacity: 0.9,\n    side: THREE.DoubleSide\n  });\n  const ringMesh = new THREE.Mesh(\n    new THREE.RingGeometry(0.9 * scale, 1.65 * scale, 36).rotateX(-Math.PI / 2),\n    ringMat\n  );\n  ringMesh.position.y = -0.35;\n  expRoot.add(ringMesh);\n\n  // 4. High-Intensity Transient Explosion Flash Light\n  const flashLight = new THREE.PointLight(0xff6600, 10.0 * scale, 80.0 * scale);\n  expRoot.add(flashLight);\n\n  // 5. Radial Fire Sparks & Dark Smoke Plume Particles\n  const particles = [];\n  const sparkColors = [0xfef08a, 0xf97316, 0xef4444, 0x38bdf8, 0x1e293b];\n  const pCount = Math.round(28 * Math.min(1.6, Math.max(0.7, scale)));\n  for (let i = 0; i < pCount; i++) {\n    const isSmoke = (i % 3 === 0);\n    const pMat = new THREE.MeshBasicMaterial({\n      color: isSmoke ? 0x334155 : sparkColors[i % 4],\n      transparent: true,\n      opacity: 0.95\n    });\n    const r = isSmoke ? (0.35 + Math.random() * 0.45) * scale : (0.14 + Math.random() * 0.25) * scale;\n    const pMesh = new THREE.Mesh(\n      isSmoke ? new THREE.SphereGeometry(r, 8, 8) : new THREE.BoxGeometry(r, r, r),\n      pMat\n    );\n    const theta = Math.random() * Math.PI * 2;\n    const phi = Math.random() * Math.PI * 0.65;\n    const spd = (10 + Math.random() * 28) * scale;\n    expRoot.add(pMesh);\n    particles.push({\n      mesh: pMesh,\n      mat: pMat,\n      isSmoke,\n      vx: Math.cos(theta) * Math.sin(phi) * spd,\n      vy: Math.cos(phi) * spd + (isSmoke ? 6.0 : 2.0),\n      vz: Math.sin(theta) * Math.sin(phi) * spd\n    });\n  }\n\n  activeExplosions.push({\n    root: expRoot,\n    fireballMesh,\n    fireballMat,\n    coreMesh,\n    coreMat,\n    ringMesh,\n    ringMat,\n    flashLight,\n    particles,\n    age: 0.0,\n    duration: 1.45 * Math.max(0.85, Math.min(1.35, scale)),\n    scale\n  });\n}\n\nfunction updateExplosions(dt) {\n  for (let i = activeExplosions.length - 1; i >= 0; i--) {\n    const ex = activeExplosions[i];\n    ex.age += dt;\n    const t = ex.age / ex.duration;\n    if (t >= 1.0) {\n      explosionGroup.remove(ex.root);\n      activeExplosions.splice(i, 1);\n      continue;\n    }\n    // Expand fireball & transition color from yellow -> orange -> crimson -> dark smoke\n    const fbScale = 1.0 + Math.pow(t, 0.55) * 6.8;\n    ex.fireballMesh.scale.set(fbScale, fbScale, fbScale);\n    if (t < 0.25) {\n      ex.fireballMat.color.setHex(0xfef08a);\n    } else if (t < 0.55) {\n      ex.fireballMat.color.setHex(0xf97316);\n    } else if (t < 0.8) {\n      ex.fireballMat.color.setHex(0xdc2626);\n    } else {\n      ex.fireballMat.color.setHex(0x1e293b);\n    }\n    ex.fireballMat.opacity = Math.max(0, (1.0 - t) * 0.92);\n\n    const coreScale = 1.0 + t * 3.5;\n    ex.coreMesh.scale.set(coreScale, coreScale, coreScale);\n    ex.coreMat.opacity = Math.max(0, 1.0 - t * 2.2);\n\n    // Supersonic shockwave ring expands rapidly\n    const ringScale = 1.0 + Math.pow(t, 0.48) * 16.5;\n    ex.ringMesh.scale.set(ringScale, ringScale, 1.0);\n    ex.ringMat.opacity = Math.max(0, (1.0 - t) * 0.85);\n\n    ex.flashLight.intensity = Math.max(0, (1.0 - t * 1.4) * 10.0 * ex.scale);\n\n    ex.particles.forEach((p) => {\n      p.mesh.position.x += p.vx * dt;\n      p.mesh.position.y += p.vy * dt;\n      p.mesh.position.z += p.vz * dt;\n      if (p.isSmoke) {\n        p.vy += 3.5 * dt;\n        const s = 1.0 + t * 2.6;\n        p.mesh.scale.set(s, s, s);\n      } else {\n        p.vy -= 20.0 * dt;\n        p.mesh.rotation.x += 8.0 * dt;\n        p.mesh.rotation.y += 8.0 * dt;\n      }\n      p.mat.opacity = Math.max(0, 1.0 - t);\n    });\n  }\n}\n\nfunction applyExplosionBlastToTraffic(bx, by, bz, blastRadius, blastStrength) {\n  let affected = 0;\n  trafficCars.forEach((car) => {\n    const dx = car.mesh.position.x - bx;\n    const dz = car.mesh.position.z - bz;\n    const dy = (car.mesh.position.y || 0) - by;\n    const dist = Math.hypot(dx, dz, dy * 0.5);\n    if (dist < blastRadius) {\n      const falloff = Math.pow(1.0 - dist / blastRadius, 1.15);\n      const dirX = dist > 0.05 ? dx / dist : (Math.random() - 0.5);\n      const dirZ = dist > 0.05 ? dz / dist : -1.0;\n      const impulse = blastStrength * (0.45 + 0.55 * falloff);\n\n      car.blastVx = (car.blastVx || 0) + dirX * impulse * 1.15 + (Math.random() - 0.5) * 8.0;\n      car.blastVz = (car.blastVz || 0) + dirZ * impulse * 1.15;\n      car.blastVy = Math.max(car.blastVy || 0, (6.5 + falloff * 14.5) * (blastStrength / 32.0));\n      car.blastVRoll = (Math.random() - 0.5) * 11.0 * falloff;\n      car.blastVPitch = (Math.random() - 0.5) * 9.0 * falloff;\n      car.blastVYaw = (Math.random() - 0.5) * 10.0 * falloff;\n      car.blastTimer = 3.2;\n\n      // Sympathetic secondary explosion on close cars\n      if (dist < 14.0) {\n        spawnExplosionEffect(car.mesh.position.x, (car.mesh.position.y || 0) + 0.8, car.mesh.position.z, 0.65);\n      }\n      affected++;\n    }\n  });\n  if (affected > 0 && !state.isDestroyed) {\n    state.blastedCarsCount += affected;\n    state.carsCleared += affected;\n  }\n  return affected;\n}\n\nfunction spawnDestructionDebris(x, y, z, baseVx, baseVy, baseVz) {\n  clearDebris();\n  const pieceColors = [bodyMaterial.color.getHex(), 0x111827, 0x38bdf8, 0xf97316, 0xef4444];\n  for (let i = 0; i < 34; i++) {\n    const sx = 0.25 + Math.random() * 0.65;\n    const sy = 0.08 + Math.random() * 0.28;\n    const sz = 0.25 + Math.random() * 0.75;\n    const mat = new THREE.MeshStandardMaterial({\n      color: pieceColors[i % pieceColors.length],\n      metalness: 0.7,\n      roughness: 0.3\n    });\n    const mesh = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), mat);\n    mesh.position.set(\n      x + (Math.random() - 0.5) * 1.8,\n      Math.max(0.2, y + Math.random() * 1.1),\n      z + (Math.random() - 0.5) * 2.8\n    );\n    debrisGroup.add(mesh);\n    debrisPieces.push({\n      mesh,\n      vx: baseVx * 0.35 + (Math.random() - 0.5) * 28,\n      vy: Math.max(5, baseVy * 0.3 + Math.random() * 20),\n      vz: baseVz * 0.35 + (Math.random() - 0.5) * 28,\n      rx: (Math.random() - 0.5) * 14,\n      ry: (Math.random() - 0.5) * 14,\n      rz: (Math.random() - 0.5) * 14\n    });\n  }\n}\n\nfunction clearDebris() {\n  debrisPieces.forEach(p => debrisGroup.remove(p.mesh));\n  debrisPieces = [];\n  activeExplosions.forEach(ex => explosionGroup.remove(ex.root));\n  activeExplosions = [];\n  if (typeof clearTireSmoke === 'function') clearTireSmoke();\n}\n\nfunction triggerPhysicsCollision(deltaV, reasonKey, bounceVx, bounceVy, bounceVz) {\n  if (state.isDestroyed || state.impactCooldown > 0) return;\n  state.impactCooldown = 0.32;\n\n  const peakG = (deltaV / CRITICAL_IMPACT_DV) * CRITICAL_G_LIMIT;\n  const energyKj = 0.5 * VEHICLE_MASS_KG * deltaV * deltaV / 1000;\n  const dvKmh = deltaV * 3.6;\n\n  state.lastImpactG = peakG;\n  state.lastImpactDvKmh = dvKmh;\n  state.lastImpactEnergyKj = energyKj;\n\n  const worldZ = currentMap === 'highway' ? 0 : state.z;\n\n  if (peakG >= CRITICAL_G_LIMIT) {\n    destroyVehicle(reasonKey);\n    return;\n  }\n\n  // Requirement 1: Ordinary non-fatal collisions do NOT trigger explosion VFX (only vehicle destruction explodes)\n  const damage = Math.max(6, Math.pow(deltaV / CRITICAL_IMPACT_DV, 1.65) * 85);\n  state.hullIntegrity = Math.max(0, state.hullIntegrity - damage);\n\n  if (state.hullIntegrity <= 0.1) {\n    state.hullIntegrity = 0;\n    destroyVehicle('crashReasonCumulative');\n    return;\n  }\n\n  state.vx += bounceVx;\n  if (state.wasAirborne) {\n    state.vz += bounceVz || 0;\n    state.speed = Math.hypot(state.vx, state.vz);\n  }\n  state.vy = Math.max(state.vy, bounceVy);\n  state.vRoll += (Math.random() - 0.5) * 3.5;\n  state.vPitch += (Math.random() - 0.5) * 2.5;\n  state.vYaw += (Math.random() - 0.5) * 3.0;\n  sound.playCrash(false);\n  showBanner('impact', 2.0);\n}\n\nfunction destroyVehicle(reasonKey) {\n  if (state.isDestroyed) return;\n  state.isDestroyed = true;\n  window.RoadsterTaxi?.onDestroyed();\n  RoadsterDrivingScore.freeze(state);\n  globalThis.window?.RoadsterDemo?.stop();\n  window.RoadsterRanked?.abort('crash');\n  state.hullIntegrity = 0;\n  state.destroyReasonKey = reasonKey || 'crashReasonThreshold';\n  carMeshGroup.visible = false;\n  if (typeof headlightSpotL !== 'undefined') headlightSpotL.intensity = 0.0;\n  if (typeof headlightSpotR !== 'undefined') headlightSpotR.intensity = 0.0;\n  hoverRingMat.opacity = 0;\n\n  const worldZ = currentMap === 'highway' ? 0 : state.z;\n  spawnDestructionDebris(state.x, state.y, worldZ, state.vx, state.vy, state.vz);\n  spawnExplosionEffect(state.x, state.y, worldZ, 1.75);\n  applyExplosionBlastToTraffic(state.x, state.y, worldZ, 55.0, 46.0);\n  sound.playCrash(true);\n\n  updateDestroyedModalText();\n  document.getElementById('modal-destroyed').classList.remove('hidden');\n}\n\nfunction updateDestroyedScores() {\n  // Keep the completed run visible throughout the wreck animation. Any late\n  // "... 110704 more characters,
+    expected: /updateSimulation\(dt\);\s*\}\s*if \(currentMap === 'city'\) window\.RoadsterTaxi\?\.present\?\.\(\);\s*else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -1,0 +1,89 @@
+✖ conservative 2.6m swept broadphase is exact for seeded chords, every rail/pier/abutment, yaw and vertical direction (21130.984026ms)
+✔ actual road-lane sweeps retain exact contacts with bounded narrow-phase setup and report CPU-only timing (12150.633014ms)
+ℹ {"scope":"CPU sweep function microbenchmark, not GPU/FPS/device-temperature evidence","queries":1432,"baseline":{"milliseconds":11409.303906000001,"narrowSetups":1075432},"candidate":{"milliseconds":189.465999,"narrowSetups":285}}
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (3.686821ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (4078.338252ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (676.905753ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (49.794414ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.835701ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (121.963134ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (5429.148083ms)
+✔ viaduct is two-way six 3.5m lanes with metre-wide shoulders and smooth same-source widening (331.749498ms)
+✔ real approach guide rails converge from the bank onto both deck edges with no open bank-end mouth (0.821217ms)
+✔ additional real hill masses enrich the inland terrain while road/underpass geometry stays unchanged (269.932626ms)
+✔ all traffic lane station boundaries and micro-perturbations keep real road support, never fall back to terrain (5457.04303ms)
+✔ production motion follows true terrain/bridge tire plane at 0m/s without false gravity, damage or fuel burn (1480.687349ms)
+✔ production motion follows true terrain/bridge tire plane at 15m/s without false gravity, damage or fuel burn (1348.549961ms)
+✔ production motion follows true terrain/bridge tire plane at 55.55555555555556m/s without false gravity, damage or fuel burn (1307.45632ms)
+✔ production motion follows true terrain/bridge tire plane at 102.77777777777777m/s without false gravity, damage or fuel burn (1343.66316ms)
+✔ slope-only gravity distinguishes coast uphill/downhill without changing EV constants (6.459502ms)
+✔ Space really detaches and keeps lifting from the 1700m slope/bridge (30.662954ms)
+✔ Space really detaches and keeps lifting from the 3800m slope/bridge (24.992828ms)
+✔ O targets six metres above actual attached bridge or the ground BELOW it, never the highest xz layer (32.071361ms)
+✔ the production cabin hits bridge underside; upward impact cannot become a bridge-top landing (4.070748ms)
+✔ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (18.877551ms)
+✔ continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall (4.37062ms)
+✔ a roof has exactly one original 4s/s recharge owner, not both road and roof owners (2.87571ms)
+✔ a true airborne rooftop touchdown restores ground EV ownership instead of staying an invisible aircraft (4.490556ms)
+✔ a fast shallow deck-bottom scrape pays only normal impact, not the unrelated 50m/s tangential speed (3.159297ms)
+✔ a swept pier landing uses its contact material/position, not water at the frame endpoint (2.510424ms)
+✔ an already airborne low-altitude O tap cannot restart ground-hop inertia grace (1.956729ms)
+✔ a vehicle below the pier still contacts real water instead of falling forever below world zero (2.000683ms)
+✔ new hillside houses use absolute base/roof heights and solid foundations, not sea-level stretched walls (19.197342ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 30
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 34358.939129
+
+✖ failing tests:
+
+test at tests/coast-collision-budget.test.mjs:7:1
+✖ conservative 2.6m swept broadphase is exact for seeded chords, every rail/pier/abutment, yaw and vertical direction (21130.984026ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      box: {
+        kind: 'rail',
+  +     maxX: 649.6886645507813,
+  +     maxY: 62.33241958618164,
+  +     maxZ: -48.47187698364258,
+  +     minX: 647.301630859375,
+  +     minY: 61.30469329833984,
+  +     minZ: -54.19666015625
+  -     maxX: 647.541630859375,
+  -     maxY: 62.17469329833985,
+  -     maxZ: -42.89974487304688,
+  -     minX: 645.3303784179687,
+  -     minY: 61.143068389892576,
+  -     minZ: -48.711876983642576
+      },
+      height: undefined,
+      kind: 'rail',
+      normal: {
+  +     x: -0.9311958639422636,
+  -     x: -0.9427448870317843,
+        y: 0,
+  +     z: -0.36451922168360484
+  -     z: -0.3335147342703596
+      },
+  +   t: 0.37417984353901884
+  -   t: 0.3732601491658247
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-collision-budget.test.mjs:10:134)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { t: 0.37417984353901884, kind: 'rail', height: undefined, normal: { x: -0.9311958639422636, y: 0, z: -0.36451922168360484 }, box: { kind: 'rail', minX: 647.301630859375, maxX: 649.6886645507813, minZ: -54.19666015625, maxZ: -48.47187698364258, minY: 61.30469329833984, maxY: 62.33241958618164 } },
+    expected: { t: 0.3732601491658247, kind: 'rail', height: undefined, normal: { x: -0.9427448870317843, y: 0, z: -0.3335147342703596 }, box: { kind: 'rail', minX: 645.3303784179687, maxX: 647.541630859375, minZ: -48.711876983642576, maxZ: -42.89974487304688, minY: 61.143068389892576, maxY: 62.17469329833985 } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

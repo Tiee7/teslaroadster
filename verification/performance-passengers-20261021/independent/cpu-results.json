@@ -1,0 +1,63 @@
+{
+  "scope": "Node24 CPU-only genuine r128; no WebGL/FPS/GPU/thermal measurement",
+  "cases": {
+    "17dda06f": {
+      "structures": {
+        "medianMs": 5.222711783333333,
+        "rangeMs": [
+          4.6514768900000005,
+          5.642188986666665
+        ],
+        "rounds": 3,
+        "iterations": 300
+      },
+      "support": {
+        "medianMs": 0.08571125500000017,
+        "rangeMs": [
+          0.07444274700000006,
+          0.08709793799999989
+        ],
+        "rounds": 3,
+        "iterations": 1000
+      },
+      "motionKernel": {
+        "medianMs": 7.177463066666666,
+        "rangeMs": [
+          6.867239603333334,
+          7.531284776666665
+        ],
+        "rounds": 3,
+        "iterations": 300
+      }
+    },
+    "eeddf7d": {
+      "structures": {
+        "medianMs": 0.04386197666666703,
+        "rangeMs": [
+          0.02393984000000273,
+          0.07691127999999783
+        ],
+        "rounds": 3,
+        "iterations": 300
+      },
+      "support": {
+        "medianMs": 0.013583605000001626,
+        "rangeMs": [
+          0.013255673999999999,
+          0.01674264299999959
+        ],
+        "rounds": 3,
+        "iterations": 1000
+      },
+      "motionKernel": {
+        "medianMs": 0.264928126666667,
+        "rangeMs": [
+          0.25876118999999864,
+          0.31335452666666846
+        ],
+        "rounds": 3,
+        "iterations": 300
+      }
+    }
+  }
+}

@@ -1,0 +1,206 @@
+✔ city wall-time clock: cruise, 10 rendered fps equals 60 Hz physics (42.517767ms)
+✔ city wall-time clock: accelerate, 10 rendered fps equals 60 Hz physics (34.049795ms)
+✔ city wall-time clock: brake, 10 rendered fps equals 60 Hz physics (33.782992ms)
+✔ city wall-time clock: boost, 10 rendered fps equals 60 Hz physics (37.615669ms)
+✔ city wall-time clock: flight, 10 rendered fps equals 60 Hz physics (50.810032ms)
+✔ city wall-time clock: cruise, 15 rendered fps equals 60 Hz physics (27.122597ms)
+✔ city wall-time clock: accelerate, 15 rendered fps equals 60 Hz physics (22.143836ms)
+✔ city wall-time clock: brake, 15 rendered fps equals 60 Hz physics (21.093831ms)
+✔ city wall-time clock: boost, 15 rendered fps equals 60 Hz physics (21.692802ms)
+✔ city wall-time clock: flight, 15 rendered fps equals 60 Hz physics (21.289659ms)
+✔ city wall-time clock: cruise, 20 rendered fps equals 60 Hz physics (24.641829ms)
+✔ city wall-time clock: accelerate, 20 rendered fps equals 60 Hz physics (21.492598ms)
+✔ city wall-time clock: brake, 20 rendered fps equals 60 Hz physics (27.834464ms)
+✔ city wall-time clock: boost, 20 rendered fps equals 60 Hz physics (24.389719ms)
+✔ city wall-time clock: flight, 20 rendered fps equals 60 Hz physics (23.323355ms)
+✔ city wall-time clock: cruise, 30 rendered fps equals 60 Hz physics (23.504241ms)
+✔ city wall-time clock: accelerate, 30 rendered fps equals 60 Hz physics (24.878226ms)
+✔ city wall-time clock: brake, 30 rendered fps equals 60 Hz physics (21.805728ms)
+✔ city wall-time clock: boost, 30 rendered fps equals 60 Hz physics (28.764332ms)
+✔ city wall-time clock: flight, 30 rendered fps equals 60 Hz physics (21.879397ms)
+✔ city wall-time clock: cruise, 60 rendered fps equals 60 Hz physics (21.373172ms)
+✔ city wall-time clock: accelerate, 60 rendered fps equals 60 Hz physics (23.178141ms)
+✔ city wall-time clock: brake, 60 rendered fps equals 60 Hz physics (21.397358ms)
+✔ city wall-time clock: boost, 60 rendered fps equals 60 Hz physics (22.681836ms)
+✔ city wall-time clock: flight, 60 rendered fps equals 60 Hz physics (21.904834ms)
+✔ city wall-time clock: cruise, 144 rendered fps equals 60 Hz physics (28.091973ms)
+✔ city wall-time clock: accelerate, 144 rendered fps equals 60 Hz physics (21.985262ms)
+✔ city wall-time clock: brake, 144 rendered fps equals 60 Hz physics (31.881526ms)
+✔ city wall-time clock: boost, 144 rendered fps equals 60 Hz physics (29.33776ms)
+✔ city wall-time clock: flight, 144 rendered fps equals 60 Hz physics (27.669692ms)
+✔ city irregular 50–250 ms foreground frames preserve every second with bounded steps (0.270778ms)
+✔ city 10 fps performs only one expensive presentation per render (0.142069ms)
+✔ city 15 fps performs only one expensive presentation per render (0.217109ms)
+✔ city 20 fps performs only one expensive presentation per render (0.140777ms)
+✔ city 30 fps performs only one expensive presentation per render (0.109771ms)
+✔ city 60 fps performs only one expensive presentation per render (0.104564ms)
+✔ city pauses, invalid clocks and suspended tabs discard debt instead of replaying old input (0.287453ms)
+✖ production render integration gives map3 an independent fixed clock while map1/autopilot ownership stays unchanged (3.397646ms)
+✔ V8 pulse-bank waveform remains byte-identical to the original; capture precedes the presentation return (1.224941ms)
+✔ production city animate+clock updates original V8 once per 10 fps render (11.007498ms)
+✔ production city animate+clock updates original V8 once per 15 fps render (7.29986ms)
+✔ production city animate+clock updates original V8 once per 60 fps render (6.062245ms)
+✖ production city animate+clock updates original V8 once per 144 fps render (22.424398ms)
+✔ 144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics (6.169804ms)
+✔ blur mutes immediately without RAF or resuming a suspended context (8.786091ms)
+✔ hidden mutes immediately without RAF or resuming a suspended context (6.441212ms)
+✔ modal-map-select pause clears the city sound snapshot and resumes without old boost (6.264342ms)
+✔ modal-help pause clears the city sound snapshot and resumes without old boost (5.635818ms)
+✔ ranked pause clears the city sound snapshot and resumes without old boost (5.438508ms)
+✔ music pause clears the city sound snapshot and resumes without old boost (6.694936ms)
+✔ suspended frames, reset and destruction never keep the last active city voice (5.107521ms)
+✔ production coast animate+clock updates original V8 once per 10 fps render (6.958764ms)
+✔ production coast animate+clock updates original V8 once per 15 fps render (6.572035ms)
+✔ production coast animate+clock updates original V8 once per 60 fps render (9.120413ms)
+✖ production coast animate+clock updates original V8 once per 144 fps render (15.309775ms)
+✔ 144 fps zero-tick frames consume fresh throttle release and SFX mute without extra physics (3.873537ms)
+✔ blur mutes immediately without RAF or resuming a suspended context (4.463854ms)
+✔ hidden mutes immediately without RAF or resuming a suspended context (4.492767ms)
+✔ modal-map-select pause clears the city sound snapshot and resumes without old boost (6.798949ms)
+✔ modal-help pause clears the city sound snapshot and resumes without old boost (4.69168ms)
+✔ ranked pause clears the city sound snapshot and resumes without old boost (4.435393ms)
+✔ music pause clears the city sound snapshot and resumes without old boost (4.380272ms)
+✔ suspended frames, reset and destruction never keep the last active city voice (4.824235ms)
+✔ highway retains one legacy sound update per render and no city event mute (10.324984ms)
+✔ autopilot retains its original substep sound ownership without a second city render update (8.271915ms)
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 10Hz (84.205946ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":10,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":90}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 15Hz (87.522974ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":15,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":135}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 20Hz (61.199312ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":20,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":180}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 30Hz (58.258191ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":30,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":270}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 60Hz (58.0298ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":60,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":540}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 144Hz (63.709803ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":144,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":540}
+✖ authorized city layout changes preserve the shared/highway world and read-only coast bridge (3.079058ms)
+✔ actual UI weather order restores original object identities and LAST selected weather through city/highway-style cycles (9627.018556ms)
+✔ coast sun follows only finite camera XZ, has a live target matrix and never mutates camera or the old lights (1289.871696ms)
+✔ r128 DirectionalLight disposal releases private map/mapPass once and never releases shared shadow targets (2530.096787ms)
+✔ construction and final-attach faults restore scene atomically and dispose all returned partial private resources (2592.505757ms)
+✔ actual switchMap coast→city/highway→coast repeatedly restores scene and disposes before the next old-map frame (2567.659231ms)
+✔ direct r128 cube sky updates the same six owned payloads across every weather instead of retaining a cached equirectangular conversion (923.274649ms)
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (3.996928ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (98.871363ms)
+✖ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.841949ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (2.884001ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.173596ms)
+✔ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (3.799498ms)
+✔ actual flat terrain, bank and asphalt render tops have no substantive coplanar overlap; world heights are not raised (294.081605ms)
+ℹ {"flatTriangles":[7894,4661,7552],"crossLayerTrianglePairs":1445873,"maxOverlapSquareMetres":0.0004671940705485156}
+✔ bridge abutment foundations and wing walls are visible oriented solids identical to collision, not invisible snap planes (0.3945ms)
+ℹ tests 86
+ℹ suites 0
+ℹ pass 81
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19716.190161
+
+✖ failing tests:
+
+test at tests/city-clock.test.mjs:57:1
+✖ production render integration gives map3 an independent fixed clock while map1/autopilot ownership stays unchanged (3.397646ms)
+  AssertionError [ERR_ASSERTION]: 0.1 != 0.05
+      at close (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-clock.test.mjs:8:48)
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-clock.test.mjs:82:77)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/city-sound.test.mjs:98:38
+✖ production city animate+clock updates original V8 once per 144 fps render (22.424398ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  61 !== 144
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-sound.test.mjs:101:79)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 61,
+    expected: 144,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/city-sound.test.mjs:98:38
+✖ production coast animate+clock updates original V8 once per 144 fps render (15.309775ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  61 !== 144
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/city-sound.test.mjs:101:79)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 61,
+    expected: 144,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/coast-art-lighting.test.mjs:34:1
+✖ authorized city layout changes preserve the shared/highway world and read-only coast bridge (3.079058ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '74c6b00cf5621f5ba6ff7791c599bd229e36a40f827555fc9000bedd82813c90'
+  - 'f40c136a13d57daf61757346ad4e77d45c8368697a8229c049400bffd6477d61'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-art-lighting.test.mjs:40:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '74c6b00cf5621f5ba6ff7791c599bd229e36a40f827555fc9000bedd82813c90',
+    expected: 'f40c136a13d57daf61757346ad4e77d45c8368697a8229c049400bffd6477d61',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/coast-terrain-render.test.mjs:9:31
+✖ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.841949ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  248 !== 384
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-terrain-render.test.mjs:35:203)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 248,
+    expected: 384,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

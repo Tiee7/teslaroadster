@@ -201,7 +201,7 @@ const RoadsterCoast = (() => {
     if(Number.isFinite(preset.fogDensity)&&previous.fog&&'density' in previous.fog)previous.fog.density=preset.fogDensity;
     if(owner.scene.environment!==owner.skyTexture)previous.environment=owner.scene.environment;
     const sunset=Boolean(preset.marsSun),rain=Boolean(preset.rain);
-    const settings=preset.daylight?{background:0xc7dfed,fog:0xc7dfed,density:.0002,sky:0xdbe9f4,ground:0x9a9b82,fill:1.05,key:0xfff5df,strength:1.7,offset:[-55,100,48],top:[178,210,231],horizon:[219,234,240],bottom:[143,153,144]}:sunset?{background:0xc6a48a,fog:0xb99582,density:.00065,sky:0xe0b49a,ground:0x8c7266,fill:.62,key:0xffd09b,strength:1.25,offset:[-68,44,35],top:[120,151,169],horizon:[213,179,155],bottom:[84,83,74]}:
+    const settings=preset.daylight?{background:0xc7dfed,fog:0xc7dfed,density:.0002,sky:0xdbe9f4,ground:0x9a9b82,fill:.58,key:0xfff5df,strength:1.0,offset:[-55,100,48],top:[178,210,231],horizon:[219,234,240],bottom:[143,153,144]}:sunset?{background:0xc6a48a,fog:0xb99582,density:.00065,sky:0xe0b49a,ground:0x8c7266,fill:.62,key:0xffd09b,strength:1.25,offset:[-68,44,35],top:[120,151,169],horizon:[213,179,155],bottom:[84,83,74]}:
       rain?{background:0x101e29,fog:0x263c47,density:.00085,sky:0x8da4af,ground:0x565c58,fill:.38,key:0x9bb4bf,strength:.68,offset:[-55,90,48],top:[12,25,36],horizon:[48,67,76],bottom:[10,19,24]}:
       {background:0x0d1c29,fog:0x263f4b,density:.00055,sky:0x9bb5c5,ground:0x655d4c,fill:.46,key:0xb2cbd5,strength:.92,offset:[-55,90,48],top:[11,22,35],horizon:[52,78,91],bottom:[10,20,27]};
     owner.background.setHex(settings.background);owner.fog.color.setHex(settings.fog);owner.fog.density=settings.density;
@@ -217,8 +217,8 @@ const RoadsterCoast = (() => {
         for(let c=0;c<3;c++)data[i+c]=Math.round(a[c]+(b[c]-a[c])*weight);data[i+3]=255;
       }
     });
-    owner.waterMaterial.roughness=sunset?.29:rain?.42:.32;owner.waterMaterial.envMapIntensity=sunset?.62:rain?.55:.75;
-    owner.skyTexture.needsUpdate=true;owner.facadeLitMaterial.emissiveIntensity=preset.daylight?.02:sunset?.06:rain?.34:.42;owner.lampMaterial.emissiveIntensity=sunset?.18:rain?.8:.65;owner.roadMat.roughness=rain?.76:.94;owner.roadMat.metalness=.02;owner.roadMat.envMapIntensity=rain?.25:.4;
+    owner.waterMaterial.roughness=sunset?.29:rain?.42:.32;owner.waterMaterial.envMapIntensity=preset.daylight?.35:sunset?.62:rain?.55:.75;
+    owner.skyTexture.needsUpdate=true;owner.facadeLitMaterial.emissiveIntensity=preset.daylight?.02:sunset?.06:rain?.34:.42;owner.lampMaterial.emissiveIntensity=preset.daylight?.025:sunset?.18:rain?.8:.65;owner.roadMat.roughness=rain?.76:.94;owner.roadMat.metalness=.02;owner.roadMat.envMapIntensity=preset.daylight?.15:rain?.25:.4;
   }
   function enter(scene,THREE=globalThis.THREE){
     if(active)return active.group;
@@ -797,24 +797,9 @@ const RoadsterCoast = (() => {
     for(const family of [0,1])for(const [name,mat,items] of [['coast-district-window-sashes',facadeWindowMaterial,districtWindows],['coast-district-selected-lit-windows',facadeLitMaterial,districtLitWindows]]){
       const mesh=batch(name+(family?'-transom':''),sashPlanes[family],mat,items[family],{receiveShadow:true,visualOnly:true});mesh.userData.coastArt.facadeFamily=family;
     }
-    const detailCapacity=384,detailRings=new THREE.InstancedMesh(revealGeometry,cream,detailCapacity);instances.add(detailRings);
-    detailRings.name='coast-district-near-window-reveals';detailRings.count=0;detailRings.castShadow=true;detailRings.receiveShadow=true;
-    detailRings.instanceMatrix.setUsage(THREE.DynamicDrawUsage);detailRings.userData.coastArt={visualOnly:true,flat:false,capacity:detailCapacity};group.add(detailRings);
-    const detailDummy=new THREE.Object3D();let detailX=NaN,detailZ=NaN;
-    function updateDistrictDetails(x,z){
-      if(Number.isFinite(detailX)&&(x-detailX)**2+(z-detailZ)**2<400)return;
-      detailX=x;detailZ=z;owner.detailRefreshes=(owner.detailRefreshes||0)+1;
-      const nearby=facadeRecords.map(record=>{const b=record.building,dx=Math.max(b.minX-x,0,x-b.maxX),dz=Math.max(b.minZ-z,0,z-b.maxZ);return {record,distance:dx*dx+dz*dz};})
-        .filter(v=>v.distance<180*180).sort((a,b)=>a.distance-b.distance).slice(0,6);
-      let count=0;
-      for(const {record} of nearby)for(const pose of record.windows){
-        const b=record.building,coordinate=pose.axis==='x'?x:z,center=pose.axis==='x'?b.x:b.z;
-        if(pose.side*(coordinate-center)<0||(pose.p[0]-x)**2+(pose.p[2]-z)**2>150*150||count===detailCapacity)continue;
-        detailDummy.position.set(...pose.p);detailDummy.position[pose.axis==='x'?'x':'z']+=pose.side*.14;
-        detailDummy.scale.set(.28,pose.h*.75,pose.w*.75);detailDummy.rotation.set(0,pose.axis==='z'?pose.side*Math.PI/2:pose.side>0?Math.PI:0,0);detailDummy.updateMatrix();detailRings.setMatrixAt(count++,detailDummy.matrix);
-      }
-      detailRings.count=count;detailRings.instanceMatrix.needsUpdate=true;
-    }
+    const staticDetails=facadeRecords.flatMap(record=>record.windows.filter(pose=>pose.axis===record.entry.axis&&pose.side===record.entry.side&&pose.p[1]<2).map(pose=>{const p=pose.p.slice();p[pose.axis==='x'?0:2]+=pose.side*.14;return {p,s:[.28,pose.h*.75,pose.w*.75],r:[0,pose.axis==='z'?pose.side*Math.PI/2:pose.side>0?Math.PI:0,0]};}));
+    const detailRings=batch('coast-district-near-window-reveals',revealGeometry,cream,staticDetails,{receiveShadow:true,visualOnly:true});detailRings.userData.coastArt.capacity=staticDetails.length;
+    function updateDistrictDetails(){}
     pavement.push({p:[-43,-.005,580],s:[4,.07,330]});
     for(let i=0;i<hero.length-1;i++){
       const a=hero[i].maxZ+18,b=hero[i+1].minZ-18;
@@ -956,28 +941,12 @@ const RoadsterCoast = (() => {
     batch('coast-palm-trunks',palmTrunkGeometry(),material(0x8e8066,{map:plasterTexture,roughness:.97}),palms.map(p=>({p:[p.x,0,p.z],s:[1,p.h,1]})),{castShadow:true,receiveShadow:true});
     const crownMaterial=material(0xffffff,{vertexColors:true,side:THREE.DoubleSide,roughness:.93});
     const palmRecords=palms.map((p,index)=>({p,index,variant:index%2,pose:{p:[p.x+.18*Math.sin(Math.PI*.7),p.h,p.z+.1*Math.sin(Math.PI*1.4)],s:[1,1,1],r:[0,(Math.floor(index/2)*.73)%(Math.PI*2),0],color:Math.floor(index/2)%3===0?0xe1e6ca:0xffffff}}));
-    const palmFar=[],palmNear=[],palmDummy=new THREE.Object3D(),palmColor=new THREE.Color();
+    const palmFar=[],palmNear=[];
     for(let variant=0;variant<2;variant++){
-      const records=palmRecords.filter(v=>v.variant===variant),nearGeo=variant?palmCrownGeometry(16,7,3.3,.52):palmCrownGeometry(14,8,3.9,.48),farGeo=variant?palmCrownGeometry(8,4,3.3,.52):palmCrownGeometry(8,4,3.9,.48);
-      const far=batch(variant?'coast-palm-fans-far-compact':'coast-palm-fans-far',farGeo,crownMaterial,records.map(v=>v.pose),{castShadow:true,receiveShadow:true,visualOnly:true});
-      const near=batch(variant?'coast-palm-fans-compact':'coast-palm-fans',nearGeo,crownMaterial,records.slice(0,12).map(v=>v.pose),{castShadow:true,receiveShadow:true,visualOnly:true});
-      far.userData.coastArt.capacity=50;near.userData.coastArt.capacity=12;near.count=0;
-      far.instanceMatrix.setUsage(THREE.DynamicDrawUsage);near.instanceMatrix.setUsage(THREE.DynamicDrawUsage);palmFar.push(far);palmNear.push(near);
+      const records=palmRecords.filter(v=>v.variant===variant),geo=variant?palmCrownGeometry(8,4,3.3,.52):palmCrownGeometry(8,4,3.9,.48);
+      const mesh=batch(variant?'coast-palm-fans-far-compact':'coast-palm-fans-far',geo,crownMaterial,records.map(v=>v.pose),{castShadow:true,receiveShadow:true,visualOnly:true});mesh.userData.coastArt.capacity=records.length;palmFar.push(mesh);
     }
-    let foliageX=NaN,foliageZ=NaN,previousNearPalms=new Set();
-    function updateCoastFoliage(x,z){
-      if(Number.isFinite(foliageX)&&(x-foliageX)**2+(z-foliageZ)**2<400)return;
-      foliageX=x;foliageZ=z;owner.foliageRefreshes=(owner.foliageRefreshes||0)+1;
-      const selected=new Set(),nearCounts=[0,0],farCounts=[0,0];
-      const candidates=palmRecords.map(record=>({record,distance:(record.p.x-x)**2+(record.p.z-z)**2})).filter(v=>v.distance<=(previousNearPalms.has(v.record.index)?210*210:180*180)).sort((a,b)=>a.distance-b.distance);
-      for(const {record} of candidates)if(nearCounts[record.variant]<12){selected.add(record.index);nearCounts[record.variant]++;}
-      previousNearPalms=selected;nearCounts.fill(0);
-      for(const record of palmRecords){
-        const isNear=selected.has(record.index),mesh=(isNear?palmNear:palmFar)[record.variant],counts=isNear?nearCounts:farCounts,v=record.pose,index=counts[record.variant]++;
-        palmDummy.position.set(...v.p);palmDummy.scale.set(...v.s);palmDummy.rotation.set(...v.r);palmDummy.updateMatrix();mesh.setMatrixAt(index,palmDummy.matrix);mesh.setColorAt(index,palmColor.setHex(v.color));
-      }
-      for(let variant=0;variant<2;variant++)for(const [meshes,counts] of [[palmNear,nearCounts],[palmFar,farCounts]]){const mesh=meshes[variant];mesh.count=counts[variant];mesh.instanceMatrix.needsUpdate=true;mesh.instanceColor.needsUpdate=true;}
-    }
+    function updateCoastFoliage(){}
     const beachCream=[],beachMetal=[],beachTimber=[],beachBodies=[],beachRoofs=[],beachGlass=[],beachFrames=[],beachSigns=[],bulbs=[],shadeCaps=[];
     const parasols=[],parasolPoles=[],beachFabric=[];
     const beachEntryRects=[],beachEntryPlants=[];
@@ -1180,7 +1149,7 @@ const RoadsterCoast = (() => {
     const buffers=new Set();let geometryBufferBytes=0,instanceBufferBytes=0;
     for(const geo of active?.geometries||[])for(const attribute of [...Object.values(geo.attributes),geo.index].filter(Boolean)){const array=attribute.isInterleavedBufferAttribute?attribute.data.array:attribute.array;if(!buffers.has(array)){buffers.add(array);geometryBufferBytes+=array.byteLength;}}
     for(const mesh of active?.instances||[])for(const attribute of [mesh.instanceMatrix,mesh.instanceColor].filter(Boolean))instanceBufferBytes+=attribute.array.byteLength;
-    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?384:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:roofBuildings.length,retainedCoastalBuildings:buildings.length,hillsideBuildings:hillsideBuildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
+    return {active:Boolean(active),builds,disposals,failedBuilds,cachedCpuPixelBytes:groundFieldCache?.pixels.byteLength||0,ownedLights:active?.lights.size||0,shadowMapResolution:active?1024:0,shadowSpanMetres:active?160:0,ownedGeometries:active?.geometries.size||0,ownedMaterials:active?.materials.size||0,ownedTextures:active?.textures.size||0,textureBytes:active?Math.ceil([...active.textures].reduce((sum,t)=>sum+(t.isCubeTexture?t.image.reduce((n,face)=>n+face.image.data.byteLength,0):t.userData?.coastCubePayload?0:t.image.data.byteLength)*(t.generateMipmaps?4/3:1),0)):0,ownedGeometryBufferBytes:geometryBufferBytes,ownedInstanceBufferBytes:instanceBufferBytes,staticMeshDraws:meshes,staticTriangles:triangles,maximumStaticTriangles:maximumTriangles,nearPalms:active?active.palmNear.reduce((n,m)=>n+m.count,0):0,farPalms:active?active.palmFar.reduce((n,m)=>n+m.count,0):0,foliageRefreshes:active?.foliageRefreshes||0,nearDetailInstances:active?.detailRings.count||0,nearDetailCapacity:active?active.detailRings.count:0,nearDetailMatrixBytes:active?.detailRings.instanceMatrix.array.byteLength||0,detailRefreshes:active?.detailRefreshes||0,shadowCasterBatches,shadowCasterTriangles,maximumShadowCasterTriangles,instances,buildings:roofBuildings.length,retainedCoastalBuildings:buildings.length,hillsideBuildings:hillsideBuildings.length,palms:palms.length,textureEstimateScope:'Owned sampled texture levels only; excludes shadow render target and driver allocations',performanceBoundary:'Static scene structure, not measured renderer draw calls or FPS'};
   }
   return Object.freeze({spec,artBudget,roads:Object.freeze(roads),nodes:Object.freeze(nodes),edges:Object.freeze(edges),routes:Object.freeze(routes),pose,onRoad,surface,support,network,
     layout:()=>({buildings,hillsideBuildings,palms,obstacles}),buildings:()=>active?obstacles:[],enter,leave,tick,weather,metrics,trafficJunctionStats:junctionTraffic.stats,createTraffic,stepTraffic,recoverTraffic,respawn,hit,sweptBox,clipBuildings,contactBounds,trafficContact});

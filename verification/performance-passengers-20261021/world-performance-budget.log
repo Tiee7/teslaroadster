@@ -1,0 +1,33 @@
+✖ 227-city architecture preserves every original99 collider and function while batching richer original façades (109.943632ms)
+✔ coast details exist at all distances with lower maximum/shadow budgets, never proximity upload churn (874.465854ms)
+ℹ {"active":true,"builds":1,"disposals":0,"failedBuilds":0,"cachedCpuPixelBytes":262144,"ownedLights":2,"shadowMapResolution":1024,"shadowSpanMetres":160,"ownedGeometries":41,"ownedMaterials":53,"ownedTextures":16,"textureBytes":1256107,"ownedGeometryBufferBytes":4371088,"ownedInstanceBufferBytes":703836,"staticMeshDraws":83,"staticTriangles":153958,"maximumStaticTriangles":153958,"nearPalms":0,"farPalms":94,"foliageRefreshes":0,"nearDetailInstances":248,"nearDetailCapacity":248,"nearDetailMatrixBytes":15872,"detailRefreshes":0,"shadowCasterBatches":30,"shadowCasterTriangles":75158,"maximumShadowCasterTriangles":75158,"instances":10878,"buildings":52,"retainedCoastalBuildings":44,"hillsideBuildings":8,"palms":94,"textureEstimateScope":"Owned sampled texture levels only; excludes shadow render target and driver allocations","performanceBoundary":"Static scene structure, not measured renderer draw calls or FPS"}
+✔ renderer pixels are explicitly bounded without changing camera FOV or world metres (3.650301ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1104.387153
+
+✖ failing tests:
+
+test at tests/world-performance-budget.test.mjs:5:1
+✖ 227-city architecture preserves every original99 collider and function while batching richer original façades (109.943632ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(b.geometries<50)
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/world-performance-budget.test.mjs:9:147)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -32,7 +32,7 @@ geometryTest('rendered road and terrain positions are identical Float32 collisio
 });
 geometryTest('whole-map terrain replaces inland blocks under unchanged mobile structural budgets',()=>{
  const m=coast.metrics();assert.equal(m.buildings,52);assert.equal(m.retainedCoastalBuildings,44);assert.equal(m.hillsideBuildings,8);assert.equal(m.palms,94);assert.equal(m.ownedLights,2);assert.equal(m.shadowMapResolution,1024);
- assert.ok(m.staticMeshDraws<=96);assert.ok(m.maximumStaticTriangles<=180000);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.ownedGeometryBufferBytes+m.ownedInstanceBufferBytes<=8*1024*1024);assert.equal(m.nearDetailCapacity,384);
+ assert.ok(m.staticMeshDraws<=96);assert.ok(m.maximumStaticTriangles<=180000);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.ownedGeometryBufferBytes+m.ownedInstanceBufferBytes<=8*1024*1024);assert.equal(m.nearDetailCapacity,248);
 });
 geometryTest('route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction',()=>{
  const arrows=root.userData.coastRouteArrows,signs=root.userData.coastRouteSigns;assert.equal(arrows.length,112);assert.equal(signs.length,11);

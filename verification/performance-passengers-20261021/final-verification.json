@@ -1,0 +1,93 @@
+{
+  "schema": "performance-passengers-final-verification-v1",
+  "baseMain": "17dda06f0c417c6c01f8e066cb7897be75969f1a",
+  "productionSourceCheckpoint": "6bf9243a2c469b237540ab277b49cc0ef7f0d7cc",
+  "tests": {
+    "command": "npm test",
+    "exitCode": 0,
+    "total": 946,
+    "passed": 946,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 465669.836916,
+    "log": "full-test-final.log",
+    "sourceUnchangedAfterRun": true
+  },
+  "lua": {
+    "passed": 24,
+    "failed": 0,
+    "log": "lua-final.log"
+  },
+  "checks": [
+    "npm run check",
+    "npm run build",
+    "node verification/demo-continuous/emit-browser-static-projection.mjs --check"
+  ],
+  "numericProjectionProgramSha256": "03384f04166142255cc51b06f40a6843dc5069cf13ab93c7b4652190c87a2284",
+  "longTraffic": {
+    "cars": [
+      12,
+      16,
+      20
+    ],
+    "simulatedSecondsEach": 1800,
+    "allSixBridgeLanes": true,
+    "zero3DObbOverlaps": true,
+    "minimumIndividualDistanceMetres": [
+      21481.371936662665,
+      21330.876000621378,
+      21385.344197561375
+    ]
+  },
+  "productionSourceSha256": {
+    "config": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "physics-main": "8696d1d4140f1045f01c9c96ed8ef59b61c64c13cb449e0d8b1c1cc45ed23954",
+    "ui-hud": "0ef476a15079a45fd5e7b8292d81f2bc5962ee4376560ba90d01a68b90913b6a",
+    "world": "579eb3e4a001d75e05ea7f4a3fa5bb4e1aa30382a9f87560c6cb52bf2e811a24",
+    "taxi": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "coast-map": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7"
+  },
+  "rootBundle": {
+    "bytes": 4889536,
+    "sha256": "0f10386154883aa989ca07be22398a73ce364d7965d365db27e8e0ec99bb19d7",
+    "gitBlob": "9a2dfc0b097a2b2730f997527e866d3701ee774f",
+    "allChangedSourcesIncludedVerbatim": true,
+    "publicOutputIdentical": true
+  },
+  "sceneBudget": {
+    "city": {
+      "originalBuildings": 99,
+      "buildings": 227,
+      "meshes": 61,
+      "triangles": 51144,
+      "lights": 0,
+      "helipads": 35,
+      "skybridges": 2
+    },
+    "coast": {
+      "staticMeshBatches": 83,
+      "staticTriangles": 153958,
+      "maximumStaticTriangles": 153958,
+      "shadowCasterBatches": 30,
+      "shadowTriangles": 75158,
+      "persistentPalmCrowns": 94,
+      "persistentEntryReveals": 248
+    },
+    "passengers": {
+      "capacity": 10,
+      "waitingStops": 5,
+      "fixedMarkerGroups": 6,
+      "maximumMarkerMeshes": 18,
+      "newLights": 0,
+      "note": "Separate bounded dynamic taxi marker budget, not included in coast static scene count."
+    }
+  },
+  "acceptanceLimits": [
+    "No GPU/WebGL compilation, exposure or phone-FPS acceptance in available environment",
+    "No user-device temperature measurement",
+    "Original CPU texture-pixel inspection is not an in-game screenshot",
+    "Official reference page text read; image pixels unavailable after cloud browser navigation failures; no third-party assets copied"
+  ],
+  "notPublishedYet": true
+}

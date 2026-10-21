@@ -31,8 +31,8 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
 }, () => {
   const h = layout(); assert.equal(h.c.THREE.REVISION, '128');
   assert.equal(h.width, 24); assert.equal(h.lane, 4); assert.equal(h.spawn, 6); assert.equal(h.stop, 8);
-  assert.equal(h.buildings.length, 99);
-  assert.equal(h.buildings.filter(b => b.kind === 'low').length, 64);
+  assert.equal(h.buildings.length, 227);
+  assert.equal(h.buildings.filter(b => b.kind === 'low').length, 192);
   assert.equal(h.buildings.filter(b => b.isHelipad).length, 35, 'retain all 35 rooftop refill functions');
   const landmarks = h.buildings.filter(b => b.kind === 'landmark');
   assert.equal(landmarks.length, 1); assert.equal(landmarks[0].height, 180);
@@ -46,10 +46,11 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     if (o.isLight) lights++; if (o.isMesh) meshes++;
     if (o.geometry?.parameters?.height === 4.2 && o.geometry.parameters.depth === 5.8) bridges++;
     if (o.geometry?.type === 'BoxGeometry' && o.castShadow) boxes++;
-    if (o.geometry?.type === 'CylinderGeometry' && o.geometry.parameters.height === 14) { beams++; assert.equal(o.material.opacity, .10); }
+    if (o.geometry?.type === 'CylinderGeometry' && o.geometry.parameters.height === 14) { beams+=o.count||1; assert.equal(o.material.opacity, .10); }
   });
-  assert.equal(bridges, 2); assert.equal(beams, 35); assert.equal(lights, 0); assert.equal(boxes, 99);
-  assert.ok(meshes < 1903, 'simplify actual scene objects, not extra per-frame visibility work');
+  assert.equal(bridges, 2); assert.equal(beams, 35); assert.equal(lights, 0); assert.equal(boxes, 6);
+  assert.ok(meshes < 100, 'batch the denser city rather than multiplying per-window/roof scene work');
+  assert.equal(h.root.userData.cityArchitecture.families.length,6);assert.equal(new Set(h.buildings.map(b=>b.family)).size,6);
   for (const pair of [-1050, -750]) {
     const endpoints = h.buildings.filter(b => b.bridgePair === pair);
     assert.equal(endpoints.length, 2); assert.ok(endpoints.every(b => b.blockX === -750 && b.blockZ === pair));
@@ -58,10 +59,11 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
   h.root.updateMatrixWorld(true);
   for (const b of h.buildings) {
     assert.ok(b.minX >= -1200 && b.maxX <= 1200 && b.minZ >= -1200 && b.maxZ <= 1200, 'all actual building boxes stay inside city boundaries');
-    const mesh = h.root.getObjectByName(`city-building-${b.id}`), bounds = new h.c.THREE.Box3().setFromObject(mesh);
+    const mesh = h.root.getObjectByName(b.renderBatch),matrix=new h.c.THREE.Matrix4();mesh.getMatrixAt(b.renderIndex,matrix);mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox.clone().applyMatrix4(matrix);
+    assert.equal(mesh.userData.cityInstances[b.renderIndex],b.id);
     for (const [actual, expected] of [[bounds.min.x,b.minX],[bounds.max.x,b.maxX],[bounds.min.z,b.minZ],[bounds.max.z,b.maxZ],[bounds.max.y,b.height]]) assert.ok(Math.abs(actual - expected) < 1e-6, 'rendered and collision boxes are identical');
     if (b.kind === 'low') {
-      assert.ok(b.height >= 18 && b.height <= 28);
+      assert.ok(b.height >= 14 && b.height <= 28);
       assert.ok(b.w === 30 || b.d === 30);
       assert.ok(b.x === b.blockX || b.z === b.blockZ, 'frontage sits at street-segment midpoint, not at a corner');
     } else if (b.kind !== 'landmark') assert.ok(b.height >= 76 && b.height <= 120);
@@ -88,7 +90,8 @@ test('real Three r128 city layout has low mid-block frontage, recessed towers an
     driving.step(1/60);
     assert.ok(Math.abs(driving.state.y-b.height)<1e-8, 'production motion lands on the same rendered roof');
     assert.equal(driving.state.vy,0); assert.equal(driving.impacts.length,0);
-    assert.ok(driving.state.airRemaining>5, 'existing landed roof recharge still works');
+    assert.ok(Math.abs(driving.state.airRemaining-5-(b.isHelipad?10:4)/60)<1e-8, '35 helipads retain10/s; all ordinary roofs use the inherited4/s, not an added pad bonus');
+    assert.equal(Boolean(driving.state.hasTriggeredHelipad),b.isHelipad);
   }
 });
 function segmentHitsBox(a, b, box) {
@@ -138,5 +141,5 @@ test('portrait default approach contains nearby high-rise accents without closin
  assert.equal(accents.filter(b=>frustum.intersectsBox(new T.Box3(new T.Vector3(b.minX,0,b.minZ),new T.Vector3(b.maxX,b.height,b.maxZ)))).length,2);
  const full=accents.find(b=>b.kind==='tower');for(const x of[full.minX,full.maxX])for(const z of[full.minZ,full.maxZ])for(const y of[0,full.height]){const p=new T.Vector3(x,y,z).project(camera);assert.ok(Math.abs(p.x)<.98&&Math.abs(p.y)<.98,'all eight actual 96m tower corners, including roof and both façade edges, inside portrait image');}
 
- const apply=h.root.userData.applyWeather;apply({daylight:true});const day=h.root.getObjectByName('city-building-0').material.color.getHex();apply({rain:false});assert.notEqual(h.root.getObjectByName('city-building-0').material.color.getHex(),day);assert.equal(h.root.getObjectByName('city-lane-paint').material.color.getHex(),0xd9dfe5);
+ const apply=h.root.userData.applyWeather;apply({daylight:true});const day=h.root.getObjectByName(h.buildings[0].renderBatch).material.color.getHex();apply({rain:false});assert.notEqual(h.root.getObjectByName(h.buildings[0].renderBatch).material.color.getHex(),day);assert.equal(h.root.getObjectByName('city-lane-paint').material.color.getHex(),0xd9dfe5);
 });

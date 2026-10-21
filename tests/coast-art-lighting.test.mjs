@@ -31,13 +31,13 @@ function harness(){
 }
 function lightValues(light){return {color:Array.from(light.color.toArray()),intensity:light.intensity,position:Array.from(light.position.toArray())};}
 
-test('authorized city layout changes preserve the shared/highway world and read-only coast bridge',()=>{
+test('authorized city layout and explicit renderer power/pixel policy preserve other shared world bytes and read-only coast bridge',()=>{
  assert.equal(world.split(bridgeSource).length,2);
  const begin=world.indexOf('function buildOpenWorldCity()'),end=world.indexOf('buildOpenWorldCity();')+'buildOpenWorldCity();'.length;
  assert.ok(begin>=0&&end>begin);
  const nonCity=world.slice(0,begin)+'// CITY_LAYOUT_OWNERSHIP_BOUNDARY\n'+world.slice(end);
  assert.equal(contract.cityRevision.baseCommit,'907a7029925d70ac1ebcd3e4e766767d599739e3');
- assert.equal(sha(nonCity),contract.cityRevision.nonCityWorldSha256);
+ assert.equal(sha(nonCity.replace("powerPreference: 'default'","powerPreference: 'high-performance'").replace("Math.min(window.devicePixelRatio || 1, window.matchMedia?.('(pointer: coarse)').matches ? 1.25 : 1.5)","Math.min(window.devicePixelRatio, 2)")),contract.cityRevision.nonCityWorldSha256);
  assert.equal(Object.hasOwn(EXPECTED_SOURCE_HASHES,'src/world.js'),false);
  for(const [path,expected] of Object.entries(EXPECTED_SOURCE_HASHES))assert.equal(sha(read(path)),expected,path);
 });

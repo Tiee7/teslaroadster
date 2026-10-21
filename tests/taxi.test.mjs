@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 
 const source = readFileSync(new URL('../src/taxi.js', import.meta.url), 'utf8');
 const config = readFileSync(new URL('../src/config.js', import.meta.url), 'utf8');
@@ -45,17 +45,12 @@ test('all stops and shortest-route segments stay on the connected city asphalt g
   assert.equal(core.shortestRoute(graph, -1, 1), null);
 });
 
-test('pickup stops and every drivable route edge clear the actual generated city building collision boxes', () => {
+test('pickup stops and every drivable route edge clear the actual generated city building collision boxes',{skip:!existsSync('/tmp/roadster-three.min.js')&&'Official production Three r128 required'}, () => {
   const world = readFileSync(new URL('../src/world.js', import.meta.url), 'utf8');
-  const generation = world.slice(world.indexOf('  const towersForSkybridges = []', world.indexOf('function buildOpenWorldCity()')), world.indexOf('  // High-Altitude Glass Pedestrian Skybridges'));
-  const boundsContext = vm.createContext({
-    CITY_ROAD_WIDTH: 21, CITY_BUILDING_SETBACK: 12, cityEnvGroup: new Object3D(), cityBuildings: [], bldgMats: [{}, {}, {}], trimMat: {}, landmarkTrimMat: {},
-    windowLitMat: {}, windowWarmMat: {}, titaniumMaterial: {}, helipadRingMat: {}, helipadMarkMat: {},
-    THREE: { Mesh, BoxGeometry: Geometry, CylinderGeometry: Geometry, SphereGeometry: Geometry,
-      PlaneGeometry: Geometry, RingGeometry: Geometry, MeshBasicMaterial: Material },
-  });
-  vm.runInContext(generation, boundsContext);
-  assert.equal(boundsContext.cityBuildings.length, 99);
+  const boundsContext=vm.createContext({console});vm.runInContext(readFileSync('/tmp/roadster-three.min.js','utf8'),boundsContext);vm.runInContext(config,boundsContext);
+  const generation=world.slice(world.indexOf('function buildOpenWorldCity()'),world.indexOf('buildOpenWorldCity();')+21);
+  vm.runInContext(`const cityEnvGroup=new THREE.Group();globalThis.cityBuildings=[];let cityAsphaltMat=null,cityAsphaltEWMat=null;const dashMat=new THREE.MeshBasicMaterial(),titaniumMaterial=new THREE.MeshStandardMaterial();const createWetRoadDetail=()=>({});${generation}`,boundsContext);
+  assert.equal(boundsContext.cityBuildings.length, 227);
   assert.equal(boundsContext.cityBuildings.filter(b => b.isHelipad).length, 35);
   const actualGraph = core.buildRoadGraph(roadCoords, 6.5, boundsContext.cityBuildings, 1200);
   assert.equal(actualGraph.nodes.length, 49);
@@ -147,25 +142,27 @@ test('public entry explains pickup radius and independent fares in both language
   }
 });
 
-test('single-passenger state machine pays once, refills five and ignores other pickup points while occupied', () => {
+test('multi-passenger state machine refills five immediately, preserves its primary and pays each ride once', () => {
   const session = makeSession(); session.start(origin);
   const [trip, other] = session.snapshot().waiting;
   assert.equal(at(session, { ...trip.pickup, y: 2.01 }), null);
   assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 4.01 }), null);
   assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 4 }).type, 'picked-up');
-  assert.equal(session.snapshot().waiting.length, 4);
-  assert.equal(at(session, other.pickup), null);
+  assert.equal(session.snapshot().waiting.length, 5);
+  assert.equal(at(session, other.pickup).type, 'picked-up');
+  assert.equal(session.snapshot().passengers.length, 2);
   assert.equal(session.snapshot().passenger.id, trip.id);
   assert.equal(session.snapshot().score, 0);
   assert.equal(at(session, { ...trip.destination, y: 2.01 }), null);
   assert.equal(at(session, { ...trip.destination, x: trip.destination.x + 2.01 }), null);
   assert.equal(at(session, { ...trip.destination, x: trip.destination.x + 2 }).type, 'delivered');
-  assert.equal(session.snapshot().passenger, null);
+  assert.equal(session.snapshot().passenger?.id ?? null, other.destination.id === trip.destination.id ? null : other.id);
   assert.equal(session.snapshot().waiting.length, 5);
-  assert.equal(session.snapshot().score, trip.fare);
-  assert.equal(session.snapshot().delivered, 1);
+  const earned = trip.fare + (other.destination.id === trip.destination.id ? other.fare : 0);
+  assert.equal(session.snapshot().score, earned);
+  assert.equal(session.snapshot().delivered, other.destination.id === trip.destination.id ? 2 : 1);
   for (let i = 0; i < 5; i++) assert.equal(session.advance(trip.destination), null);
-  assert.equal(session.snapshot().score, trip.fare);
+  assert.equal(session.snapshot().score, earned);
 });
 
 test('distance-based fares are integral, monotonic and bounded at 1000–3000', () => {
@@ -229,7 +226,7 @@ class Object3D {
 class Geometry { rotateX() { return this; } constructor(...args) { this.args = args; this.disposed = false; } dispose() { this.disposed = true; } }
 class Material { constructor(options) { Object.assign(this, options); this.disposed = false; } dispose() { this.disposed = true; } }
 class Mesh extends Object3D { constructor(geometry, material) { super(); this.geometry = geometry; this.material = material; } }
-function harness() {
+function harness(withCoast = false) {
   const elements = Object.fromEntries(['modal-map-select', 'modal-help', 'modal-destroyed', 'hud-footer', 'hud-top-container', 'hud-main', 'btn-city-taxi', 'city-taxi-help'].map(id => [id, new Element()]));
   elements['hud-top-container'].appendChild(elements['hud-main']);
   const document = { hidden: false, body: new Element(), getElementById: id => elements[id] || null, createElement: () => new Element() };
@@ -242,10 +239,11 @@ function harness() {
   const state = { ...origin, yaw: 0, isDestroyed: false, score: 123, carsCleared: 10 };
   const context = vm.createContext({ window, document, Element, state, currentLang: 'en', currentMap: 'city', lastTime: 1,
     Math: Object.assign(Object.create(Math), { random: random(1) }),
-    CITY_TAXI_STOP_OFFSET: 6.5, CITY_ROAD_COORDS: roadCoords, cityBuildings: [], CITY_HALF_BOUND: 1200, cityEnvGroup: group, performance: { now: () => 9999 },
+    CITY_TAXI_STOP_OFFSET: 6.5, CITY_ROAD_COORDS: roadCoords, cityBuildings: [], CITY_HALF_BOUND: 1200, cityEnvGroup: group, scene: new Object3D(), performance: { now: () => 9999 },
     sound: { beep() {} }, clearAllInputKeys: () => { context.clears = (context.clears || 0) + 1; },
     THREE: { DoubleSide: 2, Group: Object3D, Mesh, CylinderGeometry: Geometry, RingGeometry: Geometry, MeshBasicMaterial: Material },
   });
+  if(withCoast){vm.runInContext(readFileSync(new URL('../src/coast-road-network.js',import.meta.url),'utf8'),context);window.RoadsterCoast={network:vm.runInContext('RoadsterCoastRoads',context)};}
   vm.runInContext(source, context);
   const taxi = window.RoadsterTaxi;
   const activate = () => taxi.ensureDefault(); // city lifecycle activation, not a user shortcut
@@ -313,15 +311,16 @@ test('scene has five readable double-sided white beams and only one green destin
   const trip = h.taxi.snapshot().waiting[0];
   h.move({ ...trip.pickup, y: 10 }); assert.equal(h.taxi.snapshot().passenger, null);
   h.move(trip.pickup);
-  assert.equal(h.taxi.snapshot().passenger.id, trip.id); assert.equal(markers.filter(x => x.visible).length, 1);
+  assert.equal(h.taxi.snapshot().passenger.id, trip.id); assert.equal(markers.filter(x => x.visible).length, 6);
   assert.equal(markers.at(-1).visible, true); assert.equal(markers.at(-1).children[0].material.color, 0x22ff77);
   assert.equal(markers.at(-1).position.x, trip.destination.x); assert.equal(markers.at(-1).position.z, trip.destination.z);
   const other = h.taxi.snapshot().waiting.find(candidate => !core.withinArrival(trip.pickup, candidate.pickup, trip.destination));
   assert.ok(other, 'use another pickup that does not sweep through this green destination');
   h.move(other.pickup); assert.equal(h.taxi.snapshot().passenger.id, trip.id);
-  assert.equal(markers.filter(x => x.visible).length, 1);
+  assert.equal(markers.filter(x => x.visible).length, 6);
+  assert.equal(h.taxi.snapshot().passengers.length, 2);
   h.move(trip.destination); assert.equal(h.taxi.snapshot().score, trip.fare);
-  assert.equal(markers.filter(x => x.visible).length, 5); assert.equal(markers.at(-1).visible, false);
+  assert.equal(markers.filter(x => x.visible).length, 6); assert.equal(markers.at(-1).visible, true);
   assert.equal(h.state.score, 123); assert.equal(h.state.carsCleared, 10);
   const scoreHud = h.elements['hud-footer'].children.at(-1);
   assert.equal(scoreHud.children.length, 1); assert.equal(scoreHud.children[0].textContent, trip.fare.toLocaleString());
@@ -443,7 +442,8 @@ test('integration exposes a city entry, retains zoom brackets and keeps taxi far
   assert.match(physics, /state\.isDestroyed = true;\s*window\.RoadsterTaxi\?\.onDestroyed\(\);\s*RoadsterDrivingScore\.freeze\(state\)/);
   assert.match(physics, /if \(window\.RoadsterDemo\?\.isActive\(\)\) \{\s*coastFrameClock\.clear\(\);coastSoundFrame=null;\s*window\.RoadsterDemo\.advanceFrame\(frameSeconds, updateSimulation\);\s*\} else if \(currentMap === 'city'\)/);
   assert.match(physics, /cityFrameClock\.advance\(frameSeconds, \(step, presentationDt\) => \{\s*updateSimulation\(step, presentationDt\);\s*window\.RoadsterTaxi\?\.tick\(false\);\s*\}, cityFrameActive\)/);
-  assert.match(physics, /updateSimulation\(dt\);\s*\}\s*if \(currentMap === 'city'\) window\.RoadsterTaxi\?\.present\?\.\(\);\s*else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/);
+  assert.match(physics, /if\(!renderFrame\)return;/);
+  assert.match(physics, /if \(currentMap === 'city' \|\| currentMap === 'coast'\) window\.RoadsterTaxi\?\.present\?\.\(\);\s*else window\.RoadsterTaxi\?\.tick\(\);\s*if \(state\.isDestroyed\) updateDestroyedScores\(\);\s*window\.RoadsterTrafficAssets\?\.updateLods\(trafficCars, camera\.position\);\s*renderer\.render/);
 
   const bundler = readFileSync(new URL('../bundle_app.py', import.meta.url), 'utf8');
   assert.ok(bundler.indexOf("'vehicles.js'") < bundler.indexOf("'taxi.js'"));
@@ -746,4 +746,23 @@ test('short landscape notice space is bounded by the header, footer and occupied
     const panels = Math.max(0, height - header - footer - notices - navigation - 16);
     assert.ok(header + navigation + notices + 4 + panels <= height - footer);
   }
+});
+
+
+test('coast defaults use real elevated stops, true Y, bounded six marker pools and map-owned cleanup',()=>{
+ const h=harness(true);h.context.currentMap='coast';Object.assign(h.state,{coastSupportId:'road-0',coastDetached:false,wasAirborne:false});h.activate();
+ assert.equal(h.taxi.snapshot().active,true);assert.equal(h.taxi.snapshot().capacity,10);assert.equal(h.group.children.length,0);assert.equal(h.context.scene.children.length,1);
+ const markers=h.context.scene.children[0].children;assert.equal(markers.length,6);const trip=h.taxi.snapshot().waiting.find(t=>t.pickup.y>6);assert.ok(trip);
+ const index=h.taxi.snapshot().waiting.indexOf(trip);assert.equal(markers[index].position.y,trip.pickup.y);
+ h.move({...trip.pickup,y:trip.pickup.y-6});assert.equal(h.taxi.snapshot().passenger,null);
+ h.state.coastSupportId='terrain';h.move({...trip.pickup,y:trip.pickup.y-3});assert.equal(h.taxi.snapshot().passenger,null,'a terrain floor inside the pickup sphere is not the road stop');
+ h.state.coastSupportId='roof';h.move(trip.pickup);assert.equal(h.taxi.snapshot().passenger,null,'an elevated roof is not the road stop');h.state.coastSupportId='road-0';
+ h.state.wasAirborne=true;h.move(trip.pickup);assert.equal(h.taxi.snapshot().passenger,null);h.state.wasAirborne=false;h.move(trip.pickup);assert.equal(h.taxi.snapshot().passenger.id,trip.id);
+ assert.equal(markers.at(-1).position.y,trip.destination.y);assert.equal(markers.filter(m=>m.visible).length,6);
+ const oldGeometry=markers[0].children[0].geometry;h.context.currentMap='city';h.taxi.tick();assert.equal(oldGeometry.disposed,true);assert.equal(h.context.scene.children.length,0);assert.equal(h.group.children.length,1);assert.ok(h.taxi.snapshot().waiting.every(t=>t.pickup.y===0));assert.equal(h.taxi.snapshot().passengers.length,0);
+ h.context.currentMap='coast';h.taxi.tick();assert.equal(h.group.children.length,0);assert.equal(h.context.scene.children.length,1);assert.ok(h.taxi.snapshot().waiting.some(t=>t.pickup.y>6));h.taxi.stop();assert.equal(h.context.scene.children.length,0);
+});
+test('coast reset starts passengers after the actual elevated spawn and traffic recovery, never at stale city Y',()=>{
+ const hud=readFileSync(new URL('../src/ui-hud.js',import.meta.url),'utf8'),start=hud.indexOf('function resetCar('),end=hud.indexOf('function ',start+16),reset=hud.slice(start,end);
+ assert.ok(reset.indexOf('Object.assign(state,{x:p.x,y:p.y')<reset.indexOf('window.RoadsterTaxi?.onReset()'));assert.ok(reset.indexOf('recoverTraffic(trafficCars,state)')<reset.indexOf('window.RoadsterTaxi?.onReset()'));
 });

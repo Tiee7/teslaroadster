@@ -1,0 +1,27 @@
+{
+  "schema": "performance-passengers-source-epoch-v1",
+  "baseMain": "17dda06f0c417c6c01f8e066cb7897be75969f1a",
+  "inheritedSourceEpoch": "verification/quiet-h-brake-20261021/source-epoch.json",
+  "inheritedSourceEpochSha256": "b4d3d02daf4ce70bd1111bd4d06e4893d07830f47b1fe17e612e97b1ef32c2ba",
+  "authorizedSourceSha256": {
+    "config": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "physics-main": "8696d1d4140f1045f01c9c96ed8ef59b61c64c13cb449e0d8b1c1cc45ed23954",
+    "ui-hud": "0ef476a15079a45fd5e7b8292d81f2bc5962ee4376560ba90d01a68b90913b6a",
+    "world": "579eb3e4a001d75e05ea7f4a3fa5bb4e1aa30382a9f87560c6cb52bf2e811a24",
+    "taxi": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "coast-map": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7"
+  },
+  "baselineFixtureSha256": {
+    "physics-main.js": "c1825f62ab06be97fc5a7cddfa5f14e03813d533cf5f0a54d58ab4f2a9d02735",
+    "ui-hud.js": "db402fb60ebdd4cbf46959b3ca5e4483df23b45552223359a8a490bff731825f",
+    "config.js": "732f4907703138076149d7af989e18f378c64893fd0426eeecccf7ce162beff8",
+    "coast-road-network.js": "7ae61f2735a9b0106b2eaf288d1b322f42affa032c423fe0a65a54c97ca2c187",
+    "world.js": "b10de6aecd84f504a899a2fbdfc5799262afc5611b074959702ae7279c2e6109",
+    "taxi.js": "b7a3a20b83188c803a2af296c37f474f6784c766e5a30211f7a3ed730d48e8dd",
+    "coast-map.js": "4242c4c6a739c1e5026e2bd013c282f80dc15cd69db74254dcfafcd4b0328c6e"
+  },
+  "scope": "Bounded conservative collision candidates, static persistent coast details, render-only duplicate-frame/DPR control, lower clear-day lighting, capacity10/default coast taxi, city227 original instance-batched facades. No force/units/sound generation changes.",
+  "numericProof": "coast-map-isolation 40 production scenarios compare every numeric/boolean state and impact for300ticks; additional baseline segment identity test; projection numeric program remains unchanged",
+  "performanceBoundary": "CPU native Three scene budgets and Node logic only; no user-device temperature, real GPU FPS or WebGL visual acceptance claim"
+}

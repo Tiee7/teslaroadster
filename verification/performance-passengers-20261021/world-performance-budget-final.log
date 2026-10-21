@@ -1,0 +1,13 @@
+✔ 227-city architecture preserves every original99 collider and function while batching richer original façades (122.496609ms)
+ℹ {"scope":"Actual Three r128 scene structure; not measured GPU renderer calls/FPS","baseline":{"meshes":758,"triangles":45000,"casters":99,"shadowTriangles":1188,"geometries":721,"materials":53,"textureBytes":0},"candidate":{"meshes":61,"triangles":51144,"casters":6,"shadowTriangles":2724,"geometries":50,"materials":23,"textureBytes":393216}}
+✔ coast details exist at all distances with lower maximum/shadow budgets, never proximity upload churn (956.948265ms)
+ℹ {"active":true,"builds":1,"disposals":0,"failedBuilds":0,"cachedCpuPixelBytes":262144,"ownedLights":2,"shadowMapResolution":1024,"shadowSpanMetres":160,"ownedGeometries":41,"ownedMaterials":53,"ownedTextures":16,"textureBytes":1256107,"ownedGeometryBufferBytes":4371088,"ownedInstanceBufferBytes":703836,"staticMeshDraws":83,"staticTriangles":153958,"maximumStaticTriangles":153958,"nearPalms":0,"farPalms":94,"foliageRefreshes":0,"nearDetailInstances":248,"nearDetailCapacity":248,"nearDetailMatrixBytes":15872,"detailRefreshes":0,"shadowCasterBatches":30,"shadowCasterTriangles":75158,"maximumShadowCasterTriangles":75158,"instances":10878,"buildings":52,"retainedCoastalBuildings":44,"hillsideBuildings":8,"palms":94,"textureEstimateScope":"Owned sampled texture levels only; excludes shadow render target and driver allocations","performanceBoundary":"Static scene structure, not measured renderer draw calls or FPS"}
+✔ renderer pixels are explicitly bounded without changing camera FOV or world metres (3.570601ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1196.338773
