@@ -1,6 +1,7 @@
 """CPU geometry diagrams, explicitly NOT game/WebGL screenshots or material QA."""
 import json
 import math
+import re
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -10,12 +11,14 @@ data = json.loads((root / 'layout-before-after.json').read_text())
 font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 17)
 small = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 13)
 width, height = 620, 400
+vehicles = (root.parent.parent / 'src/vehicles.js').read_text()
+cockpit = {key: float(re.search(r'\b'+key+r':\s*(-?[\d.]+)', vehicles).group(1)) for key in ['eyeHeight', 'eyeZ', 'downwardSlope']}
 
 def perspective(buildings, position, yaw=0, fpv=False):
     x, z = position
     direction = np.array([-math.sin(yaw), 0, -math.cos(yaw)])
-    eye = np.array([x, 1.1 if fpv else 2.3275, z]) - direction * (0 if fpv else 4.05)
-    target = np.array([x, 1.05 if fpv else .65, z]) + direction * (50 if fpv else 10)
+    eye = np.array([x, cockpit['eyeHeight'] if fpv else 2.3275, z]) - direction * (cockpit['eyeZ'] if fpv else 4.05)
+    target = eye + direction * 50 + np.array([0, -cockpit['downwardSlope'] * 50, 0]) if fpv else np.array([x, .65, z]) + direction * 10
     forward = target - eye
     forward /= np.linalg.norm(forward)
     right = np.cross(forward, [0, 1, 0]); right /= np.linalg.norm(right)

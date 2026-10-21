@@ -95,10 +95,11 @@ test('all 49 city junctions expose cross traffic from four driving approaches be
   skip: !existsSync(runtime) && 'Official Three r128 is required for geometry checks',
 }, () => {
   const h = layout(); let rays = 0;
-  for (const x of h.roads) for (const z of h.roads) for (const axis of ['x','z']) for (const sign of [-1,1]) for (const distance of [45,30,15]) for (const crossSign of [-1,1]) {
+  for (const x of h.roads) for (const z of h.roads) for (const axis of ['x','z']) for (const sign of [-1,1]) for (const distance of [45,30,15]) for (const crossSign of [-1,1]) for (const lane of [1.75,5.25,8.75]) for (const crossLane of [1.75,5.25,8.75]) {
     const other = axis === 'x' ? 'z' : 'x';
-    const eye = {x,z}, target = {x,z}; eye[axis] += sign * distance; eye[other] += sign * h.spawn; target[other] += crossSign * 80;
+    const eye = {x,z}, target = {x,z}; eye[axis] += sign * distance; eye[other] += sign * lane;
+    target[other] += crossSign * 80; target[axis] -= crossSign * crossLane;
     assert.ok(h.buildings.every(box => !segmentHitsBox(eye, target, box)), `occluded ${x},${z} ${axis}${sign} distance ${distance}`); rays++;
   }
-  assert.equal(rays, 1176);
+  assert.equal(rays, 10584, 'three ego lanes × three cross-traffic lanes, both sides and four approaches');
 });
