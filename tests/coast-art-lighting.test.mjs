@@ -31,8 +31,13 @@ function harness(){
 }
 function lightValues(light){return {color:Array.from(light.color.toArray()),intensity:light.intensity,position:Array.from(light.position.toArray())};}
 
-test('world adds only an explicit read-only coast bridge; every numerical epoch input remains byte-identical',()=>{
- assert.equal(world.split(bridgeSource).length,2);assert.equal(sha(world.replace(bridgeSource,'')),contract.originalWorldSha256);
+test('authorized city layout changes preserve the shared/highway world and read-only coast bridge',()=>{
+ assert.equal(world.split(bridgeSource).length,2);
+ const begin=world.indexOf('function buildOpenWorldCity()'),end=world.indexOf('buildOpenWorldCity();')+'buildOpenWorldCity();'.length;
+ assert.ok(begin>=0&&end>begin);
+ const nonCity=world.slice(0,begin)+'// CITY_LAYOUT_OWNERSHIP_BOUNDARY\n'+world.slice(end);
+ assert.equal(contract.cityRevision.baseCommit,'907a7029925d70ac1ebcd3e4e766767d599739e3');
+ assert.equal(sha(nonCity),contract.cityRevision.nonCityWorldSha256);
  assert.equal(Object.hasOwn(EXPECTED_SOURCE_HASHES,'src/world.js'),false);
  for(const [path,expected] of Object.entries(EXPECTED_SOURCE_HASHES))assert.equal(sha(read(path)),expected,path);
 });

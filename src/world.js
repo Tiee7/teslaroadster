@@ -400,6 +400,7 @@ function buildOpenWorldCity() {
     polygonOffsetUnits: -8
   });
 
+  const cityLanePaint = [], cityCrosswalkPaint = [];
   CITY_ROAD_COORDS.forEach((coord) => {
     const nsRoad = new THREE.Mesh(new THREE.PlaneGeometry(CITY_ROAD_WIDTH, CITY_HALF_BOUND * 2), cityAsphaltMat);
     nsRoad.rotation.x = -Math.PI / 2;
@@ -422,33 +423,35 @@ function buildOpenWorldCity() {
     cityEnvGroup.add(ewCenter);
 
     // Add dashed lane dividers along every N-S and E-W avenue (skipping intersection interiors to prevent overlap)
-    const cityDashNSGeo = new THREE.PlaneGeometry(0.16, 4.8);
-    const cityDashEWGeo = new THREE.PlaneGeometry(4.8, 0.16);
     for (let dPos = -CITY_HALF_BOUND + 24; dPos <= CITY_HALF_BOUND - 24; dPos += 16) {
-      if (CITY_ROAD_COORDS.some((c) => Math.abs(dPos - c) < 20)) continue;
-      [-5.3, 5.3, -10.6, 10.6].forEach((laneOff) => {
-        const nsDash = new THREE.Mesh(cityDashNSGeo, dashMat);
-        nsDash.rotation.x = -Math.PI / 2;
-        nsDash.position.set(coord + laneOff, 0.08, dPos);
-        const ewDash = new THREE.Mesh(cityDashEWGeo, dashMat);
-        ewDash.rotation.x = -Math.PI / 2;
-        ewDash.position.set(dPos, 0.10, coord + laneOff);
-        cityEnvGroup.add(nsDash, ewDash);
+      if (CITY_ROAD_COORDS.some((c) => Math.abs(dPos - c) < CITY_ROAD_WIDTH / 2 + 3)) continue;
+      [-1, 1, -2, 2].map(lane => lane * CITY_LANE_WIDTH).forEach((laneOff) => {
+        cityLanePaint.push([coord + laneOff, 0.08, dPos, 0.16, 4.8], [dPos, 0.10, coord + laneOff, 4.8, 0.16]);
       });
     }
 
     CITY_ROAD_COORDS.forEach((crossCoord) => {
-      for (let s = -12; s <= 12; s += 3.0) {
-        const cw1 = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.5), crosswalkWhiteMat);
-        cw1.rotation.x = -Math.PI / 2;
-        cw1.position.set(coord + s, 0.13, crossCoord + 17.5);
-        const cw2 = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.5), crosswalkWhiteMat);
-        cw2.rotation.x = -Math.PI / 2;
-        cw2.position.set(coord + s, 0.13, crossCoord - 17.5);
-        cityEnvGroup.add(cw1, cw2);
+      for (let s = -CITY_ROAD_WIDTH / 2 + 1.5; s <= CITY_ROAD_WIDTH / 2 - 1.5; s += 3.0) {
+        cityCrosswalkPaint.push([coord + s, 0.13, crossCoord + CITY_ROAD_WIDTH / 2 + 1.5, 1.4, 0.5],
+          [coord + s, 0.13, crossCoord - CITY_ROAD_WIDTH / 2 - 1.5, 1.4, 0.5]);
       }
     });
   });
+
+  // Same paint footprints, two draw calls instead of >8,000 separate meshes.
+  // No new scenery lights/shadows/obstacles; near street frontage reuses towers.
+  function batchCityPaint(name, marks, material) {
+    const mesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), material, marks.length);
+    const pose = new THREE.Object3D(); pose.rotation.x = -Math.PI / 2;
+    marks.forEach(([x, y, z, w, d], i) => {
+      pose.position.set(x, y, z); pose.scale.set(w, d, 1); pose.updateMatrix(); mesh.setMatrixAt(i, pose.matrix);
+    });
+    mesh.frustumCulled = false;
+    mesh.name = name; mesh.userData.cityPaintCount = marks.length;
+    mesh.instanceMatrix.needsUpdate = true; cityEnvGroup.add(mesh);
+  }
+  batchCityPaint('city-lane-paint', cityLanePaint, dashMat);
+  batchCityPaint('city-crosswalk-paint', cityCrosswalkPaint, crosswalkWhiteMat);
 
   // City Energy Boundary Walls (Taller 45m perimeter shield)
   const wallHeight = 45;
@@ -500,10 +503,13 @@ function buildOpenWorldCity() {
       const isCentralCitadel = (bx === 150 && bz === -150);
 
       for (let sub = 0; sub < 2; sub++) {
-        const ox = bx + (sub === 0 ? -52 : 52);
-        const oz = bz + ((bIdx % 2 === 0) ? -44 : 44);
         const w = isCentralCitadel && sub === 0 ? 58 : (36 + (bIdx % 4) * 10);
         const d = isCentralCitadel && sub === 0 ? 58 : (36 + ((bIdx + 1) % 4) * 10);
+        // Reuse the same 128 towers/roof details. Their actual collision boxes
+        // follow this pose: a 6 m frontage gap supplies nearby motion cues
+        // without adding a forest of new meshes, lights, or shadow casters.
+        const ox = bx + (sub === 0 ? -1 : 1) * (150 - CITY_ROAD_WIDTH / 2 - CITY_BUILDING_SETBACK - w / 2);
+        const oz = bz + (bIdx % 2 === 0 ? -1 : 1) * (150 - CITY_ROAD_WIDTH / 2 - CITY_BUILDING_SETBACK - d / 2);
         // Taller skyscrapers: 48m up to 260m!
         const distFactor = Math.max(0.35, 1.0 - Math.hypot(bx, bz) / 1600);
         const h = (isCentralCitadel && sub === 0)
@@ -622,6 +628,7 @@ function buildOpenWorldCity() {
           minX: ox - w / 2, maxX: ox + w / 2,
           minZ: oz - d / 2, maxZ: oz + d / 2,
           x: ox, z: oz, w, d, height: h,
+          legacyX: bx + (sub === 0 ? -52 : 52), legacyZ: bz + (bIdx % 2 === 0 ? -44 : 44),
           isHelipad: isHelipadTower
         };
         cityBuildings.push(buildingDef);
@@ -645,7 +652,8 @@ function buildOpenWorldCity() {
     const t1 = towersForSkybridges[i];
     const t2 = towersForSkybridges[i + 1];
     const dist = Math.hypot(t1.x - t2.x, t1.z - t2.z);
-    if (dist > 30 && dist < 180) {
+    const originalDistance = Math.hypot(t1.legacyX - t2.legacyX, t1.legacyZ - t2.legacyZ);
+    if (originalDistance > 30 && originalDistance < 180) {
       const bridgeH = Math.min(t1.height, t2.height) * 0.72;
       const midX = (t1.x + t2.x) / 2;
       const midZ = (t1.z + t2.z) / 2;

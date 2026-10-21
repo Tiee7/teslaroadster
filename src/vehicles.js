@@ -1764,7 +1764,7 @@ function populateTraffic(count) {
       const isNS = (i % 2 === 0);
       const roadCoord = CITY_ROAD_COORDS[i % CITY_ROAD_COORDS.length];
       const dir = (i % 4 < 2) ? 1 : -1;
-      const laneOffset = dir > 0 ? 5.5 : -5.5;
+      const laneOffset = dir * CITY_LANE_WIDTH * (0.5 + Math.floor(i / (CITY_ROAD_COORDS.length * 2)) % 3);
       const travelPos = -360 + (i / count) * 720;
       const spd = 12 + (i % 5) * 2.0;
 
@@ -1774,13 +1774,13 @@ function populateTraffic(count) {
       if (isNS) {
         x = roadCoord + laneOffset;
         z = travelPos;
-        if (Math.abs(x - 5.5) < 6 && Math.abs(z) < 25) z -= 45;
+        if (Math.abs(x - state.x) < 4 && Math.abs(z - state.z) < 25) z -= 45;
         vz = -dir * spd;
         rotY = dir > 0 ? 0 : Math.PI;
       } else {
         x = travelPos;
         z = roadCoord + laneOffset;
-        if (Math.abs(x - 5.5) < 25 && Math.abs(z) < 6) x -= 45;
+        if (Math.abs(x - state.x) < 25 && Math.abs(z - state.z) < 4) x -= 45;
         vx = -dir * spd;
         rotY = dir > 0 ? Math.PI / 2 : -Math.PI / 2;
       }

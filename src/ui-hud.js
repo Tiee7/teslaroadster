@@ -441,6 +441,7 @@ function switchMap(targetMap) {
 function resetCar() {
   window.RoadsterTouch?.clear();
   window.RoadsterRanked?.abort('reset');
+  window.RoadsterCityFrame?.reset();
   globalThis.window?.RoadsterDemo?.stop();
   if (typeof clearThrusterVisuals === 'function') clearThrusterVisuals();
   if (typeof resetChaseCamera === 'function') resetChaseCamera();
@@ -473,7 +474,7 @@ function resetCar() {
     state.vy = 0.0;
     state.vz = -42.0;
   } else {
-    state.x = 5.5;
+    state.x = CITY_DEFAULT_LANE_OFFSET;
     state.y = 0.0;
     state.z = 0.0;
     state.speed = 24.0;

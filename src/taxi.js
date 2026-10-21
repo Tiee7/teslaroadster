@@ -24,7 +24,7 @@ const CityTaxiModel = (() => {
     });
   }
 
-  function buildRoadGraph(roadCoords, laneOffset = 11.5, buildings = [], halfBound = Infinity) {
+  function buildRoadGraph(roadCoords, laneOffset = 6.5, buildings = [], halfBound = Infinity) {
     const coords = [...roadCoords].sort((a, b) => a - b);
     if (coords.length < 4 || new Set(coords).size !== coords.length || !coords.every(Number.isFinite)) throw new Error('Invalid city road grid');
     const nodes = coords.flatMap((x, col) => coords.map((z, row) => ({
@@ -334,7 +334,7 @@ const CityTaxiModel = (() => {
   }
   function start() {
     if (currentMap !== 'city' || snapshot().active || state.isDestroyed) return false;
-    if (!session) session = CityTaxiModel.createSession(CityTaxiModel.buildRoadGraph(CITY_ROAD_COORDS, 11.5, cityBuildings, CITY_HALF_BOUND));
+    if (!session) session = CityTaxiModel.createSession(CityTaxiModel.buildRoadGraph(CITY_ROAD_COORDS, CITY_TAXI_STOP_OFFSET, cityBuildings, CITY_HALF_BOUND));
     window.RoadsterRanked?.abort('invalid');
     session.start(position()); lastEvent = null; createScene(); syncMarkers(); render();
     return true;
@@ -383,13 +383,13 @@ const CityTaxiModel = (() => {
     start();
     return true;
   }
-  function tick() {
+  function tick(presentFrame = true) {
     if (!snapshot().active) return;
     if (currentMap !== 'city') { stop(); return; }
     if (state.isDestroyed) { onDestroyed(); return; }
-    if (document.hidden || blockedByUi()) { session.pause(position()); renderNavigation(); return; }
+    if (document.hidden || blockedByUi()) { session.pause(position()); if (presentFrame) renderNavigation(); return; }
     const event = session.advance(position(), !state.wasAirborne && Math.abs(state.y) <= CityTaxiModel.GROUND_TOLERANCE);
-    renderNavigation();
+    if (presentFrame) renderNavigation();
     if (!event) return;
     lastEvent = event;
     syncMarkers(); render();
@@ -400,6 +400,7 @@ const CityTaxiModel = (() => {
     clearAllInputKeys(); lastTime = performance.now();
     if (snapshot().active) stop(); else start();
   });
-  window.RoadsterTaxi = Object.freeze({ handleKeydown, tick, stop, onReset, onDestroyed, render, drawCockpit, snapshot });
+  const present = () => { if (snapshot().active) renderNavigation(); };
+  window.RoadsterTaxi = Object.freeze({ handleKeydown, tick, present, stop, onReset, onDestroyed, render, drawCockpit, snapshot });
   renderEntry();
 })();
