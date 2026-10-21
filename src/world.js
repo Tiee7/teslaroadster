@@ -478,162 +478,99 @@ function buildOpenWorldCity() {
     cityEnvGroup.add(wall, cap);
   });
 
+  // Street-view hierarchy: low mid-block frontage, tall forms set well inside.
+  // No per-frame occluder hiding and no extra lights: the geometry itself clears junctions.
   const bldgMats = [
-    new THREE.MeshStandardMaterial({ color: 0x111c2e, metalness: 0.78, roughness: 0.20 }),
-    new THREE.MeshStandardMaterial({ color: 0x0b1320, metalness: 0.85, roughness: 0.16 }),
-    new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.68, roughness: 0.26 })
+    new THREE.MeshStandardMaterial({ color: 0x283241, metalness: 0.34, roughness: 0.62 }),
+    new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.34, roughness: 0.62 })
   ];
-  const windowLitMat = new THREE.MeshBasicMaterial({ color: 0x7dd3fc });
-  const windowWarmMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
-  const neonTrimMats = [
-    new THREE.MeshBasicMaterial({ color: 0x38bdf8 }),
-    new THREE.MeshBasicMaterial({ color: 0x818cf8 }),
-    new THREE.MeshBasicMaterial({ color: 0x2dd4bf })
-  ];
-  const helipadRingMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-  const helipadMarkMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
-
+  const windowLitMat = new THREE.MeshBasicMaterial({ color: 0x648391 });
+  const windowWarmMat = new THREE.MeshBasicMaterial({ color: 0x918b75 });
+  const trimMat = new THREE.MeshBasicMaterial({ color: 0x356678 });
+  const landmarkTrimMat = new THREE.MeshBasicMaterial({ color: 0x3c9aaf });
+  const helipadRingMat = new THREE.MeshBasicMaterial({ color: 0x67bdd0 });
+  const helipadMarkMat = new THREE.MeshBasicMaterial({ color: 0xc6d1d9 });
+  const towersForSkybridges = [];
   const blockCenters = [-1050, -750, -450, -150, 150, 450, 750, 1050];
   let bIdx = 0;
-  const towersForSkybridges = [];
+  function addCityBuilding(bx, bz, ox, oz, w, d, h, kind, district, bridgePair = null) {
+    const isLandmark = kind === 'landmark', isHelipadTower = kind !== 'low';
+    const bMesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), bldgMats[district % 2]);
+    bMesh.name = `city-building-${bIdx}`;
+    bMesh.position.set(ox, h / 2, oz);
+    bMesh.castShadow = true; bMesh.receiveShadow = true;
+    cityEnvGroup.add(bMesh);
+    const bands = kind === 'low' ? [0.3, 0.7] : [0.2, 0.4, 0.6, 0.8];
+    bands.forEach(level => {
+      const band = new THREE.Mesh(new THREE.BoxGeometry(w + 0.3, 0.4, d + 0.3), district % 2 ? windowWarmMat : windowLitMat);
+      band.position.set(ox, h * level, oz); cityEnvGroup.add(band);
+    });
+    if (kind === 'low') {
+      const coping = new THREE.Mesh(new THREE.BoxGeometry(w + 0.4, 0.4, d + 0.4), bldgMats[district % 2]);
+      coping.position.set(ox, h - 0.2, oz); cityEnvGroup.add(coping);
+    } else {
+      const corners = isLandmark ? [[-1,-1],[1,-1],[-1,1],[1,1]] : [[-1,-1],[1,1]];
+      const stripGeo = new THREE.BoxGeometry(0.3, h, 0.3);
+      corners.forEach(([x,z]) => {
+        const strip = new THREE.Mesh(stripGeo, isLandmark ? landmarkTrimMat : trimMat);
+        strip.position.set(ox + x * (w / 2 + 0.05), h / 2, oz + z * (d / 2 + 0.05)); cityEnvGroup.add(strip);
+      });
+    }
+    if (isHelipadTower) {
+      const padR = Math.min(w, d) * 0.38;
+      const padCircle = new THREE.Mesh(new THREE.CylinderGeometry(padR, padR, 0.25, 24), bldgMats[0]);
+      padCircle.position.set(ox, h + 0.12, oz);
 
-  blockCenters.forEach((bx) => {
-    blockCenters.forEach((bz) => {
-      // Landmark SpaceX Starbase Supertall Citadel Spire near center (150, -150)
-      const isCentralCitadel = (bx === 150 && bz === -150);
+      const padOuterRing = new THREE.Mesh(
+        new THREE.RingGeometry(padR * 0.85, padR, 24).rotateX(-Math.PI / 2),
+        helipadRingMat
+      );
+      padOuterRing.position.set(ox, h + 0.28, oz);
 
-      for (let sub = 0; sub < 2; sub++) {
-        const w = isCentralCitadel && sub === 0 ? 58 : (36 + (bIdx % 4) * 10);
-        const d = isCentralCitadel && sub === 0 ? 58 : (36 + ((bIdx + 1) % 4) * 10);
-        // Reuse the same 128 towers/roof details. Their actual collision boxes
-        // follow this pose: a 6 m frontage gap supplies nearby motion cues
-        // without adding a forest of new meshes, lights, or shadow casters.
-        const ox = bx + (sub === 0 ? -1 : 1) * (150 - CITY_ROAD_WIDTH / 2 - CITY_BUILDING_SETBACK - w / 2);
-        const oz = bz + (bIdx % 2 === 0 ? -1 : 1) * (150 - CITY_ROAD_WIDTH / 2 - CITY_BUILDING_SETBACK - d / 2);
-        // Taller skyscrapers: 48m up to 260m!
-        const distFactor = Math.max(0.35, 1.0 - Math.hypot(bx, bz) / 1600);
-        const h = (isCentralCitadel && sub === 0)
-          ? 260
-          : Math.round((48 + (bIdx % 7) * 26 + sub * 18) * (0.75 + 0.55 * distFactor));
+      const bar1 = new THREE.Mesh(new THREE.PlaneGeometry(1.6, padR * 1.1).rotateX(-Math.PI / 2), helipadMarkMat);
+      bar1.position.set(ox - padR * 0.28, h + 0.30, oz);
+      const bar2 = new THREE.Mesh(new THREE.PlaneGeometry(1.6, padR * 1.1).rotateX(-Math.PI / 2), helipadMarkMat);
+      bar2.position.set(ox + padR * 0.28, h + 0.30, oz);
+      const barMid = new THREE.Mesh(new THREE.PlaneGeometry(padR * 0.62, 1.6).rotateX(-Math.PI / 2), helipadMarkMat);
+      barMid.position.set(ox, h + 0.30, oz);
 
-        const bMesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), bldgMats[bIdx % bldgMats.length]);
-        bMesh.position.set(ox, h / 2, oz);
-        bMesh.castShadow = true;
-        bMesh.receiveShadow = true;
-        cityEnvGroup.add(bMesh);
+      cityEnvGroup.add(padCircle, padOuterRing, bar1, bar2, barMid);
 
-        // Architectural illuminated window bands
-        const bandStep = h > 120 ? 16 : 11;
-        for (let floorY = 10; floorY < h - 8; floorY += bandStep) {
-          if ((bIdx + Math.round(floorY)) % 2 === 0) {
-            const winBand = new THREE.Mesh(
-              new THREE.BoxGeometry(w + 0.35, 1.6, d + 0.35),
-              (bIdx % 2 === 0) ? windowLitMat : windowWarmMat
-            );
-            winBand.position.set(ox, floorY, oz);
-            cityEnvGroup.add(winBand);
-          }
-        }
+      const skyBeam = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.25, 1.2, 14, 12),
+        new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.10, side: THREE.DoubleSide })
+      );
+      skyBeam.position.set(ox, h + 7, oz);
+      cityEnvGroup.add(skyBeam);
+    }
 
-        // Rooftop crown neon ring & vertical corner neon strips (V10/V11)
-        const trimMat = neonTrimMats[bIdx % neonTrimMats.length];
-        const roofRing = new THREE.Mesh(
-          new THREE.BoxGeometry(w + 0.8, 0.85, d + 0.8),
-          trimMat
-        );
-        roofRing.position.set(ox, h - 0.4, oz);
-        cityEnvGroup.add(roofRing);
-
-        if (h >= 70) {
-          const stripGeo = new THREE.BoxGeometry(0.45, h, 0.45);
-          [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([cx, cz]) => {
-            const cStrip = new THREE.Mesh(stripGeo, trimMat);
-            cStrip.position.set(ox + cx * (w / 2 + 0.1), h / 2, oz + cz * (d / 2 + 0.1));
-            cityEnvGroup.add(cStrip);
-          });
-        }
-
-        const isHelipadTower = (h >= 75 && (bIdx % 3 === 0)) || (isCentralCitadel && sub === 0);
-
-        if (h >= 90 && !isHelipadTower) {
-          const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.65, 24, 8), bldgMats[1]);
-          spire.position.set(ox, h + 12, oz);
-          const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.55, 8, 8), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
-          beacon.position.set(ox, h + 24, oz);
-          cityEnvGroup.add(spire, beacon);
-        }
-
-        // V12 Enhanced Multi-Tier Setback Crowns & Roof HVAC Details
-        if (h >= 110) {
-          const tierW = w * 0.72;
-          const tierD = d * 0.72;
-          const tierH = 18;
-          const tierMesh = new THREE.Mesh(new THREE.BoxGeometry(tierW, tierH, tierD), bldgMats[(bIdx + 1) % bldgMats.length]);
-          tierMesh.position.set(ox, h + tierH / 2, oz);
-          cityEnvGroup.add(tierMesh);
-
-          // Illuminated rooftop HVAC Chillers & Satellite Arrays
-          const hvacBox = new THREE.Mesh(new THREE.BoxGeometry(tierW * 0.45, 3.5, tierD * 0.35), bldgMats[2]);
-          hvacBox.position.set(ox - tierW * 0.2, h + tierH + 1.75, oz - tierD * 0.2);
-          const satDish = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 0.3, 1.2, 16).rotateX(0.45), titaniumMaterial);
-          satDish.position.set(ox + tierW * 0.25, h + tierH + 2.0, oz + tierD * 0.2);
-          cityEnvGroup.add(hvacBox, satDish);
-        }
-
-        // High-Rise Giant Holographic Cyber Billboards on Central Towers
-        if (h >= 85 && (bIdx % 5 === 0)) {
-          const bbW = w * 0.85;
-          const bbH = 12.0;
-          const bbMat = new THREE.MeshBasicMaterial({
-            color: (bIdx % 3 === 0) ? 0x0ea5e9 : ((bIdx % 3 === 1) ? 0xf59e0b : 0xec4899),
-            transparent: true,
-            opacity: 0.88
-          });
-          const bbMesh = new THREE.Mesh(new THREE.PlaneGeometry(bbW, bbH), bbMat);
-          bbMesh.position.set(ox, h * 0.65, oz + d / 2 + 0.25);
-          const bbBorder = new THREE.Mesh(new THREE.BoxGeometry(bbW + 0.6, bbH + 0.6, 0.2), titaniumMaterial);
-          bbBorder.position.set(ox, h * 0.65, oz + d / 2 + 0.15);
-          cityEnvGroup.add(bbBorder, bbMesh);
-        }
-
-        if (isHelipadTower) {
-          const padR = Math.min(w, d) * 0.38;
-          const padCircle = new THREE.Mesh(new THREE.CylinderGeometry(padR, padR, 0.25, 24), bldgMats[0]);
-          padCircle.position.set(ox, h + 0.12, oz);
-
-          const padOuterRing = new THREE.Mesh(
-            new THREE.RingGeometry(padR * 0.85, padR, 24).rotateX(-Math.PI / 2),
-            helipadRingMat
-          );
-          padOuterRing.position.set(ox, h + 0.28, oz);
-
-          const bar1 = new THREE.Mesh(new THREE.PlaneGeometry(1.6, padR * 1.1).rotateX(-Math.PI / 2), helipadMarkMat);
-          bar1.position.set(ox - padR * 0.28, h + 0.30, oz);
-          const bar2 = new THREE.Mesh(new THREE.PlaneGeometry(1.6, padR * 1.1).rotateX(-Math.PI / 2), helipadMarkMat);
-          bar2.position.set(ox + padR * 0.28, h + 0.30, oz);
-          const barMid = new THREE.Mesh(new THREE.PlaneGeometry(padR * 0.62, 1.6).rotateX(-Math.PI / 2), helipadMarkMat);
-          barMid.position.set(ox, h + 0.30, oz);
-
-          cityEnvGroup.add(padCircle, padOuterRing, bar1, bar2, barMid);
-
-          const skyBeam = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.25, 1.2, 85, 12),
-            new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.22, side: THREE.DoubleSide })
-          );
-          skyBeam.position.set(ox, h + 42.5, oz);
-          cityEnvGroup.add(skyBeam);
-        }
-
-        const buildingDef = {
-          minX: ox - w / 2, maxX: ox + w / 2,
-          minZ: oz - d / 2, maxZ: oz + d / 2,
-          x: ox, z: oz, w, d, height: h,
-          legacyX: bx + (sub === 0 ? -52 : 52), legacyZ: bz + (bIdx % 2 === 0 ? -44 : 44),
-          isHelipad: isHelipadTower
-        };
-        cityBuildings.push(buildingDef);
-        if (h >= 80) towersForSkybridges.push(buildingDef);
-        bIdx++;
+    const buildingDef = {
+      id: bIdx, kind, blockX: bx, blockZ: bz,
+      minX: ox - w / 2, maxX: ox + w / 2, minZ: oz - d / 2, maxZ: oz + d / 2,
+      x: ox, z: oz, w, d, height: h, isHelipad: isHelipadTower,
+      bridgePair
+    };
+    cityBuildings.push(buildingDef);
+    if (bridgePair !== null) towersForSkybridges.push(buildingDef);
+    bIdx++;
+  }
+  blockCenters.forEach((bx, ix) => {
+    blockCenters.forEach((bz, iz) => {
+      const district = Math.floor(ix / 2) + Math.floor(iz / 2);
+      const frontage = [36, 42, 48][district % 3], lowH = [18, 22, 26, 28][district % 4];
+      const side = (ix % 2 === 0) ? 1 : -1;
+      const alongX = (ix + iz) % 2 === 0;
+      const w = alongX ? 30 : frontage, d = alongX ? frontage : 30;
+      const offset = 150 - CITY_ROAD_WIDTH / 2 - CITY_BUILDING_SETBACK - 15;
+      addCityBuilding(bx, bz, bx + (alongX ? side * offset : 0), bz + (alongX ? 0 : side * offset), w, d, lowH, 'low', district);
+      // Preserve both original bridge locations explicitly, not by array order.
+      const bridgePair = bx === -750 && (bz === -1050 || bz === -750) ? bz : null;
+      if (bridgePair !== null) {
+        for (const offsetX of [-34, 34]) addCityBuilding(bx, bz, bx + offsetX, bz, 44, 44, offsetX < 0 ? 108 : 120, 'tower', district, bridgePair);
+      } else if ((ix + iz) % 2 === 1) {
+        const landmark = bx === 150 && bz === -150;
+        addCityBuilding(bx, bz, bx, bz, landmark ? 58 : 44, landmark ? 58 : 44,
+          landmark ? 180 : [76, 92, 108, 120][district % 4], landmark ? 'landmark' : 'tower', district);
       }
     });
   });
@@ -648,12 +585,11 @@ function buildOpenWorldCity() {
   });
   const skybridgeGlowMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
 
-  for (let i = 0; i < Math.min(18, towersForSkybridges.length - 1); i += 2) {
+  for (let i = 0; i < towersForSkybridges.length - 1; i += 2) {
     const t1 = towersForSkybridges[i];
     const t2 = towersForSkybridges[i + 1];
     const dist = Math.hypot(t1.x - t2.x, t1.z - t2.z);
-    const originalDistance = Math.hypot(t1.legacyX - t2.legacyX, t1.legacyZ - t2.legacyZ);
-    if (originalDistance > 30 && originalDistance < 180) {
+    if (t1.bridgePair === t2.bridgePair) {
       const bridgeH = Math.min(t1.height, t2.height) * 0.72;
       const midX = (t1.x + t2.x) / 2;
       const midZ = (t1.z + t2.z) / 2;

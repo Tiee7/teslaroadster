@@ -1,0 +1,10 @@
+{
+  "baseCommit": "affe5aae0b78b52bd25feaba582e27f85bf8cc7c",
+  "oldProgramSha256": "cdfdde9664c81e8e9ffc77295870c729d26535c53ab3741251016d5da8579fb5",
+  "newProgramSha256": "59530c9a5abc20a0410939b44e5c431ea17504ab3aa70db54da5a33d3b1844a7",
+  "onlyChangedNumericalText": {
+    "before": "const CITY_BUILDING_SETBACK = 6; // Existing towers move to street corners, not a rescaled city.",
+    "after": "const CITY_BUILDING_SETBACK = 12; // Low frontage only; towers are recessed separately."
+  },
+  "boundary": "Unused city-layout setback constant only. Highway/coast physics and audio source unchanged. City building collision positions intentionally changed with matching rendered boxes."
+}
