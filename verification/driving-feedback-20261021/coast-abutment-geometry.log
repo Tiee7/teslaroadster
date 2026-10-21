@@ -1,0 +1,45 @@
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (2.712848ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (2695.813962ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (341.156167ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (17.381445ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.29257ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (76.359118ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (4178.33593ms)
+✔ viaduct is two-way six 3.5m lanes with metre-wide shoulders and smooth same-source widening (1483.630622ms)
+✔ real approach guide rails converge from the bank onto both deck edges with no open bank-end mouth (0.950317ms)
+✔ additional real hill masses enrich the inland terrain while road/underpass geometry stays unchanged (282.438798ms)
+✔ production motion follows true terrain/bridge tire plane at 0m/s without false gravity, damage or fuel burn (3289.077789ms)
+✔ production motion follows true terrain/bridge tire plane at 15m/s without false gravity, damage or fuel burn (3193.159346ms)
+✔ production motion follows true terrain/bridge tire plane at 55.55555555555556m/s without false gravity, damage or fuel burn (3276.536887ms)
+✔ production motion follows true terrain/bridge tire plane at 102.77777777777777m/s without false gravity, damage or fuel burn (3244.233519ms)
+✔ slope-only gravity distinguishes coast uphill/downhill without changing EV constants (18.018362ms)
+✔ Space really detaches and keeps lifting from the 1700m slope/bridge (182.560706ms)
+✔ Space really detaches and keeps lifting from the 3800m slope/bridge (140.85703ms)
+✔ O targets six metres above actual attached bridge or the ground BELOW it, never the highest xz layer (259.641937ms)
+✔ the production cabin hits bridge underside; upward impact cannot become a bridge-top landing (10.190939ms)
+✔ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (637.80636ms)
+✔ continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall (20.006357ms)
+✔ a roof has exactly one original 4s/s recharge owner, not both road and roof owners (6.547584ms)
+✔ a true airborne rooftop touchdown restores ground EV ownership instead of staying an invisible aircraft (31.182093ms)
+✔ a fast shallow deck-bottom scrape pays only normal impact, not the unrelated 50m/s tangential speed (8.172853ms)
+✔ a swept pier landing uses its contact material/position, not water at the frame endpoint (7.339778ms)
+✔ an already airborne low-altitude O tap cannot restart ground-hop inertia grace (2.018256ms)
+✔ a vehicle below the pier still contacts real water instead of falling forever below world zero (6.27289ms)
+✔ new hillside houses use absolute base/roof heights and solid foundations, not sea-level stretched walls (49.317129ms)
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (4.99234ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (93.452936ms)
+✔ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.271159ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (2.240655ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.35396ms)
+✔ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (4.664137ms)
+✔ actual flat terrain, bank and asphalt render tops have no substantive coplanar overlap; world heights are not raised (307.495323ms)
+ℹ {"flatTriangles":[7894,4661,7552],"crossLayerTrianglePairs":1445873,"maxOverlapSquareMetres":0.0004671940705485156}
+✔ bridge abutment foundations and wing walls are visible oriented solids identical to collision, not invisible snap planes (0.505994ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15220.887061

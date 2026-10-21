@@ -35,7 +35,7 @@ test('HUD cycles Full → Medium → Minimal repeatedly with independent compact
     assert.equal(h.hidden('hud-left'), expected === 'minimal'); assert.equal(h.hidden('hud-right'), expected === 'minimal');
     assert.equal(h.hidden('hud-brand-badge'), expected !== 'full');
     assert.equal(h.hidden('btn-map-select'), expected !== 'full');
-    assert.equal(h.hidden('btn-camera'), false); assert.equal(h.hidden('btn-reset'), false); assert.equal(h.hidden('btn-city-taxi'), false);
+    assert.equal(h.hidden('btn-camera'), false); assert.equal(h.hidden('btn-reset'), false); assert.equal(h.elements['btn-city-taxi'], undefined, 'default passenger mode has no toggle in any HUD');
     for (const id of ['btn-lang', 'btn-settings', 'btn-hud-mode', 'btn-leaderboard', 'status-banner', 'ranked-hud']) assert.equal(h.hidden(id), false);
     assert.equal(h.elements['hud-footer'].classes.has('hud-compact-view'), expected !== 'full');
     assert.equal(h.elements['hud-footer'].classes.has('hud-minimal-view'), expected === 'minimal');

@@ -31,18 +31,18 @@ function getRoadsterEngineVoice(speedRatio, engineLoad, isThrusting = false) {
   const load = Number.isFinite(engineLoad)
     ? Math.max(0, Math.min(1, engineLoad)) : (isThrusting ? 0.9 : 0.28);
   const activity = Math.max(Math.min(1, speed / 0.045), Number.isFinite(engineLoad) ? load * 0.65 : 0);
-  // A soft speed knee keeps the original V8 pulse banks in a low exhaust
-  // register at high road speed, rather than stretching them into a whine.
-  const rawRpm = 850 + speed * 3100 + load * 950;
-  const rpm = rawRpm <= 3200 ? rawRpm : 3200 + 900 * (1 - Math.exp(-(rawRpm - 3200) / 900));
+  // Keep the original V8 firing order, but run in a quiet low exhaust register.
+  // Speed/load no longer sweep several octaves or feed prominent air hiss.
+  const rawRpm = 780 + speed * 900 + load * 260;
+  const rpm = rawRpm <= 1800 ? rawRpm : 1800 + 500 * (1 - Math.exp(-(rawRpm - 1800) / 500));
   return {
     speed, load, rpm,
     cycleFrequency: rpm / 120,
-    cutoff: Math.min(1450, 360 + speed * 420 + load * 800),
-    gain: activity * (0.021 + Math.min(1, speed) * 0.025 + load * 0.038),
-    textureGain: 0.018 + load * 0.075,
-    bodyGain: 0.22 + load * 0.08,
-    bankGain: 0.44 + load * 0.10,
+    cutoff: Math.min(680, 240 + speed * 160 + load * 260),
+    gain: activity * (0.016 + Math.min(1, speed) * 0.010 + load * 0.021),
+    textureGain: 0.003 + load * 0.010,
+    bodyGain: 0.34 + load * 0.12,
+    bankGain: 0.38 + load * 0.08,
   };
 }
 
@@ -110,37 +110,37 @@ class SoundEngine {
       // bass layer and a restrained, load-sensitive combustion-air texture.
       this.engineOsc = this.ctx.createOscillator();
       this.engineOsc.setPeriodicWave(createRoadsterV8Wave(this.ctx, 0));
-      this.engineOsc.frequency.value = 850 / 120;
+      this.engineOsc.frequency.value = 780 / 120;
       this.engineBankGain = this.ctx.createGain();
       this.engineBankGain.gain.value = 0.60;
       this.engineOvertoneOsc = this.ctx.createOscillator();
       this.engineOvertoneOsc.setPeriodicWave(createRoadsterV8Wave(this.ctx, 1));
-      this.engineOvertoneOsc.frequency.value = 850 / 120;
+      this.engineOvertoneOsc.frequency.value = 780 / 120;
       this.engineOvertoneGain = this.ctx.createGain();
       this.engineOvertoneGain.gain.value = 0.44;
 
       this.engineBodyOsc = this.ctx.createOscillator();
       this.engineBodyOsc.type = 'sine';
-      this.engineBodyOsc.frequency.value = 850 / 60;
+      this.engineBodyOsc.frequency.value = 780 / 60;
       this.engineBodyGain = this.ctx.createGain();
-      this.engineBodyGain.gain.value = 0.18;
+      this.engineBodyGain.gain.value = 0.34;
 
       const engineTexture = this.ctx.createBufferSource();
       engineTexture.buffer = this.noiseBuffer;
       engineTexture.loop = true;
       this.engineTextureFilter = this.ctx.createBiquadFilter();
       this.engineTextureFilter.type = 'bandpass';
-      this.engineTextureFilter.frequency.value = 650;
+      this.engineTextureFilter.frequency.value = 250;
       this.engineTextureFilter.Q.value = 0.65;
       this.engineTextureGain = this.ctx.createGain();
-      this.engineTextureGain.gain.value = 0.018;
+      this.engineTextureGain.gain.value = 0.003;
 
       this.engineFilter = this.ctx.createBiquadFilter();
       this.engineFilter.type = 'lowpass';
-      this.engineFilter.frequency.value = 360;
+      this.engineFilter.frequency.value = 240;
       this.engineFilter.Q.value = 0.55;
       // Soft saturation gives exhaust body and provides a hard digital peak
-      // bound for this voice only. Its output is <= 1, then gain stays <= .084.
+      // bound for this voice only. Its output is <= 1, then gain stays <= .047.
       this.engineSaturator = this.ctx.createWaveShaper();
       const curve = new Float32Array(2049);
       for (let i = 0; i < curve.length; i++) {
@@ -235,7 +235,7 @@ class SoundEngine {
     this.engineOvertoneOsc.frequency.setTargetAtTime(voice.cycleFrequency, now, 0.10);
     this.engineBodyOsc.frequency.setTargetAtTime(voice.cycleFrequency * 2, now, 0.10);
     this.engineFilter.frequency.setTargetAtTime(voice.cutoff, now, 0.08);
-    this.engineTextureFilter.frequency.setTargetAtTime(400 + voice.load * 650 + voice.speed * 140, now, 0.10);
+    this.engineTextureFilter.frequency.setTargetAtTime(250 + voice.load * 220 + voice.speed * 70, now, 0.10);
     this.engineTextureGain.gain.setTargetAtTime(voice.textureGain, now, 0.08);
     this.engineBodyGain.gain.setTargetAtTime(voice.bodyGain, now, 0.08);
     this.engineOvertoneGain.gain.setTargetAtTime(voice.bankGain, now, 0.08);

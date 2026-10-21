@@ -1,0 +1,31 @@
+✔ three parallel lanes safely merge: route0, stagger-0.2, orderfalse (1089.119056ms)
+✔ three parallel lanes safely merge: route0, stagger-0.2, ordertrue (1023.917737ms)
+✔ three parallel lanes safely merge: route0, stagger0, orderfalse (1075.072171ms)
+✔ three parallel lanes safely merge: route0, stagger0, ordertrue (1022.55331ms)
+✔ three parallel lanes safely merge: route0, stagger0.2, orderfalse (948.179711ms)
+✔ three parallel lanes safely merge: route0, stagger0.2, ordertrue (1029.818721ms)
+✔ three parallel lanes safely merge: route2, stagger-0.2, orderfalse (1123.058725ms)
+✔ three parallel lanes safely merge: route2, stagger-0.2, ordertrue (851.816306ms)
+✔ three parallel lanes safely merge: route2, stagger0, orderfalse (1162.630087ms)
+✔ three parallel lanes safely merge: route2, stagger0, ordertrue (1017.508614ms)
+✔ three parallel lanes safely merge: route2, stagger0.2, orderfalse (1130.656583ms)
+✔ three parallel lanes safely merge: route2, stagger0.2, ordertrue (1000.108602ms)
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (4.080372ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (3000.218479ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (563.886711ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (31.708911ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.246292ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (75.121344ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (4750.915627ms)
+✔ viaduct is two-way six 3.5m lanes with metre-wide shoulders and smooth same-source widening (2026.840059ms)
+✔ real approach guide rails converge from the bank onto both deck edges with no open bank-end mouth (0.711065ms)
+✔ additional real hill masses enrich the inland terrain while road/underpass geometry stays unchanged (313.777683ms)
+✔ all traffic lane station boundaries and micro-perturbations keep real road support, never fall back to terrain (5339.606753ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16574.553459

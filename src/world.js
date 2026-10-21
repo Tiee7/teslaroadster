@@ -423,10 +423,10 @@ function buildOpenWorldCity() {
     cityEnvGroup.add(ewCenter);
 
     // Add dashed lane dividers along every N-S and E-W avenue (skipping intersection interiors to prevent overlap)
-    for (let dPos = -CITY_HALF_BOUND + 24; dPos <= CITY_HALF_BOUND - 24; dPos += 16) {
+    for (let dPos = -CITY_HALF_BOUND + 24; dPos <= CITY_HALF_BOUND - 24; dPos += 8) {
       if (CITY_ROAD_COORDS.some((c) => Math.abs(dPos - c) < CITY_ROAD_WIDTH / 2 + 3)) continue;
       [-1, 1, -2, 2].map(lane => lane * CITY_LANE_WIDTH).forEach((laneOff) => {
-        cityLanePaint.push([coord + laneOff, 0.08, dPos, 0.16, 4.8], [dPos, 0.10, coord + laneOff, 4.8, 0.16]);
+        cityLanePaint.push([coord + laneOff, 0.08, dPos, 0.16, 3.0], [dPos, 0.10, coord + laneOff, 3.0, 0.16]);
       });
     }
 
@@ -450,7 +450,8 @@ function buildOpenWorldCity() {
     mesh.name = name; mesh.userData.cityPaintCount = marks.length;
     mesh.instanceMatrix.needsUpdate = true; cityEnvGroup.add(mesh);
   }
-  batchCityPaint('city-lane-paint', cityLanePaint, dashMat);
+  const cityDashMat = new THREE.MeshBasicMaterial({ color: 0xd9dfe5, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
+  batchCityPaint('city-lane-paint', cityLanePaint, cityDashMat);
   batchCityPaint('city-crosswalk-paint', cityCrosswalkPaint, crosswalkWhiteMat);
 
   // City Energy Boundary Walls (Taller 45m perimeter shield)
@@ -490,6 +491,21 @@ function buildOpenWorldCity() {
   const landmarkTrimMat = new THREE.MeshBasicMaterial({ color: 0x3c9aaf });
   const helipadRingMat = new THREE.MeshBasicMaterial({ color: 0x67bdd0 });
   const helipadMarkMat = new THREE.MeshBasicMaterial({ color: 0xc6d1d9 });
+  cityEnvGroup.userData.applyWeather = (preset) => {
+    const day = Boolean(preset.daylight);
+    bldgMats[0].color.setHex(day ? 0xb5bdc5 : 0x34404e);
+    bldgMats[1].color.setHex(day ? 0x9daab7 : 0x283642);
+    windowLitMat.color.setHex(day ? 0x6b8191 : 0xb9c3bd);
+    windowWarmMat.color.setHex(day ? 0x7e878a : 0xb9a17b);
+    trimMat.color.setHex(day ? 0x596f7b : 0x456c7a);
+    cityAsphaltMat.color.setHex(day ? 0x3b424a : 0x1b2633);
+    cityAsphaltEWMat.color.copy(cityAsphaltMat.color);
+    for (const mat of [cityAsphaltMat, cityAsphaltEWMat]) {
+      mat.roughness = preset.rain ? 0.58 : day ? 0.86 : 0.72;
+      mat.metalness = preset.rain ? 0.0 : 0.06;
+      mat.envMapIntensity = preset.rain ? 0.50 : day ? 0.25 : 0.36;
+    }
+  };
   const towersForSkybridges = [];
   const blockCenters = [-1050, -750, -450, -150, 150, 450, 750, 1050];
   let bIdx = 0;
@@ -548,7 +564,7 @@ function buildOpenWorldCity() {
       id: bIdx, kind, blockX: bx, blockZ: bz,
       minX: ox - w / 2, maxX: ox + w / 2, minZ: oz - d / 2, maxZ: oz + d / 2,
       x: ox, z: oz, w, d, height: h, isHelipad: isHelipadTower,
-      bridgePair
+      bridgePair, avenueAccent: (oz === -220 && ox === 76) || (oz === -240 && ox === -52)
     };
     cityBuildings.push(buildingDef);
     if (bridgePair !== null) towersForSkybridges.push(buildingDef);
@@ -569,8 +585,10 @@ function buildOpenWorldCity() {
         for (const offsetX of [-34, 34]) addCityBuilding(bx, bz, bx + offsetX, bz, 44, 44, offsetX < 0 ? 108 : 120, 'tower', district, bridgePair);
       } else if ((ix + iz) % 2 === 1) {
         const landmark = bx === 150 && bz === -150;
-        addCityBuilding(bx, bz, bx, bz, landmark ? 58 : 44, landmark ? 58 : 44,
-          landmark ? 180 : [76, 92, 108, 120][district % 4], landmark ? 'landmark' : 'tower', district);
+        const accent = landmark || (bx === -150 && bz === -450);
+        const ox = landmark ? 76 : accent ? -52 : bx, oz = landmark ? -220 : accent ? -240 : bz;
+        addCityBuilding(bx, accent ? -150 : bz, ox, oz, landmark ? 58 : accent ? 22 : 44, landmark ? 58 : accent ? 22 : 44,
+          landmark ? 180 : accent ? 96 : [76, 92, 108, 120][district % 4], landmark ? 'landmark' : 'tower', district);
       }
     });
   });

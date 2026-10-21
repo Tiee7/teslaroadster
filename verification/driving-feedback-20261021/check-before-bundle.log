@@ -1,0 +1,469 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> tesla-roadster-simulator@1.1.0 check
+> node scripts/check.mjs
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Root bundle is stale: run python3 bundle_app.py and commit index.html
++ actual - expected
+... Skipped lines
+
+  '<!DOCTYPE html>\n' +
+    '<html lang="en">\n' +
+    '<head>\n' +
+    '  <meta charset="UTF-8" />\n' +
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />\n' +
+...
+    '  .mobile-utilities button:focus-visible, #mobile-stick-mode:focus-visible { outline: 2px solid #a4efff; outline-offset: 2px; }\n' +
++   '  body[data-mobile-controls="true"] #hud-footer { padding: 4px 8px max(84px, calc(env(safe-area-inset-bottom) + 76px)); gap: 3px; overf'... 4863348 more characters
+-   '  body[data-mobile-controls="true"] #hud-footer { padding: 4px 8px max(84px, calc(env(safe-area-inset-bottom) + 76px)); gap: 3px; overf'... 4859348 more characters
+
+    at file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/scripts/check.mjs:23:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '<!DOCTYPE html>\n' +
+    '<html lang="en">\n' +
+    '<head>\n' +
+    '  <meta charset="UTF-8" />\n' +
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />\n' +
+    '  <title>2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulator</title>\n' +
+    '  <!-- Vercel Web Analytics: official plain-HTML integration; independent of WebGL. -->\n' +
+    '  <script>\n' +
+    '    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };\n' +
+    '  </script>\n' +
+    '  <script defer src="/_vercel/insights/script.js"></script>\n' +
+    '  <script src="https://cdn.tailwindcss.com/3.4.17"></script>\n' +
+    '  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>\n' +
+    '  <link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+    '  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">\n' +
+    '  <style>\n' +
+    '/* 2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulator - Stylesheet */\n' +
+    '* { box-sizing: border-box; user-select: none; -webkit-user-select: none; }\n' +
+    'html, body {\n' +
+    '  margin: 0;\n' +
+    '  padding: 0;\n' +
+    '  width: 100%;\n' +
+    '  height: 100%;\n' +
+    '  overflow: hidden;\n' +
+    '  background-color: #060911;\n' +
+    "  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;\n" +
+    '  color: #f8fafc;\n' +
+    '}\n' +
+    ".mono { font-family: 'JetBrains Mono', monospace; }\n" +
+    '#game-canvas-container {\n' +
+    '  position: absolute;\n' +
+    '  inset: 0;\n' +
+    '  width: 100%;\n' +
+    '  height: 100%;\n' +
+    '  z-index: 1;\n' +
+    '}\n' +
+    '.glass-panel {\n' +
+    '  background: rgba(10, 15, 28, 0.80);\n' +
+    '  backdrop-filter: blur(12px);\n' +
+    '  -webkit-backdrop-filter: blur(12px);\n' +
+    '  border: 1px solid rgba(148, 163, 184, 0.22);\n' +
+    '  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.65);\n' +
+    '}\n' +
+    '.glass-pill {\n' +
+    '  background: rgba(15, 23, 42, 0.85);\n' +
+    '  backdrop-filter: blur(8px);\n' +
+    '  border: 1px solid rgba(56, 189, 248, 0.3);\n' +
+    '  transition: all 0.08s ease;\n' +
+    '}\n' +
+    '.glass-pill:active {\n' +
+    '  transform: scale(0.93);\n' +
+    '  background: rgba(14, 165, 233, 0.45);\n' +
+    '  border-color: #38bdf8;\n' +
+    '  box-shadow: 0 0 12px rgba(56, 189, 248, 0.65);\n' +
+    '}\n' +
+    '.key-badge {\n' +
+    '  display: inline-flex;\n' +
+    '  align-items: center;\n' +
+    '  justify-content: center;\n' +
+    '  min-width: 1.55rem;\n' +
+    '  height: 1.45rem;\n' +
+    '  padding: 0 0.38rem;\n' +
+    '  border-radius: 0.35rem;\n' +
+    '  background: rgba(30, 41, 59, 0.95);\n' +
+    '  border: 1px solid rgba(148, 163, 184, 0.4);\n' +
+    '  border-bottom-width: 2px;\n' +
+    "  font-family: 'JetBrains Mono', monospace;\n" +
+    '  font-size: 0.68rem;\n' +
+    '  line-height: 1;\n' +
+    '  white-space: nowrap;\n' +
+    '  flex-shrink: 0;\n' +
+    '  font-weight: 700;\n' +
+    '  color: #38bdf8;\n' +
+    '  transition: all 0.08s ease;\n' +
+    '}\n' +
+    '.ctrl-row {\n' +
+    '  display: flex;\n' +
+    '  align-items: center;\n' +
+    '  justify-content: space-between;\n' +
+    '  gap: 0.5rem;\n' +
+    '  padding: 0.22rem 0.4rem;\n' +
+    '  border-radius: 0.45rem;\n' +
+    '  background: rgba(15, 23, 42, 0.55);\n' +
+    '  border: 1px solid rgba(51, 65, 85, 0.45);\n' +
+    '}\n' +
+    '.ctrl-label {\n' +
+    '  font-size: 0.72rem;\n' +
+    '  color: #e2e8f0;\n' +
+    '  white-space: nowrap;\n' +
+    '  overflow: hidden;\n' +
+    '  text-overflow: ellipsis;\n' +
+    '}\n' +
+    '.key-badge.active {\n' +
+    '  background: #0284c7;\n' +
+    '  color: #ffffff;\n' +
+    '  border-color: #7dd3fc;\n' +
+    '  transform: translateY(1px);\n' +
+    '  box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);\n' +
+    '}\n' +
+    '.nozzle-dot {\n' +
+    '  width: 0.55rem;\n' +
+    '  height: 0.55rem;\n' +
+    '  border-radius: 9999px;\n' +
+    '  background: rgba(51, 65, 85, 0.9);\n' +
+    '  border: 1px solid rgba(148, 163, 184, 0.4);\n' +
+    '  transition: all 0.08s ease;\n' +
+    '}\n' +
+    '.nozzle-dot.firing {\n' +
+    '  background: #38bdf8;\n' +
+    '  border-color: #e0f2fe;\n' +
+    '  box-shadow: 0 0 8px #38bdf8, 0 0 14px #0284c7;\n' +
+    '  transform: scale(1.25);\n' +
+    '}\n' +
+    '@keyframes pulseWarning {\n' +
+    '  0%, 100% { opacity: 1; transform: scale(1); }\n' +
+    '  50% { opacity: 0.7; transform: scale(1.02); }\n' +
+    '}\n' +
+    '.map-card {\n' +
+    '  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);\n' +
+    '}\n' +
+    '.map-card:hover {\n' +
+    '  transform: translateY(-3px);\n' +
+    '  border-color: rgba(56, 189, 248, 0.75);\n' +
+    '  box-shadow: 0 14px 32px -6px rgba(14, 165, 233, 0.35);\n' +
+    '}\n' +
+    '.map-card.selected {\n' +
+    '  border-color: #38bdf8;\n' +
+    '  background: rgba(14, 116, 144, 0.25);\n' +
+    '  box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);\n' +
+    '}\n' +
+    '.warning-pulse {\n' +
+    '  animation: pulseWarning 0.45s infinite ease-in-out;\n' +
+    '}\n' +
+    '\n' +
+    '/* Side panels and center notices have independent geometry. Reserve a constant\n' +
+    '   notice lane on narrow screens so neither appearing nor dismissing one moves\n' +
+    '   the panels. Header/footer observation also keeps each panel scrollable. */\n' +
+    '#hud-main { position: relative; min-height: 0; }\n' +
+    '#hud-notifications {\n' +
+    '  position: absolute; top: 4px; left: 352px; right: 288px; z-index: 11;\n' +
+    '  display: flex; flex-direction: column; align-items: center; gap: 6px;\n' +
+    '  pointer-events: none;\n' +
+    '}\n' +
+    '#hud-notifications > div { max-width: 100%; flex-shrink: 0; }\n' +
+    '#hud-notifications #status-banner { overflow-wrap: anywhere; }\n' +
+    '#hud-side-panels {\n' +
+    '  display: flex; align-items: flex-start; justify-content: space-between;\n' +
+    '  gap: 8px; padding: 4px 20px 0;\n' +
+    '  padding-top: calc(4px + var(--hud-notice-space, 0px));\n' +
+    '}\n' +
+    '#hud-left, #hud-right { flex-shrink: 0; min-width: 0; }\n' +
+    '#hud-left, #hud-right-card {\n' +
+    '  max-height: max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - var(--hud-navigation-height, 0px) - 16px));\n' +
+    '  max-height: max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - var(--hud-navigation-height, 0px) - 16px));\n' +
+    '  overflow-y: auto;\n' +
+    '}\n' +
+    '@media (max-width: 1100px) {\n' +
+    '  #hud-top-container { --hud-notice-space: 100px; }\n' +
+    '  #hud-notifications { left: 12px; right: 12px; max-height: var(--hud-notice-space); overflow-y: auto; pointer-events: auto; }\n' +
+    '}\n' +
+    '@media (max-width: 767px) {\n' +
+    '  #hud-header { max-height: 30vh; max-height: 30dvh; overflow-y: auto; pointer-events: auto; }\n' +
+    '  #hud-side-panels { padding-left: 12px; padding-right: 12px; }\n' +
+    '  #hud-left, #hud-right { width: calc((100% - 8px) / 2); }\n' +
+    '  #hud-right-card { width: 100%; }\n' +
+    '  #hud-left-header, #hud-right-header { min-width: 0; }\n' +
+    '  #ui-controls-header, #ui-telemetry-header { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n' +
+    '}\n' +
+    '@media (max-width: 1100px) and (max-height: 600px) {\n' +
+    '  #hud-header { max-height: 25vh; max-height: 25dvh; overflow-y: auto; pointer-events: auto; }\n' +
+    '  #hud-footer { max-height: 32vh; max-height: 32dvh; overflow-y: auto; pointer-events: auto; }\n' +
+    '}\n' +
+    '\n' +
+    '/* Compact HUD modes reduce information, never the driving input overlay. */\n' +
+    '.hud-compact-view {\n' +
+    '  padding-bottom: 0.65rem !important;\n' +
+    '}\n' +
+    '.hud-compact-view #hud-cluster {\n' +
+    '  max-width: 44rem !important;\n' +
+    '  background: rgba(8, 14, 26, 0.75) !important;\n' +
+    '  border: 1px solid rgba(56, 189, 248, 0.35) !important;\n' +
+    '  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55) !important;\n' +
+    '  padding: 0.45rem 1rem !important;\n' +
+    '}\n' +
+    '.hud-compact-view #ui-tank-hint {\n' +
+    '  display: none !important;\n' +
+    '}\n' +
+    '\n' +
+    '/* Mobile-only overlay: the centre stays transparent and scrollable menus keep\n' +
+    '   their native touch behaviour. Primary fine-pointer desktop layouts are unchanged. */\n' +
+    '#mobile-controls, .mobile-help { display: none; }\n' +
+    '#mobile-controls[hidden] { display: none !important; }\n' +
+    '@media (pointer: coarse) {\n' +
+    '  body { --mobile-stick-size: clamp(88px, 27vw, 124px); }\n' +
+    '  body[data-mobile-controls="true"] #touch-controls { display: none !important; }\n' +
+    '  #mobile-controls:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 18; pointer-events: none; }\n' +
+    '  .mobile-stick-group { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); width: var(--mobile-stick-size); display: flex; flex-direction: column; align-items: center; gap: 6px; }\n' +
+    '  .mobile-stick-group-left { left: max(10px, env(safe-area-inset-left)); }\n' +
+    '  .mobile-stick-group-right { right: max(10px, env(safe-area-inset-right)); }\n' +
+    '  .mobile-stick { width: var(--mobile-stick-size); height: var(--mobile-stick-size); flex: 0 0 auto; position: relative; border: 1px solid #81d7ee88; border-radius: 50%; background: radial-gradient(circle, #0b233433 0 30%, #0c203544 31% 100%); box-shadow: inset 0 0 18px #07142388; pointer-events: auto; touch-action: none; -webkit-touch-callout: none; }\n' +
+    '  .mobile-stick.is-held { border-color: #a4efff; background-color: #0b293b33; }\n' +
+    '  .mobile-stick-cross { position: absolute; inset: 12%; border: 1px solid #a2d8f122; border-radius: 50%; pointer-events: none; }\n' +
+    "  .mobile-stick-cross::before, .mobile-stick-cross::after { content: ''; position: absolute; background: #a2d8f133; }\n" +
+    '  .mobile-stick-cross::before { top: 50%; left: 0; width: 100%; height: 1px; }\n' +
+    '  .mobile-stick-cross::after { left: 50%; top: 0; height: 100%; width: 1px; }\n' +
+    '  .mobile-stick-knob { position: absolute; width: 37%; height: 37%; top: 31.5%; left: 31.5%; border-radius: 50%; border: 1px solid #b0f1ffbb; background: radial-gradient(circle at 35% 30%, #7fcae777, #153e56bb); box-shadow: 0 3px 12px #0007; transform: translate(var(--stick-x, 0px), var(--stick-y, 0px)); pointer-events: none; }\n' +
+    '  .mobile-stick-label, .mobile-stick-hint { font-size: 9px; font-weight: 700; line-height: 1.3; color: #d5eef8; white-space: nowrap; text-shadow: 0 1px 3px #000; }\n' +
+    '  .mobile-stick-label { width: 100%; white-space: normal; text-align: center; }\n' +
+    '  .mobile-stick-hint { position: absolute; top: calc(100% + 2px); width: calc(100% + 12px); white-space: normal; text-align: center; font-size: 8px; line-height: 10px; }\n' +
+    '  #mobile-stick-mode { pointer-events: auto; width: 100%; min-height: 32px; border: 1px solid #79cce88c; border-radius: 9px; padding: 2px 8px; background: #0a1d2cec; color: #def7ff; font: inherit; font-size: 11px; touch-action: manipulation; }\n' +
+    '  .mobile-utilities { position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: grid; grid-template-columns: repeat(2, 42px); gap: 4px; pointer-events: auto; }\n' +
+    '  .mobile-utilities button { min-height: 32px; padding: 3px; color: #def6ff; background: #0a1d2cbd; border: 1px solid #79cce866; border-radius: 8px; font: inherit; font-size: 10px; touch-action: manipulation; }\n' +
+    '  .mobile-utilities button:focus-visible, #mobile-stick-mode:focus-visible { outline: 2px solid #a4efff; outline-offset: 2px; }\n' +
+    '  body[data-mobile-controls="true"] #hud-footer { padding: 4px 8px max(84px, calc(env(safe-area-inset-bottom) + 76px)); gap: 3px; overf'... 4863348 more characters,
+  expected: '<!DOCTYPE html>\n' +
+    '<html lang="en">\n' +
+    '<head>\n' +
+    '  <meta charset="UTF-8" />\n' +
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />\n' +
+    '  <title>2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulator</title>\n' +
+    '  <!-- Vercel Web Analytics: official plain-HTML integration; independent of WebGL. -->\n' +
+    '  <script>\n' +
+    '    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };\n' +
+    '  </script>\n' +
+    '  <script defer src="/_vercel/insights/script.js"></script>\n' +
+    '  <script src="https://cdn.tailwindcss.com/3.4.17"></script>\n' +
+    '  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>\n' +
+    '  <link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+    '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+    '  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">\n' +
+    '  <style>\n' +
+    '/* 2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulator - Stylesheet */\n' +
+    '* { box-sizing: border-box; user-select: none; -webkit-user-select: none; }\n' +
+    'html, body {\n' +
+    '  margin: 0;\n' +
+    '  padding: 0;\n' +
+    '  width: 100%;\n' +
+    '  height: 100%;\n' +
+    '  overflow: hidden;\n' +
+    '  background-color: #060911;\n' +
+    "  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;\n" +
+    '  color: #f8fafc;\n' +
+    '}\n' +
+    ".mono { font-family: 'JetBrains Mono', monospace; }\n" +
+    '#game-canvas-container {\n' +
+    '  position: absolute;\n' +
+    '  inset: 0;\n' +
+    '  width: 100%;\n' +
+    '  height: 100%;\n' +
+    '  z-index: 1;\n' +
+    '}\n' +
+    '.glass-panel {\n' +
+    '  background: rgba(10, 15, 28, 0.80);\n' +
+    '  backdrop-filter: blur(12px);\n' +
+    '  -webkit-backdrop-filter: blur(12px);\n' +
+    '  border: 1px solid rgba(148, 163, 184, 0.22);\n' +
+    '  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.65);\n' +
+    '}\n' +
+    '.glass-pill {\n' +
+    '  background: rgba(15, 23, 42, 0.85);\n' +
+    '  backdrop-filter: blur(8px);\n' +
+    '  border: 1px solid rgba(56, 189, 248, 0.3);\n' +
+    '  transition: all 0.08s ease;\n' +
+    '}\n' +
+    '.glass-pill:active {\n' +
+    '  transform: scale(0.93);\n' +
+    '  background: rgba(14, 165, 233, 0.45);\n' +
+    '  border-color: #38bdf8;\n' +
+    '  box-shadow: 0 0 12px rgba(56, 189, 248, 0.65);\n' +
+    '}\n' +
+    '.key-badge {\n' +
+    '  display: inline-flex;\n' +
+    '  align-items: center;\n' +
+    '  justify-content: center;\n' +
+    '  min-width: 1.55rem;\n' +
+    '  height: 1.45rem;\n' +
+    '  padding: 0 0.38rem;\n' +
+    '  border-radius: 0.35rem;\n' +
+    '  background: rgba(30, 41, 59, 0.95);\n' +
+    '  border: 1px solid rgba(148, 163, 184, 0.4);\n' +
+    '  border-bottom-width: 2px;\n' +
+    "  font-family: 'JetBrains Mono', monospace;\n" +
+    '  font-size: 0.68rem;\n' +
+    '  line-height: 1;\n' +
+    '  white-space: nowrap;\n' +
+    '  flex-shrink: 0;\n' +
+    '  font-weight: 700;\n' +
+    '  color: #38bdf8;\n' +
+    '  transition: all 0.08s ease;\n' +
+    '}\n' +
+    '.ctrl-row {\n' +
+    '  display: flex;\n' +
+    '  align-items: center;\n' +
+    '  justify-content: space-between;\n' +
+    '  gap: 0.5rem;\n' +
+    '  padding: 0.22rem 0.4rem;\n' +
+    '  border-radius: 0.45rem;\n' +
+    '  background: rgba(15, 23, 42, 0.55);\n' +
+    '  border: 1px solid rgba(51, 65, 85, 0.45);\n' +
+    '}\n' +
+    '.ctrl-label {\n' +
+    '  font-size: 0.72rem;\n' +
+    '  color: #e2e8f0;\n' +
+    '  white-space: nowrap;\n' +
+    '  overflow: hidden;\n' +
+    '  text-overflow: ellipsis;\n' +
+    '}\n' +
+    '.key-badge.active {\n' +
+    '  background: #0284c7;\n' +
+    '  color: #ffffff;\n' +
+    '  border-color: #7dd3fc;\n' +
+    '  transform: translateY(1px);\n' +
+    '  box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);\n' +
+    '}\n' +
+    '.nozzle-dot {\n' +
+    '  width: 0.55rem;\n' +
+    '  height: 0.55rem;\n' +
+    '  border-radius: 9999px;\n' +
+    '  background: rgba(51, 65, 85, 0.9);\n' +
+    '  border: 1px solid rgba(148, 163, 184, 0.4);\n' +
+    '  transition: all 0.08s ease;\n' +
+    '}\n' +
+    '.nozzle-dot.firing {\n' +
+    '  background: #38bdf8;\n' +
+    '  border-color: #e0f2fe;\n' +
+    '  box-shadow: 0 0 8px #38bdf8, 0 0 14px #0284c7;\n' +
+    '  transform: scale(1.25);\n' +
+    '}\n' +
+    '@keyframes pulseWarning {\n' +
+    '  0%, 100% { opacity: 1; transform: scale(1); }\n' +
+    '  50% { opacity: 0.7; transform: scale(1.02); }\n' +
+    '}\n' +
+    '.map-card {\n' +
+    '  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);\n' +
+    '}\n' +
+    '.map-card:hover {\n' +
+    '  transform: translateY(-3px);\n' +
+    '  border-color: rgba(56, 189, 248, 0.75);\n' +
+    '  box-shadow: 0 14px 32px -6px rgba(14, 165, 233, 0.35);\n' +
+    '}\n' +
+    '.map-card.selected {\n' +
+    '  border-color: #38bdf8;\n' +
+    '  background: rgba(14, 116, 144, 0.25);\n' +
+    '  box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);\n' +
+    '}\n' +
+    '.warning-pulse {\n' +
+    '  animation: pulseWarning 0.45s infinite ease-in-out;\n' +
+    '}\n' +
+    '\n' +
+    '/* Side panels and center notices have independent geometry. Reserve a constant\n' +
+    '   notice lane on narrow screens so neither appearing nor dismissing one moves\n' +
+    '   the panels. Header/footer observation also keeps each panel scrollable. */\n' +
+    '#hud-main { position: relative; min-height: 0; }\n' +
+    '#hud-notifications {\n' +
+    '  position: absolute; top: 4px; left: 352px; right: 288px; z-index: 11;\n' +
+    '  display: flex; flex-direction: column; align-items: center; gap: 6px;\n' +
+    '  pointer-events: none;\n' +
+    '}\n' +
+    '#hud-notifications > div { max-width: 100%; flex-shrink: 0; }\n' +
+    '#hud-notifications #status-banner { overflow-wrap: anywhere; }\n' +
+    '#hud-side-panels {\n' +
+    '  display: flex; align-items: flex-start; justify-content: space-between;\n' +
+    '  gap: 8px; padding: 4px 20px 0;\n' +
+    '  padding-top: calc(4px + var(--hud-notice-space, 0px));\n' +
+    '}\n' +
+    '#hud-left, #hud-right { flex-shrink: 0; min-width: 0; }\n' +
+    '#hud-left, #hud-right-card {\n' +
+    '  max-height: max(0px, calc(100vh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - var(--hud-navigation-height, 0px) - 16px));\n' +
+    '  max-height: max(0px, calc(100dvh - var(--hud-header-height, 150px) - var(--hud-footer-height, 180px) - var(--hud-notice-space, 0px) - var(--hud-navigation-height, 0px) - 16px));\n' +
+    '  overflow-y: auto;\n' +
+    '}\n' +
+    '@media (max-width: 1100px) {\n' +
+    '  #hud-top-container { --hud-notice-space: 100px; }\n' +
+    '  #hud-notifications { left: 12px; right: 12px; max-height: var(--hud-notice-space); overflow-y: auto; pointer-events: auto; }\n' +
+    '}\n' +
+    '@media (max-width: 767px) {\n' +
+    '  #hud-header { max-height: 30vh; max-height: 30dvh; overflow-y: auto; pointer-events: auto; }\n' +
+    '  #hud-side-panels { padding-left: 12px; padding-right: 12px; }\n' +
+    '  #hud-left, #hud-right { width: calc((100% - 8px) / 2); }\n' +
+    '  #hud-right-card { width: 100%; }\n' +
+    '  #hud-left-header, #hud-right-header { min-width: 0; }\n' +
+    '  #ui-controls-header, #ui-telemetry-header { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n' +
+    '}\n' +
+    '@media (max-width: 1100px) and (max-height: 600px) {\n' +
+    '  #hud-header { max-height: 25vh; max-height: 25dvh; overflow-y: auto; pointer-events: auto; }\n' +
+    '  #hud-footer { max-height: 32vh; max-height: 32dvh; overflow-y: auto; pointer-events: auto; }\n' +
+    '}\n' +
+    '\n' +
+    '/* Compact HUD modes reduce information, never the driving input overlay. */\n' +
+    '.hud-compact-view {\n' +
+    '  padding-bottom: 0.65rem !important;\n' +
+    '}\n' +
+    '.hud-compact-view #hud-cluster {\n' +
+    '  max-width: 44rem !important;\n' +
+    '  background: rgba(8, 14, 26, 0.75) !important;\n' +
+    '  border: 1px solid rgba(56, 189, 248, 0.35) !important;\n' +
+    '  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55) !important;\n' +
+    '  padding: 0.45rem 1rem !important;\n' +
+    '}\n' +
+    '.hud-compact-view #ui-tank-hint {\n' +
+    '  display: none !important;\n' +
+    '}\n' +
+    '\n' +
+    '/* Mobile-only overlay: the centre stays transparent and scrollable menus keep\n' +
+    '   their native touch behaviour. Primary fine-pointer desktop layouts are unchanged. */\n' +
+    '#mobile-controls, .mobile-help { display: none; }\n' +
+    '#mobile-controls[hidden] { display: none !important; }\n' +
+    '@media (pointer: coarse) {\n' +
+    '  body { --mobile-stick-size: clamp(88px, 27vw, 124px); }\n' +
+    '  body[data-mobile-controls="true"] #touch-controls { display: none !important; }\n' +
+    '  #mobile-controls:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 18; pointer-events: none; }\n' +
+    '  .mobile-stick-group { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); width: var(--mobile-stick-size); display: flex; flex-direction: column; align-items: center; gap: 6px; }\n' +
+    '  .mobile-stick-group-left { left: max(10px, env(safe-area-inset-left)); }\n' +
+    '  .mobile-stick-group-right { right: max(10px, env(safe-area-inset-right)); }\n' +
+    '  .mobile-stick { width: var(--mobile-stick-size); height: var(--mobile-stick-size); flex: 0 0 auto; position: relative; border: 1px solid #81d7ee88; border-radius: 50%; background: radial-gradient(circle, #0b233433 0 30%, #0c203544 31% 100%); box-shadow: inset 0 0 18px #07142388; pointer-events: auto; touch-action: none; -webkit-touch-callout: none; }\n' +
+    '  .mobile-stick.is-held { border-color: #a4efff; background-color: #0b293b33; }\n' +
+    '  .mobile-stick-cross { position: absolute; inset: 12%; border: 1px solid #a2d8f122; border-radius: 50%; pointer-events: none; }\n' +
+    "  .mobile-stick-cross::before, .mobile-stick-cross::after { content: ''; position: absolute; background: #a2d8f133; }\n" +
+    '  .mobile-stick-cross::before { top: 50%; left: 0; width: 100%; height: 1px; }\n' +
+    '  .mobile-stick-cross::after { left: 50%; top: 0; height: 100%; width: 1px; }\n' +
+    '  .mobile-stick-knob { position: absolute; width: 37%; height: 37%; top: 31.5%; left: 31.5%; border-radius: 50%; border: 1px solid #b0f1ffbb; background: radial-gradient(circle at 35% 30%, #7fcae777, #153e56bb); box-shadow: 0 3px 12px #0007; transform: translate(var(--stick-x, 0px), var(--stick-y, 0px)); pointer-events: none; }\n' +
+    '  .mobile-stick-label, .mobile-stick-hint { font-size: 9px; font-weight: 700; line-height: 1.3; color: #d5eef8; white-space: nowrap; text-shadow: 0 1px 3px #000; }\n' +
+    '  .mobile-stick-label { width: 100%; white-space: normal; text-align: center; }\n' +
+    '  .mobile-stick-hint { position: absolute; top: calc(100% + 2px); width: calc(100% + 12px); white-space: normal; text-align: center; font-size: 8px; line-height: 10px; }\n' +
+    '  #mobile-stick-mode { pointer-events: auto; width: 100%; min-height: 32px; border: 1px solid #79cce88c; border-radius: 9px; padding: 2px 8px; background: #0a1d2cec; color: #def7ff; font: inherit; font-size: 11px; touch-action: manipulation; }\n' +
+    '  .mobile-utilities { position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: grid; grid-template-columns: repeat(2, 42px); gap: 4px; pointer-events: auto; }\n' +
+    '  .mobile-utilities button { min-height: 32px; padding: 3px; color: #def6ff; background: #0a1d2cbd; border: 1px solid #79cce866; border-radius: 8px; font: inherit; font-size: 10px; touch-action: manipulation; }\n' +
+    '  .mobile-utilities button:focus-visible, #mobile-stick-mode:focus-visible { outline: 2px solid #a4efff; outline-offset: 2px; }\n' +
+    '  body[data-mobile-controls="true"] #hud-footer { padding: 4px 8px max(84px, calc(env(safe-area-inset-bottom) + 76px)); gap: 3px; overf'... 4859348 more characters,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

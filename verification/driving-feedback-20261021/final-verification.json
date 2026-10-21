@@ -1,0 +1,91 @@
+{
+  "schema": "driving-feedback-final-verification-v1",
+  "recordedAt": "2026-10-21T08:03:59.373290+00:00",
+  "baseMain": "2efc2477d329b4aaef873a014f2dc8331a13fbc3",
+  "testedProductionCommit": "06e76df8005b883c255c6f400eaabe9a7f076212",
+  "productionGitTreeListingSha256": "ac0c0867f80eaa80dade7a51ce5f759909451f3bf11d0824e621ce914204d3cd",
+  "productionUnchangedAcrossBothRuns": true,
+  "coverage": {
+    "businessTestInstances": 872,
+    "passedBusinessTestInstances": 872,
+    "remainingFailedBusinessTests": 0,
+    "basis": "Exact multiset of named test instances verified; some titles repeat. Not a single all-green npm-test run."
+  },
+  "completeIntegrationRun": {
+    "command": "npm test",
+    "tests": 872,
+    "pass": 869,
+    "fail": 3,
+    "skipped": 0,
+    "milliseconds": 610902.129707,
+    "log": "full-test-integration-872.log",
+    "failures": "Obsolete fixture weather hook stub, removed passenger button assertion, weather count3\u21924; only those test files adapted."
+  },
+  "finalRerun": {
+    "command": "node --test --test-skip-pattern='1800s full-lap' tests/*.test.mjs",
+    "runnerTests": 870,
+    "pass": 870,
+    "fail": 0,
+    "skipped": 0,
+    "milliseconds": 354054.109323,
+    "note": "869business test instances +1empty-filter file runner. Node filters3matching long tests before counting, rather than reporting skipped3.",
+    "log": "full-test-final-except-unchanged-long-runs.log"
+  },
+  "reusedUnchangedLongRuns": {
+    "businessTests": 3,
+    "counts": [
+      12,
+      16,
+      20
+    ],
+    "simulatedSecondsEach": 1800,
+    "zeroOBBOverlap": true,
+    "allSixBridgeLanesObserved": true,
+    "maximumWaitSeconds": 26.283333333333122,
+    "minimumPerCarDistanceMetres": 21330.876000621378,
+    "log": "final-candidate-1800s-traffic-extract.log",
+    "fullLog": "full-test-integration-872.log",
+    "names": [
+      "12 actual coast NPCs: 1800s full-lap 3D motion, exclusive joins, no OBB overlap, no deadlock",
+      "16 actual coast NPCs: 1800s full-lap 3D motion, exclusive joins, no OBB overlap, no deadlock",
+      "20 actual coast NPCs: 1800s full-lap 3D motion, exclusive joins, no OBB overlap, no deadlock"
+    ]
+  },
+  "otherGates": {
+    "numericMap12": {
+      "tests": 42,
+      "passed": 42,
+      "actualScenarios": 40,
+      "ticksEach": 300,
+      "equality": "Object.is every numeric/boolean field + impacts vs exact prior-main config/physics"
+    },
+    "stationAndMergeFocused": {
+      "tests": 23,
+      "pass": 23
+    },
+    "independentStationQueries": 49590,
+    "citySpeedHz": [
+      10,
+      15,
+      20,
+      30,
+      60,
+      144
+    ],
+    "citySpeedEvidence": "HUD120,9seconds,300mcar/300mcamera,production slices synthetic RAF",
+    "luaRuntime": {
+      "tests": 24,
+      "pass": 24
+    },
+    "check": "check-final.log",
+    "build": "build-final.log",
+    "projectionExactMirror": true,
+    "rootIdentity": "root-bundle-identity.json"
+  },
+  "limits": [
+    "No supported WebGL GPU context, real phone gameplay/FPS, native audio or subjective listening acceptance.",
+    "CPU SVG/PNG flat-colour geometry projections are not WebGL/PBR screenshots.",
+    "CPU WAV reference is not native OfflineAudioContext/browser autoplay/speaker acceptance.",
+    "Local gates are not a deployment claim; publication requires branch/PR checks and exact formal source readback."
+  ]
+}

@@ -70,7 +70,7 @@ test('actualr128 low-poly model owns bounded geometry, creates lazily and dispos
   for(const name of ['coast-water','coast-sand','coast-promenade','coast-pier-boardwalk','coast-original-ferris-wheel','coast-palm-trunks'])assert.ok(root.getObjectByName(name),`${name} is actual owned scene geometry`);
   root.updateMatrixWorld(true);const wheelBox=new THREE.Box3().setFromObject(root.getObjectByName('coast-original-ferris-wheel'));
   assert.ok(wheelBox.max.y>58&&wheelBox.min.x< -640&&wheelBox.max.x< -640);
-  const m=coast.metrics();assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(m.buildings,44);
+  const m=coast.metrics();assert.ok(m.staticMeshDraws<=coast.artBudget.staticMeshDraws);assert.ok(m.maximumStaticTriangles<=coast.artBudget.staticTriangles);assert.equal(m.buildings,52);assert.equal(m.retainedCoastalBuildings,44);assert.equal(m.hillsideBuildings,8);
   let instanceCount=0;
   root.traverse(o=>{if(o.isInstancedMesh){instanceCount++;o.addEventListener('dispose',()=>instancesDisposed++);for(const x of o.instanceMatrix.array)assert.ok(Number.isFinite(x));}if(!o.geometry)return;for(const x of o.geometry.attributes.position.array)assert.ok(Number.isFinite(x));});
   const before=instancesDisposed;
@@ -205,6 +205,6 @@ test('actual map switching isolates coast ownership/counts, blocks ranked starts
  await h.click('ranked-start');assert.equal(h.requests('/api/run').length,0);
  await h.click('btn-leaderboard');assert.equal(h.get('ranked-category').value,'highway-realistic');
  assert.ok(h.requests('/api/leaderboard').every(r=>!r.url.includes('coast')));
- h.context.switchMap('city');assert.equal(leaves,1);assert.equal(h.context.trafficCount,36);assert.equal(h.state.x,5.25);
+ h.context.switchMap('city');assert.equal(leaves,1);assert.equal(h.context.trafficCount,36);assert.equal(h.state.x,6);
  h.context.switchMap('highway');assert.equal(h.context.trafficCount,36);assert.equal(h.state.x,2.5);
 });

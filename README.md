@@ -52,7 +52,7 @@ tesla_roadster_simulator_package/
 - **清晰车内气量条**：实体仪表屏移入固定座舱视场，气量横槽与文字分离，带 20% 警戒线；车内外共用实时剩余量，满瓶、持续喷气、耗尽和重置一致。移除挡视线的车内中央后视镜与支架。
 - **中英双语极速切换 (🌐)**：全局 DOM 元素、弹窗指南、实时警报与语音朗读均支持一键热切换。
 - **12 款官方精调航天质感车漆**：航天阳极白 (Ano White)、主打多涂层红、暗夜钛黑、星舰液态亮银、赛博电光蓝等。
-- **3 大动态天气与光照系统**：星际暗夜 (Cyber Night)、赛博霓虹雨夜 (Neon Rain，含柔和细腻的湿沥青反光、挡风玻璃水滴与雷暴雷鸣)、火星落日黄昏 (Mars Sunset)。
+- **4 大动态天气与光照系统**：星际暗夜 (Cyber Night)、赛博霓虹雨夜 (Neon Rain，含柔和细腻的湿沥青反光、挡风玻璃水滴与雷暴雷鸣)、火星落日黄昏 (Mars Sunset)、清朗日间 (Clear Day，无太阳物件)。
 - **3 级镜头缩放与 4 种相机视角**：追视视角 (Chase)、3D 展厅特写 (V)、高空俯瞰 (Orbit)、沉浸式第一人称战机座舱 (FPV C)。
 
 ### 4. 缺陷修复与稳健性保障 (Bug Fixes & System Polish)
@@ -85,7 +85,7 @@ tesla_roadster_simulator_package/
 | **F** | 物理模式切换 | 常规物理模式 (Realistic) ⇄ 幻想极速模式 (Fantasy) |
 | **C** | 第一人称座舱视角 (FPV) | 进入超清战机级座舱（实时仪表屏、Yoke转动、HUD十字线） |
 | **V** | 3D 展厅特写视角 (Showroom) | 镜头环绕欣赏 1:1 车身工业细节 |
-| **T** | 天气与时间切换 | 暗夜 ⇄ 赛博霓虹雨夜 ⇄ 火星落日黄昏 |
+| **T** | 天气与时间切换 | 暗夜 ⇄ 赛博霓虹雨夜 ⇄ 火星落日黄昏 ⇄ 清朗日间 |
 | **M** | 选择世界地图 | 高架高速 / 赛博都市 / 海滨街区（原创压缩片区） |
 | **X** | RCS 自动回正开关 | 开启时在松开姿态控制满 2 秒后平滑回正 |
 | **R** | 修复并重置车辆 | 重置车辆姿态、补满空气槽与完整修复受损车身 |
@@ -358,9 +358,9 @@ The common FPV eye is now1.04m above the vehicle origin, below both actual roof 
 
 ## Public city passenger game / 城市接客正式入口
 
-Map 2 (Cyber City) now shows **Passenger game / 接客游戏** in the toolbar in every HUD mode, including phones. Tap to start immediately and tap the active button to exit; the existing `=` start shortcut remains available without a secret confirmation. Maps 1 and 3 do not expose or run this game. White columns mark five waiting passengers; approach within 4m on the ground, then follow that passenger’s green destination. Each road route is at least 900m and pays 1,000–3,000 independent passenger points. Existing occupied-crash penalties, preserved final scores, new-round resets and map-exit resource disposal are unchanged. These fares never enter ranked scoring; starting a passenger game cancels a current ranked run, and starting a ranked run exits the passenger game.
+Map 2 automatically enables its passenger game when ordinary sandbox driving starts. There is no toolbar toggle or `=` shortcut, and no old off-preference can suppress it. Five white waiting columns and green destinations retain their original pickup/delivery rules, fares, occupied-crash penalty and new-round resets. Leaving the city disposes its resources. Starting/running a ranked challenge temporarily suspends passengers; after its completion dialog closes, ordinary city passengers resume without changing the immutable ranked result. Maps 1/3 do not run city passenger jobs.
 
-## Map 2 street scale and low-frame-rate clock / 地图2街道尺度与低帧时间
+## Map 2 street scale and low-frame-rate clock / 地图2街道尺度与低帧时间 (first milestone history)
 
 Map 2 keeps its 2400 m world, 300 m road grid, vehicle dimensions and `CITY_WORLD_SPEED_SCALE = 1.0`. Its six lanes now measure 3.5 m each (21 m asphalt), with NPCs on actual lane centres, the reset at the middle lane centre, and passenger stops/beam clearance inside the same road grid. The existing 128 towers are repositioned six metres from the road edge; their rendered poses and collision boxes share the same coordinates. Heights, roof/helipad functions and the original two skybridge connections remain. No new scenery lights or tower models are added. Lane and crosswalk paint use two static instance batches rather than thousands of separate mesh objects.
 
@@ -369,10 +369,22 @@ This original Map 2 milestone introduced its bounded 60 Hz clock; terrain-v2 bel
 Evidence and limits are in `verification/map2-street-scale/`. The checked Three r128 CPU scene has 1,903 mesh objects instead of 10,175 (8,272 fewer), with the same 128 shadow-casting tower boxes and two bridges. These are scene-graph counts, **not measured GPU draw calls or phone FPS**. Geometry/CPU checks do not substitute for WebGL appearance, touch interaction or actual-device frame-rate acceptance. This branch starts at the published fifth Map 3 art revision `907a7029`; it does not contain or reconstruct the unavailable sixth-round candidate.
 
 
-## Map 3 terrain-v2 / 海岸山路、坡面和曲线高架
+## Map 3 terrain-v2 / 海岸山路、坡面和曲线高架 (first release history)
 
 Map 3 now has a **5.481 km natural-curved main loop**, a **3.592 km ground bypass**, and a genuinely connected **213.45 m pier approach**. The main road rises continuously from sea level to 64 m, then descends to the coast; measured maximum road grade is 6%, minimum horizontal centreline radius 44.85 m. The 9 m two-way road includes 7 m lanes plus two 1 m shoulders. Broad rolling terrain replaces the former inland grid rather than being added on top of it. Eleven direction/warning signs and 112 lane arrows distinguish the mountain, viaduct, ground bypass, underpass and pier.
 
 Road render triangles, layered wheel support, jump/landing contacts, tilted thin guardrails, bridge undersides/piers and all four directed NPC paths share `src/coast-road-network.js`. Bridge support is selected by reachable layer, not by the highest surface at the same X/Z. The non-bridge shared junctions and pier join are level; NPCs follow actual road height and reserve three real conflict zones instead of driving through one another. Coast now owns a separate bounded 60 Hz elapsed-time clock and per-render V8 controls; pause/background transitions clear stale timing/input, not physical support. Map 1/2 remain numerically equivalent to their published main baseline in 40 actual production-motion scenarios, and their world/vehicle/taxi/clock/audio sources are unchanged.
 
 The retained 44 coastal buildings and 94 palms preserve their exact published dimensions, colours and poses; hillside conflicts are removed. The scene has 82 static mesh batches, a maximum allocated-pool budget of 157,270 triangles, two owned lights, 1,256,107 sampled texture bytes and 4,388,452 geometry/instance bytes. These are CPU scene-structure measurements, **not measured GPU draw calls, phone FPS or WebGL visual acceptance**. `verification/coast-terrain-v2/` records the 835/835 final regression, 12/16/20-car 1,800-second full-lap OBB checks, old junction-height counterexample, numerical epoch proof and clearly labelled CPU-only driving geometry study. This is new terrain-v2 work based on current main; it does not recover or claim the lost sixth-art draft.
+
+
+## Driving feedback update / 真实试玩反馈修订 · 2026-10-21
+
+- **City metres remain real metres.** Production animate/clock/motion/HUD/chase-camera CPU integration at 10/15/20/30/60/144 Hz gives HUD120 km/h →300 m in9 seconds for both car and camera. The former city16 m dash cycle passed at only53.03% of Map1's14 m cycle with its legacy1.65 world scroll: a valid perceptual mismatch, not evidence to double city displacement. City paint is now3 m long with an8 m cycle and a brighter restrained white-grey; world scale stays1.0. Map1 physics/scroll are unchanged.
+- **City roads/skyline:**24 m asphalt, six4 m lanes, reset6 m, taxi stops8 m; east–west NPCs now actually keep right, as north–south already did. City NPCs remain straight/wrapped traffic, not new turn navigation. The99-building low-frontage/recessed-tower hierarchy retains35 roof refill pads and two skybridges; a slender96 m skyline accent fits wholly inside the default9:16 chase frustum. Intersections retain the all-lane sight-line clearance checks.
+- **Day/night:** the existing weather selector now includes Clear Day without a visible sun object. Pale daytime facades and matte pavement switch to quieter night facades, warmer windows and more legible road paint; no extra city lights or per-frame occlusion system.
+- **Lower, quieter V8:** retain the firing waveform and engine graph; lower the exhaust register, high-speed RPM asymptote, filter ceiling, texture noise and gain. CPU preview files compare identical inputs to the exact previous-published source. This is not a claim of subjective listening or device-speaker acceptance.
+- **Coast bridge/surface repairs:** reachable, same-height grass-to-asphalt support handoff prevents driving beneath a rising road. The viaduct is23 m wide: six3.5 m lanes plus1 m shoulders, smooth approach tapers, actual NPC lane identities/arc lengths/tangents, merge yielding and lane-aware junction reservations. Visible central abutments and wing walls close the outer-bank bypass without magnetizing underpass traffic onto the deck. Every lane station and micro-perturbation is checked against independent road triangles, including a preserved46.56 m pre-fix station-drop witness.
+- **Coast landscape:** exclusive flat terrain/bank/asphalt top faces remove large coplanar overlaps instead of raising the physical road. Two additional real inland hill masses and eight terrain-grounded hillside buildings extend the retained44 coastal buildings/94 palms. Separate foundation base and absolute roof heights preserve collisions and roof refill. Current CPU structure is85 mesh batches/167,110 maximum static triangles under the unchanged96/180,000 budget; this is not GPU draw calls/FPS.
+
+`verification/driving-feedback-20261021/` contains exact baseline fixtures, failed witnesses, numerical epoch proof, real 6-lane merge/long-run OBB regressions, source-to-bundle checks, and clearly labelled CPU flat-colour projections. These do not replace a supported browser/phone WebGL and listening check. Historical milestone records above retain their own measured counts and source identities; they are not claims that newly authorized source files stayed byte-identical.

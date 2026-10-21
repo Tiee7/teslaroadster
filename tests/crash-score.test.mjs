@@ -105,7 +105,7 @@ function harness(map = 'highway', ranked = false) {
   run("document.getElementById('btn-crash-respawn').addEventListener('click', resetCar); document.getElementById('btn-reset').addEventListener('click', resetCar);");
   const move = point => { Object.assign(state, point); window.RoadsterTaxi.tick(); };
   const startTaxi = (occupied = true) => {
-    window.RoadsterTaxi.handleKeydown({ code: 'Equal', key: '=', target: new Element(), preventDefault() {} });
+    window.RoadsterTaxi.ensureDefault();
     for (let i = 0; i < 8; i++) {
       const trip = window.RoadsterTaxi.snapshot().waiting[0]; move(trip.pickup); move(trip.destination);
     }

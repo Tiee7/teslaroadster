@@ -1,0 +1,12 @@
+✔ preserved published grass→asphalt→slope continuous-driving counterexample cuts through the road (3457.634817ms)
+✔ real production controls hand off grass to asphalt and follow the complete climb into the bridge, never resetting support per frame (35439.591336ms)
+✔ coincident ground can hand off but a distant bridge top never magnetizes terrain from below (521.736981ms)
+✔ original legal bank approach falls beneath the bridge, while real abutment wings close outer-bank bypasses (24785.956283ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64342.127977

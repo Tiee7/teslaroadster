@@ -1,0 +1,20 @@
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 10Hz (64.841244ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":10,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":90}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 15Hz (34.215356ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":15,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":135}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 20Hz (33.940747ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":20,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":180}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 30Hz (42.710847ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":30,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":270}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 60Hz (43.19625ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":60,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":540}
+✔ actual city animate+motion+HUD+camera: 120km/h travels 300m in nine seconds at 144Hz (49.874368ms)
+ℹ {"scope":"synthetic RAF/CPU integration, not a human cruise or device/WebGL FPS measurement","fps":144,"wallSeconds":9,"metres":299.9999999999964,"cameraMetres":299.9999999999964,"HUD":[120,120],"presentations":540}
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 382.43083

@@ -139,10 +139,10 @@ test('white pickup radius doubles to 4m without widening destination or permitti
 test('public entry explains pickup radius and independent fares in both languages', () => {
   for (const language of ['en', 'zh']) {
     const h = harness(); h.context.currentLang = language; h.taxi.render();
-    const button = h.elements['btn-city-taxi'];
-    assert.match(button.attributes.title, language === 'zh' ? /地面靠近 4 米自动接上/ : /within 4m on the ground/);
-    assert.equal(h.elements['city-taxi-help'].textContent, button.attributes.title);
-    assert.match(button.attributes.title, language === 'zh' ? /不计入排行榜/ : /never leaderboard/);
+    const help = h.elements['city-taxi-help'].textContent;
+    assert.match(help, language === 'zh' ? /地面靠近 4 米自动接上/ : /within 4m on the ground/);
+    assert.match(help, language === 'zh' ? /默认开启接客/ : /enabled automatically/);
+    assert.match(help, language === 'zh' ? /不计入排行榜/ : /never leaderboard/);
     assert.equal(h.confirms.length, 0);
   }
 });
@@ -248,66 +248,33 @@ function harness() {
   });
   vm.runInContext(source, context);
   const taxi = window.RoadsterTaxi;
-  const key = (overrides = {}) => taxi.handleKeydown({ code: 'Equal', key: '=', target: new Element(), preventDefault() {}, ...overrides });
+  const activate = () => taxi.ensureDefault(); // city lifecycle activation, not a user shortcut
   const move = point => { Object.assign(state, point); taxi.tick(); };
-  return { context, state, window, document, elements, group, taxi, confirms, aborts, key, move, approve: value => { approved = value; } };
+  return { context, state, window, document, elements, group, taxi, confirms, aborts, activate, move, approve: value => { approved = value; } };
 }
 
-test('public shortcut is city-only, repeat-safe, focus-safe and never reopens an active game', () => {
-  const h = harness(); const inactive = () => assert.equal(h.taxi.snapshot().active, false);
-  assert.equal(h.elements['hud-footer'].children.length, 0); assert.equal(h.group.children.length, 0);
-  for (const map of ['highway','coast']) { h.context.currentMap = map; h.key(); inactive(); }
-  h.context.currentMap = 'city'; h.key({ repeat: true }); inactive();
-  for (const flag of ['shiftKey', 'ctrlKey', 'altKey', 'metaKey', 'isComposing']) {
-    assert.equal(h.key({ [flag]: true }), false); inactive();
-  }
-  const input = new Element(); input.typing = true; h.key({ target: input }); inactive();
-  for (const id of Object.keys(h.elements).filter(id => id.startsWith('modal-'))) {
-    h.elements[id].classList.remove('hidden'); h.key(); inactive(); h.elements[id].classList.add('hidden');
-  }
-  h.document.hidden = true; h.key(); h.document.hidden = false; inactive();
-  h.window.RoadsterRanked.isDialogOpen = () => true; h.key(); inactive(); h.window.RoadsterRanked.isDialogOpen = () => false;
-  h.window.RoadsterMusic.isSettingsOpen = () => true; h.key(); inactive(); h.window.RoadsterMusic.isSettingsOpen = () => false;
-  h.state.isDestroyed = true; h.key(); h.state.isDestroyed = false; inactive();
-  h.key(); assert.equal(h.taxi.snapshot().waiting.length, 5);
-  assert.equal(h.confirms.length, 0, 'formal entry has no secret confirmation');
-  assert.equal(h.aborts.join(','), 'invalid'); assert.equal(h.context.lastTime, 9999); assert.equal(h.context.clears, 1);
-  const ids = h.taxi.snapshot().waiting.map(x => x.id).join(',');
-  h.key(); h.key({ repeat: true }); assert.equal(h.confirms.length, 0);
-  assert.equal(h.taxi.snapshot().waiting.map(x => x.id).join(','), ids);
-  assert.equal(h.elements['hud-footer'].children.length, 2); assert.equal(h.group.children.length, 1);
+test('city passengers automatically start once after map/reset, with no user switch or off preference',()=>{
+ const h=harness();assert.equal(h.taxi.snapshot().active,false);h.taxi.onReset();
+ assert.equal(h.taxi.snapshot().active,true);assert.equal(h.taxi.snapshot().waiting.length,5);assert.equal(h.group.children.length,1);
+ const ids=h.taxi.snapshot().waiting.map(t=>t.id).join(',');for(let i=0;i<6;i++){h.taxi.tick();h.taxi.ensureDefault();}
+ assert.equal(h.taxi.snapshot().waiting.map(t=>t.id).join(','),ids);assert.equal(h.group.children.length,1);assert.equal(h.aborts.length,0);
+ assert.equal(h.taxi.handleKeydown,undefined);assert.equal(h.elements['btn-city-taxi'].listeners.click,undefined);
+ const oldGeometry=h.group.children[0].children[0].children[0].geometry;h.context.currentMap='coast';h.taxi.tick();
+ assert.equal(h.taxi.snapshot().active,false);assert.equal(h.group.children.length,0);assert.equal(oldGeometry.disposed,true);
+ h.context.currentMap='city';h.taxi.onReset();assert.equal(h.taxi.snapshot().active,true);assert.equal(h.taxi.snapshot().score,0);
+});
+test('automatic passengers respect hidden/menu/destruction and ranked ownership without abort loops',()=>{
+ const h=harness();for(const map of['highway','coast']){h.context.currentMap=map;h.taxi.tick();assert.equal(h.taxi.snapshot().active,false);}
+ h.context.currentMap='city';h.document.hidden=true;h.taxi.tick();assert.equal(h.taxi.snapshot().active,false);h.document.hidden=false;
+ h.elements['modal-help'].classList.remove('hidden');h.taxi.tick();assert.equal(h.taxi.snapshot().active,false);h.elements['modal-help'].classList.add('hidden');
+ h.state.isDestroyed=true;h.taxi.tick();assert.equal(h.taxi.snapshot().active,false);h.state.isDestroyed=false;
+ h.window.RoadsterRanked.isActive=()=>true;h.taxi.onReset();h.taxi.tick();assert.equal(h.taxi.snapshot().active,false);assert.equal(h.aborts.length,0);
+ h.window.RoadsterRanked.isActive=()=>false;h.taxi.tick();assert.equal(h.taxi.snapshot().active,true);
+ h.window.RoadsterRanked.isActive=()=>true;h.taxi.tick();assert.equal(h.taxi.snapshot().active,false);h.taxi.onReset();assert.equal(h.taxi.snapshot().active,false);
+ h.window.RoadsterRanked.isActive=()=>false;h.taxi.tick();assert.equal(h.taxi.snapshot().active,true);assert.equal(h.aborts.length,0);
 });
 
-test('public city button starts and exits cleanly in every HUD, while other maps never expose or start it', () => {
-  const h = harness(), button = h.elements['btn-city-taxi'];
-  assert.equal(button.hidden, false); assert.equal(button.attributes['aria-pressed'], 'false');
-  for (const mode of ['full','medium','minimal','full']) {
-    h.document.body.dataset.hudMode = mode;
-    button.click(); assert.equal(h.taxi.snapshot().active, true); assert.equal(h.group.children.length, 1);
-    assert.equal(button.attributes['aria-pressed'], 'true');
-    const geometry = h.group.children[0].children[0].children[0].geometry;
-    button.click(); assert.equal(h.taxi.snapshot().active, false); assert.equal(h.group.children.length, 0);
-    assert.equal(h.elements['hud-footer'].children.length, 0); assert.equal(geometry.disposed, true);
-    assert.equal(button.attributes['aria-pressed'], 'false');
-  }
-  for (const map of ['highway','coast']) {
-    h.context.currentMap = map; h.taxi.render(); assert.equal(button.hidden, true);
-    button.listeners.click(); assert.equal(h.taxi.snapshot().active, false);
-  }
-  h.context.currentMap = 'city'; h.taxi.render(); assert.equal(button.hidden, false);
-  h.state.isDestroyed = true; h.taxi.render(); assert.equal(button.disabled, true); button.listeners.click();
-  assert.equal(h.taxi.snapshot().active, false);
-  h.state.isDestroyed = false; h.taxi.render(); assert.equal(button.disabled, false);
-  for (const reason of ['hidden','modal','ranked','settings']) {
-    h.document.hidden = reason === 'hidden';
-    h.elements['modal-help'].classList.toggle('hidden', reason !== 'modal');
-    h.window.RoadsterRanked.isDialogOpen = () => reason === 'ranked';
-    h.window.RoadsterMusic.isSettingsOpen = () => reason === 'settings';
-    button.listeners.click(); assert.equal(h.taxi.snapshot().active, false, reason);
-  }
-});
-
-test('real shared keyboard handler delegates = exclusively, preserves typing, and retains ] zoom', () => {
+test('real shared keyboard preserves typing and bracket zoom without an equals passenger switch', () => {
   const h = harness();
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
   const handlerSource = hud.slice(hud.indexOf("window.addEventListener('keydown'"), hud.indexOf("window.addEventListener('keyup'"));
@@ -315,7 +282,7 @@ test('real shared keyboard handler delegates = exclusively, preserves typing, an
   h.window.addEventListener = (type, listener) => { if (type === 'keydown') handler = listener; };
   h.context.THREE.MathUtils = { clamp: (value, min, max) => Math.max(min, Math.min(max, value)) };
   h.context.updateZoomButtonLabel = () => {};
-  h.context.setKeyState = () => { throw new Error('handled shortcuts must not become held controls'); };
+  h.context.setKeyState = () => {}; h.taxi.onReset();
   h.state.camZoom = 0.75;
   vm.runInContext(handlerSource, h.context);
   const event = code => ({ code, key: code === 'Equal' ? '=' : ']', target: new Element(), preventDefault() {} });
@@ -328,7 +295,7 @@ test('real shared keyboard handler delegates = exclusively, preserves typing, an
 });
 
 test('scene has five readable double-sided white beams and only one green destination while occupied', () => {
-  const h = harness(); h.key(); const markers = h.group.children[0].children;
+  const h = harness(); h.activate(); const markers = h.group.children[0].children;
   assert.equal(markers.length, 6); assert.equal(markers.filter(x => x.visible).length, 5);
   for (const marker of markers.slice(0, 5)) {
     assert.equal(marker.children[0].material.color, 0xffffff);
@@ -364,7 +331,7 @@ test('scene has five readable double-sided white beams and only one green destin
 });
 
 test('map exit and repeated stops fully remove and dispose markers and the active-only score display', () => {
-  const h = harness(); h.key(); const markers = h.group.children[0].children;
+  const h = harness(); h.activate(); const markers = h.group.children[0].children;
   const geometry = markers[0].children[0].geometry, material = markers[0].children[0].material;
   const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
   Object.assign(h.state, origin); h.taxi.onReset();
@@ -373,12 +340,12 @@ test('map exit and repeated stops fully remove and dispose markers and the activ
   assert.equal(h.taxi.snapshot().active, false); assert.equal(h.taxi.snapshot().score, 0);
   assert.equal(h.group.children.length, 0); assert.equal(h.elements['hud-footer'].children.length, 0);
   assert.equal(geometry.disposed, true); assert.equal(material.disposed, true);
-  h.context.currentMap = 'city'; h.key(); assert.equal(h.taxi.snapshot().waiting.length, 5);
+  h.context.currentMap = 'city'; h.activate(); assert.equal(h.taxi.snapshot().waiting.length, 5);
   assert.equal(h.group.children.length, 1); assert.equal(h.elements['hud-footer'].children.length, 2);
 });
 
 test('bottom-right HUD renders only the original passenger score through deliveries, losses and empty resets', () => {
-  const h = harness(); h.key();
+  const h = harness(); h.activate();
   const scoreHud = h.elements['hud-footer'].children.at(-1);
   let expected = 0;
   const check = () => {
@@ -414,14 +381,14 @@ test('bottom-right HUD renders only the original passenger score through deliver
   const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup); h.taxi.onReset(); check();
   h.context.currentMap = 'highway'; h.taxi.tick();
   assert.equal(scoreHud.parent, null); assert.equal(h.elements['hud-footer'].children.length, 0);
-  h.context.currentMap = 'city'; h.key();
+  h.context.currentMap = 'city'; h.activate();
   const restartedHud = h.elements['hud-footer'].children.at(-1);
   assert.notEqual(restartedHud, scoreHud);
   assert.equal(restartedHud.children.length, 1); assert.equal(restartedHud.children[0].textContent, '0');
 });
 
 test('numeric passenger score survives language and HUD/camera changes without adding visual text', () => {
-  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0];
+  const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0];
   h.move(trip.pickup); h.move(trip.destination);
   const scoreHud = h.elements['hud-footer'].children.at(-1);
   for (const currentLang of ['zh', 'en', 'zh', 'en']) {
@@ -445,7 +412,7 @@ test('numeric passenger score survives language and HUD/camera changes without a
 });
 
 test('menus pause transitions; destruction clears the occupied ride before any payout', () => {
-  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0];
+  const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0];
   h.elements['modal-help'].classList.remove('hidden'); h.move(trip.pickup);
   assert.equal(h.taxi.snapshot().passenger, null);
   h.elements['modal-help'].classList.add('hidden'); h.taxi.tick(); assert.equal(h.taxi.snapshot().passenger.id, trip.id);
@@ -461,12 +428,11 @@ test('integration exposes a city entry, retains zoom brackets and keeps taxi far
   const html = readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
   const hiddenCrashScore = html.match(/<div id="crash-passenger-score"[^>]* hidden>[\s\S]*?<\/strong>\s*<\/div>/)?.[0];
   assert.ok(hiddenCrashScore, 'passenger crash score is hidden until a passenger game is active');
-  assert.match(html, /<button id="btn-city-taxi"[^>]*aria-pressed="false"[^>]*aria-describedby="city-taxi-help"[^>]*hidden>Passenger game<\/button>/);
-  assert.match(source, /button.hidden = currentMap !== 'city'/);
+  assert.doesNotMatch(html, /id="btn-city-taxi"/);
+  assert.match(source, /function ensureDefault\(/);
   assert.doesNotMatch(source, /window\.confirm/);
   const hud = readFileSync(new URL('../src/ui-hud.js', import.meta.url), 'utf8');
-  assert.match(hud, /if \(window\.RoadsterTaxi\?\.handleKeydown\(e\)\) return/);
-  assert.ok(hud.indexOf("closest('input") < hud.indexOf('RoadsterTaxi?.handleKeydown(e)'));
+  assert.doesNotMatch(hud, /RoadsterTaxi\?\.handleKeydown/);
   assert.match(hud, /if \(e\.code === 'BracketRight'\)/);
   assert.match(hud, /function switchMap\(targetMap\) \{\s*window\.RoadsterTaxi\?\.stop\(\)/);
   assert.match(hud, /window\.RoadsterTaxi\?\.onReset\(\)/);
@@ -510,13 +476,13 @@ test('landing and low altitude flight never sweep a pickup or destination', () =
   assert.equal(at(session, trip.pickup).type, 'picked-up');
   flyThenLandBeyond(trip.destination); assert.equal(session.snapshot().score, 0);
   assert.equal(at(session, trip.destination).type, 'delivered');
-  const h = harness(); h.key(); const next = h.taxi.snapshot().waiting[0];
+  const h = harness(); h.activate(); const next = h.taxi.snapshot().waiting[0];
   h.state.wasAirborne = true; h.move(next.pickup); assert.equal(h.taxi.snapshot().passenger, null);
   h.state.wasAirborne = false; h.move(next.pickup); assert.equal(h.taxi.snapshot().passenger.id, next.id);
 });
 
 test('crashes settle a single double-fare penalty and freeze the result until a new round', () => {
-  const h = harness(); h.key();
+  const h = harness(); h.activate();
   const earn = count => { for (let i = 0; i < count; i++) { const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination); } };
   earn(10); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); const before = h.taxi.snapshot();
   h.state.hullIntegrity = 80; h.taxi.tick(); assert.equal(h.taxi.snapshot().passenger.id, trip.id); assert.equal(h.taxi.snapshot().score, before.score);
@@ -533,7 +499,7 @@ test('crashes settle a single double-fare penalty and freeze the result until a 
 });
 
 test('empty-car destruction keeps accrued passenger points in HUD and cockpit until respawn', () => {
-  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination);
+  const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); h.move(trip.destination);
   const hud = h.elements['hud-footer'].children.at(-1); h.state.isDestroyed = true; h.taxi.onDestroyed();
   assert.equal(h.taxi.snapshot().score, trip.fare); assert.equal(hud.children[0].textContent, trip.fare.toLocaleString());
   const draws = []; h.taxi.drawCockpit({ save() {}, restore() {}, fillRect() {}, fillText: text => draws.push(text) }); assert.match(draws[0], new RegExp(`^${trip.fare} PTS`));
@@ -561,7 +527,7 @@ test('taxi model itself blocks all payouts after death and applies nonnegative l
 test('bottom-right passenger HUD participates in footer bounds and releases its active layout', () => {
   const h = harness(); const footer = h.elements['hud-footer'];
   const controls = new Element(), cluster = new Element();
-  footer.appendChild(controls); footer.appendChild(cluster); h.key();
+  footer.appendChild(controls); footer.appendChild(cluster); h.activate();
   assert.deepEqual(footer.children[0].children, [controls, cluster]);
   assert.equal(footer.children.at(-1).id, 'city-taxi-hud'); assert.equal(footer.classList.contains('taxi-active'), true);
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
@@ -580,7 +546,7 @@ test('cockpit passenger strip shows live destination distance and local score wi
   const h = harness(); const draws = [], fills = [];
   const ctx = { save() {}, restore() {}, fillText(text, x, y, width) { draws.push({ text, x, y, width }); }, fillRect(...rect) { fills.push(rect); } };
   h.taxi.drawCockpit(ctx); assert.equal(draws.length, 0);
-  h.key(); h.taxi.drawCockpit(ctx); assert.match(draws.at(-1).text, /EMPTY.*5 WAITING/);
+  h.activate(); h.taxi.drawCockpit(ctx); assert.match(draws.at(-1).text, /EMPTY.*5 WAITING/);
   const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
   Object.assign(h.state, trip.destination, { x: trip.destination.x - 100 });
   h.taxi.drawCockpit(ctx); assert.match(draws.at(-1).text, /ON BOARD.*100m/);
@@ -624,7 +590,7 @@ test('top-left navigation shows only arrow and live meters across every HUD mode
   h.context.updateHudBounds = () => {};
   vm.runInContext(`${modeControls}\n${perspectiveControl}`, h.context);
   assert.equal(navigationParts(h).navigation, undefined);
-  h.key(); const { navigation, arrow, distance } = navigationParts(h);
+  h.activate(); const { navigation, arrow, distance } = navigationParts(h);
   assert.equal(navigation.hidden, true); assert.equal(top.classList.contains('taxi-navigation-active'), false);
   assert.equal(top.children.indexOf(navigation) + 1, top.children.indexOf(h.elements['hud-main']));
   assert.equal(navigation.attributes.role, 'img');
@@ -707,14 +673,14 @@ test('corner arrow and meter digits have silhouette contrast without a backgroun
   assert.doesNotMatch(arrow, /border|outline|box-shadow/);
   // Applying the filter to the transparent host keeps the child's clip-path
   // from cutting off the shadow; the arrow and meter digits are the only content.
-  const h = harness(); h.key(); const { navigation, arrow: element, distance } = navigationParts(h);
+  const h = harness(); h.activate(); const { navigation, arrow: element, distance } = navigationParts(h);
   assert.deepEqual(navigation.children, [element, distance]); assert.equal(element.children.length, 0);
   assert.equal(navigation.textContent, ''); assert.equal(element.textContent, '');
   assert.doesNotMatch(css, /\.city-taxi-navigation-(?:card|dial|detail)/);
 });
 
 test('meter digits follow the occupied destination live, round once and reset between passengers', () => {
-  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+  const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
   const { navigation, distance } = navigationParts(h);
   assert.equal(distance.textContent, `${Math.round(Math.hypot(trip.destination.x - h.state.x, trip.destination.z - h.state.z))}m`);
   for (const [x, z, expected] of [[30, 40, '50m'], [0, 37.49, '37m'], [0, 37.51, '38m'], [0, 0, '0m']]) {
@@ -734,7 +700,7 @@ test('meter digits follow the occupied destination live, round once and reset be
 
 test('navigation crosses north and +/-180 smoothly without a reverse full-turn jump', () => {
   for (const boundary of [0, Math.PI, 2 * Math.PI, -2 * Math.PI]) {
-    const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+    const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
     Object.assign(h.state, { x: trip.destination.x, z: trip.destination.z + 100, y: 10, wasAirborne: true, yaw: boundary - 0.001 });
     h.taxi.tick(); const before = rotation(navigationParts(h).arrow);
     h.state.yaw = boundary + 0.001; h.taxi.tick();
@@ -744,7 +710,7 @@ test('navigation crosses north and +/-180 smoothly without a reverse full-turn j
 });
 
 test('menus pause passenger transitions without freezing the live vehicle-relative bearing', () => {
-  const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+  const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
   Object.assign(h.state, { x: trip.destination.x, z: trip.destination.z + 100, yaw: 0 });
   h.elements['modal-help'].classList.remove('hidden'); h.taxi.tick();
   assert.ok(Math.abs(rotation(navigationParts(h).arrow)) < 1e-10);
@@ -755,7 +721,7 @@ test('menus pause passenger transitions without freezing the live vehicle-relati
 
 test('delivery, destroyed/reset passengers, stop and map exit clear navigation and its reserved space', () => {
   for (const finish of ['delivery', 'destroy', 'reset', 'stop', 'map']) {
-    const h = harness(); h.key(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+    const h = harness(); h.activate(); const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
     const { navigation, arrow, distance } = navigationParts(h); assert.equal(navigation.hidden, false);
     assert.match(distance.textContent, /^\d+m$/);
     if (finish === 'delivery') h.move(trip.destination);

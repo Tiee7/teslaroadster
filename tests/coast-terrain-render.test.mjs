@@ -28,10 +28,10 @@ geometryTest('rendered road and terrain positions are identical Float32 collisio
   for(let j=0;j<3;j++)for(const[axis,get]of[['x','getX'],['y','getY'],['z','getZ']])assert.equal(road[get](i*3+j),Math.fround(vertices[j][axis]));
  }
  assert.ok(Math.max(...Array.from(road.array).filter((_,i)=>i%3===1))>63.9);
- const terrain=root.getObjectByName('coast-inland-ground').geometry.attributes.position;assert.equal(terrain.count,n.terrain.indices.length);
+ const terrain=root.getObjectByName('coast-inland-ground').geometry.attributes.position;assert.ok(terrain.count>0);for(let i=0;i<terrain.count;i++){const x=terrain.getX(i),z=terrain.getZ(i);assert.ok(Math.abs(terrain.getY(i)-n.terrainSupport(x,z).height)<.002,'clipped render tops keep exact collision height; no visual road elevation fudge');}
 });
 geometryTest('whole-map terrain replaces inland blocks under unchanged mobile structural budgets',()=>{
- const m=coast.metrics();assert.equal(m.buildings,44);assert.equal(m.palms,94);assert.equal(m.ownedLights,2);assert.equal(m.shadowMapResolution,1024);
+ const m=coast.metrics();assert.equal(m.buildings,52);assert.equal(m.retainedCoastalBuildings,44);assert.equal(m.hillsideBuildings,8);assert.equal(m.palms,94);assert.equal(m.ownedLights,2);assert.equal(m.shadowMapResolution,1024);
  assert.ok(m.staticMeshDraws<=96);assert.ok(m.maximumStaticTriangles<=180000);assert.ok(m.textureBytes<=4*1024*1024);assert.ok(m.ownedGeometryBufferBytes+m.ownedInstanceBufferBytes<=8*1024*1024);assert.equal(m.nearDetailCapacity,384);
 });
 geometryTest('route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction',()=>{
@@ -57,4 +57,18 @@ geometryTest('actual sign instances read correctly from the approaching lane: ev
    assert.equal(painted,g[sign.text[k]][y][x]==='1',`${sign.text} glyph${k}, ${x}/${y}`);
   }
  }
+});
+geometryTest('actual flat terrain, bank and asphalt render tops have no substantive coplanar overlap; world heights are not raised',t=>{
+ const triangles=name=>{const p=root.getObjectByName(name).geometry.attributes.position,result=[];for(let i=0;i<p.count;i+=3){const v=[0,1,2].map(j=>({x:p.getX(i+j),y:p.getY(i+j),z:p.getZ(i+j)}));if(v.every(p=>Math.abs(p.y)<1e-5))result.push(v);}return result;};
+ const area=p=>Math.abs(p.slice(1,-1).reduce((sum,a,i)=>{const b=p[i+2],o=p[0];return sum+(a.x-o.x)*(b.z-o.z)-(b.x-o.x)*(a.z-o.z);},0))/2;
+ const intersection=(A,B)=>{let p=A;const sign=((B[1].x-B[0].x)*(B[2].z-B[0].z)-(B[1].z-B[0].z)*(B[2].x-B[0].x))>0?1:-1;for(let j=0;j<3&&p.length;j++){const a=B[j],b=B[(j+1)%3],d=v=>sign*((b.x-a.x)*(v.z-a.z)-(b.z-a.z)*(v.x-a.x)),next=[];for(let i=0;i<p.length;i++){const u=p[i],v=p[(i+1)%p.length],du=d(u),dv=d(v);if(du>=0)next.push(u);if((du>=0)!==(dv>=0)){const s=du/(du-dv);next.push({x:u.x+(v.x-u.x)*s,z:u.z+(v.z-u.z)*s});}}p=next;}return p.length>=3?area(p):0;};
+ const layers=['coast-inland-ground','coast-road-earth-banks','coast-road-surfaces'].map(triangles);let tested=0,maxOverlap=0;
+ for(const [ai,bi]of[[0,1],[0,2],[1,2]]){const grid=new Map();for(const tri of layers[bi]){const xs=tri.map(p=>p.x),zs=tri.map(p=>p.z);for(let x=Math.floor(Math.min(...xs)/64);x<=Math.floor(Math.max(...xs)/64);x++)for(let z=Math.floor(Math.min(...zs)/64);z<=Math.floor(Math.max(...zs)/64);z++){const key=`${x},${z}`;if(!grid.has(key))grid.set(key,[]);grid.get(key).push(tri);}}
+  for(const tri of layers[ai]){const xs=tri.map(p=>p.x),zs=tri.map(p=>p.z),near=new Set();for(let x=Math.floor(Math.min(...xs)/64);x<=Math.floor(Math.max(...xs)/64);x++)for(let z=Math.floor(Math.min(...zs)/64);z<=Math.floor(Math.max(...zs)/64);z++)for(const b of grid.get(`${x},${z}`)||[])near.add(b);for(const b of near){const overlap=intersection(tri,b);maxOverlap=Math.max(maxOverlap,overlap);assert.ok(overlap<.002,'only sub-20cm² Float32 seam residue, not stacked road/soil faces');tested++;}}
+ }
+ assert.ok(tested>10000);assert.ok(root.getObjectByName('coast-road-surfaces').material.polygonOffset,'controlled depth layer is only a seam safety net after true cutouts');t.diagnostic(JSON.stringify({flatTriangles:layers.map(a=>a.length),crossLayerTrianglePairs:tested,maxOverlapSquareMetres:maxOverlap}));
+});
+geometryTest('bridge abutment foundations and wing walls are visible oriented solids identical to collision, not invisible snap planes',()=>{
+ const mesh=root.getObjectByName('coast-bridge-abutments'),walls=n.structures.filter(b=>b.kind==='abutment'),matrix=new T.Matrix4(),v=new T.Vector3(),positions=mesh.geometry.attributes.position;assert.equal(walls.length,6);assert.equal(mesh.count,6);
+ for(let i=0;i<walls.length;i++){const w=walls[i],dx=w.b.x-w.a.x,dz=w.b.z-w.a.z,length=Math.hypot(dx,dz),nx=-dz/length,nz=dx/length;mesh.getMatrixAt(i,matrix);for(let j=0;j<positions.count;j++){v.fromBufferAttribute(positions,j).applyMatrix4(matrix);assert.ok(Math.abs((v.x-w.a.x)*nx+(v.z-w.a.z)*nz)<=w.thickness/2+.001);assert.ok(v.y>=w.minY-.001&&v.y<=w.maxY+.001);}}
 });

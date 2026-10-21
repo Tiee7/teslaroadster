@@ -1,0 +1,10 @@
+{
+ "stage":"source checkpoint: six-lane bridge approaches and exclusive top rendering, not a released bundle",
+ "baseMain":"2efc2477d329b4aaef873a014f2dc8331a13fbc3",
+ "geometry":{"bridgeWidth":23,"laneWidth":3.5,"lanesEachDirection":3,"shouldersEachSide":1,"approachWidth":"9→23m smooth widening, 23→9m smooth narrowing","guideRails":"real thin collision/render rails converge from earth bank to both exact deck-edge stations; not support snapping"},
+ "focused":{"roadPhysicsRenderContinuousMotion":35,"independentFlatRenderOverlap":7,"passed":true},
+ "flatRenderProof":{"crossLayerTrianglePairs":1445873,"maximumCoplanarOverlapSquareMetres":0.0004671940705485156,"allowedSeamResidueSquareMetres":0.002,"method":"true flat-top terrain and soil cutouts; controlled polygon offset only covers tiny Float32 seam residue; actual world/collision elevations unchanged"},
+ "scene":{"staticBatches":82,"maximumStaticTriangles":166102,"lights":2,"textureBytes":1256107,"geometryAndInstanceBytes":5097060},
+ "pending":["extra hills and bounded hillside architecture","final default/day/ranked and continuous approach regressions","numeric projection/bundle regeneration","full suite/build","PR/CI/production exact readback"],
+ "limitations":"CPU geometry only; no native WebGL/device FPS acceptance"
+}

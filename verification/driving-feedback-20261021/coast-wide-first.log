@@ -1,0 +1,51 @@
+✔ terrain-v2 closed Float32 meter-scale source: 0–64m, gentle slopes, real 40m+ curves and bounded geometry (2.841188ms)
+✔ all four directed traffic routes have continuous mesh support and full vehicle corners on road (2711.319057ms)
+✔ two actual ground-road/viaduct crossings have 6m+ clearance and cannot magnetize a vehicle from below (440.142349ms)
+✔ ground normal converted to YXZ pitch/roll agrees with forward/reverse slope direction (18.319467ms)
+✔ a single fast downward chord selects the FIRST bridge top, never the ground beneath it (1.154938ms)
+✔ mountain earth joins are broad gentle slopes, not narrow 80–272% dirt walls; pier link reaches the actual curved road (73.421512ms)
+✔ the preserved pre-fix C-junction counterexample cuts through NPC wheels; final full-width nonbridge junctions are level (4254.090874ms)
+✔ production motion follows true terrain/bridge tire plane at 0m/s without false gravity, damage or fuel burn (3725.005554ms)
+✔ production motion follows true terrain/bridge tire plane at 15m/s without false gravity, damage or fuel burn (3660.782913ms)
+✔ production motion follows true terrain/bridge tire plane at 55.55555555555556m/s without false gravity, damage or fuel burn (3073.970319ms)
+✔ production motion follows true terrain/bridge tire plane at 102.77777777777777m/s without false gravity, damage or fuel burn (3535.215276ms)
+✔ slope-only gravity distinguishes coast uphill/downhill without changing EV constants (19.154924ms)
+✔ Space really detaches and keeps lifting from the 1700m slope/bridge (164.15629ms)
+✔ Space really detaches and keeps lifting from the 3800m slope/bridge (138.443153ms)
+✔ O targets six metres above actual attached bridge or the ground BELOW it, never the highest xz layer (235.02299ms)
+✔ the production cabin hits bridge underside; upward impact cannot become a bridge-top landing (9.90277ms)
+✖ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (550.832767ms)
+✔ continuous pier contacts catch 200/370/fantasy-speed chords but do not create an invisible solid bridge wall (19.650623ms)
+✔ a roof has exactly one original 4s/s recharge owner, not both road and roof owners (6.763035ms)
+✔ a true airborne rooftop touchdown restores ground EV ownership instead of staying an invisible aircraft (30.091676ms)
+✔ a fast shallow deck-bottom scrape pays only normal impact, not the unrelated 50m/s tangential speed (8.154951ms)
+✔ a swept pier landing uses its contact material/position, not water at the frame endpoint (7.643348ms)
+✔ an already airborne low-altitude O tap cannot restart ground-hop inertia grace (3.668875ms)
+✔ a vehicle below the pier still contacts real water instead of falling forever below world zero (6.598362ms)
+✔ rendered tilted rails use the exact collision a→b thin prism, never a several-metres-wide AABB wall (7.094252ms)
+✔ rendered road and terrain positions are identical Float32 collision triangles, including true elevation (27.055123ms)
+✔ whole-map terrain replaces inland blocks under unchanged mobile structural budgets (1.031998ms)
+✔ route arrows and real signs distinguish mountain, viaduct, ground bypass, sharp bends and pier direction (2.003656ms)
+✔ all retained coastal buildings and palms preserve their published dimensions/colors/poses; only hillside conflicts are removed (1.144083ms)
+✔ actual sign instances read correctly from the approaching lane: every 5×7 glyph cell, no mirror text (3.669706ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 29
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16064.490001
+
+✖ failing tests:
+
+test at tests/coast-terrain-physics.test.mjs:45:1
+✖ full-size bridge-lane vehicles do not strike diagonal rails, but a crossing chord does (550.832767ms)
+  TypeError: Cannot read properties of null (reading 'kind')
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-terrain-physics.test.mjs:48:99)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

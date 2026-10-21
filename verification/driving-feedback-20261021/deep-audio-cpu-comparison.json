@@ -1,0 +1,132 @@
+{
+  "qualification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+  "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+  "before": {
+    "outputDirectory": "/workspace/shared/driving-feedback-audio-before-20261021",
+    "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+    "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+    "sourceSha256": "750417514b6621bea049cbe92d5ea5b2a12c97c0c369cf44a4d7a6dc4beb087a",
+    "sampleRate": 44100,
+    "duration": 7,
+    "peak": 0.06685250252485275,
+    "rms": 0.026383434262583293,
+    "mean": -0.00017959985161539256,
+    "maxStep": 0.005727468698751181,
+    "segments": {
+      "low": {
+        "rms": 0.022454415489750162,
+        "peak": 0.055289607495069504
+      },
+      "high": {
+        "rms": 0.02834972252909666,
+        "peak": 0.06678318232297897
+      }
+    },
+    "voices": [
+      {
+        "time": 0,
+        "rpm": 1705,
+        "gain": 0.032292
+      },
+      {
+        "time": 1,
+        "rpm": 2738.333333333333,
+        "gain": 0.06353333333333333
+      },
+      {
+        "time": 2,
+        "rpm": 3623.1463749180625,
+        "gain": 0.07186666666666666
+      },
+      {
+        "time": 3,
+        "rpm": 3948.7307396454316,
+        "gain": 0.0802
+      },
+      {
+        "time": 4,
+        "rpm": 4052.013809008401,
+        "gain": 0.0802
+      },
+      {
+        "time": 5,
+        "rpm": 4072.972923204526,
+        "gain": 0.0802
+      },
+      {
+        "time": 6,
+        "rpm": 4072.972923204526,
+        "gain": 0.0802
+      },
+      {
+        "time": 7,
+        "rpm": 4072.972923204526,
+        "gain": 0.0802
+      }
+    ]
+  },
+  "after": {
+    "outputDirectory": "/workspace/shared/driving-feedback-audio-deep-20261021",
+    "verification": "CPU reference DSP of production graph and automation; not native OfflineAudioContext, subjective listening, browser autoplay, device-volume or WebGL validation.",
+    "limits": "4096-point normalized periodic-wave tables, RBJ biquads, and production soft-clip curve; native browser oscillator interpolation and 2x WaveShaper oversampling may differ.",
+    "sourceSha256": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "sampleRate": 44100,
+    "duration": 7,
+    "peak": 0.04085602983832359,
+    "rms": 0.019888965721562853,
+    "mean": -0.000022937010576295052,
+    "maxStep": 0.0013263504952192307,
+    "segments": {
+      "low": {
+        "rms": 0.017878512093306983,
+        "peak": 0.03630102053284645
+      },
+      "high": {
+        "rms": 0.02105755822538806,
+        "peak": 0.04075024649500847
+      }
+    },
+    "voices": [
+      {
+        "time": 0,
+        "rpm": 1014,
+        "gain": 0.020416500000000004
+      },
+      {
+        "time": 1,
+        "rpm": 1314,
+        "gain": 0.038233333333333334
+      },
+      {
+        "time": 2,
+        "rpm": 1614,
+        "gain": 0.04156666666666667
+      },
+      {
+        "time": 3,
+        "rpm": 1901.937870082273,
+        "gain": 0.0449
+      },
+      {
+        "time": 4,
+        "rpm": 2081.5388712127797,
+        "gain": 0.0449
+      },
+      {
+        "time": 5,
+        "rpm": 2138.160015283732,
+        "gain": 0.0449
+      },
+      {
+        "time": 6,
+        "rpm": 2138.160015283732,
+        "gain": 0.0449
+      },
+      {
+        "time": 7,
+        "rpm": 2138.160015283732,
+        "gain": 0.0449
+      }
+    ]
+  }
+}
