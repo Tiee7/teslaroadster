@@ -574,12 +574,30 @@ html, body {
 /* Incident JSON stays selectable even when clipboard APIs are unavailable. */
 #crash-diagnostic-data { user-select: text; -webkit-user-select: text; cursor: text; }
 
+/* Context-loss recovery is a real modal, above optional studio/audio dialogs. */
+.render-health-overlay { width: min(92vw, 460px); max-height: 90dvh; margin: auto; padding: 0; border: 1px solid #38bdf8; border-radius: 16px; color: #f1f5f9; background: #0b1525; box-shadow: 0 18px 70px #0009; }
+.render-health-overlay[hidden] { display: none !important; }
+.render-health-overlay::backdrop { background: #030712dc; }
+.render-health-panel { padding: 24px; }
+.render-health-panel h2 { margin: 0 0 12px; font-size: 19px; line-height: 1.4; }
+.render-health-panel p { margin: 0 0 20px; color: #cbd5e1; font-size: 14px; line-height: 1.65; }
+.render-health-panel button { width: 100%; min-height: 48px; border: 1px solid #7dd3fc; border-radius: 9px; color: #082f49; background: #7dd3fc; font: inherit; font-weight: 700; cursor: pointer; }
+.render-health-panel button:disabled { border-color: #475569; color: #94a3b8; background: #1e293b; cursor: wait; }
+.render-health-panel button:focus-visible { outline: 3px solid #f8fafc; outline-offset: 3px; }
+
 </style>
 </head>
 <body class="relative w-full h-full overflow-hidden">
 
   <!-- 3D WebGL Viewport -->
   <div id="game-canvas-container"></div>
+  <dialog id="render-health-overlay" class="render-health-overlay" aria-labelledby="render-health-title" aria-describedby="render-health-message" tabindex="-1" hidden>
+    <div class="render-health-panel">
+      <h2 id="render-health-title">Graphics interrupted — driving paused</h2>
+      <p id="render-health-message" role="status" aria-live="assertive">Driving simulation is paused while graphics recover.</p>
+      <button id="render-health-resume" type="button" disabled>Continue driving</button>
+    </div>
+  </dialog>
   <!-- Dynamic Speed Lines, Supersonic Vignette & Rain Windshield VFX Overlay -->
   <canvas id="vfx-overlay-canvas" class="fixed inset-0 pointer-events-none z-[5] w-full h-full"></canvas>
 
@@ -1295,7 +1313,7 @@ html, body {
 
   <!-- Modular Functional Scripts -->
   <script>
-window.RoadsterBuildInfo=Object.freeze({"id":"0b6ca97cbfe1eed47387ad135b6fe46704cd565ea76c8d6f712e30c543e72d89","schema":"roadster-source-manifest-v1","sourceSha256":{"bundle_app.py":"f0a7ed05c9e14433579e46c4d744d20e756dbcf94705a35ef932c5986d6f3f4c","src/audio.js":"b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662","src/city-clock.js":"49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac","src/city-diagnostics.js":"ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977","src/coast-map.js":"ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de","src/coast-road-network.js":"96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7","src/config.js":"fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4","src/demo-numeric-projection.js":"f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b","src/driving-score.js":"eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64","src/highway-demo.js":"0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07","src/highway-traffic.js":"faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108","src/index.html":"cbeab5ca38ce65bc3828f280c504deb4c9746faf536b00c74531a7d68c4a2223","src/leaderboard.js":"49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766","src/mobile-controls.js":"3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2","src/music.js":"2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e","src/npc-traffic-assets.js":"bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c","src/physics-main.js":"ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302","src/reference-cockpit.js":"eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2","src/reference-exterior.js":"3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782","src/reference-traffic.js":"2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a","src/render-diagnostics.js":"0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0","src/start-screen.js":"c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d","src/styles.css":"61954e530a202464307d0424d2558993040042fafedd909ab423b451842499ef","src/taxi.js":"9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2","src/ui-hud.js":"6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05","src/vehicles.js":"d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8","src/weather-rain.js":"23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0","src/world.js":"f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae"}});
+window.RoadsterBuildInfo=Object.freeze({"id":"654a6e6797a1bd2edff1db84114396eea688d330ff0263312588e5d9f9f444a6","schema":"roadster-source-manifest-v1","sourceSha256":{"bundle_app.py":"0dfb372f316b8b362d41bb80ba01bd5e0ad37c424dd7c274201966b546eb316b","src/audio.js":"b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662","src/city-clock.js":"49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac","src/city-diagnostics.js":"ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977","src/coast-map.js":"ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de","src/coast-road-network.js":"96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7","src/config.js":"fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4","src/demo-numeric-projection.js":"f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b","src/driving-score.js":"eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64","src/highway-demo.js":"0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07","src/highway-traffic.js":"faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108","src/index.html":"4ca460865f868d06c3d92f5eacf210ff2450e5418dfc8f0a9be89be1a9bbb4f0","src/leaderboard.js":"49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766","src/mobile-controls.js":"3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2","src/music.js":"2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e","src/npc-traffic-assets.js":"bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c","src/physics-main.js":"ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302","src/reference-cockpit.js":"eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2","src/reference-exterior.js":"3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782","src/reference-traffic.js":"2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a","src/render-diagnostics.js":"0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0","src/render-health.js":"b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1","src/start-screen.js":"c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d","src/styles.css":"c43efb862fe202b80977c5f04f98774e25a95d7cad31e1dd2ed696cf45898636","src/taxi.js":"9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2","src/ui-hud.js":"6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05","src/vehicles.js":"d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8","src/weather-rain.js":"23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0","src/world.js":"c58a5fd0e7ec712452dba8214178afeb58e509ee96e7fa1fa62cce61684bee23"}});
 
 // =========================================================================
 // MODULE: config.js
@@ -4913,7 +4931,11 @@ function buildOpenWorldCity() {
 
   function cityInstances(name,geometry,material,records,castShadow=false){
     if(!records.length)return null;const mesh=new THREE.InstancedMesh(geometry,material,records.length),pose=new THREE.Object3D(),color=new THREE.Color();
-    records.forEach((record,i)=>{pose.position.set(...record.p);pose.scale.set(...record.s);pose.rotation.set(...(record.r||[0,0,0]));pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);if(record.color!==undefined)mesh.setColorAt(i,color.setHex(record.color));});
+    // r128 caches a shared material's instancing-colour program. Mixing a
+    // coloured batch with a null instanceColor batch can abort the entire
+    // render before traffic is drawn. Explicit white is the neutral multiplier
+    // for untinted records; do not change material, geometry or solid bounds.
+    records.forEach((record,i)=>{pose.position.set(...record.p);pose.scale.set(...record.s);pose.rotation.set(...(record.r||[0,0,0]));pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);mesh.setColorAt(i,color.setHex(record.color??0xffffff));});
     mesh.name=name;mesh.castShadow=castShadow;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     mesh.userData.cityInstances=records.map(record=>record.id??null);cityEnvGroup.add(mesh);return mesh;
   }
@@ -18046,6 +18068,116 @@ window.onload = () => {
   lastTime = performance.now();
   requestAnimationFrame(animate);
 };
+
+
+// =========================================================================
+// MODULE: render-health.js
+// =========================================================================
+// Main-canvas context loss is a safety pause, not a collision/rendering fix.
+// Native Three may stop submitting frames while ordinary RAF physics continues.
+(() => {
+  if (window.RoadsterRenderHealth) return;
+  const canvas = renderer.domElement;
+  const dialog = document.getElementById('render-health-overlay');
+  const title = document.getElementById('render-health-title');
+  const message = document.getElementById('render-health-message');
+  const button = document.getElementById('render-health-resume');
+  let paused = false, phase = 'ready', losses = 0, restorations = 0, returnFocus = null;
+  const heldUntilRelease = new Set();
+  const contextLost = () => {
+    try { return renderer.getContext?.().isContextLost?.() === true; } catch (_) { return false; }
+  };
+  function clearInput() {
+    try { if (typeof clearAllInputKeys === 'function') { clearAllInputKeys(); return; } } catch (_) {}
+    if (typeof keys !== 'undefined') for (const code of Object.keys(keys)) keys[code] = false;
+    window.RoadsterTouch?.clear?.();
+  }
+  function resetTime() {
+    window.RoadsterCityFrame?.reset?.();
+    window.RoadsterCoastFrame?.reset?.();
+    // Also discard the interval since the most recent paused RAF on resume.
+    if (typeof lastTime !== 'undefined') lastTime = performance.now();
+  }
+  function mute() {
+    if (typeof sound !== 'undefined') sound.update(0, false, false, true);
+  }
+  function show() {
+    const zh = typeof currentLang !== 'undefined' && currentLang === 'zh';
+    if (title) title.textContent = zh ? '画面中断，驾驶已暂停' : 'Graphics interrupted — driving paused';
+    if (message) message.textContent = phase === 'lost'
+      ? (zh ? 'WebGL 图形上下文已丢失。车辆停止模拟，正在等待图形恢复；不会在看不到画面时继续驾驶。'
+        : 'The WebGL graphics context was lost. Driving simulation is paused while graphics recover.')
+      : (zh ? '图形上下文已恢复，驾驶仍暂停。控制输入已清空；准备好后，请点「继续驾驶」。'
+        : 'The graphics context was restored. Driving is still paused and controls are cleared. Continue only when you are ready.');
+    if (button) { button.disabled = phase !== 'awaiting-resume'; button.textContent = zh ? '继续驾驶' : 'Continue driving'; }
+    if (!dialog) return;
+    dialog.hidden = false;
+    if (!dialog.open) {
+      try { dialog.showModal(); } catch (_) { dialog.setAttribute('open', ''); }
+    }
+    (phase === 'awaiting-resume' ? button : dialog)?.focus?.();
+  }
+  function lose(event) {
+    // This listener belongs only to the main renderer, never the studio preview.
+    event?.preventDefault?.();
+    if (phase !== 'lost') losses++;
+    if (!paused) returnFocus = document.activeElement;
+    paused = true; phase = 'lost';
+    if (typeof keys !== 'undefined') for (const code of Object.keys(keys)) if (keys[code]) heldUntilRelease.add(code);
+    window.RoadsterDemo?.stop?.();
+    clearInput(); resetTime(); mute(); show();
+  }
+  function restored() {
+    if (!paused) return;
+    restorations++; phase = 'awaiting-resume';
+    clearInput(); resetTime(); mute(); show();
+  }
+  function resume() {
+    if (!paused || phase !== 'awaiting-resume' || document.hidden) return;
+    if (contextLost()) { lose(); return; }
+    clearInput(); resetTime(); mute();
+    paused = false; phase = 'ready';
+    dialog?.close?.();
+    if (dialog) dialog.hidden = true;
+    if (returnFocus?.isConnected) returnFocus.focus?.();
+    returnFocus = null;
+  }
+  canvas.addEventListener('webglcontextlost', lose);
+  canvas.addEventListener('webglcontextrestored', restored);
+  button?.addEventListener('click', resume);
+  dialog?.addEventListener('cancel', event => { if (paused) event.preventDefault(); });
+  // A held driving key must not accumulate again behind the modal. Native
+  // button activation and modal Tab navigation remain available after restore.
+  window.addEventListener('keydown', event => {
+    if (heldUntilRelease.has(event.code)) { event.preventDefault(); event.stopImmediatePropagation(); return; }
+    if (!paused) return;
+    const buttonActivation = phase === 'awaiting-resume' && event.target === button && (event.key === 'Enter' || event.key === ' ');
+    // Keep native default actions, but do not let the existing game listener
+    // prevent Space activation or turn this interface key into driving input.
+    if (event.key === 'Tab' || buttonActivation) { event.stopImmediatePropagation(); return; }
+    if (event.code) heldUntilRelease.add(event.code);
+    event.preventDefault(); event.stopImmediatePropagation();
+  }, true);
+  window.addEventListener('keyup', event => { heldUntilRelease.delete(event.code); }, true);
+  window.RoadsterRenderHealth = Object.freeze({
+    isPaused() { if (!paused && contextLost()) lose(); return paused; },
+    snapshot: () => ({ paused, phase, losses, restorations, contextLost: contextLost() })
+  });
+  // Loaded after physics and before onload starts RAF. The original owner
+  // schedules the current animate binding, so every subsequent RAF is gated
+  // without changing the pinned physics source or its numerical kernel.
+  const runFrame = animate;
+  animate = function (now) {
+    if (!window.RoadsterRenderHealth.isPaused()) return runFrame.apply(this, arguments);
+    requestAnimationFrame(animate);
+    lastTime = now;
+    cityFrameClock.clear(); coastFrameClock.clear();
+    citySoundFrame = coastSoundFrame = null;
+    coastVisualSeconds = 0;
+    openWorldRenderMap = openWorldRenderActive = null;
+    mute();
+  };
+})();
 
 
 // =========================================================================

@@ -1,0 +1,36 @@
+{
+  "schema": "render-instance-source-epoch-v1",
+  "basePreview": "853f7a24e4b9c24969b9e64e4455c8b34caa6c7d",
+  "baseMainUnchanged": "13b9f5372034cd6ba3e14144433792c525989f63",
+  "inheritedContactEpoch": "verification/contact-sky-20261021/source-epoch.json",
+  "inheritedContactEpochSha256": "4518d0e8e2aa541171e6ddc20106b4226d71cac370859126398a47f1681c9a35",
+  "priorWorldFixture": "tests/fixtures/render-instance-baseline/world.js",
+  "priorWorldSha256": "f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae",
+  "authorizedSourceSha256": {
+    "world": "c58a5fd0e7ec712452dba8214178afeb58e509ee96e7fa1fa62cce61684bee23",
+    "render-health": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1"
+  },
+  "frozenCoreSourceSha256": {
+    "config": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "city-clock": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "physics-main": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "audio": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "vehicles": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "reference-exterior": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "reference-traffic": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "coast-map": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "highway-traffic": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "highway-demo": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "ui-hud": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "demo-numeric-projection": "f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b"
+  },
+  "scope": "Neutral-white instanceColor prevents native r128 shared-material render abort; separate main-canvas context-loss safety pause wrapper. No asset/material/geometry/scale/loading/numerical physics/collision/camera source modifications. PR19 preview only.",
+  "validationBoundary": "Native r128 WebGL1/2 command generation and Mesa llvmpipe CPU GLSL/pixel replay. Not a browser screenshot, user-device GPU, heat or FPS acceptance.",
+  "inheritedDiagnosticSourceSha256": {
+    "city-diagnostics": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "render-diagnostics": "0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0"
+  }
+}

@@ -556,3 +556,14 @@ html, body {
 }
 /* Incident JSON stays selectable even when clipboard APIs are unavailable. */
 #crash-diagnostic-data { user-select: text; -webkit-user-select: text; cursor: text; }
+
+/* Context-loss recovery is a real modal, above optional studio/audio dialogs. */
+.render-health-overlay { width: min(92vw, 460px); max-height: 90dvh; margin: auto; padding: 0; border: 1px solid #38bdf8; border-radius: 16px; color: #f1f5f9; background: #0b1525; box-shadow: 0 18px 70px #0009; }
+.render-health-overlay[hidden] { display: none !important; }
+.render-health-overlay::backdrop { background: #030712dc; }
+.render-health-panel { padding: 24px; }
+.render-health-panel h2 { margin: 0 0 12px; font-size: 19px; line-height: 1.4; }
+.render-health-panel p { margin: 0 0 20px; color: #cbd5e1; font-size: 14px; line-height: 1.65; }
+.render-health-panel button { width: 100%; min-height: 48px; border: 1px solid #7dd3fc; border-radius: 9px; color: #082f49; background: #7dd3fc; font: inherit; font-weight: 700; cursor: pointer; }
+.render-health-panel button:disabled { border-color: #475569; color: #94a3b8; background: #1e293b; cursor: wait; }
+.render-health-panel button:focus-visible { outline: 3px solid #f8fafc; outline-offset: 3px; }

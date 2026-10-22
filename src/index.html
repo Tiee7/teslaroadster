@@ -20,6 +20,13 @@
 
   <!-- 3D WebGL Viewport -->
   <div id="game-canvas-container"></div>
+  <dialog id="render-health-overlay" class="render-health-overlay" aria-labelledby="render-health-title" aria-describedby="render-health-message" tabindex="-1" hidden>
+    <div class="render-health-panel">
+      <h2 id="render-health-title">Graphics interrupted — driving paused</h2>
+      <p id="render-health-message" role="status" aria-live="assertive">Driving simulation is paused while graphics recover.</p>
+      <button id="render-health-resume" type="button" disabled>Continue driving</button>
+    </div>
+  </dialog>
   <!-- Dynamic Speed Lines, Supersonic Vignette & Rain Windshield VFX Overlay -->
   <canvas id="vfx-overlay-canvas" class="fixed inset-0 pointer-events-none z-[5] w-full h-full"></canvas>
 
@@ -758,6 +765,7 @@
   <script src="demo-numeric-projection.js"></script>
   <script src="highway-demo.js"></script>
   <script src="physics-main.js"></script>
+  <script src="render-health.js"></script>
   <script src="render-diagnostics.js"></script>
 </body>
 </html>

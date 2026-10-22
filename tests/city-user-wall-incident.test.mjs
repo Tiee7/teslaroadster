@@ -90,7 +90,7 @@ test('minimal incident distinguishes inbound normal speed from already-rebounded
   assert.ok(!('trace' in incident), 'do not publish the unnecessary full user trace');
 });
 
-test('incident520 collider is exactly the visible opaque native rendered podium, not an invisible envelope', { skip }, () => {
+test('incident520 collider matches opaque podium geometry; actual visibility still requires successful rendering', { skip }, () => {
   const { T, root, buildings } = native(), b = buildings.find(b => b.id === incident.contact.id);
   assert.equal(b.logicalId, incident.contact.logicalId);
   assert.equal(b.renderBatch, 'city-building-batch-1');

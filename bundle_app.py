@@ -10,7 +10,7 @@ def bundle():
     src_dir = root / 'src'
     html = (src_dir / 'index.html').read_text(encoding='utf-8')
     css = (src_dir / 'styles.css').read_text(encoding='utf-8')
-    js_files = ['config.js', 'city-clock.js', 'city-diagnostics.js', 'driving-score.js', 'audio.js', 'music.js', 'mobile-controls.js', 'coast-road-network.js', 'coast-map.js', 'world.js', 'highway-traffic.js', 'vehicles.js', 'reference-exterior.js', 'reference-cockpit.js', 'npc-traffic-assets.js', 'reference-traffic.js', 'weather-rain.js', 'taxi.js', 'ui-hud.js', 'leaderboard.js', 'start-screen.js', 'demo-numeric-projection.js', 'highway-demo.js', 'physics-main.js', 'render-diagnostics.js']
+    js_files = ['config.js', 'city-clock.js', 'city-diagnostics.js', 'driving-score.js', 'audio.js', 'music.js', 'mobile-controls.js', 'coast-road-network.js', 'coast-map.js', 'world.js', 'highway-traffic.js', 'vehicles.js', 'reference-exterior.js', 'reference-cockpit.js', 'npc-traffic-assets.js', 'reference-traffic.js', 'weather-rain.js', 'taxi.js', 'ui-hud.js', 'leaderboard.js', 'start-screen.js', 'demo-numeric-projection.js', 'highway-demo.js', 'physics-main.js', 'render-health.js', 'render-diagnostics.js']
     # Deterministic source identity, not a guessed Git commit or a timestamp.
     # The root bundle cannot hash itself; hash all of its inputs instead.
     inputs = ['src/index.html', 'src/styles.css', 'bundle_app.py'] + ['src/' + filename for filename in js_files]

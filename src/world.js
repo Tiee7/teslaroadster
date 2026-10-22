@@ -664,7 +664,11 @@ function buildOpenWorldCity() {
 
   function cityInstances(name,geometry,material,records,castShadow=false){
     if(!records.length)return null;const mesh=new THREE.InstancedMesh(geometry,material,records.length),pose=new THREE.Object3D(),color=new THREE.Color();
-    records.forEach((record,i)=>{pose.position.set(...record.p);pose.scale.set(...record.s);pose.rotation.set(...(record.r||[0,0,0]));pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);if(record.color!==undefined)mesh.setColorAt(i,color.setHex(record.color));});
+    // r128 caches a shared material's instancing-colour program. Mixing a
+    // coloured batch with a null instanceColor batch can abort the entire
+    // render before traffic is drawn. Explicit white is the neutral multiplier
+    // for untinted records; do not change material, geometry or solid bounds.
+    records.forEach((record,i)=>{pose.position.set(...record.p);pose.scale.set(...record.s);pose.rotation.set(...(record.r||[0,0,0]));pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);mesh.setColorAt(i,color.setHex(record.color??0xffffff));});
     mesh.name=name;mesh.castShadow=castShadow;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     mesh.userData.cityInstances=records.map(record=>record.id??null);cityEnvGroup.add(mesh);return mesh;
   }
