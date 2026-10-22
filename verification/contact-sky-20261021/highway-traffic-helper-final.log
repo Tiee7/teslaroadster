@@ -1,0 +1,39 @@
+mixed traffic 36: 28 overtakes (11 racer), 46 safe wraps, longest lane vacancy 0.00s
+mixed traffic 52: 30 overtakes (4 racer), 59 safe wraps, longest lane vacancy 0.00s
+✔ an unblocked driver keeps its own exact cruise speed and lane without randomness (29.665674ms)
+✔ same-speed traffic and distant slower traffic never justify overtaking (6.691155ms)
+✔ a blocked driver brakes smoothly and follows when both adjacent lanes are occupied (20.106708ms)
+✔ a slower nearby leader triggers one smooth adjacent overtake and no automatic return (17.715311ms)
+✔ an adjacent lane with equally slow traffic has no useful passing advantage (3.151061ms)
+✔ a too-close front car or a fast rear NPC prevents a cut-in (7.182089ms)
+✔ a grounded player alongside or closing fast from behind prevents an NPC merge (9.196215ms)
+✔ rear safety includes braking during the merge, even for an initially equal-speed player or wreck (13.4987ms)
+✔ player lateral sweep reserves the destination lane; high flight does not block the road (6.404004ms)
+✔ simultaneous opposite-side requests cannot reserve the same passing gap (8.049587ms)
+✔ an in-progress merge occupies its source and destination until completion (5.107944ms)
+✔ cooldown and sustained-blockage hysteresis prevent transient/ping-pong changes (7.099508ms)
+✔ both road ends respawn safely, cancel old merge state and retain cruise speed (3.212683ms)
+✔ rear respawn accounts for a stopped player and never spawns a fast car into its stopping gap (1.363779ms)
+✔ a completely occupied respawn area waits out of view and retries without duplicate rewards (7.000217ms)
+✔ blast motion is excluded from driver control and lane recovery is smooth (1.781985ms)
+✔ blast recovery waits for a safe lane instead of recentering into an adjacent NPC (4.877975ms)
+✔ a low blasted wreck uses the unchanged blast path when predicting a rear closing gap (6.137331ms)
+✔ rear wreck safety includes damping-driven acceleration through repeated real ground bounces (7.410917ms)
+✔ highway lateral collision velocity matches the actual unscaled path derivative (3.020248ms)
+✔ overtaking, following and lane easing agree across 20/30/60/144 Hz (42.810487ms)
+✔ actual runtime traffic block moves once, preserves score/destruction guard and city movement (7.281516ms)
+✔ spawn code assigns one personal cruise speed and the controller is bundled before physics (27.179497ms)
+✔ dense seeded 52-car runtime remains collision-free through following, overtakes and both wraps (26579.982996ms)
+✔ all traffic presets keep the four weighted pools within one car, stable random km/h targets, and balanced lanes (51.818839ms)
+✔ racers react faster and merge continuously while ordinary drivers also actively pass (8.431769ms)
+✔ new mixed-speed seeded traffic actually overtakes, uses every lane, retains identities, and never overlaps (14251.158808ms)
+✔ a racer born behind slower traffic starts inside a safe braking envelope without changing its target (1475.975416ms)
+✔ traffic refresh at a stopped player uses the live lane and safely slows approaching newborn drivers (1008.176436ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43777.775386

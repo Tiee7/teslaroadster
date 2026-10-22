@@ -1,0 +1,326 @@
+[
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 186,
+    "file": "emitted-shaders/52f4cbe4218ab10e6e19b39e71363070a068ef8f592c0eddda9860ef5f4a8577.vert.glsl",
+    "sha256": "52f4cbe4218ab10e6e19b39e71363070a068ef8f592c0eddda9860ef5f4a8577"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 187,
+    "file": "emitted-shaders/83fc4eb54df47323069fa25f6d39257714a1bb60d596f19a74dd6f2bbbd690ff.frag.glsl",
+    "sha256": "83fc4eb54df47323069fa25f6d39257714a1bb60d596f19a74dd6f2bbbd690ff"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 197,
+    "file": "emitted-shaders/14180fc66fe252a2ce8b17a60d3ba7a3a6e5b5e777d0c75fe695fbd972e4d0fc.vert.glsl",
+    "sha256": "14180fc66fe252a2ce8b17a60d3ba7a3a6e5b5e777d0c75fe695fbd972e4d0fc"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 198,
+    "file": "emitted-shaders/64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332.frag.glsl",
+    "sha256": "64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 237,
+    "file": "emitted-shaders/c14859ffcac5ae30c16e33d0a844b04aea3bb3071682254b9d95c5af024986d4.vert.glsl",
+    "sha256": "c14859ffcac5ae30c16e33d0a844b04aea3bb3071682254b9d95c5af024986d4"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 238,
+    "file": "emitted-shaders/2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6.frag.glsl",
+    "sha256": "2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 260,
+    "file": "emitted-shaders/16bea90e25480f3cc16dbd3a22baebdc574f300e5dbcf52afda09c470fc2c262.vert.glsl",
+    "sha256": "16bea90e25480f3cc16dbd3a22baebdc574f300e5dbcf52afda09c470fc2c262"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 261,
+    "file": "emitted-shaders/2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6.frag.glsl",
+    "sha256": "2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 271,
+    "file": "emitted-shaders/f100b386f85afbd733af5e004c69bd3e6ff184b6abf773258f644c036e41c964.vert.glsl",
+    "sha256": "f100b386f85afbd733af5e004c69bd3e6ff184b6abf773258f644c036e41c964"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 272,
+    "file": "emitted-shaders/64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332.frag.glsl",
+    "sha256": "64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 300,
+    "file": "emitted-shaders/e837b6c6c9a14eeefe95bccc27a48d58f2424492c51446b78107e1fd4784b178.vert.glsl",
+    "sha256": "e837b6c6c9a14eeefe95bccc27a48d58f2424492c51446b78107e1fd4784b178"
+  },
+  {
+    "capture": "native-webgl-city-strict-old",
+    "shader": 301,
+    "file": "emitted-shaders/f36f4c171518ebb8d00ae740b60adb10b57195ec0ced78af8e636bf2b0683e77.frag.glsl",
+    "sha256": "f36f4c171518ebb8d00ae740b60adb10b57195ec0ced78af8e636bf2b0683e77"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 196,
+    "file": "emitted-shaders/52f4cbe4218ab10e6e19b39e71363070a068ef8f592c0eddda9860ef5f4a8577.vert.glsl",
+    "sha256": "52f4cbe4218ab10e6e19b39e71363070a068ef8f592c0eddda9860ef5f4a8577"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 197,
+    "file": "emitted-shaders/83fc4eb54df47323069fa25f6d39257714a1bb60d596f19a74dd6f2bbbd690ff.frag.glsl",
+    "sha256": "83fc4eb54df47323069fa25f6d39257714a1bb60d596f19a74dd6f2bbbd690ff"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 207,
+    "file": "emitted-shaders/14180fc66fe252a2ce8b17a60d3ba7a3a6e5b5e777d0c75fe695fbd972e4d0fc.vert.glsl",
+    "sha256": "14180fc66fe252a2ce8b17a60d3ba7a3a6e5b5e777d0c75fe695fbd972e4d0fc"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 208,
+    "file": "emitted-shaders/64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332.frag.glsl",
+    "sha256": "64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 247,
+    "file": "emitted-shaders/c14859ffcac5ae30c16e33d0a844b04aea3bb3071682254b9d95c5af024986d4.vert.glsl",
+    "sha256": "c14859ffcac5ae30c16e33d0a844b04aea3bb3071682254b9d95c5af024986d4"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 248,
+    "file": "emitted-shaders/2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6.frag.glsl",
+    "sha256": "2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 270,
+    "file": "emitted-shaders/16bea90e25480f3cc16dbd3a22baebdc574f300e5dbcf52afda09c470fc2c262.vert.glsl",
+    "sha256": "16bea90e25480f3cc16dbd3a22baebdc574f300e5dbcf52afda09c470fc2c262"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 271,
+    "file": "emitted-shaders/2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6.frag.glsl",
+    "sha256": "2ec453afcc751877261d254e072f10b80d5ef672aa320987b473b46141c4f9d6"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 281,
+    "file": "emitted-shaders/f100b386f85afbd733af5e004c69bd3e6ff184b6abf773258f644c036e41c964.vert.glsl",
+    "sha256": "f100b386f85afbd733af5e004c69bd3e6ff184b6abf773258f644c036e41c964"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 282,
+    "file": "emitted-shaders/64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332.frag.glsl",
+    "sha256": "64bddf0e50768b146f3fb32cb753aadabbcd27855e18aa3db04411f8b5a9d332"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 310,
+    "file": "emitted-shaders/e837b6c6c9a14eeefe95bccc27a48d58f2424492c51446b78107e1fd4784b178.vert.glsl",
+    "sha256": "e837b6c6c9a14eeefe95bccc27a48d58f2424492c51446b78107e1fd4784b178"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 311,
+    "file": "emitted-shaders/f36f4c171518ebb8d00ae740b60adb10b57195ec0ced78af8e636bf2b0683e77.frag.glsl",
+    "sha256": "f36f4c171518ebb8d00ae740b60adb10b57195ec0ced78af8e636bf2b0683e77"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 351,
+    "file": "emitted-shaders/ba120c274b6607fd472ccd5156e1bbdea4c392d469f5bd1551c27acf2c26c110.vert.glsl",
+    "sha256": "ba120c274b6607fd472ccd5156e1bbdea4c392d469f5bd1551c27acf2c26c110"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 352,
+    "file": "emitted-shaders/c1382e700ab7dd7397b69b21c104efdbde2879f76179cd1771c5111fad0c060f.frag.glsl",
+    "sha256": "c1382e700ab7dd7397b69b21c104efdbde2879f76179cd1771c5111fad0c060f"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 362,
+    "file": "emitted-shaders/0c20063b338b4a7eb0deb962da4c7475f55138476378e14a806786a4f44e7307.vert.glsl",
+    "sha256": "0c20063b338b4a7eb0deb962da4c7475f55138476378e14a806786a4f44e7307"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 363,
+    "file": "emitted-shaders/e36637787cb635449613aad9d7b3edcb04b5167da00b927b7df31102ce5dc95a.frag.glsl",
+    "sha256": "e36637787cb635449613aad9d7b3edcb04b5167da00b927b7df31102ce5dc95a"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 382,
+    "file": "emitted-shaders/60e52a5794843a50d711a706309532da4b10aef706640d95176adfe908410cd4.vert.glsl",
+    "sha256": "60e52a5794843a50d711a706309532da4b10aef706640d95176adfe908410cd4"
+  },
+  {
+    "capture": "native-webgl-city-sourcefixed-npc",
+    "shader": 383,
+    "file": "emitted-shaders/b86cce664b2c12249945ce3d74462fdbe288fe225268aed97e7c833a78addbbe.frag.glsl",
+    "sha256": "b86cce664b2c12249945ce3d74462fdbe288fe225268aed97e7c833a78addbbe"
+  },
+  {
+    "capture": "native-webgl-minimal-webgl2-old",
+    "shader": 10,
+    "file": "emitted-shaders/8fce552456c2bf9e18d50f7153a3769ad1502a795ded7ea27aa331202f2fb215.vert.glsl",
+    "sha256": "8fce552456c2bf9e18d50f7153a3769ad1502a795ded7ea27aa331202f2fb215"
+  },
+  {
+    "capture": "native-webgl-minimal-webgl2-old",
+    "shader": 11,
+    "file": "emitted-shaders/bf0478bda8ef7cfd7e79fedb9aced66cdcdd00dd35cee8558c19c1a502411f11.frag.glsl",
+    "sha256": "bf0478bda8ef7cfd7e79fedb9aced66cdcdd00dd35cee8558c19c1a502411f11"
+  },
+  {
+    "capture": "native-webgl-minimal-webgl2-fixed",
+    "shader": 11,
+    "file": "emitted-shaders/8fce552456c2bf9e18d50f7153a3769ad1502a795ded7ea27aa331202f2fb215.vert.glsl",
+    "sha256": "8fce552456c2bf9e18d50f7153a3769ad1502a795ded7ea27aa331202f2fb215"
+  },
+  {
+    "capture": "native-webgl-minimal-webgl2-fixed",
+    "shader": 12,
+    "file": "emitted-shaders/bf0478bda8ef7cfd7e79fedb9aced66cdcdd00dd35cee8558c19c1a502411f11.frag.glsl",
+    "sha256": "bf0478bda8ef7cfd7e79fedb9aced66cdcdd00dd35cee8558c19c1a502411f11"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 198,
+    "file": "emitted-shaders/fe03344df0f6ef5038c69f8a55f741ca85d34a02b195aef285860283c5fa3606.vert.glsl",
+    "sha256": "fe03344df0f6ef5038c69f8a55f741ca85d34a02b195aef285860283c5fa3606"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 199,
+    "file": "emitted-shaders/8f8094a87f20b84d5635ba9e3a884ac59d190b3f37a3c2a5352ad1ac854e063a.frag.glsl",
+    "sha256": "8f8094a87f20b84d5635ba9e3a884ac59d190b3f37a3c2a5352ad1ac854e063a"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 206,
+    "file": "emitted-shaders/e2f29814e5bfc252ca38c4871372a7198f34fecac19055c9c96a7ec723933a4c.vert.glsl",
+    "sha256": "e2f29814e5bfc252ca38c4871372a7198f34fecac19055c9c96a7ec723933a4c"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 207,
+    "file": "emitted-shaders/e78f16357af98e51c04c262a79f0718c897d25d98dd9ea0f3282bcede7aa5526.frag.glsl",
+    "sha256": "e78f16357af98e51c04c262a79f0718c897d25d98dd9ea0f3282bcede7aa5526"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 218,
+    "file": "emitted-shaders/80913a6e6d143eae546867bd1594fda952069ec6d60dbabbf84f1f423c6eea91.vert.glsl",
+    "sha256": "80913a6e6d143eae546867bd1594fda952069ec6d60dbabbf84f1f423c6eea91"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 219,
+    "file": "emitted-shaders/f0c8f41a251dcd92025a2126c70b3a40250e37309227619e1682baeb29dfe6fd.frag.glsl",
+    "sha256": "f0c8f41a251dcd92025a2126c70b3a40250e37309227619e1682baeb29dfe6fd"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 281,
+    "file": "emitted-shaders/0c5652646c9336dc1eea2e6c43f8dbdcc73431b2d9cabb5da350d00ffa53f8f6.vert.glsl",
+    "sha256": "0c5652646c9336dc1eea2e6c43f8dbdcc73431b2d9cabb5da350d00ffa53f8f6"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 282,
+    "file": "emitted-shaders/c618a2452116aebb88b1b2ca19f48ca8e0f73b0b46645b53b36d6333380adbc6.frag.glsl",
+    "sha256": "c618a2452116aebb88b1b2ca19f48ca8e0f73b0b46645b53b36d6333380adbc6"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 318,
+    "file": "emitted-shaders/2cddf7e4c3b6e8a9c960c5aa270776ecd52f0d2bc885641b5b5095a29205cbbd.vert.glsl",
+    "sha256": "2cddf7e4c3b6e8a9c960c5aa270776ecd52f0d2bc885641b5b5095a29205cbbd"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 319,
+    "file": "emitted-shaders/c618a2452116aebb88b1b2ca19f48ca8e0f73b0b46645b53b36d6333380adbc6.frag.glsl",
+    "sha256": "c618a2452116aebb88b1b2ca19f48ca8e0f73b0b46645b53b36d6333380adbc6"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 331,
+    "file": "emitted-shaders/841feaa62efa38fc425b03c008c60d12c09af2ea602424af190e24fd4baf274a.vert.glsl",
+    "sha256": "841feaa62efa38fc425b03c008c60d12c09af2ea602424af190e24fd4baf274a"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 332,
+    "file": "emitted-shaders/f0c8f41a251dcd92025a2126c70b3a40250e37309227619e1682baeb29dfe6fd.frag.glsl",
+    "sha256": "f0c8f41a251dcd92025a2126c70b3a40250e37309227619e1682baeb29dfe6fd"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 372,
+    "file": "emitted-shaders/0e98efcc264397df15748effff9a9ccd95a905736483dc6ac78b1a5e99ba511b.vert.glsl",
+    "sha256": "0e98efcc264397df15748effff9a9ccd95a905736483dc6ac78b1a5e99ba511b"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 373,
+    "file": "emitted-shaders/bb6fefb4a7adccf22ec399704017023e1b201289e0cb5dcd9dd6339b3ccd4335.frag.glsl",
+    "sha256": "bb6fefb4a7adccf22ec399704017023e1b201289e0cb5dcd9dd6339b3ccd4335"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 422,
+    "file": "emitted-shaders/37ddcfcf14bfda178e8bd41a895339463f91ed705f212e5241c4f99456379e40.vert.glsl",
+    "sha256": "37ddcfcf14bfda178e8bd41a895339463f91ed705f212e5241c4f99456379e40"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 423,
+    "file": "emitted-shaders/3042c69879906b7aac783522316c1f1538db954b15948a1675eaaccd8e719356.frag.glsl",
+    "sha256": "3042c69879906b7aac783522316c1f1538db954b15948a1675eaaccd8e719356"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 436,
+    "file": "emitted-shaders/c9ee7c2a87422728a9f87e34b27698ea2295258704397e4d62c3fb6d4bec37ce.vert.glsl",
+    "sha256": "c9ee7c2a87422728a9f87e34b27698ea2295258704397e4d62c3fb6d4bec37ce"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 437,
+    "file": "emitted-shaders/8d9fc19730ff0e2f76b9f9016d9f8261e3a909c901c02737ef052953f8603c72.frag.glsl",
+    "sha256": "8d9fc19730ff0e2f76b9f9016d9f8261e3a909c901c02737ef052953f8603c72"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 465,
+    "file": "emitted-shaders/6cec741392aa31ef29169fbbffe2e0a08abc32b30e8915e233dd81ef3efb9491.vert.glsl",
+    "sha256": "6cec741392aa31ef29169fbbffe2e0a08abc32b30e8915e233dd81ef3efb9491"
+  },
+  {
+    "capture": "final-city-npc",
+    "shader": 466,
+    "file": "emitted-shaders/897a3be1dcaa64faa0659cc6f44e56fbe0f9ea3936b3085a806e4c1687910703.frag.glsl",
+    "sha256": "897a3be1dcaa64faa0659cc6f44e56fbe0f9ea3936b3085a806e4c1687910703"
+  }
+]

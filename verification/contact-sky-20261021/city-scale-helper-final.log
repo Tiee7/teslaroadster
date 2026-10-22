@@ -1,0 +1,22 @@
+✔ city 300m block takes 5.4s at actual 200km/h, 30Hz (41.128457ms)
+✔ city 300m block takes 5.4s at actual 200km/h, 60Hz (52.496202ms)
+✔ city 300m block takes 5.4s at actual 200km/h, 144Hz (108.089832ms)
+✔ city ground: same-frame displacement is velocity in metres per second (4.766629ms)
+✔ city air: same-frame displacement is velocity in metres per second (6.125604ms)
+✔ city reverse: same-frame displacement is velocity in metres per second (5.982339ms)
+✔ city strafe: same-frame displacement is velocity in metres per second (5.467638ms)
+✔ city NPCs and wheel rotation use city metre scale without changing highway traffic calibration (31.49999ms)
+✔ infinite shared tank powers rear, lift, side and retro without depletion: highway, 30Hz (119.989435ms)
+✔ infinite shared tank powers rear, lift, side and retro without depletion: highway, 60Hz (190.367326ms)
+✔ infinite shared tank powers rear, lift, side and retro without depletion: highway, 144Hz (422.076238ms)
+✔ infinite shared tank powers rear, lift, side and retro without depletion: city, 30Hz (233.940573ms)
+✔ infinite shared tank powers rear, lift, side and retro without depletion: city, 60Hz (455.620247ms)
+✔ infinite shared tank powers rear, lift, side and retro without depletion: city, 144Hz (898.862609ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2707.509262

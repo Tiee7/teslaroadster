@@ -150,7 +150,7 @@ test('actual coast contact block covers east/west cars and turning headings inst
  for(const yaw of [-Math.PI/2,-Math.PI/4]){
   const h=coastMotion({yaw,speed:10,vx:-Math.sin(yaw)*10,vz:-Math.cos(yaw)*10});
   const car={mesh:mesh(),mode:'coast',length:4.62,height:1.25,y:0,vx:0,vz:0,blastTimer:0};
-  car.mesh.position.set(h.state.x-Math.sin(yaw)*3,0,h.state.z-Math.cos(yaw)*3);car.mesh.rotation.y=yaw;h.context.testCar=car;
+  car.mesh.position.set(h.state.x-Math.sin(yaw)*4.4,0,h.state.z-Math.cos(yaw)*4.4);car.mesh.rotation.y=yaw;h.context.testCar=car;
   vm.runInContext(`function testCoastContact(car) {const coastMotionStart={x:state.x,y:state.y,z:state.z,yaw:state.yaw};const coastTrafficStart=new Map([[car,{x:car.mesh.position.x,z:car.mesh.position.z,yaw:car.mesh.rotation.y,visible:true}]]);const demoGroundSweep=null,isAirborne=false,playerWorldZ=state.z,dt=1/60;${collision}}testCoastContact(testCar);`,h.context);
   assert.equal(h.impacts.length,1);assert.equal(car.coastCooldown,1.8);assert.equal(car.speed,0);
  }
@@ -164,7 +164,8 @@ test('coast traffic sweep intersects height over the whole overlap, not just ent
  const collision=physics.slice(start,physics.indexOf('\n  // Render the resolved pose',start)).replace(/\n  \}\);\s*$/,'');
  for(const spec of [
   {name:'rising through the side before clearing the roof',from:{x:-10,y:0,z:0},to:{x:10,y:3,z:0},vy:8,damage:true},
-  {name:'descending into roof after horizontal entry',from:{x:-10,y:5,z:0},to:{x:10,y:0,z:0},vy:-8,roof:true},
+  {name:'descending beyond the real roof edge stays clear',from:{x:-10,y:5,z:0},to:{x:10,y:0,z:0},vy:-8,clear:true},
+  {name:'actual vertical descending roof contact',from:{x:0,y:5,z:0},to:{x:0,y:0,z:0},vy:-8,roof:true},
   {name:'cleared roof for the entire chord',from:{x:-10,y:4,z:0},to:{x:10,y:5,z:0},vy:2,clear:true}
  ]){
   const h=coastMotion({...spec.to,yaw:-Math.PI/2,speed:20,vx:20,vy:spec.vy,vz:0});
@@ -172,8 +173,8 @@ test('coast traffic sweep intersects height over the whole overlap, not just ent
   h.context.testCar=car;h.context.oldPlayer={...spec.from,yaw:-Math.PI/2};
   vm.runInContext(`function testCoastContact(car) {const coastMotionStart=oldPlayer;const coastTrafficStart=new Map([[car,{x:0,z:0,yaw:-Math.PI/2,visible:true}]]);const demoGroundSweep=null,isAirborne=true,playerWorldZ=state.z,dt=.05;${collision}}testCoastContact(testCar);`,h.context);
   if(spec.damage){assert.equal(h.impacts.length,1,spec.name);assert.ok(h.state.x<0);assert.ok(h.state.y<1.1);}
-  if(spec.roof){assert.equal(h.impacts.length,0);assert.equal(h.state.vy,5.5);assert.equal(h.state.y,1.4);assert.ok(h.state.x<10);}
-  if(spec.clear){assert.equal(h.impacts.length,0);assert.equal(h.state.x,10);assert.equal(h.state.y,5);}
+  if(spec.roof){assert.equal(h.impacts.length,0);assert.equal(h.state.vy,5.5);assert.ok(h.state.y>=1.2499&&h.state.y<1.251);assert.ok(h.state.x<10);}
+  if(spec.clear){assert.equal(h.impacts.length,0);assert.equal(h.state.x,spec.to.x);assert.equal(h.state.y,spec.to.y);}
  }
 });
 

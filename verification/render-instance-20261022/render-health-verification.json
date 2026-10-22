@@ -1,0 +1,68 @@
+{
+  "scope": "Context-loss independent safety mitigation. Not attribution of uploaded user incidents; not browser/device GPU acceptance.",
+  "files": {
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "tests/render-health.test.mjs": "a80736ed694a366eb334015378403b6bc2c1d134aef2857432dd21a3773c21cf",
+    "src/index.html": "4ca460865f868d06c3d92f5eacf210ff2450e5418dfc8f0a9be89be1a9bbb4f0",
+    "src/styles.css": "c43efb862fe202b80977c5f04f98774e25a95d7cad31e1dd2ed696cf45898636",
+    "bundle_app.py": "0dfb372f316b8b362d41bb80ba01bd5e0ad37c424dd7c274201966b546eb316b",
+    "src/physics-main.js": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "index.html": "7a0aca1d976f03a09c96bc592c17a024e453520b3f153eb334337cee7a50f802"
+  },
+  "physicsSourceUnchanged": true,
+  "healthTests": {
+    "passed": 10,
+    "failed": 0
+  },
+  "focusedTests": {
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "command": "node --test tests/render-health.test.mjs tests/render-diagnostics.test.mjs tests/build-identity.test.mjs"
+  },
+  "check": "passed",
+  "build": "passed",
+  "oldProductionAnimateCounterexample": {
+    "baselineSource": "physics-main-before-render-health.js",
+    "baselineSha256": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "scope": "Injected context-loss CPU production animate/motion; not observed in uploaded v2 logs and not browser/GPU acceptance",
+    "contextLost": true,
+    "cityFrameActive": true,
+    "frames": 30,
+    "simulationTicks": 30,
+    "renderAttempts": 30,
+    "before": {
+      "x": 6,
+      "z": -200
+    },
+    "after": {
+      "x": 6,
+      "z": -229.86908350374762
+    },
+    "distanceMoved": 29.869083503747618,
+    "finding": "Physics still advances while native renderer can no-op after context loss; no render-health gate in current cityFrameActive."
+  },
+  "nativeR128ContextLossProof": {
+    "scope": "Induced native r128 context-loss event CPU path, not a physical device reset",
+    "prevented": true,
+    "before": {
+      "commandCount": 187,
+      "drawCount": 6,
+      "sceneBefore": 1,
+      "sceneAfter": 1
+    },
+    "after": {
+      "commandCount": 187,
+      "drawCount": 6,
+      "sceneBefore": 1,
+      "sceneAfter": 1
+    }
+  },
+  "nativeProofSha256": "5a7b5a51ace5a191a33994b9668bb1f21d21a121fb32ea876ceaa0890ade397f",
+  "limitations": [
+    "Production RAF/fixed clocks/movement/incident recorder CPU path with scene/audio mocks, not full updateSimulation or browser GPU/device acceptance.",
+    "Independent ranked setInterval wall-clock deadline retains existing behavior; no ranked rule changes.",
+    "Native r128 GL-command loss proof is induced loss, not physical device reset or attribution to user logs."
+  ],
+  "staging": "No git add/commit/push/reset performed; prior staged work preserved."
+}

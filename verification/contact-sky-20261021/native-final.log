@@ -1,0 +1,20 @@
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 30Hz (1036.050317ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 30Hz (27.044621ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 30Hz (29.30938ms)
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 60Hz (51.608471ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 60Hz (31.896392ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 60Hz (45.271793ms)
+✔ native player/NPC continuous flat oncoming gap: old production dies, candidate clear at 144Hz (112.449457ms)
+✔ native player/NPC continuous slope oncoming gap: old production dies, candidate clear at 144Hz (89.201371ms)
+✔ native player/NPC continuous bridge oncoming gap: old production dies, candidate clear at 144Hz (79.753088ms)
+✔ native true same-lane head-on collision still destroys at 30Hz (19.275351ms)
+✔ native true same-lane head-on collision still destroys at 60Hz (15.728307ms)
+✔ native true same-lane head-on collision still destroys at 144Hz (29.720942ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1717.768697

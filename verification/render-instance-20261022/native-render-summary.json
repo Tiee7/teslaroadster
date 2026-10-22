@@ -1,0 +1,296 @@
+{
+  "scope": "Native Three r128 CPU WebGL command generation + real Mesa llvmpipe GLSL compile/link/reflection and separate software rasterization. NOT browser/device GPU QA.",
+  "recorder": "native-webgl-capture.mjs",
+  "recorderSha256": "f77784ac23e04cc5b3b7ab446e48b72a66c087991fbcd5762a09b3371aa942d7",
+  "rootCause": "r128 shared material program retains active instanceColor when a later InstancedMesh using same material has instanceColor=null. WebGLBindingStates passes null to WebGLAttributes.get and throws. Production city-building-batch-0 has colors; city-roof-cornices-0 shares bldgMats[0] but had no instanceColor. Rendering aborts before family1 and all NPC material draws in production creation order.",
+  "minimalRepair": "In cityInstances always mesh.setColorAt(i,color.setHex(record.color??0xffffff)); white is multiplicative identity. No geometry/material parameters/scale/collision/model edits.",
+  "firstIncidentBuilding": {
+    "id": 520,
+    "logicalId": "cyber-4-4-1",
+    "minY": 0,
+    "kind": "cyber-podium",
+    "blockX": 150,
+    "blockZ": 150,
+    "minX": 196,
+    "maxX": 252,
+    "minZ": 54,
+    "maxZ": 98,
+    "x": 224,
+    "z": 76,
+    "w": 56,
+    "d": 44,
+    "height": 23,
+    "isHelipad": false,
+    "bridgePair": null,
+    "avenueAccent": false,
+    "family": "copper-foundry",
+    "renderBatch": "city-building-batch-1",
+    "renderIndex": 80
+  },
+  "sourceSha256": {
+    "src/config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "three-r128": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "worldInput": "f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae"
+  },
+  "cases": {
+    "minimalWebGL1Old": {
+      "stream": "native-webgl-minimal-old.json",
+      "sha256": "5dc7bbe249c0181249c5e646fc09e91222c9cd4af2fd39759904a8dd53385271",
+      "draws": 1,
+      "programs": 1,
+      "everyProgramCompiledAndLinked": true,
+      "failure": {
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'isInterleavedBufferAttribute')",
+        "object": {
+          "id": 22,
+          "name": "same-material-uncolored",
+          "type": "Mesh",
+          "isInstancedMesh": true,
+          "instanceMatrix": true,
+          "instanceColor": false,
+          "materialId": 16,
+          "materialName": "",
+          "geometryId": 19,
+          "attributes": [
+            "position",
+            "normal",
+            "uv"
+          ],
+          "index": true
+        }
+      },
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": "not recorded in this earlier capture",
+      "batch1BeforeHooks": 0,
+      "batch1AfterHooks": "not recorded in this earlier capture"
+    },
+    "minimalWebGL1Fixed": {
+      "stream": "native-webgl-minimal-fixed.json",
+      "sha256": "5811ef6b6c6f44cf84c858eb5ffc6a2f9157034e21402e26e2184275bbfd2c9e",
+      "draws": 2,
+      "programs": 1,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": "not recorded in this earlier capture",
+      "batch1BeforeHooks": 0,
+      "batch1AfterHooks": "not recorded in this earlier capture"
+    },
+    "minimalWebGL2Old": {
+      "stream": "native-webgl-minimal-webgl2-old.json",
+      "sha256": "20a2845a68cbe919fc6580a6742005204b8fb70363484e55c19db81b12caa645",
+      "draws": 1,
+      "programs": 1,
+      "everyProgramCompiledAndLinked": true,
+      "failure": {
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'isInterleavedBufferAttribute')",
+        "object": {
+          "id": 22,
+          "name": "same-material-uncolored",
+          "type": "Mesh",
+          "isInstancedMesh": true,
+          "instanceMatrix": true,
+          "instanceColor": false,
+          "materialId": 16,
+          "materialName": "",
+          "geometryId": 19,
+          "attributes": [
+            "position",
+            "normal",
+            "uv"
+          ],
+          "index": true
+        }
+      },
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": 0,
+      "batch1BeforeHooks": 0,
+      "batch1AfterHooks": 0
+    },
+    "minimalWebGL2Fixed": {
+      "stream": "native-webgl-minimal-webgl2-fixed.json",
+      "sha256": "b85dbd297bfdbdbf32550e38776610f15b3ebe324f817958e932de1e77abfd0c",
+      "draws": 2,
+      "programs": 1,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": 0,
+      "batch1BeforeHooks": 0,
+      "batch1AfterHooks": 0
+    },
+    "productionCityWebGL1Old": {
+      "stream": "native-webgl-city-strict-old.json",
+      "sha256": "3222c5d7def19988b7b976d1b8360b3671407d60ec72189729a7fbe17d50f6b4",
+      "draws": 37,
+      "programs": 6,
+      "everyProgramCompiledAndLinked": true,
+      "failure": {
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'isInterleavedBufferAttribute')",
+        "object": {
+          "id": 65,
+          "name": "city-roof-cornices-0",
+          "type": "Mesh",
+          "isInstancedMesh": true,
+          "instanceMatrix": true,
+          "instanceColor": false,
+          "materialId": 11,
+          "materialName": "",
+          "geometryId": 53,
+          "attributes": [
+            "position",
+            "normal",
+            "uv"
+          ],
+          "index": true
+        }
+      },
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": 0,
+      "batch1BeforeHooks": 0,
+      "batch1AfterHooks": 0
+    },
+    "productionCityWebGL1SourceFixedNpc": {
+      "stream": "native-webgl-city-sourcefixed-npc.json",
+      "sha256": "cd7099b827d53af2a91e93f11f87aa2889eacaa198ba83a5fc9b36fc28862a67",
+      "draws": 65,
+      "programs": 9,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 6,
+      "npcAfterHooks": "not recorded in this earlier capture",
+      "batch1BeforeHooks": 1,
+      "batch1AfterHooks": "not recorded in this earlier capture"
+    },
+    "productionCityWebGL1SourceFixedEmpty": {
+      "stream": "native-webgl-city-sourcefixed-empty.json",
+      "sha256": "5902bebd3189a2a26685609ef2ed5f9060f5e3feff977491adc900a2ce5b9bea",
+      "draws": 59,
+      "programs": 9,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": "not recorded in this earlier capture",
+      "batch1BeforeHooks": 1,
+      "batch1AfterHooks": "not recorded in this earlier capture"
+    },
+    "productionCityWebGL2Old": {
+      "stream": "native-webgl-city-webgl2-old.json",
+      "sha256": "627422564bcc7943747240fbcdaea21d7973e63b12df622afb2d77976aae94dc",
+      "draws": 37,
+      "programs": 6,
+      "everyProgramCompiledAndLinked": true,
+      "failure": {
+        "name": "TypeError",
+        "message": "Cannot read properties of null (reading 'isInterleavedBufferAttribute')",
+        "object": {
+          "id": 65,
+          "name": "city-roof-cornices-0",
+          "type": "Mesh",
+          "isInstancedMesh": true,
+          "instanceMatrix": true,
+          "instanceColor": false,
+          "materialId": 11,
+          "materialName": "",
+          "geometryId": 53,
+          "attributes": [
+            "position",
+            "normal",
+            "uv"
+          ],
+          "index": true
+        }
+      },
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": 0,
+      "batch1BeforeHooks": 0,
+      "batch1AfterHooks": 0
+    },
+    "productionCityWebGL2SourceFixedNpc": {
+      "stream": "native-webgl-city-webgl2-fixed-npc.json",
+      "sha256": "dafac34aa1af12b650a53c0c8a41f9194e83f4c23b640bddf501537f4e312070",
+      "draws": 65,
+      "programs": 9,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 6,
+      "npcAfterHooks": 6,
+      "batch1BeforeHooks": 1,
+      "batch1AfterHooks": 1
+    },
+    "productionCityWebGL2SourceFixedEmpty": {
+      "stream": "native-webgl-city-webgl2-fixed-empty.json",
+      "sha256": "53f748eab0adb0f94bb0f4ce886bbaa325cee601fc3c0de00b072503257fd673",
+      "draws": 59,
+      "programs": 9,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": 0,
+      "batch1BeforeHooks": 1,
+      "batch1AfterHooks": 1
+    },
+    "productionCityWebGL1ShadowsNpc": {
+      "stream": "native-webgl-city-shadow-npc.json",
+      "sha256": "baac98410e758047e779378cf8654ee8f876794eea1462194eedf5663797c256",
+      "draws": 65,
+      "programs": 10,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 6,
+      "npcAfterHooks": "not recorded in this earlier capture",
+      "batch1BeforeHooks": 1,
+      "batch1AfterHooks": "not recorded in this earlier capture"
+    },
+    "productionCityWebGL1ShadowsEmpty": {
+      "stream": "native-webgl-city-shadow-empty.json",
+      "sha256": "64cefa9702b3d3e64b263639761cd486ad737847c54554b5a674593bf1a994da",
+      "draws": 59,
+      "programs": 10,
+      "everyProgramCompiledAndLinked": true,
+      "failure": null,
+      "npcBeforeHooks": 0,
+      "npcAfterHooks": "not recorded in this earlier capture",
+      "batch1BeforeHooks": 1,
+      "batch1AfterHooks": "not recorded in this earlier capture"
+    }
+  },
+  "softwarePixelControls": {
+    "native-webgl-city-sourcefixed-pixel-diff.json": {
+      "scope": "Mesa llvmpipe CPU native Three command replay, not browser/device GPU acceptance",
+      "pair": "native-webgl-city-sourcefixed",
+      "changedPixels": 3668,
+      "bounds": [
+        280,
+        200,
+        359,
+        250
+      ]
+    },
+    "native-webgl-city-shadow-pixel-diff.json": {
+      "scope": "Mesa llvmpipe CPU native Three command replay, not browser/device GPU acceptance",
+      "pair": "native-webgl-city-shadow",
+      "changedPixels": 3668,
+      "bounds": [
+        280,
+        200,
+        359,
+        250
+      ]
+    }
+  },
+  "limitations": [
+    "Three logged incidents do not include camera/weather/build identity; this is an independent exact-source defect reproduction, not a physical-device replay of those sessions.",
+    "Recorded context exposes WebGL1 or WebGL2 capabilities to native r128, while queries of active shaders/attributes/uniforms are obtained from actual Mesa compiler. The later replay executes captured GPU-style commands on CPU llvmpipe.",
+    "Callbacks prove CPU render paths, not physical GPU completion; actual software PNG paired NPC-on/off controls separately demonstrate pixel contribution.",
+    "A fake EXT_shader_texture_lod capability initially failed Mesa GLSL100 compilation. It was removed from the recorder capability declaration, not from production code. Do not interpret that harness mismatch as game root cause.",
+    "Default chase camera .75 zoom and day weather are controlled assumptions, not user-recorded camera settings.",
+    "Complete game browser UI driving and user device render acceptance still blocked/unverified."
+  ]
+}

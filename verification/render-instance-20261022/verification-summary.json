@@ -1,0 +1,60 @@
+{
+  "schema": "render-instance-verification-v1",
+  "checkedAt": "2026-10-22T07:46:56.655138+00:00",
+  "scope": "Specific tested PR19 repair: user explicitly authorized push, main merge and production deployment at 2026-10-22T07:48Z; approved core assets remain frozen",
+  "basePreview": "853f7a24e4b9c24969b9e64e4455c8b34caa6c7d",
+  "reproducedCause": "Native Three r128 shared-material instancing-color cache uses a required null instanceColor on city cornices, throwing before building family1 and NPC draw",
+  "fix": "Every city batch gets its original tint or multiplicative-neutral white; no original model/material/scale/collision changes",
+  "affectedTests": {
+    "passed": 119,
+    "failed": 0,
+    "log": "affected-tests-final.log"
+  },
+  "initialFullSuite": {
+    "records": 943,
+    "passed": 936,
+    "failed": 7,
+    "log": "full-suite-initial.log",
+    "status": "Not a green run; six child files failed without assertion/signal detail plus old source-epoch world hash"
+  },
+  "completeFailedFileRerun": {
+    "files": 7,
+    "passed": 135,
+    "failed": 1,
+    "log": "failed-files-serial.log",
+    "status": "All six previously interrupted files fully pass at concurrency1; remaining assertion was inherited v3 city-diagnostics hash missing from historical contract"
+  },
+  "finalSourceEpochRetest": {
+    "passed": 43,
+    "failed": 0,
+    "log": "source-epoch-final.log",
+    "correction": "Explicit latest epoch covers current world/render-health and inherited v3 diagnostics; old epochs/fixtures unchanged"
+  },
+  "finalFullSuite": {
+    "status": "pass",
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "log": "full-suite-final.log",
+    "passed": 1031,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 872944.229783
+  },
+  "check": "pass",
+  "build": "pass",
+  "bundle": {
+    "bytes": 4987482,
+    "sha256": "7a0aca1d976f03a09c96bc592c17a024e453520b3f153eb334337cee7a50f802",
+    "gitBlob": "086b4634f53832d2dc3e74f771b7bc1101c77fd5",
+    "sourceId": "654a6e6797a1bd2edff1db84114396eea688d330ff0263312588e5d9f9f444a6"
+  },
+  "renderBoundary": "Actual Three r128 emitted shaders compiled/linked/reflected and GL commands replayed by native EGL/OpenGLES Mesa llvmpipe CPU, NOT a browser/device GPU acceptance",
+  "finalExactSourceRaster": {
+    "withNPCDraws": 71,
+    "withoutNPCDraws": 65,
+    "glErrors": [],
+    "failures": []
+  },
+  "originalUserLogs": "Local only; existing minimal game-only fixture contacts retained on branch",
+  "frozenCore": "15 source files byte-identical; exact hashes in source-epoch.json; city geometry/index/UV/material/transform/matrices/797 collision records retain signature 4f7ca419e514c1168b55ef4c8aa68e355223d8b38a104329cc595e4cb97f6de0"
+}

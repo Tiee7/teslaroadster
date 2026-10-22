@@ -1,0 +1,79 @@
+{
+  "scope": "test/document-only evidence on PR19; no gameplay, model, collision, camera or bundle modification",
+  "parentRemoteCommit": "e20e60ce7221abc08193987e8200c7f462742e30",
+  "parentSourceTree": "13fe8aa38759313ebdfeb289c5c395736798b20b",
+  "validation": {
+    "newIncidentTests": {
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "skipped": 0
+    },
+    "relatedCompleteFiles": {
+      "files": [
+        "tests/city-contact.test.mjs",
+        "tests/city-layout.test.mjs",
+        "tests/city-cyber-geometry.test.mjs",
+        "tests/city-diagnostics.test.mjs",
+        "tests/vehicle-camera-clip.test.mjs",
+        "tests/contact-sky-traffic.test.mjs"
+      ],
+      "tests": 40,
+      "pass": 40,
+      "fail": 0,
+      "skipped": 0
+    },
+    "check": "passed on final files",
+    "build": "passed; produces unchanged static game",
+    "fullSuite": "not rerun for this test/document-only addition; do not misrepresent45 affected tests as the complete suite",
+    "nativeRuntime": "Three r128 available; native tests executed, not skipped",
+    "GPU": "not run; no actual user-device visibility/FPS/temperature claim"
+  },
+  "unchanged": {
+    "runtimeSourcesAndBundle": true,
+    "rootBundleSha256": "7299c220753795c599d60a522af68349b33173fe23ed50c1b28cc2ed7004f2ab"
+  },
+  "releaseBoundary": {
+    "branch": "fix/contact-sky-20261021",
+    "pr": 19,
+    "mainMerge": false,
+    "productionDeploy": false,
+    "newManualPreview": false
+  },
+  "artifacts": {
+    "tests/city-user-wall-incident.test.mjs": {
+      "bytes": 10467,
+      "sha256": "3260a47a7479ed7f9afdf93afdcee069b0b55b281d71a470ba8725d884c651d7"
+    },
+    "tests/fixtures/city-user-wall-20261021/incident.json": {
+      "bytes": 1579,
+      "sha256": "6234a49c91eb5cc1dfdcb850e533769a6f4f8b49c3a55d53980d4497f1f92d65"
+    },
+    "verification/city-user-wall-20261021/README.md": {
+      "bytes": 4619,
+      "sha256": "423da3434ab8f0d44e795495f3d11282ef3af02828690d4f7bad32564d49a9b5"
+    },
+    "verification/city-user-wall-20261021/independent-native-evidence.json": {
+      "bytes": 7875,
+      "sha256": "e393e53e5f3ef107b864d156e59d4f5e2b17d3ffc8a70f0ff92f0522316e30c4"
+    },
+    "verification/city-user-wall-20261021/incident-test.log": {
+      "bytes": 1378,
+      "sha256": "3f546f0fea8eb48849c03d202eb8ca4672c40768b3799cbbeedb564b95f878c3"
+    },
+    "verification/city-user-wall-20261021/related-tests.log": {
+      "bytes": 5236,
+      "sha256": "ec7db92c96e7a132fe6e1f11447e5979f8935eafa5f0955372301eda5e4008fe"
+    },
+    "verification/city-user-wall-20261021/check.log": {
+      "bytes": 476,
+      "sha256": "b8c99a615df4a40b590cbe5aaca5118298eb5513257a85d14e9f33d4a6dd6b58"
+    },
+    "verification/city-user-wall-20261021/build.log": {
+      "bytes": 237,
+      "sha256": "5c025195302db886f8702d8bfaf37ba06f612f4db6112d34ce8c13b4cac944ab"
+    }
+  },
+  "incidentStatus": "First-log CPU reconstruction only; user reports invisible traffic and two later traffic-body incidents; rendering investigation remains open.",
+  "stage": "First-log-only CPU audit checkpoint before the later invisible-traffic diagnostic revision; not final preview validation."
+}

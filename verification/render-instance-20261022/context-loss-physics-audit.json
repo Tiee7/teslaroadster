@@ -1,0 +1,20 @@
+{
+  "baselineSource": "physics-main-before-render-health.js",
+  "baselineSha256": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+  "scope": "Injected context-loss CPU production animate/motion; not observed in uploaded v2 logs and not browser/GPU acceptance",
+  "contextLost": true,
+  "cityFrameActive": true,
+  "frames": 30,
+  "simulationTicks": 30,
+  "renderAttempts": 30,
+  "before": {
+    "x": 6,
+    "z": -200
+  },
+  "after": {
+    "x": 6,
+    "z": -229.86908350374762
+  },
+  "distanceMoved": 29.869083503747618,
+  "finding": "Physics still advances while native renderer can no-op after context loss; no render-health gate in current cityFrameActive."
+}

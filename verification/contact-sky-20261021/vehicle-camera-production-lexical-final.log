@@ -1,0 +1,20 @@
+✔ city chase holds the same vehicle framing across speed changes and irregular 20–144Hz frames (10.97185ms)
+✔ a dropped 50ms frame does not pull the camera toward a steadily moving city car (10.010254ms)
+✔ chase offset damping is timestep invariant, including its aim and zoom (5.148014ms)
+✔ yaw crossing +/-180 and pitch crossing a complete loop keep camera position and aim continuous (1.438566ms)
+✔ render shake is bounded to the current frame and never pollutes the chase rig (1.388662ms)
+✔ reset teleport and map/view switches use the new vehicle anchor without a world-space camera sweep (3.134665ms)
+✔ traffic-roof contact resolves the rendered vehicle pose in the same frame used by the camera (2.9904ms)
+✔ approved player/NPC geometry, materials, models, scale and loading sources are frozen, not replaced to repair rendering (12.436276ms)
+✔ native close showroom preserves real roof triangles at altitude instead of cutting the car with the near plane (593.548836ms)
+✔ near cap follows actual model attitude/zoom/height, retaining far-view precision and unchanged asset payloads (21.822702ms)
+✔ actual production external camera branch applies the safe cap after camera placement; old branch clips the frozen car (13.026141ms)
+ℹ {"scope":"CPU native production camera branch, not user screenshot diagnosis","mode":1,"y":80,"zoom":0.75,"old":{"near":3.2,"clip":{"full":3077,"partial":54,"total":4992}},"candidate":{"near":0.534593605166443,"clip":{"full":0,"partial":0,"total":4992}}}
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 773.056852

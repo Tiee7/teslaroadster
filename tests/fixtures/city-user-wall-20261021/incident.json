@@ -1,0 +1,67 @@
+{
+  "schema": "roadster-minimal-user-wall-fixture-v1",
+  "source": {
+    "schema": "roadster-city-incident-v2",
+    "revision": "city-cyber-v2-20261021",
+    "map": "city",
+    "tick": 688,
+    "seconds": 11.466666666666816,
+    "note": "Only the final pre-impact row and resulting contact/pose; full user trace stays outside the repository. Revision is not a commit identifier."
+  },
+  "dt": 0.016666666666666666,
+  "previous": {
+    "x": 231.94290216085227,
+    "y": 0,
+    "z": 50.078042248493325,
+    "vx": -21.391063757311787,
+    "vy": 0,
+    "vz": 100.52708090991646,
+    "yaw": -3.3512546080878507,
+    "pitch": 0,
+    "roll": 0.010700998680134077,
+    "airRemaining": 1.8541666666666075,
+    "hullIntegrity": 100,
+    "wasAirborne": 0,
+    "throttle": 0,
+    "brake": 0,
+    "reverse": 0,
+    "boost": 1,
+    "lift": 0,
+    "descend": 0
+  },
+  "contact": {
+    "kind": "building-wall",
+    "id": 520,
+    "logicalId": "cyber-4-4-1",
+    "bounds": {
+      "minX": 196,
+      "maxX": 252,
+      "minZ": 54,
+      "maxZ": 98,
+      "minY": 0,
+      "height": 23
+    },
+    "verifiedSolid": true,
+    "normal": {
+      "depth": 0.12108772519466982,
+      "x": 0,
+      "z": -1
+    }
+  },
+  "deltaV": 100.84105312640014,
+  "deltaVKmh": 363.02779125504054,
+  "reason": "crashReasonThreshold",
+  "pose": {
+    "x": 231.6119298519666,
+    "y": 0,
+    "z": 51.63263874207199,
+    "vx": -19.858338533140575,
+    "vy": 0,
+    "vz": -30.25231593792006,
+    "yaw": -3.336031786138983,
+    "pitch": 0,
+    "roll": 0.010349985788765892
+  },
+  "destroyed": true,
+  "hullIntegrity": 0
+}

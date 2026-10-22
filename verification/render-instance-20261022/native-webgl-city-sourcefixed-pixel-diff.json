@@ -1,0 +1,11 @@
+{
+  "scope": "Mesa llvmpipe CPU native Three command replay, not browser/device GPU acceptance",
+  "pair": "native-webgl-city-sourcefixed",
+  "changedPixels": 3668,
+  "bounds": [
+    280,
+    200,
+    359,
+    250
+  ]
+}

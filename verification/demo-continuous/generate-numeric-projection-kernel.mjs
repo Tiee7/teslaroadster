@@ -14,7 +14,7 @@ import { isProxy } from 'node:util/types';
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const EXPECTED_SOURCE_HASHES = Object.freeze({
   'src/config.js': 'fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4',
-  'src/physics-main.js': '3fea6cc7589cab0b0adcbb6edda5b7692263697d83f29de4af1a6a08ae0cf681',
+  'src/physics-main.js': 'ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302',
   'src/highway-demo.js': '0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07',
   'src/highway-traffic.js': 'faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108',
   'src/ui-hud.js': '6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05',
@@ -222,8 +222,8 @@ export function generateNumericProjectionKernel({ repo = DEFAULT_REPO } = {}) {
   body = inject(body, '    if (state.x < -halfRoad || state.x > halfRoad) {',
     "    if (state.x < -halfRoad || state.x > halfRoad) {\n      stop('highway-rail-contact', null, 'collision');",
     'motion-gas-altitude-attitude-body', 'insert fail-closed guard at true highway rail branch before correction');
-  contact = inject(contact, '        } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {',
-    "        } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {\n          stop('npc-roof-bounce-contact', {index:carIndex}, 'collision');",
+  contact = inject(contact, '        } else if (state.vy < 0 && clearanceY < 0.15) {',
+    "        } else if (state.vy < 0 && clearanceY < 0.15) {\n          stop('npc-roof-bounce-contact', {index:carIndex}, 'collision');",
     'npc-contact-body', 'insert fail-closed guard at true roof-bounce branch before response');
   contact = inject(contact, '      } else if (clearanceY < -0.15) {',
     "      } else if (clearanceY < -0.15) {\n        stop('npc-body-contact', {index:carIndex}, 'collision');",

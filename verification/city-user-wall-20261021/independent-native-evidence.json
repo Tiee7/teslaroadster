@@ -1,0 +1,273 @@
+{
+  "scope": "Native Three r128 CPU scene geometry and constrained final production-motion frame reconstruction; NOT browser GPU QA or a recorded-input full-session replay.",
+  "reviewedLocalHead": "a1bc9bd24c3512a94e52b1560c16fb3cd667b5fd",
+  "reviewedRemoteParent": "e20e60ce7221abc08193987e8200c7f462742e30",
+  "sameSourceTree": "13fe8aa38759313ebdfeb289c5c395736798b20b",
+  "runtime": {
+    "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "revision": "128"
+  },
+  "sourceSha256": {
+    "src/config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "src/world.js": "f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae",
+    "src/physics-main.js": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "tests/helpers/motion-harness.mjs": "c8f95ed3d2b71abf2938e24a7905ee1c94c05c2942db0f0effc2393b0a3ab6f6"
+  },
+  "render": {
+    "building": {
+      "id": 520,
+      "logicalId": "cyber-4-4-1",
+      "minY": 0,
+      "kind": "cyber-podium",
+      "blockX": 150,
+      "blockZ": 150,
+      "minX": 196,
+      "maxX": 252,
+      "minZ": 54,
+      "maxZ": 98,
+      "x": 224,
+      "z": 76,
+      "w": 56,
+      "d": 44,
+      "height": 23,
+      "isHelipad": false,
+      "bridgePair": null,
+      "avenueAccent": false,
+      "family": "copper-foundry",
+      "renderBatch": "city-building-batch-1",
+      "renderIndex": 80
+    },
+    "mesh": "city-building-batch-1",
+    "visible": true,
+    "material": {
+      "transparent": false,
+      "opacity": 1,
+      "colorWrite": true,
+      "visible": true
+    },
+    "instanceIndex": 80,
+    "matrix": [
+      56,
+      0,
+      0,
+      0,
+      0,
+      23,
+      0,
+      0,
+      0,
+      0,
+      44,
+      0,
+      224,
+      11.5,
+      76,
+      1
+    ],
+    "bounds": {
+      "min": {
+        "x": 196,
+        "y": 0,
+        "z": 54
+      },
+      "max": {
+        "x": 252,
+        "y": 23,
+        "z": 98
+      }
+    }
+  },
+  "reconstructedPreResponsePose": {
+    "x": 231.6119298519666,
+    "y": 0,
+    "z": 51.75872646726666,
+    "vx": -19.858338533140575,
+    "vy": 0,
+    "vz": 100.84105312640014,
+    "yaw": -3.336031786138983,
+    "pitch": 0,
+    "roll": 0.010349985788765892
+  },
+  "models": [
+    {
+      "model": "reference",
+      "insideReferencedVisibleVertices": 831,
+      "bounds": {
+        "min": {
+          "x": 230.28921364111133,
+          "y": -0.010920483177987017,
+          "z": 49.34341174255307
+        },
+        "max": {
+          "x": 232.9630331016507,
+          "y": 1.1159822156263939,
+          "z": 54.08246133837817
+        }
+      },
+      "maxZVertex": {
+        "z": 54.08246133837817,
+        "x": 232.0878053901192,
+        "y": 0.17803023952657435,
+        "name": "referenceFrontSplitterEdge",
+        "materials": [
+          {
+            "name": "",
+            "visible": true,
+            "colorWrite": true,
+            "transparent": false,
+            "opacity": 1
+          }
+        ],
+        "shadowProxy": false
+      },
+      "contact": {
+        "depth": 0.12108772519466982,
+        "x": 0,
+        "z": -1
+      },
+      "reportedDepthError": 0
+    },
+    {
+      "model": "classic",
+      "insideReferencedVisibleVertices": 458,
+      "bounds": {
+        "min": {
+          "x": 230.19317528008273,
+          "y": -0.010039301007763991,
+          "z": 49.30537823938853
+        },
+        "max": {
+          "x": 232.92696038479397,
+          "y": 1.155088477354685,
+          "z": 54.21798602080832
+        }
+      },
+      "maxZVertex": {
+        "z": 54.21798602080832,
+        "x": 232.066952316493,
+        "y": 0.15146956040272946,
+        "name": "",
+        "materials": [
+          {
+            "name": "",
+            "visible": true,
+            "colorWrite": true,
+            "transparent": false,
+            "opacity": 1
+          }
+        ],
+        "shadowProxy": false
+      },
+      "contact": {
+        "depth": 0.24586059705512397,
+        "x": 0,
+        "z": -1
+      },
+      "reportedDepthError": 0.12477287186045416
+    }
+  ],
+  "weightedReferenceCrossCheck": {
+    "pose": {
+      "x": 231.6119298519666,
+      "y": 0,
+      "z": 51.75872646726666,
+      "vx": -19.858338533140575,
+      "vy": 0,
+      "vz": 100.84105312640014,
+      "yaw": -3.336031786138983,
+      "pitch": 0.032,
+      "roll": 0.04196163306981882
+    },
+    "insideReferencedVisibleVertices": 780,
+    "maxZVertex": {
+      "z": 54.07768393695407,
+      "x": 232.09401477673097,
+      "y": 0.2189210458440633,
+      "name": "referenceFrontSplitterEdge",
+      "materials": [
+        {
+          "name": "",
+          "visible": true,
+          "colorWrite": true,
+          "transparent": false,
+          "opacity": 1
+        }
+      ],
+      "shadowProxy": false
+    }
+  },
+  "finalFrame": {
+    "dt": 0.016666666666666666,
+    "recoveredHiddenState": {
+      "oldSteer": -0.9859968971533508,
+      "newSteer": -0.987863977532904,
+      "lateralG": -3.219257334378709,
+      "vForward": 102.77777777777776
+    },
+    "assumptions": [
+      "grounded realistic boost branch",
+      "KeyA+Semicolon on last frame",
+      "unrecorded angular velocities zero; no handbrake",
+      "steerInput and lateralG inferred from final yaw/roll; not independently logged"
+    ],
+    "productionMotionResult": {
+      "x": 231.6119298519666,
+      "y": 0,
+      "z": 51.63263874207199,
+      "vx": -19.858338533140575,
+      "vy": 0,
+      "vz": -30.25231593792006,
+      "yaw": -3.336031786138983,
+      "pitch": 0,
+      "roll": 0.010349985788765892
+    },
+    "expected": {
+      "x": 231.6119298519666,
+      "y": 0,
+      "z": 51.63263874207199,
+      "vx": -19.858338533140575,
+      "vy": 0,
+      "vz": -30.25231593792006,
+      "yaw": -3.336031786138983,
+      "pitch": 0,
+      "roll": 0.010349985788765892
+    },
+    "ObjectIsPerField": {
+      "x": true,
+      "y": true,
+      "z": true,
+      "vx": true,
+      "vy": true,
+      "vz": true,
+      "yaw": true,
+      "pitch": true,
+      "roll": true
+    },
+    "impact": [
+      100.84105312640014,
+      "crashReasonThreshold",
+      0,
+      2,
+      0
+    ],
+    "deltaVObjectIs": true
+  },
+  "interpretation": [
+    "Solid 520 is a visible opaque podium whose render bounds exactly match the diagnostic collider.",
+    "Reference collider depth and normal reproduce exactly. At pre-response pose real referenced vertices from visible, color-writing nonzero-opacity meshes are already inside the podium.",
+    "Incident pose is recorded after depenetration and velocity response. vz=-30.25231593792006 equals -0.3*100.84105312640014, so it is not the pre-impact speed.",
+    "No evidence from this incident warrants changing approved models or weakening collision rules."
+  ],
+  "limitations": [
+    "CPU geometry certification only; no WebGL rendering, visibility/occlusion perception or device-FPS claim.",
+    "No full input recording: the one-frame reconstruction recovers unlogged state algebraically.",
+    "Neutral preview source geometry freezes model configuration; animated wing/suspension pose was not recorded. The solid impact is certified by opaque front splitter vertices, not a shadow or transparent effect."
+  ],
+  "sourceAuditScriptSha256": "a9e29c4b57cd1f71a7c34cc0db65063407d20211033796e92f6e16c915731d27",
+  "bundleSha256": "7299c220753795c599d60a522af68349b33173fe23ed50c1b28cc2ed7004f2ab"
+}

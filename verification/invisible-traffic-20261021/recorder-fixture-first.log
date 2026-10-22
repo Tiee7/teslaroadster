@@ -1,0 +1,17 @@
+✔ city incident trace is bounded, copyable and stays local across reset without leaking live references (14.098177ms)
+✔ v3 incident clones bounded runtime evidence at impact and does not let a diagnostic reader break collisions (3.405255ms)
+✔ minimal incident distinguishes inbound normal speed from already-rebounded reported pose (0.766797ms)
+✔ incident520 collider is exactly the visible opaque native rendered podium, not an invisible envelope (597.818417ms)
+✔ constrained last production-motion frame reconstructs all nine recorded pose fields and fatal contact exactly (27.764352ms)
+ℹ {"scope":"native CPU single-frame reconstruction; two hidden states inferred, not whole-run input capture or GPU driving","contact":{"kind":"building-wall","id":520,"logicalId":"cyber-4-4-1","bounds":{"minX":196,"maxX":252,"minZ":54,"maxZ":98,"minY":0,"height":23},"verifiedSolid":true,"normal":{"depth":0.12108772519466982,"x":0,"z":-1}},"deltaV":100.84105312640014,"matchedPoseFields":9}
+✔ actual frozen reference vertices reach the rendered wall before push-out; preceding and resolved poses are clear (76.977927ms)
+ℹ {"scope":"actual visible native mesh vertices, not just OBB overlap","wallZ":54,"statePose":{"maxZ":54.08246133837817,"inside":831,"foremost":"referenceFrontSplitterEdge"},"visualPose":{"maxZ":54.07768393695407,"inside":780,"foremost":"referenceFrontSplitterEdge"}}
+✔ reconstructed high-speed motion remains clear beside the podium without disabling the real wall (16.414452ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 837.045033

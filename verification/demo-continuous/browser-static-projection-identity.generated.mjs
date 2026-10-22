@@ -63,9 +63,10 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   const scoreMotionStart = RoadsterDrivingScore.motion(state, currentMap);
   const isRealMode = (state.physicsMode === 'realistic');
   const cityMotionStart = currentMap === 'city' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:state.pitch,roll:state.roll} : null;
-  const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,vy:state.vy} : null;
+  const coastMotionStart = currentMap === 'coast' ? {x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:state.pitch,roll:state.roll,vy:state.vy} : null;
+  if(coastMotionStart&&typeof playerWrapper!=='undefined'&&typeof roadsterAttitudeGroup!=='undefined')coastMotionStart.contactPose={x:state.x,y:playerWrapper.position.y,z:state.z,pitch:roadsterAttitudeGroup.rotation.x,yaw:roadsterAttitudeGroup.rotation.y,roll:roadsterAttitudeGroup.rotation.z};
   const coastObstacles = currentMap === 'coast' ? (globalThis.window?.RoadsterCoast?.buildings() || []) : null;
-  const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,yaw:c.mesh.rotation.y,visible:c.mesh.visible}])) : null;
+  const coastTrafficStart = currentMap === 'coast' ? new Map(trafficCars.map(c=>[c,{x:c.mesh.position.x,y:c.mesh.position.y,z:c.mesh.position.z,yaw:c.mesh.rotation.y,pitch:c.mesh.rotation.x,roll:c.mesh.rotation.z,visible:c.mesh.visible}])) : null;
   state.gasMassKg = Number((144.0 * (state.airRemaining / MAX_AIR_SECONDS)).toFixed(1));
   const currentVehicleMass = VEHICLE_MASS_KG + (state.gasMassKg || 0);
   const fuelBurnThrustFactor = (VEHICLE_MASS_KG + 144.0) / Math.max(1850.0, currentVehicleMass);
@@ -1215,12 +1216,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
         }
       }
     } else {
-      car.mesh.position.x += car.vx * CITY_WORLD_SPEED_SCALE * dt;
-      car.mesh.position.z += car.vz * CITY_WORLD_SPEED_SCALE * dt;
-      if (car.mesh.position.x > CITY_HALF_BOUND - 10) car.mesh.position.x = -CITY_HALF_BOUND + 10;
-      if (car.mesh.position.x < -CITY_HALF_BOUND + 10) car.mesh.position.x = CITY_HALF_BOUND - 10;
-      if (car.mesh.position.z > CITY_HALF_BOUND - 10) car.mesh.position.z = -CITY_HALF_BOUND + 10;
-      if (car.mesh.position.z < -CITY_HALF_BOUND + 10) car.mesh.position.z = CITY_HALF_BOUND - 10;
+      advanceCityTraffic(car,dt);
     }
 
     const dx = Math.abs(state.x - car.mesh.position.x);
@@ -1238,10 +1234,21 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       ? RoadsterHighwayDemoPlanner.sweptContact(demoPreviousCar.x-demoGroundSweep.x,demoPreviousCar.z,
         car.mesh.position.x-state.x,car.mesh.position.z,1.85,car.length/2+2.15)!==null : false;
     const coastOld = currentMap === 'coast' ? coastTrafficStart?.get(car) : null;
-    const coastBounds = currentMap === 'coast' ? globalThis.window?.RoadsterCoast?.contactBounds(state.yaw,car.mesh.rotation.y,car.length,coastMotionStart.yaw,coastOld?.yaw) : null;
-    const coastContact = coastOld?.visible !== false && coastOld && car.mode === 'coast' && !car.blastTimer
-      ? globalThis.window?.RoadsterCoast?.trafficContact(coastMotionStart,state,coastOld,car,coastBounds) : null;
-    const coastSweptHit = coastContact !== null;
+    const coastVisualEnd=currentMap==='coast'?{...state,y:state.y-(state.suspensionSquash||0)-(state.aeroSquash||0),pitch:state.pitch+(!isAirborne?(typeof isAccelerating!=='undefined'&&isAccelerating?(typeof isRearThrusterFiring!=='undefined'&&isRearThrusterFiring ? .032 : .016):(typeof isFootBraking!=='undefined'&&isFootBraking||typeof isReversing!=='undefined'&&isReversing)?-.026:0):0),roll:state.roll+(!isAirborne?-(state.steerInput||0)*.032:0)}:null;
+    const coastContact=currentMap==='coast'&&coastOld&&coastOld.visible!==false&&car.mode==='coast'&&!car.blastTimer?coastVehicleContact(coastMotionStart.contactPose||coastMotionStart,coastVisualEnd,coastOld,car):null;
+    if(coastContact){
+      const relVx=state.vx-(car.vx||0),relVy=state.vy-(car.vy||0),relVz=state.vz-(car.vz||0),closing=Math.max(0,-relVx*coastContact.x-relVy*coastContact.y-relVz*coastContact.z+coastContact.angularClosingPerFraction/Math.max(dt,1e-6));
+      // Rewind only the player to certified first contact. NPC route distance
+      // remains authoritative; a normal impulse does not reverse tangent speed.
+      const t=Math.max(0,coastContact.t-1e-6);for(const k of['x','y','z'])state[k]=coastMotionStart[k]+(state[k]-coastMotionStart[k])*t;
+      const endContact=coastContactSeparation(cityPlayerBody({...state,y:state.y-(state.suspensionSquash||0)-(state.aeroSquash||0),pitch:coastVisualEnd.pitch,roll:coastVisualEnd.roll}),coastTrafficBody(car,{x:car.mesh.position.x,y:car.mesh.position.y,z:car.mesh.position.z,pitch:car.mesh.rotation.x,yaw:car.mesh.rotation.y,roll:car.mesh.rotation.z}));
+      const push=endContact.gap<0?endContact.depth+.0001:.0001,pushNormal=endContact.gap<0?endContact:coastContact;state.x+=pushNormal.x*push;state.y+=pushNormal.y*push;state.z+=pushNormal.z*push;
+      if(coastContact.y>.65&&state.vy<0&&closing<=18){state.vy=Math.max(5.5,state.vy+closing*coastContact.y);sound.beep(520,.08);}
+      else if(closing>.1){globalThis.window?.RoadsterCoast?.hit(car);state.vx+=1.35*closing*coastContact.x;state.vy+=1.35*closing*coastContact.y;state.vz+=1.35*closing*coastContact.z;triggerPhysicsCollision(closing,'crashReasonThreshold',0,0,0);}
+      state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);return;
+    }
+    // No other coastal AABB/roof-cushion path may promote a broad-phase gap.
+    if(currentMap==='coast')return;
     const cityNear=currentMap==='city'&&dx<10&&dz<10&&Math.abs(state.y-npcWorldY)<10;
     const cityPlayer=cityNear?cityPlayerBody(state):null,cityNpc=cityNear?cityTrafficBody(car):null;
     // Preserve the existing gentle roof-touch cushion separately from solid-body
@@ -1249,16 +1256,14 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     const cityRoofTouch=cityNear&&clearanceY>=-.15&&clearanceY<.15&&state.vy<0&&state.vy>=-18&&cityHorizontalContact(cityPlayer,cityNpc);
     const citySolidContact=cityNear&&cityContactInterval(cityPlayer,cityNpc)!==null;
     const cityBodyOverlap=cityNear&&(cityRoofTouch||citySolidContact);
-    const bodyOverlap = currentMap==='city'?cityBodyOverlap:coastBounds ? dx < coastBounds.x && dz < coastBounds.z && state.y+1.25>npcWorldY && state.y<npcWorldY+car.height+.15 : dx < 1.85 && dz < (car.length / 2 + 2.15);
-    if (bodyOverlap || demoSweptHit || coastSweptHit) {
-      if(coastSweptHit)clearanceY=coastContact.relativeY-car.height;
+    const bodyOverlap = currentMap==='city'?cityBodyOverlap:dx < 1.85 && dz < (car.length / 2 + 2.15);
+    if (bodyOverlap || demoSweptHit) {
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0 && (currentMap!=='city'||citySolidContact)) {
           if(currentMap==='city')window.RoadsterCityDiagnostics?.contact({kind:'traffic-roof',variant:car.mesh.userData?.trafficVariant,position:{...car.mesh.position},verifiedSolid:citySolidContact});
           triggerPhysicsCollision(Math.abs(state.vy), 'crashReasonThreshold', 0, 5.0, 0);
-        } else if (state.vy < 0 && (coastSweptHit ? clearanceY < 0.150001 : clearanceY < 0.15)) {
-          if(coastSweptHit){const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;}
-          state.y = (coastSweptHit?coastContact.npcY:npcWorldY) + car.height + 0.15;
+        } else if (state.vy < 0 && clearanceY < 0.15) {
+          state.y = npcWorldY + car.height + 0.15;
           state.vy = 5.5;
           sound.beep(520, 0.08);
         }
@@ -1286,10 +1291,6 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
           } else {
             state.speed = Math.max(14.0, state.speed * 0.58);
           }
-        } else if (currentMap === 'coast') {
-          globalThis.window?.RoadsterCoast?.hit(car);
-          if (coastSweptHit) { const t=Math.max(0,coastContact.t-1e-5);state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;state.y=coastMotionStart.y+(state.y-coastMotionStart.y)*t; }
-          state.vx *= -.35;state.vz *= -.35;state.speed = isAirborne ? Math.hypot(state.vx,state.vz) : state.speed * -.35;
         } else {
           car.mesh.position.x += Math.sign(car.mesh.position.x - state.x || 1) * 5.0;
           car.mesh.position.z += Math.sign(car.mesh.position.z - state.z || 1) * 5.0;
@@ -1518,10 +1519,6 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   const desiredNear = isCockpitFpv
     ? 0.08
     : THREE.MathUtils.clamp(0.38 + Math.max(0.0,currentMap==='coast'?state.y-groundElevation:state.y) * 0.045, 0.38, 3.2);
-  if (Math.abs(camera.near - desiredNear) > 0.02) {
-    camera.near = desiredNear;
-    camera.updateProjectionMatrix();
-  }
   roadsterCanopyMesh.visible = !isCockpitFpv;
   setCockpitPerspective(isCockpitFpv);
   setCockpitExteriorDetailsVisible(!isCockpitFpv);
@@ -1591,6 +1588,11 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       camera.lookAt(state.x, state.y, state.z);
     }
   }
+
+  const resolvedNear=isCockpitFpv?desiredNear:vehicleSafeCameraNear(desiredNear,camera,{x:state.x,y:visualY,z:playerWorldZ,pitch:roadsterAttitudeGroup.rotation.x,yaw:roadsterAttitudeGroup.rotation.y,roll:roadsterAttitudeGroup.rotation.z});
+  // Apply once after the final camera transform; avoid two projection updates
+  // per frame when altitude precision and close-up visibility disagree.
+  if(Math.abs(camera.near-resolvedNear)>1e-5){camera.near=resolvedNear;camera.updateProjectionMatrix();}
 
   if (state.bannerTimer > 0) {
     state.bannerTimer -= dt;

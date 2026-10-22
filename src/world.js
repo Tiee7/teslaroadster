@@ -554,7 +554,7 @@ function buildOpenWorldCity() {
         const haze=Math.exp(-Math.abs(h)*7),cloud=h>0?Math.pow(.5+.5*Math.sin(d[0]/len*6+d[2]/len*3+h*11),3)*Math.exp(-Math.pow((h-.32)*5,2)):0,i=(y*size+x)*4;
         const top=[7,8,25],horizon=[29,49,68];for(let k=0;k<3;k++)data[i+k]=Math.round(top[k]+(horizon[k]-top[k])*haze+[8,5,13][k]*cloud);data[i+3]=255;
       }const texture=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);texture.needsUpdate=true;faces.push(texture);
-    }cityNightSky=new THREE.CubeTexture(faces);cityNightSky.name='city-cyber-night-sky';cityNightSky.generateMipmaps=true;cityNightSky.minFilter=THREE.LinearMipmapLinearFilter;cityNightSky.magFilter=THREE.LinearFilter;cityNightSky.needsUpdate=true;return cityNightSky;
+    }cityNightSky=new THREE.CubeTexture(faces);cityNightSky.name='city-cyber-night-sky';cityNightSky.format=THREE.RGBAFormat;cityNightSky.generateMipmaps=true;cityNightSky.minFilter=THREE.LinearMipmapLinearFilter;cityNightSky.magFilter=THREE.LinearFilter;cityNightSky.needsUpdate=true;return cityNightSky;
   };
   const windowLitMat = new THREE.MeshBasicMaterial({ color: 0x648391 });
   const windowWarmMat = new THREE.MeshBasicMaterial({ color: 0x918b75 });
@@ -664,7 +664,11 @@ function buildOpenWorldCity() {
 
   function cityInstances(name,geometry,material,records,castShadow=false){
     if(!records.length)return null;const mesh=new THREE.InstancedMesh(geometry,material,records.length),pose=new THREE.Object3D(),color=new THREE.Color();
-    records.forEach((record,i)=>{pose.position.set(...record.p);pose.scale.set(...record.s);pose.rotation.set(...(record.r||[0,0,0]));pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);if(record.color!==undefined)mesh.setColorAt(i,color.setHex(record.color));});
+    // r128 caches a shared material's instancing-colour program. Mixing a
+    // coloured batch with a null instanceColor batch can abort the entire
+    // render before traffic is drawn. Explicit white is the neutral multiplier
+    // for untinted records; do not change material, geometry or solid bounds.
+    records.forEach((record,i)=>{pose.position.set(...record.p);pose.scale.set(...record.s);pose.rotation.set(...(record.r||[0,0,0]));pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);mesh.setColorAt(i,color.setHex(record.color??0xffffff));});
     mesh.name=name;mesh.castShadow=castShadow;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     mesh.userData.cityInstances=records.map(record=>record.id??null);cityEnvGroup.add(mesh);return mesh;
   }

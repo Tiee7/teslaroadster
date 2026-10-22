@@ -1,0 +1,38 @@
+✔ terrain-v2 explicitly supersedes flat-layout byte identity while retaining network-free owned art (1.961482ms)
+✔ actual map art keeps a bounded sample street, separate texture ownership and unchanged drivable-road clearance (1280.856667ms)
+✔ five map art entry/exit cycles dispose every owned texture/material/geometry/instance once and retain shared assets (3153.863455ms)
+✔ terrain road mesh has upward normals and world-metre UVs; landscape meets retained beach without overlap (993.450006ms)
+✔ batched Ferris cabins retain all sixteen colors, upright world poses and original wheel motion (953.010331ms)
+✔ original sculpted palms have finite nonzero folded leaves, real vertex colors and trunks inside original collision envelopes (1175.888383ms)
+✔ curated beach pockets, promenade furniture and pier gateway retain human scale and clear visual passages (1029.918622ms)
+✔ static palm crowns keep all94 original poses at every distance without rebuilds or near-distance popping (1028.224861ms)
+✔ whole-district apertures keep four outward faces and persistent ground-floor entry reveals, with no proximity rebuilding (980.57055ms)
+✔ all41 retained entry doors face finite real street segments or explicit local gardens; linked paving never crosses another building (942.924628ms)
+✔ boulevard planting and signs add scale only beyond unchanged road shoulders and keep real-light count bounded (1011.930172ms)
+✔ new 9m road edge/center paint follows actual elevated support instead of obsolete flat30m boulevards (1192.978478ms)
+✔ western boulevard curb has an actual visual cut across the original pier approach (923.405187ms)
+✔ continuous water/sand grids retain exact original area, bounds, elevation and upward winding (1209.556124ms)
+✔ native water normals drift by uniforms only, retain finite periodic offsets and dispose once (1077.869218ms)
+✔ original art payload remains below the explicit32KiB gzip ceiling with zero art fetches (425.593318ms)
+✔ fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights (1143.393498ms)
+✔ selected street-wall balcony stacks have real full-height doors exactly meeting their platform floors (996.210819ms)
+✔ curved roof trim is a finite closed shallow parapet, not a new collidable full roof (913.153742ms)
+✔ composed courtyard and three beach entries retain original obstacles, shoulders and ground datum (1044.573953ms)
+✔ driving-visible inland corner shop windows replace ground sashes without inventing entrances or road obstacles (980.448913ms)
+✔ corner storefront lettering reads left-to-right from actual outward X and Z viewpoints (978.899542ms)
+✔ continuous roof parapets preserve exact four-box union while removing2112 hidden corner triangles (1016.762983ms)
+✔ world terrain field keeps metre-bounded landscape UV, uploads once and reuses only bounded CPU pixels (1483.356875ms)
+✔ two grouped aperture families use independent half-atlas UVs and synchronized albedo/emission masks (856.706677ms)
+✔ curated corner hard courts are flat original-paver continuations outside roads and every inherited obstacle (885.427948ms)
+✔ terrain-v2 retained entrances remain on their actual44 coastal building facades with finite explicit path ownership (947.239349ms)
+✔ six grouped facade signatures partition original wall hulls exactly with explicitly initialized instance colors (887.072729ms)
+✔ signature seams avoid native window and full-door reveals and corner piers retain full road, prop and aperture clearance (1238.295878ms)
+✔ two driving-visible arrival places reuse flat paving/furniture batches and protect original and new footpaths (1005.386895ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 31962.144268

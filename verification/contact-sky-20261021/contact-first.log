@@ -1,0 +1,83 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (40.456301ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (17.38072ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (9.302711ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (72.646025ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (211.560581ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (2.241126ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (539.450877ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (2.588948ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (9.054085ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (9.59458ms)
+✔ finite city wall initial overlap depenetrates once and preserves a departing rebound; parallel motion has no false impact (20.859687ms)
+✔ fast descending car cannot die inside the gentle roof cushion before any actual3D body contact (10.239008ms)
+✔ original map data is lazy, meter-scale, connected and explicitly separate from city/highway (408.595672ms)
+✔ all directed routes and complete vehicle corners stay on legal roads, not sand, pier or water (7586.437048ms)
+✔ coast20-car road motion uses real metres and finite speed at30Hz (2100.118162ms)
+✔ coast20-car road motion uses real metres and finite speed at60Hz (4011.615027ms)
+✔ coast20-car road motion uses real metres and finite speed at144Hz (8117.75296ms)
+✔ collision stops on its actual route; blasts hide before a safe road-only respawn, without city wrap (435.084664ms)
+✔ actualr128 low-poly model owns bounded geometry, creates lazily and disposes only its own map resources (2978.512044ms)
+✔ coastal300m drive takes5.4seconds at200km/h,30Hz (395.334055ms)
+✔ coastal300m drive takes5.4seconds at200km/h,60Hz (473.23727ms)
+✔ coastal300m drive takes5.4seconds at200km/h,144Hz (513.332154ms)
+✔ sea permits flight but no ghost landing save or recharge; actual touch resets once onto the road (1229.085953ms)
+✔ spawn boulevard and pier approach form a traversable sightseeing path, not an isolated menu option (422.110517ms)
+✔ water/reset chooses a genuinely free road pose rather than spawning inside existing traffic (461.426795ms)
+✔ coast continuous side sweep prevents high-speed building tunneling and roofs remain real support (1184.437977ms)
+✔ after touchdown, rooftop driving and a fresh O takeoff never collide with their own supporting side wall (1262.814222ms)
+✖ actual coast contact block covers east/west cars and turning headings instead of a fixed north/south box (399.650392ms)
+✖ coast traffic sweep intersects height over the whole overlap, not just entry or frame end (734.197827ms)
+✔ actual player and NPC wheel blocks retain highway calibration and meter scale on both free-roam maps (1.991041ms)
+✔ actual map switching isolates coast ownership/counts, blocks ranked starts and preserves existing maps (365.770867ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 29
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 33256.160898
+
+✖ failing tests:
+
+test at tests/coast-map.test.mjs:147:1
+✖ actual coast contact block covers east/west cars and turning headings instead of a fixed north/south box (399.650392ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-map.test.mjs:155:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/coast-map.test.mjs:162:1
+✖ coast traffic sweep intersects height over the whole overlap, not just entry or frame end (734.197827ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -8 !== 5.5
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/coast-map.test.mjs:175:57)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -8,
+    expected: 5.5,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

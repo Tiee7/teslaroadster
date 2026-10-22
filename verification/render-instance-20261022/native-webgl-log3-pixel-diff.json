@@ -1,0 +1,11 @@
+{
+  "scope": "Native Three WebGL2 command replay on Mesa llvmpipe CPU; not browser or user-device GPU QA",
+  "pair": "native-webgl-log3",
+  "changedPixels": 6139,
+  "bounds": [
+    321,
+    207,
+    433,
+    274
+  ]
+}

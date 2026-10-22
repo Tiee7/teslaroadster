@@ -1,0 +1,38 @@
+✔ city chase holds the same vehicle framing across speed changes and irregular 20–144Hz frames (20.977078ms)
+✔ a dropped 50ms frame does not pull the camera toward a steadily moving city car (19.117178ms)
+✔ chase offset damping is timestep invariant, including its aim and zoom (13.95291ms)
+✔ yaw crossing +/-180 and pitch crossing a complete loop keep camera position and aim continuous (1.958531ms)
+✔ render shake is bounded to the current frame and never pollutes the chase rig (1.7676ms)
+✔ reset teleport and map/view switches use the new vehicle anchor without a world-space camera sweep (4.618412ms)
+✔ traffic-roof contact resolves the rendered vehicle pose in the same frame used by the camera (4.567557ms)
+✔ approved player/NPC geometry, materials, models, scale and loading sources are frozen, not replaced to repair rendering (109.572375ms)
+✖ native close showroom preserves real roof triangles at altitude instead of cutting the car with the near plane (807.540878ms)
+✔ near cap follows actual model attitude/zoom/height, retaining far-view precision and unchanged asset payloads (35.215798ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1120.413777
+
+✖ failing tests:
+
+test at tests/vehicle-camera-clip.test.mjs:8:1
+✖ native close showroom preserves real roof triangles at altitude instead of cutting the car with the near plane (807.540878ms)
+  AssertionError [ERR_ASSERTION]: preserved old near-plane real roof clipping witness
+      at TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_map2_scale_20261021/tests/vehicle-camera-clip.test.mjs:8:569)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

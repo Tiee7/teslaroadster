@@ -1,0 +1,17 @@
+{
+  "city": {
+    "report": "/workspace/shared/contact-sky-audit-20261021/city/REPORT.md",
+    "independentReadOnly": true,
+    "baseline": "13b9f5372034cd6ba3e14144433792c525989f63"
+  },
+  "coast": {
+    "report": "/workspace/shared/contact-sky-audit-20261021/coast/REPORT.md",
+    "independentReadOnly": true,
+    "baseline": "13b9f5372034cd6ba3e14144433792c525989f63"
+  },
+  "sky": {
+    "report": "/workspace/shared/contact-sky-audit-20261021/sky/REPORT.md",
+    "independentReadOnly": true,
+    "baseline": "13b9f5372034cd6ba3e14144433792c525989f63"
+  }
+}

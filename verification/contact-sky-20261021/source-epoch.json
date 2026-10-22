@@ -1,0 +1,38 @@
+{
+  "schema": "contact-sky-source-epoch-v1",
+  "baseMain": "13b9f5372034cd6ba3e14144433792c525989f63",
+  "inheritedSourceEpoch": "verification/city-cyber-20261021/source-epoch.json",
+  "inheritedSourceEpochSha256": "adb9a3278cb4a416f4d051840b205fd05816cd0ad34396dd2411c340e8f0b19b",
+  "authorizedSourceSha256": {
+    "physics-main": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "world": "f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae",
+    "demo-numeric-projection": "f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b"
+  },
+  "baselineFixtureSha256": {
+    "physics-main.js": "3fea6cc7589cab0b0adcbb6edda5b7692263697d83f29de4af1a6a08ae0cf681",
+    "ui-hud.js": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "demo-numeric-projection.js": "a2b9707a836001b9bb6a826b5ace6d007453ea52566c38a269b619a4b7d56483",
+    "city-diagnostics.js": "5a5dcfa4daf3d26545ca6b2a647e0d6fb972b71dbd6eb3173af56f34d7cd63fc",
+    "world.js": "1d8337d5100df16d6173586207eb1046a4730d02d07c720e2faca006103988fb"
+  },
+  "unchangedSourceSha256": {
+    "audio": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "taxi": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "vehicles": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "config": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "coast-map": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "city-clock": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "highway-demo": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "highway-traffic": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "reference-traffic": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "ui-hud": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "city-diagnostics": "5a5dcfa4daf3d26545ca6b2a647e0d6fb972b71dbd6eb3173af56f34d7cd63fc",
+    "reference-exterior": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "npc-traffic-assets": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c"
+  },
+  "scope": "Fix actual coastal YXZ OBB contact/sweep/normal closing velocity, no broad AABB may trigger damage; safe occupied city seam respawn queue using actual vertical geometry; one-line night/rain cube RGBA upload format. No palette redesign, new buildings/lights, force or audio change.",
+  "validationBoundary": "Native Three CPU actual geometry and continuous production motion. No actual WebGL/GPU/device temperature validation; user exact collision location remains unknown. Preview-only pending specific production authorization.",
+  "lateCameraScope": "After the full regression started on82804bdd, a new user screenshot prompted source-frozen car audit and an independent old near-plane counterexample. Only cap excessive external-camera near plane after final camera placement; no FOV/zoom/camera position, model/mesh/index/normal/material/scale/loading changes. Native production-branch roof clipping regression and affected camera/contact/projection checks rerun on final source. Screenshot exact pose remains unknown; no claim that this one cause explains the screenshot."
+}

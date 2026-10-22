@@ -1,0 +1,17 @@
+✔ city seam wrap cannot spawn a fatal car into the player at 30Hz; true nearby collision remains (75.11886ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 60Hz; true nearby collision remains (60.395674ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 144Hz; true nearby collision remains (61.885188ms)
+✔ city seam queue waits for player and NPC space, then restores the same right-lane velocity without ghosts (2.353666ms)
+✔ city seam clearance uses actual pitched height, not a root-height exemption (2.473513ms)
+✔ coast narrow phase certifies real 3D YXZ contacts and rejects rotated broad-box corners and different decks (7.36056ms)
+✔ exact shallow-angle sweep cannot spend its budget and miss an overlapping endpoint (2.85845ms)
+✔ a real touching coast side does not convert huge tangential velocity into fatal normal damage (2.291214ms)
+✔ rotation-only coast sweep catches real contact but never treats the AABB envelope as a hit (4.545233ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 336.600156

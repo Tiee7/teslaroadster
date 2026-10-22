@@ -1,0 +1,1660 @@
+{
+  "sourceSha256": {
+    "src/config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "three-r128": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "worldInput": "c58a5fd0e7ec712452dba8214178afeb58e509ee96e7fa1fa62cce61684bee23"
+  },
+  "setup": {
+    "variant": "roadster-57bb28b4444fe141",
+    "detail": "near",
+    "camera": {
+      "position": [
+        6,
+        2.3275,
+        -221.135
+      ],
+      "projectionMatrix": [
+        1.0825317547305484,
+        0,
+        0,
+        0,
+        0,
+        1.7320508075688774,
+        0,
+        0,
+        0,
+        0,
+        -1.0001689031518217,
+        -1,
+        0,
+        0,
+        -0.7600641831976923,
+        0
+      ],
+      "matrixWorld": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.992947724468939,
+        -0.11855301123107789,
+        0,
+        0,
+        0.11855301123107789,
+        0.992947724468939,
+        0,
+        6,
+        2.3275,
+        -221.135,
+        1
+      ]
+    },
+    "npcPosition": [
+      6,
+      0,
+      -231.33333333333493
+    ],
+    "options": {
+      "sky": "day",
+      "environment": true,
+      "weatherIndex": 3,
+      "city": true,
+      "npcVisible": true,
+      "shadows": true,
+      "webgl2": true
+    },
+    "lighting": "production weather light values; isolated scene options explicitly recorded, no shadow-map"
+  },
+  "stats": {
+    "calls": 65,
+    "triangles": 83944,
+    "programs": 10,
+    "commands": 2419,
+    "unknownMethods": [
+      "bindTexture",
+      "texParameteri",
+      "texImage2D",
+      "clearColor",
+      "clearDepth",
+      "clearStencil",
+      "enable",
+      "depthFunc",
+      "frontFace",
+      "cullFace",
+      "bindBuffer",
+      "bufferData",
+      "disable",
+      "activeTexture",
+      "bindFramebuffer",
+      "framebufferTexture2D",
+      "bindRenderbuffer",
+      "renderbufferStorage",
+      "framebufferRenderbuffer",
+      "viewport",
+      "scissor",
+      "clear",
+      "compileShader",
+      "deleteShader",
+      "useProgram",
+      "uniformMatrix4fv",
+      "depthMask",
+      "colorMask",
+      "bindVertexArray",
+      "enableVertexAttribArray",
+      "vertexAttribDivisor",
+      "vertexAttribPointer",
+      "drawElementsInstanced",
+      "uniform1f",
+      "uniform1i",
+      "pixelStorei",
+      "generateMipmap",
+      "drawElements",
+      "uniform2f",
+      "uniform3f",
+      "uniform3fv",
+      "uniform1iv",
+      "uniformMatrix3fv",
+      "polygonOffset",
+      "blendEquation",
+      "blendFuncSeparate"
+    ],
+    "contextLoss": null,
+    "renderFailure": null,
+    "renderHistory": [
+      {
+        "id": 8,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 2,
+        "materialName": "",
+        "geometryId": 13,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 9,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 14,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 13,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 18,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 17,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 22,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 21,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 26,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 25,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 30,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 29,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 34,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 33,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 3,
+        "materialName": "",
+        "geometryId": 38,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 19,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 24,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 15,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 20,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 11,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 16,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 35,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 40,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 31,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 36,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 27,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 32,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 23,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 4,
+        "materialName": "",
+        "geometryId": 28,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 20,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 25,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 16,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 21,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 12,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 17,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 36,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 41,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 32,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 37,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 28,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 33,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 24,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 29,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 10,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 15,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 14,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 19,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 18,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 23,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 22,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 27,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 26,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 31,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 30,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 35,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 34,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 5,
+        "materialName": "",
+        "geometryId": 39,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 39,
+        "name": "city-crosswalk-paint",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": false,
+        "materialId": 6,
+        "materialName": "",
+        "geometryId": 43,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 37,
+        "name": "city-lane-paint",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": false,
+        "materialId": 7,
+        "materialName": "",
+        "geometryId": 42,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 41,
+        "name": "city-avenue-paving",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": false,
+        "materialId": 8,
+        "materialName": "",
+        "geometryId": 44,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 44,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 10,
+        "materialName": "",
+        "geometryId": 46,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 48,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 10,
+        "materialName": "",
+        "geometryId": 50,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 50,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 10,
+        "materialName": "",
+        "geometryId": 52,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 51,
+        "name": "city-building-batch-0",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 11,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 65,
+        "name": "city-roof-cornices-0",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 11,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 75,
+        "name": "city-rooftop-pads",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 11,
+        "materialName": "",
+        "geometryId": 54,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 53,
+        "name": "city-building-batch-1",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 12,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 71,
+        "name": "city-roof-cornices-1",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 12,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 55,
+        "name": "city-building-batch-2",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 13,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 57,
+        "name": "city-building-batch-3",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 14,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 59,
+        "name": "city-building-batch-4",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 15,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 61,
+        "name": "city-building-batch-5",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 16,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 63,
+        "name": "city-window-courses-0",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 17,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 69,
+        "name": "city-window-courses-1",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 18,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 67,
+        "name": "city-tower-trims-0",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 19,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 73,
+        "name": "city-tower-trims-1",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 20,
+        "materialName": "",
+        "geometryId": 53,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 77,
+        "name": "city-rooftop-rings",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 21,
+        "materialName": "",
+        "geometryId": 55,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 79,
+        "name": "city-rooftop-H",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 22,
+        "materialName": "",
+        "geometryId": 56,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 83,
+        "name": "city-cyber-signs",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 24,
+        "materialName": "",
+        "geometryId": 58,
+        "attributes": [
+          "position",
+          "normal",
+          "uv",
+          "citySignTile"
+        ],
+        "index": true
+      },
+      {
+        "id": 87,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 26,
+        "materialName": "",
+        "geometryId": 60,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 88,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 26,
+        "materialName": "",
+        "geometryId": 61,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 102,
+        "name": "npc-roadster-57bb28b4444fe141-carbon",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 28,
+        "materialName": "traffic-shared-carbon",
+        "geometryId": 72,
+        "attributes": [
+          "position",
+          "normal"
+        ],
+        "index": true
+      },
+      {
+        "id": 103,
+        "name": "npc-roadster-57bb28b4444fe141-glass",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 29,
+        "materialName": "traffic-shared-glass",
+        "geometryId": 73,
+        "attributes": [
+          "position",
+          "normal"
+        ],
+        "index": true
+      },
+      {
+        "id": 104,
+        "name": "npc-roadster-57bb28b4444fe141-alloy",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 30,
+        "materialName": "traffic-shared-alloy",
+        "geometryId": 74,
+        "attributes": [
+          "position",
+          "normal"
+        ],
+        "index": true
+      },
+      {
+        "id": 105,
+        "name": "npc-roadster-57bb28b4444fe141-red",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 31,
+        "materialName": "traffic-shared-red",
+        "geometryId": 69,
+        "attributes": [
+          "position",
+          "normal"
+        ],
+        "index": true
+      },
+      {
+        "id": 106,
+        "name": "npc-roadster-57bb28b4444fe141-lamp",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 32,
+        "materialName": "traffic-shared-lamp",
+        "geometryId": 75,
+        "attributes": [
+          "position",
+          "normal"
+        ],
+        "index": true
+      },
+      {
+        "id": 101,
+        "name": "npc-roadster-57bb28b4444fe141-body",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 33,
+        "materialName": "",
+        "geometryId": 71,
+        "attributes": [
+          "position",
+          "normal"
+        ],
+        "index": true
+      },
+      {
+        "id": 81,
+        "name": "city-rooftop-beacons",
+        "type": "Mesh",
+        "isInstancedMesh": true,
+        "instanceMatrix": true,
+        "instanceColor": true,
+        "materialId": 23,
+        "materialName": "",
+        "geometryId": 57,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 47,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 9,
+        "materialName": "",
+        "geometryId": 49,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 49,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 9,
+        "materialName": "",
+        "geometryId": 51,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 43,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 9,
+        "materialName": "",
+        "geometryId": 45,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      },
+      {
+        "id": 86,
+        "name": "",
+        "type": "Mesh",
+        "isInstancedMesh": false,
+        "instanceMatrix": false,
+        "instanceColor": false,
+        "materialId": 25,
+        "materialName": "",
+        "geometryId": 59,
+        "attributes": [
+          "position",
+          "normal",
+          "uv"
+        ],
+        "index": true
+      }
+    ],
+    "completedHistory": [
+      {
+        "id": 8,
+        "name": ""
+      },
+      {
+        "id": 9,
+        "name": ""
+      },
+      {
+        "id": 13,
+        "name": ""
+      },
+      {
+        "id": 17,
+        "name": ""
+      },
+      {
+        "id": 21,
+        "name": ""
+      },
+      {
+        "id": 25,
+        "name": ""
+      },
+      {
+        "id": 29,
+        "name": ""
+      },
+      {
+        "id": 33,
+        "name": ""
+      },
+      {
+        "id": 19,
+        "name": ""
+      },
+      {
+        "id": 15,
+        "name": ""
+      },
+      {
+        "id": 11,
+        "name": ""
+      },
+      {
+        "id": 35,
+        "name": ""
+      },
+      {
+        "id": 31,
+        "name": ""
+      },
+      {
+        "id": 27,
+        "name": ""
+      },
+      {
+        "id": 23,
+        "name": ""
+      },
+      {
+        "id": 20,
+        "name": ""
+      },
+      {
+        "id": 16,
+        "name": ""
+      },
+      {
+        "id": 12,
+        "name": ""
+      },
+      {
+        "id": 36,
+        "name": ""
+      },
+      {
+        "id": 32,
+        "name": ""
+      },
+      {
+        "id": 28,
+        "name": ""
+      },
+      {
+        "id": 24,
+        "name": ""
+      },
+      {
+        "id": 10,
+        "name": ""
+      },
+      {
+        "id": 14,
+        "name": ""
+      },
+      {
+        "id": 18,
+        "name": ""
+      },
+      {
+        "id": 22,
+        "name": ""
+      },
+      {
+        "id": 26,
+        "name": ""
+      },
+      {
+        "id": 30,
+        "name": ""
+      },
+      {
+        "id": 34,
+        "name": ""
+      },
+      {
+        "id": 39,
+        "name": "city-crosswalk-paint"
+      },
+      {
+        "id": 37,
+        "name": "city-lane-paint"
+      },
+      {
+        "id": 41,
+        "name": "city-avenue-paving"
+      },
+      {
+        "id": 44,
+        "name": ""
+      },
+      {
+        "id": 48,
+        "name": ""
+      },
+      {
+        "id": 50,
+        "name": ""
+      },
+      {
+        "id": 51,
+        "name": "city-building-batch-0"
+      },
+      {
+        "id": 65,
+        "name": "city-roof-cornices-0"
+      },
+      {
+        "id": 75,
+        "name": "city-rooftop-pads"
+      },
+      {
+        "id": 53,
+        "name": "city-building-batch-1"
+      },
+      {
+        "id": 71,
+        "name": "city-roof-cornices-1"
+      },
+      {
+        "id": 55,
+        "name": "city-building-batch-2"
+      },
+      {
+        "id": 57,
+        "name": "city-building-batch-3"
+      },
+      {
+        "id": 59,
+        "name": "city-building-batch-4"
+      },
+      {
+        "id": 61,
+        "name": "city-building-batch-5"
+      },
+      {
+        "id": 63,
+        "name": "city-window-courses-0"
+      },
+      {
+        "id": 69,
+        "name": "city-window-courses-1"
+      },
+      {
+        "id": 67,
+        "name": "city-tower-trims-0"
+      },
+      {
+        "id": 73,
+        "name": "city-tower-trims-1"
+      },
+      {
+        "id": 77,
+        "name": "city-rooftop-rings"
+      },
+      {
+        "id": 79,
+        "name": "city-rooftop-H"
+      },
+      {
+        "id": 83,
+        "name": "city-cyber-signs"
+      },
+      {
+        "id": 87,
+        "name": ""
+      },
+      {
+        "id": 88,
+        "name": ""
+      },
+      {
+        "id": 102,
+        "name": "npc-roadster-57bb28b4444fe141-carbon"
+      },
+      {
+        "id": 103,
+        "name": "npc-roadster-57bb28b4444fe141-glass"
+      },
+      {
+        "id": 104,
+        "name": "npc-roadster-57bb28b4444fe141-alloy"
+      },
+      {
+        "id": 105,
+        "name": "npc-roadster-57bb28b4444fe141-red"
+      },
+      {
+        "id": 106,
+        "name": "npc-roadster-57bb28b4444fe141-lamp"
+      },
+      {
+        "id": 101,
+        "name": "npc-roadster-57bb28b4444fe141-body"
+      },
+      {
+        "id": 81,
+        "name": "city-rooftop-beacons"
+      },
+      {
+        "id": 47,
+        "name": ""
+      },
+      {
+        "id": 49,
+        "name": ""
+      },
+      {
+        "id": 43,
+        "name": ""
+      },
+      {
+        "id": 86,
+        "name": ""
+      }
+    ]
+  },
+  "raster": {
+    "scope": "Native Three captured command stream rendered by Mesa llvmpipe CPU; NOT browser/device GPU acceptance",
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "version": "OpenGL ES 3.2 Mesa 25.0.7-2+deb13u1",
+    "commands": 2419,
+    "drawCalls": 71,
+    "triangles": 93508,
+    "uniformCalls": 266,
+    "programs": {
+      "1": {
+        "shaders": [
+          2,
+          3
+        ],
+        "linked": true
+      },
+      "4": {
+        "shaders": [
+          5,
+          6
+        ],
+        "linked": true
+      },
+      "7": {
+        "shaders": [
+          8,
+          9
+        ],
+        "linked": true
+      },
+      "10": {
+        "shaders": [
+          11,
+          12
+        ],
+        "linked": true
+      },
+      "13": {
+        "shaders": [
+          14,
+          15
+        ],
+        "linked": true
+      },
+      "16": {
+        "shaders": [
+          17,
+          18
+        ],
+        "linked": true
+      },
+      "19": {
+        "shaders": [
+          20,
+          21
+        ],
+        "linked": true
+      },
+      "22": {
+        "shaders": [
+          23,
+          24
+        ],
+        "linked": true
+      },
+      "25": {
+        "shaders": [
+          26,
+          27
+        ],
+        "linked": true
+      },
+      "28": {
+        "shaders": [
+          29,
+          30
+        ],
+        "linked": true
+      }
+    },
+    "shaders": {
+      "2": {
+        "kind": 35633,
+        "sourceSha256": "fe03344df0f6ef5038c69f8a55f741ca85d34a02b195aef285860283c5fa3606",
+        "compiled": true
+      },
+      "3": {
+        "kind": 35632,
+        "sourceSha256": "8f8094a87f20b84d5635ba9e3a884ac59d190b3f37a3c2a5352ad1ac854e063a",
+        "compiled": true
+      },
+      "5": {
+        "kind": 35633,
+        "sourceSha256": "e2f29814e5bfc252ca38c4871372a7198f34fecac19055c9c96a7ec723933a4c",
+        "compiled": true
+      },
+      "6": {
+        "kind": 35632,
+        "sourceSha256": "e78f16357af98e51c04c262a79f0718c897d25d98dd9ea0f3282bcede7aa5526",
+        "compiled": true
+      },
+      "8": {
+        "kind": 35633,
+        "sourceSha256": "80913a6e6d143eae546867bd1594fda952069ec6d60dbabbf84f1f423c6eea91",
+        "compiled": true
+      },
+      "9": {
+        "kind": 35632,
+        "sourceSha256": "f0c8f41a251dcd92025a2126c70b3a40250e37309227619e1682baeb29dfe6fd",
+        "compiled": true
+      },
+      "11": {
+        "kind": 35633,
+        "sourceSha256": "0c5652646c9336dc1eea2e6c43f8dbdcc73431b2d9cabb5da350d00ffa53f8f6",
+        "compiled": true
+      },
+      "12": {
+        "kind": 35632,
+        "sourceSha256": "c618a2452116aebb88b1b2ca19f48ca8e0f73b0b46645b53b36d6333380adbc6",
+        "compiled": true
+      },
+      "14": {
+        "kind": 35633,
+        "sourceSha256": "2cddf7e4c3b6e8a9c960c5aa270776ecd52f0d2bc885641b5b5095a29205cbbd",
+        "compiled": true
+      },
+      "15": {
+        "kind": 35632,
+        "sourceSha256": "c618a2452116aebb88b1b2ca19f48ca8e0f73b0b46645b53b36d6333380adbc6",
+        "compiled": true
+      },
+      "17": {
+        "kind": 35633,
+        "sourceSha256": "841feaa62efa38fc425b03c008c60d12c09af2ea602424af190e24fd4baf274a",
+        "compiled": true
+      },
+      "18": {
+        "kind": 35632,
+        "sourceSha256": "f0c8f41a251dcd92025a2126c70b3a40250e37309227619e1682baeb29dfe6fd",
+        "compiled": true
+      },
+      "20": {
+        "kind": 35633,
+        "sourceSha256": "0e98efcc264397df15748effff9a9ccd95a905736483dc6ac78b1a5e99ba511b",
+        "compiled": true
+      },
+      "21": {
+        "kind": 35632,
+        "sourceSha256": "bb6fefb4a7adccf22ec399704017023e1b201289e0cb5dcd9dd6339b3ccd4335",
+        "compiled": true
+      },
+      "23": {
+        "kind": 35633,
+        "sourceSha256": "37ddcfcf14bfda178e8bd41a895339463f91ed705f212e5241c4f99456379e40",
+        "compiled": true
+      },
+      "24": {
+        "kind": 35632,
+        "sourceSha256": "3042c69879906b7aac783522316c1f1538db954b15948a1675eaaccd8e719356",
+        "compiled": true
+      },
+      "26": {
+        "kind": 35633,
+        "sourceSha256": "c9ee7c2a87422728a9f87e34b27698ea2295258704397e4d62c3fb6d4bec37ce",
+        "compiled": true
+      },
+      "27": {
+        "kind": 35632,
+        "sourceSha256": "8d9fc19730ff0e2f76b9f9016d9f8261e3a909c901c02737ef052953f8603c72",
+        "compiled": true
+      },
+      "29": {
+        "kind": 35633,
+        "sourceSha256": "6cec741392aa31ef29169fbbffe2e0a08abc32b30e8915e233dd81ef3efb9491",
+        "compiled": true
+      },
+      "30": {
+        "kind": 35632,
+        "sourceSha256": "897a3be1dcaa64faa0659cc6f44e56fbe0f9ea3936b3085a806e4c1687910703",
+        "compiled": true
+      }
+    },
+    "glErrors": [],
+    "failures": [],
+    "png": "/workspace/shared/tesla-collision-20261021-2327/final-city-npc.png",
+    "pngSha256": "29553c724696f8018312dc17d68af762b613f23570d676486d0a8a6e74e3d3aa",
+    "rgbaSha256": "c335d785941f4519a9667b38a659bfa8f43d19c518908453452934e8f36c54b5",
+    "nonzeroAlphaPixels": 256000
+  }
+}

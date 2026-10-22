@@ -19,8 +19,13 @@ for (const kind of ['ground', 'air', 'reverse', 'strafe']) test(`city ${kind}: s
 });
 test('city NPCs and wheel rotation use city metre scale without changing highway traffic calibration', () => {
   const physics = readFileSync(new URL('../src/physics-main.js', import.meta.url), 'utf8');
-  assert.match(physics, /car\.mesh\.position\.x \+= car\.vx \* CITY_WORLD_SPEED_SCALE \* dt/);
-  assert.match(physics, /car\.mesh\.position\.z \+= car\.vz \* CITY_WORLD_SPEED_SCALE \* dt/);
+  // Follow the production helper after occupied-seam queuing was separated;
+  // assert real unclipped metre displacement, not its former inline spelling.
+  assert.match(physics, /advanceCityTraffic\(car,dt\)/);
+  for(const[vx,vz]of[[12,0],[-12,0],[0,16],[0,-16]])for(const dt of[1/144,1/60,1/30]){
+    const h=motionHarness(),car={vx,vz,speed:Math.hypot(vx,vz),mesh:{position:{x:100,y:0,z:100},rotation:{x:0,y:0,z:0},userData:{}}};
+    h.context.advanceCityTraffic(car,dt);close(car.mesh.position.x,100+vx*dt);close(car.mesh.position.z,100+vz*dt);assert.equal(car.cityWrapPending,undefined);
+  }
   assert.match(physics, /state\.speed \* \(currentMap === 'highway' \? WORLD_SPEED_SCALE : CITY_WORLD_SPEED_SCALE\)/);
   assert.match(physics, /highwayTraffic\.step\([^;]+WORLD_SPEED_SCALE\)/);
 });
