@@ -2,7 +2,7 @@ import test from'node:test';import assert from'node:assert/strict';import{readFi
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex'),base=p=>read('tests/fixtures/performance-passengers-baseline/'+p);
 const successor=JSON.parse(read('verification/weather-ground-traffic-20261022/source-epoch.json'));
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
-const historical=file=>read(Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'tests/fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?.path||'src/'+file+'.js');
+const historical=file=>read(file==='coast-road-network'?'tests/fixtures/coast-pier-baseline/coast-road-network.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'tests/fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?.path||'src/'+file+'.js');
 // Normalize only these exact requested weather labels and the default's comment,
 // never its numeric value, plus the already weather-owned preset region.
 function weather(s){

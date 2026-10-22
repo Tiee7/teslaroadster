@@ -222,8 +222,16 @@ test('native water normals drift by uniforms only, retain finite periodic offset
 });
 
 
-test('original art payload remains below the explicit32KiB gzip ceiling with zero art fetches',()=>{
- const context=vm.createContext({window:{}});vm.runInContext(source,context);const coast=context.window.RoadsterCoast;assert.equal(coast.artBudget.sourceGzipBytes,32768);assert.ok(gzipSync(artSource).byteLength<=coast.artBudget.sourceGzipBytes&&gzipSync(roadSource).byteLength<=8192);assert.doesNotMatch(source,/fetch\(|TextureLoader|GLTFLoader|https?:\/\//);
+test('original32KiB art and8KiB archived roads retain zero fetches; pier CCD has explicit1.5KiB gzip increment budget',()=>{
+ const context=vm.createContext({window:{}});vm.runInContext(source,context);const coast=context.window.RoadsterCoast;
+ const baseline=readFileSync(new URL('fixtures/coast-pier-baseline/coast-road-network.js',import.meta.url),'utf8');assert.equal(sha(baseline),'96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7');assert.equal(coast.artBudget.sourceGzipBytes,32768);
+ // The former8KiB value was an internal source-size guard, not a host/platform limit.
+ // Keep its exact geometry/layout baseline; budget the authorized CCD separately.
+ const enforce=(art,base,current)=>{assert.ok(art<=32768,'original art gzip');assert.ok(base<=8192,'original road gzip');assert.ok(current<=9728,'current road total gzip');assert.ok(current-base<=1536,'pier CCD gzip increment');};
+ const check=(current=roadSource)=>enforce(gzipSync(artSource).byteLength,gzipSync(baseline).byteLength,gzipSync(current).byteLength);check();
+ assert.throws(()=>enforce(32769,8168,9596),/original art/);assert.throws(()=>enforce(31359,8193,9596),/original road/);assert.throws(()=>enforce(31359,8168,9705),/pier CCD gzip increment/);assert.throws(()=>enforce(31359,8168,9729),/current road total/);
+ const entropy=Array.from({length:512},(_,i)=>sha('pier-payload-negative-'+i)).join('');assert.throws(()=>check(roadSource+'\n/*'+entropy+'*/\n'),/current road total/,'actual gzip of unintended extra payload must fail');
+ assert.doesNotMatch(source,/fetch\(|TextureLoader|GLTFLoader|https?:\/\//);
 });
 
 test('fine surf stays strictly sea-side and the original38cm cut is closed without changing surface heights',{skip:existsSync(runtime)?false:'Official production Three r128 required'},()=>{

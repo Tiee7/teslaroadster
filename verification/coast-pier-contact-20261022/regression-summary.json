@@ -1,0 +1,203 @@
+{
+  "schema": "coast-pier-regression-summary-v1",
+  "status": "applicable-final-byte-combined-passed",
+  "at": "2026-10-22T19:29:20Z",
+  "basePreview": "36ae0b5811e91e36f95d052543d798a581f88881",
+  "publication": "same PR20, new unique preview only; retain every previous preview; no main or production",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "game": {
+    "bytes": 5041825,
+    "sha256": "fca86b92460ca7978a8fe6c0db7b9251000ccac88fc7a59f06fca29e85359d6d",
+    "gitBlob": "828ea00ae623e4c4a4e4408df29d335f293dd92e"
+  },
+  "networkSha256": "5279eb0f144d11562f5845d3eee058070fb2008ba000a4305a5649d6cf8f9e1d",
+  "physicsSha256": "6b1ee3737b7e1115d2bc7080d9a3374f77f0b9062a0ecca6d537df057ebd2ca8",
+  "sourceEpochSha256": "9ae7dddde9302b580a6e38b4cb5b0c78405c75855c1ffd7d31302f0bebce365f",
+  "frozenInputFileCount": 243,
+  "mainInputSnapshotSha256": "82e7c23b5add9d8b9e226f94dbf8da4e25d3b54c8aa94b933f06aa159ad9e443",
+  "finalCombinedInputSnapshotSha256": "846206a62008032348fa5ea10257d938a4af4d22dab7292024952dd1518ae1a7",
+  "checks": {
+    "bundle": "pass",
+    "npmRunCheck": "pass",
+    "npmRunBuild": "pass",
+    "gitDiffCheck": "pass",
+    "node": "v24.19.0"
+  },
+  "tests": {
+    "mainFiles": 100,
+    "serialArtFiles": [
+      "tests/coast-art-lighting.test.mjs",
+      "tests/coast-art.test.mjs"
+    ],
+    "main": {
+      "rawLog": "applicable-main-final.tap",
+      "bytes": 314177,
+      "sha256": "5cd7c5d4e7432381820484c1ddda9600d8ee9de75e6615d5c64f25cd2ba9fd82",
+      "tests": 1219,
+      "pass": 1219,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 422777.529443
+    },
+    "originalSerialArt": {
+      "rawLog": "applicable-art-serial-final.tap",
+      "bytes": 11640,
+      "sha256": "ce082882f002c9233aaafb12c3cf9911f0c32be1f259b192365b826e57368bf9",
+      "tests": 37,
+      "pass": 36,
+      "fail": 1,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 46162.423942
+    },
+    "revisedSerialArt": {
+      "rawLog": "applicable-art-serial-budget-final.tap",
+      "bytes": 10732,
+      "sha256": "194b44a55c6b467a9a584ebf7e1fddc1e38787944c322cd8f7d1b1a28fd2787e",
+      "tests": 37,
+      "pass": 37,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 44203.207673
+    },
+    "followupSourceProjectionIntegration": {
+      "rawLog": "lineage-budget-final.tap",
+      "bytes": 25746,
+      "sha256": "e628e98e54fb9eafd5471dc89f3d141e9a7f9b90424e50ebf9ab9bf2ec2bb3f9",
+      "tests": 94,
+      "pass": 94,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 4107.150539
+    },
+    "uniqueCurrentApplicablePasses": 1256,
+    "newUniqueCasesSince36ae": 102,
+    "baseline36aeApplicablePasses": 1154,
+    "newCases": {
+      "pierContact": 84,
+      "integration": 12,
+      "sourceBoundary": 5,
+      "currentAllScanEquivalence": 1
+    },
+    "combinedCoverage": "1219 unchanged final-runtime main passes +37 revised serial-art passes; the94 followup repeats are not additional unique cases. This was not one initially all-green full batch.",
+    "onlyPostMainInputChange": {
+      "file": "tests/coast-art.test.mjs",
+      "beforeSha256": "42702d4fe83388f991ae90f4bc8c3413d707b5cabf915e961214eada563fe19f",
+      "afterSha256": "550f262bf805cec016c4962eb747e42ddf345a9701707c6c77ed2d38cc444967",
+      "scope": "existing payload test only; runtime/generated/game bytes unchanged"
+    },
+    "unchangedHeavyPlannerFiles": [
+      "tests/highway-demo-clock.test.mjs",
+      "tests/highway-demo-consumed-certificate.test.mjs",
+      "tests/highway-demo-continuous.test.mjs",
+      "tests/highway-demo-floor-refill.test.mjs",
+      "tests/highway-demo-following.test.mjs",
+      "tests/highway-demo-lifecycle.test.mjs",
+      "tests/highway-demo-physics.test.mjs",
+      "tests/highway-demo-planning-cost.test.mjs",
+      "tests/highway-demo-routing.test.mjs",
+      "tests/highway-demo-scheduling.test.mjs",
+      "tests/highway-demo-successor.test.mjs",
+      "tests/highway-demo-weaving.test.mjs"
+    ],
+    "plannerBaseline": "Reused prior1164-case combined coverage for unchanged planner code; not a fresh complete planner run. Prior1164 was1127 full-batch passes plus37 serial art, with2 unexplained earlier file-level failures retained."
+  },
+  "payloadCost": {
+    "baseGameBytes": 5033960,
+    "currentGameBytes": 5041825,
+    "rawIncreaseBytes": 7865,
+    "baseGameGzipBytes": 2094005,
+    "currentGameGzipBytes": 2096298,
+    "baseRoadGzipBytes": 8168,
+    "currentRoadGzipBytes": 9596,
+    "roadDeltaGzipBytes": 1428
+  },
+  "payloadBudget": {
+    "artGzipCapBytes": 32768,
+    "archivedRoadGzipCapBytes": 8192,
+    "newPierCcdDeltaGzipCapBytes": 1536,
+    "currentRoadTotalGzipCapBytes": 9728,
+    "origin": "The former8192 literal was an internal art-test source-size guard; package/Vercel configuration has no matching road-source cap, and no user hard cap was specified. Preserve the exact layout baseline and budget the new correctness code explicitly.",
+    "negativeProof": "Original-art/baseline/delta/total numeric boundaries plus an actual deterministic entropy payload whose measured gzip must fail.",
+    "notPerformanceOptimization": true
+  },
+  "retainedInitialFailures": [
+    {
+      "rawLog": "pier-focused-first.tap",
+      "bytes": 25765,
+      "sha256": "8b915dfe87102b6a7aee5d74636f94fc0a52c875f5eb964f18b9b14a8a0e4ccc",
+      "tests": 81,
+      "pass": 80,
+      "fail": 1,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 3176.512365
+    },
+    {
+      "rawLog": "pier-integration-first.tap",
+      "bytes": 11267,
+      "sha256": "5d6621605ab5bb68279ae2ebfc852be8a73f7976d27008466e197bef7b71b54d",
+      "tests": 12,
+      "pass": 4,
+      "fail": 8,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 1498.89453
+    },
+    {
+      "rawLog": "lineage-integration-first.tap",
+      "bytes": 31635,
+      "sha256": "079fc4ec441aec688a1897fa7be45fc4d3c40bbfa84864d09d7ea8b9d859eff1",
+      "tests": 98,
+      "pass": 94,
+      "fail": 4,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 47660.325762
+    },
+    {
+      "rawLog": "applicable-art-serial-final.tap",
+      "bytes": 11640,
+      "sha256": "ce082882f002c9233aaafb12c3cf9911f0c32be1f259b192365b826e57368bf9",
+      "tests": 37,
+      "pass": 36,
+      "fail": 1,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 46162.423942
+    }
+  ],
+  "failureResolutions": [
+    "Real shallow opening overlap requested zero-energy minimum damage; corrected query/positive-only pier damage, with actual D recovery regression.",
+    "Cross-VM nested array prototypes made the harness compare falsely fail; structuredClone preserves numeric values/signed zero while neutralizing VM prototype identity.",
+    "Four historical source-hash assertions needed the exact archived96f19 road source; frozen values/negative guards were retained.",
+    "Original serial art test caught a real1428B road-source gzip increment. Explicit separate bounded CCD budget, not an archived-read substitution or blanket allowance."
+  ],
+  "nativeGeometry": {
+    "runtime": "official production Three r128",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "visibleCarVertices": 79257,
+    "actualPierVertices": 24,
+    "falseFatalContacts": 5,
+    "minVisibleModelClearanceMetres": 0.5960220238658565,
+    "maxVisibleModelClearanceMetres": 0.6018204109048213,
+    "scope": "CPU native model/instance geometry and production motion/damage; no full-scene shader/browser/user-GPU proof."
+  },
+  "limits": [
+    "The existing upright1.1/2.31/1.25 proxy is retained; not detailed628-mesh collision or new pitch/roll shape handling.",
+    "No fresh browser/user-device GPU acceptance or software-Mesa screenshot in this iteration.",
+    "Original ground-gap screenshot pixels/location unknown; not localized and not every seam/collision declared fixed.",
+    "No CPU-index prototype integrated or end-to-end FPS improvement claimed."
+  ]
+}

@@ -23,14 +23,39 @@
 | Highway recycling and single-passenger baseline | `2c217c077c82b014f47a1365b6d803574ac47946` | https://teslaroadster-iqveb25bi-tiee1.vercel.app/ |
 | Coastal rotated-hull landing contact | `723ad63d8ec48e455fe5c79c66852a05ba8ce684` | https://teslaroadster-i459q867p-tiee1.vercel.app/ |
 | Attached-frame consistency and folded local problem export | `bb73a584f3e40b648ff142707d2204b45e36c459` | https://teslaroadster-5lx2qwv4s-tiee1.vercel.app/ |
+| Coastal boundary normal response | `36ae0b5811e91e36f95d052543d798a581f88881` | https://teslaroadster-3nuzlw6tj-tiee1.vercel.app/ |
 
-The boundary-response iteration explicitly succeeds bb73 in
-`verification/coast-boundary-20261022/source-epoch.json`. Its source hashes and
-regression report identify the exact candidate; read PR20's current head and the
-Vercel deployment metadata for that SHA to locate its new unique preview. Never
+The pier-contact iteration explicitly succeeds36ae in
+`verification/coast-pier-contact-20261022/source-epoch.json`. Read PR20's current
+head and Vercel metadata for that SHA to locate its **new unique preview**. Never
 infer that a previously copied URL serves a later commit.
 
-## Current coastal boundary iteration
+## Current coastal pier-contact iteration
+
+- Reproduced5 false fatal bridge-column contacts across legal supported W drives
+  at30/60/144Hz. The unchanged actual visible model remains0.596–0.602m clear of
+  the exact native pier instance;6 far-lane and6 leaving controls stay clear.
+  One30Hz forward near trial did not reproduce and remains a negative control.
+- The old column branch expanded a fixed world-axis box regardless of car yaw.
+  Preserve its1.1m/2.31m half-extents and1.25m default height; use oriented finite
+  contact and first-contact yaw instead. This remains an upright proxy, **not**
+  exact628-mesh collision. No approved asset, terrain, road layout or damage law
+  is altered. Existing rails/abutments/ceilings retain byte-identical logic.
+- Preserve the original translation/structure phase. Actual supported Space+A
+  additionally proves that a later pure-yaw integration can reach a pier; check
+  only that later same-XYZ yaw segment. Do not rerun integration, fuel or other
+  structures. Zero-energy opening overlaps must not cause recurring minimum damage.
+- Bit-exact all-state no-contact comparisons cover land/air, clear/rain weather,
+  actual inputs and30/144Hz. Independent polygon/time oracles, rotating/short-arc
+  paths, all faces/corners, existing overlaps, simultaneous structure candidates,
+  repeated positive impacts and control recovery supplement real native geometry.
+- The final applicable counts, source/game hashes, retained red evidence and
+  exact limitations are in
+  `verification/coast-pier-contact-20261022/regression-summary.json`.
+  This fixes an independent reproduced bug, not the still-unlocalized original
+  coastal gap screenshot. No fresh browser/user-GPU visual acceptance is claimed.
+
+## Retained36ae coastal boundary iteration
 
 - Reproduced a real outer-world shallow-graze defect independently of the unknown
   ground-gap report: legal supported40m/s starts, at30/60/144Hz, struck the boundary
@@ -86,7 +111,9 @@ infer that a previously copied URL serves a later commit.
 - Keep historical source epochs and exact fixtures immutable. Add an explicit
   successor and negative drift guards; fix historical *read addresses*, not their
   frozen expected values, when a later authorized source changes.
-- Run applicable final-byte tests/build/checks. The bb73 applicable baseline was
+- Run applicable final-byte tests/build/checks. The36ae applicable baseline was
+  1154 unique passes (1117 main +37 serial art; no fresh heavy planner run).
+  The bb73 applicable baseline was
   1092 unique passes (1055 main +37 serial art; no fresh heavy planner run).
   Reuse the prior1164-case combined
   baseline for unchanged planner code rather than mechanically repeating its

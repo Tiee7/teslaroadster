@@ -841,14 +841,16 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   const coastStructureHit=coastWorld?.network?.sweepStructures(coastMotionStart,state);
   if(coastStructureHit){
     const h=coastStructureHit,t=Math.max(0,h.t-1e-5),n=h.normal;
-    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z,impact=Math.max(0,-inward);
+    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-(h.kind==='pier'?(h.angularClosingPerFraction||0)/Math.max(dt,1e-6):0),impact=Math.max(0,-inward);
     state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;
     state.y=h.kind==='ceiling'?h.height-.002:coastMotionStart.y+(state.y-coastMotionStart.y)*t;
+    // Resolve a real pier contact in its detected yaw, never in the future pose.
+    if(h.kind==='pier'){state.yaw=coastMotionStart.yaw+wrapAnglePi(state.yaw-coastMotionStart.yaw)*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}
     if(inward<0){state.vx-=1.25*inward*n.x;state.vy-=1.25*inward*n.y;state.vz-=1.25*inward*n.z;}
     if(h.kind==='ceiling'){state.isJumping6m=false;state.isAltitudeHold=false;}
     state.speed=(state.vx*-Math.sin(state.yaw)+state.vz*-Math.cos(state.yaw)>=0?1:-1)*Math.hypot(state.vx,state.vz);
     if(coastGroundAttached)state.vy=-(coastSupport.normal.x*state.vx+coastSupport.normal.z*state.vz)/coastSupport.normal.y;
-    triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
+    if(h.kind!=='pier'||impact>0)triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
   }
   const coastLanding=coastWorld&&!coastGroundAttached?coastWorld.network.sweepLanding(coastMotionStart,state):null;
   const contactFloorY = coastWorld ? (coastGroundAttached?coastSupport.height:coastLanding?.height??(coastSurface?.water?coastSurface.height:-Infinity)) : 0;
@@ -964,7 +966,19 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   // Keep pitch continuous through +/-180 and complete forward/backward 360-degree loops.
   // THREE renders the Euler angle directly; no Euler extraction or airborne pitch clamp is needed.
   state.pitch += state.vPitch * dt;
+  const coastPierYawStart=coastWorld&&Math.abs(state.vYaw*dt)>1e-12?{x:state.x,y:state.y,z:state.z,yaw:state.yaw}:null;
   state.yaw += state.vYaw * dt;
+  // Translation/other structures retain their original phase. Only the later
+  // pure-yaw trajectory needs an additional finite pier contact check.
+  if(coastPierYawStart&&Math.abs(state.yaw-coastPierYawStart.yaw)>1e-12){
+    const h=coastWorld.network?.sweepPiers?.(coastPierYawStart,state);
+    if(h){const n=h.normal,t=Math.max(0,h.t-1e-5),impact=Math.max(0,(h.angularClosingPerFraction||0)/Math.max(dt,1e-6));
+      state.yaw=coastPierYawStart.yaw+wrapAnglePi(state.yaw-coastPierYawStart.yaw)*t;
+      const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;
+      if(impact>0){state.vYaw=0;state.vx+=1.25*impact*n.x;state.vy+=1.25*impact*n.y;state.vz+=1.25*impact*n.z;triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;}
+    }
+  }
+
 
   // Complete the coast contact after attitude integration as well: a legal
   // roll/pitch can touch the ground before the upright root descends to it.

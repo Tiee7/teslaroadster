@@ -1,0 +1,96 @@
+{
+  "schema": "coast-pier-yaw-baseline-witness-v1",
+  "baselineCommit": "36ae0b5811e91e36f95d052543d798a581f88881",
+  "sourceSha256": {
+    "coast-road-network": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "coast-map": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+    "physics-main": "582245adaa9b5bb140ba22f22968865dceda94554fb11ec555756bb381926489",
+    "world": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "highway-traffic": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "vehicles": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "reference-exterior": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2"
+  },
+  "selectedPier": {
+    "index": 0,
+    "sourceBox": {
+      "kind": "pier",
+      "minX": 714.2659545898438,
+      "maxX": 716.0659545898437,
+      "minZ": -132.28856506347657,
+      "maxZ": -130.48856506347656,
+      "minY": 40.89984065152064,
+      "maxY": 62.78380279541015
+    },
+    "renderedBox": {
+      "min": {
+        "x": 714.2659546136856,
+        "y": 40.899842262268066,
+        "z": -132.2885650396347
+      },
+      "max": {
+        "x": 716.0659545660019,
+        "y": 62.78380489349365,
+        "z": -130.48856508731842
+      }
+    },
+    "vertexCount": 24,
+    "nativeCarVisibleVertices": 79257
+  },
+  "falseContact": {
+    "count": 5,
+    "allFatal": true,
+    "minVisibleModelZClearance": 0.5960220238658565,
+    "maxVisibleModelZClearance": 0.6018204109048213,
+    "maxPeakG": 28.12770404140008,
+    "fpsAndDirections": [
+      {
+        "fps": 30,
+        "reverse": true
+      },
+      {
+        "fps": 60,
+        "reverse": false
+      },
+      {
+        "fps": 60,
+        "reverse": true
+      },
+      {
+        "fps": 144,
+        "reverse": false
+      },
+      {
+        "fps": 144,
+        "reverse": true
+      }
+    ],
+    "initialProvenance": "Once-only valid terrain support/ground-normal pose; continuous ordinary W thereafter; native reference model Box3 injected into actual motion; no per-frame assignments."
+  },
+  "controls": {
+    "sixFarGap": true,
+    "sixMovingAway": true,
+    "old30HzForwardAtGap1_8HadNoHit": true
+  },
+  "trueContact": {
+    "cases": 6,
+    "visibleVerticesEnterBeforeImpact": true,
+    "delaysFrames": [
+      1,
+      2,
+      3,
+      3,
+      7,
+      7
+    ]
+  },
+  "geometryEvidence": "79,257 actual drawRange/group/material-visible native car vertices; original resolved-pose code incl pitchSquat; original pier batch() and creation line instantiated in isolated native r128 scene; actual matrix/24 box vertices; no full scene/GPU.",
+  "rootCause": "Only pier branch expands a fixed world X\u00b11.1/Z\u00b12.31 box independent of yaw, unlike rail/abutment. At90\u00b0 this both overblocks Z and underblocks X.",
+  "limits": [
+    "No user screenshot pixels or coordinates; not localization or user-incident root cause.",
+    "Actual native model Box3 is injected into motion cityPlayerBody; unmodified production damage function executes. Destruction presentation is stubbed and motion stops at first impact; no valid post-contact destruction continuation claim.",
+    "All supported initial placements are synthetic but geometrically legal; only W after initialization, never per-frame pose assignments.",
+    "Native geometry batch extracted unchanged from production; material uses solid basic replacement for geometry inspection, not render/shader/GPU proof."
+  ],
+  "originalImage": "Unavailable pixels/unknown location; NOT localized to this bug."
+}

@@ -5,10 +5,10 @@ const hash=s=>createHash('sha256').update(s).digest('hex');
 const successor=JSON.parse(readFileSync(new URL('../verification/weather-ground-traffic-20261022/source-epoch.json',import.meta.url)));
 // Exact production4451 and previewb580 fixtures retain historical bytes; current sources have explicit successor guards.
 const stability=JSON.parse(readFileSync(new URL('../verification/drive-stability-20261022/source-epoch.json',import.meta.url)));
-const historicalSource=file=>new URL(file==='taxi'?'./fixtures/single-passenger-baseline/taxi.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?'../'+stability.baselineSourceFixtures['src/'+file+'.js'].path:'../src/'+file+'.js',import.meta.url);
+const historicalSource=file=>new URL(file==='coast-road-network'?'./fixtures/coast-pier-baseline/coast-road-network.js':file==='taxi'?'./fixtures/single-passenger-baseline/taxi.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?'../'+stability.baselineSourceFixtures['src/'+file+'.js'].path:'../src/'+file+'.js',import.meta.url);
 
 const repairEpoch=JSON.parse(readFileSync(new URL('../verification/traffic-ground-regressions-20261022/source-epoch.json',import.meta.url),'utf8'));
-const weatherEpochSource=file=>readFileSync(new URL('../'+(repairEpoch.baselineSourceFixtures[file]?.path||stability.baselineSourceFixtures[file]?.path||file),import.meta.url),'utf8');
+const weatherEpochSource=file=>readFileSync(new URL('../'+(file==='src/coast-road-network.js'?'tests/fixtures/coast-pier-baseline/coast-road-network.js':repairEpoch.baselineSourceFixtures[file]?.path||stability.baselineSourceFixtures[file]?.path||file),import.meta.url),'utf8');
 test('driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline',()=>{
  const contract=JSON.parse(readFileSync(new URL('../verification/driving-feedback-20261021/source-epoch.json',import.meta.url)));
  const quiet=JSON.parse(readFileSync(new URL('../verification/quiet-h-brake-20261021/source-epoch.json',import.meta.url)));assert.equal(quiet.baseMain,'42db2bb744c8b4c42bebb34360030ff05cd10484');assert.equal(hash(readFileSync(new URL('../'+quiet.inheritedSourceEpoch,import.meta.url))),quiet.inheritedSourceEpochSha256);
