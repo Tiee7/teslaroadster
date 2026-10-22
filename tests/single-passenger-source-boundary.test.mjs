@@ -9,7 +9,8 @@ const epoch = JSON.parse(read(path));
 const inherited = JSON.parse(read(epoch.inheritedWeatherEpoch));
 const repair = JSON.parse(read('verification/traffic-ground-regressions-20261022/source-epoch.json'));
 const hullRepair = JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json'));
-const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256 };
+const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
+const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256 };
 function verify(overrides = {}) {
   for (const key of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, key), 'unknown override: ' + key);
   for (const [key, want] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, key) ? overrides[key] : read(key)), want, key);

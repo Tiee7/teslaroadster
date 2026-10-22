@@ -596,6 +596,11 @@
       </div>
 
       <p id="crash-collision-source" class="mono text-xs text-cyan-200 mb-3" hidden></p>
+      <div class="crash-problem-tools">
+        <button id="btn-copy-crash-problem" type="button" class="ranked-button" disabled>Copy brief report</button>
+        <p id="crash-problem-status" class="ranked-small" role="status" aria-live="polite"></p>
+        <textarea id="crash-problem-data" readonly hidden aria-label="Local game problem record"></textarea>
+      </div>
       <details id="crash-diagnostics" class="text-left text-xs text-slate-300 mb-3" hidden>
         <summary id="crash-diagnostics-label" class="cursor-pointer">Local collision diagnostic (not uploaded)</summary>
         <textarea id="crash-diagnostic-data" readonly aria-label="Local collision diagnostic JSON" class="w-full h-24 mt-2 p-2 bg-slate-950 border border-slate-600 rounded mono text-xs"></textarea>
@@ -737,6 +742,16 @@
       <button id="music-toggle" type="button" class="ranked-button ranked-primary" aria-pressed="true" aria-describedby="music-status">Pause music</button>
       <p id="music-status" class="ranked-status" role="status"></p>
       <p id="music-note" class="ranked-small"></p>
+      <details id="drive-problem-tools" class="drive-problem-tools">
+        <summary id="drive-problem-title">Local problem record</summary>
+        <p id="drive-problem-note" class="ranked-small">Game state only. Nothing is uploaded automatically.</p>
+        <div class="drive-problem-actions">
+          <button id="btn-copy-drive-problem" type="button" class="ranked-button" disabled>Copy brief report</button>
+          <button id="btn-save-drive-problem" type="button" class="ranked-button" disabled>Save JSON</button>
+        </div>
+        <p id="drive-problem-status" class="ranked-small" role="status" aria-live="polite"></p>
+        <textarea id="drive-problem-data" readonly hidden aria-label="Local game problem record"></textarea>
+      </details>
     </div>
   </dialog>
 

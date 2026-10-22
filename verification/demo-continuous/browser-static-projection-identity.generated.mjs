@@ -973,6 +973,8 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       if(state.airRemaining>2.2)state.isAutoDescending8s=false;if(state.airRemaining>=2.5&&!wantsHover||state.airRemaining>=9.95)state.isFreefalling=false;
     }
   }
+  // The resolved coastal support owns this same frame's display/score mode.
+  if(coastWorld&&coastGroundAttached)isAirborne=false;
   if(coastGroundAttached){
     const plane=coastWorld.network.groundAttitude(coastSupport.normal,state.yaw);
     state.pitch=plane.pitch;state.roll=plane.roll;state.vPitch=state.vRoll=0;

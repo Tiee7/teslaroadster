@@ -567,3 +567,11 @@ html, body {
 .render-health-panel button { width: 100%; min-height: 48px; border: 1px solid #7dd3fc; border-radius: 9px; color: #082f49; background: #7dd3fc; font: inherit; font-weight: 700; cursor: pointer; }
 .render-health-panel button:disabled { border-color: #475569; color: #94a3b8; background: #1e293b; cursor: wait; }
 .render-health-panel button:focus-visible { outline: 3px solid #f8fafc; outline-offset: 3px; }
+
+/* Local opt-in problem tools live inside settings/crash, never over driving. */
+.drive-problem-tools { margin-top: 22px; padding-top: 14px; border-top: 1px solid #3a829b66; }
+.drive-problem-tools summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+.drive-problem-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.crash-problem-tools { margin: 10px 0; }
+#drive-problem-data, #crash-problem-data { box-sizing: border-box; width: 100%; min-height: 128px; max-height: 240px; margin-top: 8px; padding: 10px; border: 1px solid #3a829b; border-radius: 8px; background: #07101b; color: #e8f4fc; font: 11px/1.5 monospace; resize: vertical; user-select: text; -webkit-user-select: text; touch-action: pan-y; }
+#drive-problem-data[hidden], #crash-problem-data[hidden] { display: none; }

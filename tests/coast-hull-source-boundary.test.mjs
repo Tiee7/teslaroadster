@@ -5,7 +5,9 @@ import {createHash} from 'node:crypto';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex');
 const epoch=JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json'));
 const inherited=JSON.parse(read(epoch.inheritedTrafficEpoch));
-const pins={...epoch.frozenSourceSha256,...epoch.authorizedSourceSha256};
+const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
+const historical=p=>read(stability.baselineSourceFixtures[p]?.path||p);
+const pins={...epoch.frozenSourceSha256,...epoch.authorizedSourceSha256,...stability.authorizedSourceSha256};
 function verify(overrides={}){
  for(const p of Object.keys(overrides))assert.ok(Object.hasOwn(pins,p),'unknown source '+p);
  for(const [p,h]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:read(p)),h,p);
@@ -28,7 +30,7 @@ test('all current sources stay pinned; assets, rendering, ground meshes, traffic
 });
 
 test('physics byte delta is only coast hull geometry/contact and the existing autoland distance input, never a camera or force rewrite',()=>{
- const before=read(epoch.baselineSourceFixtures['src/physics-main.js'].path),after=read('src/physics-main.js');
+ const before=read(epoch.baselineSourceFixtures['src/physics-main.js'].path),after=historical('src/physics-main.js');
  let normalized=removeRegion(after,'// Coast-only landing uses the rotated, frozen player collider,','function coastTrafficBody(car,pose) {');
  normalized=removeRegion(normalized,'  // Complete the coast contact after attitude integration as well:','  if(coastGroundAttached){\n    const plane=coastWorld.network.groundAttitude(coastSupport.normal,state.yaw);');
  normalized=removeRegion(normalized,'  // Keep the existing braking law, but a rotated coast hull can meet the','  const needsEmergencyLandingSave = (');
@@ -41,8 +43,8 @@ test('physics byte delta is only coast hull geometry/contact and the existing au
 test('projection generators change only their explicit physics/generator/program identity pins',()=>{
  const g='verification/demo-continuous/generate-numeric-projection-kernel.mjs',emit='verification/demo-continuous/emit-browser-static-projection.mjs';
  const oldPhysics=epoch.baselineSourceFixtures['src/physics-main.js'].sha256,newPhysics=epoch.authorizedSourceSha256['src/physics-main.js'];
- assert.equal(read(g).replace(newPhysics,oldPhysics),read(epoch.baselineSourceFixtures[g].path));
- assert.equal(read(emit).replace(epoch.numericProjection.currentGeneratorSha256,epoch.numericProjection.previousGeneratorSha256).replace(epoch.numericProjection.currentProgramSha256,epoch.numericProjection.previousProgramSha256),read(epoch.baselineSourceFixtures[emit].path));
+ assert.equal(historical(g).replace(newPhysics,oldPhysics),read(epoch.baselineSourceFixtures[g].path));
+ assert.equal(historical(emit).replace(epoch.numericProjection.currentGeneratorSha256,epoch.numericProjection.previousGeneratorSha256).replace(epoch.numericProjection.currentProgramSha256,epoch.numericProjection.previousProgramSha256),read(epoch.baselineSourceFixtures[emit].path));
 });
 
 test('negative guards reject omitted hull repair, core-asset/handling/traffic/passenger/terrain drift and unknown gameplay modules',()=>{

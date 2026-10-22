@@ -1,7 +1,8 @@
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';import{createHash}from'node:crypto';import vm from'node:vm';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex'),base=p=>read('tests/fixtures/performance-passengers-baseline/'+p);
 const successor=JSON.parse(read('verification/weather-ground-traffic-20261022/source-epoch.json'));
-const historical=file=>read(Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'tests/fixtures/weather-ground-traffic-baseline/'+file+'.js':'src/'+file+'.js');
+const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
+const historical=file=>read(Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'tests/fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?.path||'src/'+file+'.js');
 // Normalize only these exact requested weather labels and the default's comment,
 // never its numeric value, plus the already weather-owned preset region.
 function weather(s){
@@ -15,7 +16,7 @@ function weather(s){
 }
 const presets=s=>{const a=s.indexOf('const WEATHER_PRESETS ='),b=s.indexOf('\n];',a)+3,c=vm.createContext({});vm.runInContext(s.slice(a,b)+';globalThis.result=WEATHER_PRESETS;',c);return JSON.parse(JSON.stringify(c.result));};
 const repairEpoch=JSON.parse(readFileSync(new URL('../verification/traffic-ground-regressions-20261022/source-epoch.json',import.meta.url),'utf8'));
-const weatherEpochSource=file=>readFileSync(new URL('../'+(repairEpoch.baselineSourceFixtures[file]?.path||file),import.meta.url),'utf8');
+const weatherEpochSource=file=>readFileSync(new URL('../'+(repairEpoch.baselineSourceFixtures[file]?.path||stability.baselineSourceFixtures[file]?.path||file),import.meta.url),'utf8');
 test('historical performance epoch is frozen; new city contact/skyline changes have an explicit authorized successor',()=>{
  const epoch=JSON.parse(read('verification/performance-passengers-20261021/source-epoch.json'));assert.equal(epoch.baseMain,'17dda06f0c417c6c01f8e066cb7897be75969f1a');for(const[file,want]of Object.entries(epoch.baselineFixtureSha256))assert.equal(sha(base(file)),want);
  const before=base('physics-main.js'),after=read('tests/fixtures/city-contact-baseline/physics-main.js'),marker='// Scope the fixed clock';assert.equal(after.slice(0,after.indexOf(marker)),before.slice(0,before.indexOf(marker)),'all shared/map3 force, collision response, score, visual jet and audio argument code exact');

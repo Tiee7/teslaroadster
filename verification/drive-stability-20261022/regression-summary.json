@@ -1,0 +1,297 @@
+{
+  "schema": "roadster-drive-stability-regression-v1",
+  "completedAt": "2026-10-22T17:11:20.154298+00:00",
+  "publication": {
+    "scope": "preview only, same PR20; keep earlier unique deployments",
+    "baseCommit": "723ad63d8ec48e455fe5c79c66852a05ba8ce684",
+    "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5"
+  },
+  "runtime": {
+    "bytes": 5031409,
+    "sha256": "c3ae707e4283218ca08c39c5d5615fa8db84616147c3f0edb4a99b20f00dc084",
+    "gitBlobSha": "22f296cd5b4f9b44a667e2a9637bbcd438024dbf",
+    "sourceEpochSha256": "96989640aee7aa34824f0765cac9f417667f055a753392cb9b6b0f66c4757902",
+    "sourceTestSnapshotSha256": "555396e907a1e6414c49926b9d3c4a85e1840fcdc274f7f7e660b1db61a6b11a",
+    "sourceTestFilesFrozen": 163,
+    "byteDrift": 0,
+    "finalDeterministicCheckAndBuild": "passed"
+  },
+  "repair": {
+    "coastLanding": "Synchronize local airborne=false only when coastal support is already attached; existing motion, tank, geometry, clearance and controls unchanged.",
+    "coastCounterexampleRetained": true,
+    "naturalLandingScenarios": 7,
+    "renderRates": [
+      30,
+      60,
+      144
+    ],
+    "motionAndAirComparison": "Object.is at every compared frame versus exact723 fixture",
+    "recoveryControls": [
+      "W",
+      "A",
+      "H"
+    ],
+    "lastingControlLossDemonstrated": false,
+    "diagnostics": "Folded settings and crash tools; explicit game-only local copy/download, no automatic upload",
+    "reviewRegressions": {
+      "before": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "afterFocused": {
+        "tests": 23,
+        "pass": 23,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "fixes": [
+        "Save invalidates old clipboard token before changing output/status",
+        "Only new crash-copy button stops Space/Enter propagation; never preventDefault or change global controls"
+      ],
+      "rawBefore": "review-regressions-before-fix.tap",
+      "focusedAfterOverlapsFinal": true
+    }
+  },
+  "currentApplicableTests": {
+    "uniqueCases": 1092,
+    "pass": 1092,
+    "fail": 0,
+    "skip": 0,
+    "main": {
+      "tests": 1055,
+      "pass": 1055,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "artSerial": {
+      "tests": 37,
+      "pass": 37,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "phases": [
+      {
+        "phase": "art-serial",
+        "exitCode": 0,
+        "durationSeconds": 46.68704867362976,
+        "log": "applicable-art-serial.tap"
+      },
+      {
+        "phase": "main",
+        "exitCode": 0,
+        "durationSeconds": 434.3538248538971,
+        "log": "applicable-final.tap"
+      }
+    ],
+    "selectedFiles": 97,
+    "newUniqueCases": 47,
+    "newByFile": {
+      "tests/coast-landing-frame.test.mjs": 21,
+      "tests/highway-traffic-endurance.test.mjs": 3,
+      "tests/drive-local-diagnostics.test.mjs": 17,
+      "tests/drive-stability-source-boundary.test.mjs": 6
+    },
+    "repeatFocusedCasesNotAdded": true,
+    "isCurrentFullRepositoryRun": false,
+    "manifest": "applicable-test-manifest.json",
+    "manifestSha256": "c31f29e6172814473878f28ea482dfcf1fde3a7fb9e79f8c1c4131bae73b490d"
+  },
+  "baselineReuse": {
+    "priorUniqueCases": 1164,
+    "coverage": "1127 prior full-batch passes plus37 unchanged serial art passes; NOT one all-green full run",
+    "retainedUnknownPriorFileFailures": [
+      "coast-art-lighting.test.mjs",
+      "coast-art.test.mjs"
+    ],
+    "excludedUnchangedPlannerFiles": [
+      "tests/highway-demo-clock.test.mjs",
+      "tests/highway-demo-consumed-certificate.test.mjs",
+      "tests/highway-demo-continuous.test.mjs",
+      "tests/highway-demo-floor-refill.test.mjs",
+      "tests/highway-demo-following.test.mjs",
+      "tests/highway-demo-lifecycle.test.mjs",
+      "tests/highway-demo-physics.test.mjs",
+      "tests/highway-demo-planning-cost.test.mjs",
+      "tests/highway-demo-routing.test.mjs",
+      "tests/highway-demo-scheduling.test.mjs",
+      "tests/highway-demo-successor.test.mjs",
+      "tests/highway-demo-weaving.test.mjs"
+    ],
+    "reason": "Reuse prior1164-case combined baseline for unchanged highway planner; current exact physics delta is coast-only and numeric fixed-input projection equivalence is rechecked.",
+    "currentArtFilesSeparatelyPassed": 37
+  },
+  "guardProvenance": {
+    "historicalEpochsImmutable": true,
+    "baselineSourceFixtures": {
+      "src/physics-main.js": {
+        "path": "tests/fixtures/drive-stability-baseline/physics-main.js",
+        "sha256": "5b9714605d3360890996ffe12afadcdf78949f5e059baa47fcd220a954611ee7"
+      },
+      "src/demo-numeric-projection.js": {
+        "path": "tests/fixtures/drive-stability-baseline/demo-numeric-projection.js",
+        "sha256": "3303ca3f522a558961bf25b0de536cb3d9ca1b5959238a7ccaf1f9e0ceada289"
+      },
+      "src/render-diagnostics.js": {
+        "path": "tests/fixtures/drive-stability-baseline/render-diagnostics.js",
+        "sha256": "0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0"
+      },
+      "src/index.html": {
+        "path": "tests/fixtures/drive-stability-baseline/index.html",
+        "sha256": "40dc09da3943d91e1fc454af9bc0c87ffe25dac79f5a2aa8f86b6466a9e51bff"
+      },
+      "src/styles.css": {
+        "path": "tests/fixtures/drive-stability-baseline/styles.css",
+        "sha256": "c43efb862fe202b80977c5f04f98774e25a95d7cad31e1dd2ed696cf45898636"
+      },
+      "verification/demo-continuous/generate-numeric-projection-kernel.mjs": {
+        "path": "tests/fixtures/drive-stability-baseline/generate-numeric-projection-kernel.mjs",
+        "sha256": "fad5db8d8d59c34b778950e96d1fb0b738ebc3683c26cf7a8432b49f020fdee3"
+      },
+      "verification/demo-continuous/emit-browser-static-projection.mjs": {
+        "path": "tests/fixtures/drive-stability-baseline/emit-browser-static-projection.mjs",
+        "sha256": "e8dcf45974b99b9e035b8189c0f9572caecf05228c473a34eecf5a5a511ead5d"
+      }
+    },
+    "historicalReaderRepairs": "Point historical src/index/styles/render evidence to exact723 fixtures, never loosen frozen expected pins. Initial two red historical src/index assertions retained locally.",
+    "newNegativeDriftGuard": true
+  },
+  "highwayEndurance": {
+    "scope": "CPU real NPC step only, not rendered player-driving or GPU/FPS acceptance",
+    "durationSecondsEach": 900,
+    "metrics": [
+      {
+        "scope": "NPC-step CPU only",
+        "seconds": 900,
+        "count": 20,
+        "playerSpeed": 0,
+        "minFront": 13,
+        "meanFront": 17.944444444444443,
+        "meanNpcKmH": 82.5783919840973,
+        "passes": 0,
+        "incidents": 14,
+        "admissions": 2,
+        "hiddenFrames": 35
+      },
+      {
+        "scope": "NPC-step CPU only",
+        "seconds": 900,
+        "count": 52,
+        "playerSpeed": 10,
+        "minFront": 39,
+        "meanFront": 43.53969348659004,
+        "meanNpcKmH": 70.73538390337403,
+        "passes": 0,
+        "incidents": 14,
+        "admissions": 455,
+        "hiddenFrames": 89184
+      },
+      {
+        "scope": "NPC-step CPU only",
+        "seconds": 900,
+        "count": 52,
+        "playerSpeed": 100,
+        "minFront": 35,
+        "meanFront": 41.56007662835249,
+        "meanNpcKmH": 82.27073805855248,
+        "passes": 10142,
+        "incidents": 14,
+        "admissions": 8816,
+        "hiddenFrames": 127521
+      }
+    ],
+    "runtimeSourceUnchangedSha256": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "existingActualDrivingContinuityRetested": true
+  },
+  "diagnosticPerformance": {
+    "scope": "CPU-only extra pose observer; no FPS improvement claim or total JS heap measurement",
+    "samples": 96,
+    "numericBackingBytes": 9216,
+    "supportQueriesPerSample": 0,
+    "manualTriangleLimit": 65536,
+    "cpuBenchmark": {
+      "scope": "CPU-only bounded local pose sampling, not GPU/device FPS",
+      "frames": 20000,
+      "totalMs": 94.28057899999999,
+      "msPerFrame": 0.004714028949999999,
+      "bytes": 9216
+    }
+  },
+  "visualEvidence": {
+    "scope": "Six actual inspected software-Mesa environment-only frames; no car/HUD/NPC/browser/user-device GPU acceptance",
+    "renderer": {
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "version": "OpenGL ES 3.2 Mesa 25.0.7-2+deb13u1",
+      "anisotropyExtension": true,
+      "maxAnisotropy": 16.0
+    },
+    "glErrors": 0,
+    "shaderFailures": 0,
+    "clearGapOrHardPopInInBoundedViews": false,
+    "pngs": [
+      {
+        "file": "bridge-approach-fpv-day.png",
+        "sha256": "b82e17dd7edbaff859164d5bef7bda1c4bebe818221a0eac63f71a194f650935"
+      },
+      {
+        "file": "bridge-deck-observer-day.png",
+        "sha256": "9ed9b14f00b8de15228dd0afa15ebc7cae1d887b6707c9e016cfb60c858e2ef8"
+      },
+      {
+        "file": "bridge-joint-fpv-day.png",
+        "sha256": "ff8545aba22c020f47035ba6264e9c9abc0d2bdde410d18dbb6436e60e3cde85"
+      },
+      {
+        "file": "flat-road-fpv-day.png",
+        "sha256": "227d90b803911f6e1ad37e11756967c1a4a6ccbb2db32f85f10bfa8cba1df1e0"
+      },
+      {
+        "file": "flat-road-fpv-night.png",
+        "sha256": "3130368a54687d52027e8dbb3319055218b9e9053df490dfec7aba7d526880ac"
+      },
+      {
+        "file": "promenade-eye-day.png",
+        "sha256": "1639879be4e8a061f89e87328d633d9c4fe1da66ad96fb2efc117dd855d20013"
+      }
+    ]
+  },
+  "limitations": [
+    "Original coastal screenshot pixels/location/input remain unavailable; original report still unlocalized.",
+    "No supported independent cloud browser was exposed. Software-Mesa environmental pixels do not establish full-game/browser/user-GPU acceptance.",
+    "Rendered-pose trace is not exact fixed-tick/input replay.",
+    "Pre-review applicable run intentionally interrupted at452 passes before editing bytes; not counted."
+  ],
+  "preservation": {
+    "vehicleAssetsMaterialsScales": "frozen by source epoch/negative tests",
+    "taxiSinglePassengerSha256": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "previousDraftHead": "e20e60ce7221abc08193987e8200c7f462742e30",
+    "previousDraftStagedTree": "eaa768042808163d3558fa2c3717de3cd2362350",
+    "previousDraftRef": "a1bc9bd24c3512a94e52b1560c16fb3cd667b5fd"
+  },
+  "retainedEvidenceLogs": {
+    "applicable-final.tap": "8ba4dfc5aab172423813daa8b49986e1d646915576ac056cb333a1fd99c512a2",
+    "applicable-art-serial.tap": "2ffc7ad649727401a4192e2e834372c58462de23719efb93fc9e53cc73c782b5",
+    "diagnostic-review-before-fix.tap": "efa1bc1d89d3e6261d9f97d335fa06806f35375d7b1624abe1feb5c084df568b",
+    "diagnostic-review-after-fix.tap": "172089cd414f7a4160fd544bd71f6e555c12b1abb200fc641bfe39f90542bf36",
+    "lineage-first.log": "c6ccbec02b6ea61d52a28fdd7f793387785ca3fd49bafe726ad8012ea5104096",
+    "applicable-pre-review-interrupted.tap": "dea2d9241df260ef7d5db47bfd8335fd2c2c6005044557c3fee763a57abf71ac",
+    "final-build-check.log": "1185f9d6466244479ef9946c116eea71efc9fc0e6db9e32ac1e8f64467e8cf3a"
+  },
+  "whitespaceValidation": {
+    "codeAndNewProse": "git diff --cached --check passes with only exact immutable/raw evidence exclusions",
+    "excluded": [
+      "tests/fixtures/drive-stability-baseline/physics-main.js",
+      "verification/drive-stability-20261022/review-regressions-before-fix.tap"
+    ],
+    "reason": "Preserve byte-exact pre-existing source fixture and raw failure output; do not normalize evidence."
+  }
+}

@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: copy-then-save invalidates both late clipboard success and rejection without overwriting local JSON status
+not ok 1 - copy-then-save invalidates both late clipboard success and rejection without overwriting local JSON status
+  ---
+  duration_ms: 7.373377
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/drive-local-diagnostics.test.mjs:75:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    resolve
+    + actual - expected
+    
+    + '已复制。可直接粘贴发送。'
+    - '已发起本地JSON下载；未上传。'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '已发起本地JSON下载；未上传。'
+  actual: '已复制。可直接粘贴发送。'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/drive-local-diagnostics.test.mjs:76:456)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: crash report keyboard activation stays native instead of becoming a driving Space hotkey
+not ok 2 - crash report keyboard activation stays native instead of becoming a driving Space hotkey
+  ---
+  duration_ms: 1.549287
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/drive-local-diagnostics.test.mjs:79:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Space
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/drive-local-diagnostics.test.mjs:81:287)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 127.031118
