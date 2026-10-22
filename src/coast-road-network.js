@@ -216,7 +216,7 @@ const RoadsterCoastRoads = (() => {
     const search=(lo,hi,depth)=>{const mid=(lo+hi)/2,q=at(mid),b=bound(q);if(q.gap>b*(hi-lo)/2+1e-7)return null;if(depth>=36||b*(hi-lo)<1e-7){for(const p of[lo,mid,hi]){const c=at(p);if(c.gap<=1e-7)return finish(p,c);}return null;}return search(lo,mid,depth+1)||search(mid,hi,depth+1);};return search(t,1,0);
   }
   function sweepPiers(previous,next,height=1.25){let hit=null;for(const box of pierBoxes){const h=sweepPier(previous,next,box,height);if(h&&(!hit||h.t<hit.t))hit=h;}return hit;}
-  function sweepStructures(previous,next,height=1.25){
+  function sweepStructures(previous,next,height=1.25,includeCeiling=true){
     let hit=null;const minX=Math.min(previous.x,next.x)-3.4,maxX=Math.max(previous.x,next.x)+3.4,minZ=Math.min(previous.z,next.z)-3.4,maxZ=Math.max(previous.z,next.z)+3.4,minY=Math.min(previous.y,next.y),maxY=Math.max(previous.y,next.y)+height;
     for(const box of structures){
       if(box.maxX<minX||box.minX>maxX||box.maxZ<minZ||box.minZ>maxZ||box.maxY<minY||box.minY>maxY)continue;
@@ -240,6 +240,7 @@ const RoadsterCoastRoads = (() => {
       }
       if(normal&&enter<=exit&&enter<=1&&(!hit||enter<hit.t))hit={t:enter,kind:box.kind,box,normal};
     }
+    if(includeCeiling){
     const count=Math.max(1,Math.ceil(Math.hypot(next.x-previous.x,next.z-previous.z)/1.5));
     for(let i=1;i<=count;i++){
       const t=i/count,x=lerp(previous.x,next.x,t),z=lerp(previous.z,next.z,t),y=lerp(previous.y,next.y,t);
@@ -248,6 +249,7 @@ const RoadsterCoastRoads = (() => {
         const before=lerp(previous.y,next.y,oldT)+height-(old?old.height-SLAB_DEPTH:ceiling),after=y+height-ceiling;
         if(before<=0&&after>=0&&after>before+1e-8){const fraction=clamp(-before/(after-before),0,1),at=(i-1+fraction)/count;if(!hit||at<hit.t)hit={t:at,kind:'ceiling',height:ceiling-height,normal:{x:-s.normal.x,y:-s.normal.y,z:-s.normal.z}};}
       }
+    }
     }
     return hit;
   }

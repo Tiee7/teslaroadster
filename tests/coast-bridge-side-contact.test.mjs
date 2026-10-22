@@ -9,7 +9,8 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),physics=read
 const oldPhysics=read('tests/fixtures/coast-bridge-side-baseline/physics-main.js');
 assert.equal(createHash('sha256').update(oldPhysics).digest('hex'),'6b1ee3737b7e1115d2bc7080d9a3374f77f0b9062a0ecca6d537df057ebd2ca8');
 const network=read('src/coast-road-network.js');
-assert.equal(createHash('sha256').update(network).digest('hex'),'5279eb0f144d11562f5845d3eee058070fb2008ba000a4305a5649d6cf8f9e1d','side contact does not alter the network/other structures');
+const priorNetwork=read('tests/fixtures/coast-bridge-bottom-baseline/coast-road-network.js');assert.equal(createHash('sha256').update(priorNetwork).digest('hex'),'5279eb0f144d11562f5845d3eee058070fb2008ba000a4305a5649d6cf8f9e1d');
+const removeBottomSwitch=network.replace('function sweepStructures(previous,next,height=1.25,includeCeiling=true){','function sweepStructures(previous,next,height=1.25){').replace('    if(includeCeiling){\n    const count=','    const count=').replace('    }\n    return hit;\n  }\n  const trafficPathCache=','    return hit;\n  }\n  const trafficPathCache=');assert.equal(removeBottomSwitch,priorNetwork,'only default-preserving coarse-ceiling opt-out is authorized; all prior data/structure bytes stay exact');
 function section(text,start,end){assert.equal(text.split(start).length,2,start);const a=text.indexOf(start),b=text.indexOf(end,a+start.length);assert.ok(b>a,end);return text.slice(a,b);}
 const wc=vm.createContext({window:{}});vm.runInContext(network+'\n'+map,wc);const coast=wc.window.RoadsterCoast,n=coast.network;
 const damage=section(physics,'function triggerPhysicsCollision(','function destroyVehicle(');assert.equal(damage,section(oldPhysics,'function triggerPhysicsCollision(','function destroyVehicle('),'existing damage constants/formula are unchanged');

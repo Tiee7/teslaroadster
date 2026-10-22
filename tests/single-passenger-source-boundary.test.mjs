@@ -10,9 +10,9 @@ const inherited = JSON.parse(read(epoch.inheritedWeatherEpoch));
 const repair = JSON.parse(read('verification/traffic-ground-regressions-20261022/source-epoch.json'));
 const hullRepair = JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json'));
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
-const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
+const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),bridgeBottom=JSON.parse(read('verification/coast-bridge-bottom-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
 const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json'));
-const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256 };
+const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256 };
 function verify(overrides = {}) {
   for (const key of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, key), 'unknown override: ' + key);
   for (const [key, want] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, key) ? overrides[key] : read(key)), want, key);

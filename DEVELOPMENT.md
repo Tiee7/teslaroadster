@@ -25,13 +25,33 @@
 | Attached-frame consistency and folded local problem export | `bb73a584f3e40b648ff142707d2204b45e36c459` | https://teslaroadster-5lx2qwv4s-tiee1.vercel.app/ |
 | Coastal boundary normal response | `36ae0b5811e91e36f95d052543d798a581f88881` | https://teslaroadster-3nuzlw6tj-tiee1.vercel.app/ |
 | Coastal finite pier/yaw contact | `9414c67d4706902c8b723a2b1f33fdb6e17262a9` | https://teslaroadster-gm1vi637y-tiee1.vercel.app/ |
+| Coastal finite side contact | `ac55a1fc8fcd80fe04d594d8cce58006f1fa8fc5` | https://teslaroadster-o57d2liyn-tiee1.vercel.app/ |
 
-The bridge-side iteration explicitly succeeds9414 in
-`verification/coast-bridge-side-contact-20261022/source-epoch.json`. Read PR20's
+The current bottom-contact iteration explicitly succeeds ac55 in
+`verification/coast-bridge-bottom-contact-20261022/source-epoch.json`. Read PR20's
 current head and Vercel metadata for that SHA to locate its **new unique preview**.
-Never infer that a previously copied URL serves a later commit.
+The retained side epoch succeeds 9414. Never infer that a previously copied URL
+serves a later commit.
 
-## Current finite bridge-side iteration
+## Current finite bridge-bottom iteration
+
+- Succeedsac55; see `verification/coast-bridge-bottom-contact-20261022/README.md`
+  and immutable source epoch for exact native underside penetration/air-gap
+  counterexamples, continuous input witness, old four-case red and verification.
+- Use actual finite bottom triangles and full rotated body CCD; retain original
+  side, pier, rail, top landing and underpass behavior. Only the player bypasses
+  the obsolete root-height ceiling; default network callers remain unchanged.
+- Test/render limits remain explicit: original screenshot location unknown,
+  CPU native geometry and whole-state traces, not browser GPU/user-device QA.
+- New safe plane certificate reduces unshipped added-query cost, but final CPU
+  is slower thanac55 on these scenarios; do not market it as FPS optimization.
+
+- Current final joint coverage:1354 unique passes (1299 main,18 terrain,37 art),
+  zero skips. The original terrain worker was SIGKILLed; only async/one scheduler
+  yield changed, all original18 assertions reran green. RSS observations do not
+  prove OS OOM. No source/index byte changed after the original main/art batch.
+
+## Retainedac55 finite bridge-side iteration
 
 - Reproduced6 actual native side-triangle misses and3 continuous real Space/W
   flights from independently verified nearby terrain support at30/60/144Hz.
@@ -57,6 +77,11 @@ Never infer that a previously copied URL serves a later commit.
   shared lower edge, not by a teleport; untested interior underside cases remain
   unproven. Exact tests, strengthened contact-row coverage and limits are in
   `verification/coast-bridge-side-contact-20261022/regression-summary.json`.
+
+- Finalac55 coverage was1319 unique current passes:1264 main,18 serial terrain,
+  37 serial art; the same12 unchanged expensive planner files reused the prior
+  explicit baseline. Original native penetration/red and unexplained file-level
+  SIGKILL history remain retained; no full-repository npm-test claim.
 
 ## Retained9414 coastal pier-contact iteration
 

@@ -1,0 +1,103 @@
+{
+  "schema": "roadster-coastal-bottom-contact-regression-v1",
+  "baselineCommit": "ac55a1fc8fcd80fe04d594d8cce58006f1fa8fc5",
+  "productionBaselineUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "scope": "PR20 development branch/new independent preview only",
+  "freshApplicableUniquePasses": 1354,
+  "zeroSkips": true,
+  "coverageKind": "Joint: unchanged main1299 plus art37 from original batch; same original-path18 terrain assertions after a two-line test-only scheduler yield. The original batch had a retained file-level SIGKILL, not one clean full run.",
+  "groups": {
+    "main": {
+      "tests": 1299,
+      "pass": 1299,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2138/final-main.tap",
+      "logSha256": "6898279492c7ac59b621582026b4c42e15449d642a7d0eaf512c6aad0048936e"
+    },
+    "terrain": {
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2138/final-terrain-yield.tap",
+      "logSha256": "6fab272ea1fb00ef44d4da5f43ab3f00c7a26cf70ac46527810c63fb56a6a330"
+    },
+    "art": {
+      "tests": 37,
+      "pass": 37,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2138/final-art.tap",
+      "logSha256": "b4d16fde594e9891a481a3e26296e81e16e4a95097b2242bebc1b2317acbdb3e"
+    }
+  },
+  "baselineApplicableUniquePasses": 1319,
+  "newUniqueCases": 35,
+  "newContactCases": 30,
+  "newSourceGuards": 5,
+  "allSourceGuards": 43,
+  "newContactOracleRows": 121,
+  "focusedRunsOverlapNotSummed": true,
+  "reusedUnchangedHeavyPlannerFiles": [
+    "tests/highway-demo-clock.test.mjs",
+    "tests/highway-demo-consumed-certificate.test.mjs",
+    "tests/highway-demo-continuous.test.mjs",
+    "tests/highway-demo-floor-refill.test.mjs",
+    "tests/highway-demo-following.test.mjs",
+    "tests/highway-demo-lifecycle.test.mjs",
+    "tests/highway-demo-physics.test.mjs",
+    "tests/highway-demo-planning-cost.test.mjs",
+    "tests/highway-demo-routing.test.mjs",
+    "tests/highway-demo-scheduling.test.mjs",
+    "tests/highway-demo-successor.test.mjs",
+    "tests/highway-demo-weaving.test.mjs"
+  ],
+  "fullRepositoryNpmTestClaimed": false,
+  "jointInputProof": {
+    "initiallyAll268InputsExactAfterOriginalThreeGroups": {
+      "equal": true,
+      "files": 268,
+      "runtimePhysicsSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "rootHtmlSha256": "6fe84fc1be026eaadc86b2ab6788e0ad7116d3da575ba2aff393663f752ba8c7"
+    },
+    "afterTestOnlyResourceAdjustment": {
+      "changed": [
+        "tests/coast-terrain-physics.test.mjs"
+      ],
+      "other267InputsExact": true,
+      "oldTestSha256": "f3a6f78c5e3eb1e93d654a0bfafa802ff32d70cff5e6e457cf713e1e10d69d6c",
+      "newTestSha256": "29b01d3380449faad66bcce772def18382dbec1fb1b0c8470fe8a915213288ac",
+      "completeTestRestoresByteExactByRemovingOnlyAsyncAndOneYield": true,
+      "assertionsAndInputsUnchanged": true,
+      "notIncludedInUnchangedMainFiles": true
+    }
+  },
+  "runtimeSourceSha256": {
+    "src/physics-main.js": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+    "src/coast-road-network.js": "9ad29e5666e0d753953617b3c5ccf353bdd6bff732014a34f5200c0be13e2690",
+    "src/demo-numeric-projection.js": "0291464182fe7b273241f0024c433bb030669543773eb01dd2ae6990679566d0",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "9630f64145e00e325ee14a730ef5b13bf4937cf5a581276cd0754cfb2b477595",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "ca0a2f12f6a76da3804d2deae0629478689834b4f23d6f1085bdd799d518d6a6"
+  },
+  "rootHtml": {
+    "bytes": 5070566,
+    "sha256": "6fe84fc1be026eaadc86b2ab6788e0ad7116d3da575ba2aff393663f752ba8c7",
+    "gitBlob": "09ec32794e7348d67c5559990322604a3c875798"
+  },
+  "frozenAssetsAndAllOutsideCoastMathRemainExact": true,
+  "artBudgetChanged": false,
+  "networkNodeDefaultGzipBytes": 9609,
+  "networkTotalBudgetBytes": 9728,
+  "performanceEvidence": "verification/coast-bridge-bottom-contact-20261022/performance-baseline.json",
+  "manualRetest": [
+    "海滨地图：在桥下正常抬头/倒置飞行，真实接触桥底应阻挡；保持桥顶落地和桥下净空可通行。",
+    "如发现其它地面缝隙，通过折叠本地诊断复制坐标/姿态，并提供对应画面；原截图位置仍未知。"
+  ],
+  "limits": [
+    "Native r128 actual original geometry/Raycaster and full body/real-key CPU frames; no browser GPU pixels or user device test this round.",
+    "Natural witness uses one independently verified nearby terrain start, not a whole drive from default spawn.",
+    "Final new contact costs more CPU than ac55; plane certificate reduces unshipped naive overhead, not FPS/GPU performance.",
+    "No claim all coastal gaps resolved or original screenshot event identified."
+  ]
+}

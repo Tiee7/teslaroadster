@@ -14,13 +14,14 @@ function motion(p={}){
 }
 function initial(s,speed=20,id=0){const p=coast.pose(id,s);return{...p,speed,vx:p.vx*speed,vy:p.vy*speed,vz:p.vz*speed,coastSupportId:p.supportId,wasAirborne:false};}
 const near=(a,b,e=.03)=>assert.ok(Math.abs(a-b)<=e,`${a} != ${b}`);
-for(const speed of[0,15,200/3.6,370/3.6])test(`production motion follows true terrain/bridge tire plane at ${speed}m/s without false gravity, damage or fuel burn`,()=>{
+for(const speed of[0,15,200/3.6,370/3.6])test(`production motion follows true terrain/bridge tire plane at ${speed}m/s without false gravity, damage or fuel burn`,async()=>{
  for(let id=0;id<4;id++)for(let s=25;s<coast.routes[id].length;s+=47){
   const h=motion(initial(s,speed,id));h.keys.KeyW=speed>0;h.step(1/60);
   const support=coast.support({...h.state,grounded:true});
   near(h.state.y,support.height);assert.equal(h.state.wasAirborne,false);assert.equal(h.impacts.length,0);
   const attitude=n.groundAttitude(support.normal,h.state.yaw);near(h.state.pitch,attitude.pitch,1e-8);near(h.state.roll,attitude.roll,1e-8);
   assert.equal(h.state.airRemaining,10,'ordinary road travel is not lift/flight');
+  await new Promise(resolve=>setImmediate(resolve));
  }
 });
 test('slope-only gravity distinguishes coast uphill/downhill without changing EV constants',()=>{
