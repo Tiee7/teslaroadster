@@ -3,8 +3,8 @@ const baselineDir=new URL('./fixtures/driving-feedback-baseline/',import.meta.ur
 const baseline=Object.fromEntries(['physics-main.js','config.js'].map(file=>[file,readFileSync(new URL(file,baselineDir),'utf8')]));
 const hash=s=>createHash('sha256').update(s).digest('hex');
 const successor=JSON.parse(readFileSync(new URL('../verification/weather-ground-traffic-20261022/source-epoch.json',import.meta.url)));
-// Exact production4451 fixtures retain historical bytes for superseded files.
-const historicalSource=file=>new URL(Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':'../src/'+file+'.js',import.meta.url);
+// Exact production4451 and previewb580 fixtures retain historical bytes; current sources have explicit successor guards.
+const historicalSource=file=>new URL(file==='taxi'?'./fixtures/single-passenger-baseline/taxi.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':'../src/'+file+'.js',import.meta.url);
 
 test('driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline',()=>{
  const contract=JSON.parse(readFileSync(new URL('../verification/driving-feedback-20261021/source-epoch.json',import.meta.url)));

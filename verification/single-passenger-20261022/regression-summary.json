@@ -1,0 +1,93 @@
+{
+  "schema": "roadster-single-passenger-regression-v1",
+  "basePreview": "b58060ad60df3e46fa93f953f4441ce5b4388029",
+  "scope": "Same draft PR20 preview only; main4451 untouched; no production deployment.",
+  "verificationMode": "Joint coverage of1080unique suite cases; NOT one fresh all-green full-suite invocation.",
+  "originalFullSuite": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "exitCode": 1,
+    "tests": 1080,
+    "suites": 0,
+    "pass": 1079,
+    "fail": 1,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 1436706.082044,
+    "retainedExternalLog": "full-suite-concurrency2.log",
+    "logSha256": "c8318c1ba3a33daa5aada1966b700b454891703b1c35bee130012984697b4f94",
+    "soleFailure": "driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline",
+    "reason": "Historical city-cyber Taxi source read still used live authorized single-seat source5a228... rather than exact prior9c72... baseline. No passenger/physics assertion failed."
+  },
+  "correctedAffectedRun": {
+    "command": "node --test --test-concurrency=2 tests/coast-map-isolation.test.mjs tests/single-passenger-source-boundary.test.mjs tests/weather-ground-source-boundary.test.mjs",
+    "exitCode": 0,
+    "tests": 49,
+    "suites": 0,
+    "pass": 49,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 2487.665917,
+    "retainedExternalLog": "source-boundary-corrected.log",
+    "logSha256": "7f0cfe5bfad73af0f203c9ae7a127e02dce1d9e4855360b475d0127bfd0f1241",
+    "uniqueSuiteCasesStill1080": true,
+    "overlapWithPreviouslyPassingCases": 48,
+    "replacesHistoricalFailureCount": 1,
+    "negativeDriftGuardsPass": true
+  },
+  "testOnlyCorrection": {
+    "file": "tests/coast-map-isolation.test.mjs",
+    "delta": "Historical Taxi lookup only now points to exact SHA-pinned b580 fixture; all prior historical hash assertions remain intact. Current Taxi and every other source still checked by explicit successor epoch/negative guards.",
+    "productionBytesUnchangedSinceFullSuiteStart": true,
+    "retainedIsolatedFailureLogSha256": "7f128fd3312a05c055ae2b9e7e1ab9c8a4358cec62193a401695c1e1e6ee5437"
+  },
+  "focusedLifecycle": {
+    "tests": 74,
+    "pass": 74,
+    "fail": 0,
+    "skipped": 0,
+    "retainedExternalLog": "focused-lifecycle.log",
+    "logSha256": "be2fdb486f564fa3b9d0a6dba787b3200d741460ad7f035b987d02777a577821",
+    "note": "These cases overlap full-suite coverage; do not add to1080."
+  },
+  "build": {
+    "commands": [
+      "python3 bundle_app.py",
+      "npm run check",
+      "npm run build",
+      "git diff --check"
+    ],
+    "exitCodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "checkLogSha256": "b8c99a615df4a40b590cbe5aaca5118298eb5513257a85d14e9f33d4a6dd6b58",
+    "buildLogSha256": "5c025195302db886f8702d8bfaf37ba06f612f4db6112d34ce8c13b4cac944ab"
+  },
+  "artifact": {
+    "path": "index.html",
+    "bytes": 5001332,
+    "gitBlob": "3f41fc707bfd3e15e51cd4606bd43565c78be33e",
+    "sha256": "60d943beb93d0ecdba155149cdd63963a2697823b1e326c41d6ec01643a9b9cd"
+  },
+  "source": {
+    "taxiSha256": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "sourceEpochSha256": "68442ed1df46856ee113e0bc900d9dcfa867fd6e92644bd562a0dfeb52460dff",
+    "finalTaxiSnapshotCapacity": 1
+  },
+  "independentReview": {
+    "retainedExternalReport": "independent-audit.json",
+    "reportSha256": "765c83f39c0e99b2733dfac1ddb36d28ca476f90fdb5ce3a0929a03737861367",
+    "scriptSha256": "99486851cac1e62f4d52240bd14f75dfd4ff4cf23e95c6427373f1da5447fdd1",
+    "boundary": "CPU original/one-constant counterfactual and static actual lifecycle ordering; not full collision integration or GPU."
+  },
+  "limitations": [
+    "CPU/model/adapter/native geometry checks, not actual browser/fullscene/user-GPU acceptance.",
+    "Final pass is explicitly joint coverage, not a fabricated all-green aggregate log."
+  ],
+  "verifiedAtUTC": "2026-10-22T12:54:18.707851+00:00"
+}

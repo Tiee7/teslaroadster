@@ -3,7 +3,7 @@
 const CityTaxiModel = (() => {
   'use strict';
   const WAITING_COUNT = 5;
-  const CAPACITY = 10;
+  const CAPACITY = 1;
   const ARRIVAL_RADIUS = 2;
   const PICKUP_RADIUS = ARRIVAL_RADIUS * 2;
   const MARKER_RADIUS = 3;
@@ -181,8 +181,8 @@ const CityTaxiModel = (() => {
       refill(position);
       return { type: 'picked-up', trip, trips: [trip] };
     }
-    // FIFO primary remains stable until delivered; one green marker avoids ten
-    // overlapping transparent destination columns and a jumping navigation arrow.
+    // The sole occupied seat owns the green marker and navigation until delivery
+    // or the existing loss/reset lifecycle clears it.
     const snapshot = () => ({ active, waiting: [...waiting], passengers: [...passengers], capacity: CAPACITY,
       passenger: passengers[0] || null, score, delivered, finished });
     return { start, stop, reset, destroy, pause, advance, losePassenger, snapshot };
@@ -207,8 +207,8 @@ const CityTaxiModel = (() => {
   function renderEntry() {
     const help = document.getElementById('city-taxi-help');
     const instructions = isZh()
-      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2、地图3默认开启接客，最多同时载10位；白柱始终补充5位，满载暂停接人。绿柱依上车顺序指向下一位目的地，经过其他已载乘客目的地也会自动送达。`
-      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning or resetting starts from zero. Passengers are enabled automatically in the city and coast: carry up to 10, with five waiting stops replenished after pickup. Green guides the oldest ride; other on-board rides can also be delivered en route.`;
+      ? `白色光柱是乘客，地面靠近 ${CityTaxiModel.PICKUP_RADIUS} 米自动接上；绿色光柱是该乘客目的地。每趟至少 900 米，送达获 1000–3000 独立接客积分，不计入排行榜。撞毁时乘客遇难，扣双倍车费后保留本局成绩；复活或重置后从零开始。地图2、地图3默认开启接客，每次只能载1位乘客，送达或本趟按原有规则结束后才能接下一位。白柱始终补充5位，载客时隐藏；绿柱只指向当前乘客目的地。`
+      : `White columns mark passengers: get within ${CityTaxiModel.PICKUP_RADIUS}m on the ground to pick one up; green marks their destination. Routes are at least 900m, paying 1,000–3,000 separate passenger points, never leaderboard points. A crash loses the passenger and deducts twice the fare before preserving the final score. Respawning or resetting starts from zero. Passengers are enabled automatically in the city and coast: carry only one at a time, with no further pickup until delivery or the existing loss/reset rules clear the seat. Five waiting stops replenish after pickup; white columns hide while occupied and green marks only the current ride destination.`;
     if (help) help.textContent = instructions;
   }
   function blockedByUi() {

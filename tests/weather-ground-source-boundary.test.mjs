@@ -5,6 +5,8 @@ import { createHash } from 'node:crypto';
 const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 const sha = value => createHash('sha256').update(value).digest('hex');
 const epoch = JSON.parse(read('verification/weather-ground-traffic-20261022/source-epoch.json'));
+const single = JSON.parse(read('verification/single-passenger-20261022/source-epoch.json'));
+const weatherSource = path => path === single.baselineFixture.sourcePath ? read(single.baselineFixture.path) : read(path);
 const exact4451Baseline = {
   "coast-map.js": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
   "config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
@@ -27,7 +29,9 @@ const approved = [
 const renderPath = 'verification/render-instance-20261022/source-epoch.json';
 const inheritedRenderHash = 'ef00b4e5cbec254f0daadd69ff39141958bb31ef17120a10244dc6385197e529';
 function verifyCurrent(overrides = {}) {
-  const pins = { ...epoch.authorizedSourceSha256, ...epoch.frozenUnchangedSourceSha256, ...epoch.frozenApprovedVehicleAssetSourceSha256 };
+  const historicalPins = { ...epoch.authorizedSourceSha256, ...epoch.frozenUnchangedSourceSha256, ...epoch.frozenApprovedVehicleAssetSourceSha256 };
+  for (const [path, expected] of Object.entries(historicalPins)) assert.equal(sha(weatherSource(path)), expected, 'weather epoch baseline: ' + path);
+  const pins = { ...historicalPins, ...single.authorizedSourceSha256 };
   for (const path of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, path), 'unknown override: ' + path);
   for (const [path, expected] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, path) ? overrides[path] : read(path)), expected, path);
 }
@@ -63,7 +67,7 @@ test('latest epoch checks actual current sources and preserves all approved asse
   assert.match(read('src/render-health.js'), /if \(!window\.RoadsterRenderHealth\.isPaused\(\)\) return runFrame/);
 });
 test('epoch negative guards reject unapproved core-asset, authorized-source and projection-pin drift', () => {
-  for (const path of ['src/vehicles.js', 'src/config.js', 'src/physics-main.js', 'src/demo-numeric-projection.js', 'verification/demo-continuous/generate-numeric-projection-kernel.mjs']) {
+  for (const path of ['src/taxi.js', 'src/vehicles.js', 'src/config.js', 'src/physics-main.js', 'src/demo-numeric-projection.js', 'verification/demo-continuous/generate-numeric-projection-kernel.mjs']) {
     assert.throws(() => verifyCurrent({ [path]: read(path) + '\n// unauthorized drift\n' }), error => error.code === 'ERR_ASSERTION' && error.message.includes(path));
   }
   assert.throws(() => verifyCurrent({ 'unlisted-module.js': '' }), /unknown override/);
