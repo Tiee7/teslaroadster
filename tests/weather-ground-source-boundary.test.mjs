@@ -9,6 +9,7 @@ const single = JSON.parse(read('verification/single-passenger-20261022/source-ep
 const repair = JSON.parse(read('verification/traffic-ground-regressions-20261022/source-epoch.json'));
 const hullRepair = JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json'));
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
+const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json'));
 const weatherSource = path => path === single.baselineFixture.sourcePath ? read(single.baselineFixture.path) : repair.baselineSourceFixtures[path] ? read(repair.baselineSourceFixtures[path].path) : stability.baselineSourceFixtures[path] ? read(stability.baselineSourceFixtures[path].path) : read(path);
 const exact4451Baseline = {
   "coast-map.js": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
@@ -34,7 +35,7 @@ const inheritedRenderHash = 'ef00b4e5cbec254f0daadd69ff39141958bb31ef17120a10244
 function verifyCurrent(overrides = {}) {
   const historicalPins = { ...epoch.authorizedSourceSha256, ...epoch.frozenUnchangedSourceSha256, ...epoch.frozenApprovedVehicleAssetSourceSha256 };
   for (const [path, expected] of Object.entries(historicalPins)) assert.equal(sha(weatherSource(path)), expected, 'weather epoch baseline: ' + path);
-  const pins = { ...historicalPins, ...single.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256 };
+  const pins = { ...historicalPins, ...single.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256 };
   for (const path of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, path), 'unknown override: ' + path);
   for (const [path, expected] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, path) ? overrides[path] : read(path)), expected, path);
 }

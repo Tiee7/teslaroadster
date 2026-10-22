@@ -22,14 +22,36 @@
 | --- | --- | --- |
 | Highway recycling and single-passenger baseline | `2c217c077c82b014f47a1365b6d803574ac47946` | https://teslaroadster-iqveb25bi-tiee1.vercel.app/ |
 | Coastal rotated-hull landing contact | `723ad63d8ec48e455fe5c79c66852a05ba8ce684` | https://teslaroadster-i459q867p-tiee1.vercel.app/ |
+| Attached-frame consistency and folded local problem export | `bb73a584f3e40b648ff142707d2204b45e36c459` | https://teslaroadster-5lx2qwv4s-tiee1.vercel.app/ |
 
-The current iteration explicitly succeeds723 in
-`verification/drive-stability-20261022/source-epoch.json`. Its source hashes and
+The boundary-response iteration explicitly succeeds bb73 in
+`verification/coast-boundary-20261022/source-epoch.json`. Its source hashes and
 regression report identify the exact candidate; read PR20's current head and the
-Vercel deployment metadata for that SHA to locate its new preview. Never infer
-that a previously copied URL serves a later commit.
+Vercel deployment metadata for that SHA to locate its new unique preview. Never
+infer that a previously copied URL serves a later commit.
 
-## Current stability iteration
+## Current coastal boundary iteration
+
+- Reproduced a real outer-world shallow-graze defect independently of the unknown
+  ground-gap report: legal supported40m/s starts, at30/60/144Hz, struck the boundary
+  at only1.97–2.09m/s normal closing speed. All9 baseline cases fed the total
+  ~39.5m/s into fatal damage and reversed the fast tangent; all9 inward controls
+  stayed clear. The original source fixture and compact measured witness remain.
+- Change only the coastal boundary response: retain bounds, restitution0.35,
+  strict10m/s impact trigger and existing yaw correction; apply bounce/damage only
+  to outward motion on crossed axes. Preserve tangent velocity and combine corner
+  normal components without counting tangential speed. No player teleport/rescue,
+  collision removal, asset change, ground-height adjustment or driving-speed tune.
+- Positive hard impacts, corners, inward overlaps, slow contact, varied frame
+  rates and post-contact controls need explicit regression coverage. The exact
+  final tested source and counts are recorded in
+  `verification/coast-boundary-20261022/regression-summary.json`.
+- A separate CPU structure-index prototype is **not integrated**: microbenchmark
+  improvement alone does not establish meaningful end-to-end frame-time/FPS gain.
+  Terrain, road structures, traffic, weather, lights and local diagnostics stay
+  byte-frozen from bb73.
+
+## Retained bb73 stability improvements
 
 1. A coastal landing already resolved support/`wasAirborne`, but its local
    airborne flag survived one fixed step. Synchronize the already-attached frame
@@ -64,7 +86,9 @@ that a previously copied URL serves a later commit.
 - Keep historical source epochs and exact fixtures immutable. Add an explicit
   successor and negative drift guards; fix historical *read addresses*, not their
   frozen expected values, when a later authorized source changes.
-- Run applicable final-byte tests/build/checks. Reuse the prior1164-case combined
+- Run applicable final-byte tests/build/checks. The bb73 applicable baseline was
+  1092 unique passes (1055 main +37 serial art; no fresh heavy planner run).
+  Reuse the prior1164-case combined
   baseline for unchanged planner code rather than mechanically repeating its
   longest cases; report exactly which current tests ran and which baseline was reused.
 - The prior1164 coverage was **not one all-green full run**:1127 full-batch passes

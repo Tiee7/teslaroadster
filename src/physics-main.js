@@ -1413,6 +1413,16 @@ function updateSimulation(dt, presentationDt = dt) {
         const key=axis==='x'?'vx':'vz',impactV=Math.max(0,-state[key]*n);
         if(impactV>0){state[key]+=1.35*impactV*n;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);}
         if(impactV>10){window.RoadsterCityDiagnostics?.contact({kind:'boundary',axis,sign:cityWall.sign,height:45.3,normal:n});triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);}
+      } else if(coastWorld){
+        // Coast boundary impulse uses only outward normal motion, not tangent speed.
+        const nx=Math.abs(state.x)>limit?Math.sign(state.x):0,nz=Math.abs(state.z)>limit?Math.sign(state.z):0;
+        const closingX=nx?Math.max(0,state.vx*nx):0,closingZ=nz?Math.max(0,state.vz*nz):0;
+        state.x=THREE.MathUtils.clamp(state.x,-limit,limit);state.z=THREE.MathUtils.clamp(state.z,-limit,limit);
+        if(closingX>0)state.vx-=1.35*closingX*nx;if(closingZ>0)state.vz-=1.35*closingZ*nz;
+        state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);
+        state.yaw-=wrapAnglePi(state.yaw)*(1.0-Math.pow(0.10,dt));
+        const impactV=Math.hypot(closingX,closingZ);
+        if(impactV>10)triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);
       } else {
         const impactV = Math.abs(state.speed);
         state.x = THREE.MathUtils.clamp(state.x, -limit, limit);state.z = THREE.MathUtils.clamp(state.z, -limit, limit);

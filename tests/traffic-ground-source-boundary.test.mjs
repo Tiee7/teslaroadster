@@ -1,7 +1,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync,readdirSync}from'node:fs';import{createHash}from'node:crypto';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex');
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
-const e=JSON.parse(read('verification/traffic-ground-regressions-20261022/source-epoch.json')),hullRepair=JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json')),pins={...e.frozenSourceSha256,...e.authorizedSourceSha256,...hullRepair.authorizedSourceSha256,...stability.authorizedSourceSha256};
+const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json'));
+const e=JSON.parse(read('verification/traffic-ground-regressions-20261022/source-epoch.json')),hullRepair=JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json')),pins={...e.frozenSourceSha256,...e.authorizedSourceSha256,...hullRepair.authorizedSourceSha256,...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256};
 function verify(overrides={}){for(const p of Object.keys(overrides))assert.ok(Object.hasOwn(pins,p),'unknown source '+p);for(const[p,s]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:read(p)),s,p);}
 test('traffic repair explicitly succeeds3417 and keeps all old source epochs plus exact deployed counterexamples immutable',()=>{
  assert.equal(e.basePreview,'3417fa07d357b4231c36ac439caeb9460371cc31');assert.equal(e.mainUnchanged,'4451a11c9c09d031a9da037ce63afe4bb7f062e5');assert.match(e.publicationScope,/^preview-only; same PR20;/);
