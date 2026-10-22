@@ -680,13 +680,16 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
 
   // Auto-landing save must ONLY engage when vehicle is falling fast towards ground, NEVER when climbing or hovering!
   const isDescendingTowardsGround = state.vy < -3.5 && !wantsHover && !state.isAltitudeHold && !state.isJumping6m;
+  // Keep the existing braking law, but a rotated coast hull can meet the
+  // selected real floor before its upright root reaches that floor.
+  const landingClearance=coastWorld&&coastSurface?.solid?Math.min(agl,coastBodyGroundClearance(state,coastSurface)):agl;
   const needsEmergencyLandingSave = (
     !coastSurface?.water && isDescendingTowardsGround &&
-    agl > 0.02 &&
-    agl <= minSafeBrakeAlt &&
+    landingClearance > 0.02 &&
+    landingClearance <= minSafeBrakeAlt &&
     (state.airRemaining > 0.01 || state.isAutoLandingSave) &&
     !state.isFreefalling &&
-    (downSpeed > 5.5 || state.isAutoLandingSave || (agl <= 3.0 && cosTiltNow < 0.55 && downSpeed > 2.5))
+    (downSpeed > 5.5 || state.isAutoLandingSave || (landingClearance <= 3.0 && cosTiltNow < 0.55 && downSpeed > 2.5))
   );
 
   if (needsEmergencyLandingSave) {
@@ -953,6 +956,23 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   state.pitch += state.vPitch * dt;
   state.yaw += state.vYaw * dt;
 
+  // Complete the coast contact after attitude integration as well: a legal
+  // roll/pitch can touch the ground before the upright root descends to it.
+  const coastHullLanding=coastWorld&&!coastGroundAttached?coastBodyGroundLanding(coastWorld,coastMotionStart,state):null;
+  if(coastHullLanding){
+    const normal=coastHullLanding.normal,downImpactSpeed=Math.max(0,-(state.vx*normal.x+state.vy*normal.y+state.vz*normal.z)),cosTilt=Math.cos(state.roll)*Math.cos(state.pitch);
+    state.x=coastHullLanding.x;state.y=coastHullLanding.height;state.z=coastHullLanding.z;
+    coastSupport=coastHullLanding;coastGroundAttached=true;state.coastSupportId=coastSupport.id;state.wasAirborne=false;groundElevation=coastSupport.height;
+    state.vy=-(normal.x*state.vx+normal.z*state.vz)/normal.y;
+    state.jumpInertiaGraceSeconds=null;state.isAutoLandingSave=false;state.isJumping6m=false;
+    if(state.isAltitudeHold){state.isAltitudeHold=false;const badge=document.getElementById('key-n');if(badge)badge.classList.remove('active');}
+    if(downImpactSpeed>.8){state.suspensionSquash=Math.min(.048,downImpactSpeed*.0035);state.suspensionVelocity=downImpactSpeed*.004;}
+    if(downImpactSpeed>15.5||(downImpactSpeed>7.5&&cosTilt<.25)){triggerPhysicsCollision(downImpactSpeed*(cosTilt<.25?1.85:1.15),'crashReasonGround',0,3,0);if(state.isDestroyed)return;}
+    if(!isRetroBrakeFiring&&((!wantsHover&&!isRearThrusterFiring)||state.isFreefalling)){
+      state.airRemaining=Math.min(MAX_AIR_SECONDS,state.airRemaining+3.4*dt);state.airUsedContinuous=MAX_AIR_SECONDS-state.airRemaining;
+      if(state.airRemaining>2.2)state.isAutoDescending8s=false;if(state.airRemaining>=2.5&&!wantsHover||state.airRemaining>=9.95)state.isFreefalling=false;
+    }
+  }
   if(coastGroundAttached){
     const plane=coastWorld.network.groundAttitude(coastSupport.normal,state.yaw);
     state.pitch=plane.pitch;state.roll=plane.roll;state.vPitch=state.vRoll=0;

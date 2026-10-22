@@ -1,0 +1,74 @@
+{
+  "schema": "coast-hull-contact-source-epoch-v1",
+  "basePreview": "2c217c077c82b014f47a1365b6d803574ac47946",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; same PR20; no main/production authorization",
+  "inheritedTrafficEpoch": "verification/traffic-ground-regressions-20261022/source-epoch.json",
+  "inheritedTrafficEpochSha256": "2f29b8317572cc7c3c7ffc532594ad9bc64564af12d16bcb888ab90e929d3d69",
+  "authorizedSourceSha256": {
+    "src/physics-main.js": "5b9714605d3360890996ffe12afadcdf78949f5e059baa47fcd220a954611ee7",
+    "src/demo-numeric-projection.js": "3303ca3f522a558961bf25b0de536cb3d9ca1b5959238a7ccaf1f9e0ceada289",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "fad5db8d8d59c34b778950e96d1fb0b738ebc3683c26cf7a8432b49f020fdee3",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "e8dcf45974b99b9e035b8189c0f9572caecf05228c473a34eecf5a5a511ead5d"
+  },
+  "frozenSourceSha256": {
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+    "src/coast-road-network.js": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/index.html": "40dc09da3943d91e1fc454af9bc0c87ffe25dac79f5a2aa8f86b6466a9e51bff",
+    "src/leaderboard.js": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "src/mobile-controls.js": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/render-diagnostics.js": "0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/styles.css": "c43efb862fe202b80977c5f04f98774e25a95d7cad31e1dd2ed696cf45898636",
+    "src/taxi.js": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821"
+  },
+  "baselineSourceFixtures": {
+    "src/physics-main.js": {
+      "path": "tests/fixtures/coast-hull-contact-baseline/physics-main.js",
+      "sha256": "692713c8dcd606ed8478946aedd0af9a86ad5073b50d82f986d68072f649c4d6"
+    },
+    "src/demo-numeric-projection.js": {
+      "path": "tests/fixtures/coast-hull-contact-baseline/demo-numeric-projection.js",
+      "sha256": "74483fd71c2e5b2bfed8dd129f22f4dd7c74da796df1de62982db485d1aef8f4"
+    },
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": {
+      "path": "tests/fixtures/coast-hull-contact-baseline/generate-numeric-projection-kernel.mjs",
+      "sha256": "77ec87f4fe43d4ba66b11dc885029f47ae0fb1e78ab0c8356a22b7cfc4b64e29"
+    },
+    "verification/demo-continuous/emit-browser-static-projection.mjs": {
+      "path": "tests/fixtures/coast-hull-contact-baseline/emit-browser-static-projection.mjs",
+      "sha256": "a66c34cda561241e6d3f7ed3a114675c5ca8bd884ac801251a4a2e0f7448d933"
+    }
+  },
+  "numericProjection": {
+    "previousGeneratorSha256": "77ec87f4fe43d4ba66b11dc885029f47ae0fb1e78ab0c8356a22b7cfc4b64e29",
+    "currentGeneratorSha256": "fad5db8d8d59c34b778950e96d1fb0b738ebc3683c26cf7a8432b49f020fdee3",
+    "previousProgramSha256": "0a07161b9f7ac0ba57c8d5000cf1bf466acc5d2b7ccf0d987006d074a9cdfe17",
+    "currentProgramSha256": "42fa09be66c5e9c53631019487be63471361812651be7132996187663a6123a3"
+  },
+  "scope": [
+    "Coast-only swept contact of the existing frozen rotated player body with finite real ground surfaces, using exact root-triangle height and existing landing policy.",
+    "Coast-only auto-landing distance reads actual rotated hull clearance, retaining the original thrust, fuel, speed and damage formulas.",
+    "Regenerate numeric/browser projection identities while retaining bit-exact highway/city motion."
+  ],
+  "originalUserEvent": "Not matched: no screenshot pixels or exact user input/location. This fixes an independently reachable partial-burial class, not a proven mesh gap.",
+  "frozenPassengerCapacity": 1,
+  "frozenTrafficRepair": "Normal highway front/rear cycles remain unchanged; incident rear recovery remains separate."
+}

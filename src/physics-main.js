@@ -407,6 +407,42 @@ function cityContactDetails(a,b){
 }
 // Coastal broad AABBs are rejection-only. The final certificate is the real
 // YXZ player/NPC OBB, with conservative advancement through their full poses.
+// Coast-only landing uses the rotated, frozen player collider, not merely its
+// upright root anchor. Every accepted floor still belongs to a finite real
+// surface beneath the root; a bridge above the previous root is never selected.
+function coastBodyGroundClearance(pose,surface) {
+  const body=cityPlayerBody({...pose,y:pose.y-(pose.suspensionSquash||0)-(pose.aeroSquash||0)}),n=surface.normal;
+  return(n.x*(body.x-pose.x)+n.y*(body.y-surface.height)+n.z*(body.z-pose.z)-cityContactProjection(body,[n.x,n.y,n.z]))/n.y;
+}
+
+function coastBodyGroundLanding(world,previous,next) {
+  const start=previous.contactPose||previous;
+  const finish={...next,y:next.y-(next.suspensionSquash||0)-(next.aeroSquash||0)};
+  const delta={};for(const key of ['pitch','yaw','roll'])delta[key]=wrapAnglePi((finish[key]||0)-(start[key]||0));
+  const steps=Math.max(1,Math.ceil(Math.hypot(finish.x-start.x,finish.y-start.y,finish.z-start.z)),Math.ceil((Math.abs(delta.pitch)+Math.abs(delta.yaw)+Math.abs(delta.roll))/.04));
+  const at=t=>({x:start.x+(finish.x-start.x)*t,y:start.y+(finish.y-start.y)*t,z:start.z+(finish.z-start.z)*t,pitch:(start.pitch||0)+delta.pitch*t,yaw:(start.yaw||0)+delta.yaw*t,roll:(start.roll||0)+delta.roll*t});
+  const corners=pose=>{const body=cityPlayerBody(pose),points=[];for(const x of [-1,1])for(const y of [-1,1])for(const z of [-1,1]){const p={x:body.x,y:body.y,z:body.z};for(let axis=0;axis<3;axis++){const amount=[x,y,z][axis]*body.half[axis];p.x+=body.axes[axis][0]*amount;p.y+=body.axes[axis][1]*amount;p.z+=body.axes[axis][2]*amount;}points.push(p);}return points;};
+  let old=corners(at(0));
+  for(let step=1;step<=steps;step++){
+    const points=corners(at(step/steps));let first=null;
+    for(let vertex=0;vertex<points.length;vertex++){
+      const a=old[vertex],b=points[vertex],hit=world.network.sweepLanding(a,b);
+      const options=hit?[hit]:world.network.candidates(a.x,a.z).filter(s=>s.solid&&a.y<s.height&&b.y-a.y+(s.normal.x*(b.x-a.x)+s.normal.z*(b.z-a.z))/s.normal.y< -1e-8).map(s=>({...s,t:0}));
+      for(const surface of options){
+        const t=(step-1+surface.t)/steps,root={x:previous.x+(next.x-previous.x)*t,z:previous.z+(next.z-previous.z)*t};
+        const plane=(x,z)=>surface.triangle?surface.triangle.a.y-(surface.normal.x*(x-surface.triangle.a.x)+surface.normal.z*(z-surface.triangle.a.z))/surface.normal.y:surface.height;
+        if(previous.y<plane(previous.x,previous.z)-.025)continue;
+        const height=plane(root.x,root.z),finite=world.network.candidates(root.x,root.z).find(s=>s.solid&&s.id===surface.id&&Math.abs(s.height-height)<.03);
+        if(!finite)continue;
+        const contact={...finite,t,x:root.x,z:root.z,height:finite.height,bodyContact:true};
+        if(!first||contact.t<first.t-1e-8||(Math.abs(contact.t-first.t)<1e-8&&contact.road))first=contact;
+      }
+    }
+    if(first)return first;old=points;
+  }
+  return null;
+}
+
 function coastTrafficBody(car,pose) {
   const b=car.mesh.userData?.cityContactBounds||globalThis.window?.RoadsterTrafficAssets?.cityContactBounds?.(car.mesh);
   return cityContactBody(pose,car.length,car.width||car.mesh.userData?.width||1.96,car.height,b,'YXZ');
@@ -1438,13 +1474,16 @@ function updateSimulation(dt, presentationDt = dt) {
 
   // Auto-landing save must ONLY engage when vehicle is falling fast towards ground, NEVER when climbing or hovering!
   const isDescendingTowardsGround = state.vy < -3.5 && !wantsHover && !state.isAltitudeHold && !state.isJumping6m;
+  // Keep the existing braking law, but a rotated coast hull can meet the
+  // selected real floor before its upright root reaches that floor.
+  const landingClearance=coastWorld&&coastSurface?.solid?Math.min(agl,coastBodyGroundClearance(state,coastSurface)):agl;
   const needsEmergencyLandingSave = (
     !coastSurface?.water && isDescendingTowardsGround &&
-    agl > 0.02 &&
-    agl <= minSafeBrakeAlt &&
+    landingClearance > 0.02 &&
+    landingClearance <= minSafeBrakeAlt &&
     (state.airRemaining > 0.01 || state.isAutoLandingSave) &&
     !state.isFreefalling &&
-    (downSpeed > 5.5 || state.isAutoLandingSave || (agl <= 3.0 && cosTiltNow < 0.55 && downSpeed > 2.5))
+    (downSpeed > 5.5 || state.isAutoLandingSave || (landingClearance <= 3.0 && cosTiltNow < 0.55 && downSpeed > 2.5))
   );
 
   if (needsEmergencyLandingSave) {
@@ -1711,6 +1750,23 @@ function updateSimulation(dt, presentationDt = dt) {
   state.pitch += state.vPitch * dt;
   state.yaw += state.vYaw * dt;
 
+  // Complete the coast contact after attitude integration as well: a legal
+  // roll/pitch can touch the ground before the upright root descends to it.
+  const coastHullLanding=coastWorld&&!coastGroundAttached?coastBodyGroundLanding(coastWorld,coastMotionStart,state):null;
+  if(coastHullLanding){
+    const normal=coastHullLanding.normal,downImpactSpeed=Math.max(0,-(state.vx*normal.x+state.vy*normal.y+state.vz*normal.z)),cosTilt=Math.cos(state.roll)*Math.cos(state.pitch);
+    state.x=coastHullLanding.x;state.y=coastHullLanding.height;state.z=coastHullLanding.z;
+    coastSupport=coastHullLanding;coastGroundAttached=true;state.coastSupportId=coastSupport.id;state.wasAirborne=false;groundElevation=coastSupport.height;
+    state.vy=-(normal.x*state.vx+normal.z*state.vz)/normal.y;
+    state.jumpInertiaGraceSeconds=null;state.isAutoLandingSave=false;state.isJumping6m=false;
+    if(state.isAltitudeHold){state.isAltitudeHold=false;const badge=document.getElementById('key-n');if(badge)badge.classList.remove('active');}
+    if(downImpactSpeed>.8){state.suspensionSquash=Math.min(.048,downImpactSpeed*.0035);state.suspensionVelocity=downImpactSpeed*.004;}
+    if(downImpactSpeed>15.5||(downImpactSpeed>7.5&&cosTilt<.25)){triggerPhysicsCollision(downImpactSpeed*(cosTilt<.25?1.85:1.15),'crashReasonGround',0,3,0);if(state.isDestroyed)return;}
+    if(!isRetroBrakeFiring&&((!wantsHover&&!isRearThrusterFiring)||state.isFreefalling)){
+      state.airRemaining=Math.min(MAX_AIR_SECONDS,state.airRemaining+3.4*dt);state.airUsedContinuous=MAX_AIR_SECONDS-state.airRemaining;
+      if(state.airRemaining>2.2)state.isAutoDescending8s=false;if(state.airRemaining>=2.5&&!wantsHover||state.airRemaining>=9.95)state.isFreefalling=false;
+    }
+  }
   if(coastGroundAttached){
     const plane=coastWorld.network.groundAttitude(coastSupport.normal,state.yaw);
     state.pitch=plane.pitch;state.roll=plane.roll;state.vPitch=state.vRoll=0;
