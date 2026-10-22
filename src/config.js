@@ -52,7 +52,7 @@ const I18N = {
       "Rose Titanium", "Matte Nardo Gray", "Hyper Sonic Yellow"
     ],
     weatherPrefix: "Sky: ",
-    weathers: ["Cyber Night (T)", "Cyber Neon Rain (T)", "Mars Sunset Dusk (T)", "Daylight (T)"],
+    weathers: ["Night (T)", "Rainy Night (T)", "Dusk (T)", "Day (T)"],
     trafficPrefix: "Traffic: ",
     trafficLevels: ["Normal (20)", "Heavy (36)", "Insane (52)"],
     camPrefix: "Cam: ",
@@ -218,7 +218,7 @@ const I18N = {
       "玫瑰钛金属 (Rose Titanium)", "纳多战机灰 (Nardo Gray)", "极速破音黄 (Sonic Yellow)"
     ],
     weatherPrefix: "天气: ",
-    weathers: ["星际暗夜 (T)", "赛博霓虹雨夜 (T)", "火星落日黄昏 (T)", "清朗日间 (T)"],
+    weathers: ["黑夜", "雨夜", "黄昏", "白天"],
     trafficPrefix: "车流密度: ",
     trafficLevels: ["标准 (20辆)", "密集 (36辆)", "极限 (52辆)"],
     camPrefix: "视角: ",
@@ -346,7 +346,7 @@ let currentLang = 'en'; // Default English as requested
 let currentMap = 'highway'; // 'highway', 'city', or original 'coast'
 let selectedMapInModal = 'highway';
 let paintIndex = 0;    // 0: Ano White, 1: Official Signature Red, etc.
-let weatherIndex = 0;  // 0: Cyber Night, 1: Cyber Neon Rain, 2: Mars Sunset Dusk
+let weatherIndex = 0;  // Night by default; keep legacy indices: night0/rain1/dusk2/day3.
 let trafficLevelIndex = 1; // 0: 20, 1: 36 (Heavy default), 2: 52
 let cameraModeIndex = 0; // 0: Chase, 1: 3D Showroom, 2: High Orbit, 3: Cockpit FPV
 let cameraZoomScale = 0.75; // Default close view (~3.9m distance in highway)
@@ -486,9 +486,10 @@ const PAINT_PRESETS = [
 const WEATHER_PRESETS = [
   {
     id: 'cyber-night',
+    menuOrder: 2,
     icon: '🌌',
-    nameEn: 'Cyber Night',
-    nameZh: '星际暗夜 (Cyber Night)',
+    nameEn: 'Night',
+    nameZh: '黑夜',
     descEn: 'Crisp deep-space starlight with high-contrast neon highway & tower reflections',
     descZh: '深邃星际夜空与高对比度霓虹灯带反射',
     bgColor: 0x070b16,
@@ -509,9 +510,10 @@ const WEATHER_PRESETS = [
   },
   {
     id: 'neon-rain',
+    menuOrder: 3,
     icon: '🌧️',
-    nameEn: 'Cyber Neon Rain',
-    nameZh: '赛博霓虹雨夜 (Neon Rain)',
+    nameEn: 'Rainy Night',
+    nameZh: '雨夜',
     descEn: 'Wet asphalt with soft, textured highlights, 3D storm rain streaks, windshield droplets & lightning thunder',
     descZh: '柔和细腻的湿沥青反光、3D疾风骤雨粒子、挡风玻璃水滴与闪电雷暴',
     bgColor: 0x040812,
@@ -532,9 +534,10 @@ const WEATHER_PRESETS = [
   },
   {
     id: 'mars-sunset',
+    menuOrder: 1,
     icon: '🌅',
-    nameEn: 'Mars Sunset Dusk',
-    nameZh: '火星落日黄昏 (Mars Sunset)',
+    nameEn: 'Dusk',
+    nameZh: '黄昏',
     descEn: 'Low-angle golden-crimson solar disc, warm amber atmospheric haze & gold canopy reflections',
     descZh: '低角度金红落日巨轮、暖琥珀大气晚霞与镀金座舱盖流光反射',
     bgColor: 0x240e16,
@@ -554,7 +557,7 @@ const WEATHER_PRESETS = [
     marsSun: true
   },
   {
-    id: 'clear-day', icon: '🏙️', nameEn: 'Clear Day', nameZh: '清朗日间',
+    id: 'clear-day', menuOrder: 0, icon: '🏙️', nameEn: 'Day', nameZh: '白天',
     descEn: 'Readable daylight, soft sky and matte roads; no visible sun disc',
     descZh: '清朗天光、柔和天空与哑光道路，不显示太阳模型',
     bgColor: 0xc7dfed, fogColor: 0xc7dfed, fogDensity: 0.00020,

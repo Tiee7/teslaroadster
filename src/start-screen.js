@@ -97,6 +97,7 @@
       preview.camera.bottom = -halfHeight;
       preview.camera.updateProjectionMatrix();
       preview.renderer.setSize(width, height, false);
+      window.RoadsterWeatherLights?.applyTo(preview.model);
       preview.renderer.render(preview.scene, preview.camera);
     } catch (_) {
       preview?.renderer.dispose();

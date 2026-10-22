@@ -1,0 +1,143 @@
+{
+  "scope": "Read-only single-seed paired CPU diagnostic; cooperative real-time deadline versus previous untimed audit, not browser/FPS validation.",
+  "sourceUnchanged": true,
+  "sourceSha256": {
+    "src/highway-traffic.js": "ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/physics-main.js": "babd286109019e68ca07351c300feda0c24197f6ad7eeee64561254117b236ff",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+    "tests/fixtures/weather-ground-traffic-baseline/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+  },
+  "currentUntimedAuditWallMs": 376118.419792,
+  "counterfactualUntimedAuditWallMs": 37224.698443,
+  "observations": [
+    {
+      "name": "current-rear-only",
+      "frames": 1200,
+      "attemptedStepCalls": 1200,
+      "simulationSeconds": 20.0,
+      "wallMs": 27910.156294999997,
+      "plannerWall": {
+        "calls": 1200,
+        "totalMs": 25789.614890000026,
+        "p50Ms": 21.36417100000017,
+        "p95Ms": 24.648746000000756,
+        "p99Ms": 26.56874499999958,
+        "maxMs": 42.847357,
+        "over20ms": 1182,
+        "over33point3ms": 3,
+        "over100ms": 0,
+        "over1000ms": 0
+      },
+      "completedStepWall": {
+        "calls": 1200,
+        "totalMs": 27884.004718000026,
+        "p50Ms": 23.073624999999993,
+        "p95Ms": 27.0552110000026,
+        "p99Ms": 29.094520000000102,
+        "maxMs": 67.54231699999998,
+        "over20ms": 1182,
+        "over33point3ms": 4,
+        "over100ms": 0,
+        "over1000ms": 0
+      },
+      "all1200FramesLive": true,
+      "firstNull": null,
+      "landings": 1,
+      "destroyed": false,
+      "warmMin": 228.75230545642182,
+      "minFuel": 4.290833333333197,
+      "finalDensity": {
+        "front": 0,
+        "behind": 33,
+        "waiting": 19
+      },
+      "impactCount": 0,
+      "maxRenderElapsedAtPlannerExitMs": 42.077314,
+      "renderTimeLimitHits": 2006
+    },
+    {
+      "name": "counterfactual-4451-forward-traffic",
+      "frames": 767,
+      "attemptedStepCalls": 768,
+      "simulationSeconds": 12.783333333333333,
+      "wallMs": 20376.169113000004,
+      "plannerWall": {
+        "calls": 767,
+        "totalMs": 16128.79925299999,
+        "p50Ms": 20.830658999999287,
+        "p95Ms": 24.27632000000085,
+        "p99Ms": 34.536371000001964,
+        "maxMs": 60.92570799999885,
+        "over20ms": 741,
+        "over33point3ms": 9,
+        "over100ms": 0,
+        "over1000ms": 0
+      },
+      "completedStepWall": {
+        "calls": 767,
+        "totalMs": 20357.02004400001,
+        "p50Ms": 26.192044999996142,
+        "p95Ms": 31.906409999995958,
+        "p99Ms": 43.3374979999935,
+        "maxMs": 86.16260600000169,
+        "over20ms": 742,
+        "over33point3ms": 27,
+        "over100ms": 0,
+        "over1000ms": 0
+      },
+      "all1200FramesLive": false,
+      "firstNull": {
+        "frame": 767,
+        "time": 12.783333333333333
+      },
+      "landings": 1,
+      "destroyed": true,
+      "warmMin": 132.09010878030261,
+      "minFuel": 8.476292143976254,
+      "finalDensity": {
+        "front": 43,
+        "behind": 5,
+        "waiting": 4
+      },
+      "impactCount": 1,
+      "maxRenderElapsedAtPlannerExitMs": 59.91217699999834,
+      "renderTimeLimitHits": 1018
+    }
+  ],
+  "findings": [
+    "Current rear-only workload completes1200frames safely in27.91s wall on this CPU, versus376.12s without injected performance; source and seed are unchanged.",
+    "Existing20ms planner limit is cooperative, not hard: current maxplanner42.85ms and maxfullstep67.54ms; oldtraffic maxplanner60.93ms/maxfullstep86.16ms. No >100ms completed calls observed in either single run.",
+    "Deadline changes available planning work and may change route decisions. Old-traffic counterfactual collides after767 live frames/12.7833s, unlike its5landing untimed run. This is not evidence that restoring front refills alone is safe under runtime budget.",
+    "No browser/GPU/FPS/thermal claims. These are single host-clock-dependent CPU runs, not deterministic frame-timing guarantees."
+  ],
+  "matchedPrefix": {
+    "frames": 767,
+    "currentStepWall": {
+      "calls": 767,
+      "p50Ms": 22.79088000000047,
+      "p95Ms": 27.27664699999991,
+      "maxMs": 67.54231699999998
+    },
+    "counterfactualStepWall": {
+      "calls": 767,
+      "p50Ms": 26.192044999996142,
+      "p95Ms": 31.906409999995958,
+      "maxMs": 86.16260600000169
+    },
+    "currentPlannerWall": {
+      "calls": 767,
+      "p50Ms": 21.317281000000094,
+      "p95Ms": 24.74308900000142,
+      "maxMs": 42.847357
+    },
+    "counterfactualPlannerWall": {
+      "calls": 767,
+      "p50Ms": 20.830658999999287,
+      "p95Ms": 24.27632000000085,
+      "maxMs": 60.92570799999885
+    }
+  },
+  "currentUntimedToTimedWallRatio": 13.476041331211757
+}

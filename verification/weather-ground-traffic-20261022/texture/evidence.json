@@ -1,0 +1,306 @@
+{
+  "scope": "Isolated original paver bytes/metre-correct patch and native Three r128 MeshStandard shader captured then rasterized by Mesa llvmpipe; not browser, device, full scene, or FPS acceptance",
+  "nativeCapabilities": {
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "version": "OpenGL ES 3.2 Mesa 25.0.7-2+deb13u1",
+    "anisotropyExtension": true,
+    "maxAnisotropy": 16.0
+  },
+  "sameTextureRgbaBytes": true,
+  "sameCommandStreamExceptAnisotropySampler": true,
+  "sameCameraGeometryUvsMipmapsMaterialShaderLighting": true,
+  "rows": [
+    {
+      "targetForwardMetres": 5,
+      "actualForwardMetresAtPixelRow": 4.993310443031382,
+      "pixelRow": 671,
+      "jointPeriodPixels": 85.93953008346945,
+      "measurements": {
+        "1": {
+          "meanLuminance": 229.82879348958332,
+          "rowStdDev": 4.953803368573367,
+          "mortarFundamentalAmplitude": 1.2799393992042838,
+          "mortarFundamentalPeakToPeak": 2.5598787984085676
+        },
+        "4": {
+          "meanLuminance": 229.86095572916668,
+          "rowStdDev": 4.848613277624514,
+          "mortarFundamentalAmplitude": 1.2947833936764108,
+          "mortarFundamentalPeakToPeak": 2.5895667873528216
+        },
+        "8": {
+          "meanLuminance": 229.86095572916668,
+          "rowStdDev": 4.848613277624514,
+          "mortarFundamentalAmplitude": 1.2947833936764108,
+          "mortarFundamentalPeakToPeak": 2.5895667873528216
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 10,
+      "actualForwardMetresAtPixelRow": 10.021520316712108,
+      "pixelRow": 511,
+      "jointPeriodPixels": 43.937427854731126,
+      "measurements": {
+        "1": {
+          "meanLuminance": 231.56846588541669,
+          "rowStdDev": 1.7677608704182852,
+          "mortarFundamentalAmplitude": 1.2167108101599078,
+          "mortarFundamentalPeakToPeak": 2.4334216203198156
+        },
+        "4": {
+          "meanLuminance": 230.5699161458333,
+          "rowStdDev": 3.598417716445795,
+          "mortarFundamentalAmplitude": 1.424381177446954,
+          "mortarFundamentalPeakToPeak": 2.848762354893908
+        },
+        "8": {
+          "meanLuminance": 230.5699161458333,
+          "rowStdDev": 3.598417716445795,
+          "mortarFundamentalAmplitude": 1.424381177446954,
+          "mortarFundamentalPeakToPeak": 2.848762354893908
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 15,
+      "actualForwardMetresAtPixelRow": 15.056975823413293,
+      "pixelRow": 456,
+      "jointPeriodPixels": 29.499205213604125,
+      "measurements": {
+        "1": {
+          "meanLuminance": 231.62382500000004,
+          "rowStdDev": 1.244808486692496,
+          "mortarFundamentalAmplitude": 1.4129173369318508,
+          "mortarFundamentalPeakToPeak": 2.8258346738637017
+        },
+        "4": {
+          "meanLuminance": 230.06309114583337,
+          "rowStdDev": 2.1614024468898902,
+          "mortarFundamentalAmplitude": 1.6314780384406704,
+          "mortarFundamentalPeakToPeak": 3.262956076881341
+        },
+        "8": {
+          "meanLuminance": 228.71413958333332,
+          "rowStdDev": 2.7808745555572374,
+          "mortarFundamentalAmplitude": 1.5015640374569672,
+          "mortarFundamentalPeakToPeak": 3.0031280749139344
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 20,
+      "actualForwardMetresAtPixelRow": 19.903232806301354,
+      "pixelRow": 429,
+      "jointPeriodPixels": 22.411350462504835,
+      "measurements": {
+        "1": {
+          "meanLuminance": 232.29845078125004,
+          "rowStdDev": 0.7916739836774233,
+          "mortarFundamentalAmplitude": 0.8913924235853965,
+          "mortarFundamentalPeakToPeak": 1.782784847170793
+        },
+        "4": {
+          "meanLuminance": 231.04120156250005,
+          "rowStdDev": 1.4507457481691568,
+          "mortarFundamentalAmplitude": 1.3086093074887617,
+          "mortarFundamentalPeakToPeak": 2.6172186149775234
+        },
+        "8": {
+          "meanLuminance": 231.04120156250005,
+          "rowStdDev": 1.4507457481691568,
+          "mortarFundamentalAmplitude": 1.3086093074887617,
+          "mortarFundamentalPeakToPeak": 2.6172186149775234
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 30,
+      "actualForwardMetresAtPixelRow": 29.746917995294794,
+      "pixelRow": 401,
+      "jointPeriodPixels": 15.06098257247604,
+      "measurements": {
+        "1": {
+          "meanLuminance": 232.5059619791667,
+          "rowStdDev": 0.36990746690929316,
+          "mortarFundamentalAmplitude": 0.00951397939404148,
+          "mortarFundamentalPeakToPeak": 0.01902795878808296
+        },
+        "4": {
+          "meanLuminance": 231.52915520833335,
+          "rowStdDev": 0.8008326772503958,
+          "mortarFundamentalAmplitude": 0.9011474193886737,
+          "mortarFundamentalPeakToPeak": 1.8022948387773474
+        },
+        "8": {
+          "meanLuminance": 231.52915520833335,
+          "rowStdDev": 0.8008326772503958,
+          "mortarFundamentalAmplitude": 0.9011474193886737,
+          "mortarFundamentalPeakToPeak": 1.8022948387773474
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 40,
+      "actualForwardMetresAtPixelRow": 40.371843333252535,
+      "pixelRow": 386,
+      "jointPeriodPixels": 11.12328548853254,
+      "measurements": {
+        "1": {
+          "meanLuminance": 232.75084999999999,
+          "rowStdDev": 0.35125782197696814,
+          "mortarFundamentalAmplitude": 0.004818434393606101,
+          "mortarFundamentalPeakToPeak": 0.009636868787212201
+        },
+        "4": {
+          "meanLuminance": 232.09482708333334,
+          "rowStdDev": 0.4345594748514367,
+          "mortarFundamentalAmplitude": 0.3593470615213654,
+          "mortarFundamentalPeakToPeak": 0.7186941230427308
+        },
+        "8": {
+          "meanLuminance": 232.09482708333334,
+          "rowStdDev": 0.4345594748514367,
+          "mortarFundamentalAmplitude": 0.3593470615213654,
+          "mortarFundamentalPeakToPeak": 0.7186941230427308
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 50,
+      "actualForwardMetresAtPixelRow": 49.830256511236584,
+      "pixelRow": 378,
+      "jointPeriodPixels": 9.02318037709596,
+      "measurements": {
+        "1": {
+          "meanLuminance": 233.04140000000004,
+          "rowStdDev": 5.684341886080802e-14,
+          "mortarFundamentalAmplitude": 7.874577775460065e-14,
+          "mortarFundamentalPeakToPeak": 1.574915555092013e-13
+        },
+        "4": {
+          "meanLuminance": 232.66838567708336,
+          "rowStdDev": 0.422799681627643,
+          "mortarFundamentalAmplitude": 0.028296025241287118,
+          "mortarFundamentalPeakToPeak": 0.056592050482574235
+        },
+        "8": {
+          "meanLuminance": 232.3111315104167,
+          "rowStdDev": 0.42613364815562776,
+          "mortarFundamentalAmplitude": 0.28954091106247026,
+          "mortarFundamentalPeakToPeak": 0.5790818221249405
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 75,
+      "actualForwardMetresAtPixelRow": 73.40796347574835,
+      "pixelRow": 367,
+      "jointPeriodPixels": 6.135535848870631,
+      "measurements": {
+        "1": {
+          "meanLuminance": 234.04140000000004,
+          "rowStdDev": 5.684341886080802e-14,
+          "mortarFundamentalAmplitude": 5.638546124320328e-14,
+          "mortarFundamentalPeakToPeak": 1.1277092248640655e-13
+        },
+        "4": {
+          "meanLuminance": 233.0937697916667,
+          "rowStdDev": 0.07222866267941941,
+          "mortarFundamentalAmplitude": 0.0006297667871509379,
+          "mortarFundamentalPeakToPeak": 0.0012595335743018758
+        },
+        "8": {
+          "meanLuminance": 233.07807526041668,
+          "rowStdDev": 0.07350180774729599,
+          "mortarFundamentalAmplitude": 0.0028176982822851766,
+          "mortarFundamentalPeakToPeak": 0.005635396564570353
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 100,
+      "actualForwardMetresAtPixelRow": 98.85348775771712,
+      "pixelRow": 361,
+      "jointPeriodPixels": 4.56045701529289,
+      "measurements": {
+        "1": {
+          "meanLuminance": 234.04140000000004,
+          "rowStdDev": 5.684341886080802e-14,
+          "mortarFundamentalAmplitude": 5.656060824245067e-14,
+          "mortarFundamentalPeakToPeak": 1.1312121648490134e-13
+        },
+        "4": {
+          "meanLuminance": 234.04140000000004,
+          "rowStdDev": 5.684341886080802e-14,
+          "mortarFundamentalAmplitude": 5.656060824245067e-14,
+          "mortarFundamentalPeakToPeak": 1.1312121648490134e-13
+        },
+        "8": {
+          "meanLuminance": 233.12034505208337,
+          "rowStdDev": 0.10450977551714419,
+          "mortarFundamentalAmplitude": 0.008808458916893245,
+          "mortarFundamentalPeakToPeak": 0.01761691783378649
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 150,
+      "actualForwardMetresAtPixelRow": 151.1490151322829,
+      "pixelRow": 355,
+      "jointPeriodPixels": 2.985378181715069,
+      "measurements": {
+        "1": {
+          "meanLuminance": 234.04215208333335,
+          "rowStdDev": 0.007330401580156477,
+          "mortarFundamentalAmplitude": 0.00017819516076987763,
+          "mortarFundamentalPeakToPeak": 0.00035639032153975527
+        },
+        "4": {
+          "meanLuminance": 234.04215208333335,
+          "rowStdDev": 0.007330401580156477,
+          "mortarFundamentalAmplitude": 0.00017819516076987763,
+          "mortarFundamentalPeakToPeak": 0.00035639032153975527
+        },
+        "8": {
+          "meanLuminance": 234.04215208333335,
+          "rowStdDev": 0.007330401580156477,
+          "mortarFundamentalAmplitude": 0.00017819516076987763,
+          "mortarFundamentalPeakToPeak": 0.00035639032153975527
+        }
+      }
+    },
+    {
+      "targetForwardMetres": 200,
+      "actualForwardMetresAtPixelRow": 205.4049297356802,
+      "pixelRow": 352,
+      "jointPeriodPixels": 2.1978387649265687,
+      "measurements": {
+        "1": {
+          "meanLuminance": 234.04647656250003,
+          "rowStdDev": 0.01845958628148025,
+          "mortarFundamentalAmplitude": 0.00017013206619910675,
+          "mortarFundamentalPeakToPeak": 0.0003402641323982135
+        },
+        "4": {
+          "meanLuminance": 234.04647656250003,
+          "rowStdDev": 0.01845958628148025,
+          "mortarFundamentalAmplitude": 0.00017013206619910675,
+          "mortarFundamentalPeakToPeak": 0.0003402641323982135
+        },
+        "8": {
+          "meanLuminance": 234.04647656250003,
+          "rowStdDev": 0.01845958628148025,
+          "mortarFundamentalAmplitude": 0.00017013206619910675,
+          "mortarFundamentalPeakToPeak": 0.0003402641323982135
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Isolated original paver patch, not full coast render",
+    "Software GL/native r128, not browser or physical device; no performance claim",
+    "No on-demand texture fetch or late mesh activation was exercised; result diagnoses minification not streaming",
+    "Anisotropy cannot recover joint detail beyond display pixel resolution; physically unresolvable distant mortar still fades"
+  ]
+}

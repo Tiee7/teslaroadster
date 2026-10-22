@@ -1,0 +1,87 @@
+{
+  "schema": "weather-ground-traffic-source-epoch-v1",
+  "baseMain": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; this iteration has no main/production authorization",
+  "inheritedRenderEpoch": "verification/render-instance-20261022/source-epoch.json",
+  "inheritedRenderEpochSha256": "ef00b4e5cbec254f0daadd69ff39141958bb31ef17120a10244dc6385197e529",
+  "baselineFixtureSourceCommit": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "baselineFixtureDirectory": "tests/fixtures/weather-ground-traffic-baseline/",
+  "baselineFixtureSourcePath": {
+    "coast-map.js": "src/coast-map.js",
+    "config.js": "src/config.js",
+    "demo-numeric-projection.js": "src/demo-numeric-projection.js",
+    "emit-browser-static-projection.mjs": "verification/demo-continuous/emit-browser-static-projection.mjs",
+    "generate-numeric-projection-kernel.mjs": "verification/demo-continuous/generate-numeric-projection-kernel.mjs",
+    "highway-traffic.js": "src/highway-traffic.js",
+    "index.html": "src/index.html",
+    "physics-main.js": "src/physics-main.js",
+    "start-screen.js": "src/start-screen.js",
+    "ui-hud.js": "src/ui-hud.js",
+    "world.js": "src/world.js"
+  },
+  "baselineFixtureSha256": {
+    "coast-map.js": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
+    "demo-numeric-projection.js": "f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b",
+    "emit-browser-static-projection.mjs": "7d81343ac9d3c4779c6502c0b2f411cfa5847b459d5028efc34df9ac9ff48bb8",
+    "generate-numeric-projection-kernel.mjs": "44b4b92b6296891233a3aa55df91e98c9080d2da7c82f7f8f13b547f66236fd1",
+    "highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+    "index.html": "4ca460865f868d06c3d92f5eacf210ff2450e5418dfc8f0a9be89be1a9bbb4f0",
+    "physics-main.js": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "start-screen.js": "c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d",
+    "ui-hud.js": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "world.js": "c58a5fd0e7ec712452dba8214178afeb58e509ee96e7fa1fa62cce61684bee23"
+  },
+  "authorizedSourceSha256": {
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/index.html": "40dc09da3943d91e1fc454af9bc0c87ffe25dac79f5a2aa8f86b6466a9e51bff",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "src/coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+    "src/highway-traffic.js": "ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a",
+    "src/physics-main.js": "babd286109019e68ca07351c300feda0c24197f6ad7eeee64561254117b236ff",
+    "src/demo-numeric-projection.js": "7e9672c800aaf1f1f26f1eb35b28a0563bbb2858afa3251da12ab49017456b3d",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "1982012a1f0495c44f51e9e81d45feb3a84406d4119ba73fbf34ba755bf72469",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "ba5af5b87a5c0d3bbd0a988e416d7d0a436a67a014640ba49b4a945e3543876e"
+  },
+  "frozenApprovedVehicleAssetSourceSha256": {
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a"
+  },
+  "frozenUnchangedSourceSha256": {
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-road-network.js": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/leaderboard.js": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "src/mobile-controls.js": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/render-diagnostics.js": "0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/styles.css": "c43efb862fe202b80977c5f04f98774e25a95d7cad31e1dd2ed696cf45898636",
+    "src/taxi.js": "9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0"
+  },
+  "scope": [
+    "Visible/cycle weather order day/dusk/night/rain, Chinese labels 白天/黄昏/黑夜/雨夜, default legacy night0 and physical rain1 retained.",
+    "Actual player/menu auxiliary SpotLights disabled in day across reset/map/menu transitions; frozen vehicle meshes/materials/scale unchanged.",
+    "Map3 ground sampler anisotropy capped by real renderer capability; original texture pixels, UVs, mipmaps and physical terrain unchanged.",
+    "Map1 expired blast/out-of-bounds traffic respawns safely behind, rejects occupied admission and does not award phantom overtakes; generated highway numeric projection follows the exact revised source epoch."
+  ],
+  "preservedFixes": [
+    "Neutral-white city instanceColor for every shared-material instanced batch.",
+    "Main-canvas context-loss safety pause/render recovery guard."
+  ],
+  "validationBoundary": "CPU/native Three source/runtime and deterministic regression tests. No claim of user-device GPU appearance, FPS or thermal acceptance."
+}

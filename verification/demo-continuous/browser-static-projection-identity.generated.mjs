@@ -33,6 +33,16 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     });
     // Continue animating blasted traffic cars during explosion aftermath!
     trafficCars.forEach((car) => {
+      // Destruction returns before the normal traffic controller. Its aftermath
+      // must still admit/retry highway NPCs behind the player, never on the road
+      // in front of the crash or inside another vehicle.
+      if (currentMap === 'highway' && car.mode === 'highway' &&
+          (car.highwayWaitingToSpawn !== undefined ||
+           (!(car.blastTimer > 0) && highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 })))) {
+        highwayTraffic.respawnBehind(car, trafficCars, LANE_CENTERS,
+          { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
+        return;
+      }
       if (car.blastTimer && car.blastTimer > 0) {
         car.blastTimer = Math.max(0, car.blastTimer - dt);
         car.mesh.position.x += car.blastVx * dt;
@@ -49,6 +59,11 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
         car.mesh.rotation.x += car.blastVPitch * dt;
         car.mesh.rotation.y += car.blastVYaw * dt;
         car.mesh.rotation.z += car.blastVRoll * dt;
+        if (currentMap === 'highway' &&
+            (car.blastTimer <= 0.01 || highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 }))) {
+          highwayTraffic.respawnBehind(car, trafficCars, LANE_CENTERS,
+            { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
+        }
       }
     });
     if (!cityOwnsDrivingSound() && !coastOwnsDrivingSound()) sound.update(0, false, false, true);
@@ -1200,7 +1215,11 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       car.mesh.rotation.x += car.blastVPitch * dt;
       car.mesh.rotation.y += car.blastVYaw * dt;
       car.mesh.rotation.z += car.blastVRoll * dt;
-      if (car.blastTimer <= 0.01) {
+      if (currentMap === 'highway' &&
+          (car.blastTimer <= 0.01 || highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 }))) {
+        highwayTraffic.respawnBehind(car, trafficCars, LANE_CENTERS,
+          { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
+      } else if (car.blastTimer <= 0.01) {
         car.y = 0.0;
         car.mesh.position.y = 0.0;
         car.mesh.rotation.x = 0.0;
@@ -1219,6 +1238,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       advanceCityTraffic(car,dt);
     }
 
+    if (currentMap === 'highway' && car.highwayWaitingToSpawn !== undefined) return;
     const dx = Math.abs(state.x - car.mesh.position.x);
     const dz = Math.abs(playerWorldZ - car.mesh.position.z);
     const npcWorldY=currentMap==='coast'||currentMap==='city'?(car.mesh.position.y||0):0;

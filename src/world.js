@@ -33,7 +33,8 @@ scene.add(rimLight);
 // Explicit renderer-only bridge: coast consumes focus without writing camera/physics.
 scene.userData.coastArtBridge = Object.freeze({
   getFocus: () => camera.position,
-  sharedLights: Object.freeze([ambientLight, dirLight, rimLight])
+  sharedLights: Object.freeze([ambientLight, dirLight, rimLight]),
+  getMaxGroundAnisotropy: () => renderer.capabilities.getMaxAnisotropy()
 });
 
 // underGlowLight removed per user request (eliminates weird blue light column under car)

@@ -9,6 +9,8 @@ const world=read('src/world.js'),source=read('src/coast-road-network.js')+'\n'+r
 const runtime=process.env.ROADSTER_THREE_RUNTIME||'/tmp/roadster-three.min.js';
 const skip=existsSync(runtime)?false:'Official production Three r128 required';
 const bridgeSource=`// Explicit renderer-only bridge: coast consumes focus without writing camera/physics.\nscene.userData.coastArtBridge = Object.freeze({\n  getFocus: () => camera.position,\n  sharedLights: Object.freeze([ambientLight, dirLight, rimLight])\n});\n\n`;
+const currentBridgeSource=bridgeSource.replace('  sharedLights: Object.freeze([ambientLight, dirLight, rimLight])','  sharedLights: Object.freeze([ambientLight, dirLight, rimLight]),\n  getMaxGroundAnisotropy: () => renderer.capabilities.getMaxAnisotropy()');
+const priorWorld=read('tests/fixtures/weather-ground-traffic-baseline/world.js');
 const sha=s=>createHash('sha256').update(s).digest('hex');
 const contract=JSON.parse(read('verification/coast-art/collision-contract.json'));
 function harness(){
@@ -32,10 +34,14 @@ function harness(){
 function lightValues(light){return {color:Array.from(light.color.toArray()),intensity:light.intensity,position:Array.from(light.position.toArray())};}
 
 test('authorized city layout and explicit renderer power/pixel policy preserve other shared world bytes and read-only coast bridge',()=>{
- assert.equal(world.split(bridgeSource).length,2);
- const begin=world.indexOf('function buildOpenWorldCity()'),end=world.indexOf('buildOpenWorldCity();')+'buildOpenWorldCity();'.length;
+ assert.equal(priorWorld.split(bridgeSource).length,2);assert.equal(world.split(currentBridgeSource).length,2);
+ assert.equal(world.replace(currentBridgeSource,bridgeSource),priorWorld,'only authorized renderer-capability getter extends production4451 world');
+ let capabilityReads=0;const bridgeScene={userData:{}},position={x:1,y:2,z:3},lights=[{},{},{}];
+ const bridgeContext=vm.createContext({scene:bridgeScene,camera:{position},ambientLight:lights[0],dirLight:lights[1],rimLight:lights[2],renderer:{capabilities:{getMaxAnisotropy(){capabilityReads++;return 16;}}}});
+ vm.runInContext(currentBridgeSource,bridgeContext);assert.equal(capabilityReads,0,'getter is lazy');assert.equal(bridgeScene.userData.coastArtBridge.getMaxGroundAnisotropy(),16);assert.equal(capabilityReads,1);assert.equal(bridgeScene.userData.coastArtBridge.getFocus(),position);assert.deepEqual(Array.from(bridgeScene.userData.coastArtBridge.sharedLights),lights);assert.ok(Object.isFrozen(bridgeScene.userData.coastArtBridge));
+ const begin=priorWorld.indexOf('function buildOpenWorldCity()'),end=priorWorld.indexOf('buildOpenWorldCity();')+'buildOpenWorldCity();'.length;
  assert.ok(begin>=0&&end>begin);
- const nonCity=world.slice(0,begin)+'// CITY_LAYOUT_OWNERSHIP_BOUNDARY\n'+world.slice(end);
+ const nonCity=priorWorld.slice(0,begin)+'// CITY_LAYOUT_OWNERSHIP_BOUNDARY\n'+priorWorld.slice(end);
  assert.equal(contract.cityRevision.baseCommit,'907a7029925d70ac1ebcd3e4e766767d599739e3');
  assert.equal(sha(nonCity.replace("powerPreference: 'default'","powerPreference: 'high-performance'").replace("Math.min(window.devicePixelRatio || 1, window.matchMedia?.('(pointer: coarse)').matches ? 1.25 : 1.5)","Math.min(window.devicePixelRatio, 2)")),contract.cityRevision.nonCityWorldSha256);
  assert.equal(Object.hasOwn(EXPECTED_SOURCE_HASHES,'src/world.js'),false);

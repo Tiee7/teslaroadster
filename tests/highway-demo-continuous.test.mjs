@@ -5,6 +5,7 @@ import {simulation,car,lanes} from './helpers/demo-harness.mjs';
 import {source} from './helpers/demo-lifecycle-harness.mjs';
 import {pool} from '../scripts/verify-demo.mjs';
 import {candidateHarness} from './helpers/demo-candidate-harness.mjs';
+import {historicalTrafficSimulation} from './helpers/demo-historical-traffic-harness.mjs';
 const drain=iterator=>{let next;do{next=iterator.next();}while(!next.done);return next.value;};
 const intervals=[1/30,1/80,1/144,1/45,1/60];
 for(const fps of [30,60,144,'irregular'])test(`two-lane escape holds one final target and steering through the intermediate center at ${fps}`,()=>{
@@ -89,8 +90,10 @@ test('landing sweep rejects the roof-rebound band even while the body envelope i
  h.step(1/60);assert.equal(h.state.y,1.4);assert.equal(h.state.vy,5.5);
 });
 
-test('dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end with a complete planned arc',()=>{
- const h=simulation({speed:0,vz:0},[],{seed:7});pool(h,52,7);
+test('historical4451 forward-refill traffic fixture: dense zero-start seed7 preserves the former12.8s complete-arc regression',()=>{
+ // Preserve every original assertion under its original constant-front stream.
+ // This is an explicit historical stress fixture, not current refill behavior.
+ const h=historicalTrafficSimulation({speed:0,vz:0},[],{seed:7});pool(h,52,7);
  let landings=0,previousY=0,longAir=0,air=0,peak=0,warmMin=Infinity,higher=false;
  for(let i=0;i<20*60;i++){
   const f=h.step(1/60);assert.ok(f,'fixed failing seed remains live');
@@ -102,6 +105,70 @@ test('dense zero-start seed7 passes the former12.8s landing-to-next-hop rear-end
  }
  assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(higher);assert.ok(landings>=3);
  assert.ok(longAir<2.4);assert.ok(peak<=10);assert.ok(warmMin>=220);
+});
+
+test('current rear-only dense zero-start seed7 stays safe for the complete20s as forward traffic clears without front refills',()=>{
+ const h=simulation({speed:0,vz:0},[],{seed:7});pool(h,52,7);
+ const identities=[...h.cars],meshes=h.cars.map(c=>c.mesh);
+ let landings=0,previousY=0,longAir=0,air=0,peak=0,warmMin=Infinity,higher=false,rearRefreshes=0,clearTailFrames=0;
+ for(let i=0;i<20*60;i++){
+  const before=h.cars.map(c=>({z:c.mesh.position.z,recycled:!!c.highwayRecycledBehind,waiting:c.highwayWaitingToSpawn!==undefined}));
+  const f=h.step(1/60);assert.ok(f,'all1200 actual frames must remain live; empty road is not an early-exit excuse');
+  if(f.frame.jump){assert.ok(f.frame.jumpHeight>=2.3&&f.frame.jumpHeight<=10);higher ||= f.frame.jumpHeight>2.3;}
+  if(f.isAirborne){assert.equal(f.frame.input.throttle,0);assert.equal(f.frame.input.boost,0);assert.equal(f.frame.input.lift,0);}
+  assert.ok(h.state.airRemaining>=0&&h.state.airRemaining<=10,'finite tank remains within its physical bounds');
+  assert.ok(Math.abs(h.state.x)<=15,'player stays on the actual30m pavement');
+  assert.ok(h.state.y>=0&&h.state.y<=10,'no below-ground or unbounded flight');
+  air=h.state.y>.005?air+1/60:0;longAir=Math.max(longAir,air);peak=Math.max(peak,h.state.y);
+  if(previousY>.005&&h.state.y===0)landings++;previousY=h.state.y;
+  if(i>=300)warmMin=Math.min(warmMin,h.state.speed*3.6);
+  let front=0;
+  for(let j=0;j<h.cars.length;j++){
+   const c=h.cars[j],old=before[j],waiting=c.highwayWaitingToSpawn!==undefined;
+   assert.equal(c,identities[j]);assert.equal(c.mesh,meshes[j]);
+   if(waiting){assert.equal(c.mesh.visible,false);assert.equal(c.mesh.position.z,510);assert.equal(c.highwayRecycledBehind,true);}
+   const refreshed=(!old.recycled&&c.highwayRecycledBehind)||(old.waiting&&!waiting)||Math.abs(c.mesh.position.z-old.z)>12;
+   if(refreshed){rearRefreshes++;assert.ok(c.mesh.position.z>65,'every observed refill/queue transition stays behind, never negative-Z ahead');assert.equal(c.highwayPassEligible,false);}
+   if(waiting||c.mesh.visible===false)continue;
+   if(c.mesh.position.z<0)front++;
+   // Same static Map1 fatal-body envelope as production. The production
+   // swept/collision path also runs in the harness and must report no impact.
+   assert.ok(Math.abs(h.state.x-c.mesh.position.x)>=1.85||Math.abs(c.mesh.position.z)>=c.length/2+2.15||h.state.y>=c.height-.15,
+    'no admitted visible NPC may overlap the low player body');
+  }
+  if(i>=15*60){assert.equal(front,0,'this finite rear-only stream really clears ahead');clearTailFrames++;}
+ }
+ assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(higher);
+ assert.ok(landings>=1,'the real high hop must finish; a clear road does not require three artificial hops');
+ assert.equal(landings,h.launches.length,'no unfinished final jump');
+ assert.ok(rearRefreshes>0);assert.equal(clearTailFrames,5*60);
+ assert.ok(longAir<2.4);assert.ok(peak<=10);assert.ok(warmMin>=220);
+});
+
+test('current rear-only real-O unit: two initial obstacle rows preserve landing, finite refill wait and an ordinary safe successor hop',()=>{
+ // Unit seam: dispatch ONLY the first already-complete validated candidate.
+ // The second hop is the ordinary planner's decision; no front cars injected.
+ const cars=lanes.flatMap((_,lane)=>[car(lane,-20,22),car(lane,-200,22)]);
+ const u=candidateHarness({speed:65,vz:-65,airRemaining:4,isFreefalling:false},cars),h=u.h;
+ const {option}=u.candidate(2.3,3);assert.ok(option);u.dispatch(option);
+ let previousY=0,landings=0,firstLandingGas=null,firstLandingTime=null,successorGas=null,successorTime=null,refillFrames=0,minSpeed=Infinity;
+ for(let i=0;i<6*60;i++){
+  const gas=h.state.airRemaining,f=h.step(1/60);assert.ok(f);
+  assert.ok(h.state.airRemaining>=0&&h.state.airRemaining<=10);assert.ok(Math.abs(h.state.x)<=15);assert.ok(h.state.y>=0&&h.state.y<=10);
+  minSpeed=Math.min(minSpeed,h.state.speed*3.6);
+  if(f.frame.jump&&h.launches.length===2){successorTime=i/60;successorGas=gas;}
+  if(f.isAirborne){assert.equal(f.frame.input.throttle,0);assert.equal(f.frame.input.boost,0);assert.equal(f.frame.input.lift,0);}
+  if(previousY>.005&&h.state.y===0){landings++;if(firstLandingGas===null){firstLandingGas=h.state.airRemaining;firstLandingTime=i/60;}}
+  if(firstLandingGas!==null&&h.state.y===0&&h.launches.length<2&&h.state.airRemaining>gas){
+   refillFrames++;assert.ok(Math.abs(h.state.airRemaining-gas-3.4/60)<1e-9,'ordinary finite ground recharge only');
+  }
+  previousY=h.state.y;
+  for(const c of h.cars)if(c.highwayRecycledBehind)assert.ok(c.mesh.position.z>65,'static rows recycle only behind');
+ }
+ assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(h.launches.length>=2);assert.ok(landings>=2);
+ assert.ok(firstLandingGas<option.requiredNextAir,'first landing actually needs the reserved refill');
+ assert.ok(refillFrames>0);assert.ok(successorTime>firstLandingTime+.4);assert.ok(successorGas>=option.requiredNextAir);
+ assert.ok(minSpeed>=220);
 });
 
 test('complete candidate real-O unit: low-tank landing reserves the real refill wait before the next launch can clear a roof',()=>{

@@ -1,0 +1,187 @@
+{
+  "scope": "Read-only differential diagnosis, one original20s52seed7 case; only NPC traffic source changed in counterfactual. No production or repo test edits.",
+  "current": {
+    "sourceSha256": {
+      "src/highway-traffic.js": "ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a",
+      "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+      "src/physics-main.js": "babd286109019e68ca07351c300feda0c24197f6ad7eeee64561254117b236ff",
+      "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+      "tests/highway-demo-continuous.test.mjs": "1cdb4b07b4004bdc1cd717e03682a4184458f8915c2311285cdf2f66204d8237"
+    },
+    "frames": 1200,
+    "cpuMs": 376118.419792,
+    "landings": 1,
+    "higher": true,
+    "longAir": 1.1333333333333342,
+    "peak": 3.2,
+    "warmMin": 228.75230545642182,
+    "minFuel": 4.290833333333197,
+    "impacts": 0,
+    "destroyed": false,
+    "airInputViolations": 0,
+    "firstImpact": null,
+    "firstDestroyed": null,
+    "firstNull": null,
+    "jumpEvents": [
+      {
+        "frame": 304,
+        "time": 5.066666666666666,
+        "height": 3.2,
+        "gas": 9.837315802845529,
+        "targetLane": 1
+      }
+    ],
+    "landingEvents": [
+      {
+        "frame": 372,
+        "time": 6.2,
+        "gas": 8.39179042849506,
+        "speedKmh": 229.27381855956853,
+        "x": -7.54715040952616
+      }
+    ],
+    "checks": {
+      "impactsZero": true,
+      "notDestroyed": true,
+      "higher": true,
+      "atLeast3Landings": false,
+      "longAirBelow2point4": true,
+      "peakAtMost10": true,
+      "warmMinAtLeast220": true,
+      "airInputNeutral": true,
+      "minFuelNonnegative": true
+    },
+    "effectiveTrafficSourceSha256": "ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a"
+  },
+  "forwardPolicy4451": {
+    "sourceSha256": {
+      "src/highway-traffic.js": "ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a",
+      "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+      "src/physics-main.js": "babd286109019e68ca07351c300feda0c24197f6ad7eeee64561254117b236ff",
+      "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
+      "tests/highway-demo-continuous.test.mjs": "1cdb4b07b4004bdc1cd717e03682a4184458f8915c2311285cdf2f66204d8237",
+      "tests/fixtures/weather-ground-traffic-baseline/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+    },
+    "frames": 1200,
+    "cpuMs": 37224.698443,
+    "landings": 5,
+    "higher": true,
+    "longAir": 1.5833333333333326,
+    "peak": 6,
+    "warmMin": 220.69761218112356,
+    "minFuel": 5.10798761585899,
+    "impacts": 0,
+    "destroyed": false,
+    "airInputViolations": 0,
+    "firstImpact": null,
+    "firstDestroyed": null,
+    "firstNull": null,
+    "jumpEvents": [
+      {
+        "frame": 305,
+        "time": 5.083333333333333,
+        "height": 2.3,
+        "gas": 9.808165694901298,
+        "targetLane": 2
+      },
+      {
+        "frame": 634,
+        "time": 10.566666666666666,
+        "height": 2.3,
+        "gas": 9.808165694901298,
+        "targetLane": 5
+      },
+      {
+        "frame": 696,
+        "time": 11.6,
+        "height": 3.2,
+        "gas": 8.814635676657627,
+        "targetLane": 3
+      },
+      {
+        "frame": 773,
+        "time": 12.883333333333333,
+        "height": 6,
+        "gas": 7.43735593453138,
+        "targetLane": 3
+      },
+      {
+        "frame": 1013,
+        "time": 16.883333333333333,
+        "height": 2.3,
+        "gas": 9.808165694901298,
+        "targetLane": 4
+      }
+    ],
+    "landingEvents": [
+      {
+        "frame": 358,
+        "time": 5.966666666666667,
+        "gas": 8.53295881064292,
+        "speedKmh": 229.2838252623706,
+        "x": -2.899633644727826
+      },
+      {
+        "frame": 687,
+        "time": 11.45,
+        "gas": 8.523986540478765,
+        "speedKmh": 282.8011255267973,
+        "x": 12.088818888314567
+      },
+      {
+        "frame": 764,
+        "time": 12.733333333333333,
+        "gas": 7.109676395235987,
+        "speedKmh": 281.1463419010865,
+        "x": 4.500098322292985
+      },
+      {
+        "frame": 868,
+        "time": 14.466666666666667,
+        "gas": 5.14798761585899,
+        "speedKmh": 278.2237807132736,
+        "x": 2.728382412763619
+      },
+      {
+        "frame": 1066,
+        "time": 17.766666666666666,
+        "gas": 8.60309505730362,
+        "speedKmh": 227.84398795804927,
+        "x": 7.155889235657719
+      }
+    ],
+    "checks": {
+      "all1200FramesLive": true,
+      "jumpHeightsWithinOriginalRange": true,
+      "impactsZero": true,
+      "notDestroyed": true,
+      "higher": true,
+      "atLeast3Landings": true,
+      "longAirBelow2point4": true,
+      "peakAtMost10": true,
+      "warmMinAtLeast220": true,
+      "airInputNeutral": true,
+      "minFuelNonnegative": true
+    },
+    "effectiveTrafficSourceSha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108"
+  },
+  "finding": "Only original landings>=3 invariant fails under requested rear-only stream; all safety/air-input/fuel/speed/height checks true. Current active front pool clears by11s and remains0; forced extra hops have no forward obstacle. Frozen4451 forward-refill traffic restores5 complete safe landings and every original assertion.",
+  "testAdapterProposal": "New isolated helper wrapper reads original frozen demo-harness source, checks exact anchors and pins hash, rewrites only traffic read to baseline4451 source plus vendor import base URL; data-URL ESM. Original helper and production files untouched.",
+  "originalFailingCase": {
+    "baseCommit": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+    "path": "tests/highway-demo-continuous.test.mjs",
+    "sha256": "1cdb4b07b4004bdc1cd717e03682a4184458f8915c2311285cdf2f66204d8237",
+    "failedInvariantOnly": "landings>=3",
+    "firstFullSuite": {
+      "tests": 1066,
+      "passed": 1065,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "postDiagnosisTests": {
+    "historicalAdapterSha256": "9c8916ac2cf6e64ba1cddc72015d2b623fa1f8d9cfdf365f0c663018c2175174",
+    "continuousTestsSha256": "004eef1c24386e6ed997c17dc653bc6aea17493877aef429e8e6e184ef06803c",
+    "coverage": "Original constant-forward seed keeps all original assertions; current rear-only20s retains all safety/fuel/speed/bounds plus behind admission; two initial rows prove actual finite refill and a safe ordinary successor hop."
+  }
+}
