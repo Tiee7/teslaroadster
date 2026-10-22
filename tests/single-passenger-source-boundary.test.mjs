@@ -7,7 +7,8 @@ const sha = value => createHash('sha256').update(value).digest('hex');
 const path = 'verification/single-passenger-20261022/source-epoch.json';
 const epoch = JSON.parse(read(path));
 const inherited = JSON.parse(read(epoch.inheritedWeatherEpoch));
-const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256 };
+const repair = JSON.parse(read('verification/traffic-ground-regressions-20261022/source-epoch.json'));
+const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256 };
 function verify(overrides = {}) {
   for (const key of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, key), 'unknown override: ' + key);
   for (const [key, want] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, key) ? overrides[key] : read(key)), want, key);
@@ -37,7 +38,7 @@ test('capacity is the sole model behavior delta; scene lifecycle, collision/fare
   };
   assert.equal(adapter(after), adapter(before));
 });
-test('every live source stays pinned; prior weather/ground/traffic, approved vehicle assets and render safeguards are unchanged', () => {
+test('every live source stays pinned through the explicit traffic repair successor; approved assets, passenger and render safeguards stay unchanged', () => {
   verify();
   const prior = { ...inherited.authorizedSourceSha256, ...inherited.frozenUnchangedSourceSha256, ...inherited.frozenApprovedVehicleAssetSourceSha256 };
   delete prior['src/taxi.js']; assert.deepEqual(epoch.frozenPreviewSourceSha256, prior);

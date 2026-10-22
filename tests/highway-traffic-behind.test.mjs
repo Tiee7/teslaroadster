@@ -73,12 +73,16 @@ test('spawn admission reserves the full radius of a rotated long wreck, not only
     Math.abs(entry.mesh.position.z - wreck.mesh.position.z) >= (3 + 4.62) / 2, 'actual yaw90 body boxes must not intersect');
 });
 
-for (const fps of [30, 60, 144]) test(`every normal road boundary refills behind and stays stable on repeated ${fps}Hz frames`, () => {
-  for (const [x, z, recycled] of [[lanes[2], -481, false], [lanes[2], 66, false], [lanes[2], 481, true], [-20, -30, false], [20, -30, false]]) {
+for (const fps of [30, 60, 144]) test(`normal longitudinal loops and true lateral incidents retain distinct placement at ${fps}Hz`, () => {
+  for (const [x, z, recycled, placement] of [[lanes[2], -481, false, 'behind'], [lanes[2], 66, false, 'ahead'],
+    [lanes[2], 481, true, 'ahead'], [-20, -30, false, 'incident'], [20, -30, false, 'incident']]) {
     const h = controller(), c = car(2, z, 20, { highwayRecycledBehind: recycled }); c.mesh.position.x = x;
     h.step([c], player(), 1 / fps, lanes, scale);
-    assert.equal(c.highwayWaitingToSpawn, undefined); assert.equal(c.highwayRecycledBehind, true);
-    assert.ok(c.mesh.position.z >= 95 && c.mesh.position.z <= 415); const admittedZ = c.mesh.position.z;
+    assert.equal(c.highwayWaitingToSpawn, undefined); assert.equal(c.highwayRecycledBehind, placement === 'incident');
+    const low = placement === 'ahead' ? -470 : placement === 'behind' ? 23 : 95;
+    const high = placement === 'ahead' ? -416 : placement === 'behind' ? 55 : 415;
+    assert.ok(c.mesh.position.z >= low && c.mesh.position.z <= high, placement);
+    const admittedZ = c.mesh.position.z;
     for (let frame = 0; frame < 2 * fps; frame++) {
       h.step([c], player(), 1 / fps, lanes, scale);
       assert.equal(c.highwayPassedThisFrame, false); assert.equal(c.mesh.position.z, admittedZ);
@@ -87,20 +91,27 @@ for (const fps of [30, 60, 144]) test(`every normal road boundary refills behind
   }
 });
 
-test('pass latch requires a genuinely forward vehicle, not birth/recycle behind or repeated rear wraps', () => {
+test('pass rewards require a genuine forward approach, not initial rear placement or an incident spawn', () => {
   const h = controller(), bornBehind = car(1, 64.9), original = car(2, -10); let passes = 0;
+  h.step([original, bornBehind], player(60), 1 / 60, lanes, scale);
+  assert.equal(bornBehind.highwayPassedThisFrame, false, 'a behind-born entry cannot manufacture a pass');
+  assert.ok(bornBehind.mesh.position.z < -400, 'ordinary first loop restores forward traffic');
   for (let frame = 0; frame < 60 * 45; frame++) {
+    const before = [original, bornBehind].map(c => ({ z:c.mesh.position.z, eligible:c.highwayPassEligible, incident:c.highwayRecycledBehind }));
     h.step([original, bornBehind], player(60), 1 / 60, lanes, scale);
-    passes += Number(original.highwayPassedThisFrame) + Number(bornBehind.highwayPassedThisFrame);
+    for (let i=0;i<2;i++) if ([original,bornBehind][i].highwayPassedThisFrame) {
+      assert.equal(before[i].eligible,true); assert.equal(before[i].incident,false); assert.ok(before[i].z<=65);
+      assert.ok([original,bornBehind][i].mesh.position.z < -400); passes++;
+    }
   }
-  assert.equal(passes, 1, 'only the original forward car was passed; repeated +480 rear exits are not rewards');
-  assert.equal(original.highwayPassEligible, false); assert.equal(bornBehind.highwayPassEligible, false);
-  // A recycled NPC can later overtake the player and become a real new pass.
-  for (let frame = 0; frame < 60 * 15 && !original.highwayPassEligible; frame++) h.step([original], player(0), 1 / 60, lanes, scale);
-  assert.equal(original.highwayPassEligible, true); assert.ok(original.mesh.position.z < -4.62);
-  let second = 0;
-  for (let frame = 0; frame < 60 * 4; frame++) { h.step([original], player(60), 1 / 60, lanes, scale); second += Number(original.highwayPassedThisFrame); }
-  assert.equal(second, 1);
+  assert.ok(passes > 4, 'legitimate later normal-loop approaches remain scoreable');
+  const incident=car(2,-30);h.respawnBehind(incident,[incident],lanes,player(60),scale);
+  for(let frame=0;frame<2*60;frame++){h.step([incident],player(60),1/60,lanes,scale);assert.equal(incident.highwayPassedThisFrame,false);}
+  assert.equal(incident.highwayPassEligible,false);
+  for(let frame=0;frame<15*60&&!incident.highwayPassEligible;frame++)h.step([incident],player(0),1/60,lanes,scale);
+  assert.equal(incident.highwayPassEligible,true);assert.ok(incident.mesh.position.z < -4.62);
+  let second=0;for(let frame=0;frame<4*60;frame++){h.step([incident],player(60),1/60,lanes,scale);second+=Number(incident.highwayPassedThisFrame);}
+  assert.equal(second,1);
 });
 
 test('52-car safe-admission queue includes wreck footprints and retries after an actual opening', () => {
@@ -117,15 +128,13 @@ test('52-car safe-admission queue includes wreck footprints and retries after an
   assert.ok(admitted > 0 && admitted < waiting.length, 'safe entries become visible, crowded entries remain hidden');
 });
 
-test('rear-only recycling deliberately lets a faster player empty the forward traffic window', () => {
-  const h = controller(), cars = Array.from({ length: 52 }, (_, i) => car(i % 6, -40 - Math.floor(i / 6) * 43, 19 + i % 25));
-  let passes = 0;
-  for (let frame = 0; frame < 45 * 30; frame++) {
-    h.step(cars, player(100), 1 / 30, lanes, scale); for (const c of cars) passes += Number(c.highwayPassedThisFrame);
-  }
-  const active = cars.filter(c => c.mesh.visible); assert.ok(active.length > 0);
-  assert.ok(active.every(c => c.mesh.position.z > 65));
-  assert.ok(passes <= 52, 'no artificial front refills or repeated rear-wrap score');
+test('frozen3417 counterexample depleted front traffic while ordinary normal loops now keep it populated', () => {
+  const broken=Function(read('tests/fixtures/traffic-ground-regression-baseline/highway-traffic.js')+'\nreturn highwayTraffic;')();
+  const seedCars=()=>Array.from({length:52},(_,i)=>car(i%6,-40-Math.floor(i/6)*43,19+i%25));
+  const before=seedCars(),after=seedCars(),fixed=controller();
+  for(let frame=0;frame<45*30;frame++){broken.step(before,player(100),1/30,lanes,scale);fixed.step(after,player(100),1/30,lanes,scale);}
+  assert.equal(before.filter(c=>c.mesh.visible&&c.mesh.position.z<0).length,0,'preserve the actual deployed depletion failure');
+  assert.ok(after.filter(c=>c.mesh.visible&&c.mesh.position.z<0).length>=20,'normal forward supply is restored, not merely total pool count');
 });
 
 test('city/coast objects are never modified by Map1-only lifecycle APIs', () => {
@@ -183,10 +192,20 @@ test('frozen production counterexamples: ordinary rear exit used to refill ahead
   const old = Function(oldTraffic + '\nreturn highwayTraffic;')(), previous = car(2, 64.9), next = structuredClone(previous);
   old.step([previous], player(60), 1 / 30, lanes, scale); controller().step([next], player(60), 1 / 30, lanes, scale);
   assert.ok(previous.mesh.position.z < -400, 'real previous road-end policy refilled forward');
-  assert.ok(next.mesh.position.z > 65, 'successor refills behind');
+  assert.ok(next.mesh.position.z < -400, 'ordinary rear exit again refills ahead, just as4451');
   const expired = car(2, -30, 20, { blastTimer: .001, blastVx: 0, blastVy: 0, blastVz: 0, blastVPitch: 0, blastVYaw: 0, blastVRoll: 0 });
   const fixed = structuredClone(expired);
   destroyed([expired], 'highway', oldPhysics, oldTraffic).tick(1 / 60); destroyed([fixed]).tick(1 / 60);
   assert.equal(expired.blastTimer, 0); assert.equal(expired.mesh.position.z, -30);
   assert.ok(fixed.mesh.position.z >= 95); assert.equal(fixed.blastTimer, 0);
+});
+
+test('a normal front-admission queue retains its direction even during the production destroyed branch', () => {
+  const h=controller(),entry=car(2,66),blockers=lanes.flatMap((_,lane)=>[-470,-430].map(z=>car(lane,z,0)));
+  h.step([entry,...blockers],player(20),1/60,lanes,scale);
+  assert.equal(entry.highwayWaitingToSpawn,true);assert.equal(entry.highwayRecycledBehind,false);assert.equal(entry.mesh.visible,false);assert.equal(entry.mesh.position.z,-510);
+  for(const c of blockers)c.mode='city';
+  const aftermath=destroyed([entry,...blockers]);aftermath.tick(1/60);
+  assert.equal(entry.highwayWaitingToSpawn,undefined);assert.equal(entry.mesh.visible,true);assert.ok(entry.mesh.position.z < -400);
+  assert.equal(entry.highwayPassEligible,true);assert.equal(aftermath.state.carsCleared,0);
 });

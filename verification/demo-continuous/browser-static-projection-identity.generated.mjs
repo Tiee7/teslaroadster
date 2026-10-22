@@ -34,12 +34,13 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
     // Continue animating blasted traffic cars during explosion aftermath!
     trafficCars.forEach((car) => {
       // Destruction returns before the normal traffic controller. Its aftermath
-      // must still admit/retry highway NPCs behind the player, never on the road
-      // in front of the crash or inside another vehicle.
+      // still retries each queue's placement policy; incident recovery stays
+      // behind the crash and never materializes inside another vehicle.
       if (currentMap === 'highway' && car.mode === 'highway' &&
           (car.highwayWaitingToSpawn !== undefined ||
            (!(car.blastTimer > 0) && highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 })))) {
-        highwayTraffic.respawnBehind(car, trafficCars, LANE_CENTERS,
+        const refill = car.highwayWaitingToSpawn !== undefined ? highwayTraffic.retrySpawn : highwayTraffic.respawnBehind;
+        refill(car, trafficCars, LANE_CENTERS,
           { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
         return;
       }

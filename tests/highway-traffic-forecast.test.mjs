@@ -57,7 +57,7 @@ for (const fps of [30, 60, 144]) for (const count of [20, 36, 52]) {
 }
 
 test('forecast initialization, reserved-lane order and safety-speed ties match exactly', () => {
-  const marker = 'return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds, respawnBehind, isOutOfBounds });';
+  const marker = 'return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds, respawnBehind, retrySpawn, isOutOfBounds });';
   assert.equal(source.split(marker).length, 2);
   const inspect = Function(`${source.replace(marker, 'return { step, forecastStep, snapshot, forecastSnapshot, leaderFor, forecastLeaderFor };')}\nreturn highwayTraffic;`)();
   for (let from = 0; from < 6; from++) for (let to = 0; to < 6; to++) for (const x of [-16.85, -12.5, -8.15, -3.15, 0, 3.15, 8.15, 12.5, 16.85]) {
@@ -85,12 +85,12 @@ test('forecastStep retains ordinary zero/negative-dt and non-six-lane behavior',
 test('52 dense cars reuse repeated waiting geometry without sharing per-driver spawn decisions', () => {
   for (const fps of [30, 60, 144]) {
     const a = [], waiting = [];
-    for (let lane = 0; lane < 6; lane++) for (const z of [95, 155, 215, 275, 335, 395])
-      a.push(car(lane, z, 64, { highwaySpeedInitialized: true, highwayRecycledBehind: true }));
-    for (let i = 0; i < 16; i++) {
-      const c = car(i % 6, 510, 12 + i * 2.3,
+    for (let lane = 0; lane < 6; lane++) for (const z of [115, 195, 275, 355, 415, -470, -430])
+      a.push(car(lane, z, 64, { highwaySpeedInitialized: true, highwayRecycledBehind: z > 65 }));
+    for (let i = 0; i < 10; i++) {
+      const c = car(i % 6, i % 2 === 0 ? -510 : 510, 12 + i * 2.3,
         { length: [3.7, 4.62, 5.4, 9.2][i % 4], driverType: i % 3 ? 'cruise' : 'racer',
-          highwayWaitingToSpawn: i % 2 === 0, highwaySpeedInitialized: true });
+          highwayWaitingToSpawn: i % 2 === 0, highwayRecycledBehind: i % 2 !== 0, highwaySpeedInitialized: true });
       c.mesh.visible = false; a.push(c); waiting.push(a.length - 1);
     }
     const b = clone(a), normal = controller(), predicted = controller();
@@ -127,10 +127,10 @@ test('runtime retry-cache preserves every car property against the independent u
   for (const fps of [30, 60, 144]) {
     const ordinary = Function(`${uncachedSource}\nreturn highwayTraffic;`)(), cached = controller();
     const a = [];
-    for (let lane = 0; lane < 6; lane++) for (const z of [95, 155, 215, 275, 335, 395])
-      a.push(car(lane, z, 64, { highwaySpeedInitialized: true, highwayRecycledBehind: true }));
-    for (let i = 0; i < 16; i++) {
-      const entry = car(i % 6, 510, 12 + i * 2.3, { highwayWaitingToSpawn: false,
+    for (let lane = 0; lane < 6; lane++) for (const z of [115, 195, 275, 355, 415, -470, -430])
+      a.push(car(lane, z, 64, { highwaySpeedInitialized: true, highwayRecycledBehind: z > 65 }));
+    for (let i = 0; i < 10; i++) {
+      const entry = car(i % 6, i % 2 === 0 ? -510 : 510, 12 + i * 2.3, { highwayWaitingToSpawn: false,
         length: [3.7, 4.62, 5.4, 9.2][i % 4], driverType: i % 3 ? 'cruise' : 'racer' });
       entry.mesh.visible = false; a.push(entry);
     }
@@ -162,7 +162,7 @@ test('captured 52-car terminal fixture traffic is exactly equivalent through rep
 });
 
 test('indexed lane queries preserve original ordinal, own-reference exclusion, lengths and speed overrides', () => {
-  const marker = 'return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds, respawnBehind, isOutOfBounds });';
+  const marker = 'return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds, respawnBehind, retrySpawn, isOutOfBounds });';
   const h = Function(`${source.replace(marker, 'return { forecastIndexLanes, leaderFor, forecastLeaderFor, safeAdjacentGap, forecastSafeAdjacentGap };')}\nreturn highwayTraffic;`)();
   const own = { car: { driverType: 'racer' }, z: 0, length: 4.62, lanes: [2], speed: 30 };
   const farLong = { z: -20, length: 14, lanes: [2], speed: 22, frontSafetySpeed: 0, rearSafetySpeed: 41 };

@@ -158,7 +158,7 @@ test('both road ends respawn safely, cancel old merge state and retain cruise sp
     assert.ok(!a.laneChange); assert.equal(a.desiredSpeed, 25); assert.ok(a.laneChangeCooldown > 2.9);
     assert.equal(a.mesh.position.x, lanes[a.laneIdx]);
     assert.ok(Math.abs(a.mesh.position.x - occupied.mesh.position.x) > 1.85 || Math.abs(a.mesh.position.z - occupied.mesh.position.z) > 24);
-    assert.ok(a.mesh.position.z > 65 && a.mesh.position.z <= 480, 'rear admission may advance through remaining substeps, but stays behind');
+    assert.ok(ahead ? a.mesh.position.z >= -475 && a.mesh.position.z <= -410 : a.mesh.position.z >= 20 && a.mesh.position.z <= 60, 'ordinary loop preserves its correct direction through remaining substeps');
     h.step([a, occupied], { ...away(), vz: -25 }, 0.01);
     assert.equal(a.highwayPassedThisFrame, false, 'a wrap scores at most once');
   }
@@ -172,13 +172,13 @@ test('rear respawn accounts for a stopped player and never spawns a fast car int
 
 test('a completely occupied respawn area waits out of view and retries without duplicate rewards', () => {
   const h = harness(), a = car(2, 64.9, 30, { highwayPassEligible: true });
-  const blockers = lanes.flatMap((_, lane) => [95, 135, 175, 215, 255, 295, 335, 375, 415].map(z => car(lane, z, 0, { highwayRecycledBehind: true })));
+  const blockers = lanes.flatMap((_, lane) => [-470, -430].map(z => car(lane, z, 0, { highwayRecycledBehind: false })));
   h.step([a, ...blockers], { ...away(), vz: -60 }, 0.05);
-  assert.equal(a.highwayPassedThisFrame, true); assert.equal(a.highwayWaitingToSpawn, false); assert.equal(a.mesh.position.z, 510); assert.equal(a.mesh.visible, false);
+  assert.equal(a.highwayPassedThisFrame, true); assert.equal(a.highwayWaitingToSpawn, true); assert.equal(a.mesh.position.z, -510); assert.equal(a.mesh.visible, false);
   h.step([a, ...blockers], { ...away(), vz: -60 }, 0.05);
-  assert.equal(a.highwayPassedThisFrame, false); assert.equal(a.highwayWaitingToSpawn, false);
+  assert.equal(a.highwayPassedThisFrame, false); assert.equal(a.highwayWaitingToSpawn, true);
   h.step([a], { ...away(), vz: -30 }, 0.05);
-  assert.equal(a.highwayWaitingToSpawn, undefined); assert.equal(a.mesh.visible, true); assert.ok(a.mesh.position.z >= 95 && a.mesh.position.z <= 415);
+  assert.equal(a.highwayWaitingToSpawn, undefined); assert.equal(a.mesh.visible, true); assert.ok(a.mesh.position.z >= -470 && a.mesh.position.z <= -416);
 });
 
 test('blast motion stays excluded from driver control, then an expired wreck refills behind', () => {

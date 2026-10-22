@@ -6,6 +6,8 @@ const successor=JSON.parse(readFileSync(new URL('../verification/weather-ground-
 // Exact production4451 and previewb580 fixtures retain historical bytes; current sources have explicit successor guards.
 const historicalSource=file=>new URL(file==='taxi'?'./fixtures/single-passenger-baseline/taxi.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':'../src/'+file+'.js',import.meta.url);
 
+const repairEpoch=JSON.parse(readFileSync(new URL('../verification/traffic-ground-regressions-20261022/source-epoch.json',import.meta.url),'utf8'));
+const weatherEpochSource=file=>readFileSync(new URL('../'+(repairEpoch.baselineSourceFixtures[file]?.path||file),import.meta.url),'utf8');
 test('driving-feedback epoch explicitly owns authorized changes and freezes prior-main baseline',()=>{
  const contract=JSON.parse(readFileSync(new URL('../verification/driving-feedback-20261021/source-epoch.json',import.meta.url)));
  const quiet=JSON.parse(readFileSync(new URL('../verification/quiet-h-brake-20261021/source-epoch.json',import.meta.url)));assert.equal(quiet.baseMain,'42db2bb744c8b4c42bebb34360030ff05cd10484');assert.equal(hash(readFileSync(new URL('../'+quiet.inheritedSourceEpoch,import.meta.url))),quiet.inheritedSourceEpochSha256);
@@ -18,7 +20,7 @@ test('driving-feedback epoch explicitly owns authorized changes and freezes prio
  for(const[file,expected]of Object.entries({...contract.currentSourceSha256,...quiet.authorizedSourceSha256,...perf.authorizedSourceSha256,...city.authorizedSourceSha256,...cyber.authorizedSourceSha256,...contact.authorizedSourceSha256,...render.inheritedDiagnosticSourceSha256,...render.authorizedSourceSha256}))assert.equal(hash(readFileSync(historicalSource(file))),expected,file);
  for(const[file,expected]of Object.entries(contract.baselineFixtureSha256))assert.equal(hash(baseline[file]),expected,file);
  assert.equal(contract.baseMain,'2efc2477d329b4aaef873a014f2dc8331a13fbc3');
- assert.equal(successor.baseMain,'4451a11c9c09d031a9da037ce63afe4bb7f062e5');assert.equal(hash(readFileSync(new URL('../'+successor.inheritedRenderEpoch,import.meta.url))),successor.inheritedRenderEpochSha256);for(const[file,expected]of Object.entries(successor.authorizedSourceSha256))assert.equal(hash(readFileSync(new URL('../'+file,import.meta.url))),expected,file);
+ assert.equal(successor.baseMain,'4451a11c9c09d031a9da037ce63afe4bb7f062e5');assert.equal(hash(readFileSync(new URL('../'+successor.inheritedRenderEpoch,import.meta.url))),successor.inheritedRenderEpochSha256);for(const[file,expected]of Object.entries(successor.authorizedSourceSha256))assert.equal(hash(weatherEpochSource(file)),expected,file);
 });
 test('historical highway planner/traffic/clock bytes remain frozen; authorized Map1 rear-respawn has a separate current epoch',()=>{
  const identities=JSON.parse(readFileSync(new URL('../verification/coast-terrain-v2/unchanged-source-identities.json',import.meta.url))).sha256;

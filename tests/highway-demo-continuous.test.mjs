@@ -92,7 +92,7 @@ test('landing sweep rejects the roof-rebound band even while the body envelope i
 
 test('historical4451 forward-refill traffic fixture: dense zero-start seed7 preserves the former12.8s complete-arc regression',()=>{
  // Preserve every original assertion under its original constant-front stream.
- // This is an explicit historical stress fixture, not current refill behavior.
+ // Explicit4451 historical stress coverage remains beside the current repaired stream.
  const h=historicalTrafficSimulation({speed:0,vz:0},[],{seed:7});pool(h,52,7);
  let landings=0,previousY=0,longAir=0,air=0,peak=0,warmMin=Infinity,higher=false;
  for(let i=0;i<20*60;i++){
@@ -107,11 +107,12 @@ test('historical4451 forward-refill traffic fixture: dense zero-start seed7 pres
  assert.ok(longAir<2.4);assert.ok(peak<=10);assert.ok(warmMin>=220);
 });
 
-test('current rear-only dense zero-start seed7 stays safe for the complete20s as forward traffic clears without front refills',()=>{
+test('current continuous dense zero-start seed7 sustains forward traffic and finishes every launched arc after at least20s',()=>{
  const h=simulation({speed:0,vz:0},[],{seed:7});pool(h,52,7);
  const identities=[...h.cars],meshes=h.cars.map(c=>c.mesh);
- let landings=0,previousY=0,longAir=0,air=0,peak=0,warmMin=Infinity,higher=false,rearRefreshes=0,clearTailFrames=0;
- for(let i=0;i<20*60;i++){
+ let landings=0,previousY=0,longAir=0,air=0,peak=0,warmMin=Infinity,higher=false,normalRefreshes=0,populatedTailFrames=0,completeFrames=0;
+ for(let i=0;i<22.5*60&&(i<20*60||h.state.y>.005);i++){
+  completeFrames++;
   const before=h.cars.map(c=>({z:c.mesh.position.z,recycled:!!c.highwayRecycledBehind,waiting:c.highwayWaitingToSpawn!==undefined}));
   const f=h.step(1/60);assert.ok(f,'all1200 actual frames must remain live; empty road is not an early-exit excuse');
   if(f.frame.jump){assert.ok(f.frame.jumpHeight>=2.3&&f.frame.jumpHeight<=10);higher ||= f.frame.jumpHeight>2.3;}
@@ -126,9 +127,9 @@ test('current rear-only dense zero-start seed7 stays safe for the complete20s as
   for(let j=0;j<h.cars.length;j++){
    const c=h.cars[j],old=before[j],waiting=c.highwayWaitingToSpawn!==undefined;
    assert.equal(c,identities[j]);assert.equal(c.mesh,meshes[j]);
-   if(waiting){assert.equal(c.mesh.visible,false);assert.equal(c.mesh.position.z,510);assert.equal(c.highwayRecycledBehind,true);}
+   if(waiting){assert.equal(c.mesh.visible,false);assert.equal(c.mesh.position.z,c.highwayWaitingToSpawn?-510:510);assert.equal(c.highwayRecycledBehind,false);}
    const refreshed=(!old.recycled&&c.highwayRecycledBehind)||(old.waiting&&!waiting)||Math.abs(c.mesh.position.z-old.z)>12;
-   if(refreshed){rearRefreshes++;assert.ok(c.mesh.position.z>65,'every observed refill/queue transition stays behind, never negative-Z ahead');assert.equal(c.highwayPassEligible,false);}
+   if(refreshed){normalRefreshes++;assert.equal(c.highwayRecycledBehind,false,'ordinary road loops are not incident recovery');if(!waiting)assert.ok(c.mesh.position.z<0||(c.mesh.position.z>=20&&c.mesh.position.z<=65),'normal front or normal rear entry');}
    if(waiting||c.mesh.visible===false)continue;
    if(c.mesh.position.z<0)front++;
    // Same static Map1 fatal-body envelope as production. The production
@@ -136,16 +137,16 @@ test('current rear-only dense zero-start seed7 stays safe for the complete20s as
    assert.ok(Math.abs(h.state.x-c.mesh.position.x)>=1.85||Math.abs(c.mesh.position.z)>=c.length/2+2.15||h.state.y>=c.height-.15,
     'no admitted visible NPC may overlap the low player body');
   }
-  if(i>=15*60){assert.equal(front,0,'this finite rear-only stream really clears ahead');clearTailFrames++;}
+  if(i>=15*60){assert.ok(front>0,'normal road traffic must remain ahead throughout the tail');populatedTailFrames++;}
  }
  assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(higher);
- assert.ok(landings>=1,'the real high hop must finish; a clear road does not require three artificial hops');
+ assert.ok(landings>=3,'continuous traffic retains repeated completed jumps, not an exhausted obstacle pool');
  assert.equal(landings,h.launches.length,'no unfinished final jump');
- assert.ok(rearRefreshes>0);assert.equal(clearTailFrames,5*60);
+ assert.ok(normalRefreshes>0);assert.ok(populatedTailFrames>=5*60);assert.ok(completeFrames>=20*60&&completeFrames<=22.5*60);
  assert.ok(longAir<2.4);assert.ok(peak<=10);assert.ok(warmMin>=220);
 });
 
-test('current rear-only real-O unit: two initial obstacle rows preserve landing, finite refill wait and an ordinary safe successor hop',()=>{
+test('current continuous real-O unit: two initial obstacle rows preserve landing, finite refill wait and an ordinary safe successor hop',()=>{
  // Unit seam: dispatch ONLY the first already-complete validated candidate.
  // The second hop is the ordinary planner's decision; no front cars injected.
  const cars=lanes.flatMap((_,lane)=>[car(lane,-20,22),car(lane,-200,22)]);
@@ -163,7 +164,7 @@ test('current rear-only real-O unit: two initial obstacle rows preserve landing,
    refillFrames++;assert.ok(Math.abs(h.state.airRemaining-gas-3.4/60)<1e-9,'ordinary finite ground recharge only');
   }
   previousY=h.state.y;
-  for(const c of h.cars)if(c.highwayRecycledBehind)assert.ok(c.mesh.position.z>65,'static rows recycle only behind');
+  for(const c of h.cars)assert.notEqual(c.highwayRecycledBehind,true,'normal obstacle rows never become incident recovery');
  }
  assert.equal(h.impacts.length,0);assert.equal(h.state.isDestroyed,false);assert.ok(h.launches.length>=2);assert.ok(landings>=2);
  assert.ok(firstLandingGas<option.requiredNextAir,'first landing actually needs the reserved refill');

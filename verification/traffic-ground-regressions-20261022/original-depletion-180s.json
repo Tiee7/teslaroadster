@@ -1,0 +1,65 @@
+{
+  "source": "tests/fixtures/traffic-ground-regression-baseline/highway-traffic.js",
+  "seconds": 180,
+  "count": 52,
+  "playerSpeedKmh": 360,
+  "firstEmptyAfter5s": 5.033333333333333,
+  "maxEmptySeconds": 175,
+  "passes": 29,
+  "samples": [
+    {
+      "seconds": 0,
+      "front": 29,
+      "live": 52,
+      "waiting": 0
+    },
+    {
+      "seconds": 1,
+      "front": 20,
+      "live": 52,
+      "waiting": 0
+    },
+    {
+      "seconds": 2,
+      "front": 13,
+      "live": 52,
+      "waiting": 0
+    },
+    {
+      "seconds": 5,
+      "front": 0,
+      "live": 33,
+      "waiting": 19
+    },
+    {
+      "seconds": 10,
+      "front": 0,
+      "live": 32,
+      "waiting": 20
+    },
+    {
+      "seconds": 30,
+      "front": 0,
+      "live": 33,
+      "waiting": 19
+    },
+    {
+      "seconds": 60,
+      "front": 0,
+      "live": 30,
+      "waiting": 22
+    },
+    {
+      "seconds": 120,
+      "front": 0,
+      "live": 30,
+      "waiting": 22
+    },
+    {
+      "seconds": 180,
+      "front": 0,
+      "live": 31,
+      "waiting": 21
+    }
+  ]
+}

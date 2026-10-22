@@ -14,9 +14,9 @@ import { isProxy } from 'node:util/types';
 const DEFAULT_REPO = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const EXPECTED_SOURCE_HASHES = Object.freeze({
   'src/config.js': 'b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13',
-  'src/physics-main.js': 'babd286109019e68ca07351c300feda0c24197f6ad7eeee64561254117b236ff',
+  'src/physics-main.js': '692713c8dcd606ed8478946aedd0af9a86ad5073b50d82f986d68072f649c4d6',
   'src/highway-demo.js': '0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07',
-  'src/highway-traffic.js': 'ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a',
+  'src/highway-traffic.js': '7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec',
   'src/ui-hud.js': '75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4',
   'src/audio.js': 'b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662',
   'tests/helpers/demo-harness.mjs': '69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff',
