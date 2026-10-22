@@ -1,6 +1,8 @@
 """Bundle src/ into the root index.html without third-party build tools."""
 from pathlib import Path
 import re
+import hashlib
+import json
 
 
 def bundle():
@@ -8,8 +10,14 @@ def bundle():
     src_dir = root / 'src'
     html = (src_dir / 'index.html').read_text(encoding='utf-8')
     css = (src_dir / 'styles.css').read_text(encoding='utf-8')
-    js_files = ['config.js', 'city-clock.js', 'city-diagnostics.js', 'driving-score.js', 'audio.js', 'music.js', 'mobile-controls.js', 'coast-road-network.js', 'coast-map.js', 'world.js', 'highway-traffic.js', 'vehicles.js', 'reference-exterior.js', 'reference-cockpit.js', 'npc-traffic-assets.js', 'reference-traffic.js', 'weather-rain.js', 'taxi.js', 'ui-hud.js', 'leaderboard.js', 'start-screen.js', 'demo-numeric-projection.js', 'highway-demo.js', 'physics-main.js']
-    bundled_js_parts = []
+    js_files = ['config.js', 'city-clock.js', 'city-diagnostics.js', 'driving-score.js', 'audio.js', 'music.js', 'mobile-controls.js', 'coast-road-network.js', 'coast-map.js', 'world.js', 'highway-traffic.js', 'vehicles.js', 'reference-exterior.js', 'reference-cockpit.js', 'npc-traffic-assets.js', 'reference-traffic.js', 'weather-rain.js', 'taxi.js', 'ui-hud.js', 'leaderboard.js', 'start-screen.js', 'demo-numeric-projection.js', 'highway-demo.js', 'physics-main.js', 'render-diagnostics.js']
+    # Deterministic source identity, not a guessed Git commit or a timestamp.
+    # The root bundle cannot hash itself; hash all of its inputs instead.
+    inputs = ['src/index.html', 'src/styles.css', 'bundle_app.py'] + ['src/' + filename for filename in js_files]
+    hashes = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in inputs}
+    identity = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    build_info = {'schema': 'roadster-source-manifest-v1', 'id': identity, 'sourceSha256': hashes}
+    bundled_js_parts = ['window.RoadsterBuildInfo=Object.freeze(' + json.dumps(build_info, sort_keys=True, separators=(',', ':')) + ');']
     for filename in js_files:
         content = (src_dir / filename).read_text(encoding='utf-8')
         bundled_js_parts.append(

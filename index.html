@@ -1295,6 +1295,7 @@ html, body {
 
   <!-- Modular Functional Scripts -->
   <script>
+window.RoadsterBuildInfo=Object.freeze({"id":"0b6ca97cbfe1eed47387ad135b6fe46704cd565ea76c8d6f712e30c543e72d89","schema":"roadster-source-manifest-v1","sourceSha256":{"bundle_app.py":"f0a7ed05c9e14433579e46c4d744d20e756dbcf94705a35ef932c5986d6f3f4c","src/audio.js":"b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662","src/city-clock.js":"49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac","src/city-diagnostics.js":"ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977","src/coast-map.js":"ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de","src/coast-road-network.js":"96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7","src/config.js":"fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4","src/demo-numeric-projection.js":"f0619bb3d1bec313a1ad612219d903fb49b0d1a5965e55d21e64e6f0faf9b90b","src/driving-score.js":"eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64","src/highway-demo.js":"0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07","src/highway-traffic.js":"faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108","src/index.html":"cbeab5ca38ce65bc3828f280c504deb4c9746faf536b00c74531a7d68c4a2223","src/leaderboard.js":"49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766","src/mobile-controls.js":"3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2","src/music.js":"2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e","src/npc-traffic-assets.js":"bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c","src/physics-main.js":"ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302","src/reference-cockpit.js":"eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2","src/reference-exterior.js":"3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782","src/reference-traffic.js":"2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a","src/render-diagnostics.js":"0bb2d17aa40e855143dc74da91edb9b70fa296a2d95e0a1146b145c1a48903c0","src/start-screen.js":"c716db5e4726bcae7830ff978fbf2302788df5f7a794d1088dd4697545b4c58d","src/styles.css":"61954e530a202464307d0424d2558993040042fafedd909ab423b451842499ef","src/taxi.js":"9c72de76b21486b8f08e5abd08bc326c1920b02362448d597feaf12ceff879d2","src/ui-hud.js":"6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05","src/vehicles.js":"d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8","src/weather-rain.js":"23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0","src/world.js":"f57b97d207769e3d14e69a18f3f2e442bb65a5f56ff6956876c68c3f945e20ae"}});
 
 // =========================================================================
 // MODULE: config.js
@@ -1911,7 +1912,7 @@ const RoadsterCityClock = (() => {
 (() => {
   const fields=['x','y','z','vx','vy','vz','yaw','pitch','roll','airRemaining','hullIntegrity','wasAirborne','throttle','brake','reverse','boost','lift','descend'];
   const capacity=96,rows=Array.from({length:capacity},()=>new Float64Array(fields.length));
-  let head=0,count=0,tick=0,seconds=0,contact=null,last=null;
+  let head=0,count=0,tick=0,seconds=0,contact=null,last=null,runtimeReader=null;
   const clone=value=>JSON.parse(JSON.stringify(value));
   function begin(state,dt,input){
     tick++;seconds+=Math.max(0,Number.isFinite(dt)?dt:0);contact=null;const row=rows[head];
@@ -1920,13 +1921,16 @@ const RoadsterCityClock = (() => {
   }
   function impact(state,deltaV,reason){
     const trace=[];for(let i=0;i<count;i++)trace.push(Array.from(rows[(head-count+i+capacity)%capacity]));
-    last={schema:'roadster-city-incident-v2',revision:'city-cyber-v2-20261021',map:'city',tick,seconds,
+    let runtime={available:false,reason:'render diagnostics not registered'};
+    if(runtimeReader)try{runtime=clone(runtimeReader({phase:'impact',contact}));}catch(error){runtime={available:false,reason:String(error?.message||error).slice(0,240)};}
+    last={schema:'roadster-city-incident-v3',revision:'city-render-diagnostics-20261021',map:'city',tick,seconds,
       contact:clone(contact||{kind:'unclassified'}),deltaV,deltaVKmh:deltaV*3.6,reason,
       pose:{x:state.x,y:state.y,z:state.z,vx:state.vx,vy:state.vy,vz:state.vz,yaw:state.yaw,pitch:state.pitch,roll:state.roll},
-      fields:fields.slice(),trace,destroyed:false};
+      fields:fields.slice(),trace,runtime,destroyed:false};
   }
   function destroy(state,reason){if(!last||last.tick!==tick)impact(state,0,reason);last.destroyed=true;last.reason=reason;last.hullIntegrity=state.hullIntegrity;}
   window.RoadsterCityDiagnostics=Object.freeze({begin,contact(value){contact=value;},impact,destroy,
+    setRuntimeReader(reader){runtimeReader=typeof reader==='function'?reader:null;},
     snapshot:()=>last?clone(last):null,reset(){head=count=0;contact=null;},
     stats:()=>({capacity,storedFrames:count,bytes:rows.reduce((n,r)=>n+r.byteLength,0),hasIncident:Boolean(last)})});
 })();
@@ -18042,6 +18046,184 @@ window.onload = () => {
   lastTime = performance.now();
   requestAnimationFrame(animate);
 };
+
+
+// =========================================================================
+// MODULE: render-diagnostics.js
+// =========================================================================
+// Local, bounded render evidence. Render callbacks certify submission attempts,
+// NOT GPU completion, unoccluded visibility, or the colour of visible pixels.
+(() => {
+  if (window.RoadsterRenderDiagnostics) return;
+  const LIMIT = 8, CHILD_LIMIT = 6, observed = new WeakMap();
+  const frame = { started: 0, finished: 0, lastFinishedFrame: null, lastStartedAt: null, lastFinishedAt: null };
+  const contextEvents = { lost: 0, restored: 0, lastLostAt: null, lastRestoredAt: null };
+  const now = () => typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : null;
+  const finite = value => Number.isFinite(value) ? value : null;
+  const short = (value, max = 256) => typeof value === 'string' ? value.slice(0, max) : value == null ? null : String(value).slice(0, max);
+  const vector = value => value ? { x: finite(value.x), y: finite(value.y), z: finite(value.z) } : null;
+  const matrix = value => value?.elements ? Array.from(value.elements).slice(0, 16).map(finite) : null;
+  const transform = object => object ? { id: object.id ?? null, name: short(object.name), visible: object.visible !== false,
+    position: vector(object.position), rotation: object.rotation ? { ...vector(object.rotation), order: short(object.rotation.order) } : null,
+    scale: vector(object.scale), matrixAutoUpdate: object.matrixAutoUpdate ?? null, matrixWorldNeedsUpdate: object.matrixWorldNeedsUpdate ?? null,
+    layers: object.layers?.mask ?? null, matrix: matrix(object.matrix), matrixWorld: matrix(object.matrixWorld) } : null;
+  const safeInfo = value => {
+    if (!value || typeof value !== 'object') return value == null ? null : short(value);
+    const result = {};
+    for (const key of Object.keys(value).slice(0, 16)) {
+      const v = value[key];
+      result[key] = typeof v === 'boolean' || typeof v === 'number' ? (typeof v === 'number' ? finite(v) : v)
+        : Array.isArray(v) ? v.slice(0, 16).map(x => typeof x === 'number' ? finite(x) : short(x)) : short(v);
+    }
+    return result;
+  };
+  function buildInfo(value) {
+    if (!value || typeof value !== 'object') return null;
+    const source = value.sourceSha256 && typeof value.sourceSha256 === 'object' ? value.sourceSha256 : {};
+    const entries = Object.entries(source).filter(([path, hash]) => /^(?:src\/[a-z0-9][a-z0-9-]*\.(?:js|html|css)|bundle_app\.py)$/.test(path)
+      && typeof hash === 'string' && /^[a-f0-9]{64}$/.test(hash)).sort(([a], [b]) => a.localeCompare(b));
+    return { schema: short(value.schema), id: short(value.id), sourceInputCount: entries.length,
+      sourceSha256: Object.fromEntries(entries.slice(0, 32)), sourceListTruncated: entries.length > 32 };
+  }
+  function ancestry(object) {
+    const chain = []; let cursor = object, visible = true, inScene = false;
+    for (let i = 0; cursor && i < 8; i++, cursor = cursor.parent) {
+      visible = visible && cursor.visible !== false;
+      if (cursor === scene) inScene = true;
+      if (i < 4) chain.push(transform(cursor));
+    }
+    return { visible, inScene, chain, truncated: Boolean(cursor) };
+  }
+  function programInfo(program) {
+    if (!program) return null;
+    const d = program.diagnostics;
+    return { id: program.id ?? null, usedTimes: finite(program.usedTimes), runnable: d ? d.runnable ?? null : null,
+      diagnosticsAvailable: Boolean(d), programLog: short(d?.programLog, 1024),
+      vertexLog: short(d?.vertexShader?.log, 1024), fragmentLog: short(d?.fragmentShader?.log, 1024) };
+  }
+  function noteProgram(record, material) {
+    // Only read renderer properties for materials whose after-render hook ran.
+    // Do not compile/link, drain GL errors, or read pixels for diagnostics.
+    if (!material || !renderer.properties?.get) return;
+    try {
+      const properties = renderer.properties.get(material);
+      record.lastProgram = properties?.program || properties?.currentProgram || null;
+    } catch (error) { record.programReadError = short(error?.message); }
+  }
+  function observe(mesh) {
+    if (!mesh || observed.has(mesh)) return;
+    const record = { before: 0, after: 0, lastBeforeFrame: null, lastAfterFrame: null, lastProgram: null };
+    observed.set(mesh, record);
+    const before = mesh.onBeforeRender, after = mesh.onAfterRender;
+    mesh.onBeforeRender = function (...args) {
+      record.before++; record.lastBeforeFrame = frame.started;
+      record.lastGeometryId = args[3]?.id ?? this.geometry?.id ?? null;
+      record.lastMaterialId = args[4]?.id ?? this.material?.id ?? null;
+      record.lastCameraId = args[2]?.id ?? null;
+      try { return typeof before === 'function' ? before.apply(this, args) : undefined; }
+      catch (error) { record.callbackError = short(error?.message); throw error; }
+    };
+    mesh.onAfterRender = function (...args) {
+      record.after++; record.lastAfterFrame = frame.started;
+      noteProgram(record, args[4] || this.material);
+      try { return typeof after === 'function' ? after.apply(this, args) : undefined; }
+      catch (error) { record.callbackError = short(error?.message); throw error; }
+    };
+  }
+  function nearby(contact) {
+    const cars = typeof trafficCars !== 'undefined' && Array.isArray(trafficCars) ? trafficCars : [];
+    const p = typeof state !== 'undefined' ? state : camera.position;
+    const ordered = cars.filter(car => car?.mesh?.position).map((car, ordinal) => ({ car, ordinal,
+      distance2: ['x', 'y', 'z'].reduce((sum, key) => sum + Math.pow((car.mesh.position[key] || 0) - (p[key] || 0), 2), 0) }))
+      .sort((a, b) => a.distance2 - b.distance2 || a.ordinal - b.ordinal);
+    const selected = ordered.slice(0, LIMIT);
+    let target = null;
+    if (contact?.kind?.startsWith('traffic') && contact.position) {
+      target = ordered.find(({ car }) => (!contact.variant || car.mesh.userData?.trafficVariant === contact.variant)
+        && ['x', 'y', 'z'].every(key => Math.abs((car.mesh.position[key] || 0) - (contact.position[key] || 0)) < 1e-4));
+      if (target && !selected.includes(target)) { if (selected.length === LIMIT) selected.pop(); selected.push(target); }
+    }
+    return { selected, target, total: cars.length };
+  }
+  function sphereTest(mesh) {
+    const sphere = mesh.geometry?.boundingSphere;
+    // intersectsObject() would compute a missing bound and mutate geometry.
+    // A missing or stale bound remains evidence, never silently recomputed.
+    if (!sphere || typeof THREE === 'undefined' || !THREE.Frustum || !THREE.Matrix4 || !sphere.clone || !mesh.matrixWorld || !camera.projectionMatrix || !camera.matrixWorldInverse) return null;
+    try {
+      const frustum = new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+      return frustum.intersectsSphere(sphere.clone().applyMatrix4(mesh.matrixWorld));
+    } catch (_) { return null; }
+  }
+  function materialInfo(material) {
+    if (!material) return null;
+    return { id: material.id ?? null, type: short(material.type), name: short(material.name), visible: material.visible !== false,
+      colorWrite: material.colorWrite !== false, transparent: Boolean(material.transparent), opacity: finite(material.opacity),
+      side: material.side ?? null, depthTest: material.depthTest ?? null, depthWrite: material.depthWrite ?? null,
+      alphaTest: finite(material.alphaTest), version: finite(material.version), clippingPlanes: material.clippingPlanes?.length || 0 };
+  }
+  function childInfo(mesh) {
+    const g = mesh.geometry, record = observed.get(mesh), parents = ancestry(mesh), sphere = g?.boundingSphere;
+    return { ...transform(mesh), ancestry: parents,
+      eligibility: { visibleInAncestors: parents.visible, attachedToScene: parents.inScene,
+        cameraLayerMatch: camera.layers && mesh.layers ? Boolean(camera.layers.mask & mesh.layers.mask) : null,
+        frustumCulled: mesh.frustumCulled ?? null, storedSphereIntersectsCamera: sphereTest(mesh) },
+      material: (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).slice(0, 4).map(materialInfo),
+      geometry: g ? { id: g.id ?? null, positionCount: g.attributes?.position?.count ?? null, indexCount: g.index?.count ?? null,
+        indexType: short(g.index?.array?.constructor?.name), drawRange: g.drawRange ? { start: finite(g.drawRange.start), count: finite(g.drawRange.count), unbounded: g.drawRange.count === Infinity } : null,
+        groups: (g.groups || []).slice(0, 8).map(group => ({ start: finite(group.start), count: finite(group.count), materialIndex: group.materialIndex ?? null })),
+        boundingSphere: sphere ? { center: vector(sphere.center), radius: finite(sphere.radius) } : null } : null,
+      submission: record ? { beforeCallbacks: record.before, afterCallbacks: record.after,
+        lastBeforeFrame: record.lastBeforeFrame, lastAfterFrame: record.lastAfterFrame,
+        lastGeometryId: record.lastGeometryId ?? null, lastMaterialId: record.lastMaterialId ?? null, lastCameraId: record.lastCameraId ?? null,
+        lastProgram: programInfo(record.lastProgram), callbackError: record.callbackError || null, programReadError: record.programReadError || null }
+        : { observed: false, reason: 'No nearby render hook has been attached yet.' } };
+  }
+  function read(request = {}) {
+    const contact = request?.contact || (request?.kind ? request : null), selection = nearby(contact);
+    let contextLost = null;
+    try { contextLost = renderer.getContext?.().isContextLost?.() ?? null; } catch (_) {}
+    const programs = renderer.info?.programs || [], failed = programs.filter(program => program.diagnostics?.runnable === false);
+    return { schema: 'roadster-render-evidence-v1', phase: short(request?.phase || 'live'),
+      limitation: 'Callbacks record CPU render/submission paths only, not GPU completion, pixel visibility, occlusion, or visual acceptance. Matrices/bounds are observed, never repaired.',
+      build: buildInfo(window.RoadsterBuildInfo), map: typeof currentMap === 'undefined' ? null : currentMap,
+      playerState: typeof state === 'undefined' ? null : { ...vector(state), yaw: finite(state.yaw), pitch: finite(state.pitch), roll: finite(state.roll), destroyed: Boolean(state.isDestroyed) },
+      scene: transform(scene), trafficGroup: typeof trafficGroup === 'undefined' ? null : transform(trafficGroup),
+      camera: { ...transform(camera), near: finite(camera.near), far: finite(camera.far), fov: finite(camera.fov),
+        projectionMatrix: matrix(camera.projectionMatrix), matrixWorldInverse: matrix(camera.matrixWorldInverse) },
+      frame: { ...frame, active: frame.started > 0 && frame.lastFinishedFrame !== frame.started, capturedAt: now() },
+      renderer: { contextLost, contextEvents: { ...contextEvents }, getErrorConsumed: false,
+        stats: safeInfo(renderer.info?.render), memory: safeInfo(renderer.info?.memory), programCount: programs.length,
+        failedProgramCount: failed.length, programs: [...failed, ...programs.filter(program => !failed.includes(program))].slice(0, 8).map(programInfo) },
+      traffic: { total: selection.total, captured: selection.selected.length, maximumCars: LIMIT, maximumChildrenPerCar: CHILD_LIMIT,
+        contactTargetMatched: Boolean(selection.target), cars: selection.selected.map(entry => {
+          const { car } = entry, mesh = car.mesh;
+          return { ordinal: entry.ordinal, contactTarget: entry === selection.target, distance: Math.sqrt(entry.distance2),
+            variant: short(mesh.userData?.trafficVariant), lod: short(mesh.userData?.trafficDetail), mode: short(car.mode),
+            velocity: { x: finite(car.vx), y: finite(car.vy), z: finite(car.vz) }, speed: finite(car.speed),
+            blastTimer: finite(car.blastTimer), cityWrapPending: Boolean(car.cityWrapPending),
+            ...transform(mesh), ancestry: ancestry(mesh), childCount: mesh.children?.length || 0,
+            children: (mesh.children || []).slice(0, CHILD_LIMIT).map(childInfo) };
+        }) } };
+  }
+  const sceneBefore = scene.onBeforeRender, sceneAfter = scene.onAfterRender;
+  scene.onBeforeRender = function (...args) {
+    frame.started++; frame.lastStartedAt = now();
+    const result = typeof sceneBefore === 'function' ? sceneBefore.apply(this, args) : undefined;
+    for (const { car } of nearby().selected) for (const child of (car.mesh.children || []).slice(0, CHILD_LIMIT)) observe(child);
+    return result;
+  };
+  scene.onAfterRender = function (...args) {
+    frame.finished++; frame.lastFinishedFrame = frame.started; frame.lastFinishedAt = now();
+    return typeof sceneAfter === 'function' ? sceneAfter.apply(this, args) : undefined;
+  };
+  const canvas = renderer.domElement;
+  canvas?.addEventListener?.('webglcontextlost', () => { contextEvents.lost++; contextEvents.lastLostAt = now(); });
+  canvas?.addEventListener?.('webglcontextrestored', () => { contextEvents.restored++; contextEvents.lastRestoredAt = now(); });
+  const registered = typeof window.RoadsterCityDiagnostics?.setRuntimeReader === 'function';
+  if (registered) window.RoadsterCityDiagnostics.setRuntimeReader(read);
+  window.RoadsterRenderDiagnostics = Object.freeze({ snapshot: () => read({ phase: 'live' }), read, registered });
+})();
 
   </script></body>
 </html>

@@ -1,0 +1,14 @@
+✔ incident2 preserves the road-middle NPC report without inventing missing render/build state (0.769132ms)
+✔ incident2 constrained motion/contact reconstruction matches the uploaded NPC collision; screen visibility remains unknown (542.286999ms)
+ℹ {"scope":"CPU constrained reproduction, not proof NPC appeared on user GPU; NPC speed/yaw and hidden rack/lateralG inferred","variant":"roadster-57bb28b4444fe141","deltaV":80.93315192421706,"poseFieldsMatched":9}
+✔ incident3 preserves the road-middle NPC report without inventing missing render/build state (0.172424ms)
+✔ incident3 constrained motion/contact reconstruction matches the uploaded NPC collision; screen visibility remains unknown (28.572289ms)
+ℹ {"scope":"CPU constrained reproduction, not proof NPC appeared on user GPU; NPC speed/yaw and hidden rack/lateralG inferred","variant":"roadster-5e3b285ce5ba2af3","deltaV":88.7963021746644,"poseFieldsMatched":9}
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 658.700837

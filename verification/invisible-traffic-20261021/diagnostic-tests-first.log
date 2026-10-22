@@ -1,0 +1,35 @@
+✔ city incident trace is bounded, copyable and stays local across reset without leaking live references (11.872339ms)
+✔ v3 incident clones bounded runtime evidence at impact and does not let a diagnostic reader break collisions (1.277449ms)
+✔ incident2 preserves the road-middle NPC report without inventing missing render/build state (1.192083ms)
+✔ incident2 constrained motion/contact reconstruction matches the uploaded NPC collision; screen visibility remains unknown (631.088303ms)
+ℹ {"scope":"CPU constrained reproduction, not proof NPC appeared on user GPU; NPC speed/yaw and hidden rack/lateralG inferred","variant":"roadster-57bb28b4444fe141","deltaV":80.93315192421706,"poseFieldsMatched":9}
+✔ incident3 preserves the road-middle NPC report without inventing missing render/build state (0.124653ms)
+✔ incident3 constrained motion/contact reconstruction matches the uploaded NPC collision; screen visibility remains unknown (37.671509ms)
+ℹ {"scope":"CPU constrained reproduction, not proof NPC appeared on user GPU; NPC speed/yaw and hidden rack/lateralG inferred","variant":"roadster-5e3b285ce5ba2af3","deltaV":88.7963021746644,"poseFieldsMatched":9}
+✔ minimal incident distinguishes inbound normal speed from already-rebounded reported pose (1.122411ms)
+✔ incident520 collider is exactly the visible opaque native rendered podium, not an invisible envelope (598.432045ms)
+✔ constrained last production-motion frame reconstructs all nine recorded pose fields and fatal contact exactly (19.112787ms)
+ℹ {"scope":"native CPU single-frame reconstruction; two hidden states inferred, not whole-run input capture or GPU driving","contact":{"kind":"building-wall","id":520,"logicalId":"cyber-4-4-1","bounds":{"minX":196,"maxX":252,"minZ":54,"maxZ":98,"minY":0,"height":23},"verifiedSolid":true,"normal":{"depth":0.12108772519466982,"x":0,"z":-1}},"deltaV":100.84105312640014,"matchedPoseFields":9}
+✔ actual frozen reference vertices reach the rendered wall before push-out; preceding and resolved poses are clear (48.796308ms)
+ℹ {"scope":"actual visible native mesh vertices, not just OBB overlap","wallZ":54,"statePose":{"maxZ":54.08246133837817,"inside":831,"foremost":"referenceFrontSplitterEdge"},"visualPose":{"maxZ":54.07768393695407,"inside":780,"foremost":"referenceFrontSplitterEdge"}}
+✔ reconstructed high-speed motion remains clear beside the podium without disabling the real wall (22.572023ms)
+✔ registers a local bounded reader and does not require diagnostics registration to expose a live snapshot (27.630282ms)
+✔ preserves scene and mesh callback this/arguments/results, observes attempts, and is idempotent (4.198815ms)
+✔ does not mistake CPU callbacks, missing callbacks, or an interrupted previous frame for visible pixels (3.669075ms)
+✔ retains the matching traffic contact even outside the nearest eight and accepts direct contact input (24.022416ms)
+✔ reports current ancestor visibility, attachment, stored matrices, layers and draw state without repairing scene objects (4.398118ms)
+✔ prioritizes bounded existing shader failures and observes context-loss events without consuming GL errors (10.337923ms)
+✔ does not swallow or replace existing render callback failures (3.307434ms)
+✔ native Three stored-sphere frustum evidence does not compute bounds or update world matrices (35.418255ms)
+✔ diagnostics code has no network/storage/pixel-read/error-draining or asset mutation path (0.407278ms)
+✔ build evidence keeps only bounded public source hashes, never stringifies nested objects (11.377411ms)
+✔ native 52-car/100-frame observer budget leaves asset bytes, materials and transforms unchanged (189.304355ms)
+ℹ {"scope":"native Three CPU callbacks only, not GPU/device FPS","cars":52,"frames":100,"baselineMs":2.164592999999968,"observedMs":8.39080899999999,"meanObserverOverheadMsPerFrame":0.06226216000000022,"snapshotMs":4.530552999999998,"snapshotJsonBytes":142106,"assetTransformSha256":"75d9db867d539eeb72b9843620171be79bbf7a6b9f63c0240988c21a14ce52a5"}
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 804.83578

@@ -1,0 +1,51 @@
+✔ continuous EW traffic pass rejects former unrotated side-gap fatal witness (39.285936ms)
+✔ continuous EW traffic pass rejects former airborne-NPC ground ghost fatal witness (20.431645ms)
+✔ a true head-on city contact still destroys at the unchanged18G threshold (10.416493ms)
+✔ continuous W parallel to building0 passes the visible0.482m gap; direct wall hits remain physical (110.225146ms)
+✔ continuous ground-start climb flies over the actual45.3m city shield, not an infinite air wall (294.325205ms)
+✔ visible low wall still collides; shape above it or beyond its finite span does not (3.152884ms)
+✔ actual NPC near/far geometry supplies one stable variant-specific city collider without changing highway/coast length (472.279141ms)
+✔ full Euler XYZ contact follows vertical/rolled visible car geometry, not a four-metre horizontal phantom (2.488575ms)
+✔ full3D city contact matrix agrees with real Three r128 Euler XYZ for pitch/yaw/roll (10.363515ms)
+✔ player contact uses actual YXZ while traffic keeps XYZ; pitched roof-corner clearance is not a wall strike (8.941019ms)
+✔ finite city wall initial overlap depenetrates once and preserves a departing rebound; parallel motion has no false impact (18.784939ms)
+✔ fast descending car cannot die inside the gentle roof cushion before any actual3D body contact (9.749651ms)
+✔ spatial broad phase never drops any rotated actual building candidate and bounds dense-city work (4167.299575ms)
+ℹ {"scope":"CPU broad phase, not device FPS/temperature","queries":1323,"allSolidParts":797,"maximumCandidates":8,"meanCandidates":2.5895691609977325,"verificationMs":4033.2707590000005}
+✔ stepped tower empty shoulder volume remains driveable, while its real podium and upper wall remain solid (1563.931237ms)
+✔ all static cyber signs share one atlas, three forward landmarks and no time-dependent upload or added lights (1.050067ms)
+✔ actual Plane UV and every original atlas glyph cell read upright, including the frozen inverted-R witness (1.637292ms)
+ℹ {"scope":"native Plane + actual compiled shader address/atlas pixels; not GPU QA","cells":2100,"legacyRWrongPixel":240,"correctRPixel":9}
+✔ city incident trace is bounded, copyable and stays local across reset without leaking live references (16.795849ms)
+✔ city keeps metre scale, six real 4 m lanes and a matching reset/NPC/stop contract (1.725862ms)
+✔ real Three r128 city layout has low mid-block frontage, recessed towers and preserved functions (413.527719ms)
+✔ all 49 city junctions expose cross traffic from four driving approaches before entry (3862.0469ms)
+✔ city lane paint is a physical 3m dash / 8m cycle with independent light paint, not a speed multiplier (86.237698ms)
+✔ 20 actual production city NPC spawns use right-side lanes on both axes (2.337463ms)
+✔ 36 actual production city NPC spawns use right-side lanes on both axes (1.831107ms)
+✔ 52 actual production city NPC spawns use right-side lanes on both axes (1.963502ms)
+✔ portrait default approach contains nearby high-rise accents without closing the road or junction sightlines (68.388473ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 30Hz; true nearby collision remains (74.884491ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 60Hz; true nearby collision remains (62.39591ms)
+✔ city seam wrap cannot spawn a fatal car into the player at 144Hz; true nearby collision remains (67.314481ms)
+✔ city seam queue waits for player and NPC space, then restores the same right-lane velocity without ghosts (2.678195ms)
+✔ city seam clearance uses actual pitched height, not a root-height exemption (2.459102ms)
+✔ coast narrow phase certifies real 3D YXZ contacts and rejects rotated broad-box corners and different decks (6.914635ms)
+✔ exact shallow-angle sweep cannot spend its budget and miss an overlapping endpoint (3.151522ms)
+✔ a real touching coast side does not convert huge tangential velocity into fatal normal damage (2.720758ms)
+✔ rotation-only coast sweep catches real contact but never treats the AABB envelope as a hit (7.387071ms)
+✔ far coast traffic rejects before OBB/SAT work; rotating sweeps return only certified contacts (67.173924ms)
+✔ pure coast yaw cannot spend recursive work on a constant positive vertical gap (3.054379ms)
+✔ approved player/NPC geometry, materials, models, scale and loading sources are frozen, not replaced to repair rendering (13.920003ms)
+✔ native close showroom preserves real roof triangles at altitude instead of cutting the car with the near plane (661.840772ms)
+✔ near cap follows actual model attitude/zoom/height, retaining far-view precision and unchanged asset payloads (19.831931ms)
+✔ actual production external camera branch applies the safe cap after camera placement; old branch clips the frozen car (16.89849ms)
+ℹ {"scope":"CPU native production camera branch, not user screenshot diagnosis","mode":1,"y":80,"zoom":0.75,"old":{"near":3.2,"clip":{"full":3077,"partial":54,"total":4992}},"candidate":{"near":0.534593605166443,"clip":{"full":0,"partial":0,"total":4992}}}
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5898.486297

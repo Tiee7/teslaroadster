@@ -1,0 +1,60 @@
+{
+  "schema": "roadster-city-incident-v2",
+  "revision": "city-cyber-v2-20261021",
+  "map": "city",
+  "tick": 1787,
+  "seconds": 29.783333333332923,
+  "contact": {
+    "kind": "traffic-body",
+    "variant": "roadster-5e3b285ce5ba2af3",
+    "position": {
+      "x": -510.8000000000111,
+      "y": 0,
+      "z": -602
+    },
+    "verifiedSolid": true,
+    "normal": {
+      "depth": 0.507784965335448,
+      "x": 0.9986768287938113,
+      "y": 0,
+      "z": 0.05142559314520947
+    }
+  },
+  "deltaV": 88.7963021746644,
+  "deltaVKmh": 319.66668782879185,
+  "reason": "crashReasonThreshold",
+  "pose": {
+    "x": -506.28672584924595,
+    "y": 0,
+    "z": -600.6585832937492,
+    "vx": 17.07460759536852,
+    "vy": 0,
+    "vz": 0.8792352020163019,
+    "yaw": 1.519348040016838,
+    "pitch": 0,
+    "roll": 0.0079883766876101
+  },
+  "destroyed": true,
+  "hullIntegrity": 0,
+  "previous": {
+    "x": -505.0881358925872,
+    "y": 0,
+    "z": -600.5968634283414,
+    "vx": -102.64724872110281,
+    "vy": 0,
+    "vz": -5.178217350239979,
+    "yaw": 1.5203923317878072,
+    "pitch": 0,
+    "roll": 0.007959552001313597,
+    "airRemaining": 0.4233333333332747,
+    "hullIntegrity": 100,
+    "wasAirborne": 0,
+    "throttle": 0,
+    "brake": 0,
+    "reverse": 0,
+    "boost": 1,
+    "lift": 0,
+    "descend": 0
+  },
+  "note": "Game telemetry only; full trace remains local. User reports NPCs invisible. This v2 record lacks camera/render/build data, so collider evidence does not establish screen visibility."
+}

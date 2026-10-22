@@ -3,7 +3,7 @@
 (() => {
   const fields=['x','y','z','vx','vy','vz','yaw','pitch','roll','airRemaining','hullIntegrity','wasAirborne','throttle','brake','reverse','boost','lift','descend'];
   const capacity=96,rows=Array.from({length:capacity},()=>new Float64Array(fields.length));
-  let head=0,count=0,tick=0,seconds=0,contact=null,last=null;
+  let head=0,count=0,tick=0,seconds=0,contact=null,last=null,runtimeReader=null;
   const clone=value=>JSON.parse(JSON.stringify(value));
   function begin(state,dt,input){
     tick++;seconds+=Math.max(0,Number.isFinite(dt)?dt:0);contact=null;const row=rows[head];
@@ -12,13 +12,16 @@
   }
   function impact(state,deltaV,reason){
     const trace=[];for(let i=0;i<count;i++)trace.push(Array.from(rows[(head-count+i+capacity)%capacity]));
-    last={schema:'roadster-city-incident-v2',revision:'city-cyber-v2-20261021',map:'city',tick,seconds,
+    let runtime={available:false,reason:'render diagnostics not registered'};
+    if(runtimeReader)try{runtime=clone(runtimeReader({phase:'impact',contact}));}catch(error){runtime={available:false,reason:String(error?.message||error).slice(0,240)};}
+    last={schema:'roadster-city-incident-v3',revision:'city-render-diagnostics-20261021',map:'city',tick,seconds,
       contact:clone(contact||{kind:'unclassified'}),deltaV,deltaVKmh:deltaV*3.6,reason,
       pose:{x:state.x,y:state.y,z:state.z,vx:state.vx,vy:state.vy,vz:state.vz,yaw:state.yaw,pitch:state.pitch,roll:state.roll},
-      fields:fields.slice(),trace,destroyed:false};
+      fields:fields.slice(),trace,runtime,destroyed:false};
   }
   function destroy(state,reason){if(!last||last.tick!==tick)impact(state,0,reason);last.destroyed=true;last.reason=reason;last.hullIntegrity=state.hullIntegrity;}
   window.RoadsterCityDiagnostics=Object.freeze({begin,contact(value){contact=value;},impact,destroy,
+    setRuntimeReader(reader){runtimeReader=typeof reader==='function'?reader:null;},
     snapshot:()=>last?clone(last):null,reset(){head=count=0;contact=null;},
     stats:()=>({capacity,storedFrames:count,bytes:rows.reduce((n,r)=>n+r.byteLength,0),hasIncident:Boolean(last)})});
 })();

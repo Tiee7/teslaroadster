@@ -1,0 +1,60 @@
+{
+  "schema": "roadster-city-incident-v2",
+  "revision": "city-cyber-v2-20261021",
+  "map": "city",
+  "tick": 1055,
+  "seconds": 17.583333333333616,
+  "contact": {
+    "kind": "traffic-body",
+    "variant": "roadster-57bb28b4444fe141",
+    "position": {
+      "x": 6,
+      "y": 0,
+      "z": -231.33333333333493
+    },
+    "verifiedSolid": true,
+    "normal": {
+      "depth": 0.685157494762958,
+      "x": 0,
+      "y": 0,
+      "z": 1
+    }
+  },
+  "deltaV": 80.93315192421706,
+  "deltaVKmh": 291.35934692718143,
+  "reason": "crashReasonThreshold",
+  "pose": {
+    "x": 6,
+    "y": 0,
+    "z": -226.80633333333492,
+    "vx": 0,
+    "vy": 0,
+    "vz": 8.326603173475974,
+    "yaw": 0,
+    "pitch": 0,
+    "roll": -3.552713678800501e-15
+  },
+  "destroyed": true,
+  "hullIntegrity": 0,
+  "previous": {
+    "x": 6,
+    "y": 0,
+    "z": -225.81427162936092,
+    "vx": 0,
+    "vy": 0,
+    "vz": -100.29981859088372,
+    "yaw": 0,
+    "pitch": 0,
+    "roll": -3.552713678800501e-15,
+    "airRemaining": 8.838333333333384,
+    "hullIntegrity": 100,
+    "wasAirborne": 0,
+    "throttle": 0,
+    "brake": 0,
+    "reverse": 0,
+    "boost": 1,
+    "lift": 0,
+    "descend": 0
+  },
+  "note": "Game telemetry only; full trace remains local. User reports NPCs invisible. This v2 record lacks camera/render/build data, so collider evidence does not establish screen visibility."
+}
