@@ -1,22 +1,22 @@
 {
   "schema": "verification-numeric-projection-prototype-v1",
   "sourceHashes": {
-    "src/config.js": "fc0d2ee01f9201cb218afab912bb64ed69ac1de786a0ca4574df9a9dbb30a0c4",
-    "src/physics-main.js": "ca6dd107d4d81f3b628d7752d1ed6422e4e2e0495263aa4768da58e739907302",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/physics-main.js": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
-    "src/highway-traffic.js": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
-    "src/ui-hud.js": "6481528ea36f007ddb206b387a263764436c11c7e3192431c60974510773ca05",
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
     "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "programSourceSha256": "b09f024d19b1d206e2614cd744e2934b9aca0d526a3f027e96c6b95b2b88be60",
+  "programSourceSha256": "e26fe5a46e6dc1b70ac1d77e31f5e320601ae806b9e89c99e51233547da45ea8",
   "segments": [
     {
       "name": "world-tank-mass-constants",
       "file": "src/config.js",
-      "begin": 20664,
-      "end": 22354,
+      "begin": 20617,
+      "end": 22307,
       "firstLine": 357,
       "lastLine": 389,
       "sourceSha256": "0993e80c745eb69e56c40c3e8cf6dd1bde4040e5479be178765848cd4852d268",
@@ -27,22 +27,22 @@
       "name": "numeric-and-busy-input-helpers",
       "file": "src/physics-main.js",
       "begin": 13995,
-      "end": 42256,
+      "end": 53472,
       "firstLine": 351,
-      "lastLine": 729,
-      "sourceSha256": "f484ce5eec200cccf6ef7ac1dcf8e005b3efe527a2fefaefd3fca3810b4461e6",
-      "emittedSha256": "f484ce5eec200cccf6ef7ac1dcf8e005b3efe527a2fefaefd3fca3810b4461e6",
+      "lastLine": 818,
+      "sourceSha256": "9902383c023ddd90b6809bda29562f9e6136a16aa64249e2c6b79a9d3e793802",
+      "emittedSha256": "9902383c023ddd90b6809bda29562f9e6136a16aa64249e2c6b79a9d3e793802",
       "transformations": []
     },
     {
       "name": "motion-gas-altitude-attitude-body",
       "file": "src/physics-main.js",
-      "begin": 45988,
-      "end": 99276,
-      "firstLine": 822,
-      "lastLine": 1810,
-      "sourceSha256": "dcb50aa2cf7fa85c580cdfe6faad4e28994dd68ff8efbc4807f6b21ec7442e29",
-      "emittedSha256": "2c71e18016defd76e613dcc487ec476ed085455f07804eee7da6b43a70c48d31",
+      "begin": 58256,
+      "end": 117796,
+      "firstLine": 927,
+      "lastLine": 1978,
+      "sourceSha256": "9b01f3b7debfc20b73caee0de2598b4ae04fec83774f80a4515401c8006b221b",
+      "emittedSha256": "c7a33d4a7bff368846b087930e3a8add284cc34ae07f403ceae6ff8e283e2631",
       "transformations": [
         "insert fail-closed guard at true highway rail branch before correction"
       ]
@@ -50,10 +50,10 @@
     {
       "name": "npc-contact-body",
       "file": "src/physics-main.js",
-      "begin": 107973,
-      "end": 115329,
-      "firstLine": 1980,
-      "lastLine": 2069,
+      "begin": 126883,
+      "end": 134239,
+      "firstLine": 2153,
+      "lastLine": 2242,
       "sourceSha256": "f4d326d34af93f9f12be82790593b92fe4a4a519da78c18b1f160cc5a3d5ece4",
       "emittedSha256": "264b15239241d510ff9d67ef28ce580904fe8b3246713f9ce5eabbb3f15f1816",
       "transformations": [
@@ -65,10 +65,10 @@
     {
       "name": "real-g-feedback-tail",
       "file": "src/physics-main.js",
-      "begin": 116370,
-      "end": 116817,
-      "firstLine": 2089,
-      "lastLine": 2094,
+      "begin": 135280,
+      "end": 135727,
+      "firstLine": 2262,
+      "lastLine": 2267,
       "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "emittedSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "transformations": []
@@ -77,11 +77,11 @@
       "name": "complete-highway-traffic-module",
       "file": "src/highway-traffic.js",
       "begin": 0,
-      "end": 25704,
+      "end": 31022,
       "firstLine": 1,
-      "lastLine": 449,
-      "sourceSha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
-      "emittedSha256": "faf6b646391504ea3661ec2e816b9b162ea3214fd0fea11c6d0f019b6cdfb108",
+      "lastLine": 534,
+      "sourceSha256": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+      "emittedSha256": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
       "transformations": []
     },
     {
@@ -98,10 +98,10 @@
     {
       "name": "numeric-jump-trigger",
       "file": "src/ui-hud.js",
-      "begin": 44839,
-      "end": 47166,
-      "firstLine": 944,
-      "lastLine": 983,
+      "begin": 45972,
+      "end": 48299,
+      "firstLine": 966,
+      "lastLine": 1005,
       "sourceSha256": "297cef1a6f773865f68230d7580b7054ad443ca62075ed43cf0b8c6b3fbbfa8b",
       "emittedSha256": "297cef1a6f773865f68230d7580b7054ad443ca62075ed43cf0b8c6b3fbbfa8b",
       "transformations": []

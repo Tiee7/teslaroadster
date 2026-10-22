@@ -1,8 +1,8 @@
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync,readdirSync}from'node:fs';import{createHash}from'node:crypto';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
+const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
 const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json')),historical=p=>read(boundary.baselineSourceFixtures[p]?.path||p);
-const sha=s=>createHash('sha256').update(s).digest('hex'),e=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json')),old=JSON.parse(read(e.inheritedHullEpoch)),pins={...e.frozenSourceSha256,...e.authorizedSourceSha256,...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256},fixture=p=>read(e.baselineSourceFixtures[p].path);
+const sha=s=>createHash('sha256').update(s).digest('hex'),e=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json')),old=JSON.parse(read(e.inheritedHullEpoch)),pins={...e.frozenSourceSha256,...e.authorizedSourceSha256,...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256},fixture=p=>read(e.baselineSourceFixtures[p].path);
 function verify(overrides={}){for(const p of Object.keys(overrides))assert.ok(Object.hasOwn(pins,p),'unknown source '+p);for(const[p,h]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:read(p)),h,p);}
 function region(s,a,b){assert.equal(s.split(a).length,2);const i=s.indexOf(a),j=s.indexOf(b,i+a.length);assert.ok(j>i);return s.slice(0,i)+s.slice(j);}
 test('stability epoch explicitly succeeds723 while preserving immutable coastal repair and exact source fixtures',()=>{

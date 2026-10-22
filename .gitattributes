@@ -1,0 +1,3 @@
+# Byte-exact historical source oracle; keep its two existing trailing-space lines.
+# SHA256 guards forbid any fixture drift; live source whitespace rules stay default.
+tests/fixtures/coast-bridge-side-baseline/physics-main.js whitespace=-blank-at-eol

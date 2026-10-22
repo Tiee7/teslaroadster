@@ -24,13 +24,41 @@
 | Coastal rotated-hull landing contact | `723ad63d8ec48e455fe5c79c66852a05ba8ce684` | https://teslaroadster-i459q867p-tiee1.vercel.app/ |
 | Attached-frame consistency and folded local problem export | `bb73a584f3e40b648ff142707d2204b45e36c459` | https://teslaroadster-5lx2qwv4s-tiee1.vercel.app/ |
 | Coastal boundary normal response | `36ae0b5811e91e36f95d052543d798a581f88881` | https://teslaroadster-3nuzlw6tj-tiee1.vercel.app/ |
+| Coastal finite pier/yaw contact | `9414c67d4706902c8b723a2b1f33fdb6e17262a9` | https://teslaroadster-gm1vi637y-tiee1.vercel.app/ |
 
-The pier-contact iteration explicitly succeeds36ae in
-`verification/coast-pier-contact-20261022/source-epoch.json`. Read PR20's current
-head and Vercel metadata for that SHA to locate its **new unique preview**. Never
-infer that a previously copied URL serves a later commit.
+The bridge-side iteration explicitly succeeds9414 in
+`verification/coast-bridge-side-contact-20261022/source-epoch.json`. Read PR20's
+current head and Vercel metadata for that SHA to locate its **new unique preview**.
+Never infer that a previously copied URL serves a later commit.
 
-## Current coastal pier-contact iteration
+## Current finite bridge-side iteration
+
+- Reproduced6 actual native side-triangle misses and3 continuous real Space/W
+  flights from independently verified nearby terrain support at30/60/144Hz.
+  No per-frame pose forcing; the60Hz supported-start witness crosses a real
+  vertical face at1.7s with32.03mm visible penetration and no previous damage.
+- Cache original finite Float32 side quads in physics, leaving every road/terrain/
+  bridge render byte and approved asset frozen. Full-YXZ existing body proxy,
+  exact constant-angle intervals and conservative rotational certificates stop
+  the true side contact, including later paid RCS, without rerunning fuel/time.
+- Preserve original structure priority/ties and pier behavior where sides stay
+  clear. Test finite endpoints/edges, normal energy, all-state underpass/rail
+  controls and genuine contact-row visible vertices; do not confuse this with
+  an exact628-mesh collision solver or original screenshot localization.
+- A partition-invariant finite-plane fix and axis-aware certificate bound close
+  actual defects found in the new implementation itself. The narrow CPU
+  >5-second-to1.68ms no-contact result is not an FPS claim. Persistent native-body
+  driving also exposed4.569ms eager-candidate numerical-motion CPU; lazy finite
+  geometry and a complete-rotation-radius broadphase reduce it to0.197ms, still
+  slightly above old9414 without side collisions (0.130ms), with all1500 per-trial
+  states exact across3 trials. Payload grows, not shrinks; original internal
+  art/road budgets remain unchanged.
+- The previous station4300 bottom-first witness is now stopped by the true side
+  shared lower edge, not by a teleport; untested interior underside cases remain
+  unproven. Exact tests, strengthened contact-row coverage and limits are in
+  `verification/coast-bridge-side-contact-20261022/regression-summary.json`.
+
+## Retained9414 coastal pier-contact iteration
 
 - Reproduced5 false fatal bridge-column contacts across legal supported W drives
   at30/60/144Hz. The unchanged actual visible model remains0.596–0.602m clear of
@@ -111,7 +139,9 @@ infer that a previously copied URL serves a later commit.
 - Keep historical source epochs and exact fixtures immutable. Add an explicit
   successor and negative drift guards; fix historical *read addresses*, not their
   frozen expected values, when a later authorized source changes.
-- Run applicable final-byte tests/build/checks. The36ae applicable baseline was
+- Run applicable final-byte tests/build/checks. The9414 applicable baseline was
+  1256 unique passes (1219 main +37 serial art; no fresh heavy planner run).
+  The36ae applicable baseline was
   1154 unique passes (1117 main +37 serial art; no fresh heavy planner run).
   The bb73 applicable baseline was
   1092 unique passes (1055 main +37 serial art; no fresh heavy planner run).

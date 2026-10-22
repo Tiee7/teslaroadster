@@ -838,19 +838,22 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   }
 
   // Top, bottom and bounded structural contacts are different events.
-  const coastStructureHit=coastWorld?.network?.sweepStructures(coastMotionStart,state);
+  const coastNetworkHit=coastWorld?.network?.sweepStructures(coastMotionStart,state);
+  const coastBridgeTranslationHit=coastWorld?coastBridgeSideContact(coastWorld,coastMotionStart,state):null;
+  const coastStructureHit=coastBridgeTranslationHit&&(!coastNetworkHit||coastBridgeTranslationHit.t<coastNetworkHit.t)?coastBridgeTranslationHit:coastNetworkHit;
   if(coastStructureHit){
     const h=coastStructureHit,t=Math.max(0,h.t-1e-5),n=h.normal;
-    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-(h.kind==='pier'?(h.angularClosingPerFraction||0)/Math.max(dt,1e-6):0),impact=Math.max(0,-inward);
+    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-((h.kind==='pier'||h.kind==='bridge-side')?(h.angularClosingPerFraction||0)/Math.max(dt,1e-6):0),impact=Math.max(0,-inward);
     state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;
     state.y=h.kind==='ceiling'?h.height-.002:coastMotionStart.y+(state.y-coastMotionStart.y)*t;
     // Resolve a real pier contact in its detected yaw, never in the future pose.
     if(h.kind==='pier'){state.yaw=coastMotionStart.yaw+wrapAnglePi(state.yaw-coastMotionStart.yaw)*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}
+    if(h.kind==='bridge-side'){for(const k of['pitch','yaw','roll'])state[k]=(coastMotionStart[k]||0)+wrapAnglePi(state[k]-(coastMotionStart[k]||0))*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}
     if(inward<0){state.vx-=1.25*inward*n.x;state.vy-=1.25*inward*n.y;state.vz-=1.25*inward*n.z;}
     if(h.kind==='ceiling'){state.isJumping6m=false;state.isAltitudeHold=false;}
     state.speed=(state.vx*-Math.sin(state.yaw)+state.vz*-Math.cos(state.yaw)>=0?1:-1)*Math.hypot(state.vx,state.vz);
     if(coastGroundAttached)state.vy=-(coastSupport.normal.x*state.vx+coastSupport.normal.z*state.vz)/coastSupport.normal.y;
-    if(h.kind!=='pier'||impact>0)triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
+    if((h.kind!=='pier'&&h.kind!=='bridge-side')||impact>0)triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
   }
   const coastLanding=coastWorld&&!coastGroundAttached?coastWorld.network.sweepLanding(coastMotionStart,state):null;
   const contactFloorY = coastWorld ? (coastGroundAttached?coastSupport.height:coastLanding?.height??(coastSurface?.water?coastSurface.height:-Infinity)) : 0;
@@ -957,6 +960,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   state.vPitch *= Math.pow(0.20, dt);
   state.vYaw *= Math.pow(0.25, dt);
 
+  const coastBridgeAttitudeStart=coastWorld?{x:state.x,y:state.y,z:state.z,pitch:state.pitch,yaw:state.yaw,roll:state.roll}:null;
   state.roll = wrapAnglePi(state.roll + state.vRoll * dt);
   // Wing attitude assist follows the same delayed stabilizer as the RCS springs.
   if (pitchInput === 0 && (stabilizerDt > 0 || !isAirborne) && Math.abs(state.speed) > 28.0) {
@@ -968,6 +972,13 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   state.pitch += state.vPitch * dt;
   const coastPierYawStart=coastWorld&&Math.abs(state.vYaw*dt)>1e-12?{x:state.x,y:state.y,z:state.z,yaw:state.yaw}:null;
   state.yaw += state.vYaw * dt;
+  // Only a real side candidate adds ordering work; the old pier-only path is
+  // byte-for-byte preserved when this finite side trajectory stays clear.
+  const coastBridgeAttitudeHit=coastBridgeAttitudeStart&&['pitch','yaw','roll'].some(k=>Math.abs(state[k]-coastBridgeAttitudeStart[k])>1e-12)?coastBridgeSideContact(coastWorld,coastBridgeAttitudeStart,state):null;
+  const coastPierBeforeSide=coastBridgeAttitudeHit&&coastPierYawStart&&Math.abs(state.yaw-coastPierYawStart.yaw)>1e-12?coastWorld.network?.sweepPiers?.(coastPierYawStart,state):null;
+  if(coastBridgeAttitudeHit&&(!coastPierBeforeSide||coastBridgeAttitudeHit.t<coastPierBeforeSide.t)){
+    coastBridgeSideResolve(coastBridgeAttitudeHit,coastBridgeAttitudeStart,dt);if(state.isDestroyed)return;
+  }else{
   // Translation/other structures retain their original phase. Only the later
   // pure-yaw trajectory needs an additional finite pier contact check.
   if(coastPierYawStart&&Math.abs(state.yaw-coastPierYawStart.yaw)>1e-12){
@@ -978,6 +989,12 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
       if(impact>0){state.vYaw=0;state.vx+=1.25*impact*n.x;state.vy+=1.25*impact*n.y;state.vz+=1.25*impact*n.z;triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;}
     }
   }
+    if(coastBridgeAttitudeHit&&coastPierBeforeSide){
+      const t=coastPierBeforeSide.t,rest={x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:coastBridgeAttitudeStart.pitch+wrapAnglePi(state.pitch-coastBridgeAttitudeStart.pitch)*t,roll:coastBridgeAttitudeStart.roll+wrapAnglePi(state.roll-coastBridgeAttitudeStart.roll)*t};
+      const hit=coastBridgeSideContact(coastWorld,rest,state);if(hit){coastBridgeSideResolve(hit,rest,dt*(1-t));if(state.isDestroyed)return;}
+    }
+  }
+
 
 
   // Complete the coast contact after attitude integration as well: a legal
