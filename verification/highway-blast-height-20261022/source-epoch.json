@@ -1,0 +1,78 @@
+{
+  "schema": "highway-blast-height-source-epoch-v1",
+  "basePreview": "6bf9a327bfd6baeba48b8a9d62c4349379a152a8",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; same PR20; keep prior unique previews",
+  "inheritedBottomEpoch": "verification/coast-bridge-bottom-contact-20261022/source-epoch.json",
+  "inheritedBottomEpochSha256": "047e8d1af68043ede0bc1ecd406773db451b6f5c3c818308504ba126c37f03c1",
+  "baselineSourceFixtures": {
+    "src/physics-main.js": {
+      "path": "tests/fixtures/highway-blast-height-baseline/physics-main.js",
+      "sha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f"
+    },
+    "src/demo-numeric-projection.js": {
+      "path": "tests/fixtures/highway-blast-height-baseline/demo-numeric-projection.js",
+      "sha256": "0291464182fe7b273241f0024c433bb030669543773eb01dd2ae6990679566d0"
+    },
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": {
+      "path": "tests/fixtures/highway-blast-height-baseline/generate-numeric-projection-kernel.mjs",
+      "sha256": "9630f64145e00e325ee14a730ef5b13bf4937cf5a581276cd0754cfb2b477595"
+    },
+    "verification/demo-continuous/emit-browser-static-projection.mjs": {
+      "path": "tests/fixtures/highway-blast-height-baseline/emit-browser-static-projection.mjs",
+      "sha256": "ca0a2f12f6a76da3804d2deae0629478689834b4f23d6f1085bdd799d518d6a6"
+    }
+  },
+  "frozenSourceSha256": {
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/render-diagnostics.js": "8254e1cbdf37ef1256726a3068f622ea70f6fb8d3be9006b0a8e069168499397",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-road-network.js": "9ad29e5666e0d753953617b3c5ccf353bdd6bff732014a34f5200c0be13e2690",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/leaderboard.js": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/styles.css": "2788eeeb0b2c79e612416b559ac73af0e6d0fa285674cd1a230f1dcb2e578774",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/index.html": "17afb2a5e025200d7a8908aad639ba47f29e1e6d317123f4c40c73ed0f6d975d",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "src/mobile-controls.js": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+    "src/taxi.js": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747"
+  },
+  "authorizedSourceSha256": {
+    "src/physics-main.js": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6",
+    "src/demo-numeric-projection.js": "dc21fea48532d3f7ad0c24040c08d54915604b2580abfd535041cb33400b9a10",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "1771f45bcc3f334b0f4ca445fe58dae052997403922cff1bfc85db2136f23038",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "af3e7a95f6032fa82d4e200e4c6d53eda64c1114d9dd75a5ccb0b01f15c4a726"
+  },
+  "collisionGuard": "    // A reset can leave the previous explosion's NPCs airborne. Reject only\n    // certified vertical separation; the old road contact/damage stays intact.\n    // Root spheres contain every orientation and the unchanged visual lean.\n    if(currentMap==='highway'&&car.blastTimer>0&&(bodyOverlap||demoSweptHit)){\n      const a=cityPlayerBody(state),b=cityTrafficBody(car),p=car.mesh.position;\n      const radius=(body,x,y,z)=>Math.hypot(...body.half)+Math.hypot(body.x-x,body.y-y,body.z-z);\n      const visualY=Math.max(0,state.y-(state.suspensionSquash||0)-(state.aeroSquash||0));\n      if(Math.abs(visualY-p.y)>radius(a,state.x,state.y,state.z)+radius(b,p.x,p.y,p.z)+1e-7)return;\n    }\n",
+  "numericProjection": {
+    "previousPhysicsSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+    "previousGeneratorSha256": "9630f64145e00e325ee14a730ef5b13bf4937cf5a581276cd0754cfb2b477595",
+    "previousProgramSha256": "9e6cad941938f73e1a066251e491216650476b1333e9f08775d8cb7cdd49dd88",
+    "currentGeneratorSha256": "1771f45bcc3f334b0f4ca445fe58dae052997403922cff1bfc85db2136f23038",
+    "currentProgramSha256": "2f7c4a3fb6cbbe90b92d63be9eebc02a4755a3c46a3a45ef3e247939607c18d7"
+  },
+  "response": {
+    "map": "highway only",
+    "condition": "positive blastTimer and existing road or demo XZ candidate",
+    "rejection": "strict vertical root-sphere separation plus1e-7 metres",
+    "bodyRadius": "existing native visible-model bounds: norm(half extents)+norm(local center)",
+    "playerVisualRoot": "unchanged max(0,state.y-suspensionSquash-aeroSquash)",
+    "preserved": "existing XZ contact, damage, blast/expiry/rear admission, reset and ordinary NPC integration byte-exact",
+    "scopeLimit": "rejection only; not a full 3D or swept highway collision rewrite"
+  },
+  "evidenceBoundary": "CPU production crash/blast/aftermath/reset/force/contact with native r128 player and archived NPC meshes; initial crash is an explicit fatal contact fixture, not a default-spawn journey, browserGPU or the unknown original coastal screenshot"
+}

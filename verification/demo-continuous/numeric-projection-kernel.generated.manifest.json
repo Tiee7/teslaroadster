@@ -2,7 +2,7 @@
   "schema": "verification-numeric-projection-prototype-v1",
   "sourceHashes": {
     "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
-    "src/physics-main.js": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+    "src/physics-main.js": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
     "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
@@ -10,7 +10,7 @@
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "programSourceSha256": "9e6cad941938f73e1a066251e491216650476b1333e9f08775d8cb7cdd49dd88",
+  "programSourceSha256": "2f7c4a3fb6cbbe90b92d63be9eebc02a4755a3c46a3a45ef3e247939607c18d7",
   "segments": [
     {
       "name": "world-tank-mass-constants",
@@ -51,11 +51,11 @@
       "name": "npc-contact-body",
       "file": "src/physics-main.js",
       "begin": 129942,
-      "end": 137298,
+      "end": 137986,
       "firstLine": 2182,
-      "lastLine": 2271,
-      "sourceSha256": "f4d326d34af93f9f12be82790593b92fe4a4a519da78c18b1f160cc5a3d5ece4",
-      "emittedSha256": "264b15239241d510ff9d67ef28ce580904fe8b3246713f9ce5eabbb3f15f1816",
+      "lastLine": 2280,
+      "sourceSha256": "d38f17180b71176bfdc29b0072e28f719359e12dba92c2366500aa2e36ad46e1",
+      "emittedSha256": "62c868d455f1ac7d83c2f30c1f296069fa90a549b3da510f5ecf3c20624c4ccd",
       "transformations": [
         "remove enclosing production trafficCars.forEach terminator only",
         "insert fail-closed guard at true roof-bounce branch before response",
@@ -65,10 +65,10 @@
     {
       "name": "real-g-feedback-tail",
       "file": "src/physics-main.js",
-      "begin": 138339,
-      "end": 138786,
-      "firstLine": 2291,
-      "lastLine": 2296,
+      "begin": 139027,
+      "end": 139474,
+      "firstLine": 2300,
+      "lastLine": 2305,
       "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "emittedSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "transformations": []

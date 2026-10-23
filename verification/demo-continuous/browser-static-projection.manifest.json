@@ -1,9 +1,9 @@
 {
   "schema": "verification-browser-static-projection-v1",
-  "numericalProgramSourceSha256": "9e6cad941938f73e1a066251e491216650476b1333e9f08775d8cb7cdd49dd88",
+  "numericalProgramSourceSha256": "2f7c4a3fb6cbbe90b92d63be9eebc02a4755a3c46a3a45ef3e247939607c18d7",
   "sourceHashes": {
     "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
-    "src/physics-main.js": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+    "src/physics-main.js": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
     "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
@@ -11,7 +11,7 @@
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "nodeGeneratorSha256": "9630f64145e00e325ee14a730ef5b13bf4937cf5a581276cd0754cfb2b477595",
+  "nodeGeneratorSha256": "1771f45bcc3f334b0f4ca445fe58dae052997403922cff1bfc85db2136f23038",
   "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
   "mathProfiles": [
     {
@@ -25,8 +25,8 @@
   ],
   "functionSources": {
     "updateSimulation": {
-      "sha256": "0a951cc9de5dac447e6e63543d41ff8ab109b24d94e480a25693fa4eed5a7bc7",
-      "length": 104646
+      "sha256": "c61df61f8b0f7d8e5697ccc8815e3c88a491d1c74ec09de7943393f26f5787e1",
+      "length": 105334
     },
     "wrapAnglePi": {
       "sha256": "4a43189ee76d5927e870e14a61a5de8fe71d91dcb8c3a5996d52adc61fa19c52",
@@ -133,11 +133,11 @@
       "name": "npc-contact-body",
       "file": "src/physics-main.js",
       "begin": 129942,
-      "end": 137298,
+      "end": 137986,
       "firstLine": 2182,
-      "lastLine": 2271,
-      "sourceSha256": "f4d326d34af93f9f12be82790593b92fe4a4a519da78c18b1f160cc5a3d5ece4",
-      "emittedSha256": "264b15239241d510ff9d67ef28ce580904fe8b3246713f9ce5eabbb3f15f1816",
+      "lastLine": 2280,
+      "sourceSha256": "d38f17180b71176bfdc29b0072e28f719359e12dba92c2366500aa2e36ad46e1",
+      "emittedSha256": "62c868d455f1ac7d83c2f30c1f296069fa90a549b3da510f5ecf3c20624c4ccd",
       "transformations": [
         "remove enclosing production trafficCars.forEach terminator only",
         "insert fail-closed guard at true roof-bounce branch before response",
@@ -147,10 +147,10 @@
     {
       "name": "real-g-feedback-tail",
       "file": "src/physics-main.js",
-      "begin": 138339,
-      "end": 138786,
-      "firstLine": 2291,
-      "lastLine": 2296,
+      "begin": 139027,
+      "end": 139474,
+      "firstLine": 2300,
+      "lastLine": 2305,
       "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "emittedSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "transformations": []

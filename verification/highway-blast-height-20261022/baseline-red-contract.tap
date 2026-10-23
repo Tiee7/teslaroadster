@@ -1,0 +1,164 @@
+TAP version 13
+# Subtest: 6bf9 reset player must survive the vertically separated blasted NPC (30Hz,delay0)
+not ok 1 - 6bf9 reset player must survive the vertically separated blasted NPC (30Hz,delay0)
+  ---
+  duration_ms: 1135.043054
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:54'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:207)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: 6bf9 reset player must survive the vertically separated blasted NPC (30Hz,delay0.2)
+not ok 2 - 6bf9 reset player must survive the vertically separated blasted NPC (30Hz,delay0.2)
+  ---
+  duration_ms: 9.48765
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:54'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:207)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: 6bf9 reset player must survive the vertically separated blasted NPC (60Hz,delay0)
+not ok 3 - 6bf9 reset player must survive the vertically separated blasted NPC (60Hz,delay0)
+  ---
+  duration_ms: 11.972673
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:54'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:207)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: 6bf9 reset player must survive the vertically separated blasted NPC (60Hz,delay0.2)
+not ok 4 - 6bf9 reset player must survive the vertically separated blasted NPC (60Hz,delay0.2)
+  ---
+  duration_ms: 12.80089
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:54'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:207)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: 6bf9 reset player must survive the vertically separated blasted NPC (144Hz,delay0)
+not ok 5 - 6bf9 reset player must survive the vertically separated blasted NPC (144Hz,delay0)
+  ---
+  duration_ms: 27.55598
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:54'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:207)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: 6bf9 reset player must survive the vertically separated blasted NPC (144Hz,delay0.2)
+not ok 6 - 6bf9 reset player must survive the vertically separated blasted NPC (144Hz,delay0.2)
+  ---
+  duration_ms: 22.978157
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:54'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/verification/highway-blast-height-20261022/baseline-red-contract.mjs:5:207)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 0
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1360.665474

@@ -1,0 +1,18 @@
+{
+  "files": {
+    "baseline-red-contract.tap": {
+      "bytes": 7061,
+      "sha256": "5dd872c64c9a75bcc454b7c76514dcc71775eee52979bba31c31a69cb30e22dc"
+    },
+    "initial-coast-map-file-sigkill.tap": {
+      "bytes": 355,
+      "sha256": "caff21751eb8bd6383ced9e2cd1e3c31116b387b71ab7b7c36dba70342ea28dd"
+    }
+  },
+  "fullBatchRedLog": "/workspace/shared/tesla-hourly-20261022-2338/final-main.tap",
+  "serialSameSourceGreenLog": "/workspace/shared/tesla-hourly-20261022-2338/final-coast-map-serial.tap",
+  "testAssertionsChangedAfterFailure": false,
+  "runtimeBytesChangedAfterFailure": false,
+  "cause": "Observed SIGKILL only; no OOM cause asserted.",
+  "localToolDebugging": "Manifest read-path typo fixed before tests started; abandoned expensive character diff canceled and replaced by exact validated line/character patching. No publication side effects."
+}

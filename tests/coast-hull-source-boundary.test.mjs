@@ -9,7 +9,7 @@ const stability=JSON.parse(read('verification/drive-stability-20261022/source-ep
 const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),bridgeBottom=JSON.parse(read('verification/coast-bridge-bottom-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
 const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json'));
 const historical=p=>read(stability.baselineSourceFixtures[p]?.path||bridgeBottom.baselineSourceFixtures[p]?.path||p);
-const pins={...epoch.frozenSourceSha256,...epoch.authorizedSourceSha256,...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256};
+const pins={...epoch.frozenSourceSha256,...epoch.authorizedSourceSha256,...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256};
 function verify(overrides={}){
  for(const p of Object.keys(overrides))assert.ok(Object.hasOwn(pins,p),'unknown source '+p);
  for(const [p,h]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:read(p)),h,p);

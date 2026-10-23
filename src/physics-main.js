@@ -2217,6 +2217,15 @@ function updateSimulation(dt, presentationDt = dt) {
     const citySolidContact=cityNear&&cityContactInterval(cityPlayer,cityNpc)!==null;
     const cityBodyOverlap=cityNear&&(cityRoofTouch||citySolidContact);
     const bodyOverlap = currentMap==='city'?cityBodyOverlap:dx < 1.85 && dz < (car.length / 2 + 2.15);
+    // A reset can leave the previous explosion's NPCs airborne. Reject only
+    // certified vertical separation; the old road contact/damage stays intact.
+    // Root spheres contain every orientation and the unchanged visual lean.
+    if(currentMap==='highway'&&car.blastTimer>0&&(bodyOverlap||demoSweptHit)){
+      const a=cityPlayerBody(state),b=cityTrafficBody(car),p=car.mesh.position;
+      const radius=(body,x,y,z)=>Math.hypot(...body.half)+Math.hypot(body.x-x,body.y-y,body.z-z);
+      const visualY=Math.max(0,state.y-(state.suspensionSquash||0)-(state.aeroSquash||0));
+      if(Math.abs(visualY-p.y)>radius(a,state.x,state.y,state.z)+radius(b,p.x,p.y,p.z)+1e-7)return;
+    }
     if (bodyOverlap || demoSweptHit) {
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0 && (currentMap!=='city'||citySolidContact)) {

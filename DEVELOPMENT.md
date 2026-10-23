@@ -33,6 +33,26 @@ current head and Vercel metadata for that SHA to locate its **new unique preview
 The retained side epoch succeeds 9414. Never infer that a previously copied URL
 serves a later commit.
 
+## Current highway airborne-wreck iteration
+
+- Succeeds6bf9; read `verification/highway-blast-height-20261022/README.md` and
+  immutable source epoch. Actual explosion/aftermath/reset plus uninterrupted
+  W/semicolon replays falsely killed the player while native meshes remained
+  10.65–15.57m vertically separated at30/60/144Hz. Initial fatal contact is an
+  explicit fixture, presentation/RNG isolated; not a default-spawn journey.
+- Add only a conservative orientation-independent root-sphere vertical rejection
+  for existing positive-blast highway XZ candidates. Preserve all original damage,
+  force, genuine contact, traffic, blast/expiry/reset and incident-rear recovery.
+  No complete highway3D/swept collision, GPU/FPS or original-screenshot fix claim.
+- The bottom/side/pier/boundary repairs remain immutable. Prior READY preview
+  https://teslaroadster-1x75kvaif-tiee1.vercel.app/ serves6bf9 and stays retained.
+- Final applicable joint coverage:1376 unique passes (1302 main +19 unchanged
+  coast-map serial +18 terrain +37 art),0 skips. Original coast-map file SIGKILL
+  retained; no runtime/test input changed and all276 hashes stayed exact. This is
+  not one clean full batch;12 unchanged long planner files retain prior baseline.
+- Final regression and new independent preview are identified by this epoch's
+  report and PR20 metadata; never infer a moving alias serves the tested commit.
+
 ## Current finite bridge-bottom iteration
 
 - Succeedsac55; see `verification/coast-bridge-bottom-contact-20261022/README.md`

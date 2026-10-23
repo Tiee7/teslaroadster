@@ -1,0 +1,119 @@
+{
+  "schema": "highway-blast-height-regression-v1",
+  "basePreview": "6bf9a327bfd6baeba48b8a9d62c4349379a152a8",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; same PR20; keep prior unique previews",
+  "freshApplicableUniquePasses": 1376,
+  "newUniqueCases": 22,
+  "newBehaviorCases": 17,
+  "newSourceGuards": 5,
+  "totalSourceGuards": 48,
+  "zeroSkips": true,
+  "coverageKind": "Joint unchanged-byte coverage. Original batch1302 main passes and1 coast-map file SIGKILL; exact original19 coast-map assertions passed serially. Terrain18/art37 pass. Not one all-green original batch.",
+  "groups": {
+    "main": {
+      "tests": 1303,
+      "pass": 1302,
+      "fail": 1,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2338/final-main.tap",
+      "logSha256": "b57ffa7a777f92ca7f72475685f3f44b5e05ac2874003c67001b5179d1a5d1b7"
+    },
+    "terrain": {
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2338/final-terrain.tap",
+      "logSha256": "10414c45c9d6882af177fff55b5f8a820f98d25e636ebb14134b320f015d3162"
+    },
+    "art": {
+      "tests": 37,
+      "pass": 37,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2338/final-art.tap",
+      "logSha256": "cfeedd48f446aefe50a21548227adaca628480113f64507e787e7a9bcd6dc06c"
+    },
+    "coast-map-serial": {
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2338/final-coast-map-serial.tap",
+      "logSha256": "7f5af72f3b41eef0601a0c54131a25e48736719889e7db83b329de21545087ae"
+    }
+  },
+  "unchangedInputProof": {
+    "files": 276,
+    "allExact": true,
+    "path": "/workspace/shared/tesla-hourly-20261022-2338/final-runtime-test-inputs.json",
+    "sha256": "1c9e44f80cb4937fbf7cdfb41c21cf02105c36ea3114731f6985c5e6b81e76f5",
+    "afterSerialCoastMapAllExact": true
+  },
+  "reusedUnchangedPlannerFiles": [
+    "tests/highway-demo-clock.test.mjs",
+    "tests/highway-demo-consumed-certificate.test.mjs",
+    "tests/highway-demo-continuous.test.mjs",
+    "tests/highway-demo-floor-refill.test.mjs",
+    "tests/highway-demo-following.test.mjs",
+    "tests/highway-demo-lifecycle.test.mjs",
+    "tests/highway-demo-physics.test.mjs",
+    "tests/highway-demo-planning-cost.test.mjs",
+    "tests/highway-demo-routing.test.mjs",
+    "tests/highway-demo-scheduling.test.mjs",
+    "tests/highway-demo-successor.test.mjs",
+    "tests/highway-demo-weaving.test.mjs"
+  ],
+  "fullRepositoryNpmTestClaimed": false,
+  "focusedRunsOverlapNotSummed": true,
+  "sourceSha256": {
+    "src/physics-main.js": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6",
+    "src/demo-numeric-projection.js": "dc21fea48532d3f7ad0c24040c08d54915604b2580abfd535041cb33400b9a10",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "1771f45bcc3f334b0f4ca445fe58dae052997403922cff1bfc85db2136f23038",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "af3e7a95f6032fa82d4e200e4c6d53eda64c1114d9dd75a5ccb0b01f15c4a726"
+  },
+  "rootHtml": {
+    "bytes": 5072639,
+    "sha256": "2379f4f790501651ca5506ef055bfa30f8d0e7c4c3827a33370a6e1f34c6df11",
+    "gitBlob": "0da67bc236b52fa4bae0ea291e6203cf26e5f3e3"
+  },
+  "preservedRed": {
+    "baselineExpectedFailCases": 6,
+    "baselineLog": "verification/highway-blast-height-20261022/baseline-red-contract.tap",
+    "baselineLogSha256": "5dd872c64c9a75bcc454b7c76514dcc71775eee52979bba31c31a69cb30e22dc",
+    "coastMapOriginalFailureExcerpt": "verification/highway-blast-height-20261022/initial-coast-map-file-sigkill.tap",
+    "coastMapOriginalFullLog": "/workspace/shared/tesla-hourly-20261022-2338/final-main.tap",
+    "coastMapFailureCause": "Unknown; SIGKILL observed, no OOM diagnosis claimed."
+  },
+  "finding": {
+    "initialEvent": "Explicit fatal contact fixture30m/s; VFX/debris/audio/DOM and their RNG presentation isolated. Original crash/blast/aftermath/reset and continuous W+Semicolon CPU motion/contact. No per-frame forcing.",
+    "rates": [
+      30,
+      60,
+      144
+    ],
+    "aftermathDelaysSeconds": [
+      0,
+      0.2
+    ],
+    "nativeDrawnVerticalGapMetres": [
+      10.653623465933256,
+      15.570445917062582
+    ],
+    "oldReportedFalseImpactMps": [
+      77.97987203393848,
+      82.77777777777777
+    ],
+    "nativeRevisionObservedThisRound": "128",
+    "nativeRuntimeSha256InheritedFromPriorVerifiedCache": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "nativeRuntimeFinalHashRead": "Not repeated: the /tmp cache disappeared after completed zero-skip native tests. Do not claim a fresh final-byte runtime hash.",
+    "actualNearFarGeometryBounded": true
+  },
+  "limits": [
+    "CPU/native geometry and production-block motion, not browserGPU/user-device pixels or default-spawn journey.",
+    "Rejection-only conservative sphere guard; no full3D/swept highway collision rewrite and possible smaller-gap false positives remain.",
+    "Original coastal screenshot/location unavailable and unlocalized; no claim all ground gaps fixed.",
+    "No FPS/performance improvement claim; correctness cost not benchmarked."
+  ]
+}

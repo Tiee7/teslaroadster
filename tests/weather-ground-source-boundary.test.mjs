@@ -36,7 +36,7 @@ const inheritedRenderHash = 'ef00b4e5cbec254f0daadd69ff39141958bb31ef17120a10244
 function verifyCurrent(overrides = {}) {
   const historicalPins = { ...epoch.authorizedSourceSha256, ...epoch.frozenUnchangedSourceSha256, ...epoch.frozenApprovedVehicleAssetSourceSha256 };
   for (const [path, expected] of Object.entries(historicalPins)) assert.equal(sha(weatherSource(path)), expected, 'weather epoch baseline: ' + path);
-  const pins = { ...historicalPins, ...single.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256 };
+  const pins = { ...historicalPins, ...single.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256 };
   for (const path of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, path), 'unknown override: ' + path);
   for (const [path, expected] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, path) ? overrides[path] : read(path)), expected, path);
 }
