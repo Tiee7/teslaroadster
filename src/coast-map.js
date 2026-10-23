@@ -139,13 +139,14 @@ const RoadsterCoast = (() => {
     return {t:enter,y,npcY,relativeY,body:relativeY<car.height-.15};
   }
 
-  function clipBuildings(previous,state){
+  function clipBuildings(previous,state,separated=null){
     let earliest=null;
     for(const b of obstacles){
       if(Math.max(previous.y,state.y)+1.25<(b.minY??0))continue;
       if(previous.y>=b.height-.08&&state.y>=b.height-.08)continue;
       const t=sweptBox(previous.x,previous.z,state.x,state.z,b,1.1,1.8);
       if(t===null||previous.y+(state.y-previous.y)*t>=b.height+.08)continue;
+      if(separated?.(b))continue;
       if(earliest===null||t<earliest)earliest=t;
     }
     if(earliest===null)return null;

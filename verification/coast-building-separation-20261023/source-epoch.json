@@ -1,0 +1,74 @@
+{
+  "schema": "coast-building-separation-v1",
+  "basePreview": "f67c1789a7c8e94506d025a7e719907c3823a5a9",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; same PR20; keep prior unique previews",
+  "inheritedHighwayEpoch": "verification/highway-blast-height-20261022/source-epoch.json",
+  "inheritedHighwayEpochSha256": "31571308ea0dbf6152fbb1871c8e2a73f15657e8192bd423a594544533807424",
+  "baselineSourceFixtures": {
+    "src/physics-main.js": {
+      "path": "tests/fixtures/coast-building-separation-baseline/physics-main.js",
+      "sha256": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6"
+    },
+    "src/coast-map.js": {
+      "path": "tests/fixtures/coast-building-separation-baseline/coast-map.js",
+      "sha256": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747"
+    },
+    "src/demo-numeric-projection.js": {
+      "path": "tests/fixtures/coast-building-separation-baseline/demo-numeric-projection.js",
+      "sha256": "dc21fea48532d3f7ad0c24040c08d54915604b2580abfd535041cb33400b9a10"
+    },
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": {
+      "path": "tests/fixtures/coast-building-separation-baseline/generate-numeric-projection-kernel.mjs",
+      "sha256": "1771f45bcc3f334b0f4ca445fe58dae052997403922cff1bfc85db2136f23038"
+    },
+    "verification/demo-continuous/emit-browser-static-projection.mjs": {
+      "path": "tests/fixtures/coast-building-separation-baseline/emit-browser-static-projection.mjs",
+      "sha256": "af3e7a95f6032fa82d4e200e4c6d53eda64c1114d9dd75a5ccb0b01f15c4a726"
+    }
+  },
+  "frozenSourceSha256": {
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/render-diagnostics.js": "8254e1cbdf37ef1256726a3068f622ea70f6fb8d3be9006b0a8e069168499397",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-road-network.js": "9ad29e5666e0d753953617b3c5ccf353bdd6bff732014a34f5200c0be13e2690",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/leaderboard.js": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/styles.css": "2788eeeb0b2c79e612416b559ac73af0e6d0fa285674cd1a230f1dcb2e578774",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/index.html": "17afb2a5e025200d7a8908aad639ba47f29e1e6d317123f4c40c73ed0f6d975d",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "src/mobile-controls.js": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+    "src/taxi.js": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c"
+  },
+  "authorizedSourceSha256": {
+    "src/physics-main.js": "273e70d8f39cb2d6f9d47706b00fd27dbef21235052e01d255d9f7429432ed0e",
+    "src/coast-map.js": "3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe",
+    "src/demo-numeric-projection.js": "598d35f7bbda55ea2d408f3f433ac44f7c0e136f3de97dfc64e2d020ddd1fff1",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "872f2e48f065664bf1b0cff121fbb884f1a56bf6d1c83bafae87362a2b3a4956",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "c54cf7ffc41dad82a06e387d3623548229d0e307fd64ff7cf02f2eeb9ce57a0e"
+  },
+  "separationHelper": "// Rejection only: a fixed world plane must separate the WHOLE native body\n// throughout the translation chord, including the existing visual pitch/roll.\n// The caller additionally certifies flat, straight, non-RCS grounded motion;\n// other trajectories retain the original coastal building contact unchanged.\nfunction coastBuildingSeparated(previous,next,box) {\n  if([previous,next].some(q=>['x','y','z','pitch','yaw','roll'].some(k=>!Number.isFinite(q[k]??0))))return false;\n  const p=previous,a=cityPlayerBody(p);\n  if(!cityPlayerBounds)return false; // Missing native bounds retain legacy contact.\n  const radius=Math.hypot(...a.half)+Math.hypot(a.x-p.x,a.y-p.y,a.z-p.z);\n  const turn=['pitch','yaw','roll'].reduce((sum,k)=>sum+Math.abs(wrapAnglePi((next[k]||0)-(p[k]||0))),0);\n  // Presentation adds at most .032 pitch and .032 roll. Root suspension is\n  // vertical only and cannot cross either of these horizontal planes.\n  const pad=radius*(turn+.064)+1e-7;\n  for(const [axis,extent,lo,hi]of[['x',a.rx,box.minX,box.maxX],['z',a.rz,box.minZ,box.maxZ]]){\n    const shift=next[axis]-p[axis],min=a[axis]-extent+Math.min(0,shift)-pad,max=a[axis]+extent+Math.max(0,shift)+pad;\n    if(Number.isFinite(min)&&Number.isFinite(max)&&(max<lo||min>hi))return true;\n  }\n  return false;\n}\n",
+  "integrationBlock": "  let coastSeparatedBuilding=null;\n  if (coastMotionStart) {\n    const flatStraight=coastGroundAttached&&!hasManualAttitudeInput&&driveInput.steer===0&&\n      ['pitch','roll','vPitch','vRoll','vYaw','steerInput','lateralG'].every(k=>Math.abs(state[k]||0)<1e-12)&&\n      coastSupport.normal.x===0&&coastSupport.normal.z===0;\n    let endSupport;\n    coastSeparatedBuilding=flatStraight?b=>{\n      endSupport ||= coastWorld.support({...state,previousY:coastMotionStart.y,grounded:true});\n      return endSupport?.solid&&endSupport.height===state.y&&endSupport.normal.x===0&&endSupport.normal.z===0&&coastBuildingSeparated(coastMotionStart,state,b);\n    }:null;\n    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state,coastSeparatedBuilding);\n",
+  "lateWallGuard": "          if(coastWorld&&coastSeparatedBuilding?.(b))continue;\n",
+  "clipAddition": "      if(separated?.(b))continue;\n",
+  "visualAngleEnvelopeRadians": 0.064,
+  "contactToleranceMetres": 1e-07,
+  "limits": [
+    "Flat/straight/no-manual-RCS native-bound rejection only; all other contact paths retain legacy behavior.",
+    "No building sweep rewrite, later airborne/steered proxy improvement or original unknown screenshot claim."
+  ]
+}

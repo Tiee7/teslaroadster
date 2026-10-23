@@ -648,8 +648,17 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
   let freefallStartVy = null;
 
   // Coast-only continuous obstacle contact; legacy map1/2 response is unchanged.
+  let coastSeparatedBuilding=null;
   if (coastMotionStart) {
-    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state);
+    const flatStraight=coastGroundAttached&&!hasManualAttitudeInput&&driveInput.steer===0&&
+      ['pitch','roll','vPitch','vRoll','vYaw','steerInput','lateralG'].every(k=>Math.abs(state[k]||0)<1e-12)&&
+      coastSupport.normal.x===0&&coastSupport.normal.z===0;
+    let endSupport;
+    coastSeparatedBuilding=flatStraight?b=>{
+      endSupport ||= coastWorld.support({...state,previousY:coastMotionStart.y,grounded:true});
+      return endSupport?.solid&&endSupport.height===state.y&&endSupport.normal.x===0&&endSupport.normal.z===0&&coastBuildingSeparated(coastMotionStart,state,b);
+    }:null;
+    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state,coastSeparatedBuilding);
     if (contact) { triggerPhysicsCollision(contact.speed,'crashReasonBuilding',0,2,0); if (state.isDestroyed) return; }
   }
   // Sea is not a road: no automatic landing save or recharge before real contact.
@@ -1103,6 +1112,7 @@ export const declaredUpdateSimulation = function updateSimulation(dt, presentati
             }
             continue;
           }
+          if(coastWorld&&coastSeparatedBuilding?.(b))continue;
           const impactSpeed = Math.hypot(state.vx, state.vz, state.vy * 0.5);
           const dLeft = Math.abs(state.x - (b.minX - 1.1));
           const dRight = Math.abs(state.x - (b.maxX + 1.1));

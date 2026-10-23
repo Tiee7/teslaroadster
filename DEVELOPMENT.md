@@ -201,3 +201,12 @@ serves a later commit.
   all game HTML bytes (separate any known hosting feedback append).
 - Save a concise release report and keep the original failing evidence. Any CPU,
   software-Mesa, HTTP-only or browser limitation stays explicit.
+
+## Current coastal building-side separation iteration
+
+- Succeedsf67c178 on the original PR20 preview branch.24 actual continuous-W paths at30/60/144Hz false-hit original shop-house sides with the whole native car box0.382m clear. A nearby legal supported start is explicit; not a default-spawn journey.
+- Add rejection only when native bounds, flat solid start/end, straight steering, zero angular rates and no manual RCS certify whole-chord X/Z separation. Preserve original visual lean in a conservative envelope; missing/native/nonfinite evidence retains old contact. The later wall-only fallback shares the gate, roof logic remains exact.
+- Original assets, terrain/road geometry, bridge/pier contacts, damage/response coefficients, weather/lights, single passenger and highway supply stay frozen. Not a full building CCD or every-map-gap repair; smaller gaps/steered/airborne cases may retain legacy conservative contact.
+- Read `verification/coast-building-separation-20261023/` for immutable old source, native witnesses, retained red history and exact final regression/publication evidence. Prior unique f67 preview stays retained; no main/production operation.
+- Separate new lateral ground audit confirms brief bank-kink low-detail clipping (sill up to15.61cm, wheel20.13cm) without sustained burial/reset/control loss in those bounded paths. That is **not** repaired by this building fix and must not be relabeled zero-penetration.
+- CPU/native/production-block evidence only, no GPU/FPS or fresh browser acceptance. Original user screenshot/location remains unknown.

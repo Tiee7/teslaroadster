@@ -1,0 +1,148 @@
+{
+  "schema": "coast-building-separation-final-regression-v1",
+  "baseCommit": "f67c1789a7c8e94506d025a7e719907c3823a5a9",
+  "verifiedAtUtc": "2026-10-23T12:10:31.214391+00:00",
+  "scope": "Preview-only, same PR20 development branch; no main merge/production update; keep all old previews.",
+  "runtime": {
+    "physicsSha256": "273e70d8f39cb2d6f9d47706b00fd27dbef21235052e01d255d9f7429432ed0e",
+    "coastMapSha256": "3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe",
+    "rootHtmlBytes": 5077416,
+    "rootHtmlSha256": "17d595047a5b7aca5e1a102bf0a6c15062c21e28ab9a8f1506b161ed4474a53a",
+    "nativeThreeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "counterexamples": {
+    "count": 24,
+    "fps": [
+      30,
+      60,
+      144
+    ],
+    "buildingCount": 8,
+    "nativeBoxWallGapMetres": 0.3820024967193,
+    "originalImpactRangeMps": [
+      25.156249999999947,
+      25.500000000000007
+    ],
+    "nearbySupportedStartNotDefaultSpawn": true,
+    "newFix": "Reject only whole-body certified side separation on flat/straight/no-manual-RCS motion. Default/surviving original responses and real hits unchanged.",
+    "originalRedSourceFixtureSha256": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6"
+  },
+  "finalApplicable": {
+    "tests": 1419,
+    "pass": 1419,
+    "fail": 0,
+    "skip": 0,
+    "newUniqueCases": 43,
+    "groups": [
+      {
+        "name": "main",
+        "tests": 1364,
+        "pass": 1364,
+        "fail": 0,
+        "skipped": 0,
+        "path": "/workspace/shared/tesla-next-map-audit-20261023-1138/applicable-main.tap",
+        "sha256": "d4bdb46929d64f4200d6c9c8a3309f31109ffc7b1968f2799b6b3c9cf1832b9b"
+      },
+      {
+        "name": "terrain",
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "skipped": 0,
+        "path": "/workspace/shared/tesla-next-map-audit-20261023-1138/applicable-terrain.tap",
+        "sha256": "e75435026f884c9e58d73501beed6d8350387e29b2ac89241063e6e63f2e6a44"
+      },
+      {
+        "name": "art",
+        "tests": 37,
+        "pass": 37,
+        "fail": 0,
+        "skipped": 0,
+        "path": "/workspace/shared/tesla-next-map-audit-20261023-1138/applicable-art.tap",
+        "sha256": "7f92ea1f47c9c6ab25db571dd057398dcf532d9b7c4f34e7fade1c8500ae9fc2"
+      }
+    ],
+    "focusedRerunsNotAdded": true,
+    "notFullRepositoryNpmTest": true,
+    "excludedUnchangedPlannerFiles": [
+      "tests/highway-demo-clock.test.mjs",
+      "tests/highway-demo-consumed-certificate.test.mjs",
+      "tests/highway-demo-continuous.test.mjs",
+      "tests/highway-demo-floor-refill.test.mjs",
+      "tests/highway-demo-following.test.mjs",
+      "tests/highway-demo-lifecycle.test.mjs",
+      "tests/highway-demo-physics.test.mjs",
+      "tests/highway-demo-planning-cost.test.mjs",
+      "tests/highway-demo-routing.test.mjs",
+      "tests/highway-demo-scheduling.test.mjs",
+      "tests/highway-demo-successor.test.mjs",
+      "tests/highway-demo-weaving.test.mjs"
+    ],
+    "reusedUnchangedFileSha256": {
+      "tests/highway-demo-clock.test.mjs": "ce98e7e4cbdc737103ee759eed1b54c55a073e14118dad5cd382a2913f0c17ef",
+      "tests/highway-demo-consumed-certificate.test.mjs": "89afd18736b293baded04a63a4b3834271e775fb4236d03d2e20c0e108ae16f8",
+      "tests/highway-demo-continuous.test.mjs": "775dee6ff0cbab4db8480dfe6b9eaf48b659fd26c59deb6964747aab53151eca",
+      "tests/highway-demo-floor-refill.test.mjs": "e5a617f68946926266e79d5f5af51b07346d287ee0af204c70338a28d2d03fe5",
+      "tests/highway-demo-following.test.mjs": "675da673f5c0269641be6418865cbb86b5e4dd6c1971c3244e2d0ce66edef4b9",
+      "tests/highway-demo-lifecycle.test.mjs": "0a2b73f9213307b284674eb23de416e57137aaaf987806b572201c581ea174b0",
+      "tests/highway-demo-physics.test.mjs": "7b017141b56ca513dc0eb7fd814743685c5d4ccc069b9509e568c6d0f21d724b",
+      "tests/highway-demo-planning-cost.test.mjs": "a4f87bab4e58a6dc27faa50115a14b36a3122ecfdc6e0886371dee7295c8081b",
+      "tests/highway-demo-routing.test.mjs": "b75470b75a6aebf183b0e9f5d18ae7ead71b907fcd318691500405c410d8fa44",
+      "tests/highway-demo-scheduling.test.mjs": "cb649bbca4e44b51ed408844c77fe6cac3f4fb1592ff3e9c2eb8c02676a7ce73",
+      "tests/highway-demo-successor.test.mjs": "bde90a4134006a1a6d79e18bf72d61235af887d8610507e2d56a9652b6a003b5",
+      "tests/highway-demo-weaving.test.mjs": "ad472a46efc7bfedb6c9d6e88a9c184a81982f5a2fabdc38cad024fdcdd04afd"
+    }
+  },
+  "extraProjectionMirror": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "skip": 0,
+    "notAddedTo1419": true,
+    "path": "/workspace/shared/tesla-next-map-audit-20261023-1138/projection-mirror.tap",
+    "sha256": "c2a08fc5016fe81878788168a68dbe5f7e14405cb2c5c7133744774c27990fae"
+  },
+  "frozenFinalInputs": {
+    "sourceTestAndGeneratedArtifacts": 273,
+    "allUnchanged": true,
+    "snapshotPath": "/workspace/shared/tesla-next-map-audit-20261023-1138/final-inputs.json",
+    "snapshotSha256": "c927c511e6e0691a7544489dab3398a6b608f76699f197b96d34b13f0afee71d"
+  },
+  "checks": {
+    "npm run check": "passed",
+    "npm run build": "passed",
+    "git diff --check": "passed"
+  },
+  "retainedFailures": {
+    "original24NativeWitnessesBeforeEdit": "verification/coast-building-separation-20261023/baseline-native-reproduction.json",
+    "oldFixtureIntentionalRed": {
+      "path": "verification/coast-building-separation-20261023/baseline-red-contract.tap",
+      "tests": 3,
+      "fail": 3,
+      "expected": true,
+      "rerunAfterCandidateWritten": true
+    },
+    "firstHistoricalReadAddressRun": {
+      "path": "verification/coast-building-separation-20261023/initial-historical-read-address-failures.tap",
+      "tests": 91,
+      "pass": 87,
+      "fail": 4
+    },
+    "secondHistoricalReadAddressRun": {
+      "path": "verification/coast-building-separation-20261023/second-historical-read-address-failure.tap",
+      "tests": 133,
+      "pass": 132,
+      "fail": 1
+    },
+    "correction": "Historical read-addresses only; immutable fixture bytes, expected values and historical epochs unchanged. No runtime change after those focused failures."
+  },
+  "independentReview": "Read-only reviewer found native root-radius/world-plane certificate conservative under finite flat/straight gate; recommended explicit nonfinite/native-fallback guards were applied and tested.",
+  "limits": [
+    "CPU/native geometry and production-block control paths, not browser/user-device GPU/FPS.",
+    "No full building CCD or steered/airborne/smaller-gap repair. Conservative legacy cases remain.",
+    "Original coastal ground-gap screenshot/location remains unlocalized; not every map gap fixed.",
+    "Separate exploratory lateral bank-kink observations at their recorded intermediate source snapshots are not added to current regression counts and are not repaired in this iteration."
+  ],
+  "publication": "Final commit/new unique READY preview and remote/readback proof are recorded separately in delivery-summary.json after publication.",
+  "evidenceDirectory": "/workspace/shared/tesla-next-map-audit-20261023-1138"
+}

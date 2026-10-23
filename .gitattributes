@@ -7,3 +7,11 @@ tests/fixtures/coast-bridge-bottom-baseline/physics-main.js whitespace=-blank-at
 tests/fixtures/highway-blast-height-baseline/physics-main.js whitespace=-blank-at-eol
 # Preserve the hash-recorded original failing TAP bytes, including blank-line spaces.
 verification/highway-blast-height-20261022/baseline-red-contract.tap whitespace=-blank-at-eol
+
+# Exact f67 source oracle retains its original trailing spaces.
+tests/fixtures/coast-building-separation-baseline/physics-main.js whitespace=-blank-at-eol
+
+# Keep original failing TAP blank-line bytes intact; no runtime whitespace exemption.
+verification/coast-building-separation-20261023/baseline-red-contract.tap whitespace=-blank-at-eol
+verification/coast-building-separation-20261023/initial-historical-read-address-failures.tap whitespace=-blank-at-eol
+verification/coast-building-separation-20261023/second-historical-read-address-failure.tap whitespace=-blank-at-eol

@@ -1,0 +1,847 @@
+{
+  "base": "f67c1789a7c8e94506d025a7e719907c3823a5a9",
+  "scope": "Exact original native r128 full-scene triangle and conservative native car Box3 audit at production callback; once-supported start plus continuous W, not default-spawn/GPU",
+  "physicsSha256": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6",
+  "witnesses": [
+    {
+      "fps": 30,
+      "buildingZ": -440,
+      "initial": {
+        "x": -28.977787174284458,
+        "y": 0,
+        "z": -423.65078283208425,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": -160,
+      "initial": {
+        "x": -28.660136595368385,
+        "y": 0,
+        "z": -137.81441932371817,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671936604,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": 0,
+      "initial": {
+        "x": -35.292046777904034,
+        "y": 0,
+        "z": 18.94509268258698,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671935893,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": 160,
+      "initial": {
+        "x": -28.93701907992363,
+        "y": 0,
+        "z": 180.27598445476033,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671936604,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": 440,
+      "initial": {
+        "x": -30.644059009850025,
+        "y": 0,
+        "z": 455.5854250964243,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": 580,
+      "initial": {
+        "x": -29.133711382746696,
+        "y": 0,
+        "z": 599.6244214492384,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": 720,
+      "initial": {
+        "x": -31.648157976567745,
+        "y": 0,
+        "z": 738.9389289327431,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 30,
+      "buildingZ": 1000,
+      "initial": {
+        "x": -28.590377688407898,
+        "y": 0,
+        "z": 1019.1715483217034,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 9,
+      "time": 0.3333333333333333,
+      "impact": [
+        25.500000000000007,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": -440,
+      "initial": {
+        "x": -28.977787174284458,
+        "y": 0,
+        "z": -423.65078283208425,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": -160,
+      "initial": {
+        "x": -28.660136595368385,
+        "y": 0,
+        "z": -137.81441932371817,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671936604,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": 0,
+      "initial": {
+        "x": -35.292046777904034,
+        "y": 0,
+        "z": 18.94509268258698,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671935893,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": 160,
+      "initial": {
+        "x": -28.93701907992363,
+        "y": 0,
+        "z": 180.27598445476033,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671936604,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": 440,
+      "initial": {
+        "x": -30.644059009850025,
+        "y": 0,
+        "z": 455.5854250964243,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": 580,
+      "initial": {
+        "x": -29.133711382746696,
+        "y": 0,
+        "z": 599.6244214492384,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": 720,
+      "initial": {
+        "x": -31.648157976567745,
+        "y": 0,
+        "z": 738.9389289327431,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 60,
+      "buildingZ": 1000,
+      "initial": {
+        "x": -28.590377688407898,
+        "y": 0,
+        "z": 1019.1715483217034,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 18,
+      "time": 0.31666666666666665,
+      "impact": [
+        25.224999999999973,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": -440,
+      "initial": {
+        "x": -28.977787174284458,
+        "y": 0,
+        "z": -423.65078283208425,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": -160,
+      "initial": {
+        "x": -28.660136595368385,
+        "y": 0,
+        "z": -137.81441932371817,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671936604,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": 0,
+      "initial": {
+        "x": -35.292046777904034,
+        "y": 0,
+        "z": 18.94509268258698,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671935893,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": 160,
+      "initial": {
+        "x": -28.93701907992363,
+        "y": 0,
+        "z": 180.27598445476033,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.38200249671936604,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": 440,
+      "initial": {
+        "x": -30.644059009850025,
+        "y": 0,
+        "z": 455.5854250964243,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": 580,
+      "initial": {
+        "x": -29.133711382746696,
+        "y": 0,
+        "z": 599.6244214492384,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": 720,
+      "initial": {
+        "x": -31.648157976567745,
+        "y": 0,
+        "z": 738.9389289327431,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 1
+        }
+      ]
+    },
+    {
+      "fps": 144,
+      "buildingZ": 1000,
+      "initial": {
+        "x": -28.590377688407898,
+        "y": 0,
+        "z": 1019.1715483217034,
+        "yaw": -1.5707963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 20,
+        "vx": 20,
+        "vy": 0,
+        "vz": 0,
+        "wasAirborne": false,
+        "coastSupportId": "terrain"
+      },
+      "frame": 44,
+      "time": 0.3125,
+      "impact": [
+        25.156249999999947,
+        "crashReasonBuilding",
+        0,
+        2,
+        0
+      ],
+      "nativeWallGap": 0.3820024967193376,
+      "allSceneHits": [
+        {
+          "name": "coast-inland-ground",
+          "instance": null,
+          "triangles": 2
+        }
+      ]
+    }
+  ]
+}

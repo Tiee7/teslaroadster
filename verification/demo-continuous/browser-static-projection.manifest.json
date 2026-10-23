@@ -1,9 +1,9 @@
 {
   "schema": "verification-browser-static-projection-v1",
-  "numericalProgramSourceSha256": "2f7c4a3fb6cbbe90b92d63be9eebc02a4755a3c46a3a45ef3e247939607c18d7",
+  "numericalProgramSourceSha256": "0d135439a20b1e29a596f64bc4eedbebe35b503afdc088c4f92d0e8d664016e9",
   "sourceHashes": {
     "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
-    "src/physics-main.js": "d3b3936cb71db98d35862e3f4a068eda6409460babbf8472a602085f98cd96f6",
+    "src/physics-main.js": "273e70d8f39cb2d6f9d47706b00fd27dbef21235052e01d255d9f7429432ed0e",
     "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
     "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
     "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
@@ -11,7 +11,7 @@
     "tests/helpers/demo-harness.mjs": "69868deb4aed37cc25c78828fdc9ef34eae4ffae217396b965807f7277f3feff",
     "tests/helpers/vendor/three-r128-MathUtils.mjs": "09ee4ebbae9976c1c9803eaafe5cb7553fcd58f34293fd557dc51c2ac8fe1f61"
   },
-  "nodeGeneratorSha256": "1771f45bcc3f334b0f4ca445fe58dae052997403922cff1bfc85db2136f23038",
+  "nodeGeneratorSha256": "872f2e48f065664bf1b0cff121fbb884f1a56bf6d1c83bafae87362a2b3a4956",
   "mathIdentityProfilesSha256": "2d588d45a973970ea3bb253e9eeeafee137fa923785ec107d846498859a9ba3a",
   "mathProfiles": [
     {
@@ -25,8 +25,8 @@
   ],
   "functionSources": {
     "updateSimulation": {
-      "sha256": "c61df61f8b0f7d8e5697ccc8815e3c88a491d1c74ec09de7943393f26f5787e1",
-      "length": 105334
+      "sha256": "4f0bcc53f058eb7940d9de971b95c974b71c0b72cc62d38572bc4bb883d7ac8c",
+      "length": 106052
     },
     "wrapAnglePi": {
       "sha256": "4a43189ee76d5927e870e14a61a5de8fe71d91dcb8c3a5996d52adc61fa19c52",
@@ -109,22 +109,22 @@
       "name": "numeric-and-busy-input-helpers",
       "file": "src/physics-main.js",
       "begin": 13995,
-      "end": 56416,
+      "end": 57698,
       "firstLine": 351,
-      "lastLine": 847,
-      "sourceSha256": "a3f3db1546bab618a4984709e9a6b92c80aa013b5cddb32212521d1694e0c068",
-      "emittedSha256": "a3f3db1546bab618a4984709e9a6b92c80aa013b5cddb32212521d1694e0c068",
+      "lastLine": 866,
+      "sourceSha256": "e6ad3ddc4e96d653a3bd26b9779a127bf5aa14b64b69264abc43cbda9eaf5602",
+      "emittedSha256": "e6ad3ddc4e96d653a3bd26b9779a127bf5aa14b64b69264abc43cbda9eaf5602",
       "transformations": []
     },
     {
       "name": "motion-gas-altitude-attitude-body",
       "file": "src/physics-main.js",
-      "begin": 61200,
-      "end": 120855,
-      "firstLine": 956,
-      "lastLine": 2007,
-      "sourceSha256": "200c43a3441a0d62c5931f0c82db23f66ded2676060b256437a111608e4655e9",
-      "emittedSha256": "42d1c083907554643f314ff985d42658332726772b18bf360d333c23181b448b",
+      "begin": 62482,
+      "end": 122855,
+      "firstLine": 975,
+      "lastLine": 2036,
+      "sourceSha256": "6917bc7586616b9c9c209377cf1d3b8d5af961324b0c5f6a242783e9fba15dd5",
+      "emittedSha256": "c032eb74441e4def56bf2654a5a2944a1d6b1460ff994b8c87b7f1c4a121fdd4",
       "transformations": [
         "insert fail-closed guard at true highway rail branch before correction"
       ]
@@ -132,10 +132,10 @@
     {
       "name": "npc-contact-body",
       "file": "src/physics-main.js",
-      "begin": 129942,
-      "end": 137986,
-      "firstLine": 2182,
-      "lastLine": 2280,
+      "begin": 131942,
+      "end": 139986,
+      "firstLine": 2211,
+      "lastLine": 2309,
       "sourceSha256": "d38f17180b71176bfdc29b0072e28f719359e12dba92c2366500aa2e36ad46e1",
       "emittedSha256": "62c868d455f1ac7d83c2f30c1f296069fa90a549b3da510f5ecf3c20624c4ccd",
       "transformations": [
@@ -147,10 +147,10 @@
     {
       "name": "real-g-feedback-tail",
       "file": "src/physics-main.js",
-      "begin": 139027,
-      "end": 139474,
-      "firstLine": 2300,
-      "lastLine": 2305,
+      "begin": 141027,
+      "end": 141474,
+      "firstLine": 2329,
+      "lastLine": 2334,
       "sourceSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "emittedSha256": "780158edc83ce2b46b5f83ed8dd3e3965c3b674e65e65efb0d8c635101669247",
       "transformations": []

@@ -657,6 +657,25 @@ function cityCanLandOnRoof(pose,box){
   const minY=box.minY||0,solid=cityContactBody({x:(box.minX+box.maxX)/2,y:minY,z:(box.minZ+box.maxZ)/2},box.maxZ-box.minZ,box.maxX-box.minX,box.height-minY+.002);
   return cityContactInterval(cityPlayerBody(pose),solid)!==null;
 }
+// Rejection only: a fixed world plane must separate the WHOLE native body
+// throughout the translation chord, including the existing visual pitch/roll.
+// The caller additionally certifies flat, straight, non-RCS grounded motion;
+// other trajectories retain the original coastal building contact unchanged.
+function coastBuildingSeparated(previous,next,box) {
+  if([previous,next].some(q=>['x','y','z','pitch','yaw','roll'].some(k=>!Number.isFinite(q[k]??0))))return false;
+  const p=previous,a=cityPlayerBody(p);
+  if(!cityPlayerBounds)return false; // Missing native bounds retain legacy contact.
+  const radius=Math.hypot(...a.half)+Math.hypot(a.x-p.x,a.y-p.y,a.z-p.z);
+  const turn=['pitch','yaw','roll'].reduce((sum,k)=>sum+Math.abs(wrapAnglePi((next[k]||0)-(p[k]||0))),0);
+  // Presentation adds at most .032 pitch and .032 roll. Root suspension is
+  // vertical only and cannot cross either of these horizontal planes.
+  const pad=radius*(turn+.064)+1e-7;
+  for(const [axis,extent,lo,hi]of[['x',a.rx,box.minX,box.maxX],['z',a.rz,box.minZ,box.maxZ]]){
+    const shift=next[axis]-p[axis],min=a[axis]-extent+Math.min(0,shift)-pad,max=a[axis]+extent+Math.max(0,shift)+pad;
+    if(Number.isFinite(min)&&Number.isFinite(max)&&(max<lo||min>hi))return true;
+  }
+  return false;
+}
 function cityBuildingContact(pose,box) {
   const body=cityPlayerBody(pose);
   const minY=box.minY||0,solid=cityContactBody({x:(box.minX+box.maxX)/2,y:minY,z:(box.minZ+box.maxZ)/2},box.maxZ-box.minZ,box.maxX-box.minX,box.height-minY);
@@ -1524,8 +1543,17 @@ function updateSimulation(dt, presentationDt = dt) {
   let freefallStartVy = null;
 
   // Coast-only continuous obstacle contact; legacy map1/2 response is unchanged.
+  let coastSeparatedBuilding=null;
   if (coastMotionStart) {
-    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state);
+    const flatStraight=coastGroundAttached&&!hasManualAttitudeInput&&driveInput.steer===0&&
+      ['pitch','roll','vPitch','vRoll','vYaw','steerInput','lateralG'].every(k=>Math.abs(state[k]||0)<1e-12)&&
+      coastSupport.normal.x===0&&coastSupport.normal.z===0;
+    let endSupport;
+    coastSeparatedBuilding=flatStraight?b=>{
+      endSupport ||= coastWorld.support({...state,previousY:coastMotionStart.y,grounded:true});
+      return endSupport?.solid&&endSupport.height===state.y&&endSupport.normal.x===0&&endSupport.normal.z===0&&coastBuildingSeparated(coastMotionStart,state,b);
+    }:null;
+    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state,coastSeparatedBuilding);
     if (contact) { triggerPhysicsCollision(contact.speed,'crashReasonBuilding',0,2,0); if (state.isDestroyed) return; }
   }
   // Sea is not a road: no automatic landing save or recharge before real contact.
@@ -1979,6 +2007,7 @@ function updateSimulation(dt, presentationDt = dt) {
             }
             continue;
           }
+          if(coastWorld&&coastSeparatedBuilding?.(b))continue;
           const impactSpeed = Math.hypot(state.vx, state.vz, state.vy * 0.5);
           const dLeft = Math.abs(state.x - (b.minX - 1.1));
           const dRight = Math.abs(state.x - (b.maxX + 1.1));
