@@ -214,6 +214,7 @@
     return supportedMap() && !state.infiniteJet && !window.RoadsterDemo?.isBusy() && run && category() === run.category && trafficLevelIndex === 1 && weatherIndex === 0 && !state.insaneMode && state.autoStabilizer;
   }
   function tick(now = performance.now()) {
+    if (window.RoadsterReplay?.isActive?.()) return;
     if (phase !== 'running') return;
     if (document.hidden) { abort('hidden'); return; }
     if (!compatible()) { abort('invalid'); return; }
@@ -287,6 +288,7 @@
     }
   }
   async function start() {
+    if (window.RoadsterReplay?.isBusy?.()) return;
     if (!supportedMap() || state.infiniteJet || window.RoadsterDemo?.isBusy()) return;
     if (isInFlight() || isSaved()) return;
     const enteredName = $('ranked-nickname').value;
@@ -369,6 +371,7 @@
     }
   }
   async function submit() {
+    if (window.RoadsterReplay?.isBusy?.()) return;
     if (phase !== 'complete' || !result) return;
     const payload = result;
     phase = 'submitting'; errorType = ''; error = ''; render();

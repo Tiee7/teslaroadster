@@ -1,8 +1,9 @@
+import { replayPins, replayHistoricalPath, readLiveSource } from './helpers/replay-source-epoch.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
+const read = path => readFileSync(new URL('../' + replayHistoricalPath(path), import.meta.url), 'utf8');
 const sha = value => createHash('sha256').update(value).digest('hex');
 const epoch = JSON.parse(read('verification/weather-ground-traffic-20261022/source-epoch.json'));
 const single = JSON.parse(read('verification/single-passenger-20261022/source-epoch.json'));
@@ -36,9 +37,9 @@ const inheritedRenderHash = 'ef00b4e5cbec254f0daadd69ff39141958bb31ef17120a10244
 function verifyCurrent(overrides = {}) {
   const historicalPins = { ...epoch.authorizedSourceSha256, ...epoch.frozenUnchangedSourceSha256, ...epoch.frozenApprovedVehicleAssetSourceSha256 };
   for (const [path, expected] of Object.entries(historicalPins)) assert.equal(sha(weatherSource(path)), expected, 'weather epoch baseline: ' + path);
-  const pins = { ...historicalPins, ...single.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256 };
+  const pins = { ...historicalPins, ...single.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256 , ...replayPins };
   for (const path of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, path), 'unknown override: ' + path);
-  for (const [path, expected] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, path) ? overrides[path] : read(path)), expected, path);
+  for (const [path, expected] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, path) ? overrides[path] : readLiveSource(path)), expected, path);
 }
 test('weather/ground/traffic epoch succeeds production4451 explicitly and keeps all historical fixtures/epochs immutable', () => {
   assert.equal(epoch.schema, 'weather-ground-traffic-source-epoch-v1');
@@ -65,7 +66,7 @@ test('latest epoch checks actual current sources and preserves all approved asse
   const frozen = Object.fromEntries(assets.map(name => ['src/' + name + '.js', render.frozenCoreSourceSha256[name]]));
   assert.deepEqual(epoch.frozenApprovedVehicleAssetSourceSha256, frozen);
   const liveSourcePaths = readdirSync(new URL('../src/', import.meta.url)).map(name => 'src/' + name).sort();
-  const pinnedSourcePaths = [...Object.keys(epoch.authorizedSourceSha256).filter(path => path.startsWith('src/')), ...Object.keys(epoch.frozenUnchangedSourceSha256)].sort();
+  const pinnedSourcePaths = [...new Set([...Object.keys(epoch.authorizedSourceSha256).filter(path => path.startsWith('src/')), ...Object.keys(epoch.frozenUnchangedSourceSha256), ...Object.keys(replayPins).filter(path => path.startsWith('src/'))])].sort();
   assert.deepEqual(pinnedSourcePaths, liveSourcePaths, 'every source file is authorized or remains frozen, none disappears from verification');
   assert.match(read('src/world.js'), /mesh\.setColorAt\(i,color\.setHex\(record\.color\?\?0xffffff\)\)/);
   assert.equal(sha(read('src/render-health.js')), render.authorizedSourceSha256['render-health']);

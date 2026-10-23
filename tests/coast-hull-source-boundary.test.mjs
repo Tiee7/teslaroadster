@@ -1,18 +1,19 @@
+import { replayPins, replayHistoricalPath, readLiveSource } from './helpers/replay-source-epoch.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex');
+const read=p=>readFileSync(new URL('../' + replayHistoricalPath(p), import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex');
 const epoch=JSON.parse(read('verification/coast-hull-contact-20261022/source-epoch.json'));
 const inherited=JSON.parse(read(epoch.inheritedTrafficEpoch));
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
 const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),bridgeBottom=JSON.parse(read('verification/coast-bridge-bottom-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
 const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json'));
 const historical=p=>read(stability.baselineSourceFixtures[p]?.path||bridgeBottom.baselineSourceFixtures[p]?.path||p);
-const pins={...epoch.frozenSourceSha256,...epoch.authorizedSourceSha256,...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256};
+const pins={...epoch.frozenSourceSha256,...epoch.authorizedSourceSha256,...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256, ...replayPins };
 function verify(overrides={}){
  for(const p of Object.keys(overrides))assert.ok(Object.hasOwn(pins,p),'unknown source '+p);
- for(const [p,h]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:read(p)),h,p);
+ for(const [p,h]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:readLiveSource(p)),h,p);
 }
 function removeRegion(source,a,b){assert.equal(source.split(a).length,2);const i=source.indexOf(a),j=source.indexOf(b,i+a.length);assert.ok(j>i);return source.slice(0,i)+source.slice(j);}
 

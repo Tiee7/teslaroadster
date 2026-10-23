@@ -233,6 +233,7 @@ const CityTaxiModel = (() => {
   }
   function createScene() {
     markerGroup = new THREE.Group();
+    markerGroup.name = 'taxi-passenger-markers';
     markerParent = currentMap === 'city' ? cityEnvGroup : scene;
     markerParent.add(markerGroup);
     beamGeometry = new THREE.CylinderGeometry(CityTaxiModel.MARKER_RADIUS, CityTaxiModel.MARKER_RADIUS, 1100, 24, 1, true);

@@ -1,0 +1,33 @@
+✔ RAM replay explicitly succeeds f2, preserves production/main and every immutable numerical source (52.749305ms)
+✔ only the declared replay UI/adapter files advance; taxi rules and ranked algorithms are byte exact outside guards (1.465081ms)
+✔ negative live guards reject every declared/frozen source drift and additional unknown gameplay modules (393.127472ms)
+✔ RAM core copies samples, orders time and brackets/clamps seek without retaining caller arrays (3.337781ms)
+✔ duration and byte limits stop and preserve the oldest samples, never overwrite or exceed reservation (2.205933ms)
+✔ generation/visibility/teleport cuts never interpolate across respawns (0.80269ms)
+✔ highway: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore (1199.154346ms)
+✔ city: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore (1146.719384ms)
+✔ coast: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore (968.408223ms)
+✔ actual reset/respawn markers cut short teleports and hidden vehicles remain in the clip (1008.949284ms)
+✔ highway: real owner respawn/wrap forces a trajectory cut without changing its physics source (851.058977ms)
+✔ city: real owner respawn/wrap forces a trajectory cut without changing its physics source (1100.098195ms)
+✔ coast: real owner respawn/wrap forces a trajectory cut without changing its physics source (912.562555ms)
+✔ focused replay buttons cannot run original R/F/T game shortcuts; native control defaults remain available (941.121469ms)
+✔ render-health recovery remains operable during replay and does not resume playback automatically (912.007963ms)
+✔ FPV recordings use approved exterior yoke projection during playback and restore exact FPV presentation (1941.899538ms)
+✔ production crash creates all 34 debris pieces, records their real poses and restores original aftermath (929.050269ms)
+✔ pause, seek, speed, loop and free pointer / keyboard / phone dolly controls are presentation only (1013.929592ms)
+✔ background stops recording / pauses replay; pagehide and BFCache pageshow release every clip reference (941.838946ms)
+✔ repeat record / play / clear cycles do not accumulate buffers or source/generated bindings (1158.826289ms)
+✔ menus cannot trap playback, and replacing traffic with the same count is refused without stale live bindings (906.004764ms)
+✔ actual adapter automatically stops visibly at its buffer limit and retains its initial samples (1315.947331ms)
+✔ production animate bypasses every simulation / rank / taxi side effect throughout playback and pause (907.272767ms)
+✔ real ranked controller rejects replay-time start and submit, and independent tick cannot advance a run (20.410115ms)
+✔ implementation is RAM-only, labels cinematic limits and is bundled in the required lifecycle order (1.157111ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18361.211269

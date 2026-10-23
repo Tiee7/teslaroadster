@@ -7,8 +7,9 @@
   local tree and outstanding drafts before editing. Do not create a competing writer.
 - Each verified iteration gets a commit and a **new unique Vercel preview URL**.
   Keep earlier previews available; do not delete/promote them or rely only on a moving branch alias.
-- No automatic main merge or production deployment. Production baseline remains
-  `4451a11c9c09d031a9da037ce63afe4bb7f062e5` unless separately authorized.
+- No automatic main merge or production deployment. The user manually promoted
+  `f2cbd9b3557e242ff40f2291df02fa3e224f7c61` to production as
+  `dpl_7sJARPobcCozbJP8bGqRGS5uehci`; preserve it. Main remains4451.
 - Approved vehicle geometry/materials/scales are frozen. Do not conceal rendering
   or collision defects by resizing assets, clipping the scene, lowering traffic
   density, teleporting the player, or disabling legitimate collisions.
@@ -210,3 +211,18 @@ serves a later commit.
 - Read `verification/coast-building-separation-20261023/` for immutable old source, native witnesses, retained red history and exact final regression/publication evidence. Prior unique f67 preview stays retained; no main/production operation.
 - Separate new lateral ground audit confirms brief bank-kink low-detail clipping (sill up to15.61cm, wheel20.13cm) without sustained burial/reset/control loss in those bounded paths. That is **not** repaired by this building fix and must not be relabeled zero-penetration.
 - CPU/native/production-block evidence only, no GPU/FPS or fresh browser acceptance. Original user screenshot/location remains unknown.
+
+## Temporary RAM replay iteration
+
+- Explicitly authorized page-memory-only recording and replay; see
+  `verification/ram-replay-20261023/README.md` and its source epoch. No download,
+  upload or persistent replay storage; refresh/pagehide/BFCache cleanup is tested.
+- All vehicles and actual debris trajectories, essential animation, pause/seek/
+  speed/loop plus front-side/ground/free cameras. Existing driving kernels,
+  geometry/materials, weather and traffic counts remain byte-identical to f2.
+- Playback isolates physics/ranking/taxi and restores a live presentation
+  checkpoint. Particle-perfect effects, audio, coastal ambient rewind and
+  obstruction-free cinematic editing are not claimed; the UI labels limits.
+- Continue existing PR20/dev only. User-promoted f2 production and main are not
+  authorized to change. Final regression and independent READY preview evidence
+  belong to this iteration; never infer that an older preview serves it.

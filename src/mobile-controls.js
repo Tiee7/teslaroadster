@@ -15,6 +15,7 @@
   let mode = 'lift';
 
   function blocked() {
+    if (window.RoadsterReplay?.isActive?.()) return true;
     return document.hidden || (typeof state !== 'undefined' && state.isDestroyed) ||
       ['modal-map-select', 'modal-help', 'modal-destroyed'].some(id => {
         const node = document.getElementById(id);

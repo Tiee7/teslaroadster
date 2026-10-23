@@ -99,6 +99,7 @@
       </button>
 
       <!-- Camera View Toggle -->
+      <button id="btn-replay" type="button" class="ranked-button" aria-controls="replay-panel">Replay</button>
       <button id="btn-camera" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 cursor-pointer">
         <span id="ui-camera-btn">Cam: Chase</span>
       </button>
@@ -755,6 +756,20 @@
     </div>
   </dialog>
 
+  <section id="replay-panel" class="replay-panel" aria-labelledby="replay-title" hidden>
+    <div class="replay-heading"><strong id="replay-title">Temporary replay · RAM only</strong><button id="replay-close" type="button">Close panel</button></div>
+    <div class="replay-actions"><button id="replay-record" type="button">● Record</button><button id="replay-stop" type="button">■ Stop</button><button id="replay-play" type="button">▶ Play</button><button id="replay-pause" type="button">Ⅱ Pause</button><button id="replay-exit" type="button">Return to driving</button><button id="replay-clear" type="button">Clear clip</button></div>
+    <input id="replay-seek" type="range" min="0" max="0" step="0.001" value="0" aria-label="Replay time">
+    <output id="replay-time"></output>
+    <div class="replay-options">
+      <label>Speed / 速度 <select id="replay-speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+      <label><input id="replay-loop" type="checkbox"> Loop / 循环</label>
+      <label>Camera / 机位 <select id="replay-camera"><option value="chase">Chase / 追车</option><option value="front">Front-side / 前侧</option><option value="ground">Ground / 贴地</option><option value="free">Free / 自由</option></select></label>
+      <label>Follow / 跟随 <select id="replay-target"><option value="player">Player / 我的车</option><option value="npc">NPC 1 / 交通车</option></select></label>
+      <button id="replay-near" type="button" aria-label="Move replay camera closer">＋</button><button id="replay-far" type="button" aria-label="Move replay camera farther">−</button>
+    </div>
+    <p id="replay-status" role="status"></p><p id="replay-note" class="replay-note"></p>
+  </section>
   <!-- Modular Functional Scripts -->
   <script src="config.js"></script>
   <script src="city-clock.js"></script>
@@ -780,6 +795,8 @@
   <script src="demo-numeric-projection.js"></script>
   <script src="highway-demo.js"></script>
   <script src="physics-main.js"></script>
+  <script src="replay-core.js"></script>
+  <script src="replay.js"></script>
   <script src="render-health.js"></script>
   <script src="render-diagnostics.js"></script>
 </body>

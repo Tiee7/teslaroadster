@@ -1,8 +1,9 @@
+import { replayPins, replayHistoricalPath, readLiveSource } from './helpers/replay-source-epoch.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
+const read = path => readFileSync(new URL('../' + replayHistoricalPath(path), import.meta.url), 'utf8');
 const sha = value => createHash('sha256').update(value).digest('hex');
 const path = 'verification/single-passenger-20261022/source-epoch.json';
 const epoch = JSON.parse(read(path));
@@ -12,10 +13,10 @@ const hullRepair = JSON.parse(read('verification/coast-hull-contact-20261022/sou
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
 const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),bridgeBottom=JSON.parse(read('verification/coast-bridge-bottom-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
 const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json'));
-const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256 };
+const pins = { ...epoch.frozenPreviewSourceSha256, ...epoch.authorizedSourceSha256, ...repair.authorizedSourceSha256, ...hullRepair.authorizedSourceSha256, ...stability.authorizedSourceSha256, ...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256 , ...replayPins };
 function verify(overrides = {}) {
   for (const key of Object.keys(overrides)) assert.ok(Object.hasOwn(pins, key), 'unknown override: ' + key);
-  for (const [key, want] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, key) ? overrides[key] : read(key)), want, key);
+  for (const [key, want] of Object.entries(pins)) assert.equal(sha(Object.hasOwn(overrides, key) ? overrides[key] : readLiveSource(key)), want, key);
 }
 test('single-seat epoch explicitly succeeds previewb580 while preserving its exact baseline and prior four-change source epoch', () => {
   assert.equal(epoch.schema, 'single-passenger-source-epoch-v1');

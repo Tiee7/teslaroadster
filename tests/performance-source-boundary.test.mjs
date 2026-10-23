@@ -1,5 +1,6 @@
+import { replayPins, replayHistoricalPath, readLiveSource } from './helpers/replay-source-epoch.mjs';
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';import{createHash}from'node:crypto';import vm from'node:vm';
-const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex'),base=p=>read('tests/fixtures/performance-passengers-baseline/'+p);
+const read=p=>readFileSync(new URL('../' + replayHistoricalPath(p), import.meta.url),'utf8'),sha=s=>createHash('sha256').update(s).digest('hex'),base=p=>read('tests/fixtures/performance-passengers-baseline/'+p);
 const successor=JSON.parse(read('verification/weather-ground-traffic-20261022/source-epoch.json'));
 const stability=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json'));
 const historical=file=>read(file==='coast-road-network'?'tests/fixtures/coast-pier-baseline/coast-road-network.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'tests/fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?.path||'src/'+file+'.js');

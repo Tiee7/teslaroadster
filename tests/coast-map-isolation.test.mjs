@@ -1,11 +1,12 @@
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';import{createHash}from'node:crypto';import{motionHarness}from'./helpers/motion-harness.mjs';
+import { replayHistoricalPath } from './helpers/replay-source-epoch.mjs';
 const baselineDir=new URL('./fixtures/driving-feedback-baseline/',import.meta.url);
 const baseline=Object.fromEntries(['physics-main.js','config.js'].map(file=>[file,readFileSync(new URL(file,baselineDir),'utf8')]));
 const hash=s=>createHash('sha256').update(s).digest('hex');
 const successor=JSON.parse(readFileSync(new URL('../verification/weather-ground-traffic-20261022/source-epoch.json',import.meta.url)));
 // Exact production4451 and previewb580 fixtures retain historical bytes; current sources have explicit successor guards.
 const stability=JSON.parse(readFileSync(new URL('../verification/drive-stability-20261022/source-epoch.json',import.meta.url)));
-const historicalSource=file=>new URL(file==='coast-road-network'?'./fixtures/coast-pier-baseline/coast-road-network.js':file==='taxi'?'./fixtures/single-passenger-baseline/taxi.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?'../'+stability.baselineSourceFixtures['src/'+file+'.js'].path:'../src/'+file+'.js',import.meta.url);
+const historicalSource=file=>new URL(file==='coast-road-network'?'./fixtures/coast-pier-baseline/coast-road-network.js':file==='taxi'?'./fixtures/single-passenger-baseline/taxi.js':Object.hasOwn(successor.baselineFixtureSha256,file+'.js')?'./fixtures/weather-ground-traffic-baseline/'+file+'.js':stability.baselineSourceFixtures['src/'+file+'.js']?'../'+stability.baselineSourceFixtures['src/'+file+'.js'].path:'../'+replayHistoricalPath('src/'+file+'.js'),import.meta.url);
 
 const repairEpoch=JSON.parse(readFileSync(new URL('../verification/traffic-ground-regressions-20261022/source-epoch.json',import.meta.url),'utf8'));
 const weatherEpochSource=file=>readFileSync(new URL('../'+(file==='src/coast-map.js'?'tests/fixtures/coast-building-separation-baseline/coast-map.js':file==='src/coast-road-network.js'?'tests/fixtures/coast-pier-baseline/coast-road-network.js':repairEpoch.baselineSourceFixtures[file]?.path||stability.baselineSourceFixtures[file]?.path||file),import.meta.url),'utf8');
