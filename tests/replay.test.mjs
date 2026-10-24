@@ -29,7 +29,7 @@ test('generation/visibility/teleport cuts never interpolate across respawns', ()
 });
 
 class Dom {
-  constructor(id = '') { this.id = id; this.listeners = {}; this.hidden = false; this.value = ''; this.dataset = {}; this.classes = new Set(['hidden']); this.classList = { add: x => this.classes.add(x), remove: x => this.classes.delete(x), contains: x => this.classes.has(x), toggle: (x, yes) => yes ? this.classes.add(x) : this.classes.delete(x) }; }
+  constructor(id = '') { this.id = id; this.listeners = {}; this.hidden = false; this.value = ''; this.dataset = {}; this.style = { setProperty() {} }; this.classes = new Set(['hidden']); this.classList = { add: x => this.classes.add(x), remove: x => this.classes.delete(x), contains: x => this.classes.has(x), toggle: (x, yes) => yes ? this.classes.add(x) : this.classes.delete(x) }; }
   addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); }
   emit(type, extra = {}) { const e = { target: this, preventDefault() { this.prevented = true; }, stopImmediatePropagation() { this.stopped = true; }, ...extra }; for (const fn of this.listeners[type] || []) { fn(e); if (e.stopped) break; } return e; }
   dispatchEvent(event) { return this.emit(event.type || 'change', event); }
@@ -40,17 +40,17 @@ class Dom {
   showModal() { this.open = true; }
   close() { this.open = false; }
 }
-function fixture(map = 'highway', count = 52) {
+function fixture(map = 'highway', count = 52, { autopilot = false } = {}) {
   const ids = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(([, id]) => [id, new Dom(id)]));
   const document = new Dom(), window = new Dom(), canvas = new Dom(); document.body = new Dom(); document.hidden = false;
   document.getElementById = id => ids.get(id); document.createElement = () => new Dom();
   window.innerWidth = 1280; window.innerHeight = 850; window.confirm = () => true;
   let renders = 0, inputs = 0, simulations = 0, now = 1000;
-  const c = vm.createContext({ window, document, console, Event: class {}, atob: t => Buffer.from(t, 'base64').toString('binary'),
+  const c = vm.createContext({ window, document, console, keys: {}, Event: class {}, atob: t => Buffer.from(t, 'base64').toString('binary'),
     localStorage: { getItem: () => null, setItem() { throw Error('Unexpected persistence'); } }, performance: { now: () => now },
     fetch() { throw Error('Unexpected network'); }, indexedDB: { open() { throw Error('Unexpected persistence'); } },
-    sound: { update() {}, playCrash() {}, beep() {} }, clearAllInputKeys() { inputs++; }, resetChaseCamera() {}, showBanner() {},
-    renderBannerText() {}, updateCockpitHudScreen() {}, renderer: { domElement: canvas, render() { renders++; } }, lastTime: 0,
+    sound: { update() {}, playCrash() {}, beep() {}, playAirBrakeServo() {}, playMilestoneChime() {}, playSonicBoom() {}, playThunder() {}, speakAlert() {} }, clearAllInputKeys() { inputs++; for (const key of Object.keys(c.keys)) c.keys[key] = false; }, resetChaseCamera() {}, showBanner() {},
+    renderBannerText() {}, updateCockpitHudScreen() {}, updateSpeedAndWeatherOverlay() {}, updateWindshieldRain() {}, renderer: { domElement: canvas, render() { renders++; } }, lastTime: 0,
     updateSimulation() { simulations++; }, requestAnimationFrame() {}, setKeyState() {},
   });
   vm.runInContext(readFileSync(process.env.ROADSTER_THREE_RUNTIME || '/tmp/roadster-three.min.js', 'utf8'), c);
@@ -62,10 +62,23 @@ function fixture(map = 'highway', count = 52) {
     populateTraffic(${count}); globalThis.parts={scene,camera,playerWrapper,roadsterAttitudeGroup,carMeshGroup,trafficCars,wheels,frontWheelSteerGroups,activeWingGroup,rearNozzlesGimbalGroup,allThrusterPlumes,coldGasTime,debrisGroup,explosionGroup,tireSmokeGroup,debrisPieces,state,scrollingProps};`, c);
   vm.runInContext(read('src/city-clock.js') + '\n' + physics.slice(physics.indexOf('// Scope the fixed clock'), physics.indexOf("window.addEventListener('resize'")), c);
   const hud = read('src/ui-hud.js'); vm.runInContext(hud.slice(hud.indexOf('function resetCar()'), hud.indexOf('function applyTranslations()')), c);
+  if (autopilot) {
+    // Execute the actual production physics owner, not the lightweight counter
+    // used by the presentation-only cases above. Keep the requested NPC count.
+    vm.runInContext(physics.slice(physics.indexOf('function wrapAnglePi('), physics.indexOf('// Scope the fixed clock')), c);
+    c.lastTime = now;
+    // Explicit safe, populated highway witness, not a default-spawn survival
+    // claim: every native NPC remains present and is advanced by real physics.
+    vm.runInContext(`trafficCars.forEach((car,i)=>{car.mesh.position.set(LANE_CENTERS[i%6],0,-90-35*Math.floor(i/6));car.mesh.rotation.set(0,0,0);car.mesh.visible=true;car.speed=30;car.vz=-30;car.vx=0;car.y=0;car.blastTimer=0;car.laneChange=null;delete car.highwayWaitingToSpawn;});`, c);
+    window.RoadsterRanked = { tick() {}, render() {}, abort() {}, isActive: () => false, isDialogOpen: () => false, prepareForDemo: async () => {} };
+    vm.runInContext(read('src/demo-numeric-projection.js') + '\n' + read('src/highway-demo.js'), c);
+  }
   vm.runInContext(core + '\n' + adapter, c);
   const api = window.RoadsterReplay, parts = c.parts;
   function tick(dt = .05) { now += dt * 1000; api.afterTick(dt); }
-  return { c, api, parts, window, document, canvas, ids, tick, evaluate: s => vm.runInContext(s, c), get renders() { return renders; }, get inputs() { return inputs; }, get simulations() { return simulations; } };
+  function frame(dt = 1 / 60) { now += dt * 1000; c.animate(now); }
+  function elapse(seconds) { now += seconds * 1000; }
+  return { c, api, parts, window, document, canvas, ids, tick, frame, elapse, evaluate: s => vm.runInContext(s, c), get renders() { return renders; }, get inputs() { return inputs; }, get simulations() { return simulations; } };
 }
 for (const map of ['highway', 'city', 'coast']) test(`${map}: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore`, () => {
   const f = fixture(map, map === 'coast' ? 20 : 52), { api, parts: p } = f;
@@ -213,4 +226,126 @@ test('implementation is RAM-only, labels cinematic limits and is bundled in the 
   for (const declaration of ['function tick(now = performance.now())', 'async function start()', 'async function submit()']) {
     const s = read('src/leaderboard.js'); const i = s.indexOf(declaration); assert.match(s.slice(i, i + 170), /RoadsterReplay\?\.is(?:Active|Busy)/);
   }
+});
+
+const plain = value => JSON.parse(JSON.stringify(value));
+const flushAutopilot = () => new Promise(resolve => setImmediate(resolve));
+async function clickAutopilot(f) {
+  const button = f.ids.get('btn-highway-demo');
+  button.closest = selector => selector === 'button' ? button : null;
+  const event = f.document.emit('click', { target: button });
+  if (!event.stopped) button.emit('click');
+  await flushAutopilot();
+  return event;
+}
+function assertVehicleSample(f, sample) {
+  const nodes = [f.parts.playerWrapper, f.parts.roadsterAttitudeGroup, f.parts.carMeshGroup, ...f.parts.trafficCars.map(car => car.mesh)];
+  for (let i = 0; i < nodes.length; i++) {
+    assert.deepEqual(plain(nodes[i].position.toArray()), plain(sample.slice(i * 18, i * 18 + 3)), `vehicle binding ${i} position`);
+    assert.deepEqual(plain(nodes[i].quaternion.toArray()), plain(sample.slice(i * 18 + 3, i * 18 + 7)), `vehicle binding ${i} attitude`);
+    assert.deepEqual(plain(nodes[i].scale.toArray()), plain(sample.slice(i * 18 + 7, i * 18 + 10)), `vehicle binding ${i} scale`);
+    assert.equal(Number(nodes[i].visible), sample[i * 18 + 10], `vehicle binding ${i} visibility`);
+  }
+}
+function assertPostPhysicsCapture(f) {
+  const sample = f.api.sample(f.api.stats().duration).a;
+  const nodes = [f.parts.playerWrapper, f.parts.roadsterAttitudeGroup, f.parts.carMeshGroup, ...f.parts.trafficCars.map(car => car.mesh)];
+  nodes.forEach((node, i) => {
+    assert.deepEqual(plain(sample.slice(i * 18, i * 18 + 3)), plain(node.position.toArray().map(Math.fround)), `post-physics binding ${i} position`);
+    assert.deepEqual(plain(sample.slice(i * 18 + 3, i * 18 + 7)), plain(node.quaternion.toArray().map(Math.fround)), `post-physics binding ${i} attitude`);
+  });
+  assert.equal(sample[nodes.length * 18 + 17], Math.fround(f.parts.wheels[0].rotation.x), 'actual wheel phase, not input-derived approximation');
+}
+test('autopilot already active: record real post-physics vehicle/traffic/attitude state, never replay driver inputs', async () => {
+  const f = fixture('highway', 52, { autopilot: true }), api = f.api, demo = f.window.RoadsterDemo;
+  await demo.toggle(); assert.equal(demo.isActive(), true);
+  assert.equal(api.record(), true, 'an active autopilot must be recordable');
+  const initial = api.sample(0).a, initialSpeed = f.parts.state.speed;
+  for (let i = 0; i < 12; i++) { const count = api.stats().frames; f.frame(); if (api.stats().frames > count) assertPostPhysicsCapture(f); }
+  api.stop(); assert.ok(api.stats().duration > 0); assert.equal(api.stats().vehicles, 53);
+  assert.ok(demo.clockStats().steps >= 12, 'actual production autopilot fixed clock ran');
+  assert.ok(demo.input().throttle > 0); assert.notEqual(f.parts.state.speed, initialSpeed);
+  assert.equal(f.evaluate('Object.values(keys).some(Boolean)'), false, 'autopilot actually drove with no keyboard recording');
+  const end = api.sample(api.stats().duration).a;
+  assert.equal(end.length, initial.length, 'manual and autopilot use the same complete sample fields');
+  assert.notDeepEqual(plain(end.slice(0, 55 * 18)), plain(initial.slice(0, 55 * 18)), 'real physics moved the player/traffic without recorded keyboard input');
+  for (let i = 0; i < 3; i++) f.frame();
+  f.frame(1 / 120); assert.ok(demo.clockStats().accumulator > 0, 'retain a genuine pre-entry fractional clock accumulator');
+  const liveState = JSON.stringify(f.parts.state), livePose = plain([f.parts.playerWrapper.position.toArray(), f.parts.trafficCars.map(car => car.mesh.position.toArray())]);
+  const liveClock = plain(demo.clockStats()), liveInput = plain(demo.input());
+  assert.equal(api.play(), true); api.pause(); api.seek(api.stats().duration); assertVehicleSample(f, end);
+  for (let i = 0; i < 40; i++) f.frame(.1);
+  // Public entry points cannot bypass playback isolation either.
+  demo.step(.1); demo.advanceFrame(.1, f.c.updateSimulation); await demo.toggle();
+  assert.equal(JSON.stringify(f.parts.state), liveState); assert.deepEqual(plain(demo.clockStats()), liveClock); assert.deepEqual(plain(demo.input()), liveInput); assert.equal(demo.isActive(), true);
+  api.exit(); assert.deepEqual(plain([f.parts.playerWrapper.position.toArray(), f.parts.trafficCars.map(car => car.mesh.position.toArray())]), livePose);
+  assert.deepEqual(plain(demo.clockStats()), liveClock);
+  f.frame(); assert.equal(demo.isActive(), true); assert.equal(demo.clockStats().steps, liveClock.steps + 1, 'no replay wall-time debt or planner restart on return');
+});
+test('autopilot UI can switch manual/auto/manual/auto during one recording without replacing its population or fields', async () => {
+  const f = fixture('highway', 52, { autopilot: true }), api = f.api, demo = f.window.RoadsterDemo;
+  assert.equal(api.record(), true); const population = f.parts.trafficCars, size = api.sample(0).a.length;
+  for (let i = 0; i < 3; i++) f.frame();
+  assert.notEqual((await clickAutopilot(f)).prevented, true); assert.equal(demo.isActive(), true);
+  for (let i = 0; i < 6; i++) f.frame();
+  assert.notEqual((await clickAutopilot(f)).prevented, true); assert.equal(demo.isBusy(), false);
+  for (let i = 0; i < 3; i++) f.frame();
+  await clickAutopilot(f); assert.equal(demo.isActive(), true); for (let i = 0; i < 6; i++) f.frame();
+  assert.equal(api.stats().mode, 'recording'); assert.equal(f.parts.trafficCars, population); api.stop();
+  const end = api.sample(api.stats().duration).a; assert.equal(end.length, size);
+  assert.equal(api.play(), true); api.pause(); api.seek(api.stats().duration); assertVehicleSample(f, end);
+  assert.equal((await clickAutopilot(f)).prevented, true, 'switching is blocked only during actual playback');
+  assert.equal(demo.isActive(), true); api.exit();
+});
+test('autopilot pending preparation cannot race into record/playback; cancellation cannot late-start it', async () => {
+  const f = fixture('highway', 52, { autopilot: true }), api = f.api, demo = f.window.RoadsterDemo;
+  api.record(); f.tick(); api.stop(); let finishPreparation;
+  f.window.RoadsterRanked.prepareForDemo = () => new Promise(resolve => { finishPreparation = resolve; });
+  const pending = demo.toggle(); assert.equal(demo.isBusy(), true); assert.equal(demo.isActive(), false);
+  assert.equal(api.record(), false); assert.equal(api.play(), false);
+  demo.stop(); finishPreparation(); await pending; assert.equal(demo.isBusy(), false);
+  assert.equal(api.play(), true); api.pause(); const blocked = demo.toggle(); assert.equal(demo.isBusy(), false, 'playback cannot start a new async preparation'); await blocked; api.exit();
+});
+test('autopilot slow replacement confirmation accepts/cancels without overload and never resets its private clock', async () => {
+  for (const accept of [false, true]) {
+    const f = fixture('highway', 52, { autopilot: true }), api = f.api, demo = f.window.RoadsterDemo;
+    await demo.toggle(); api.record(); f.frame(); f.frame(); f.frame(); api.stop();
+    const before = plain(demo.clockStats()); f.window.confirm = () => { f.elapse(2); return accept; };
+    assert.equal(api.record(), accept); assert.deepEqual(plain(demo.clockStats()), before);
+    f.frame(); assert.equal(demo.isActive(), true, 'the confirmation modal must not cause a wall-time overload stop'); assert.equal(demo.clockStats().steps, before.steps + 1);
+  }
+});
+test('autopilot preparation begun inside recording stays captured and must settle before playback entry', async () => {
+  const f = fixture('highway', 52, { autopilot: true }), api = f.api, demo = f.window.RoadsterDemo;
+  api.record(); for (let i = 0; i < 3; i++) f.frame(); let release;
+  f.window.RoadsterRanked.prepareForDemo = () => new Promise(resolve => { release = resolve; });
+  await clickAutopilot(f); assert.equal(demo.isBusy(), true); assert.equal(demo.isActive(), false);
+  for (let i = 0; i < 3; i++) f.frame(); assert.equal(api.stats().mode, 'recording'); api.stop();
+  assert.equal(api.play(), false); release(); await flushAutopilot(); assert.equal(demo.isActive(), true);
+  const state = JSON.stringify(f.parts.state), clock = plain(demo.clockStats());
+  assert.equal(api.play(), true); assert.match(f.ids.get('replay-status').textContent, /autopilot.*frozen/);
+  f.frame(.1); assert.equal(JSON.stringify(f.parts.state), state); assert.deepEqual(plain(demo.clockStats()), clock); api.exit();
+});
+test('autopilot airborne live checkpoint is preserved; blur safety cancellation is never silently re-armed', async () => {
+  const f = fixture('highway', 52, { autopilot: true }), api = f.api, demo = f.window.RoadsterDemo;
+  await demo.toggle(); api.record(); for (let i = 0; i < 3; i++) f.frame();
+  // Explicit airborne witness after normal activation, not a claim that this
+  // fixture proves a planner-generated jump or a default-spawn journey.
+  f.evaluate('state.y=3;state.vy=-2;state.pitch=-.2;state.roll=.35;state.wasAirborne=true;');
+  for (let i = 0; i < 6; i++) f.frame(); api.stop(); assert.equal(demo.isActive(), true); assert.ok(f.parts.state.y > .15);
+  const state = JSON.stringify(f.parts.state), pose = plain([f.parts.playerWrapper.position.toArray(), f.parts.roadsterAttitudeGroup.quaternion.toArray()]), clock = plain(demo.clockStats());
+  assert.equal(api.play(), true); api.pause(); api.seek(0); f.frame(.1); api.exit();
+  assert.equal(JSON.stringify(f.parts.state), state); assert.deepEqual(plain([f.parts.playerWrapper.position.toArray(), f.parts.roadsterAttitudeGroup.quaternion.toArray()]), pose); assert.deepEqual(plain(demo.clockStats()), clock); assert.equal(demo.isActive(), true);
+  api.play(); f.window.emit('blur'); assert.equal(api.stats().mode, 'paused'); assert.equal(demo.isBusy(), false);
+  assert.equal(f.ids.get('btn-highway-demo').textContent, 'Autopilot', 'existing UI reports that safety stopped the owner');
+  api.exit(); assert.equal(demo.isBusy(), false, 'never call toggle to re-arm an airborne/background-stopped driver'); assert.equal(JSON.stringify(f.parts.state), state);
+});
+test('autopilot collision/debris and normal performance-stop transitions keep the recording valid', async () => {
+  const crash = fixture('highway', 52, { autopilot: true }); await crash.window.RoadsterDemo.toggle(); crash.api.record(); for (let i = 0; i < 3; i++) crash.frame();
+  crash.evaluate("triggerPhysicsCollision(30,'crashReasonThreshold',0,0,0)"); crash.frame();
+  assert.equal(crash.window.RoadsterDemo.isBusy(), false); assert.equal(crash.api.stats().mode, 'recording'); assert.equal(crash.api.stats().debris, 34); crash.api.stop();
+  const state = JSON.stringify(crash.parts.state); assert.equal(crash.api.play(), true); crash.api.pause(); crash.api.seek(crash.api.stats().duration);
+  assert.equal(crash.parts.scene.getObjectByName('temporary-replay-debris').children.filter(n => n.visible).length, 34); crash.api.exit(); assert.equal(JSON.stringify(crash.parts.state), state); assert.equal(crash.window.RoadsterDemo.isBusy(), false);
+  const slow = fixture('highway', 52, { autopilot: true }); await slow.window.RoadsterDemo.toggle(); slow.api.record(); for (let i = 0; i < 3; i++) slow.frame();
+  slow.frame(.2); assert.equal(slow.window.RoadsterDemo.isBusy(), false); assert.equal(slow.api.stats().mode, 'recording'); slow.frame(); slow.api.stop(); assert.ok(slow.api.stats().duration > 0); assert.equal(slow.api.play(), true); slow.api.exit();
 });

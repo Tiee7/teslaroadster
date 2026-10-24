@@ -1,0 +1,106 @@
+{
+  "schema": "ram-replay-source-epoch-v2-autopilot",
+  "basePreview": "f2cbd9b3557e242ff40f2291df02fa3e224f7c61",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "productionPreserved": "dpl_7sJARPobcCozbJP8bGqRGS5uehci",
+  "publicationScope": "preview-only; same PR20; no main merge or production deployment",
+  "inheritedEpoch": "verification/coast-building-separation-20261023/source-epoch.json",
+  "inheritedEpochSha256": "b318aba21b70566993653d6853b78db72749bc512e5d1c5df2ddb3e623c9031a",
+  "authorization": "Autopilot motion must be recordable as actual post-physics vehicle state; retain temporary page-RAM-only data and preview-only publication bounds.",
+  "frozenSourceSha256": {
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/render-diagnostics.js": "8254e1cbdf37ef1256726a3068f622ea70f6fb8d3be9006b0a8e069168499397",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-road-network.js": "9ad29e5666e0d753953617b3c5ccf353bdd6bff732014a34f5200c0be13e2690",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/physics-main.js": "273e70d8f39cb2d6f9d47706b00fd27dbef21235052e01d255d9f7429432ed0e",
+    "src/coast-map.js": "3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe",
+    "src/demo-numeric-projection.js": "598d35f7bbda55ea2d408f3f433ac44f7c0e136f3de97dfc64e2d020ddd1fff1",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "872f2e48f065664bf1b0cff121fbb884f1a56bf6d1c83bafae87362a2b3a4956",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "c54cf7ffc41dad82a06e387d3623548229d0e307fd64ff7cf02f2eeb9ce57a0e"
+  },
+  "authorizedSourceSha256": {
+    "bundle_app.py": "06aebb3c896680de14015ddc5a44e018f96aa3a074b903c6808938702d92ba5b",
+    "index.html": "9b5e9c9701a934bcefeea0c268768325d2656ca0355211fc3115fc7a0a8bb51e",
+    "src/index.html": "5e89c099abd04b68b5fcdbf2c9bbaf7adbb82cfec802902d6442b7fe45e10849",
+    "src/styles.css": "17621b926b56509d37c6a112f411f06c3ec1927c85c84b93516b7365df4460cd",
+    "src/leaderboard.js": "7c352894696349d66fa54411b66b3465351788161b060e31a2090f1147cebce6",
+    "src/mobile-controls.js": "5451890de12b3ecff07f933e483596f5f164ff37705309aa091657982b4c095d",
+    "src/taxi.js": "e376e158bd568e3ddd2ab381905b67588bb9452d58a8bc51dc73930058b871d2",
+    "src/replay-core.js": "5bf06c62ae4628e8ceca3aae9929de3cb47f65f93eb4b5aca165ce06c6865aed",
+    "src/replay.js": "20531135c674529ce26b159d9fd2ca55d90f82755275b811f6d99e9127e38b36"
+  },
+  "baselineSourceFixtures": {
+    "bundle_app.py": {
+      "path": "tests/fixtures/ram-replay-baseline/bundle_app.py",
+      "sha256": "0dfb372f316b8b362d41bb80ba01bd5e0ad37c424dd7c274201966b546eb316b"
+    },
+    "src/index.html": {
+      "path": "tests/fixtures/ram-replay-baseline/src/index.html",
+      "sha256": "17afb2a5e025200d7a8908aad639ba47f29e1e6d317123f4c40c73ed0f6d975d"
+    },
+    "src/styles.css": {
+      "path": "tests/fixtures/ram-replay-baseline/src/styles.css",
+      "sha256": "2788eeeb0b2c79e612416b559ac73af0e6d0fa285674cd1a230f1dcb2e578774"
+    },
+    "src/leaderboard.js": {
+      "path": "tests/fixtures/ram-replay-baseline/src/leaderboard.js",
+      "sha256": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766"
+    },
+    "src/mobile-controls.js": {
+      "path": "tests/fixtures/ram-replay-baseline/src/mobile-controls.js",
+      "sha256": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2"
+    },
+    "src/taxi.js": {
+      "path": "tests/fixtures/ram-replay-baseline/src/taxi.js",
+      "sha256": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a"
+    }
+  },
+  "limits": {
+    "seconds": 300,
+    "bufferBytes": 33554432,
+    "npcMaximum": 52,
+    "sampleHz": 20,
+    "overwrite": false
+  },
+  "unchangedNumericalSources": [
+    "src/physics-main.js",
+    "src/highway-traffic.js",
+    "src/coast-map.js",
+    "src/config.js",
+    "src/ui-hud.js",
+    "src/demo-numeric-projection.js"
+  ],
+  "presentationLimits": [
+    "Explosion fire/smoke and rain particles are not replayed",
+    "Audio and coastal ambient animation are not replayed",
+    "Free camera has ground clearance, not building avoidance"
+  ],
+  "integration": "Active autopilot records with the same post-simulation sampler; only pending preparation blocks entry. Replay guards original controller entry points and freezes the existing planner/clock without stop/restart. Live safety cancellation is not undone; confirmation UI time is resynchronized. Physics, original autopilot and generated projection source are unchanged.",
+  "baseCommit": "2e47ce901e0bf5a52bc18cebde601d045042371c",
+  "inheritedReplayEpoch": "verification/ram-replay-20261023/source-epoch.json",
+  "inheritedReplayEpochSha256": "7a24b20c1a7e5b68dd47eb2624ba36b9b726fe46b63205724e09577257647cde",
+  "previousReplaySourceFixture": {
+    "path": "tests/fixtures/replay-autopilot-baseline/replay.js",
+    "sha256": "87e234a0163d76b5a9d7ed2a2b391aa277113a605fd2b335c6709e79ac57cb12"
+  },
+  "iterationChangedSources": [
+    "index.html",
+    "src/replay.js"
+  ]
+}

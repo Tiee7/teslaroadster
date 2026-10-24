@@ -1,0 +1,208 @@
+TAP version 13
+# Subtest: RAM replay explicitly succeeds f2, preserves production/main and every immutable numerical source
+ok 1 - RAM replay explicitly succeeds f2, preserves production/main and every immutable numerical source
+  ---
+  duration_ms: 47.716795
+  type: 'test'
+  ...
+# Subtest: only the declared replay UI/adapter files advance; taxi rules and ranked algorithms are byte exact outside guards
+ok 2 - only the declared replay UI/adapter files advance; taxi rules and ranked algorithms are byte exact outside guards
+  ---
+  duration_ms: 1.536889
+  type: 'test'
+  ...
+# Subtest: negative live guards reject every declared/frozen source drift and additional unknown gameplay modules
+ok 3 - negative live guards reject every declared/frozen source drift and additional unknown gameplay modules
+  ---
+  duration_ms: 366.892761
+  type: 'test'
+  ...
+# Subtest: autopilot replay succeeds the immutable first RAM epoch without changing its sample fields or numerical owners
+ok 4 - autopilot replay succeeds the immutable first RAM epoch without changing its sample fields or numerical owners
+  ---
+  duration_ms: 2.460948
+  type: 'test'
+  ...
+# Subtest: RAM core copies samples, orders time and brackets/clamps seek without retaining caller arrays
+ok 5 - RAM core copies samples, orders time and brackets/clamps seek without retaining caller arrays
+  ---
+  duration_ms: 3.060749
+  type: 'test'
+  ...
+# Subtest: duration and byte limits stop and preserve the oldest samples, never overwrite or exceed reservation
+ok 6 - duration and byte limits stop and preserve the oldest samples, never overwrite or exceed reservation
+  ---
+  duration_ms: 1.513955
+  type: 'test'
+  ...
+# Subtest: generation/visibility/teleport cuts never interpolate across respawns
+ok 7 - generation/visibility/teleport cuts never interpolate across respawns
+  ---
+  duration_ms: 0.691767
+  type: 'test'
+  ...
+# Subtest: highway: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+ok 8 - highway: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+  ---
+  duration_ms: 965.500297
+  type: 'test'
+  ...
+# Subtest: city: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+ok 9 - city: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+  ---
+  duration_ms: 1134.945676
+  type: 'test'
+  ...
+# Subtest: coast: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+ok 10 - coast: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+  ---
+  duration_ms: 877.021431
+  type: 'test'
+  ...
+# Subtest: actual reset/respawn markers cut short teleports and hidden vehicles remain in the clip
+ok 11 - actual reset/respawn markers cut short teleports and hidden vehicles remain in the clip
+  ---
+  duration_ms: 840.349833
+  type: 'test'
+  ...
+# Subtest: highway: real owner respawn/wrap forces a trajectory cut without changing its physics source
+ok 12 - highway: real owner respawn/wrap forces a trajectory cut without changing its physics source
+  ---
+  duration_ms: 789.677002
+  type: 'test'
+  ...
+# Subtest: city: real owner respawn/wrap forces a trajectory cut without changing its physics source
+ok 13 - city: real owner respawn/wrap forces a trajectory cut without changing its physics source
+  ---
+  duration_ms: 1023.879153
+  type: 'test'
+  ...
+# Subtest: coast: real owner respawn/wrap forces a trajectory cut without changing its physics source
+ok 14 - coast: real owner respawn/wrap forces a trajectory cut without changing its physics source
+  ---
+  duration_ms: 813.757324
+  type: 'test'
+  ...
+# Subtest: focused replay buttons cannot run original R/F/T game shortcuts; native control defaults remain available
+ok 15 - focused replay buttons cannot run original R/F/T game shortcuts; native control defaults remain available
+  ---
+  duration_ms: 840.714597
+  type: 'test'
+  ...
+# Subtest: render-health recovery remains operable during replay and does not resume playback automatically
+ok 16 - render-health recovery remains operable during replay and does not resume playback automatically
+  ---
+  duration_ms: 850.214222
+  type: 'test'
+  ...
+# Subtest: FPV recordings use approved exterior yoke projection during playback and restore exact FPV presentation
+ok 17 - FPV recordings use approved exterior yoke projection during playback and restore exact FPV presentation
+  ---
+  duration_ms: 1782.98293
+  type: 'test'
+  ...
+# Subtest: production crash creates all 34 debris pieces, records their real poses and restores original aftermath
+ok 18 - production crash creates all 34 debris pieces, records their real poses and restores original aftermath
+  ---
+  duration_ms: 884.444402
+  type: 'test'
+  ...
+# Subtest: pause, seek, speed, loop and free pointer / keyboard / phone dolly controls are presentation only
+ok 19 - pause, seek, speed, loop and free pointer / keyboard / phone dolly controls are presentation only
+  ---
+  duration_ms: 829.026492
+  type: 'test'
+  ...
+# Subtest: background stops recording / pauses replay; pagehide and BFCache pageshow release every clip reference
+ok 20 - background stops recording / pauses replay; pagehide and BFCache pageshow release every clip reference
+  ---
+  duration_ms: 872.512865
+  type: 'test'
+  ...
+# Subtest: repeat record / play / clear cycles do not accumulate buffers or source/generated bindings
+ok 21 - repeat record / play / clear cycles do not accumulate buffers or source/generated bindings
+  ---
+  duration_ms: 844.5201
+  type: 'test'
+  ...
+# Subtest: menus cannot trap playback, and replacing traffic with the same count is refused without stale live bindings
+ok 22 - menus cannot trap playback, and replacing traffic with the same count is refused without stale live bindings
+  ---
+  duration_ms: 817.276087
+  type: 'test'
+  ...
+# Subtest: actual adapter automatically stops visibly at its buffer limit and retains its initial samples
+ok 23 - actual adapter automatically stops visibly at its buffer limit and retains its initial samples
+  ---
+  duration_ms: 1165.506582
+  type: 'test'
+  ...
+# Subtest: production animate bypasses every simulation / rank / taxi side effect throughout playback and pause
+ok 24 - production animate bypasses every simulation / rank / taxi side effect throughout playback and pause
+  ---
+  duration_ms: 896.231331
+  type: 'test'
+  ...
+# Subtest: real ranked controller rejects replay-time start and submit, and independent tick cannot advance a run
+ok 25 - real ranked controller rejects replay-time start and submit, and independent tick cannot advance a run
+  ---
+  duration_ms: 19.141352
+  type: 'test'
+  ...
+# Subtest: implementation is RAM-only, labels cinematic limits and is bundled in the required lifecycle order
+ok 26 - implementation is RAM-only, labels cinematic limits and is bundled in the required lifecycle order
+  ---
+  duration_ms: 0.767468
+  type: 'test'
+  ...
+# Subtest: autopilot already active: record real post-physics vehicle/traffic/attitude state, never replay driver inputs
+ok 27 - autopilot already active: record real post-physics vehicle/traffic/attitude state, never replay driver inputs
+  ---
+  duration_ms: 3826.415459
+  type: 'test'
+  ...
+# Subtest: autopilot UI can switch manual/auto/manual/auto during one recording without replacing its population or fields
+ok 28 - autopilot UI can switch manual/auto/manual/auto during one recording without replacing its population or fields
+  ---
+  duration_ms: 2929.185338
+  type: 'test'
+  ...
+# Subtest: autopilot pending preparation cannot race into record/playback; cancellation cannot late-start it
+ok 29 - autopilot pending preparation cannot race into record/playback; cancellation cannot late-start it
+  ---
+  duration_ms: 806.084591
+  type: 'test'
+  ...
+# Subtest: autopilot slow replacement confirmation accepts/cancels without overload and never resets its private clock
+ok 30 - autopilot slow replacement confirmation accepts/cancels without overload and never resets its private clock
+  ---
+  duration_ms: 3238.868828
+  type: 'test'
+  ...
+# Subtest: autopilot preparation begun inside recording stays captured and must settle before playback entry
+ok 31 - autopilot preparation begun inside recording stays captured and must settle before playback entry
+  ---
+  duration_ms: 821.641591
+  type: 'test'
+  ...
+# Subtest: autopilot airborne live checkpoint is preserved; blur safety cancellation is never silently re-armed
+ok 32 - autopilot airborne live checkpoint is preserved; blur safety cancellation is never silently re-armed
+  ---
+  duration_ms: 1524.594487
+  type: 'test'
+  ...
+# Subtest: autopilot collision/debris and normal performance-stop transitions keep the recording valid
+ok 33 - autopilot collision/debris and normal performance-stop transitions keep the recording valid
+  ---
+  duration_ms: 2809.238977
+  type: 'test'
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32374.557948

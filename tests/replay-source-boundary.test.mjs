@@ -41,3 +41,20 @@ test('negative live guards reject every declared/frozen source drift and additio
   assert.throws(() => verify({ 'src/unapproved-extra.js': '' }), /Unknown replay scope/);
   assert.deepEqual(epoch.limits, { seconds: 300, bufferBytes: 33554432, npcMaximum: 52, sampleHz: 20, overwrite: false });
 });
+test('autopilot replay succeeds the immutable first RAM epoch without changing its sample fields or numerical owners', () => {
+  assert.equal(epoch.baseCommit, '2e47ce901e0bf5a52bc18cebde601d045042371c');
+  const oldText = read(epoch.inheritedReplayEpoch), old = JSON.parse(oldText);
+  assert.equal(sha(oldText), epoch.inheritedReplayEpochSha256);
+  assert.deepEqual(epoch.iterationChangedSources, ['index.html', 'src/replay.js']);
+  assert.deepEqual(Object.keys(epoch.authorizedSourceSha256).filter(p => epoch.authorizedSourceSha256[p] !== old.authorizedSourceSha256[p]).sort(), epoch.iterationChangedSources);
+  assert.deepEqual(epoch.frozenSourceSha256, old.frozenSourceSha256);
+  const previous = read(epoch.previousReplaySourceFixture.path), current = read('src/replay.js');
+  assert.equal(sha(previous), epoch.previousReplaySourceFixture.sha256); assert.equal(sha(previous), old.authorizedSourceSha256['src/replay.js']);
+  const unchanged = [['function buildBindings()', 'const trafficToken'], ['function dataFor(', 'function applyOne('], ['function applyOne(', 'function snapshotLive('], ['function capture(', 'function afterTick('], ['function afterTick(', 'function releaseClip('], ['function renderFrame(', 'function frame('], ['function frame(', 'function renderUi(']];
+  for (const [start, end] of unchanged) {
+    const section = source => source.slice(source.indexOf(start), source.indexOf(end, source.indexOf(start)));
+    assert.ok(section(previous).length > 20); assert.equal(section(current), section(previous), start);
+  }
+  assert.equal(sha(read('src/highway-demo.js')), old.frozenSourceSha256['src/highway-demo.js']);
+  assert.equal(sha(read('src/physics-main.js')), old.frozenSourceSha256['src/physics-main.js']);
+});

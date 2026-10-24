@@ -14,6 +14,7 @@
   const zh = () => currentLang === 'zh';
   const active = () => mode === 'playing' || mode === 'paused';
   const busy = () => mode !== 'drive';
+  const autopilotPreparing = () => window.RoadsterDemo?.isBusy?.() && !window.RoadsterDemo?.isActive?.();
   const text = (en, cn) => zh() ? cn : en;
   const signature = () => `${currentMap}|${trafficCars.length}|${paintIndex}|${weatherIndex}|${window.RoadsterVehicle?.getModel?.() || ''}|${window.RoadsterVehicle?.getCockpit?.() || ''}`;
   const matchesScene = () => metadata && metadata.signature === signature() && metadata.population === trafficCars;
@@ -129,8 +130,14 @@
     effectRoot.clear(); effectRoot.visible = false; message = ''; elapsed = playhead = nextSample = 0; renderUi();
   }
   function record() {
-    if (active() || overlayOpen() || window.RoadsterRanked?.isActive?.() || window.RoadsterDemo?.isBusy?.()) { message = 'busy'; renderUi(); return false; }
-    if (buffer.stats().frames && !window.confirm(text('Replace the temporary clip? The old clip will be cleared.', '开始新录制会清除现有临时片段，是否继续？'))) return false;
+    if (active() || overlayOpen() || window.RoadsterRanked?.isActive?.() || autopilotPreparing()) { message = 'busy'; renderUi(); return false; }
+    if (buffer.stats().frames) {
+      const replace = window.confirm(text('Replace the temporary clip? The old clip will be cleared.', '开始新录制会清除现有临时片段，是否继续？'));
+      // A synchronous dialog must not become autopilot's >150ms clock debt.
+      // Keep its private planner and fractional accumulator; discard UI time only.
+      lastTime = performance.now();
+      if (!replace) return false;
+    }
     releaseClip(); buildBindings();
     metadata = { signature: signature(), population: trafficCars, map: currentMap, vehicles: trafficCars.length + 1, build: window.RoadsterBuildInfo?.id || '', weather: weatherIndex };
     $('replay-target').innerHTML = '<option value="0">Player / 我的车</option>' + trafficCars.map((_, i) => `<option value="${i + 1}">NPC ${i + 1} / 交通车 ${i + 1}</option>`).join('');
@@ -143,7 +150,7 @@
     if (buffer.stats().frames < 2 || !buffer.duration()) return false;
     if (!matchesScene()) { message = 'configuration'; renderUi(); return false; }
     if (!active()) {
-      if (overlayOpen() || window.RoadsterRanked?.isActive?.() || window.RoadsterDemo?.isBusy?.()) { message = 'busy'; renderUi(); return false; }
+      if (overlayOpen() || window.RoadsterRanked?.isActive?.() || autopilotPreparing()) { message = 'busy'; renderUi(); return false; }
       checkpoint = snapshotLive(); clearInput();
       if (checkpoint.taxiMarker) checkpoint.taxiMarker.visible = false;
       debrisGroup.visible = explosionGroup.visible = tireSmokeGroup.visible = rainLinesMesh.visible = false;
@@ -154,7 +161,7 @@
       sound.update(0, false, false, true);
     }
     if (playhead >= buffer.duration()) playhead = 0;
-    mode = 'playing'; open = true; renderFrame(0); renderUi(); return true;
+    message = ''; mode = 'playing'; open = true; renderFrame(0); renderUi(); return true;
   }
   function pause() { if (mode === 'playing') mode = 'paused'; clearInput(); renderUi(); }
   function exit() {
@@ -236,8 +243,8 @@
     $('replay-pause').disabled = mode !== 'playing'; $('replay-exit').disabled = !active(); $('replay-clear').disabled = !stats.frames || mode === 'recording';
     $('replay-seek').disabled = !active(); $('replay-seek').max = String(stats.duration); $('replay-seek').value = String(active() ? playhead : 0);
     $('replay-time').textContent = `${(active() ? playhead : stats.duration).toFixed(1)} / ${stats.duration.toFixed(1)} s · ${(stats.bytes / 1048576).toFixed(1)} / 32 MiB · ${metadata?.vehicles || 0} ${text('vehicles', '辆车')}`;
-    const notices = { memory: text('Buffer limit reached. Recording stopped; clip retained.', '已达内存上限，录制自动停止，已有片段已保留。'), duration: text('5-minute limit reached. Clip retained.', '已达5分钟上限，录制自动停止，已有片段已保留。'), hidden: text('Page hidden: recording stopped / replay paused.', '页面转入后台：已停止录制或暂停回放。'), graphics: text('Graphics interrupted: recording stopped; clip retained.', '图形中断：录制已停止，片段已保留。'), configuration: text('Scene changed. Clear this clip before recording again.', '场景配置已改变，请清除片段后重新录制。'), busy: text('Close menus or finish the challenge/demo first.', '请先关闭菜单，或结束排位/自动演示。'), locked: text('Clear the clip before changing map or configuration.', '请先清除临时片段，再更换地图或配置。') };
-    $('replay-status').textContent = notices[message] || (mode === 'recording' ? text('Recording all vehicles. Stops at 5 min or 32 MiB; never overwrites.', '正在记录所有车辆。5分钟或32MiB自动停止，不循环覆盖。') : active() ? text('Playback only — driving, score and taxi are frozen.', '回放中：驾驶、计分、出租车均已冻结。') : text('Record → Stop → Play. Refresh / leaving this page clears the clip.', '录制 → 停止 → 回放。刷新或离开网页后清除。'));
+    const notices = { memory: text('Buffer limit reached. Recording stopped; clip retained.', '已达内存上限，录制自动停止，已有片段已保留。'), duration: text('5-minute limit reached. Clip retained.', '已达5分钟上限，录制自动停止，已有片段已保留。'), hidden: text('Page hidden: recording stopped / replay paused.', '页面转入后台：已停止录制或暂停回放。'), graphics: text('Graphics interrupted: recording stopped; clip retained.', '图形中断：录制已停止，片段已保留。'), configuration: text('Scene changed. Clear this clip before recording again.', '场景配置已改变，请清除片段后重新录制。'), busy: text('Close menus, finish the challenge or wait for autopilot preparation.', '请先关闭菜单、结束排位，或等待自动驾驶准备完成。'), locked: text('Clear the clip before changing map or configuration.', '请先清除临时片段，再更换地图或配置。') };
+    $('replay-status').textContent = notices[message] || (mode === 'recording' ? text('Recording all vehicles — manual and autopilot. Stops at 5 min or 32 MiB; never overwrites.', '正在记录所有车辆（含手动和自动驾驶）。5分钟或32MiB自动停止，不循环覆盖。') : active() ? text('Playback only — autopilot, driving, score and taxi are frozen.', '回放中：自动驾驶、驾驶、计分、出租车均已冻结。') : text('Record → Stop → Play. Refresh / leaving this page clears the clip.', '录制 → 停止 → 回放。刷新或离开网页后清除。'));
     $('replay-note').textContent = text('Vehicle / debris trajectories and jets recorded. Explosion fire/smoke, rain, audio and coastal ambient animation are not replayed. Free camera has ground clearance, not building avoidance. Drag to look; wheel / + / − to move; WASD + Q/E in Free view.', '记录车辆、碎片轨迹与喷气。爆炸火球烟雾、雨滴、音频及海岸环境动画暂不回放。自由镜头有贴地保护，无建筑避障。拖动转向；滚轮或＋／−移动；自由机位可用WASD＋Q/E。');
   }
   $('btn-replay')?.addEventListener('click', () => { open = !open; renderUi(); });
@@ -255,7 +262,7 @@
   canvas.addEventListener('pointermove', e => { if (!active() || free.drag?.id !== e.pointerId) return; if (cameraMode !== 'free') enterFree(); free.yaw -= (e.clientX - free.drag.x) * .006; free.pitch = Math.max(-1.4, Math.min(1.4, free.pitch - (e.clientY - free.drag.y) * .006)); free.drag.x = e.clientX; free.drag.y = e.clientY; });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(type, () => { free.drag = null; });
   canvas.addEventListener('wheel', e => { if (active()) { e.preventDefault(); e.stopImmediatePropagation(); dolly(Math.sign(e.deltaY)); } }, { passive: false, capture: true });
-  const lockedIds = new Set(['btn-map-select', 'btn-crash-switch-map', 'btn-physics-mode', 'btn-plaid-mode', 'btn-paint', 'btn-weather', 'btn-traffic', 'btn-highway-demo', 'btn-leaderboard', 'ranked-hud-open', 'ranked-start']);
+  const lockedIds = new Set(['btn-map-select', 'btn-crash-switch-map', 'btn-physics-mode', 'btn-plaid-mode', 'btn-paint', 'btn-weather', 'btn-traffic', 'btn-leaderboard', 'ranked-hud-open', 'ranked-start']);
   document.addEventListener('click', e => { const button = e.target.closest?.('button'); if (button?.closest('#render-health-overlay')) return; if ((active() && button && !button.closest('#replay-panel') && button.id !== 'btn-replay') || (buffer.stats().frames && lockedIds.has(button?.id))) { e.preventDefault(); e.stopImmediatePropagation(); message = 'locked'; open = true; renderUi(); return; }
     // These existing listeners hold the original reset function by reference.
     if (mode === 'recording' && ['btn-reset', 'btn-crash-respawn'].includes(button?.id)) { resetGeneration++; pendingCut = true; }
@@ -302,6 +309,17 @@
   };
   const input = setKeyState;
   setKeyState = function (code, isDown) { if (isDown && active()) return; return input.apply(this, arguments); };
+  // Keep the live autopilot closure intact while watching history, including an
+  // airborne checkpoint. Stopping/restarting it would reset its planner/clock.
+  // Safety stop() on blur/pagehide remains the original owner and is not undone.
+  if (window.RoadsterDemo) for (const method of ['step', 'advanceFrame', 'toggle']) {
+    const run = window.RoadsterDemo[method];
+    if (typeof run !== 'function') continue;
+    window.RoadsterDemo[method] = function () {
+      if (active()) return method === 'toggle' ? Promise.resolve(false) : method === 'advanceFrame' ? null : undefined;
+      return run.apply(this, arguments);
+    };
+  }
   if (window.__gameTestHooks) window.__gameTestHooks.resetCar = resetCar;
   renderUi();
 })();

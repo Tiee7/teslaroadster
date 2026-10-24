@@ -226,3 +226,21 @@ serves a later commit.
 - Continue existing PR20/dev only. User-promoted f2 production and main are not
   authorized to change. Final regression and independent READY preview evidence
   belong to this iteration; never infer that an older preview serves it.
+
+## Autopilot recording successor
+
+- Succeeds2e47ce9; see `verification/ram-replay-autopilot-20261024/`. Active highway
+  autopilot and manual/autopilot switches are recordable through the same actual
+  post-simulation snapshots, never a replay of keyboard or planner decisions.
+- Only replay adapter/root bundle change at runtime. Pending preparation blocks
+  replay entry; playback freezes the existing owner without stop/restart, retains
+  fractional clock debt, and excludes replay/confirmation wall time. Existing
+  focus-loss/background safety stops remain stopped on return.
+- Native CPU scene coverage includes the real original physics + autopilot/clock,
+  all53 vehicles, attitude/wheels, switching, async preparation, airborne restore,
+  confirmation accept/cancel, actual crash debris and performance-stop continuity.
+  It is not browser visual/FPS evidence. Prior browser/HTTP restrictions remain;
+  do not treat the new feature request as navigation permission.
+- Retain the original RAM-only cleanup,5min-or32MiB-first limit, no overwrite,
+  no persistence/upload/download, no particle-perfect/video/obstruction promises.
+  Five minutes is an upper bound, not a guaranteed clip duration on every map.
