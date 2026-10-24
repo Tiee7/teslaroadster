@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>2026 Tesla Roadster SpaceX Thruster Flight & Highway Simulator</title>
+  <!-- Vercel Web Analytics: official plain-HTML integration; independent of WebGL. -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="relative w-full h-full overflow-hidden">
+
+  <!-- 3D WebGL Viewport -->
+  <div id="game-canvas-container"></div>
+  <dialog id="render-health-overlay" class="render-health-overlay" aria-labelledby="render-health-title" aria-describedby="render-health-message" tabindex="-1" hidden>
+    <div class="render-health-panel">
+      <h2 id="render-health-title">Graphics interrupted — driving paused</h2>
+      <p id="render-health-message" role="status" aria-live="assertive">Driving simulation is paused while graphics recover.</p>
+      <button id="render-health-resume" type="button" disabled>Continue driving</button>
+    </div>
+  </dialog>
+  <!-- Dynamic Speed Lines, Supersonic Vignette & Rain Windshield VFX Overlay -->
+  <canvas id="vfx-overlay-canvas" class="fixed inset-0 pointer-events-none z-[5] w-full h-full"></canvas>
+
+  <!-- Unified Non-Overlapping Top HUD Container -->
+  <div id="hud-top-container" class="fixed inset-x-0 top-0 z-10 pointer-events-none flex flex-col">
+  <!-- Top Navigation & Telemetry Header -->
+  <header id="hud-header" class="relative z-10 pointer-events-none flex flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-5 md:py-2.5">
+    <!-- Brand & Model Badge -->
+    <div id="hud-brand-badge" class="pointer-events-auto glass-panel rounded-xl px-3.5 py-2 flex items-center gap-3">
+      <div class="w-2.5 h-8 rounded-full bg-gradient-to-b from-cyan-400 via-sky-500 to-blue-600 shadow-[0_0_12px_rgba(56,189,248,0.8)]"></div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="ui-title" class="font-extrabold tracking-tight text-sm md:text-base text-white">TESLA ROADSTER // SPACEX ROCKET PKG</span>
+          <span class="hidden sm:inline-block text-[10px] mono uppercase px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">80kN • 10 RCS</span>
+        </div>
+        <p id="ui-subtitle" class="text-[11px] text-slate-300">Oct 15, 2026 McGregor Demo Spec • 600L COPV Cold-Gas Thrusters</p>
+      </div>
+    </div>
+
+    <!-- Action Controls Bar -->
+    <div id="hud-action-bar" class="pointer-events-auto flex flex-wrap items-center gap-1.5 md:gap-2">
+      <button id="btn-highway-demo" type="button" class="ranked-button ranked-nav highway-demo-toggle" aria-pressed="false">Autopilot</button>
+      <span id="city-taxi-help" class="sr-only"></span>
+      <button id="btn-leaderboard" type="button" class="ranked-button ranked-nav">🏁 Leaderboard</button>
+
+      <!-- Language Switcher (Default EN, toggle ZH) -->
+      <button id="btn-lang" type="button" class="glass-panel hover:bg-sky-500/20 active:scale-95 transition rounded-lg px-3 py-1.5 text-xs font-bold text-cyan-300 border border-cyan-400/40 flex items-center gap-1.5 cursor-pointer">
+        <span>🌐</span>
+        <span id="lang-label">中文 / EN</span>
+      </button>
+
+      <!-- Map Selector Button -->
+      <button id="btn-map-select" type="button" class="glass-panel hover:bg-indigo-500/25 active:scale-95 transition rounded-lg px-3 py-1.5 text-xs font-bold text-indigo-200 border border-indigo-400/40 flex items-center gap-1.5 cursor-pointer">
+        <span>🗺️</span>
+        <span id="ui-map-btn">Map: Elevated Highway (M)</span>
+      </button>
+
+            <!-- Physics Mode Toggle (Realistic vs Fantasy) -->
+      <button id="btn-physics-mode" type="button" class="glass-panel hover:bg-emerald-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-bold text-emerald-300 border border-emerald-400/40 flex items-center gap-1.5 cursor-pointer">
+        <span id="physics-mode-icon">⚡</span>
+        <span id="ui-physics-mode-btn">Mode: Realistic (F)</span>
+      </button>
+
+      <!-- Insane / Plaid Mode Toggle (Y) (Realistic mode up to 370 km/h) -->
+      <button id="btn-plaid-mode" type="button" class="glass-panel hover:bg-rose-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-bold text-rose-300 border border-rose-400/40 flex items-center gap-1.5 cursor-pointer">
+        <span id="plaid-mode-icon">🔥</span>
+        <span id="ui-plaid-mode-btn">Plaid: OFF (Y)</span>
+      </button>
+
+      <!-- Speed Unit Toggle (KM/h vs MPH) (U) -->
+      <button id="btn-unit-toggle" type="button" class="glass-panel hover:bg-sky-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-bold text-cyan-300 border border-cyan-400/40 flex items-center gap-1.5 cursor-pointer">
+        <span>⏱️</span>
+        <span id="ui-unit-btn">Unit: KM/h (B)</span>
+      </button>
+      <!-- Paint Finish Selector -->
+      <button id="btn-paint" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 flex items-center gap-1.5 cursor-pointer">
+        <span id="paint-dot" class="w-2.5 h-2.5 rounded-full bg-slate-100 border border-white"></span>
+        <span id="ui-paint-btn">Finish: Ano White</span>
+      </button>
+
+      <!-- Weather & Time Selector (Section III.3) -->
+      <button id="btn-weather" type="button" class="glass-panel hover:bg-amber-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-amber-200 border border-amber-400/30 flex items-center gap-1.5 cursor-pointer">
+        <span id="weather-icon">🌌</span>
+        <span id="ui-weather-btn">Sky: Cyber Night (T)</span>
+      </button>
+
+      <!-- Traffic Density Selector -->
+      <button id="btn-traffic" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 cursor-pointer">
+        <span id="ui-traffic-btn">Traffic: Heavy (36)</span>
+      </button>
+
+      <!-- Camera View Toggle -->
+      <button id="btn-camera" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 cursor-pointer">
+        <span id="ui-camera-btn">Cam: Chase</span>
+      </button>
+
+      <!-- Camera Distance Zoom Toggle Button -->
+      <button id="btn-camera-zoom" type="button" class="glass-panel hover:bg-cyan-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-400/30 cursor-pointer" title="Adjust Camera Zoom ([ / ] or Mouse Wheel)">
+        <span id="ui-camera-zoom-btn">🔍 Zoom: Close</span>
+      </button>
+      <!-- HUD Mode Toggle (Full → Medium → Minimal) -->
+      <button id="btn-hud-mode" type="button" class="glass-panel hover:bg-cyan-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-400/30 cursor-pointer" title="Cycle HUD: Full → Medium → Minimal (Z)" aria-label="Cycle HUD: Full → Medium → Minimal (Z)">
+        <span id="ui-hud-mode-btn">🖥️ HUD: Full (Z)</span>
+      </button>
+
+      <button id="btn-settings" type="button" class="ranked-button ranked-nav" aria-haspopup="dialog" aria-controls="audio-settings">⚙ Settings</button>
+
+      <!-- Sound Effects Toggle (music is controlled separately in Settings) -->
+      <button id="btn-sound" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 cursor-pointer">
+        <span id="ui-sound-btn">🔊 SFX: ON</span>
+      </button>
+
+      <!-- Reset Car Button -->
+      <button id="btn-reset" type="button" class="glass-panel hover:bg-amber-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-amber-300 border border-amber-400/30 cursor-pointer">
+        <span id="ui-reset-btn">↺ Reset (R)</span>
+      </button>
+
+      <!-- Instructions / Spec Modal Toggle -->
+      <button id="btn-help" type="button" class="glass-panel hover:bg-cyan-500/20 active:scale-95 transition rounded-lg px-3 py-1.5 text-xs font-bold text-white bg-cyan-600/30 border border-cyan-400/50 cursor-pointer">
+        <span id="ui-help-btn">? Controls & Specs (P)</span>
+      </button>
+    </div>
+  </header>
+  <div id="hud-main">
+  <!-- Notifications are an overlay, independent of the anchored side panels. -->
+  <div id="hud-notifications">
+  <div id="ranked-hud" class="ranked-hud" data-phase="idle">
+    <button id="ranked-hud-open" type="button" aria-haspopup="dialog"><span id="ranked-hud-status" role="status">Sandbox • challenge is optional</span><strong id="ranked-countdown" aria-live="off"></strong></button>
+    <button id="ranked-hud-dismiss" type="button" aria-label="Hide challenge status">✕</button>
+  </div>
+
+  <!-- Center Alert Banner for Thruster Status (8s Auto-Descent / 10s Freefall / Stunt Bonus) -->
+  <div class="relative z-10 pointer-events-none flex flex-col items-center justify-center mt-1 px-4">
+    <div id="status-banner" class="hidden glass-panel rounded-xl px-4 py-2 text-center border-2 transition-all duration-150">
+      <div id="status-banner-title" class="text-xs md:text-sm font-extrabold tracking-wider uppercase"></div>
+      <div id="status-banner-sub" class="text-[11px] text-slate-200 mt-0.5"></div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Side panels stay anchored below the header when notifications change. -->
+  <div id="hud-side-panels" class="pointer-events-none">
+  <!-- Left HUD: Clean, Grouped 6-DOF Attitude & Controls Guide Card -->
+  <aside id="hud-left" class="pointer-events-auto glass-panel rounded-xl p-3 w-72 md:w-80 transition-all duration-200 max-h-[calc(100vh-11.5rem)] overflow-y-auto">
+    <div id="hud-left-header" class="flex items-center justify-between gap-2 border-b border-slate-700/70 pb-1.5 mb-2">
+      <span id="ui-controls-header" class="text-xs font-bold uppercase tracking-wider text-cyan-400">Flight & Drive Controls</span>
+      <button id="btn-collapse-guide" type="button" aria-controls="guide-body" class="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800/90 text-cyan-300 hover:text-white hover:bg-slate-700 cursor-pointer" title="Minimize / Expand">[_]</button>
+    </div>
+
+    <div id="guide-body" class="space-y-1.5 text-xs">
+      <!-- 1. Driving & Rear Rocket Boost -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-drive" class="ctrl-label">Drive • Rear Jet</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-w" data-hold-key="KeyW" class="key-badge cursor-pointer active:scale-95 select-none" title="Drive Forward (W)">W</span>
+          <span id="key-semi" data-hold-key="Semicolon" class="key-badge text-cyan-300 border-cyan-400 cursor-pointer active:scale-95 select-none hover:bg-cyan-500/25 transition" title="SpaceX Rear Rocket Boost (;)">; Jet</span>
+          <span id="key-i" class="hidden">I</span>
+        </div>
+      </div>
+
+      <!-- 2. Ground Steer & Mid-Air Nose Yaw -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-steer" class="ctrl-label">Steer / Air Yaw</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-a" data-hold-key="KeyA" class="key-badge cursor-pointer active:scale-95 select-none" title="Steer Left (A)">A ◀</span>
+          <span id="key-d" data-hold-key="KeyD" class="key-badge cursor-pointer active:scale-95 select-none" title="Steer Right (D)">▶ D</span>
+        </div>
+      </div>
+
+      <!-- 3. Foot Brake (H) & Reverse (S) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-brake" class="ctrl-label">Foot Brake • Rev</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-h" data-hold-key="KeyH" class="key-badge text-rose-300 border-rose-400 cursor-pointer active:scale-95 select-none" title="Foot Brake (H)">H Brake</span>
+          <span id="key-s" data-hold-key="KeyS" class="key-badge cursor-pointer active:scale-95 select-none" title="Reverse (S)">S Rev</span>
+          <span id="key-k" class="hidden">K</span>
+        </div>
+      </div>
+
+      <!-- 4. Handbrake Drift (U) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-handbrake" class="ctrl-label">Handbrake Drift</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-u" data-hold-key="KeyU" class="key-badge text-amber-300 border-amber-400 cursor-pointer active:scale-95 select-none" title="Handbrake Drift (U)">U Drift</span>
+        </div>
+      </div>
+
+      <!-- 5. Ascend (+30%) & 6m Quick Jump (O) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-hover" class="ctrl-label">Climb • 6m Jump</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-space" class="key-badge text-cyan-300 border-cyan-400">SPACE</span>
+          <span id="key-o" class="key-badge text-emerald-300 border-emerald-400" title="2.5x Speed Quick Jump to 6m">O (6m)</span>
+        </div>
+      </div>
+
+      <!-- 6. Air Altitude Hold (N) & Thrust Descend (SHIFT) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-descend" class="ctrl-label">Alt Hold • Descend</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-n" class="key-badge text-teal-300 border-teal-400" title="Hold Current Altitude in Mid-Air (Low Air Use)">N Hold</span>
+          <span id="key-shift" class="key-badge">SHIFT</span>
+        </div>
+      </div>
+
+      <!-- 7. Airborne Lateral Move (Q / E) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-air-jets" class="ctrl-label">Air Strafe L / R</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-q" class="key-badge text-cyan-300">Q ◀</span>
+          <span id="key-e" class="key-badge text-cyan-300">▶ E</span>
+        </div>
+      </div>
+
+      <!-- 8. Roll (J/L) & Pitch (I/K) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-roll" class="ctrl-label">Roll • Pitch</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-left" data-hold-key="KeyJ" class="key-badge cursor-pointer" title="Roll Left (J or Left Arrow)">J ↺</span>
+          <span id="key-right" data-hold-key="KeyL" class="key-badge cursor-pointer" title="Roll Right (L or Right Arrow)">L ↻</span>
+          <span id="key-up" data-hold-key="KeyI" class="key-badge cursor-pointer" title="Pitch Up (I or Up Arrow)">I ▲</span>
+          <span id="key-down" data-hold-key="KeyK" class="key-badge cursor-pointer" title="Pitch Down (K or Down Arrow)">K ▼</span>
+        </div>
+      </div>
+
+      <!-- 9. Plaid (Y) & Speed Unit Toggle (B) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-modes" class="ctrl-label">Plaid • Speed Unit</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-y" class="key-badge text-rose-300">Y 370</span>
+          <span id="key-b" class="key-badge text-sky-300">B Unit</span>
+        </div>
+      </div>
+
+      <!-- 11. Camera Distance Zoom ([ / ] or Wheel) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-zoom" class="ctrl-label">Camera Zoom</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span class="key-badge text-cyan-300" title="Zoom In / Out ([ / ] or Mouse Wheel)">[ / ]</span>
+          <span class="key-badge text-sky-300" title="Mouse Scroll Wheel">Wheel</span>
+        </div>
+      </div>
+
+      <!-- 10. Cockpit FPV (C) & Weather (T) -->
+      <div class="ctrl-row">
+        <span id="ui-ctrl-fpv-weather" class="ctrl-label">Cockpit FPV • Sky</span>
+        <div class="flex items-center gap-1 shrink-0">
+          <span id="key-c" class="key-badge text-amber-300">C FPV</span>
+          <span id="key-t" class="key-badge text-cyan-300">T Sky</span>
+        </div>
+      </div>
+
+      <!-- Hidden compatibility element for ui-ctrl-reverse -->
+      <span id="ui-ctrl-reverse" class="hidden">Reverse Drive (S)</span>
+
+      <!-- 11. RCS Auto-Stabilizer toggle (X) -->
+      <div class="pt-1 border-t border-slate-700/70 flex items-center justify-between px-1">
+        <span id="ui-stabilizer-label" class="text-[11px] text-slate-300">RCS Auto-Stabilizer</span>
+        <button id="btn-stabilizer" type="button" class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 cursor-pointer">
+          <span id="ui-stabilizer-state">ON (X)</span>
+        </button>
+      </div>
+
+      <!-- Air Tank Physics Rule Note -->
+      <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/80 text-[11px] text-slate-300 leading-relaxed">
+        <div id="ui-rule-title" class="font-bold text-amber-300 mb-0.5">⚡ 600L COPV Air Tank Rules:</div>
+        <div id="ui-rule-desc">
+          • Capacity: <b class="text-white">10.0s</b> continuous thrust (<b class="text-teal-300">N</b> holds alt with low air).<br/>
+          • <b class="text-amber-300">8.0s</b> Auto-Descent → <b class="text-rose-400">10.0s</b> Freefall | Impact ≥ <b class="text-white">18.0 G</b> Total Destruction!
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right HUD: 6-DOF Attitude Gyro, 10-Nozzle Indicator & Score Telemetry -->
+  <aside id="hud-right" class="pointer-events-none flex flex-col items-end gap-2">
+    <div id="hud-right-card" class="glass-panel rounded-xl p-3 w-56 md:w-64 pointer-events-auto transition-all duration-200 max-h-[calc(100vh-12.5rem)] overflow-y-auto">
+      <div id="hud-right-header" class="flex items-center justify-between gap-1.5 border-b border-slate-700/70 pb-1.5 mb-2">
+        <span id="ui-telemetry-header" class="text-xs font-bold uppercase tracking-wider text-cyan-400">6-DOF RCS Telemetry</span>
+        <div class="flex items-center gap-1">
+          <span id="ui-flight-mode" class="text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">GROUND</span>
+          <button id="btn-collapse-telemetry" type="button" aria-controls="telemetry-body" class="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800/90 text-cyan-300 hover:text-white hover:bg-slate-700 cursor-pointer" title="Minimize / Expand">[_]</button>
+        </div>
+      </div>
+
+      <div id="telemetry-body">
+      <div class="grid grid-cols-3 gap-1.5 text-center mb-2">
+        <div class="bg-slate-900/80 rounded-lg p-1.5 border border-slate-800">
+          <div id="ui-lbl-roll" class="text-[10px] text-slate-400">ROLL</div>
+          <div id="val-roll" class="mono text-xs font-bold text-cyan-300">0°</div>
+        </div>
+        <div class="bg-slate-900/80 rounded-lg p-1.5 border border-slate-800">
+          <div id="ui-lbl-pitch" class="text-[10px] text-slate-400">PITCH</div>
+          <div id="val-pitch" class="mono text-xs font-bold text-cyan-300">0°</div>
+        </div>
+        <div class="bg-slate-900/80 rounded-lg p-1.5 border border-slate-800">
+          <div id="ui-lbl-yaw" class="text-[10px] text-slate-400">YAW</div>
+          <div id="val-yaw" class="mono text-xs font-bold text-cyan-300">0°</div>
+        </div>
+      </div>
+
+      <!-- Structural Integrity & Peak G-Force Threshold Bar -->
+      <div class="bg-slate-900/85 rounded-lg p-2 border border-slate-800 mb-2">
+        <div class="flex items-center justify-between text-[10px] mb-1">
+          <span id="ui-hull-label" class="font-semibold uppercase text-slate-300">Chassis Integrity</span>
+          <span id="val-hull-pct" class="mono font-bold text-emerald-400">100%</span>
+        </div>
+        <div class="w-full h-2 rounded bg-slate-950 overflow-hidden mb-1.5 border border-slate-800">
+          <div id="hull-bar-fill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-100" style="width: 100%;"></div>
+        </div>
+        <div class="flex items-center justify-between text-[10px] text-slate-400 mono">
+          <span id="ui-last-g-lbl">Impact G / Limit:</span>
+          <span id="val-impact-g" class="text-slate-200 font-bold">0.0G / 18.0G</span>
+        </div>
+      </div>
+
+      <!-- 10 SpaceX Cold-Gas Nozzle Live Status Matrix -->
+      <div class="bg-slate-900/85 rounded-lg p-2 border border-slate-800 mb-2">
+        <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1.5">
+          <span id="ui-nozzle-label" class="font-semibold uppercase text-slate-300">10 SpaceX Nozzles</span>
+          <span id="val-active-nozzles" class="mono text-cyan-300">0 / 10 Active</span>
+        </div>
+        <div class="flex items-center justify-between gap-1 px-1">
+          <div id="noz-1" class="nozzle-dot" title="Rear 80kN #1"></div>
+          <div id="noz-2" class="nozzle-dot" title="Rear 80kN #2"></div>
+          <div id="noz-3" class="nozzle-dot" title="Rear 80kN #3"></div>
+          <div id="noz-4" class="nozzle-dot" title="Rear 80kN #4"></div>
+          <div id="noz-5" class="nozzle-dot" title="Lift Front-L"></div>
+          <div id="noz-6" class="nozzle-dot" title="Lift Front-R"></div>
+          <div id="noz-7" class="nozzle-dot" title="Lift Rear-L"></div>
+          <div id="noz-8" class="nozzle-dot" title="Lift Rear-R"></div>
+          <div id="noz-9" class="nozzle-dot" title="RCS Roll/Pitch"></div>
+          <div id="noz-10" class="nozzle-dot" title="RCS Yaw/Retro"></div>
+        </div>
+      </div>
+
+      <div class="space-y-1 text-xs">
+        <div class="flex justify-between">
+          <span id="ui-lbl-altitude" class="text-slate-400">Altitude:</span>
+          <span id="val-altitude" class="mono font-bold text-white">0.0 m</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-vspeed" class="text-slate-400">Vertical Vel:</span>
+          <span id="val-vspeed" class="mono font-bold text-slate-200">0.0 m/s</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-coords" class="text-slate-400">World Pos:</span>
+          <span id="val-coords" class="mono font-bold text-sky-300">0, 0</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-passed" class="text-slate-400">Cars Cleared:</span>
+          <span id="val-passed" class="mono font-bold text-emerald-400">0</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-score" class="text-slate-400">Distance Score:</span>
+          <span id="val-score" class="mono font-bold text-amber-300">0</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-downforce" class="text-slate-400">Aero Downforce:</span>
+          <span id="val-downforce" class="mono font-bold text-cyan-300">0 N</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-tire-temp" class="text-slate-400">Tire Temp:</span>
+          <span id="val-tire-temp" class="mono font-bold text-amber-300">35°C</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-drag-coeff" class="text-slate-400">Drag Coeff (Cd):</span>
+          <span id="val-drag-coeff" class="mono font-bold text-teal-300">0.34</span>
+        </div>
+        <div class="flex justify-between">
+          <span id="ui-lbl-gas-mass" class="text-slate-400">COPV Gas Mass:</span>
+          <span id="val-gas-mass" class="mono font-bold text-sky-300">144.0 kg</span>
+        </div>
+
+      </div>
+      </div>
+    </div>
+  </aside>
+  </div>
+  </div>
+  </div>
+
+  <!-- Two independent mobile sticks. The overlay never captures touches between pads. -->
+  <div id="mobile-controls" hidden>
+    <div class="mobile-stick-group mobile-stick-group-left">
+      <span id="mobile-left-label" class="mobile-stick-label">STEER · DRIVE / BRAKE</span>
+      <div id="mobile-stick-left" class="mobile-stick" role="group" aria-label="Steer, drive and brake" aria-describedby="mobile-help-copy">
+        <span class="mobile-stick-cross" aria-hidden="true"></span><span class="mobile-stick-knob" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="mobile-stick-group mobile-stick-group-right">
+      <select id="mobile-stick-mode" aria-label="Right stick mode"><option value="lift">Lift</option><option value="attitude">Attitude</option><option value="boost">Boost</option></select>
+      <div id="mobile-stick-right" class="mobile-stick" role="group" aria-label="Lift and strafe" aria-describedby="mobile-right-hint mobile-help-copy">
+        <span class="mobile-stick-cross" aria-hidden="true"></span><span class="mobile-stick-knob" aria-hidden="true"></span>
+      </div>
+      <span id="mobile-right-hint" class="mobile-stick-hint">↑ Lift · ↓ Descend · ↔ Strafe</span>
+    </div>
+    <div class="mobile-utilities">
+      <button id="mobile-jump" type="button">Jump</button><button id="mobile-hold" type="button">Hold</button>
+      <button id="mobile-camera" type="button">View</button><button id="mobile-reset" type="button">Reset</button>
+    </div>
+  </div>
+
+  <!-- Bottom HUD: Speedometer, 10-Second COPV Air Tank Bar & On-Screen Touch/Click Controls -->
+  <footer id="hud-footer" class="fixed bottom-0 inset-x-0 z-10 pointer-events-none p-3 md:p-4 flex flex-col items-center gap-2">
+    <!-- Touch / Mouse Quick Action Buttons -->
+    <div id="touch-controls" class="pointer-events-auto flex flex-wrap items-center justify-center gap-1.5 md:hidden">
+      <button data-hold-key="KeyW" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">W ▲</button>
+      <button data-hold-key="KeyA" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">A ◀</button>
+      <button data-hold-key="KeyH" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-300 border-rose-400 active:bg-rose-600">H (Brake)</button>
+      <button data-hold-key="KeyU" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-amber-300 border-amber-400 active:bg-amber-600">U (Drift)</button>
+      <button data-hold-key="KeyD" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-white active:bg-sky-500">D ▶</button>
+      <button data-hold-key="KeyS" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 active:bg-slate-700">S (Rev)</button>
+      <button data-hold-key="KeyI" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Pitch nose up (I)">I ↶ Pitch</button>
+      <button data-hold-key="KeyK" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Pitch nose down (K)">K ↷ Pitch</button>
+      <button data-hold-key="KeyJ" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Roll left (J)">J ◀ Roll</button>
+      <button data-hold-key="KeyL" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-cyan-300" aria-label="Roll right (L)">L ▶ Roll</button>
+      <button data-hold-key="Space" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-cyan-300 border-cyan-400 active:bg-cyan-500">SPACE</button>
+      <button data-hold-key="ShiftLeft" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-slate-200 active:bg-slate-700" title="Thrust Descend (Shift)">SHIFT ▼</button>
+      <button id="btn-touch-jump" type="button" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-emerald-300 border-emerald-400 active:bg-emerald-600 cursor-pointer" title="6m Quick Jump (O)">O (6m)</button>
+      <button id="btn-touch-hold" type="button" class="glass-pill px-2 py-1.5 rounded-lg text-xs font-bold text-teal-300 border-teal-400 active:bg-teal-600 cursor-pointer" title="Altitude Hold (N)">N (Hold)</button>
+      <button data-hold-key="Semicolon" class="glass-pill px-2.5 py-1.5 rounded-lg text-xs font-bold text-cyan-300 border-cyan-400 active:bg-cyan-500 shadow-[0_0_10px_rgba(56,189,248,0.5)]">; JET 🚀</button>
+    </div>
+
+    <!-- Main Center Instrument Cluster -->
+    <div id="hud-cluster" class="pointer-events-auto glass-panel rounded-2xl px-4 py-3 w-full max-w-3xl flex flex-col md:flex-row items-center gap-4">
+      <!-- Speed & Gear Readout -->
+      <div id="hud-cluster-speed" class="flex items-center gap-4 min-w-[165px] justify-center md:justify-start border-b md:border-b-0 md:border-r border-slate-700/70 pb-2 md:pb-0 md:pr-4">
+        <div class="text-center md:justify-start md:text-left">
+          <div class="flex items-baseline gap-1.5 justify-center md:justify-start">
+            <span id="indicator-turn-l" class="text-sm font-bold text-slate-600 transition-colors mr-0.5 select-none" title="Left Turn Indicator">◀</span>
+            <span id="val-speed" class="mono text-3xl md:text-4xl font-extrabold text-white tracking-tight">0</span>
+            <span id="val-speed-unit" class="text-xs font-bold text-cyan-400 uppercase cursor-pointer hover:underline" title="Click to toggle KM/h ⇄ MPH">KM/H</span>
+            <span id="indicator-turn-r" class="text-sm font-bold text-slate-600 transition-colors ml-0.5 mr-1 select-none" title="Right Turn Indicator">▶</span>
+            <span id="val-g-force" class="text-[11px] mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 ml-1">0.0 G</span>
+            <span id="val-drive-gear" class="text-[11px] mono font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40 ml-1" title="Drive Gear Mode (D / R / P / AIR / DRIFT)">D</span>
+          </div>
+          <div id="val-kmh" class="mono text-[11px] text-slate-300">0 MPH • 0-100 in 1.9s</div>
+        </div>
+      </div>
+
+      <!-- 10-Second COPV Compressed Air Tank Gauge -->
+      <div id="hud-cluster-tank" class="flex-1 w-full">
+        <div class="flex items-center justify-between text-xs mb-1">
+          <div class="flex items-center gap-2">
+            <span id="ui-tank-title" class="font-bold uppercase tracking-wider text-cyan-300">AIR TANK</span>
+            <span id="ui-tank-state-badge" class="text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">READY</span>
+          </div>
+          <div class="mono font-bold text-xs flex items-center gap-2">
+            <span id="val-air-flow" class="text-[10px] mono font-bold px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">FLOW: 0 L/s</span>
+            <span id="val-air-sec" class="text-white">10.0s</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar with 8th-Second (2.0s remaining / 20%) Threshold Marker -->
+        <div class="relative w-full h-4 rounded-lg bg-slate-900/95 border border-slate-700 overflow-hidden p-0.5">
+          <!-- 20% (8s used) Auto-Descent Marker Line -->
+          <div class="absolute top-0 bottom-0 left-[20%] w-0.5 bg-amber-400 z-20" title="8s Used / 2s Left: Auto-Descent Threshold"></div>
+          <div id="ui-8s-marker-label" class="absolute -top-0.5 left-[20.5%] text-[9px] mono font-bold text-amber-300 z-20 pointer-events-none leading-none pt-1">8s AUTO-DESCEND</div>
+
+          <!-- Fill Bar -->
+          <div id="air-bar-fill" class="h-full rounded-md bg-gradient-to-r from-cyan-500 via-sky-400 to-emerald-400 transition-all duration-75" style="width: 100%;"></div>
+        </div>
+
+        <!-- Auto-descent / depletion warning -->
+        <div class="flex justify-between text-[10px] text-slate-400 mt-1 mono">
+          <span id="ui-tank-hint">8.0s used → Auto-Descend | 10.0s used → Freefall</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Compact launch screen: the model opens the full finish collection. -->
+  <div id="modal-map-select" class="start-overlay" role="dialog" aria-modal="true" aria-labelledby="map-modal-title" tabindex="-1">
+    <div class="start-shell">
+      <header class="start-header">
+        <div class="start-brand">
+          <span id="map-modal-badge" class="start-eyebrow">SPACEX COLD-GAS PACKAGE</span>
+          <h1 id="map-modal-title">Your Roadster</h1>
+          <p id="map-modal-sub" class="start-subtitle">Choose your setup and drive.</p>
+        </div>
+        <div class="start-tools">
+          <button id="btn-map-audio-settings" type="button" class="start-tool start-audio" aria-haspopup="dialog" aria-controls="audio-settings" aria-label="Audio settings">⚙ Audio settings</button>
+          <button id="btn-map-modal-lang" type="button" class="start-tool start-language" aria-label="Switch language">🌐 中文 / EN</button>
+        </div>
+      </header>
+      <div class="start-main">
+        <button id="btn-start-paint" type="button" class="start-vehicle" aria-haspopup="dialog" aria-controls="paint-picker" aria-expanded="false">
+          <span id="ui-modal-paint-step" class="start-eyebrow">YOUR ROADSTER</span>
+          <span id="start-car-preview" class="start-car-stage" aria-hidden="true"></span>
+          <span class="start-vehicle-caption">
+            <span id="modal-paint-active-badge" class="start-current-paint">
+              <span id="modal-active-dot" class="start-paint-dot"></span>
+              <span id="modal-active-paint-name">Ano White</span>
+            </span>
+            <span id="start-paint-action" class="start-change">Change finish ↗</span>
+          </span>
+        </button>
+        <div class="start-choices">
+          <div id="start-vehicle-options" class="start-vehicle-options" role="group" aria-label="Vehicle configuration">
+            <label for="start-model"><span id="start-model-label">Vehicle model</span><select id="start-model"><option value="reference" selected>Roadster 2 · Reference</option><option value="classic">Classic Roadster</option></select></label>
+            <label for="start-cockpit"><span id="start-cockpit-label">Cockpit</span><select id="start-cockpit"><option value="reference" selected>Reference cockpit</option><option value="classic">Classic cockpit</option></select></label>
+          </div>
+          <section class="start-worlds" aria-labelledby="ui-modal-map-title">
+            <h2 id="ui-modal-map-title" class="start-section-title">World</h2>
+            <div class="start-world-grid">
+              <button id="card-map-highway" type="button" class="map-card start-world selected" aria-pressed="true">
+                <span class="start-world-top"><span aria-hidden="true">🛣️</span><span id="card-hwy-status">✓ SELECTED</span></span>
+                <strong id="card-hwy-title">Elevated Highway</strong>
+                <span id="card-hwy-spec">6 lanes · traffic</span>
+              </button>
+              <button id="card-map-city" type="button" class="map-card start-world" aria-pressed="false">
+                <span class="start-world-top"><span aria-hidden="true">🏙️</span><span id="card-city-status">SELECT →</span></span>
+                <strong id="card-city-title">Cyber City</strong>
+                <span id="card-city-spec">Roam · rooftop refills</span>
+              </button>
+              <button id="card-map-coast" type="button" class="map-card start-world" aria-pressed="false">
+                <span class="start-world-top"><span aria-hidden="true">🏖️</span><span id="card-coast-status">SELECT →</span></span>
+                <strong id="card-coast-title">Coastal District</strong>
+                <span id="card-coast-spec">Beach · pier · original</span>
+              </button>
+            </div>
+          </section>
+          <section class="start-weather" aria-labelledby="ui-modal-weather-title">
+            <h2 id="ui-modal-weather-title" class="start-section-title">Weather & time</h2>
+            <div id="modal-weather-grid" class="start-weather-grid"></div>
+          </section>
+          <div class="start-drive-options">
+            <label for="start-physics"><span id="start-physics-label">Driving mode</span><select id="start-physics"><option value="realistic">Realistic</option><option value="plaid">Plaid</option><option value="fantasy">Fantasy</option></select></label>
+            <label for="start-traffic"><span id="start-traffic-label">Traffic</span><select id="start-traffic"><option value="0">Normal · 20</option><option value="1">Heavy · 36</option><option value="2">Insane · 52</option></select></label>
+          </div>
+        </div>
+      </div>
+      <footer class="start-footer">
+        <div id="modal-config-summary" class="start-screen-reader" aria-live="polite">
+          <span id="ui-ready-prefix">Ready to launch with:</span>
+          <span id="summary-model-chip">Roadster 2 · Reference</span>, <span id="summary-cockpit-chip">Reference cockpit</span>, <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
+        </div>
+        <button id="btn-launch-selected-map" type="button" class="start-launch"><span id="ui-btn-launch-map">Launch simulation</span><span aria-hidden="true">→</span></button>
+      </footer>
+      <!-- Long-form descriptions remain available to assistive technology. -->
+      <div class="start-screen-reader"><span id="ui-modal-map-step"></span><span id="ui-modal-weather-step"></span><span id="card-hwy-tag"></span><span id="card-hwy-desc"></span><span id="card-city-tag"></span><span id="card-city-desc"></span><span id="map-modal-highlights"></span></div>
+    </div>
+  </div>
+  <dialog id="paint-picker" aria-labelledby="ui-modal-paint-title" aria-describedby="paint-picker-note">
+    <div class="paint-picker-content">
+      <header class="paint-picker-heading"><div><span id="paint-picker-eyebrow" class="start-eyebrow">12 EXTERIOR FINISHES</span><h2 id="ui-modal-paint-title">Choose your finish</h2></div><button id="paint-picker-close" type="button" class="start-tool">Done</button></header>
+      <div id="paint-picker-preview" class="paint-picker-stage" aria-hidden="true"></div>
+      <p id="paint-picker-note">Select a finish to preview it on your Roadster. Your choice is saved.</p>
+      <div id="modal-paint-grid" class="paint-picker-grid"></div>
+    </div>
+  </dialog>
+
+  <!-- Vehicle Destroyed / Crash Telemetry Overlay Modal -->
+  <div id="modal-destroyed" class="fixed inset-0 z-30 bg-rose-950/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="crash-dialog-content glass-panel rounded-2xl max-w-lg w-full p-6 border-2 border-rose-500 shadow-[0_0_50px_rgba(244,63,94,0.45)] text-center">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 border border-rose-400 text-2xl mb-2">💥</div>
+      <div id="crash-badge" class="text-[11px] mono font-bold uppercase px-2.5 py-0.5 rounded bg-rose-500/30 text-rose-200 inline-block mb-1">CRITICAL STRUCTURAL FAILURE</div>
+      <h2 id="crash-title" class="text-2xl font-extrabold text-white">VEHICLE DESTROYED</h2>
+      <p id="crash-reason" class="text-xs text-rose-200 mt-1 mb-4">Impact force exceeded the 18.0 G monocoque structural limit!</p>
+
+      <p id="ranked-crash-status" class="text-sm text-cyan-200 mb-3" role="status"></p>
+      <div class="grid grid-cols-3 gap-2 bg-slate-950/90 border border-rose-500/40 rounded-xl p-3 mb-5 text-center">
+        <div>
+          <div id="crash-lbl-speed" class="text-[10px] text-slate-400 uppercase">Impact Δv</div>
+          <div id="crash-val-speed" class="mono text-sm md:text-base font-extrabold text-white">128 km/h</div>
+        </div>
+        <div>
+          <div id="crash-lbl-g" class="text-[10px] text-slate-400 uppercase">Peak G-Force</div>
+          <div id="crash-val-g" class="mono text-sm md:text-base font-extrabold text-rose-400">24.6 G</div>
+        </div>
+        <div>
+          <div id="crash-lbl-energy" class="text-[10px] text-slate-400 uppercase">Impact Energy</div>
+          <div id="crash-val-energy" class="mono text-sm md:text-base font-extrabold text-amber-300">980 kJ</div>
+        </div>
+      </div>
+
+      <div id="crash-score-summary" aria-live="polite" aria-atomic="true">
+        <div class="crash-score-card">
+          <div id="crash-lbl-score">Distance Score</div>
+          <strong id="crash-val-score" class="mono">0</strong>
+        </div>
+        <div id="crash-passenger-score" class="crash-score-card" hidden>
+          <div id="crash-lbl-passenger-score">Passenger Score (Separate)</div>
+          <strong id="crash-val-passenger-score" class="mono">0</strong>
+        </div>
+      </div>
+
+      <p id="crash-collision-source" class="mono text-xs text-cyan-200 mb-3" hidden></p>
+      <details id="crash-diagnostics" class="text-left text-xs text-slate-300 mb-3" hidden>
+        <summary id="crash-diagnostics-label" class="cursor-pointer">Local collision diagnostic (not uploaded)</summary>
+        <textarea id="crash-diagnostic-data" readonly aria-label="Local collision diagnostic JSON" class="w-full h-24 mt-2 p-2 bg-slate-950 border border-slate-600 rounded mono text-xs"></textarea>
+      </details>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button id="btn-crash-respawn" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-extrabold text-sm bg-gradient-to-r from-emerald-500 to-cyan-600 text-white shadow-lg hover:brightness-110 active:scale-95 transition cursor-pointer">
+          <span id="crash-btn-respawn">↺ Repair & Respawn (R)</span>
+        </button>
+        <button id="btn-crash-switch-map" type="button" class="w-full sm:w-auto px-4 py-2.5 rounded-xl font-bold text-xs bg-slate-800 text-slate-200 border border-slate-600 hover:bg-slate-700 active:scale-95 transition cursor-pointer">
+          <span id="crash-btn-map">🗺️ Switch Map (M)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Bilingual Instructions & 2026 Roadster Demo Blueprint Modal -->
+  <div id="modal-help" class="fixed inset-0 z-30 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-panel rounded-2xl max-w-2xl w-full p-5 md:p-6 border border-cyan-500/40 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-700 pb-3 mb-4">
+        <div>
+          <span id="modal-badge" class="text-[11px] mono uppercase px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">OCT 15, 2026 MCGREGOR DEMO SPEC</span>
+          <h2 id="modal-title" class="text-xl md:text-2xl font-extrabold text-white mt-1">Tesla Roadster "Rocket" — Flight & Highway Simulator</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-modal-lang" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 hover:bg-cyan-500/30 cursor-pointer">
+            🌐 中文 / EN
+          </button>
+          <button id="btn-close-modal" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white cursor-pointer">✕</button>
+        </div>
+      </div>
+
+      <!-- Car Spec Summary -->
+      <p id="modal-desc" class="text-xs md:text-sm text-slate-300 leading-relaxed mb-4">
+        Modeled after the Next-Gen Tesla Roadster (Rocket Configuration) demonstrated on October 15, 2026 in Texas. Features fighter-jet inspired Ano White bodywork, a Gold Glazed astronaut-visor single-seat canopy, active Optimus-actuated rear wing, underbody suction fan skirt, and <b>10 SpaceX cold-gas supersonic thrusters</b> fed by twin <b>600L Carbon-Overwrapped Pressure Vessels (COPVs)</b> delivering 80+ kN of thrust.
+      </p>
+
+      <!-- Control Grid -->
+      <section id="mobile-help" class="mobile-help"><h3 id="mobile-help-title">Mobile dual sticks</h3><p id="mobile-help-copy"></p></section>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
+          <h3 id="modal-h-drive" class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2">1. Driving & Vertical Flight</h3>
+          <ul id="modal-list-drive" class="space-y-1.5 text-xs text-slate-200">
+            <li><b class="text-cyan-300 mono">W / H / B / S</b> : W Accelerate, H Foot Brake, B Handbrake Drift, S Reverse</li>
+            <li><b class="text-cyan-300 mono">A / D</b> : Steer Left / Right across dense 6-lane highway traffic</li>
+            <li><b class="text-cyan-300 mono">SPACE</b> : Ignite vertical lift thrusters to <b>Hover & Ascend</b></li>
+            <li><b class="text-cyan-300 mono">SHIFT</b> : Fire retro-thrusters for controlled <b>Descent</b></li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
+          <h3 id="modal-h-attitude" class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2">2. 6-DOF Mid-Air Attitude (RCS)</h3>
+          <ul id="modal-list-attitude" class="space-y-1.5 text-xs text-slate-200">
+            <li><b class="text-cyan-300 mono">← / → (Arrows)</b> : <b>Roll</b> left / right (hold for 360° barrel rolls!)</li>
+            <li><b class="text-cyan-300 mono">↑ / ↓ (Arrows)</b> : <b>Pitch</b> nose up / down</li>
+            <li><b class="text-cyan-300 mono">Q / E</b> : <b>Yaw</b> rotate nose left / right</li>
+            <li><b class="text-cyan-300 mono">O / R</b> : Toggle RCS Auto-Stabilizer (`O`) or Reset Car (`R`)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Speed of Sound vs Game Supersonic Note (Requirement 2) -->
+      <div id="modal-sonic-box" class="bg-cyan-500/15 border border-cyan-400/40 rounded-xl p-3.5 mb-3.5">
+        <h3 id="modal-h-sonic" class="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-1">🔊 Speed of Sound & Supersonic Gameplay Tuning</h3>
+        <p id="modal-p-sonic" class="text-xs text-slate-100 leading-relaxed">
+          In reality, the speed of sound at sea level (Mach 1) is <b>343 m/s (1,235 km/h / 767 MPH)</b>. For gameplay excitement and visual impact, we adjusted the in-game supersonic Mach barrier to <b>370 km/h (230 MPH / 102.8 m/s)</b>!
+        </p>
+      </div>
+
+      <!-- Air Tank Physics Breakdown -->
+      <div class="bg-amber-500/10 border border-amber-400/30 rounded-xl p-3.5 mb-5">
+        <h3 id="modal-h-tank" class="text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">3. 10-Second COPV Compressed Air Tank Physics</h3>
+        <p id="modal-p-tank" class="text-xs text-slate-200 leading-relaxed">
+          • <b>0.0s – 8.0s Used (100% → 20% Air)</b>: Full supersonic lift and attitude control.<br/>
+          • <b>At 8.0s Used (2.0s / 20% Air Remaining)</b>: Tank pressure drops below hover threshold — <b>Auto-Descent</b> engages automatically even if holding <span class="mono text-cyan-300">SPACE</span>.<br/>
+          • <b>At 10.0s Used (0% Air Remaining)</b>: Compressed air is exhausted — thrusters shut off and the Roadster enters immediate <b>Freefall</b>! Touch down on the highway to rapidly repressurize the 600L tanks.
+        </p>
+      </div>
+
+      <div class="flex justify-end">
+        <button id="btn-start-game" type="button" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 hover:brightness-110 active:scale-95 transition cursor-pointer">
+          <span id="modal-btn-resume">Launch Simulation</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Native modal keeps keyboard focus contained without pausing the ranked clock. -->
+  <dialog id="ranked-dialog" aria-labelledby="ranked-title" aria-describedby="ranked-privacy">
+    <div class="ranked-panel">
+      <div class="ranked-heading">
+        <h2 id="ranked-title">60-second challenge</h2>
+        <div class="ranked-actions"><button id="ranked-language" type="button" class="ranked-button">中文</button><button id="ranked-close" type="button" class="ranked-button" aria-label="Close leaderboard">✕</button></div>
+      </div>
+      <p id="ranked-status" class="ranked-status" role="status"></p>
+      <p id="ranked-running-hint" class="ranked-notice" hidden></p>
+      <div class="ranked-current"><span id="ranked-current-label">Challenge category</span>: <strong id="ranked-current-category"></strong></div>
+      <p id="ranked-settings-hint" class="ranked-small"></p>
+      <label id="ranked-nickname-label" for="ranked-nickname">Public nickname</label>
+      <input id="ranked-nickname" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="ranked-nickname-hint ranked-name-lock" />
+      <p id="ranked-nickname-hint" class="ranked-small"></p>
+      <p id="ranked-name-lock" class="ranked-small"></p>
+      <p id="ranked-error" class="ranked-error" role="alert"></p>
+      <p id="ranked-result" class="ranked-result" hidden></p>
+      <p id="ranked-baseline" class="ranked-small"></p>
+      <div class="ranked-actions ranked-run-actions">
+        <button id="ranked-start" type="button" class="ranked-button ranked-primary">Start 60-second challenge</button>
+        <button id="ranked-abort" type="button" class="ranked-button" hidden>Cancel challenge</button>
+        <button id="ranked-submit" type="button" class="ranked-button ranked-primary" hidden>Submit public score</button>
+        <button id="ranked-discard" type="button" class="ranked-button" hidden>Discard result</button>
+      </div>
+      <p id="ranked-privacy" class="ranked-small"></p>
+      <details class="ranked-details"><summary>Rules / 规则 · v1</summary><p id="ranked-rules"></p><p id="ranked-trust"></p></details>
+      <div class="ranked-board-heading">
+        <label id="ranked-category-label" for="ranked-category">Public leaderboard</label>
+        <select id="ranked-category">
+          <option value="highway-realistic">Elevated Highway · Realistic</option>
+          <option value="highway-fantasy">Elevated Highway · Fantasy</option>
+          <option value="city-realistic">Cyber City · Realistic</option>
+          <option value="city-fantasy">Cyber City · Fantasy</option>
+        </select>
+        <button id="ranked-refresh" type="button" class="ranked-button">Refresh board</button>
+      </div>
+      <p id="ranked-board-status" class="ranked-small" role="status"></p>
+      <table id="ranked-table" hidden><thead><tr><th id="ranked-rank-label" scope="col">Rank</th><th id="ranked-name-label" scope="col">Nickname</th><th id="ranked-score-label" scope="col">Score</th></tr></thead><tbody id="ranked-entries"></tbody></table>
+    </div>
+  </dialog>
+
+  <audio id="roadster-bgm" src="/assets/Ludicrous_Velocity_bgm.mp3" loop preload="none" playsinline></audio>
+  <dialog id="audio-settings" aria-labelledby="audio-settings-title">
+    <div class="ranked-panel">
+      <div class="ranked-heading">
+        <h2 id="audio-settings-title">Audio settings</h2>
+        <button id="audio-settings-close" type="button" class="ranked-button" autofocus>Back to game</button>
+      </div>
+      <p id="engine-sound-label">Simulated engine sound</p>
+      <button id="engine-sound-toggle" type="button" class="ranked-button ranked-primary" aria-pressed="true" aria-describedby="engine-sound-note">Engine sound: On</button>
+      <p id="engine-sound-note" class="ranked-small"></p>
+      <p id="music-label">Background music · loop</p>
+      <button id="music-toggle" type="button" class="ranked-button ranked-primary" aria-pressed="true" aria-describedby="music-status">Pause music</button>
+      <p id="music-status" class="ranked-status" role="status"></p>
+      <p id="music-note" class="ranked-small"></p>
+    </div>
+  </dialog>
+
+  <!-- Modular Functional Scripts -->
+  <script src="config.js"></script>
+  <script src="city-clock.js"></script>
+  <script src="city-diagnostics.js"></script>
+  <script src="driving-score.js"></script>
+  <script src="audio.js"></script>
+  <script src="music.js"></script>
+  <script src="mobile-controls.js"></script>
+  <script src="coast-road-network.js"></script>
+  <script src="coast-map.js"></script>
+  <script src="world.js"></script>
+  <script src="highway-traffic.js"></script>
+  <script src="vehicles.js"></script>
+  <script src="reference-exterior.js"></script>
+  <script src="reference-cockpit.js"></script>
+  <script src="npc-traffic-assets.js"></script>
+  <script src="reference-traffic.js"></script>
+  <script src="weather-rain.js"></script>
+  <script src="taxi.js"></script>
+  <script src="ui-hud.js"></script>
+  <script src="leaderboard.js"></script>
+  <script src="start-screen.js"></script>
+  <script src="demo-numeric-projection.js"></script>
+  <script src="highway-demo.js"></script>
+  <script src="physics-main.js"></script>
+  <script src="render-health.js"></script>
+  <script src="render-diagnostics.js"></script>
+</body>
+</html>

@@ -138,31 +138,39 @@ test('public entry explains pickup radius and independent fares in both language
     assert.match(help, language === 'zh' ? /地面靠近 4 米自动接上/ : /within 4m on the ground/);
     assert.match(help, language === 'zh' ? /默认开启接客/ : /enabled automatically/);
     assert.match(help, language === 'zh' ? /不计入排行榜/ : /never leaderboard/);
+    assert.match(help, language === 'zh' ? /每次只能载1位乘客/ : /carry only one at a time/);
+    assert.doesNotMatch(help, /载10位|up to 10|oldest ride|other on-board rides/);
     assert.equal(h.confirms.length, 0);
   }
 });
 
-test('multi-passenger state machine refills five immediately, preserves its primary and pays each ride once', () => {
+test('single-passenger state machine refuses a second fare, then pays and accepts the next ride once', () => {
   const session = makeSession(); session.start(origin);
   const [trip, other] = session.snapshot().waiting;
   assert.equal(at(session, { ...trip.pickup, y: 2.01 }), null);
   assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 4.01 }), null);
   assert.equal(at(session, { ...trip.pickup, x: trip.pickup.x + 4 }).type, 'picked-up');
   assert.equal(session.snapshot().waiting.length, 5);
-  assert.equal(at(session, other.pickup).type, 'picked-up');
-  assert.equal(session.snapshot().passengers.length, 2);
+  assert.notEqual(other.pickup.id, trip.destination.id);
+  assert.equal(at(session, other.pickup), null);
+  assert.equal(session.snapshot().passengers.length, 1);
+  assert.equal(session.snapshot().capacity, 1);
   assert.equal(session.snapshot().passenger.id, trip.id);
   assert.equal(session.snapshot().score, 0);
   assert.equal(at(session, { ...trip.destination, y: 2.01 }), null);
   assert.equal(at(session, { ...trip.destination, x: trip.destination.x + 2.01 }), null);
   assert.equal(at(session, { ...trip.destination, x: trip.destination.x + 2 }).type, 'delivered');
-  assert.equal(session.snapshot().passenger?.id ?? null, other.destination.id === trip.destination.id ? null : other.id);
+  assert.equal(session.snapshot().passenger, null);
   assert.equal(session.snapshot().waiting.length, 5);
-  const earned = trip.fare + (other.destination.id === trip.destination.id ? other.fare : 0);
-  assert.equal(session.snapshot().score, earned);
-  assert.equal(session.snapshot().delivered, other.destination.id === trip.destination.id ? 2 : 1);
+  assert.equal(session.snapshot().score, trip.fare);
+  assert.equal(session.snapshot().delivered, 1);
   for (let i = 0; i < 5; i++) assert.equal(session.advance(trip.destination), null);
-  assert.equal(session.snapshot().score, earned);
+  assert.equal(session.snapshot().score, trip.fare);
+  assert.equal(at(session, other.pickup).type, 'picked-up');
+  assert.equal(session.snapshot().passenger.id, other.id);
+  assert.equal(at(session, other.destination).type, 'delivered');
+  assert.equal(session.snapshot().score, trip.fare + other.fare);
+  assert.equal(session.snapshot().delivered, 2);
 });
 
 test('distance-based fares are integral, monotonic and bounded at 1000–3000', () => {
@@ -311,16 +319,16 @@ test('scene has five readable double-sided white beams and only one green destin
   const trip = h.taxi.snapshot().waiting[0];
   h.move({ ...trip.pickup, y: 10 }); assert.equal(h.taxi.snapshot().passenger, null);
   h.move(trip.pickup);
-  assert.equal(h.taxi.snapshot().passenger.id, trip.id); assert.equal(markers.filter(x => x.visible).length, 6);
+  assert.equal(h.taxi.snapshot().passenger.id, trip.id); assert.equal(markers.filter(x => x.visible).length, 1);
   assert.equal(markers.at(-1).visible, true); assert.equal(markers.at(-1).children[0].material.color, 0x22ff77);
   assert.equal(markers.at(-1).position.x, trip.destination.x); assert.equal(markers.at(-1).position.z, trip.destination.z);
   const other = h.taxi.snapshot().waiting.find(candidate => !core.withinArrival(trip.pickup, candidate.pickup, trip.destination));
   assert.ok(other, 'use another pickup that does not sweep through this green destination');
   h.move(other.pickup); assert.equal(h.taxi.snapshot().passenger.id, trip.id);
-  assert.equal(markers.filter(x => x.visible).length, 6);
-  assert.equal(h.taxi.snapshot().passengers.length, 2);
+  assert.equal(markers.filter(x => x.visible).length, 1);
+  assert.equal(h.taxi.snapshot().passengers.length, 1);
   h.move(trip.destination); assert.equal(h.taxi.snapshot().score, trip.fare);
-  assert.equal(markers.filter(x => x.visible).length, 6); assert.equal(markers.at(-1).visible, true);
+  assert.equal(markers.filter(x => x.visible).length, 5); assert.equal(markers.at(-1).visible, false);
   assert.equal(h.state.score, 123); assert.equal(h.state.carsCleared, 10);
   const scoreHud = h.elements['hud-footer'].children.at(-1);
   assert.equal(scoreHud.children.length, 1); assert.equal(scoreHud.children[0].textContent, trip.fare.toLocaleString());
@@ -751,14 +759,14 @@ test('short landscape notice space is bounded by the header, footer and occupied
 
 test('coast defaults use real elevated stops, true Y, bounded six marker pools and map-owned cleanup',()=>{
  const h=harness(true);h.context.currentMap='coast';Object.assign(h.state,{coastSupportId:'road-0',coastDetached:false,wasAirborne:false});h.activate();
- assert.equal(h.taxi.snapshot().active,true);assert.equal(h.taxi.snapshot().capacity,10);assert.equal(h.group.children.length,0);assert.equal(h.context.scene.children.length,1);
+ assert.equal(h.taxi.snapshot().active,true);assert.equal(h.taxi.snapshot().capacity,1);assert.equal(h.group.children.length,0);assert.equal(h.context.scene.children.length,1);
  const markers=h.context.scene.children[0].children;assert.equal(markers.length,6);const trip=h.taxi.snapshot().waiting.find(t=>t.pickup.y>6);assert.ok(trip);
  const index=h.taxi.snapshot().waiting.indexOf(trip);assert.equal(markers[index].position.y,trip.pickup.y);
  h.move({...trip.pickup,y:trip.pickup.y-6});assert.equal(h.taxi.snapshot().passenger,null);
  h.state.coastSupportId='terrain';h.move({...trip.pickup,y:trip.pickup.y-3});assert.equal(h.taxi.snapshot().passenger,null,'a terrain floor inside the pickup sphere is not the road stop');
  h.state.coastSupportId='roof';h.move(trip.pickup);assert.equal(h.taxi.snapshot().passenger,null,'an elevated roof is not the road stop');h.state.coastSupportId='road-0';
  h.state.wasAirborne=true;h.move(trip.pickup);assert.equal(h.taxi.snapshot().passenger,null);h.state.wasAirborne=false;h.move(trip.pickup);assert.equal(h.taxi.snapshot().passenger.id,trip.id);
- assert.equal(markers.at(-1).position.y,trip.destination.y);assert.equal(markers.filter(m=>m.visible).length,6);
+ assert.equal(markers.at(-1).position.y,trip.destination.y);assert.equal(markers.filter(m=>m.visible).length,1);
  const oldGeometry=markers[0].children[0].geometry;h.context.currentMap='city';h.taxi.tick();assert.equal(oldGeometry.disposed,true);assert.equal(h.context.scene.children.length,0);assert.equal(h.group.children.length,1);assert.ok(h.taxi.snapshot().waiting.every(t=>t.pickup.y===0));assert.equal(h.taxi.snapshot().passengers.length,0);
  h.context.currentMap='coast';h.taxi.tick();assert.equal(h.group.children.length,0);assert.equal(h.context.scene.children.length,1);assert.ok(h.taxi.snapshot().waiting.some(t=>t.pickup.y>6));h.taxi.stop();assert.equal(h.context.scene.children.length,0);
 });
@@ -766,3 +774,55 @@ test('coast reset starts passengers after the actual elevated spawn and traffic 
  const hud=readFileSync(new URL('../src/ui-hud.js',import.meta.url),'utf8'),start=hud.indexOf('function resetCar('),end=hud.indexOf('function ',start+16),reset=hud.slice(start,end);
  assert.ok(reset.indexOf('Object.assign(state,{x:p.x,y:p.y')<reset.indexOf('window.RoadsterTaxi?.onReset()'));assert.ok(reset.indexOf('recoverTraffic(trafficCars,state)')<reset.indexOf('window.RoadsterTaxi?.onReset()'));
 });
+
+for (const map of ['city', 'coast']) {
+  test(`${map}: single-seat adapter keeps only the occupied target, cockpit1/1 and score, then restores waiting markers`, () => {
+    const h = harness(true); h.context.currentMap = map;
+    Object.assign(h.state, { coastSupportId: 'road-0', coastDetached: false, wasAirborne: false });
+    h.activate(); const parent = map === 'city' ? h.group : h.context.scene, markers = parent.children[0].children;
+    const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup);
+    const other = h.taxi.snapshot().waiting.find(t => !core.withinArrival(trip.pickup, t.pickup, trip.destination));
+    assert.ok(other); const ids = h.taxi.snapshot().waiting.map(t => t.id).join(',');
+    for (let repeat = 0; repeat < 10; repeat++) { h.move(other.pickup); h.taxi.tick(false); h.taxi.present(); }
+    const data = h.taxi.snapshot(); assert.equal(data.capacity, 1); assert.equal(data.passengers.length, 1); assert.equal(data.passenger.id, trip.id);
+    assert.equal(data.waiting.map(t => t.id).join(','), ids); assert.equal(data.score, 0); assert.equal(data.delivered, 0);
+    assert.ok(markers.slice(0, 5).every(m => !m.visible)); assert.equal(markers.at(-1).visible, true);
+    assert.equal(markers.at(-1).position.x, trip.destination.x); assert.equal(markers.at(-1).position.y, trip.destination.y);
+    assert.equal(markers.at(-1).position.z, trip.destination.z);
+    const lines = [], ctx = { save() {}, restore() {}, fillRect() {}, fillText(text) { lines.push(text); } };
+    for (const language of ['en', 'zh']) {
+      h.context.currentLang = language; h.taxi.render(); h.taxi.drawCockpit(ctx);
+      assert.match(lines.at(-1), language === 'zh' ? /载客 1\/1/ : /ON BOARD 1\/1/);
+    }
+    h.move(trip.destination); assert.equal(h.taxi.snapshot().passenger, null); assert.equal(h.taxi.snapshot().score, trip.fare);
+    assert.equal(h.taxi.snapshot().delivered, 1); assert.equal(markers.at(-1).visible, false); assert.ok(markers.slice(0, 5).every(m => m.visible));
+    assert.equal(navigationParts(h).navigation.hidden, true);
+    const scoreHud = h.elements['hud-footer'].children.at(-1); assert.equal(scoreHud.children[0].textContent, trip.fare.toLocaleString());
+    const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup); assert.equal(h.taxi.snapshot().passenger.id, next.id);
+    assert.equal(h.taxi.snapshot().passengers.length, 1); assert.equal(h.taxi.snapshot().score, trip.fare);
+    assert.equal(h.state.score, 123); assert.equal(h.state.carsCleared, 10);
+  });
+
+  test(`${map}: occupied death at destination settles a single loss once, then reset and map exit clear all targets`, () => {
+    const h = harness(true); h.context.currentMap = map;
+    Object.assign(h.state, { coastSupportId: 'road-0', coastDetached: false, wasAirborne: false }); h.activate();
+    let earned = 0;
+    for (let i = 0; i < 5; i++) { const t = h.taxi.snapshot().waiting[0]; h.move(t.pickup); h.move(t.destination); earned += t.fare; }
+    const trip = h.taxi.snapshot().waiting[0]; h.move(trip.pickup); assert.equal(h.taxi.snapshot().passengers.length, 1);
+    Object.assign(h.state, trip.destination, { isDestroyed: true });
+    h.taxi.onDestroyed(); const net = Math.max(0, earned - trip.fare * 2);
+    for (let repeat = 0; repeat < 10; repeat++) { h.taxi.onDestroyed(); h.taxi.tick(); h.taxi.onReset(); }
+    assert.equal(h.taxi.snapshot().passenger, null); assert.equal(h.taxi.snapshot().finished, true);
+    assert.equal(h.taxi.snapshot().score, net); assert.equal(h.taxi.snapshot().delivered, 5, 'fatal destination never awards a fare');
+    assert.equal(navigationParts(h).navigation.hidden, true);
+    h.state.isDestroyed = false; h.taxi.onReset();
+    assert.equal(h.taxi.snapshot().finished, false); assert.equal(h.taxi.snapshot().score, 0); assert.equal(h.taxi.snapshot().delivered, 0);
+    const next = h.taxi.snapshot().waiting[0]; h.move(next.pickup); assert.equal(h.taxi.snapshot().passenger.id, next.id);
+    h.context.currentMap = map === 'city' ? 'coast' : 'city'; h.taxi.tick();
+    assert.equal(h.taxi.snapshot().passenger, null); assert.equal(h.taxi.snapshot().passengers.length, 0);
+    assert.equal(h.taxi.snapshot().capacity, 1); assert.equal(h.taxi.snapshot().score, 0);
+    assert.equal(navigationParts(h).navigation.hidden, true);
+    h.context.currentMap = 'highway'; h.taxi.tick(); assert.equal(h.taxi.snapshot().active, false);
+    assert.equal(h.taxi.snapshot().passengers.length, 0); assert.equal(h.group.children.length, 0); assert.equal(h.context.scene.children.length, 0);
+  });
+}

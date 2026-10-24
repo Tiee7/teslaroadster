@@ -1,0 +1,122 @@
+{
+  "1": {
+    "rgbaSha256": "ec29a7ada7fb77ee73170e10d41bd7d8b1cba96f9b7334b9d92d99e91b40082a",
+    "pngSha256": "84dc4c9c79e17a4d07378164a8870a266372798e653a227b2525c5e9ab71aaaa",
+    "sourceSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "textureSha256": "cdb3fba211e4235586d1279c8ca4a373b1ab7cbe230da98d9e385a6f1c1d8aca",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "effectiveAnisotropy": 1,
+    "drawCalls": 1,
+    "triangles": 2,
+    "shaders": {
+      "2": {
+        "kind": 35633,
+        "sourceSha256": "b4287d8f6fce4128b283a73f5d4c6c1a1ffe1e48cb8fa4c1562e7ffeba3e3aa0",
+        "compiled": true
+      },
+      "3": {
+        "kind": 35632,
+        "sourceSha256": "716742756e7b96dd4d9296684b6987947c132235e7ab9a55d8cd6387fc1d429f",
+        "compiled": true
+      }
+    },
+    "glErrors": [],
+    "failures": []
+  },
+  "4": {
+    "rgbaSha256": "f6dd72e6d2fe8ef7f67f67c7418612069b9cc8b77e948577dda199d862da7548",
+    "pngSha256": "2a99a989d87e3aca7763e5d8e1f9b5d7414815e8b31a9eb5295a9113e72c0c18",
+    "sourceSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "textureSha256": "cdb3fba211e4235586d1279c8ca4a373b1ab7cbe230da98d9e385a6f1c1d8aca",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "effectiveAnisotropy": 4,
+    "drawCalls": 1,
+    "triangles": 2,
+    "shaders": {
+      "2": {
+        "kind": 35633,
+        "sourceSha256": "b4287d8f6fce4128b283a73f5d4c6c1a1ffe1e48cb8fa4c1562e7ffeba3e3aa0",
+        "compiled": true
+      },
+      "3": {
+        "kind": 35632,
+        "sourceSha256": "716742756e7b96dd4d9296684b6987947c132235e7ab9a55d8cd6387fc1d429f",
+        "compiled": true
+      }
+    },
+    "glErrors": [],
+    "failures": []
+  },
+  "8": {
+    "rgbaSha256": "876fcf8835bd00b01223ad27055476985f4d944545c3abe5f902306a18ef3235",
+    "pngSha256": "64d11119fc513851b6a28cab1b98db5906e2fdd5e2a9b34816fbd3e2056a5477",
+    "sourceSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "textureSha256": "cdb3fba211e4235586d1279c8ca4a373b1ab7cbe230da98d9e385a6f1c1d8aca",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "effectiveAnisotropy": 8,
+    "drawCalls": 1,
+    "triangles": 2,
+    "shaders": {
+      "2": {
+        "kind": 35633,
+        "sourceSha256": "b4287d8f6fce4128b283a73f5d4c6c1a1ffe1e48cb8fa4c1562e7ffeba3e3aa0",
+        "compiled": true
+      },
+      "3": {
+        "kind": 35632,
+        "sourceSha256": "716742756e7b96dd4d9296684b6987947c132235e7ab9a55d8cd6387fc1d429f",
+        "compiled": true
+      }
+    },
+    "glErrors": [],
+    "failures": []
+  },
+  "cap4": {
+    "rgbaSha256": "f6dd72e6d2fe8ef7f67f67c7418612069b9cc8b77e948577dda199d862da7548",
+    "pngSha256": "2a99a989d87e3aca7763e5d8e1f9b5d7414815e8b31a9eb5295a9113e72c0c18",
+    "sourceSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "textureSha256": "cdb3fba211e4235586d1279c8ca4a373b1ab7cbe230da98d9e385a6f1c1d8aca",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "effectiveAnisotropy": 4,
+    "drawCalls": 1,
+    "triangles": 2,
+    "shaders": {
+      "2": {
+        "kind": 35633,
+        "sourceSha256": "b4287d8f6fce4128b283a73f5d4c6c1a1ffe1e48cb8fa4c1562e7ffeba3e3aa0",
+        "compiled": true
+      },
+      "3": {
+        "kind": 35632,
+        "sourceSha256": "716742756e7b96dd4d9296684b6987947c132235e7ab9a55d8cd6387fc1d429f",
+        "compiled": true
+      }
+    },
+    "glErrors": [],
+    "failures": []
+  },
+  "unsupported": {
+    "rgbaSha256": "ec29a7ada7fb77ee73170e10d41bd7d8b1cba96f9b7334b9d92d99e91b40082a",
+    "pngSha256": "84dc4c9c79e17a4d07378164a8870a266372798e653a227b2525c5e9ab71aaaa",
+    "sourceSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "textureSha256": "cdb3fba211e4235586d1279c8ca4a373b1ab7cbe230da98d9e385a6f1c1d8aca",
+    "runtimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "effectiveAnisotropy": 1,
+    "drawCalls": 1,
+    "triangles": 2,
+    "shaders": {
+      "2": {
+        "kind": 35633,
+        "sourceSha256": "b4287d8f6fce4128b283a73f5d4c6c1a1ffe1e48cb8fa4c1562e7ffeba3e3aa0",
+        "compiled": true
+      },
+      "3": {
+        "kind": 35632,
+        "sourceSha256": "716742756e7b96dd4d9296684b6987947c132235e7ab9a55d8cd6387fc1d429f",
+        "compiled": true
+      }
+    },
+    "glErrors": [],
+    "failures": []
+  }
+}

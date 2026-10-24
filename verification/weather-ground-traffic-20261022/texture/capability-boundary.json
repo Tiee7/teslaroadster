@@ -1,0 +1,31 @@
+{
+  "cap4": {
+    "requestedAnisotropy": 8,
+    "reportedNativeR128Capability": 4,
+    "effectiveAnisotropy": 4,
+    "expectedMatch": "4",
+    "samePixels": true,
+    "sameCommands": true,
+    "glErrors": [],
+    "failures": [],
+    "note": "Simulated WebGL capability facade; replay is native Mesa with no unsupported anisotropy operation"
+  },
+  "unsupported": {
+    "requestedAnisotropy": 8,
+    "reportedNativeR128Capability": 0,
+    "effectiveAnisotropy": 1,
+    "expectedMatch": "1",
+    "samePixels": true,
+    "sameCommands": true,
+    "glErrors": [],
+    "failures": [],
+    "note": "Simulated WebGL capability facade; replay is native Mesa with no unsupported anisotropy operation"
+  },
+  "sourceCommit": {
+    "commit": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+    "coastSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "capturedCoastSha256": "ee0a881e0d1647de70d4403002a0f0f9fbadddceca5c15ad758cf25a13dd91de",
+    "same": true
+  },
+  "textureRgbaSha256": "cdb3fba211e4235586d1279c8ca4a373b1ab7cbe230da98d9e385a6f1c1d8aca"
+}

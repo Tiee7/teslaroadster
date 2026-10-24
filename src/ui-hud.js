@@ -454,13 +454,12 @@ function resetCar() {
   document.getElementById('modal-destroyed').classList.add('hidden');
 
 
-  if (typeof headlightSpotL !== 'undefined') headlightSpotL.intensity = 2.4;
-  if (typeof headlightSpotR !== 'undefined') headlightSpotR.intensity = 2.4;
   RoadsterDrivingScore.reset(state);
   state.carsCleared = 0;
   state.blastedCarsCount = 0;
   state.speedMilestone = 0;
   state.isDestroyed = false;
+  window.RoadsterWeatherLights?.sync();
   state.hullIntegrity = 100.0;
   state.lastImpactG = 0.0;
   state.impactCooldown = 0.0;
@@ -830,14 +829,7 @@ function selectWeatherMode(idx, playAudio = true) {
 
 
 
-  if (typeof headlightSpotL !== 'undefined' && typeof headlightSpotR !== 'undefined') {
-    const spotCol = wp.marsSun ? 0xfef08a : (wp.rain ? 0x7dd3fc : 0xf8fafc);
-    const spotInt = wp.rain ? 2.8 : (wp.marsSun ? 2.0 : 2.4);
-    headlightSpotL.color.setHex(spotCol);
-    headlightSpotR.color.setHex(spotCol);
-    headlightSpotL.intensity = spotInt;
-    headlightSpotR.intensity = spotInt;
-  }
+  syncVehicleWeatherLights();
   rainLinesMesh.visible = wp.rain;
   marsSunGroup.visible = wp.marsSun;
 
@@ -849,17 +841,47 @@ function selectWeatherMode(idx, playAudio = true) {
   if (playAudio) sound.beep(610, 0.08);
 }
 
+// Illumination state belongs to weather, not to frozen model/mesh/material data.
+// These are the two actual road-projecting lights. There is no separate beam
+// or glow FX mesh to hide: the similarly named LED surfaces are real fixtures.
+function syncVehicleWeatherLights(previewRoot = null) {
+  const wp = WEATHER_PRESETS[weatherIndex];
+  const enabled = !wp.daylight && (previewRoot || typeof state === 'undefined' || !state.isDestroyed);
+  const color = wp.marsSun ? 0xfef08a : (wp.rain ? 0x7dd3fc : 0xf8fafc);
+  const intensity = enabled ? (wp.rain ? 2.8 : (wp.marsSun ? 2.0 : 2.4)) : 0;
+  const apply = light => {
+    if (!light) return;
+    light.color.setHex(color);
+    light.intensity = intensity;
+    light.visible = Boolean(enabled);
+  };
+  if (previewRoot) {
+    // Studio clones own their Light instances but share the approved materials.
+    // Updating only Light state keeps those shared resources byte-identical.
+    previewRoot.traverse?.(part => { if (part.isSpotLight) apply(part); });
+  } else {
+    if (typeof headlightSpotL !== 'undefined') apply(headlightSpotL);
+    if (typeof headlightSpotR !== 'undefined') apply(headlightSpotR);
+  }
+}
+window.RoadsterWeatherLights = Object.freeze({
+  sync: () => syncVehicleWeatherLights(),
+  applyTo: root => { if (root) syncVehicleWeatherLights(root); }
+});
+
 function cycleWeatherMode() {
-  selectWeatherMode((weatherIndex + 1) % WEATHER_PRESETS.length, true);
+  // Menu order is intentionally separate from legacy rain/physics indices.
+  const order = WEATHER_PRESETS.map((_, idx) => idx).sort((a, b) => WEATHER_PRESETS[a].menuOrder - WEATHER_PRESETS[b].menuOrder);
+  selectWeatherMode(order[(order.indexOf(weatherIndex) + 1) % order.length], true);
 }
 
 function renderModalWeatherGrid() {
   const grid = document.getElementById('modal-weather-grid');
   if (!grid) return;
   const isZh = currentLang === 'zh';
-  const shortNames = isZh ? ['星际暗夜', '霓虹雨夜', '火星落日', '清朗日间'] : ['Cyber Night', 'Neon Rain', 'Mars Sunset', 'Clear Day'];
-  WEATHER_PRESETS.forEach((wp, idx) => {
-    let button = grid.children[idx];
+  const menu = WEATHER_PRESETS.map((wp, idx) => ({ wp, idx })).sort((a, b) => a.wp.menuOrder - b.wp.menuOrder);
+  menu.forEach(({ wp, idx }, position) => {
+    let button = grid.children[position];
     if (!button) {
       button = document.createElement('button');
       button.type = 'button';
@@ -870,10 +892,10 @@ function renderModalWeatherGrid() {
     button.setAttribute('aria-pressed', String(idx === weatherIndex));
     button.setAttribute('aria-label', isZh ? wp.nameZh : wp.nameEn);
     button.setAttribute('title', isZh ? wp.descZh : wp.descEn);
-    button.innerHTML = `<span aria-hidden="true">${wp.icon}</span><span>${shortNames[idx]}</span>`;
+    button.innerHTML = `<span aria-hidden="true">${wp.icon}</span><span>${isZh ? wp.nameZh : wp.nameEn}</span>`;
   });
   const summary = document.getElementById('summary-weather-chip');
-  if (summary) summary.textContent = `${WEATHER_PRESETS[weatherIndex].icon} ${shortNames[weatherIndex]}`;
+  if (summary) summary.textContent = `${WEATHER_PRESETS[weatherIndex].icon} ${isZh ? WEATHER_PRESETS[weatherIndex].nameZh : WEATHER_PRESETS[weatherIndex].nameEn}`;
 }
 
 document.getElementById('btn-weather').addEventListener('click', () => cycleWeatherMode());

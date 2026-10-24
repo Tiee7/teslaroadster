@@ -1,0 +1,12 @@
+# Subtest: tests/coast-map.test.mjs
+not ok 36 - tests/coast-map.test.mjs
+  ---
+  duration_ms: 23899.30442
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/coast-map.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: ~
+  signal: 'SIGKILL'
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...

@@ -1,0 +1,913 @@
+{
+  "schema": 2,
+  "baselineHead": "ac55a1fc8fcd80fe04d594d8cce58006f1fa8fc5",
+  "baselineSourceSha256": {
+    "physics-main": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+    "coast-road-network": "5279eb0f144d11562f5845d3eee058070fb2008ba000a4305a5649d6cf8f9e1d",
+    "coast-map": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+    "config": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "driving-score": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "reference-exterior": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "reference-cockpit": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2"
+  },
+  "finding": "Upright root+1.25 ceiling misses rotated approved native hull and falsely hits inverted body >1m before conservative OBB/real visible model. Ceiling phase also precedes paid RCS.",
+  "seededAir": [
+    {
+      "pose": "nose-up",
+      "initialFullState": {
+        "x": 846.1108502072587,
+        "y": 41.40815098811645,
+        "z": 248.0704973910741,
+        "vx": 0,
+        "vy": 6,
+        "vz": 0,
+        "airStrafeSpeed": 0,
+        "speed": 0,
+        "maxSpeed": 55.56,
+        "airMaxSpeed": 31.5,
+        "physicsMode": "realistic",
+        "insaneMode": false,
+        "speedUnit": "kmh",
+        "hudMode": "full",
+        "hudMinimal": false,
+        "speedMilestone": 0,
+        "tireTemp": 35,
+        "gasMassKg": 144,
+        "dragCoeffCd": 0.34,
+        "suspensionVelocity": 0,
+        "downforceN": 0,
+        "brakeHeat": 0,
+        "wasAirBraking": false,
+        "camZoom": 0.75,
+        "isDrifting": false,
+        "driftAngle": 0,
+        "isAltitudeHold": false,
+        "holdTargetY": 0,
+        "isJumping6m": false,
+        "groundHopActive": false,
+        "jumpTargetY": 6,
+        "driftTimer": 0,
+        "steerInput": 0,
+        "steerAngle": 0,
+        "roll": 0,
+        "pitch": 1.5707963267948966,
+        "attitudeIdleSeconds": 0,
+        "wasAirborne": true,
+        "jumpInertiaSeconds": null,
+        "yaw": -2.296797227164318,
+        "vRoll": 0,
+        "vPitch": 0,
+        "vYaw": 0,
+        "accumulatedRoll": 0,
+        "airRemaining": 10,
+        "infiniteJet": false,
+        "airUsedContinuous": 0,
+        "isAutoDescending8s": false,
+        "isFreefalling": false,
+        "autoStabilizer": true,
+        "hullIntegrity": 100,
+        "lastImpactG": 0,
+        "lastImpactDvKmh": 0,
+        "lastImpactEnergyKj": 0,
+        "impactCooldown": 0,
+        "isDestroyed": false,
+        "destroyReasonKey": "crashReasonThreshold",
+        "carsCleared": 0,
+        "blastedCarsCount": 0,
+        "score": 0,
+        "finalDrivingResult": null,
+        "distanceMeters": 0,
+        "distanceBySpeed": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "bannerTimer": 0,
+        "bannerType": null,
+        "hasTriggeredHelipad": false,
+        "isAutoLandingSave": false,
+        "lastAutoSaveAlt": 0,
+        "wasSupersonic": false,
+        "cameraShake": 0,
+        "longitudinalG": 0,
+        "lateralG": 0,
+        "prevSpeed": 42,
+        "lightningTimer": 6.5,
+        "lightningFlash": 0
+      },
+      "events": [
+        {
+          "fps": 30,
+          "t": 0.1,
+          "rootY": 41.95910098811644,
+          "pitch": 1.5707963267948966,
+          "airRemaining": 10,
+          "hull": 100,
+          "nativeHit": {
+            "depth": 0.04349636212067054,
+            "face": 654,
+            "normal": {
+              "x": 0.03823023452034645,
+              "y": 0.9986931575442807,
+              "z": 0.03391793393993416
+            }
+          },
+          "damage": [],
+          "structureHits": 0
+        },
+        {
+          "fps": 60,
+          "t": 0.1,
+          "rootY": 41.959100988116454,
+          "pitch": 1.5707963267948966,
+          "airRemaining": 10,
+          "hull": 100,
+          "nativeHit": {
+            "depth": 0.04349636212068475,
+            "face": 654,
+            "normal": {
+              "x": 0.03823023452034645,
+              "y": 0.9986931575442807,
+              "z": 0.03391793393993416
+            }
+          },
+          "damage": [],
+          "structureHits": 0
+        },
+        {
+          "fps": 144,
+          "t": 0.09722222222222222,
+          "rootY": 41.94512147422754,
+          "pitch": 1.5707963267948966,
+          "airRemaining": 10,
+          "hull": 100,
+          "nativeHit": {
+            "depth": 0.02951684823177203,
+            "face": 654,
+            "normal": {
+              "x": 0.03823023452034645,
+              "y": 0.9986931575442807,
+              "z": 0.03391793393993416
+            }
+          },
+          "damage": [],
+          "structureHits": 0
+        }
+      ]
+    },
+    {
+      "pose": "upright",
+      "initialFullState": {
+        "x": 846.1108502072587,
+        "y": 41.40815098811645,
+        "z": 248.0704973910741,
+        "vx": 0,
+        "vy": 6,
+        "vz": 0,
+        "airStrafeSpeed": 0,
+        "speed": 0,
+        "maxSpeed": 55.56,
+        "airMaxSpeed": 31.5,
+        "physicsMode": "realistic",
+        "insaneMode": false,
+        "speedUnit": "kmh",
+        "hudMode": "full",
+        "hudMinimal": false,
+        "speedMilestone": 0,
+        "tireTemp": 35,
+        "gasMassKg": 144,
+        "dragCoeffCd": 0.34,
+        "suspensionVelocity": 0,
+        "downforceN": 0,
+        "brakeHeat": 0,
+        "wasAirBraking": false,
+        "camZoom": 0.75,
+        "isDrifting": false,
+        "driftAngle": 0,
+        "isAltitudeHold": false,
+        "holdTargetY": 0,
+        "isJumping6m": false,
+        "groundHopActive": false,
+        "jumpTargetY": 6,
+        "driftTimer": 0,
+        "steerInput": 0,
+        "steerAngle": 0,
+        "roll": 0,
+        "pitch": 0,
+        "attitudeIdleSeconds": 0,
+        "wasAirborne": true,
+        "jumpInertiaSeconds": null,
+        "yaw": -2.296797227164318,
+        "vRoll": 0,
+        "vPitch": 0,
+        "vYaw": 0,
+        "accumulatedRoll": 0,
+        "airRemaining": 10,
+        "infiniteJet": false,
+        "airUsedContinuous": 0,
+        "isAutoDescending8s": false,
+        "isFreefalling": false,
+        "autoStabilizer": true,
+        "hullIntegrity": 100,
+        "lastImpactG": 0,
+        "lastImpactDvKmh": 0,
+        "lastImpactEnergyKj": 0,
+        "impactCooldown": 0,
+        "isDestroyed": false,
+        "destroyReasonKey": "crashReasonThreshold",
+        "carsCleared": 0,
+        "blastedCarsCount": 0,
+        "score": 0,
+        "finalDrivingResult": null,
+        "distanceMeters": 0,
+        "distanceBySpeed": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "bannerTimer": 0,
+        "bannerType": null,
+        "hasTriggeredHelipad": false,
+        "isAutoLandingSave": false,
+        "lastAutoSaveAlt": 0,
+        "wasSupersonic": false,
+        "cameraShake": 0,
+        "longitudinalG": 0,
+        "lateralG": 0,
+        "prevSpeed": 42,
+        "lightningTimer": 6.5,
+        "lightningFlash": 0
+      },
+      "events": [
+        {
+          "fps": 30,
+          "t": 0.3333333333333333,
+          "rootY": 42.85615098811644,
+          "pitch": 0,
+          "airRemaining": 10,
+          "hull": 94,
+          "nativeHit": null,
+          "damage": [
+            {
+              "args": [
+                2.726412710284254,
+                "crashReasonBuilding",
+                0,
+                1,
+                0
+              ],
+              "rootY": 42.85615098811644,
+              "pitch": 0,
+              "hullBefore": 100
+            }
+          ],
+          "structureHits": 0
+        },
+        {
+          "fps": 60,
+          "t": 0.3333333333333333,
+          "rootY": 42.85615098811644,
+          "pitch": 0,
+          "airRemaining": 10,
+          "hull": 94,
+          "nativeHit": null,
+          "damage": [
+            {
+              "args": [
+                2.726412710284254,
+                "crashReasonBuilding",
+                0,
+                1,
+                0
+              ],
+              "rootY": 42.85615098811644,
+              "pitch": 0,
+              "hullBefore": 100
+            }
+          ],
+          "structureHits": 0
+        },
+        {
+          "fps": 144,
+          "t": 0.3333333333333333,
+          "rootY": 42.85615098811644,
+          "pitch": 0,
+          "airRemaining": 10,
+          "hull": 94,
+          "nativeHit": null,
+          "damage": [
+            {
+              "args": [
+                2.7264127102842433,
+                "crashReasonBuilding",
+                0,
+                1,
+                0
+              ],
+              "rootY": 42.85615098811644,
+              "pitch": 0,
+              "hullBefore": 100
+            }
+          ],
+          "structureHits": 0
+        }
+      ]
+    },
+    {
+      "pose": "inverted",
+      "initialFullState": {
+        "x": 846.1108502072587,
+        "y": 42.60815098811644,
+        "z": 248.0704973910741,
+        "vx": 0,
+        "vy": 6,
+        "vz": 0,
+        "airStrafeSpeed": 0,
+        "speed": 0,
+        "maxSpeed": 55.56,
+        "airMaxSpeed": 31.5,
+        "physicsMode": "realistic",
+        "insaneMode": false,
+        "speedUnit": "kmh",
+        "hudMode": "full",
+        "hudMinimal": false,
+        "speedMilestone": 0,
+        "tireTemp": 35,
+        "gasMassKg": 144,
+        "dragCoeffCd": 0.34,
+        "suspensionVelocity": 0,
+        "downforceN": 0,
+        "brakeHeat": 0,
+        "wasAirBraking": false,
+        "camZoom": 0.75,
+        "isDrifting": false,
+        "driftAngle": 0,
+        "isAltitudeHold": false,
+        "holdTargetY": 0,
+        "isJumping6m": false,
+        "groundHopActive": false,
+        "jumpTargetY": 6,
+        "driftTimer": 0,
+        "steerInput": 0,
+        "steerAngle": 0,
+        "roll": 0,
+        "pitch": 3.141592653589793,
+        "attitudeIdleSeconds": 0,
+        "wasAirborne": true,
+        "jumpInertiaSeconds": null,
+        "yaw": -2.296797227164318,
+        "vRoll": 0,
+        "vPitch": 0,
+        "vYaw": 0,
+        "accumulatedRoll": 0,
+        "airRemaining": 10,
+        "infiniteJet": false,
+        "airUsedContinuous": 0,
+        "isAutoDescending8s": false,
+        "isFreefalling": false,
+        "autoStabilizer": true,
+        "hullIntegrity": 100,
+        "lastImpactG": 0,
+        "lastImpactDvKmh": 0,
+        "lastImpactEnergyKj": 0,
+        "impactCooldown": 0,
+        "isDestroyed": false,
+        "destroyReasonKey": "crashReasonThreshold",
+        "carsCleared": 0,
+        "blastedCarsCount": 0,
+        "score": 0,
+        "finalDrivingResult": null,
+        "distanceMeters": 0,
+        "distanceBySpeed": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "bannerTimer": 0,
+        "bannerType": null,
+        "hasTriggeredHelipad": false,
+        "isAutoLandingSave": false,
+        "lastAutoSaveAlt": 0,
+        "wasSupersonic": false,
+        "cameraShake": 0,
+        "longitudinalG": 0,
+        "lateralG": 0,
+        "prevSpeed": 42,
+        "lightningTimer": 6.5,
+        "lightningFlash": 0
+      },
+      "events": [
+        {
+          "fps": 30,
+          "t": 0.06666666666666667,
+          "rootY": 42.85615098811644,
+          "pitch": 3.141592653589793,
+          "airRemaining": 10,
+          "hull": 94,
+          "nativeHit": null,
+          "damage": [
+            {
+              "args": [
+                5.338975219479714,
+                "crashReasonBuilding",
+                0,
+                1,
+                0
+              ],
+              "rootY": 42.85615098811644,
+              "pitch": 3.141592653589793,
+              "hullBefore": 100
+            }
+          ],
+          "structureHits": 0
+        },
+        {
+          "fps": 60,
+          "t": 0.05,
+          "rootY": 42.85615098811644,
+          "pitch": 3.141592653589793,
+          "airRemaining": 10,
+          "hull": 94,
+          "nativeHit": null,
+          "damage": [
+            {
+              "args": [
+                5.50226037630443,
+                "crashReasonBuilding",
+                0,
+                1,
+                0
+              ],
+              "rootY": 42.85615098811644,
+              "pitch": 3.141592653589793,
+              "hullBefore": 100
+            }
+          ],
+          "structureHits": 0
+        },
+        {
+          "fps": 144,
+          "t": 0.04861111111111111,
+          "rootY": 42.85615098811644,
+          "pitch": 3.141592653589793,
+          "airRemaining": 10,
+          "hull": 94,
+          "nativeHit": null,
+          "damage": [
+            {
+              "args": [
+                5.515867472706488,
+                "crashReasonBuilding",
+                0,
+                1,
+                0
+              ],
+              "rootY": 42.85615098811644,
+              "pitch": 3.141592653589793,
+              "hullBefore": 100
+            }
+          ],
+          "structureHits": 0
+        }
+      ]
+    }
+  ],
+  "naturalGround": {
+    "initialFullState": {
+      "x": 846.1108502072587,
+      "y": 0,
+      "z": 248.0704973910741,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "airStrafeSpeed": 0,
+      "speed": 0,
+      "maxSpeed": 55.56,
+      "airMaxSpeed": 31.5,
+      "physicsMode": "realistic",
+      "insaneMode": false,
+      "speedUnit": "kmh",
+      "hudMode": "full",
+      "hudMinimal": false,
+      "speedMilestone": 0,
+      "tireTemp": 35,
+      "gasMassKg": 144,
+      "dragCoeffCd": 0.34,
+      "suspensionVelocity": 0,
+      "downforceN": 0,
+      "brakeHeat": 0,
+      "wasAirBraking": false,
+      "camZoom": 0.75,
+      "isDrifting": false,
+      "driftAngle": 0,
+      "isAltitudeHold": false,
+      "holdTargetY": 0,
+      "isJumping6m": false,
+      "groundHopActive": false,
+      "jumpTargetY": 6,
+      "driftTimer": 0,
+      "steerInput": 0,
+      "steerAngle": 0,
+      "roll": 0,
+      "pitch": 0,
+      "attitudeIdleSeconds": 0,
+      "wasAirborne": false,
+      "jumpInertiaSeconds": null,
+      "yaw": -2.296797227164318,
+      "vRoll": 0,
+      "vPitch": 0,
+      "vYaw": 0,
+      "accumulatedRoll": 0,
+      "airRemaining": 10,
+      "infiniteJet": false,
+      "airUsedContinuous": 0,
+      "isAutoDescending8s": false,
+      "isFreefalling": false,
+      "autoStabilizer": true,
+      "hullIntegrity": 100,
+      "lastImpactG": 0,
+      "lastImpactDvKmh": 0,
+      "lastImpactEnergyKj": 0,
+      "impactCooldown": 0,
+      "isDestroyed": false,
+      "destroyReasonKey": "crashReasonThreshold",
+      "carsCleared": 0,
+      "blastedCarsCount": 0,
+      "score": 0,
+      "finalDrivingResult": null,
+      "distanceMeters": 0,
+      "distanceBySpeed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "bannerTimer": 0,
+      "bannerType": null,
+      "hasTriggeredHelipad": false,
+      "isAutoLandingSave": false,
+      "lastAutoSaveAlt": 0,
+      "wasSupersonic": false,
+      "cameraShake": 0,
+      "longitudinalG": 0,
+      "lateralG": 0,
+      "prevSpeed": 42,
+      "lightningTimer": 6.5,
+      "lightningFlash": 0,
+      "coastSupportId": "bank-1"
+    },
+    "keys": "Space[0,6.5),KeyI[3.3,6.5); no W; no per-frame state/pose assignment",
+    "actualFloor": {
+      "point": {
+        "x": 846.1108502072587,
+        "z": 248.0704973910741
+      },
+      "support": {
+        "id": "bank-1",
+        "height": 0
+      },
+      "actualMeshesRaycaster": [
+        {
+          "point": {
+            "x": 846.1108502072587,
+            "y": 0,
+            "z": 248.0704973910741
+          },
+          "name": "coast-road-earth-banks",
+          "normal": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "face": 3
+        }
+      ]
+    },
+    "events": [
+      {
+        "fps": 30,
+        "t": 4.366666666666666,
+        "rootY": 42.140366666666594,
+        "pitch": 1.1041660499380594,
+        "airRemaining": 5.228000000000003,
+        "hull": 100,
+        "nativeHit": {
+          "depth": 0.1490722820610486,
+          "face": 654,
+          "normal": {
+            "x": 0.03823023452034645,
+            "y": 0.9986931575442807,
+            "z": 0.03391793393993416
+          }
+        },
+        "damage": [],
+        "structureHits": 0
+      },
+      {
+        "fps": 60,
+        "t": 4.366666666666666,
+        "rootY": 42.05081111111108,
+        "pitch": 1.1059445614505963,
+        "airRemaining": 5.227999999999926,
+        "hull": 100,
+        "nativeHit": {
+          "depth": 0.06070736625179762,
+          "face": 654,
+          "normal": {
+            "x": 0.03823023452034645,
+            "y": 0.9986931575442807,
+            "z": 0.03391793393993416
+          }
+        },
+        "damage": [],
+        "structureHits": 0
+      },
+      {
+        "fps": 144,
+        "t": 4.361111111111111,
+        "rootY": 41.93773668981443,
+        "pitch": 1.0888152921268652,
+        "airRemaining": 5.237777777777659,
+        "hull": 100,
+        "nativeHit": {
+          "depth": 0.0004123475830084544,
+          "face": 654,
+          "normal": {
+            "x": 0.03823023452034645,
+            "y": 0.9986931575442807,
+            "z": 0.03391793393993416
+          }
+        },
+        "damage": [],
+        "structureHits": 0
+      }
+    ]
+  },
+  "hoverRCS": {
+    "initialFullState": {
+      "x": 846.1108502072587,
+      "y": 42.60815098811644,
+      "z": 248.0704973910741,
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "airStrafeSpeed": 0,
+      "speed": 0,
+      "maxSpeed": 55.56,
+      "airMaxSpeed": 31.5,
+      "physicsMode": "realistic",
+      "insaneMode": false,
+      "speedUnit": "kmh",
+      "hudMode": "full",
+      "hudMinimal": false,
+      "speedMilestone": 0,
+      "tireTemp": 35,
+      "gasMassKg": 144,
+      "dragCoeffCd": 0.34,
+      "suspensionVelocity": 0,
+      "downforceN": 0,
+      "brakeHeat": 0,
+      "wasAirBraking": false,
+      "camZoom": 0.75,
+      "isDrifting": false,
+      "driftAngle": 0,
+      "isAltitudeHold": true,
+      "holdTargetY": 42.60815098811644,
+      "isJumping6m": false,
+      "groundHopActive": false,
+      "jumpTargetY": 6,
+      "driftTimer": 0,
+      "steerInput": 0,
+      "steerAngle": 0,
+      "roll": 0,
+      "pitch": 0,
+      "attitudeIdleSeconds": 0,
+      "wasAirborne": true,
+      "jumpInertiaSeconds": null,
+      "yaw": -2.296797227164318,
+      "vRoll": 0,
+      "vPitch": 0,
+      "vYaw": 0,
+      "accumulatedRoll": 0,
+      "airRemaining": 10,
+      "infiniteJet": false,
+      "airUsedContinuous": 0,
+      "isAutoDescending8s": false,
+      "isFreefalling": false,
+      "autoStabilizer": true,
+      "hullIntegrity": 100,
+      "lastImpactG": 0,
+      "lastImpactDvKmh": 0,
+      "lastImpactEnergyKj": 0,
+      "impactCooldown": 0,
+      "isDestroyed": false,
+      "destroyReasonKey": "crashReasonThreshold",
+      "carsCleared": 0,
+      "blastedCarsCount": 0,
+      "score": 0,
+      "finalDrivingResult": null,
+      "distanceMeters": 0,
+      "distanceBySpeed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "bannerTimer": 0,
+      "bannerType": null,
+      "hasTriggeredHelipad": false,
+      "isAutoLandingSave": false,
+      "lastAutoSaveAlt": 0,
+      "wasSupersonic": false,
+      "cameraShake": 0,
+      "longitudinalG": 0,
+      "lateralG": 0,
+      "prevSpeed": 42,
+      "lightningTimer": 6.5,
+      "lightningFlash": 0
+    },
+    "keys": "KeyI continuously; existing real altitude hold, root drifts upward <.05m, not claimed strictly stationary",
+    "events": [
+      {
+        "fps": 30,
+        "t": 0.6333333333333333,
+        "rootY": 42.64321123294499,
+        "pitch": 0.4775840315772291,
+        "airRemaining": 9.620000000000008,
+        "hull": 100,
+        "nativeHit": {
+          "depth": 0.04088783551242159,
+          "face": 655,
+          "normal": {
+            "x": 0.03839567207191661,
+            "y": 0.9986787322412245,
+            "z": 0.034154972335025444
+          }
+        },
+        "damage": [],
+        "structureHits": 0
+      },
+      {
+        "fps": 60,
+        "t": 0.6166666666666667,
+        "rootY": 42.650386430785815,
+        "pitch": 0.4528699748726431,
+        "airRemaining": 9.630000000000008,
+        "hull": 100,
+        "nativeHit": {
+          "depth": 0.007454985633373212,
+          "face": 655,
+          "normal": {
+            "x": 0.03839567207191661,
+            "y": 0.9986787322412245,
+            "z": 0.034154972335025444
+          }
+        },
+        "damage": [],
+        "structureHits": 0
+      },
+      {
+        "fps": 144,
+        "t": 0.6111111111111112,
+        "rootY": 42.6547009616047,
+        "pitch": 0.44351024558692853,
+        "airRemaining": 9.633333333333354,
+        "hull": 100,
+        "nativeHit": {
+          "depth": 8.961406337704148e-05,
+          "face": 655,
+          "normal": {
+            "x": 0.03839567207191661,
+            "y": 0.9986787322412245,
+            "z": 0.034154972335025444
+          }
+        },
+        "damage": [],
+        "structureHits": 0
+      }
+    ]
+  },
+  "nativeGeometry": {
+    "visibleVertexCount": 79257,
+    "face654": {
+      "bridgeOrdinal": 109,
+      "globalSegment": 691,
+      "generatedBy": "down(row0[0]),down(row0[4]),down(row1[0]) in original decks bridge loop, Float32 triangleMesh; verified exact3 vertices (order-insensitive)",
+      "actualVertices": [
+        [
+          852.7955322265625,
+          44.17317581176758,
+          238.6265411376953
+        ],
+        [
+          837.5313720703125,
+          44.17317581176758,
+          255.8313751220703
+        ],
+        [
+          856.9149780273438,
+          43.89120864868164,
+          242.28570556640625
+        ]
+      ],
+      "rawGeneratedVertices": [
+        [
+          852.7955322265625,
+          44.17317581176758,
+          238.6265411376953
+        ],
+        [
+          837.5313720703125,
+          44.17317581176758,
+          255.8313751220703
+        ],
+        [
+          856.9149780273438,
+          43.89120864868164,
+          242.28570556640625
+        ]
+      ],
+      "matrixWorld": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "initialNoseUp": {
+      "allNativeVisibleVertices": 79257,
+      "projected": 79257,
+      "minVerticalClearance": 0.5052536574484776,
+      "minPlaneSignedNormalClearance": 0.5045933705180164,
+      "highest": 43.613150988116445,
+      "closestVertical": {
+        "point": {
+          "x": 846.1892473078312,
+          "y": 43.613150988116445,
+          "z": 247.6854481811717
+        },
+        "pointIndex": 16791,
+        "height": 44.11840464556492,
+        "face": 654
+      },
+      "conservativeRotatedBodyNativeTriangleIntersections": []
+    },
+    "invertedFirstCallback": {
+      "allNativeVisibleVertices": 79257,
+      "projected": 79257,
+      "minVerticalClearance": 1.1803384290556096,
+      "minPlaneSignedNormalClearance": 1.1787788859448547,
+      "highest": 42.85735100246924,
+      "closestVertical": {
+        "point": {
+          "x": 846.5193428224808,
+          "y": 42.85735100246924,
+          "z": 249.68902462980162
+        },
+        "pointIndex": 15685,
+        "height": 44.037689431524846,
+        "face": 655
+      },
+      "conservativeRotatedBodyNativeTriangleIntersections": []
+    }
+  },
+  "sourceArtifacts": {
+    "frozenPhysics": "tests/fixtures/coast-bridge-bottom-baseline/physics-main.js",
+    "frozenNetwork": "tests/fixtures/coast-bridge-bottom-baseline/coast-road-network.js",
+    "test": "tests/coast-bridge-bottom-contact.test.mjs",
+    "retainedFailureRecord": "verification/coast-bridge-bottom-contact-20261022/preserved-red-history.json"
+  },
+  "limits": [
+    "CPU Three r128 actual native visible reference vertices/original Float32 deck and production motion/damage, not GPU pixels.",
+    "Actual supported bank1 start under bridge, not default spawn traversal or user screenshot coordinates. No original image pixels/location obtained.",
+    "Proof ends at first callback including nonfatal, or visible penetration; full real triggerPhysicsCollision retained. Only destruction/sound/UI presentation is stubbed. Motion step finishes the contact frame; no subsequent frame is advanced.",
+    "Dynamic NPC traffic is isolated by the motion harness; all original static map support/structure contacts remain active and no preceding damage is ignored.",
+    "Seeded air and hover cases explicitly do not claim ground-input provenance; separate natural ground paths cover that.",
+    "Old 4300 path blocked by previous side-edge fix is not reused."
+  ]
+}

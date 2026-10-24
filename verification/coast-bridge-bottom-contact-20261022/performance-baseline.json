@@ -1,0 +1,654 @@
+{
+  "warmupFrames": 300,
+  "timedFrames": 1200,
+  "rows": [
+    {
+      "trial": 0,
+      "kind": "idleBridge",
+      "name": "baselineAc55",
+      "sourceSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 11.736130999999887,
+      "firstQueryMs": 2.734474000000091,
+      "stepTimedMeanMs": 0.16426802166666885,
+      "stepP50Ms": 0.13985600000000886,
+      "stepP95Ms": 0.25137999999992644,
+      "queryCalls": 3000,
+      "queryTotalMs": 68.38599000000659,
+      "queryTimedMeanMs": 0.0206570916666692,
+      "queryP95Ms": 0.02926300000012816,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": null
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "idleBridge",
+      "name": "unprunedCandidate",
+      "sourceSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 14.490393999999924,
+      "firstQueryMs": 5.821486999999934,
+      "stepTimedMeanMs": 1.40631697999999,
+      "stepP50Ms": 1.3317489999999452,
+      "stepP95Ms": 1.8305559999998877,
+      "queryCalls": 3000,
+      "queryTotalMs": 1982.52053200002,
+      "queryTimedMeanMs": 0.6400572041666748,
+      "queryP95Ms": 0.9320810000003803,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 11
+        }
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "idleBridge",
+      "name": "repaired",
+      "sourceSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 13.206092000000353,
+      "firstQueryMs": 6.084641999999803,
+      "stepTimedMeanMs": 0.25906906333333607,
+      "stepP50Ms": 0.23898200000030556,
+      "stepP95Ms": 0.3509870000002593,
+      "queryCalls": 3000,
+      "queryTotalMs": 236.36758799998324,
+      "queryTimedMeanMs": 0.07413555083332805,
+      "queryP95Ms": 0.11051199999974415,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 11
+        }
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "guidedDrive",
+      "name": "baselineAc55",
+      "sourceSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 6.580983000000742,
+      "firstQueryMs": 2.131760000000213,
+      "stepTimedMeanMs": 0.18431344333332086,
+      "stepP50Ms": 0.1654129999997167,
+      "stepP95Ms": 0.27614700000049197,
+      "queryCalls": 3000,
+      "queryTotalMs": 92.0133590000114,
+      "queryTimedMeanMs": 0.02896933750000509,
+      "queryP95Ms": 0.04732999999941967,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": null
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "guidedDrive",
+      "name": "unprunedCandidate",
+      "sourceSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 10.949118000000453,
+      "firstQueryMs": 4.800731000000269,
+      "stepTimedMeanMs": 1.1540082000000045,
+      "stepP50Ms": 1.139629000000241,
+      "stepP95Ms": 1.675518000000011,
+      "queryCalls": 3000,
+      "queryTotalMs": 1674.946466000004,
+      "queryTimedMeanMs": 0.5127662287499978,
+      "queryP95Ms": 0.7762829999992391,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 197
+        }
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "guidedDrive",
+      "name": "repaired",
+      "sourceSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 9.00094799999988,
+      "firstQueryMs": 3.959882999999536,
+      "stepTimedMeanMs": 0.32684625583334387,
+      "stepP50Ms": 0.28933599999982107,
+      "stepP95Ms": 0.5110729999996693,
+      "queryCalls": 3000,
+      "queryTotalMs": 310.51275700000315,
+      "queryTimedMeanMs": 0.09910183291666878,
+      "queryP95Ms": 0.1655430000000706,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 197
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "idleBridge",
+      "name": "baselineAc55",
+      "sourceSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 5.828835000000254,
+      "firstQueryMs": 1.8205710000002,
+      "stepTimedMeanMs": 0.16699717166665928,
+      "stepP50Ms": 0.15292499999941356,
+      "stepP95Ms": 0.22544199999992998,
+      "queryCalls": 3000,
+      "queryTotalMs": 65.48921000000428,
+      "queryTimedMeanMs": 0.020555678749991556,
+      "queryP95Ms": 0.022933000000193715,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": null
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "idleBridge",
+      "name": "unprunedCandidate",
+      "sourceSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 10.17790100000002,
+      "firstQueryMs": 4.6376710000004095,
+      "stepTimedMeanMs": 1.340351217500003,
+      "stepP50Ms": 1.290168999999878,
+      "stepP95Ms": 1.603650999999445,
+      "queryCalls": 3000,
+      "queryTotalMs": 1848.3546160000205,
+      "queryTimedMeanMs": 0.6054979800000065,
+      "queryP95Ms": 0.8596350000007078,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 11
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "idleBridge",
+      "name": "repaired",
+      "sourceSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 9.412121999999727,
+      "firstQueryMs": 4.505861999999979,
+      "stepTimedMeanMs": 0.27305539166665616,
+      "stepP50Ms": 0.24512099999992643,
+      "stepP95Ms": 0.39895699999942735,
+      "queryCalls": 3000,
+      "queryTotalMs": 244.3614979999802,
+      "queryTimedMeanMs": 0.0785587312499888,
+      "queryP95Ms": 0.12921999999889522,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 11
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "guidedDrive",
+      "name": "baselineAc55",
+      "sourceSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 7.040721999999732,
+      "firstQueryMs": 2.032191000000239,
+      "stepTimedMeanMs": 0.17387224416665503,
+      "stepP50Ms": 0.16231899999911548,
+      "stepP95Ms": 0.23751000000083877,
+      "queryCalls": 3000,
+      "queryTotalMs": 83.49779699995997,
+      "queryTimedMeanMs": 0.026782763333324057,
+      "queryP95Ms": 0.040450000000419095,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": null
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "guidedDrive",
+      "name": "unprunedCandidate",
+      "sourceSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 11.216607000000295,
+      "firstQueryMs": 5.3016329999991285,
+      "stepTimedMeanMs": 1.195665653333343,
+      "stepP50Ms": 1.1595580000011978,
+      "stepP95Ms": 1.7768550000000687,
+      "queryCalls": 3000,
+      "queryTotalMs": 1716.66450600001,
+      "queryTimedMeanMs": 0.5314016679166654,
+      "queryP95Ms": 0.8423600000005536,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 197
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "guidedDrive",
+      "name": "repaired",
+      "sourceSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 8.765787000000273,
+      "firstQueryMs": 4.397944999998799,
+      "stepTimedMeanMs": 0.31978671666663405,
+      "stepP50Ms": 0.2773880000004283,
+      "stepP95Ms": 0.517891999999847,
+      "queryCalls": 3000,
+      "queryTotalMs": 303.3204760000008,
+      "queryTimedMeanMs": 0.0968890995833264,
+      "queryP95Ms": 0.16717599999901722,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 197
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "idleBridge",
+      "name": "baselineAc55",
+      "sourceSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 6.342568999998548,
+      "firstQueryMs": 2.2101849999999104,
+      "stepTimedMeanMs": 0.15471394583332918,
+      "stepP50Ms": 0.14335100000062084,
+      "stepP95Ms": 0.2125129999985802,
+      "queryCalls": 3000,
+      "queryTotalMs": 64.09222499992211,
+      "queryTimedMeanMs": 0.02043479916665319,
+      "queryP95Ms": 0.02343500000097265,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": null
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "idleBridge",
+      "name": "unprunedCandidate",
+      "sourceSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 10.339955000001282,
+      "firstQueryMs": 4.865433999999368,
+      "stepTimedMeanMs": 1.4508082658333206,
+      "stepP50Ms": 1.3563079999985348,
+      "stepP95Ms": 2.0534439999992173,
+      "queryCalls": 3000,
+      "queryTotalMs": 1958.34715899997,
+      "queryTimedMeanMs": 0.6510152441666507,
+      "queryP95Ms": 1.0157359999993787,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 11
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "idleBridge",
+      "name": "repaired",
+      "sourceSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 846.2672558488181,
+        "y": 44.797415891729706,
+        "z": 248.20942810315907,
+        "speed": 3.2107300340312504e-06,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+      "firstStepMs": 10.415364999998928,
+      "firstQueryMs": 5.691109999999753,
+      "stepTimedMeanMs": 0.3055546116666543,
+      "stepP50Ms": 0.26056400000015856,
+      "stepP95Ms": 0.49254500000097323,
+      "queryCalls": 3000,
+      "queryTotalMs": 265.62575999994806,
+      "queryTimedMeanMs": 0.08641864916664721,
+      "queryP95Ms": 0.15747099999862257,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 11
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "guidedDrive",
+      "name": "baselineAc55",
+      "sourceSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 7.8853110000000015,
+      "firstQueryMs": 2.6504119999990507,
+      "stepTimedMeanMs": 0.21505990250001106,
+      "stepP50Ms": 0.18554299999959767,
+      "stepP95Ms": 0.34945499999957974,
+      "queryCalls": 3000,
+      "queryTotalMs": 105.60502400005316,
+      "queryTimedMeanMs": 0.033644349166675816,
+      "queryP95Ms": 0.06410400000095251,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": null
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "guidedDrive",
+      "name": "unprunedCandidate",
+      "sourceSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 11.461777000000438,
+      "firstQueryMs": 5.601417999998375,
+      "stepTimedMeanMs": 1.3024763391667238,
+      "stepP50Ms": 1.2402250000013737,
+      "stepP95Ms": 1.984731999997166,
+      "queryCalls": 3000,
+      "queryTotalMs": 1859.1141099998276,
+      "queryTimedMeanMs": 0.5744415183332846,
+      "queryP95Ms": 0.9306099999994331,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 197
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "guidedDrive",
+      "name": "repaired",
+      "sourceSha256": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+      "frames": 1500,
+      "impacts": 0,
+      "final": {
+        "x": 932.4752776125644,
+        "y": 27.973623407681107,
+        "z": 692.1463995481473,
+        "speed": 20.199467134212448,
+        "airRemaining": 10
+      },
+      "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+      "firstStepMs": 8.99421699999948,
+      "firstQueryMs": 4.316602999999304,
+      "stepTimedMeanMs": 0.342219056666648,
+      "stepP50Ms": 0.2989899999993213,
+      "stepP95Ms": 0.5317829999985406,
+      "queryCalls": 3000,
+      "queryTotalMs": 321.5932559999965,
+      "queryTimedMeanMs": 0.10384825291667009,
+      "queryP95Ms": 0.17511699999886332,
+      "cache": {
+        "side": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "bottom": {
+          "gridCells": 45,
+          "gridEntries": 913,
+          "allocatedFiniteTriangles": 197
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Production physics/tank/attitude excerpt through motionHarness, no GPU/render/HUD/NPC whole-frame FPS measurement.",
+    "One actual supported initialization then real digital steering/throttle/brake inputs only; no per-frame state or pose assignments.",
+    "Three independent persistent VM trials per variant/route, original native approved model bounding geometry.",
+    "Cache counts are object cardinality, not JS heap bytes; RSS source was not differentiated and no SIGKILL cause is asserted."
+  ]
+}

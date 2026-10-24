@@ -1,0 +1,27 @@
+{
+  "schema": "coast-side-preserved-red-evidence-v1",
+  "eagerUnshippedPhysicsSha256": "ada206866520ca095ab9cc9f76e9822d2b6f28721a3c129145c2b383d78849cd",
+  "scope": "Historical evidence from the pre-cache candidate, not a pass claim for the later8bbb final runtime. All old raw logs retained locally, no assertion relaxed.",
+  "parallelMain": {
+    "log": "applicable-main-final-eager.tap",
+    "sha256": "f21452518f37e67ebf0545a6e5beb43e4847788ffab37047318dca95c0e9bd87",
+    "tests": 1263,
+    "pass": 1262,
+    "fail": 1,
+    "failureFragment": "# Subtest: tests/coast-terrain-physics.test.mjs\nnot ok 41 - tests/coast-terrain-physics.test.mjs\n  ---\n  duration_ms: 6990.382606\n  type: 'test'\n  location: '<worktree>/tests/coast-terrain-physics.test.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: ~\n  signal: 'SIGKILL'\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...",
+    "fragmentLocationPathRelativized": true
+  },
+  "sameSourceSerialTerrain": {
+    "log": "terrain-before-serial.tap",
+    "sha256": "d565665e3fcd57b80171216a822857dd0f710b8ed98a26297725c68d4ab83fed",
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "milliseconds": 13746.8
+  },
+  "limits": [
+    "The one file-level SIGKILL had no failed business assertion. Its cause is unproven; identical reported RSS for baseline/eager does not establish OOM.",
+    "The final changed runtime is independently rerun across every applicable file, with this heavy multi-VM terrain file scheduled serially rather than omitted.",
+    "The earlier wrong hidden/shadow mesh oracle and real finite-plane partition failure remain documented separately; native visible oracle was corrected without asset scaling or tolerance relaxation."
+  ]
+}

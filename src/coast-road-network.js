@@ -189,10 +189,38 @@ const RoadsterCoastRoads = (() => {
     }
     return null;
   }
-  function sweepStructures(previous,next,height=1.25){
+  // Pier-only upright proxy: retain 1.1/2.31 half extents and the caller height.
+  const pierBoxes=structures.filter(box=>box.kind==='pier');
+  function sweepPier(previous,next,box,height){
+    const radius=Math.hypot(1.1,2.31),px=previous.x,pz=previous.z,py=previous.y,dx=next.x-px,dz=next.z-pz,dy=next.y-py;
+    if(box.maxX<Math.min(px,next.x)-3.4||box.minX>Math.max(px,next.x)+3.4||box.maxZ<Math.min(pz,next.z)-3.4||box.minZ>Math.max(pz,next.z)+3.4||box.maxY<Math.min(py,next.y)||box.minY>Math.max(py,next.y)+height)return null;
+    const yaw=previous.yaw||0,turn=Math.atan2(Math.sin((next.yaw||0)-yaw),Math.cos((next.yaw||0)-yaw));
+    const cx=(box.minX+box.maxX)/2,cz=(box.minZ+box.maxZ)/2,cy=(box.minY+box.maxY)/2,bx=(box.maxX-box.minX)/2,bz=(box.maxZ-box.minZ)/2,by=(box.maxY-box.minY)/2;
+    const axes=angle=>{const s=Math.sin(angle),c=Math.cos(angle);return [[1,0,0],[0,0,1],[0,1,0],[c,0,-s],[-s,0,-c]];};
+    const projection=(n,angle)=>{const s=Math.sin(angle),c=Math.cos(angle);return bx*Math.abs(n[0])+by*Math.abs(n[1])+bz*Math.abs(n[2])+1.1*Math.abs(c*n[0]-s*n[2])+2.31*Math.abs(s*n[0]+c*n[2])+height/2*Math.abs(n[1]);};
+    const at=t=>{const angle=yaw+turn*t,q=[px+dx*t-cx,py+dy*t+height/2-cy,pz+dz*t-cz];let best=null;
+      for(const n of axes(angle)){const offset=q[0]*n[0]+q[1]*n[1]+q[2]*n[2],gap=Math.abs(offset)-projection(n,angle),sign=offset<0?-1:1;if(!best||gap>best.gap)best={gap,normal:{x:n[0]*sign,y:n[1]*sign,z:n[2]*sign}};}return {...best,yaw:angle};};
+    const finish=(t,q)=>{const n=q.normal,s=Math.sin(q.yaw),c=Math.cos(q.yaw),corners=[];let support=Infinity;
+      for(const r of[-1.1,1.1])for(const l of[-2.31,2.31]){const offset=(c*r-s*l)*n.x+(-s*r-c*l)*n.z;support=Math.min(support,offset);corners.push({offset,closing:-turn*((-s*r-c*l)*n.x+(-c*r+s*l)*n.z)});}
+      const angularClosingPerFraction=turn?Math.max(...corners.filter(p=>p.offset<=support+1e-7).map(p=>p.closing)):0;
+      return {t,kind:'pier',box,normal:n,yaw:q.yaw,depth:Math.max(0,-q.gap),angularClosingPerFraction};};
+    const first=at(0);if(first.gap<=1e-7){const h=finish(0,first),closing=-(dx*h.normal.x+dy*h.normal.y+dz*h.normal.z)+h.angularClosingPerFraction;if(Math.abs(turn)<1e-12&&closing<=0)return null;return h;}
+    // Constant yaw has an exact five-axis linear interval; tangency cannot
+    // consume a numerical iteration budget or become a broad-AABB contact.
+    if(Math.abs(turn)<1e-12){let enter=0,exit=1;for(const n of axes(yaw)){const from=(px-cx)*n[0]+(py+height/2-cy)*n[1]+(pz-cz)*n[2],v=dx*n[0]+dy*n[1]+dz*n[2],r=projection(n,yaw);if(Math.abs(v)<1e-12){if(Math.abs(from)>r)return null;continue;}const a=(-r-from)/v,b=(r-from)/v;enter=Math.max(enter,Math.min(a,b));exit=Math.min(exit,Math.max(a,b));if(enter>exit)return null;}return enter<=1&&exit>=0?finish(enter,at(enter)):null;}
+    // A fixed separating plane certifies an interval clear using translation
+    // plus the maximum root-centred angular feature travel. No sampled miss or
+    // exhausted conservative-advance budget is reinterpreted as a clear path.
+    const bound=q=>Math.abs(dx*q.normal.x+dy*q.normal.y+dz*q.normal.z)+Math.abs(turn)*radius*Math.hypot(q.normal.x,q.normal.z);
+    let t=0;for(let i=0;i<96;i++){const q=at(t);if(q.gap<=1e-7)return finish(t,q);const b=bound(q);if(b<1e-12)return null;const step=q.gap/b*.9;if(t+step>1)return null;t+=step;}
+    const search=(lo,hi,depth)=>{const mid=(lo+hi)/2,q=at(mid),b=bound(q);if(q.gap>b*(hi-lo)/2+1e-7)return null;if(depth>=36||b*(hi-lo)<1e-7){for(const p of[lo,mid,hi]){const c=at(p);if(c.gap<=1e-7)return finish(p,c);}return null;}return search(lo,mid,depth+1)||search(mid,hi,depth+1);};return search(t,1,0);
+  }
+  function sweepPiers(previous,next,height=1.25){let hit=null;for(const box of pierBoxes){const h=sweepPier(previous,next,box,height);if(h&&(!hit||h.t<hit.t))hit=h;}return hit;}
+  function sweepStructures(previous,next,height=1.25,includeCeiling=true){
     let hit=null;const minX=Math.min(previous.x,next.x)-3.4,maxX=Math.max(previous.x,next.x)+3.4,minZ=Math.min(previous.z,next.z)-3.4,maxZ=Math.max(previous.z,next.z)+3.4,minY=Math.min(previous.y,next.y),maxY=Math.max(previous.y,next.y)+height;
     for(const box of structures){
       if(box.maxX<minX||box.minX>maxX||box.maxZ<minZ||box.minZ>maxZ||box.maxY<minY||box.minY>maxY)continue;
+      if(box.kind==='pier'){const h=sweepPier(previous,next,box,height);if(h&&(!hit||h.t<hit.t))hit=h;continue;}
       let enter=0,exit=1,normal=null;
       const ranges=[['y',box.minY-height,box.maxY,{x:0,y:1,z:0}]];
       let from=previous,to=next;
@@ -212,6 +240,7 @@ const RoadsterCoastRoads = (() => {
       }
       if(normal&&enter<=exit&&enter<=1&&(!hit||enter<hit.t))hit={t:enter,kind:box.kind,box,normal};
     }
+    if(includeCeiling){
     const count=Math.max(1,Math.ceil(Math.hypot(next.x-previous.x,next.z-previous.z)/1.5));
     for(let i=1;i<=count;i++){
       const t=i/count,x=lerp(previous.x,next.x,t),z=lerp(previous.z,next.z,t),y=lerp(previous.y,next.y,t);
@@ -220,6 +249,7 @@ const RoadsterCoastRoads = (() => {
         const before=lerp(previous.y,next.y,oldT)+height-(old?old.height-SLAB_DEPTH:ceiling),after=y+height-ceiling;
         if(before<=0&&after>=0&&after>before+1e-8){const fraction=clamp(-before/(after-before),0,1),at=(i-1+fraction)/count;if(!hit||at<hit.t)hit={t:at,kind:'ceiling',height:ceiling-height,normal:{x:-s.normal.x,y:-s.normal.y,z:-s.normal.z}};}
       }
+    }
     }
     return hit;
   }
@@ -286,5 +316,5 @@ const RoadsterCoastRoads = (() => {
       stats:()=>({maximumWait,maximumHold,zones:zones.map(q=>({id:q.id,grants:q.grants,releases:q.releases,owned:Boolean(q.owner)}))})});
   }
   const stats=()=>({routes:routes.length,mainLength:routes[0].length,bypassLength:routes[1].length,pierLinkLength:access.length,stations:routes.reduce((n,r)=>n+r.stations.length,access.stations.length),roadTriangles:triangles.length-banks.length,bankTriangles:banks.length,terrainTriangles:terrain.indices.length/3,maxHeight:Math.max(...routes[0].stations.map(p=>p.y)),maxGrade:Math.max(...routes.flatMap(r=>r.stations.map(p=>Math.abs(p.grade))))});
-  return Object.freeze({version:2,HALF_BOUND,ROAD_WIDTH,BRIDGE_ROAD_WIDTH,SLAB_DEPTH,routes,access,segments,triangles,banks,structures,terrain,trafficPath,sampleRoute,createTrafficJunctions,trafficConflicts,querySupport,sweepLanding,sweepStructures,groundAttitude,candidates,nearestSegment,heightInTriangle,terrainSupport,stats});
+  return Object.freeze({version:2,HALF_BOUND,ROAD_WIDTH,BRIDGE_ROAD_WIDTH,SLAB_DEPTH,routes,access,segments,triangles,banks,structures,terrain,trafficPath,sampleRoute,createTrafficJunctions,trafficConflicts,querySupport,sweepLanding,sweepStructures,sweepPiers,groundAttitude,candidates,nearestSegment,heightInTriangle,terrainSupport,stats});
 })();

@@ -139,13 +139,14 @@ const RoadsterCoast = (() => {
     return {t:enter,y,npcY,relativeY,body:relativeY<car.height-.15};
   }
 
-  function clipBuildings(previous,state){
+  function clipBuildings(previous,state,separated=null){
     let earliest=null;
     for(const b of obstacles){
       if(Math.max(previous.y,state.y)+1.25<(b.minY??0))continue;
       if(previous.y>=b.height-.08&&state.y>=b.height-.08)continue;
       const t=sweptBox(previous.x,previous.z,state.x,state.z,b,1.1,1.8);
       if(t===null||previous.y+(state.y-previous.y)*t>=b.height+.08)continue;
+      if(separated?.(b))continue;
       if(earliest===null||t<earliest)earliest=t;
     }
     if(earliest===null)return null;
@@ -226,6 +227,14 @@ const RoadsterCoast = (() => {
     const geometries=new Set(),materials=new Set(),textures=new Set(),instances=new Set(),lights=new Set(),own=g=>(geometries.add(g),g);
     const owner={group,geometries,materials,textures,instances,lights,scene};
     try {
+    // Grazing-angle road/paver detail otherwise dissolves into isotropic mip
+    // averages nearby. Keep original pixels, metre-correct UVs and mipmaps;
+    // bound the sampler quality once, without per-frame work or extra textures.
+    let groundAnisotropy=1;
+    try {
+      const maximum=scene.userData?.coastArtBridge?.getMaxGroundAnisotropy?.();
+      if(Number.isFinite(maximum))groundAnisotropy=Math.max(1,Math.min(8,Math.floor(maximum)));
+    } catch {}
     function grainTexture(kind,size=kind==='sand'?256:128){
       const bytes=new Uint8Array(size*size*4);let value=kind==='asphalt'?991:kind==='sand'?771:kind==='plaster'?331:551;
       for(let y=0;y<size;y++)for(let x=0;x<size;x++){
@@ -239,6 +248,7 @@ const RoadsterCoast = (() => {
       const texture=new THREE.DataTexture(bytes,size,size,THREE.RGBAFormat);
       texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.magFilter=THREE.LinearFilter;
       texture.minFilter=THREE.LinearMipmapLinearFilter;texture.generateMipmaps=true;texture.needsUpdate=true;
+      texture.anisotropy=kind==='plaster'?1:groundAnisotropy;
       texture.repeat.set(kind==='plaster'?12:1,kind==='plaster'?6:1);
       textures.add(texture);return texture;
     }

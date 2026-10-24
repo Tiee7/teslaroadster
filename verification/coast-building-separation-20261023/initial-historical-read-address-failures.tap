@@ -1,0 +1,644 @@
+TAP version 13
+# Subtest: coast boundary epoch explicitly succeedsbb73 with immutable source lineage and exact prior fixtures
+ok 1 - coast boundary epoch explicitly succeedsbb73 with immutable source lineage and exact prior fixtures
+  ---
+  duration_ms: 35.104253
+  type: 'test'
+  ...
+# Subtest: all asset/material/scale, terrain, weather, traffic, single-passenger, controls, camera and local-diagnostic sources remain byte frozen
+ok 2 - all asset/material/scale, terrain, weather, traffic, single-passenger, controls, camera and local-diagnostic sources remain byte frozen
+  ---
+  duration_ms: 27.097474
+  type: 'test'
+  ...
+# Subtest: the complete physics delta is one coast-only boundary branch; no shared force/steering/yaw/threshold/bounds change
+ok 3 - the complete physics delta is one coast-only boundary branch; no shared force/steering/yaw/threshold/bounds change
+  ---
+  duration_ms: 7.600577
+  type: 'test'
+  ...
+# Subtest: numeric generation/emission changes only the explicit source/generator/program identity pins
+ok 4 - numeric generation/emission changes only the explicit source/generator/program identity pins
+  ---
+  duration_ms: 0.381952
+  type: 'test'
+  ...
+# Subtest: negative guards reject omitted coast fix, stale projection, asset, terrain, traffic, passenger, weather or unknown-module drift
+ok 5 - negative guards reject omitted coast fix, stale projection, asset, terrain, traffic, passenger, weather or unknown-module drift
+  ---
+  duration_ms: 122.56444
+  type: 'test'
+  ...
+# Subtest: bottom epoch succeedsac55 and preserves every inherited pin and five byte-exact source fixtures
+ok 6 - bottom epoch succeedsac55 and preserves every inherited pin and five byte-exact source fixtures
+  ---
+  duration_ms: 30.562956
+  type: 'test'
+  ...
+# Subtest: only finite-bottom query plus existing phase adapters change; all noncoast integration and old side behavior are frozen
+not ok 7 - only finite-bottom query plus existing phase adapters change; all noncoast integration and old side behavior are frozen
+  ---
+  duration_ms: 6.498896
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/coast-bridge-bottom-source-boundary.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    src/coast-map.js
+    + actual - expected
+    
+    + '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+    - '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+  actual: '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/coast-bridge-bottom-source-boundary.test.mjs:8:662)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: bottom plane certificate is the sole difference from the exact unpruned finite-triangle query oracle
+ok 8 - bottom plane certificate is the sole difference from the exact unpruned finite-triangle query oracle
+  ---
+  duration_ms: 1.120158
+  type: 'test'
+  ...
+# Subtest: generated highway numeric identities advance without relaxing the original generator/emitter source
+ok 9 - generated highway numeric identities advance without relaxing the original generator/emitter source
+  ---
+  duration_ms: 1.155644
+  type: 'test'
+  ...
+# Subtest: negative drift guards reject model, weather, network geometry, noncoast math and concealed finite-helper edits
+ok 10 - negative drift guards reject model, weather, network geometry, noncoast math and concealed finite-helper edits
+  ---
+  duration_ms: 44.529928
+  type: 'test'
+  ...
+# Subtest: bridge-side epoch succeeds9414, preserves every immutable epoch and four exact source fixtures
+ok 11 - bridge-side epoch succeeds9414, preserves every immutable epoch and four exact source fixtures
+  ---
+  duration_ms: 37.376063
+  type: 'test'
+  ...
+# Subtest: all model/material/scale, actual deck geometry, network, weather, traffic and passenger code remain byte frozen
+ok 12 - all model/material/scale, actual deck geometry, network, weather, traffic and passenger code remain byte frozen
+  ---
+  duration_ms: 16.836461
+  type: 'test'
+  ...
+# Subtest: outside finite side query/TOI and ordered late response all physics bytes equal9414, including original pier-only block
+ok 13 - outside finite side query/TOI and ordered late response all physics bytes equal9414, including original pier-only block
+  ---
+  duration_ms: 4.063515
+  type: 'test'
+  ...
+# Subtest: numeric generator and emitter change only complete source/generator/program identity pins
+ok 14 - numeric generator and emitter change only complete source/generator/program identity pins
+  ---
+  duration_ms: 0.271539
+  type: 'test'
+  ...
+# Subtest: negative guards reject missing side CCD, wrong energy/order, stale projection and frozen gameplay/art drift
+ok 15 - negative guards reject missing side CCD, wrong energy/order, stale projection and frozen gameplay/art drift
+  ---
+  duration_ms: 120.383925
+  type: 'test'
+  ...
+# Subtest: building-separation epoch succeeds exact f67 with all historical source fixtures and prior epoch unchanged
+ok 16 - building-separation epoch succeeds exact f67 with all historical source fixtures and prior epoch unchanged
+  ---
+  duration_ms: 30.898043
+  type: 'test'
+  ...
+# Subtest: runtime delta is only conservative native separation gates; original collision, roof, force and response bytes remain exact
+ok 17 - runtime delta is only conservative native separation gates; original collision, roof, force and response bytes remain exact
+  ---
+  duration_ms: 2.524493
+  type: 'test'
+  ...
+# Subtest: all assets, all roads/terrain and structural contacts, four weather modes/day lights, single passenger and highway continuity stay pinned
+ok 18 - all assets, all roads/terrain and structural contacts, four weather modes/day lights, single passenger and highway continuity stay pinned
+  ---
+  duration_ms: 22.910769
+  type: 'test'
+  ...
+# Subtest: negative source guards reject weakened native/finite/flat certificates, skipped real damage, stale projection and unknown gameplay
+ok 19 - negative source guards reject weakened native/finite/flat certificates, skipped real damage, stale projection and unknown gameplay
+  ---
+  duration_ms: 162.205981
+  type: 'test'
+  ...
+# Subtest: native-clear coast building0 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 20 - native-clear coast building0 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 2063.813081
+  type: 'test'
+  ...
+# Subtest: native-clear coast building1 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 21 - native-clear coast building1 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 60.187653
+  type: 'test'
+  ...
+# Subtest: native-clear coast building2 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 22 - native-clear coast building2 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 53.113015
+  type: 'test'
+  ...
+# Subtest: native-clear coast building3 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 23 - native-clear coast building3 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 55.691135
+  type: 'test'
+  ...
+# Subtest: native-clear coast building4 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 24 - native-clear coast building4 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 50.530017
+  type: 'test'
+  ...
+# Subtest: native-clear coast building5 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 25 - native-clear coast building5 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 55.566257
+  type: 'test'
+  ...
+# Subtest: native-clear coast building6 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 26 - native-clear coast building6 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 62.746642
+  type: 'test'
+  ...
+# Subtest: native-clear coast building7 side drive retains real W motion without fixed-axis false hit at30Hz
+ok 27 - native-clear coast building7 side drive retains real W motion without fixed-axis false hit at30Hz
+  ---
+  duration_ms: 47.604103
+  type: 'test'
+  ...
+# Subtest: native-clear coast building0 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 28 - native-clear coast building0 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 68.63092
+  type: 'test'
+  ...
+# Subtest: native-clear coast building1 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 29 - native-clear coast building1 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 68.002171
+  type: 'test'
+  ...
+# Subtest: native-clear coast building2 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 30 - native-clear coast building2 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 74.114721
+  type: 'test'
+  ...
+# Subtest: native-clear coast building3 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 31 - native-clear coast building3 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 73.72079
+  type: 'test'
+  ...
+# Subtest: native-clear coast building4 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 32 - native-clear coast building4 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 74.992209
+  type: 'test'
+  ...
+# Subtest: native-clear coast building5 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 33 - native-clear coast building5 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 71.324239
+  type: 'test'
+  ...
+# Subtest: native-clear coast building6 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 34 - native-clear coast building6 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 70.908487
+  type: 'test'
+  ...
+# Subtest: native-clear coast building7 side drive retains real W motion without fixed-axis false hit at60Hz
+ok 35 - native-clear coast building7 side drive retains real W motion without fixed-axis false hit at60Hz
+  ---
+  duration_ms: 68.882921
+  type: 'test'
+  ...
+# Subtest: native-clear coast building0 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 36 - native-clear coast building0 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 145.541805
+  type: 'test'
+  ...
+# Subtest: native-clear coast building1 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 37 - native-clear coast building1 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 140.255528
+  type: 'test'
+  ...
+# Subtest: native-clear coast building2 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 38 - native-clear coast building2 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 134.537085
+  type: 'test'
+  ...
+# Subtest: native-clear coast building3 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 39 - native-clear coast building3 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 134.51437
+  type: 'test'
+  ...
+# Subtest: native-clear coast building4 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 40 - native-clear coast building4 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 141.106875
+  type: 'test'
+  ...
+# Subtest: native-clear coast building5 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 41 - native-clear coast building5 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 142.836134
+  type: 'test'
+  ...
+# Subtest: native-clear coast building6 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 42 - native-clear coast building6 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 136.994379
+  type: 'test'
+  ...
+# Subtest: native-clear coast building7 side drive retains real W motion without fixed-axis false hit at144Hz
+ok 43 - native-clear coast building7 side drive retains real W motion without fixed-axis false hit at144Hz
+  ---
+  duration_ms: 135.135886
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":null}
+ok 44 - genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":null}
+  ---
+  duration_ms: 28.809263
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":3}
+ok 45 - genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":3}
+  ---
+  duration_ms: 68.602996
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":1.4,"steer":1}
+ok 46 - genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":1.4,"steer":1}
+  ---
+  duration_ms: 30.142875
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":1.4,"airborne":true}
+ok 47 - genuine/no-candidate/steered/airborne original building behavior stays exact30Hz {"gap":1.4,"airborne":true}
+  ---
+  duration_ms: 37.192992
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":null}
+ok 48 - genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":null}
+  ---
+  duration_ms: 41.137387
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":3}
+ok 49 - genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":3}
+  ---
+  duration_ms: 112.21461
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":1.4,"steer":1}
+ok 50 - genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":1.4,"steer":1}
+  ---
+  duration_ms: 36.318616
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":1.4,"airborne":true}
+ok 51 - genuine/no-candidate/steered/airborne original building behavior stays exact60Hz {"gap":1.4,"airborne":true}
+  ---
+  duration_ms: 44.291471
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":null}
+ok 52 - genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":null}
+  ---
+  duration_ms: 52.399813
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":3}
+ok 53 - genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":3}
+  ---
+  duration_ms: 215.10497
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":1.4,"steer":1}
+ok 54 - genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":1.4,"steer":1}
+  ---
+  duration_ms: 61.660948
+  type: 'test'
+  ...
+# Subtest: genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":1.4,"airborne":true}
+ok 55 - genuine/no-candidate/steered/airborne original building behavior stays exact144Hz {"gap":1.4,"airborne":true}
+  ---
+  duration_ms: 67.813463
+  type: 'test'
+  ...
+# Subtest: separation certificate encloses native corners over translation/short-Euler/visual-lean paths
+ok 56 - separation certificate encloses native corners over translation/short-Euler/visual-lean paths
+  ---
+  duration_ms: 105.945452
+  type: 'test'
+  ...
+# Subtest: default coastal clip API and surviving candidate response are unchanged, lazy gate runs only after original broad hit
+ok 57 - default coastal clip API and surviving candidate response are unchanged, lazy gate runs only after original broad hit
+  ---
+  duration_ms: 1069.754424
+  type: 'test'
+  ...
+# Subtest: missing native bounds and invalid pose angles fail closed without changing old hit ownership
+ok 58 - missing native bounds and invalid pose angles fail closed without changing old hit ownership
+  ---
+  duration_ms: 9.565897
+  type: 'test'
+  ...
+# Subtest: coast hull repair explicitly inherits immutable2c traffic/single-seat preview and exact source fixtures
+ok 59 - coast hull repair explicitly inherits immutable2c traffic/single-seat preview and exact source fixtures
+  ---
+  duration_ms: 4.517803
+  type: 'test'
+  ...
+# Subtest: all current sources stay pinned; assets, rendering, ground meshes, traffic, weather and single passenger remain exact
+ok 60 - all current sources stay pinned; assets, rendering, ground meshes, traffic, weather and single passenger remain exact
+  ---
+  duration_ms: 19.884379
+  type: 'test'
+  ...
+# Subtest: physics byte delta is only coast hull geometry/contact and the existing autoland distance input, never a camera or force rewrite
+ok 61 - physics byte delta is only coast hull geometry/contact and the existing autoland distance input, never a camera or force rewrite
+  ---
+  duration_ms: 3.950059
+  type: 'test'
+  ...
+# Subtest: projection generators change only their explicit physics/generator/program identity pins
+ok 62 - projection generators change only their explicit physics/generator/program identity pins
+  ---
+  duration_ms: 0.44213
+  type: 'test'
+  ...
+# Subtest: negative guards reject omitted hull repair, core-asset/handling/traffic/passenger/terrain drift and unknown gameplay modules
+ok 63 - negative guards reject omitted hull repair, core-asset/handling/traffic/passenger/terrain drift and unknown gameplay modules
+  ---
+  duration_ms: 56.126344
+  type: 'test'
+  ...
+# Subtest: pier epoch explicitly succeeds 36ae with immutable complete source lineage and five exact fixtures
+ok 64 - pier epoch explicitly succeeds 36ae with immutable complete source lineage and five exact fixtures
+  ---
+  duration_ms: 37.823637
+  type: 'test'
+  ...
+# Subtest: every source is pinned and only pier geometry/response plus numeric identities may change
+ok 65 - every source is pinned and only pier geometry/response plus numeric identities may change
+  ---
+  duration_ms: 26.867316
+  type: 'test'
+  ...
+# Subtest: terrain/roads/rails/abutments/ceilings are byte exact outside the added finite pier CCD
+ok 66 - terrain/roads/rails/abutments/ceilings are byte exact outside the added finite pier CCD
+  ---
+  duration_ms: 0.622786
+  type: 'test'
+  ...
+# Subtest: physics changes only pier TOI/energy and a later same-XYZ yaw segment; generator identities alone follow it
+ok 67 - physics changes only pier TOI/energy and a later same-XYZ yaw segment; generator identities alone follow it
+  ---
+  duration_ms: 2.508999
+  type: 'test'
+  ...
+# Subtest: negative guards reject missing pier CCD/late response, stale projection and frozen asset/gameplay drift
+ok 68 - negative guards reject missing pier CCD/late response, stale projection and frozen asset/gameplay drift
+  ---
+  duration_ms: 107.231215
+  type: 'test'
+  ...
+# Subtest: stability epoch explicitly succeeds723 while preserving immutable coastal repair and exact source fixtures
+ok 69 - stability epoch explicitly succeeds723 while preserving immutable coastal repair and exact source fixtures
+  ---
+  duration_ms: 38.578776
+  type: 'test'
+  ...
+# Subtest: the entire physics delta only synchronizes already-attached coast display/score classification, never forces or travel
+ok 70 - the entire physics delta only synchronizes already-attached coast display/score classification, never forces or travel
+  ---
+  duration_ms: 11.047915
+  type: 'test'
+  ...
+# Subtest: render evidence keeps every prior line except bounded opt-in game-state tools and a guarded after-render sampler
+ok 71 - render evidence keeps every prior line except bounded opt-in game-state tools and a guarded after-render sampler
+  ---
+  duration_ms: 0.921525
+  type: 'test'
+  ...
+# Subtest: UI changes are only folded settings/crash report controls and their isolated selectors
+ok 72 - UI changes are only folded settings/crash report controls and their isolated selectors
+  ---
+  duration_ms: 5.345981
+  type: 'test'
+  ...
+# Subtest: projection generator/emitter differ only by the explicit physics/generator/program identities
+ok 73 - projection generator/emitter differ only by the explicit physics/generator/program identities
+  ---
+  duration_ms: 0.459135
+  type: 'test'
+  ...
+# Subtest: negative guards reject core asset, terrain, camera, speed, weather, traffic, passenger and diagnostic drift
+ok 74 - negative guards reject core asset, terrain, camera, speed, weather, traffic, passenger and diagnostic drift
+  ---
+  duration_ms: 123.301555
+  type: 'test'
+  ...
+# Subtest: blast-height epoch explicitly succeeds6bf9 and retains immutable bottom epoch and four exact source fixtures
+ok 75 - blast-height epoch explicitly succeeds6bf9 and retains immutable bottom epoch and four exact source fixtures
+  ---
+  duration_ms: 43.625658
+  type: 'test'
+  ...
+# Subtest: the whole runtime delta is only one positive-blast candidate separation rejection; original contact/force/expiry/reset remain exact
+ok 76 - the whole runtime delta is only one positive-blast candidate separation rejection; original contact/force/expiry/reset remain exact
+  ---
+  duration_ms: 2.081451
+  type: 'test'
+  ...
+# Subtest: all approved assets, weather/lights, single passenger, highway supply and every coastal/render byte remain frozen
+ok 77 - all approved assets, weather/lights, single passenger, highway supply and every coastal/render byte remain frozen
+  ---
+  duration_ms: 19.054378
+  type: 'test'
+  ...
+# Subtest: numeric generator/emitter advance only complete source/generator/program identities without changing projection math
+ok 78 - numeric generator/emitter advance only complete source/generator/program identities without changing projection math
+  ---
+  duration_ms: 0.425335
+  type: 'test'
+  ...
+# Subtest: negative guards reject disabling ground damage, approximate shrinking, stale projection, any coast/asset/gameplay drift and unknown modules
+ok 79 - negative guards reject disabling ground damage, approximate shrinking, stale projection, any coast/asset/gameplay drift and unknown modules
+  ---
+  duration_ms: 134.764263
+  type: 'test'
+  ...
+# Subtest: historical performance epoch is frozen; new city contact/skyline changes have an explicit authorized successor
+not ok 80 - historical performance epoch is frozen; new city contact/skyline changes have an explicit authorized successor
+  ---
+  duration_ms: 64.583559
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/performance-source-boundary.test.mjs:20:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    src/coast-map.js
+    + actual - expected
+    
+    + '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+    - '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+  actual: '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/performance-source-boundary.test.mjs:32:277)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: single-seat epoch explicitly succeeds previewb580 while preserving its exact baseline and prior four-change source epoch
+ok 81 - single-seat epoch explicitly succeeds previewb580 while preserving its exact baseline and prior four-change source epoch
+  ---
+  duration_ms: 2.307623
+  type: 'test'
+  ...
+# Subtest: capacity is the sole model behavior delta; scene lifecycle, collision/fare/arrival rules and all non-help adapter code remain exact
+ok 82 - capacity is the sole model behavior delta; scene lifecycle, collision/fare/arrival rules and all non-help adapter code remain exact
+  ---
+  duration_ms: 0.545962
+  type: 'test'
+  ...
+# Subtest: every live source stays pinned through the explicit traffic repair successor; approved assets, passenger and render safeguards stay unchanged
+ok 83 - every live source stays pinned through the explicit traffic repair successor; approved assets, passenger and render safeguards stay unchanged
+  ---
+  duration_ms: 17.11121
+  type: 'test'
+  ...
+# Subtest: negative guards reject restored multiseat capacity, vehicle/physics/weather/traffic drift and unlisted source changes
+ok 84 - negative guards reject restored multiseat capacity, vehicle/physics/weather/traffic drift and unlisted source changes
+  ---
+  duration_ms: 38.139381
+  type: 'test'
+  ...
+# Subtest: traffic repair explicitly succeeds3417 and keeps all old source epochs plus exact deployed counterexamples immutable
+ok 85 - traffic repair explicitly succeeds3417 and keeps all old source epochs plus exact deployed counterexamples immutable
+  ---
+  duration_ms: 9.725581
+  type: 'test'
+  ...
+# Subtest: all live sources including single-seat, four prior improvements, approved assets and render safeguards stay pinned
+ok 86 - all live sources including single-seat, four prior improvements, approved assets and render safeguards stay pinned
+  ---
+  duration_ms: 21.821331
+  type: 'test'
+  ...
+# Subtest: historical traffic-epoch physics delta is only queue intent routing in destroyed NPC aftermath, not driving or collision calculations
+ok 87 - historical traffic-epoch physics delta is only queue intent routing in destroyed NPC aftermath, not driving or collision calculations
+  ---
+  duration_ms: 5.167879
+  type: 'test'
+  ...
+# Subtest: negative guards reject regression to finite rear-only traffic and any asset/physics/weather/passenger/ground drift
+ok 88 - negative guards reject regression to finite rear-only traffic and any asset/physics/weather/passenger/ground drift
+  ---
+  duration_ms: 69.643575
+  type: 'test'
+  ...
+# Subtest: weather/ground/traffic epoch succeeds production4451 explicitly and keeps all historical fixtures/epochs immutable
+ok 89 - weather/ground/traffic epoch succeeds production4451 explicitly and keeps all historical fixtures/epochs immutable
+  ---
+  duration_ms: 12.297853
+  type: 'test'
+  ...
+# Subtest: latest epoch checks actual current sources and preserves all approved asset modules and both render safeguards
+not ok 90 - latest epoch checks actual current sources and preserves all approved asset modules and both render safeguards
+  ---
+  duration_ms: 3.308475
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/weather-ground-source-boundary.test.mjs:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    weather epoch baseline: src/coast-map.js
+    + actual - expected
+    
+    + '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+    - '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+  actual: '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+  operator: 'strictEqual'
+  stack: |-
+    verifyCurrent (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/weather-ground-source-boundary.test.mjs:38:73)
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/weather-ground-source-boundary.test.mjs:62:3)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: epoch negative guards reject unapproved core-asset, authorized-source and projection-pin drift
+not ok 91 - epoch negative guards reject unapproved core-asset, authorized-source and projection-pin drift
+  ---
+  duration_ms: 3.611811
+  type: 'test'
+  location: '/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/weather-ground-source-boundary.test.mjs:74:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The validation function is expected to return "true". Received false
+    
+    Caught error:
+    
+    AssertionError [ERR_ASSERTION]: weather epoch baseline: src/coast-map.js
+    + actual - expected
+    
+    + '3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe'
+    - '0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/tests/weather-ground-source-boundary.test.mjs:76:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..91
+# tests 91
+# suites 0
+# pass 87
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6312.576477

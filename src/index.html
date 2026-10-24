@@ -90,7 +90,8 @@
       <!-- Weather & Time Selector (Section III.3) -->
       <button id="btn-weather" type="button" class="glass-panel hover:bg-amber-500/20 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-amber-200 border border-amber-400/30 flex items-center gap-1.5 cursor-pointer">
         <span id="weather-icon">🌌</span>
-        <span id="ui-weather-btn">Sky: Cyber Night (T)</span>
+        <span id="headlight-status" class="text-xs text-amber-300" role="status" hidden></span>
+        <span id="ui-weather-btn">Sky: Night (T)</span>
       </button>
 
       <!-- Traffic Density Selector -->
@@ -99,6 +100,7 @@
       </button>
 
       <!-- Camera View Toggle -->
+      <button id="btn-replay" type="button" class="ranked-button" aria-controls="replay-panel">Replay</button>
       <button id="btn-camera" type="button" class="glass-panel hover:bg-slate-800/80 active:scale-95 transition rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 cursor-pointer">
         <span id="ui-camera-btn">Cam: Chase</span>
       </button>
@@ -543,7 +545,7 @@
       <footer class="start-footer">
         <div id="modal-config-summary" class="start-screen-reader" aria-live="polite">
           <span id="ui-ready-prefix">Ready to launch with:</span>
-          <span id="summary-model-chip">Roadster 2 · Reference</span>, <span id="summary-cockpit-chip">Reference cockpit</span>, <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Cyber Night</span>
+          <span id="summary-model-chip">Roadster 2 · Reference</span>, <span id="summary-cockpit-chip">Reference cockpit</span>, <span id="summary-paint-chip">Ano White</span>, <span id="summary-map-chip">Elevated Highway</span>, <span id="summary-weather-chip">Night</span>
         </div>
         <button id="btn-launch-selected-map" type="button" class="start-launch"><span id="ui-btn-launch-map">Launch simulation</span><span aria-hidden="true">→</span></button>
       </footer>
@@ -596,6 +598,11 @@
       </div>
 
       <p id="crash-collision-source" class="mono text-xs text-cyan-200 mb-3" hidden></p>
+      <div class="crash-problem-tools">
+        <button id="btn-copy-crash-problem" type="button" class="ranked-button" disabled>Copy brief report</button>
+        <p id="crash-problem-status" class="ranked-small" role="status" aria-live="polite"></p>
+        <textarea id="crash-problem-data" readonly hidden aria-label="Local game problem record"></textarea>
+      </div>
       <details id="crash-diagnostics" class="text-left text-xs text-slate-300 mb-3" hidden>
         <summary id="crash-diagnostics-label" class="cursor-pointer">Local collision diagnostic (not uploaded)</summary>
         <textarea id="crash-diagnostic-data" readonly aria-label="Local collision diagnostic JSON" class="w-full h-24 mt-2 p-2 bg-slate-950 border border-slate-600 rounded mono text-xs"></textarea>
@@ -737,9 +744,35 @@
       <button id="music-toggle" type="button" class="ranked-button ranked-primary" aria-pressed="true" aria-describedby="music-status">Pause music</button>
       <p id="music-status" class="ranked-status" role="status"></p>
       <p id="music-note" class="ranked-small"></p>
+      <details id="drive-problem-tools" class="drive-problem-tools">
+        <summary id="drive-problem-title">Local problem record</summary>
+        <p id="drive-problem-note" class="ranked-small">Game state only. Nothing is uploaded automatically.</p>
+        <div class="drive-problem-actions">
+          <button id="btn-copy-drive-problem" type="button" class="ranked-button" disabled>Copy brief report</button>
+          <button id="btn-save-drive-problem" type="button" class="ranked-button" disabled>Save JSON</button>
+        </div>
+        <p id="drive-problem-status" class="ranked-small" role="status" aria-live="polite"></p>
+        <textarea id="drive-problem-data" readonly hidden aria-label="Local game problem record"></textarea>
+      </details>
     </div>
   </dialog>
 
+  <section id="replay-panel" class="replay-panel" aria-labelledby="replay-title" hidden>
+    <div class="replay-heading"><strong id="replay-title">Temporary replay · RAM only</strong><button id="replay-close" type="button">Close panel</button></div>
+    <div class="replay-actions"><button id="replay-record" type="button">● Record</button><button id="replay-stop" type="button">■ Stop</button><button id="replay-play" type="button">▶ Play</button><button id="replay-pause" type="button">Ⅱ Pause</button><button id="replay-exit" type="button">Return to driving</button><button id="replay-clear" type="button">Clear clip</button></div>
+    <input id="replay-seek" type="range" min="0" max="0" step="0.001" value="0" aria-label="Replay time">
+    <output id="replay-time"></output>
+    <div class="replay-options">
+      <label>Speed / 速度 <select id="replay-speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+      <label><input id="replay-loop" type="checkbox"> Loop / 循环</label>
+      <label>Camera / 机位 <select id="replay-camera"><option value="chase">Chase / 追车</option><option value="front">Front-side / 前侧</option><option value="ground">Right door low / 右前门贴地</option><option value="fixed">Fixed world point / 世界定点</option><option value="cockpit">Cockpit (player) / 车内（我的车）</option><option value="free">Free / 自由</option></select></label>
+      <label>Follow / 跟随 <select id="replay-target"><option value="player">Player / 我的车</option><option value="npc">NPC 1 / 交通车</option></select></label>
+      <button id="replay-near" type="button" aria-label="Move replay camera closer">＋</button><button id="replay-far" type="button" aria-label="Move replay camera farther">−</button>
+      <button id="replay-fixed-here" type="button">Fix camera here / 固定此处</button>
+    </div>
+    <p id="replay-fixed-status" class="replay-note" role="status"></p>
+    <p id="replay-status" role="status"></p><p id="replay-note" class="replay-note"></p>
+  </section>
   <!-- Modular Functional Scripts -->
   <script src="config.js"></script>
   <script src="city-clock.js"></script>
@@ -760,11 +793,14 @@
   <script src="weather-rain.js"></script>
   <script src="taxi.js"></script>
   <script src="ui-hud.js"></script>
+  <script src="headlight-projection.js"></script>
   <script src="leaderboard.js"></script>
   <script src="start-screen.js"></script>
   <script src="demo-numeric-projection.js"></script>
   <script src="highway-demo.js"></script>
   <script src="physics-main.js"></script>
+  <script src="replay-core.js"></script>
+  <script src="replay.js"></script>
   <script src="render-health.js"></script>
   <script src="render-diagnostics.js"></script>
 </body>

@@ -1,0 +1,81 @@
+{
+  "schema": "roadster-weather-ground-traffic-regression-v1",
+  "baseMain": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "scope": "Independent preview review only; no production merge/deployment.",
+  "verifiedAtUTC": "2026-10-22T10:24:31.812543+00:00",
+  "fullSuite": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "exitCode": 0,
+    "tests": 1068,
+    "suites": 0,
+    "pass": 1068,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 1326964.523821,
+    "retainedExternalLog": "full-suite-final-concurrency2.log",
+    "logSha256": "6f2da830a1b0127d238f80fb8cc7ffc88d526f3a07e5a4efcf79c0585b75b1fa",
+    "logLastModifiedUTC": "2026-10-22T10:21:52.591547+00:00",
+    "boundary": "CPU/source/native geometry regressions; not browser or device-GPU/FPS acceptance."
+  },
+  "build": {
+    "commands": [
+      "npm run check",
+      "npm run build",
+      "git diff --check"
+    ],
+    "exitCodes": [
+      0,
+      0,
+      0
+    ],
+    "checkLogSha256": "b8c99a615df4a40b590cbe5aaca5118298eb5513257a85d14e9f33d4a6dd6b58",
+    "buildLogSha256": "5c025195302db886f8702d8bfaf37ba06f612f4db6112d34ce8c13b4cac944ab"
+  },
+  "artifact": {
+    "path": "index.html",
+    "bytes": 5001268,
+    "gitBlob": "aa629e568a662d70f896fcf951e30935d0ff50f7",
+    "sha256": "10c3be1e4b39c3b77dbc62b76bb8c487d24821f0ed85e32e3d4380057acd2f9c"
+  },
+  "sourceEpochSha256": "e8fba7c5d5ed507e9a28cfe5c7e07d636d6904d5ab05319220c564fa06e28eb9",
+  "nativeThreeRuntime": {
+    "revision": "128",
+    "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2"
+  },
+  "additionalStaticGuards": {
+    "projectionIdentityPass": 29,
+    "projectionMirrorPass": 3,
+    "reportOnlyRedirectWrapper": "verification/weather-ground-traffic-20261022/verify-projection-identity.mjs"
+  },
+  "trafficFixtureTransition": {
+    "initialFullSuite": {
+      "tests": 1066,
+      "pass": 1065,
+      "fail": 1,
+      "skipped": 0,
+      "retainedExternalLog": "full-suite-concurrency2.log",
+      "logSha256": "c14355afbe07bd6a3407246afa592fb2036b266f4023fa654739c62c3b01b9b2"
+    },
+    "reason": "Rear-only recycling intentionally changes sustained forward traffic pressure; old seed7 minimum3landings depended on front refill.",
+    "originalStrictAssertions": "Preserved under exact4451 traffic-only historical fixture; all other current physics/planner unchanged.",
+    "newCurrentCoverage": "Full1200frame20s rear-only safety/fuel/speed/bounds/admission checks plus two-real-hop finite-recharge pressure unit. Both pass in final full run.",
+    "productionSourceChangedToGreenFixture": false,
+    "diagnosisReport": "traffic-fixture-diagnosis.json"
+  },
+  "samplingEvidence": {
+    "reportDirectory": "texture/",
+    "pixelReplayCases": 5,
+    "boundary": "Isolated original-paver native Mesa software pixels; not full scene/browser/user-device GPU/FPS."
+  },
+  "preservation": {
+    "vehicleAssetModules": "All source-epoch approved vehicle assets and frozen modules match exact4451 bytes.",
+    "priorRenderAndContextLossFixes": true,
+    "oldDraftsPreserved": true
+  },
+  "limitations": [
+    "User-device appearance and motion require preview acceptance.",
+    "20ms CPU planner budget is cooperative, not a hard cap; bounded-planner-summary.json is not a device FPS result."
+  ]
+}

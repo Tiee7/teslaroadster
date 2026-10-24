@@ -1,0 +1,202 @@
+{
+  "schema": "coast-hull-contact-regression-v1",
+  "preparedAt": "2026-10-22T15:34:16.882922+00:00",
+  "scope": "preview-only PR20; main and production4451 unchanged",
+  "basePreview": "2c217c077c82b014f47a1365b6d803574ac47946",
+  "originalUserEvent": {
+    "status": "UNLOCALIZED",
+    "imagePixelsObtained": false,
+    "imageViewed": false,
+    "untrustedClueOnly": "system-extracted first-person/airtime description; no coordinates/input replay",
+    "notClaimed": "This independently reachable partial-burial class is not established as the original user ground-gap event."
+  },
+  "counterexample": {
+    "fixture": "tests/fixtures/coast-hull-contact-baseline/physics-main.js",
+    "sha256": "692713c8dcd606ed8478946aedd0af9a86ad5073b50d82f986d68072f649c4d6",
+    "input": "Upright supported flat route1 at400m; hold Space0.8s and J1.6s, then release all; no midflight pose assignment.",
+    "actualGeometryChecks": "Old2c CPU native real reference geometry: eye<-0.6m, near plane<-0.65m, actual visible-material neutral reference vertices<-1m, root>=0; no ground callback before burial.",
+    "newChecks": "Same actual inputs still take off and land; four native/proxy schedules eye>0.4m, near>0.3m, actual vertex>-0.06m (existing suspension), no impact/reset; ordinary upright peak/fuel exact."
+  },
+  "repair": {
+    "sourceSha256": "5b9714605d3360890996ffe12afadcdf78949f5e059baa47fcd220a954611ee7",
+    "sourceEpoch": "verification/coast-hull-contact-20261022/source-epoch.json",
+    "changes": [
+      "Coast-only adaptive eight-corner sweep of existing frozen rotated collider through real finite surfaces, previous-root-above gate and finite root-triangle height.",
+      "Earlier body contact hands off existing ground attitude/damage/recharge policy.",
+      "Existing coastal paid landing protection distance uses actual rotated hull clearance, with unchanged thrust/fuel/damage coefficients."
+    ],
+    "notChanged": [
+      "camera",
+      "628-asset modules/materials/scales",
+      "road/terrain meshes/support layout",
+      "highway front replenishment and incident rear recovery",
+      "single passenger",
+      "weather",
+      "city/highway physics bytes outside coast gates"
+    ],
+    "fuelBoundary": "Normal upright case peak/fuel remains exact; rotated flight fuel/contact timing legitimately changes. No blanket fuel-identity claim.",
+    "noLowYTeleport": true
+  },
+  "targeted": {
+    "command": "node --test --test-concurrency=2 tests/coast-*.test.mjs tests/weather-ground-numeric-projection.test.mjs tests/traffic-ground-source-boundary.test.mjs tests/weather-ground-source-boundary.test.mjs tests/single-passenger-source-boundary.test.mjs tests/performance-source-boundary.test.mjs",
+    "tests": 257,
+    "pass": 257,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 434607.083329,
+    "log": "coast-projection-targeted.log",
+    "counting": "Overlapping focused and targeted runs are not added together."
+  },
+  "focused": {
+    "core": {
+      "tests": 51,
+      "pass": 51,
+      "skip": 0
+    },
+    "sourceProjection": {
+      "tests": 23,
+      "pass": 23,
+      "skip": 0
+    },
+    "finalNative": {
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "durationMs": 6575.004956,
+      "command": "node --test --test-reporter=spec tests/coast-hull-ground-contact-native.test.mjs"
+    }
+  },
+  "retainedFailures": [
+    {
+      "log": "core-contact-initial.log",
+      "failures": 24,
+      "cause": "Prototype root height extrapolated from corner triangle on slopes/decks. Fixed finite.height;1e-8 assertion unchanged."
+    },
+    {
+      "log": "independent-candidate-natural.json",
+      "cause": "Body-first-only V1 hit earlier without matching old root-distance autoland; natural hard hits increased. Repaired hull-distance input, not damage thresholds."
+    },
+    {
+      "log": "invalid-postimpact-fuel-assertion.stderr",
+      "cause": "Invalid harness assertion read fuel after a record-only damage callback continued into legitimate recharge. Final test records fuel synchronously at impact; production unchanged by this correction."
+    }
+  ],
+  "actualMeshAudit": {
+    "sourceSha256": {
+      "coast-road-network.js": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+      "coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+      "physics-main.js": "5b9714605d3360890996ffe12afadcdf78949f5e059baa47fcd220a954611ee7",
+      "config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+      "driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64"
+    },
+    "triangles": 32088,
+    "meshes": 6,
+    "rayCrossChecks": 8,
+    "static": {
+      "checked": 78698,
+      "skipped": 134,
+      "missing": 0,
+      "mismatchOver02": 0,
+      "maxHeightDifference": 1.4210854715202004e-14,
+      "firstDifferences": [],
+      "scope": "Every source road/bank triangle centroid and3near-edge points, plus every terrain triangle centroid, if production chooses that precise support."
+    },
+    "motion": {
+      "cases": 32,
+      "executed": 32,
+      "firstUnderCount": 0,
+      "maxSupportRenderDifference": 0,
+      "minimumRootClearance": 0,
+      "impactStops": 1,
+      "stopPolicy": "Stop at first damage callback/reset; no postcollision lifecycle claim."
+    }
+  },
+  "fullSuite": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "startedAt": "2026-10-22T15:28:09.022343+00:00",
+    "exitCode": 1,
+    "reportedTests": 1129,
+    "pass": 1127,
+    "fileLevelFailures": 2,
+    "failures": [
+      "tests/coast-art-lighting.test.mjs",
+      "tests/coast-art.test.mjs"
+    ],
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 997310.528238,
+    "log": "full-suite-concurrency2.log",
+    "diagnosis": "Final spec reporter only says test failed at file scope; no assertion stack, exitCode or signal. Cause remains unknown; OOM/SIGKILL is not established. No production/test edit made in response."
+  },
+  "artifact": {
+    "bytes": 5015942,
+    "sha256": "108ddb92d9e086fb389e6ddc967dfe9c73e3394c986c44f734367cb92b11fed3",
+    "gitBlobSha": "d6129415a10a94e58cd73b89683621ee62735166"
+  },
+  "evidenceSha256": {
+    "core-contact-initial.log": "248dd5328cd782f7719ff35bf7f908a267b724acd1812e6ea085263dda5fe2d5",
+    "core-contact-finite-height.log": "5d2d968ccba8421fd9eb0917df8577d91c6781efd1cc3d9d5999c5a43f10eb3b",
+    "source-projection-initial.log": "c3c8a2b46084bdd099a04b6ea3b7559f733f92d36f6b30c32a73f47c8a609987",
+    "portable-native-tests.log": "eb222781eecbcfcafd15a8d0b38add1ffc252ddd6069d4776f5273e1c0028f24",
+    "coast-projection-targeted.log": "fc81604e421c0ba765f2e0fb91d1aa3265f85a30b1d5e8274291e91b29a053cb",
+    "baseline-source-snapshot.json": "880bce06cd732a871c1b98f6057970ed2c62f51444d3e8428164cb0401441ffd",
+    "baseline-source-fixtures.json": "c8fab0fd9791ea6d25d1f0634a6ed01166348c2372031918079e3c93c4c88990",
+    "independent-candidate-natural.json": "9e8edf839b111474168db9187cfe6f4a05971c3dc97b0b7fb13fbe24ac70c291",
+    "independent-candidate-natural-v2.json": "4fa9b10c5d715415ecdcc4d516910124ed1bd734be8f3cd1205604210941dc45",
+    "independent-candidate-hard-landings-v2.json": "ed58b4ce2d88a3c89c904b521af15aa5b50b737cd210515b58d38ee8faa52710",
+    "invalid-postimpact-fuel-assertion.stderr": "bdfc95cf0bec6e0ce394f6ef9110b959568fb14d30405ad415d6bad731e75efd",
+    "independent-final-audit.json": "2fb5b375693f7e23de68248939dd6294ecc434d6e8e933841b3ddeef1b9494af",
+    "current-render-mesh-support.mjs": "b74908a0d88413a2e1538851ef28ff0f7bd7dfe4bf1cb4d2ff2e7aad9a5cd4ba",
+    "current-render-mesh-support.json": "3cfd1aecd1d6c31a2220cb1993ea5f5422b93e0a123307de611314fd04fafdbe",
+    "current-render-mesh-support.log": "80cdfb93ceb881f46be231a6ad7db3f41001577aae3c4547bea5e790666c561f",
+    "full-suite-source-snapshot.json": "879c51ec44735b39be04a6b6630b7e1c7548f19df2bbd15219e20b5c2c3c5912",
+    "upload-progress.json": "4f283fe4682a501beaf72a775ff3bf3acc7b10f0dd4c9a2bd0da7922115e1d1c",
+    "full-suite-concurrency2.log": "92db739bc2f14e717cc778d984171d92b428dea23297bfbbe9e42e32ec88c84c",
+    "full-suite-exit-code.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "full-suite-terminal-observation.json": "2770db6e3308ebaaae0157b2c6204a48fe30bb39ab035d6cc5d80a970de59982",
+    "coast-art-serial-recheck.tap": "b9344425b06ebe3057f3086178482b5691d6f8f19f3fc570d6e236fc7c1e085d",
+    "coast-art-serial-exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build.log": "5c025195302db886f8702d8bfaf37ba06f612f4db6112d34ce8c13b4cac944ab",
+    "final-pre-full-check.log": "b8c99a615df4a40b590cbe5aaca5118298eb5513257a85d14e9f33d4a6dd6b58"
+  },
+  "limits": [
+    "No original image pixels/location/input capture; original incident remains unlocalized.",
+    "CPU actual Three scene/matrix/ray/mesh checks are not WebGL/GPU/browser/FPS proof.",
+    "Eight corner chords with bounded angular substeps are not an exact general swept OBB-vs-entire-world proof.",
+    "Existing motion harness records callbacks and does not simulate complete destruction/NPC lifecycle.",
+    "Native reference point cloud includes frozen exterior parts hidden in FPV; not all reference vertices are claimed as FPV pixels."
+  ],
+  "completedAt": "2026-10-22T15:47:35.780736+00:00",
+  "serialRecheck": {
+    "command": "node --test --test-concurrency=1 --test-reporter=tap tests/coast-art-lighting.test.mjs tests/coast-art.test.mjs",
+    "exitCode": 0,
+    "tests": 37,
+    "pass": 37,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 45811.818074,
+    "log": "coast-art-serial-recheck.tap",
+    "sourceAndTestBytesChanged": false
+  },
+  "combinedCoverage": {
+    "status": "ALL_1164_UNIQUE_CASES_PASSED_ACROSS_UNCHANGED_BYTES",
+    "uniqueTests": 1164,
+    "calculation": "1127 passed full-batch cases +37 original child cases in the two rechecked files =1164. The two failed file placeholders are not test cases counted as passed.",
+    "notClaimed": "Not one all-green full run. The earlier257/51/23/11 runs overlap and are not added.",
+    "sourceAndTestSnapshotFiles": 211,
+    "snapshotChanged": []
+  },
+  "nativeRuntime": {
+    "revision": 128,
+    "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "environmentVariable": "ROADSTER_THREE_RUNTIME; run used existing /tmp/roadster-three.min.js",
+    "fullAndFocusedNativeSkipped": 0
+  },
+  "buildChecks": {
+    "build": "npm run build: pass; public/index.html byte-identical to root index.html",
+    "check": "npm run check: JavaScript syntax, inline bundle, unique DOM IDs, deterministic bundler and deployment config passed",
+    "whitespaceBoundary": "Exact historical physics fixture retains two original trailing-space lines. Scoped change whitespace check excludes only that byte-frozen archive; all actual code/test/doc edits are clean."
+  }
+}

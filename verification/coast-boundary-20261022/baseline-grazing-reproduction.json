@@ -1,0 +1,597 @@
+{
+  "schema": "coast-boundary-baseline-witness-v1",
+  "at": "2026-10-22T17:44:08.636Z",
+  "baseCommit": "bb73a584f3e40b648ff142707d2204b45e36c459",
+  "sourceSha256": {
+    "config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "physics-main.js": "2c001737855bf9406ae29dce2c286a23d679cfe6b5a7fea9cd2e5103825432ad",
+    "coast-road-network.js": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7",
+    "coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747"
+  },
+  "observerOnlyInstrumentedPhysicsSha256": "e188eb066f150c398e38f6043d7aa49ab3d3fb6e04debebe0314b5f7ceadc85c",
+  "scope": "Read-only actual production motion from supported legal positions,40m/s nominal speed, shallow0.05rad incidence, no per-frame pose/input assignment. Each run is at most2seconds and stops at first impact. An observer-only insertion captures incoming velocity immediately before the old boundary branch; original production damage threshold runs unchanged and destroyVehicle presentation is stubbed.",
+  "limits": [
+    "CPU motion/damage replay; destruction presentation and full RAF/traffic/render lifecycle not executed.",
+    "Legal supported starting states, not continuous driving from default spawn.",
+    "No new GPU evidence; unrelated to the still-unlocalized original ground-gap screenshot."
+  ],
+  "rows": [
+    {
+      "edgeAxis": "x",
+      "edgeSign": 1,
+      "fps": 30,
+      "legalInitial": {
+        "x": 1196,
+        "z": 100,
+        "y": 6.991811046694883,
+        "yaw": -0.05,
+        "pitch": -0.005271309347413195,
+        "roll": -0.05582417172284185,
+        "speed": 40,
+        "vx": 1.9991667708271332,
+        "vz": -39.95001041579865,
+        "vy": -0.21085432688227765,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 27,
+      "firstContact": {
+        "arguments": [
+          39.55453932063241,
+          "crashReasonThreshold",
+          0.29195009867576466,
+          2,
+          -5.530102203078246
+        ],
+        "incoming": {
+          "x": 1197.8688721466501,
+          "y": 6.8234382601274515,
+          "z": 64.25493965047819,
+          "vx": 2.0853578476840333,
+          "vy": -0.14600128008572566,
+          "vz": -39.50073002198747,
+          "speed": 39.55453932063241,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": -0.7298752466894116,
+          "vy": -0.14600128008572566,
+          "vz": 13.825255507695614,
+          "speed": -13.844088762221341
+        },
+        "productionPeakG": 25.42791813469226,
+        "productionDvKmH": 142.39634155427666,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 2.0853578476840333,
+        "tangentBeforeMps": -39.50073002198747,
+        "tangentAfterMps": 13.825255507695614,
+        "reportedDeltaVMps": 39.55453932063241,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 60,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "x",
+      "edgeSign": 1,
+      "fps": 60,
+      "legalInitial": {
+        "x": 1196,
+        "z": 100,
+        "y": 6.991811046694883,
+        "yaw": -0.05,
+        "pitch": -0.005271309347413195,
+        "roll": -0.05582417172284185,
+        "speed": 40,
+        "vx": 1.9991667708271332,
+        "vz": -39.95001041579865,
+        "vy": -0.21085432688227765,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 53,
+      "firstContact": {
+        "arguments": [
+          39.56354860398357,
+          "crashReasonThreshold",
+          0.29133047657212047,
+          2,
+          -5.531313912249569
+        ],
+        "incoming": {
+          "x": 1197.8300440023002,
+          "y": 6.823661642212587,
+          "z": 64.90935807651141,
+          "vx": 2.0809319755151465,
+          "vy": -0.1457325917851362,
+          "vz": -39.50938508749692,
+          "speed": 39.56354860398357,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": -0.7283261914303012,
+          "vy": -0.1457325917851362,
+          "vz": 13.828284780623923,
+          "speed": -13.847242011394249
+        },
+        "productionPeakG": 25.433709816846584,
+        "productionDvKmH": 142.42877497434085,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 2.0809319755151465,
+        "tangentBeforeMps": -39.50938508749692,
+        "tangentAfterMps": 13.828284780623923,
+        "reportedDeltaVMps": 39.56354860398357,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 120,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "x",
+      "edgeSign": 1,
+      "fps": 144,
+      "legalInitial": {
+        "x": 1196,
+        "z": 100,
+        "y": 6.991811046694883,
+        "yaw": -0.05,
+        "pitch": -0.005271309347413195,
+        "roll": -0.05582417172284185,
+        "speed": 40,
+        "vx": 1.9991667708271332,
+        "vz": -39.95001041579865,
+        "vy": -0.21085432688227765,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 126,
+      "firstContact": {
+        "arguments": [
+          39.568085014616976,
+          "crashReasonThreshold",
+          0.2909740646997722,
+          2,
+          -5.531919648420953
+        ],
+        "incoming": {
+          "x": 1197.8104169021842,
+          "y": 6.823585952344864,
+          "z": 65.23636573361217,
+          "vx": 2.0783861764269442,
+          "vy": -0.14557739387646235,
+          "vz": -39.51371177443537,
+          "speed": 39.568085014616976,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": -0.7274351617494305,
+          "vy": -0.14557739387646235,
+          "vz": 13.82979912105238,
+          "speed": -13.848829755115942
+        },
+        "productionPeakG": 25.436626080825196,
+        "productionDvKmH": 142.44510605262113,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 2.0783861764269442,
+        "tangentBeforeMps": -39.51371177443537,
+        "tangentAfterMps": 13.82979912105238,
+        "reportedDeltaVMps": 39.568085014616976,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 288,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "z",
+      "edgeSign": 1,
+      "fps": 30,
+      "legalInitial": {
+        "x": 100,
+        "z": 1196,
+        "y": 0,
+        "yaw": 1.6207963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 40,
+        "vx": -39.95001041579865,
+        "vz": 1.9991667708271323,
+        "vy": 0,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 28,
+      "firstContact": {
+        "arguments": [
+          39.49630365557916,
+          "crashReasonThreshold",
+          -5.52257209849077,
+          2,
+          0.27635894243556214
+        ],
+        "incoming": {
+          "x": 62.956820652932635,
+          "y": 0,
+          "z": 1197.8537039781884,
+          "vx": -39.44694356064835,
+          "vy": 0,
+          "vz": 1.9739924459683011,
+          "speed": 39.49630365557916,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": 13.806430246226922,
+          "vy": 0,
+          "vz": -0.6908973560889053,
+          "speed": -13.823706279452706
+        },
+        "productionPeakG": 25.39048092144375,
+        "productionDvKmH": 142.18669316008499,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 1.9739924459683011,
+        "tangentBeforeMps": -39.44694356064835,
+        "tangentAfterMps": 13.806430246226922,
+        "reportedDeltaVMps": 39.49630365557916,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 60,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "z",
+      "edgeSign": 1,
+      "fps": 60,
+      "legalInitial": {
+        "x": 100,
+        "z": 1196,
+        "y": 0,
+        "yaw": 1.6207963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 40,
+        "vx": -39.95001041579865,
+        "vz": 1.9991667708271323,
+        "vy": 0,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 55,
+      "firstContact": {
+        "arguments": [
+          39.505298200906296,
+          "crashReasonThreshold",
+          -5.523829761119035,
+          2,
+          0.27642187802204077
+        ],
+        "incoming": {
+          "x": 63.61005947423591,
+          "y": 0,
+          "z": 1197.8210147915934,
+          "vx": -39.45592686513596,
+          "vy": 0,
+          "vz": 1.9744419858717197,
+          "speed": 39.505298200906296,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": 13.809574402797585,
+          "vy": 0,
+          "vz": -0.6910546950551019,
+          "speed": -13.826854370317204
+        },
+        "productionPeakG": 25.39626312915405,
+        "productionDvKmH": 142.21907352326267,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 1.9744419858717197,
+        "tangentBeforeMps": -39.45592686513596,
+        "tangentAfterMps": 13.809574402797585,
+        "reportedDeltaVMps": 39.505298200906296,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 120,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "z",
+      "edgeSign": 1,
+      "fps": 144,
+      "legalInitial": {
+        "x": 100,
+        "z": 1196,
+        "y": 0,
+        "yaw": 1.6207963267948966,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 40,
+        "vx": -39.95001041579865,
+        "vz": 1.9991667708271323,
+        "vy": 0,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 131,
+      "firstContact": {
+        "arguments": [
+          39.50905240678647,
+          "crashReasonThreshold",
+          -5.524354693093091,
+          2,
+          0.27644814651480315
+        ],
+        "incoming": {
+          "x": 63.881646830503456,
+          "y": 0,
+          "z": 1197.8074240963128,
+          "vx": -39.45967637923636,
+          "vy": 0,
+          "vz": 1.97462961796288,
+          "speed": 39.50905240678647,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": 13.810886732732726,
+          "vy": 0,
+          "vz": -0.6911203662870079,
+          "speed": -13.828168342375266
+        },
+        "productionPeakG": 25.398676547219875,
+        "productionDvKmH": 142.23258866443132,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 1.97462961796288,
+        "tangentBeforeMps": -39.45967637923636,
+        "tangentAfterMps": 13.810886732732726,
+        "reportedDeltaVMps": 39.50905240678647,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 288,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "z",
+      "edgeSign": -1,
+      "fps": 30,
+      "legalInitial": {
+        "x": 100,
+        "z": -1196,
+        "y": 0,
+        "yaw": -1.5207963267948965,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 40,
+        "vx": 39.95001041579865,
+        "vz": -1.9991667708271375,
+        "vy": 0,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 28,
+      "firstContact": {
+        "arguments": [
+          39.496303655579176,
+          "crashReasonThreshold",
+          5.522572098490771,
+          2,
+          -0.27635894243556297
+        ],
+        "incoming": {
+          "x": 137.04317934706742,
+          "y": 0,
+          "z": -1197.8537039781884,
+          "vx": 39.446943560648364,
+          "vy": 0,
+          "vz": -1.973992445968307,
+          "speed": 39.496303655579176,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": -13.806430246226927,
+          "vy": 0,
+          "vz": 0.6908973560889073,
+          "speed": -13.823706279452711
+        },
+        "productionPeakG": 25.390480921443757,
+        "productionDvKmH": 142.18669316008504,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 1.973992445968307,
+        "tangentBeforeMps": 39.446943560648364,
+        "tangentAfterMps": -13.806430246226927,
+        "reportedDeltaVMps": 39.496303655579176,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 60,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "z",
+      "edgeSign": -1,
+      "fps": 60,
+      "legalInitial": {
+        "x": 100,
+        "z": -1196,
+        "y": 0,
+        "yaw": -1.5207963267948965,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 40,
+        "vx": 39.95001041579865,
+        "vz": -1.9991667708271375,
+        "vy": 0,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 55,
+      "firstContact": {
+        "arguments": [
+          39.505298200906324,
+          "crashReasonThreshold",
+          5.523829761119038,
+          2,
+          -0.27642187802204166
+        ],
+        "incoming": {
+          "x": 136.38994052576408,
+          "y": 0,
+          "z": -1197.8210147915934,
+          "vx": 39.455926865135986,
+          "vy": 0,
+          "vz": -1.9744419858717261,
+          "speed": 39.505298200906324,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": -13.809574402797594,
+          "vy": 0,
+          "vz": 0.6910546950551041,
+          "speed": -13.826854370317212
+        },
+        "productionPeakG": 25.396263129154065,
+        "productionDvKmH": 142.21907352326278,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 1.9744419858717261,
+        "tangentBeforeMps": 39.455926865135986,
+        "tangentAfterMps": -13.809574402797594,
+        "reportedDeltaVMps": 39.505298200906324,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 120,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    },
+    {
+      "edgeAxis": "z",
+      "edgeSign": -1,
+      "fps": 144,
+      "legalInitial": {
+        "x": 100,
+        "z": -1196,
+        "y": 0,
+        "yaw": -1.5207963267948965,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 40,
+        "vx": 39.95001041579865,
+        "vz": -1.9991667708271375,
+        "vy": 0,
+        "airRemaining": 10,
+        "wasAirborne": false,
+        "coastSupportId": "terrain",
+        "impactCooldown": 0
+      },
+      "framesToFirstContact": 131,
+      "firstContact": {
+        "arguments": [
+          39.50905240678652,
+          "crashReasonThreshold",
+          5.524354693093098,
+          2,
+          -0.27644814651480426
+        ],
+        "incoming": {
+          "x": 136.11835316949663,
+          "y": 0,
+          "z": -1197.8074240963128,
+          "vx": 39.45967637923641,
+          "vy": 0,
+          "vz": -1.9746296179628877,
+          "speed": 39.50905240678652,
+          "limit": 1197.8
+        },
+        "immediatelyAfterResponse": {
+          "vx": -13.810886732732744,
+          "vy": 0,
+          "vz": 0.6911203662870107,
+          "speed": -13.828168342375282
+        },
+        "productionPeakG": 25.398676547219907,
+        "productionDvKmH": 142.2325886644315,
+        "productionDestroyed": true
+      },
+      "measurement": {
+        "normalClosingMps": 1.9746296179628877,
+        "tangentBeforeMps": 39.45967637923641,
+        "tangentAfterMps": -13.810886732732744,
+        "reportedDeltaVMps": 39.50905240678652,
+        "destroyed": true
+      },
+      "inwardControl": {
+        "insetMetres": 6,
+        "frames": 288,
+        "contacts": 0,
+        "resets": 0,
+        "destroyed": false
+      }
+    }
+  ]
+}

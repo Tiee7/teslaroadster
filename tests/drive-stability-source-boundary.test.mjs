@@ -1,0 +1,30 @@
+import { replayPins, replayHistoricalPath, readLiveSource } from './helpers/replay-source-epoch.mjs';
+import test from'node:test';import assert from'node:assert/strict';import{readFileSync,readdirSync}from'node:fs';import{createHash}from'node:crypto';
+const read=p=>readFileSync(new URL('../' + replayHistoricalPath(p), import.meta.url),'utf8');
+const bridgeSide=JSON.parse(read('verification/coast-bridge-side-contact-20261022/source-epoch.json')),bridgeBottom=JSON.parse(read('verification/coast-bridge-bottom-contact-20261022/source-epoch.json')),pier=JSON.parse(read('verification/coast-pier-contact-20261022/source-epoch.json'));
+const boundary=JSON.parse(read('verification/coast-boundary-20261022/source-epoch.json')),historical=p=>read(boundary.baselineSourceFixtures[p]?.path||bridgeBottom.baselineSourceFixtures[p]?.path||p);
+const sha=s=>createHash('sha256').update(s).digest('hex'),e=JSON.parse(read('verification/drive-stability-20261022/source-epoch.json')),old=JSON.parse(read(e.inheritedHullEpoch)),pins={...e.frozenSourceSha256,...e.authorizedSourceSha256,...boundary.authorizedSourceSha256,...pier.authorizedSourceSha256,...bridgeSide.authorizedSourceSha256,...bridgeBottom.authorizedSourceSha256,...JSON.parse(read('verification/highway-blast-height-20261022/source-epoch.json')).authorizedSourceSha256,...JSON.parse(read('verification/coast-building-separation-20261023/source-epoch.json')).authorizedSourceSha256, ...replayPins },fixture=p=>read(e.baselineSourceFixtures[p].path);
+function verify(overrides={}){for(const p of Object.keys(overrides))assert.ok(Object.hasOwn(pins,p),'unknown source '+p);for(const[p,h]of Object.entries(pins))assert.equal(sha(Object.hasOwn(overrides,p)?overrides[p]:readLiveSource(p)),h,p);}
+function region(s,a,b){assert.equal(s.split(a).length,2);const i=s.indexOf(a),j=s.indexOf(b,i+a.length);assert.ok(j>i);return s.slice(0,i)+s.slice(j);}
+test('stability epoch explicitly succeeds723 while preserving immutable coastal repair and exact source fixtures',()=>{
+ assert.equal(e.schema,'drive-stability-source-epoch-v1');assert.equal(e.basePreview,'723ad63d8ec48e455fe5c79c66852a05ba8ce684');assert.equal(e.mainUnchanged,'4451a11c9c09d031a9da037ce63afe4bb7f062e5');assert.match(e.publicationScope,/^preview-only; same PR20;/);assert.equal(e.inheritedHullEpochSha256,'deae97a47f90c8f4e8fe031b47a22b7d76547764b03e5ecbe9b6fffe06eff90b');assert.equal(sha(read(e.inheritedHullEpoch)),e.inheritedHullEpochSha256);
+ for(const[p,f]of Object.entries(e.baselineSourceFixtures)){assert.equal(sha(read(f.path)),f.sha256,p);assert.equal(f.sha256,({...old.frozenSourceSha256,...old.authorizedSourceSha256})[p],p);}
+ verify();assert.deepEqual(Object.keys(pins).filter(p=>p.startsWith('src/')).sort(),readdirSync(new URL('../src/',import.meta.url)).map(p=>'src/'+p).sort());
+});
+test('the entire physics delta only synchronizes already-attached coast display/score classification, never forces or travel',()=>{
+ const p='src/physics-main.js',addition="  // The resolved coastal support owns this same frame's display/score mode.\n  if(coastWorld&&coastGroundAttached)isAirborne=false;\n";assert.equal(historical(p).split(addition).length,2);assert.equal(historical(p).replace(addition,''),fixture(p));assert.match(historical(p),/if\(coastWorld&&coastGroundAttached\)isAirborne=false;\n  if\(coastGroundAttached\)\{\n    const plane=/);
+});
+test('render evidence keeps every prior line except bounded opt-in game-state tools and a guarded after-render sampler',()=>{
+ let s=region(read('src/render-diagnostics.js'),'  // Opt-in exports contain game state only.','  const sceneBefore = scene.onBeforeRender, sceneAfter = scene.onAfterRender;');const next="    const result=typeof sceneAfter === 'function' ? sceneAfter.apply(this, args) : undefined;\n    try{sampleDriveFrame();}catch(_){} // Observing game state cannot break a render callback.\n    return result;",prior="    return typeof sceneAfter === 'function' ? sceneAfter.apply(this, args) : undefined;";assert.equal(s.split(next).length,2);s=s.replace(next,prior);assert.equal(s,fixture('src/render-diagnostics.js'));assert.deepEqual(e.diagnosticBudget,{ringCapacity:96,ringBytes:9216,perFrameSupportQueries:0,manualTriangleBudget:65536,automaticUpload:false,personalData:false});
+});
+test('UI changes are only folded settings/crash report controls and their isolated selectors',()=>{
+ let s=read('src/index.html');s=region(s,'      <details id="drive-problem-tools"','    </div>\n  </dialog>');
+ s=region(s,'      <div class="crash-problem-tools">','      <details id="crash-diagnostics"');assert.equal(s,fixture('src/index.html'));
+ const css=read('src/styles.css'),mark='\n/* Local opt-in problem tools live inside settings/crash, never over driving. */';assert.equal(css.split(mark).length,2);assert.equal(css.slice(0,css.indexOf(mark)),fixture('src/styles.css'));
+});
+test('projection generator/emitter differ only by the explicit physics/generator/program identities',()=>{
+ const n=e.numericProjection,g='verification/demo-continuous/generate-numeric-projection-kernel.mjs',p='verification/demo-continuous/emit-browser-static-projection.mjs';assert.equal(historical(g).replace(e.authorizedSourceSha256['src/physics-main.js'],n.previousPhysicsSha256),fixture(g));assert.equal(historical(p).replace(n.currentGeneratorSha256,n.previousGeneratorSha256).replace(n.currentProgramSha256,n.previousProgramSha256),fixture(p));
+});
+test('negative guards reject core asset, terrain, camera, speed, weather, traffic, passenger and diagnostic drift',()=>{
+ for(const p of['src/physics-main.js','src/render-diagnostics.js','src/config.js','src/coast-map.js','src/coast-road-network.js','src/vehicles.js','src/reference-exterior.js','src/reference-cockpit.js','src/world.js','src/highway-traffic.js','src/taxi.js'])assert.throws(()=>verify({[p]:read(p)+'\n// unauthorized drift\n'}),v=>v.code==='ERR_ASSERTION'&&v.message.includes(p));assert.throws(()=>verify({'src/new-gameplay.js':''}),/unknown source/);
+});

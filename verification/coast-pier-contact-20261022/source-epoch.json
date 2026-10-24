@@ -1,0 +1,81 @@
+{
+  "schema": "coast-pier-contact-source-epoch-v1",
+  "basePreview": "36ae0b5811e91e36f95d052543d798a581f88881",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; same PR20; keep prior unique previews",
+  "inheritedBoundaryEpoch": "verification/coast-boundary-20261022/source-epoch.json",
+  "inheritedBoundaryEpochSha256": "d04b44acb36318f0de7d9e0387fbb30b4ae77068896cd893952017bfe6e18f3b",
+  "baselineSourceFixtures": {
+    "src/coast-road-network.js": {
+      "path": "tests/fixtures/coast-pier-baseline/coast-road-network.js",
+      "sha256": "96f19c1fab8709937275aeac7afd5e658f84c30d9d9ca11db8c52075b2dfe9b7"
+    },
+    "src/physics-main.js": {
+      "path": "tests/fixtures/coast-pier-baseline/physics-main.js",
+      "sha256": "582245adaa9b5bb140ba22f22968865dceda94554fb11ec555756bb381926489"
+    },
+    "src/demo-numeric-projection.js": {
+      "path": "tests/fixtures/coast-pier-baseline/demo-numeric-projection.js",
+      "sha256": "9a8a598819b35ea98b3e352e1bbddbd3a363315580431515e2a42d66679c9da6"
+    },
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": {
+      "path": "tests/fixtures/coast-pier-baseline/generate-numeric-projection-kernel.mjs",
+      "sha256": "6adc616acd6650584eb445b3df9469fd01c5658d5ea419a4e0cc56bde98efd65"
+    },
+    "verification/demo-continuous/emit-browser-static-projection.mjs": {
+      "path": "tests/fixtures/coast-pier-baseline/emit-browser-static-projection.mjs",
+      "sha256": "b2539bf86ad6c74e72c69c282a488a285113402a4fad034f51f31e11747ea489"
+    }
+  },
+  "frozenSourceSha256": {
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/leaderboard.js": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "src/mobile-controls.js": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/taxi.js": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "src/render-diagnostics.js": "8254e1cbdf37ef1256726a3068f622ea70f6fb8d3be9006b0a8e069168499397",
+    "src/index.html": "17afb2a5e025200d7a8908aad639ba47f29e1e6d317123f4c40c73ed0f6d975d",
+    "src/styles.css": "2788eeeb0b2c79e612416b559ac73af0e6d0fa285674cd1a230f1dcb2e578774"
+  },
+  "authorizedSourceSha256": {
+    "src/coast-road-network.js": "5279eb0f144d11562f5845d3eee058070fb2008ba000a4305a5649d6cf8f9e1d",
+    "src/physics-main.js": "6b1ee3737b7e1115d2bc7080d9a3374f77f0b9062a0ecca6d537df057ebd2ca8",
+    "src/demo-numeric-projection.js": "0dee0d4e2996a60a89a2326e33cffd07e836812079f7303996fc4860925610b8",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "2174e7d2397e3f3d14d5f7a1e8ec94c56b9fb9e142078fb591b1bf4ad59dc073",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "99cc89b09e438db70da373d743b1000465792f9aca4174becdc77dc2ef4ecf10"
+  },
+  "proxy": {
+    "pierHalfWidth": 1.1,
+    "pierHalfLength": 2.31,
+    "defaultHeight": 1.25,
+    "contactToleranceMetres": 1e-07,
+    "localSeparationMetres": 0.0001,
+    "sweptBroadphaseMetres": 3.4
+  },
+  "physicsScope": "early structure phase/ordering retained; additional pier-only same-XYZ yaw segment after late angular integration; TOI yaw/local separation only on pier contact; original damage law, bounds, driving coefficients and non-pier response retained",
+  "numericProjection": {
+    "previousPhysicsSha256": "582245adaa9b5bb140ba22f22968865dceda94554fb11ec555756bb381926489",
+    "previousGeneratorSha256": "6adc616acd6650584eb445b3df9469fd01c5658d5ea419a4e0cc56bde98efd65",
+    "previousProgramSha256": "8b741544c5d35d840edfba12f7b4597a35f392c1c6b96ed0eb35ff03d579f835",
+    "currentGeneratorSha256": "2174e7d2397e3f3d14d5f7a1e8ec94c56b9fb9e142078fb591b1bf4ad59dc073",
+    "currentProgramSha256": "1d2f10e73afc0a538dbe7161fe852f7e7d1fd3e7e6167623514753911afad3f2"
+  },
+  "originalUserEvent": "Original coastal gap screenshot pixels/location remain unknown; independent pier non-contact fatal and late-yaw missed contact are not claimed to identify it."
+}

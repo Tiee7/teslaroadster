@@ -3,6 +3,15 @@
 // array entry cannot cut into a later car's already-reserved merge.
 const highwayTraffic = (() => {
   const MIN_GAP = 7;
+  // World -Z is forward. Only incident recovery uses the rear reservoir;
+  // ordinary longitudinal window exits keep the continuous road traffic loop.
+  const REAR_SPAWN_OFFSETS = [95, 135, 175, 215, 255, 295, 335, 375, 415];
+  const FRONT_SPAWN_OFFSETS = [-452, -470, -434, -416];
+  const NORMAL_REAR_SPAWN_OFFSETS = [55, 39, 23];
+  const spawnCandidates = (player, placement) => {
+    const offsets = placement === 'incident' ? REAR_SPAWN_OFFSETS : placement === 'ahead' ? FRONT_SPAWN_OFFSETS : NORMAL_REAR_SPAWN_OFFSETS;
+    return player.z ? offsets.map(z => z + player.z) : offsets;
+  };
   const SPEED_ADVANTAGE = 0.6;
   const MERGE_SECONDS = 2.6;
   const COOLDOWN_SECONDS = 3.0;
@@ -37,7 +46,7 @@ const highwayTraffic = (() => {
   }
   const occupiedLanes = car => car.laneChange ? [car.laneChange.from, car.laneChange.to] : [car.laneIdx];
 
-  function reset(car, lane, lanes) {
+  function reset(car, lane, lanes, placement) {
     car.laneIdx = lane;
     car.targetX = lanes[lane];
     car.mesh.position.x = car.targetX;
@@ -46,6 +55,9 @@ const highwayTraffic = (() => {
     car.mesh.rotation.x = car.mesh.rotation.y = car.mesh.rotation.z = 0;
     car.laneChange = null;
     delete car.recoverHighwayLane;
+    delete car.highwayWaitingToSpawn;
+    car.highwayRecycledBehind = placement === 'incident';
+    car.highwayPassEligible = placement === 'ahead';
     car.blockedTime = 0;
     car.laneChangeCooldown = profile(car).cooldown;
     car.vx = 0;
@@ -194,6 +206,21 @@ const highwayTraffic = (() => {
     return true;
   }
 
+  const bodyRadius = car => Math.hypot(car.length || car.mesh.userData?.length || 4.62,
+    car.width || car.mesh.userData?.width || 2.03, car.height || car.mesh.userData?.height || 1.5) / 2;
+  const isWreck = car => car.blastTimer > 0 || car.recoverHighwayLane;
+  const spawnLength = car => isWreck(car) ? bodyRadius(car) * 2 : car.length || 4.62;
+  function spawnOccupied(car, lanes, forecast = false) {
+    const occupied = forecast ? forecastOccupied(car, lanes) : [...new Set([...occupiedLanes(car), ...footprint(car.mesh.position.x, lanes)])];
+    if (!isWreck(car)) return occupied;
+    // A tumbling long body may cover another lane even at a lane center.
+    // The half-lane margin covers an admitted body anywhere inside its lane.
+    return [...new Set([...occupied, ...lanes.flatMap((center, lane) =>
+      Math.abs(center - car.mesh.position.x) <= bodyRadius(car) + 2.5 ? [lane] : [])])];
+  }
+  const spawnReserves = (car, lane, lanes) => occupiedLanes(car).includes(lane) ||
+    Math.abs(car.mesh.position.x - lanes[lane]) <= (isWreck(car) ? bodyRadius(car) + 2.5 : 2.3);
+
   const forecastReserves = (car, lane) => car.laneChange
     ? car.laneChange.from === lane || car.laneChange.to === lane : car.laneIdx === lane;
   function forecastSpawnIndex(own, cars, lanes, player, scale) {
@@ -204,7 +231,7 @@ const highwayTraffic = (() => {
       for (let lane = 0; lane < 6; lane++) if (forecastReserves(other, lane)) occupancy[lane]++;
       const neighbor = { car: other, z: other.mesh.position.z,
         speed: other.blastTimer > 0 ? blastSpeed(other, player, scale) : other.speed,
-        length: other.length || 4.62, lanes: forecastOccupied(other, lanes) };
+        length: spawnLength(other), lanes: spawnOccupied(other, lanes, true) };
       if (other.blastTimer > 0) {
         const bounds = blastSafetyBounds(other, player, scale);
         neighbor.frontSafetySpeed = bounds.frontSafetySpeed; neighbor.rearSafetySpeed = bounds.rearSafetySpeed;
@@ -214,27 +241,28 @@ const highwayTraffic = (() => {
     if (player.y < 4) neighbors.push({ z: player.z || 0, speed: -player.vz, length: 4.62,
       lanes: forecastFootprint(player.x, lanes) });
     forecastIndexLanes(neighbors);
-    return { occupancy, neighbors, live, aheadGaps: new Map(), behindGaps: new Map() };
+    return { occupancy, neighbors, live, gaps: new Map() };
   }
-  function forecastRespawn(car, cars, lanes, ahead, player, scale, shared) {
+  function forecastRespawn(car, cars, lanes, player, scale, shared, placement) {
     const holder = shared || { index: null };
     const index = holder.index || (holder.index = forecastSpawnIndex(car, cars, lanes, player, scale));
-    const candidates = ahead ? [-452, -470, -434, -416] : [55, 39, 23];
+    const candidates = spawnCandidates(player, placement);
     const order = lanes.map((_, i) => i).sort((a, b) => index.occupancy[a] - index.occupancy[b] || Math.abs(a - car.laneIdx) - Math.abs(b - car.laneIdx));
-    const length = car.length || 4.62, byLength = ahead ? index.aheadGaps : index.behindGaps;
-    let slots = byLength.get(length);
+    const length = car.length || 4.62, byLength = index.gaps;
+    const key = placement + ':' + length;
+    let slots = byLength.get(key);
     if (!slots) {
       slots = candidates.map(z => lanes.map((_, lane) => {
         let gap = Infinity;
         for (const other of index.live) {
-          if (!forecastReserves(other, lane) && Math.abs(other.mesh.position.x - lanes[lane]) > 2.3) continue;
+          if (!spawnReserves(other, lane, lanes)) continue;
           // Keep the exact original operation order. Splitting the two half
           // lengths can round differently at the 24 m admission boundary.
-          gap = Math.min(gap, Math.abs(z - other.mesh.position.z) - (length + (other.length || 4.62)) / 2);
+          gap = Math.min(gap, Math.abs(z - other.mesh.position.z) - (length + spawnLength(other)) / 2);
         }
         return gap;
       }));
-      byLength.set(length, slots);
+      byLength.set(key, slots);
     }
     for (let slot = 0; slot < candidates.length; slot++) {
       const z = candidates[slot];
@@ -243,19 +271,57 @@ const highwayTraffic = (() => {
         // Each waiting driver still pays its OWN speed/profile safety check.
         // Only immutable slot geometry is shared, never a failure decision.
         if (slots[slot][lane] >= 24 && forecastSafeAdjacentGap(atSpawn, lane, index.neighbors, scale)) {
-          reset(car, lane, lanes); car.mesh.position.z = z;
+          reset(car, lane, lanes, placement); car.mesh.position.z = z;
           holder.index = null; // Newly live car changes every later retry.
           return;
         }
       }
     }
-    car.highwayWaitingToSpawn = ahead; car.mesh.visible = false;
-    car.mesh.position.z = ahead ? -510 : 95; car.vx = 0;
+    car.highwayWaitingToSpawn = placement === 'ahead'; car.highwayRecycledBehind = placement === 'incident'; car.highwayPassEligible = false; car.mesh.visible = false;
+    car.mesh.position.z = (player.z || 0) + (placement === 'ahead' ? -510 : 510); car.vx = 0;
   }
 
-  function respawn(car, cars, lanes, ahead, player, scale, forecast = false, shared = null) {
-    if (forecast) return forecastRespawn(car, cars, lanes, ahead, player, scale, shared);
-    const candidates = ahead ? [-452, -470, -434, -416] : [55, 39, 23];
+  function retireBlast(car) {
+    car.y = car.blastTimer = car.blastVx = car.blastVy = car.blastVz = 0;
+    car.blastVRoll = car.blastVPitch = car.blastVYaw = 0;
+    car.mesh.position.y = 0;
+    car.mesh.rotation.x = car.mesh.rotation.y = car.mesh.rotation.z = 0;
+    car.laneChange = null;
+    delete car.recoverHighwayLane;
+  }
+  function isOffRoad(car, lanes) {
+    const halfLane = lanes.length > 1 ? Math.abs(lanes[1] - lanes[0]) / 2 : 2.5;
+    // A tumbling body's X extent can come from length/height, not just width.
+    // Its enclosing radius keeps the whole body beyond the 30 m pavement plus
+    // a 1 m buffer before recycling, regardless of yaw/pitch/roll.
+    const lateralMargin = halfLane + bodyRadius(car) + 1;
+    return car.mesh.position.x < lanes[0] - lateralMargin || car.mesh.position.x > lanes[lanes.length - 1] + lateralMargin;
+  }
+  function isOutOfBounds(car, lanes, player = { z: 0 }) {
+    if (car.mode !== 'highway') return false;
+    const z = player.z || 0, rearLimit = car.highwayRecycledBehind ? 480 : 65;
+    return car.mesh.position.z < z - 480 || car.mesh.position.z > z + rearLimit || isOffRoad(car, lanes);
+  }
+  function respawnBehind(car, cars, lanes, player, scale) {
+    if (car.mode !== 'highway') return false;
+    car.highwayPassedThisFrame = false;
+    delete car.highwayWaitingToSpawn;
+    respawn(car, cars, lanes, player, scale);
+    return car.highwayWaitingToSpawn === undefined;
+  }
+  function retrySpawn(car, cars, lanes, player, scale, forecast = false, shared = null) {
+    if (car.mode !== 'highway' || car.highwayWaitingToSpawn === undefined) return false;
+    const placement = car.highwayWaitingToSpawn ? 'ahead' : car.highwayRecycledBehind ? 'incident' : 'behind';
+    delete car.highwayWaitingToSpawn;
+    respawn(car, cars, lanes, player, scale, forecast, shared, placement);
+    return car.highwayWaitingToSpawn === undefined;
+  }
+  function respawn(car, cars, lanes, player, scale, forecast = false, shared = null, placement = 'incident') {
+    retireBlast(car);
+    // Reuse the already-proven exact six-lane retry geometry in the runtime
+    // too. Rejected waiting entries stay hidden and do not change occupancy.
+    if (forecast || shared) return forecastRespawn(car, cars, lanes, player, scale, shared, placement);
+    const candidates = spawnCandidates(player, placement);
     const occupancy = lanes.map((_, lane) => cars.filter(other => other !== car && other.mode === 'highway' && other.highwayWaitingToSpawn === undefined && occupiedLanes(other).includes(lane)).length);
     const order = lanes.map((_, i) => i).sort((a, b) => occupancy[a] - occupancy[b] || Math.abs(a - car.laneIdx) - Math.abs(b - car.laneIdx));
     const neighbors = cars.filter(other => other !== car && other.mode === 'highway' && other.highwayWaitingToSpawn === undefined)
@@ -263,8 +329,8 @@ const highwayTraffic = (() => {
         car: other, z: other.mesh.position.z,
         speed: other.blastTimer > 0 ? blastSpeed(other, player, scale) : other.speed,
         ...(other.blastTimer > 0 ? blastSafetyBounds(other, player, scale) : {}),
-        length: other.length || 4.62,
-        lanes: [...new Set([...occupiedLanes(other), ...footprint(other.mesh.position.x, lanes)])]
+        length: spawnLength(other),
+        lanes: spawnOccupied(other, lanes)
       }));
     if (player.y < 4) neighbors.push({
       z: player.z || 0, speed: -player.vz, length: 4.62, lanes: footprint(player.x, lanes)
@@ -275,12 +341,12 @@ const highwayTraffic = (() => {
         for (const other of cars) {
           if (other === car || other.mode !== 'highway' || other.highwayWaitingToSpawn !== undefined) continue;
           // Include both reserved lanes and the actual footprint of a blasted car.
-          if (!occupiedLanes(other).includes(lane) && Math.abs(other.mesh.position.x - lanes[lane]) > 2.3) continue;
-          gap = Math.min(gap, Math.abs(z - other.mesh.position.z) - ((car.length || 4.62) + (other.length || 4.62)) / 2);
+          if (!spawnReserves(other, lane, lanes)) continue;
+          gap = Math.min(gap, Math.abs(z - other.mesh.position.z) - ((car.length || 4.62) + spawnLength(other)) / 2);
         }
         const atSpawn = { car, z, speed: car.speed, length: car.length || 4.62 };
         if (gap >= 24 && safeAdjacentGap(atSpawn, lane, neighbors, scale)) {
-          reset(car, lane, lanes);
+          reset(car, lane, lanes, placement);
           car.mesh.position.z = z;
           return;
         }
@@ -288,9 +354,11 @@ const highwayTraffic = (() => {
     }
     // Hide a rejected entry instead of materializing inside another vehicle.
     // Retry once a safe gap opens on a later simulation step.
-    car.highwayWaitingToSpawn = ahead;
+    car.highwayWaitingToSpawn = placement === 'ahead';
+    car.highwayRecycledBehind = placement === 'incident';
+    car.highwayPassEligible = false;
     car.mesh.visible = false;
-    car.mesh.position.z = ahead ? -510 : 95;
+    car.mesh.position.z = (player.z || 0) + (placement === 'ahead' ? -510 : 510);
     car.vx = 0;
   }
 
@@ -307,11 +375,22 @@ const highwayTraffic = (() => {
     const h = dt / count;
     for (let substep = 0; substep < count; substep++) {
       const live = [];
-      const forecastSpawns = forecast ? { index: null } : null;
+      const spawnCache = lanes.length === 6 ? { index: null } : null;
       for (const car of cars) {
         if (car.mode !== 'highway') continue;
+        if (typeof car.highwayPassEligible !== 'boolean') car.highwayPassEligible =
+          car.mesh.position.z < (player.z || 0) - ((car.length || 4.62) + 4.62) / 2;
+        // A pre-existing expired blast is a safe fallback. Normal runtime
+        // also calls respawnBehind directly at active/destroyed blast expiry.
+        const expiredBlast = !(car.blastTimer > 0) && car.recoverHighwayLane;
+        const incidentExit = isOffRoad(car, lanes) || (isWreck(car) && isOutOfBounds(car, lanes, player));
+        if (car.highwayWaitingToSpawn === undefined && (incidentExit || expiredBlast)) {
+          if (spawnCache) spawnCache.index = null;
+          respawn(car, cars, lanes, player, scale, forecast, spawnCache);
+          if (car.highwayWaitingToSpawn !== undefined) continue;
+        }
         if (car.blastTimer > 0) {
-          if (forecastSpawns) forecastSpawns.index = null;
+          if (spawnCache) spawnCache.index = null;
           car.laneChange = null;
           car.blockedTime = 0;
           car.laneChangeCooldown = profile(car).cooldown;
@@ -319,18 +398,16 @@ const highwayTraffic = (() => {
           continue;
         }
         if (car.highwayWaitingToSpawn !== undefined) {
-          const ahead = car.highwayWaitingToSpawn;
-          delete car.highwayWaitingToSpawn;
-          respawn(car, cars, lanes, ahead, player, scale, forecast, forecastSpawns);
+          retrySpawn(car, cars, lanes, player, scale, forecast, spawnCache);
           if (car.highwayWaitingToSpawn !== undefined) continue;
         }
         if (car.recoverHighwayLane) {
-          if (forecastSpawns) forecastSpawns.index = null;
+          if (spawnCache) spawnCache.index = null;
           car.laneIdx = closestLane(car.mesh.position.x, lanes);
           car.targetX = lanes[car.laneIdx];
         }
         car.laneChangeCooldown = Math.max(0, (car.laneChangeCooldown || 0) - h);
-        if (forecastSpawns && !Number.isInteger(car.laneIdx)) forecastSpawns.index = null;
+        if (spawnCache && !Number.isInteger(car.laneIdx)) spawnCache.index = null;
         live.push(snapshotFor(car, lanes));
       }
       const traffic = live.slice();
@@ -432,10 +509,18 @@ const highwayTraffic = (() => {
         car.vx = lateralSpeed; // Highway lateral motion is unscaled, like state.vx.
         car.mesh.rotation.y = -clamp(Math.atan2(lateralSpeed, Math.max(8, speed * scale)), -0.14, 0.14);
         car.mesh.rotation.z = -clamp(lateralSpeed * 0.018, -0.06, 0.06);
-        if (car.mesh.position.z > 65) {
-          car.highwayPassedThisFrame = true;
-          respawn(car, cars, lanes, true, player, scale, forecast);
-        } else if (car.mesh.position.z < -480) respawn(car, cars, lanes, false, player, scale, forecast);
+        const playerZ = player.z || 0;
+        // A rear entry is not a player overtake. It becomes eligible only
+        // after actually returning fully in front of the player, not a wrap.
+        if (car.mesh.position.z < playerZ - ((car.length || 4.62) + 4.62) / 2) {
+          car.highwayRecycledBehind = false;
+          car.highwayPassEligible = true;
+        }
+        const rearLimit = car.highwayRecycledBehind ? 480 : 65;
+        if (car.mesh.position.z > playerZ + rearLimit) {
+          if (!car.highwayRecycledBehind && car.highwayPassEligible && own.z <= playerZ + 65) car.highwayPassedThisFrame = true;
+          respawn(car, cars, lanes, player, scale, forecast, null, 'ahead');
+        } else if (car.mesh.position.z < playerZ - 480) respawn(car, cars, lanes, player, scale, forecast, null, 'behind');
       }
     }
   }
@@ -444,5 +529,5 @@ const highwayTraffic = (() => {
     // for another road layout. Other lane counts retain the ordinary path.
     return step(cars, player, dt, lanes, scale, lanes.length === 6);
   }
-  return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds });
+  return Object.freeze({ step, forecastStep, createDrivers, initializeSpeeds, respawnBehind, retrySpawn, isOutOfBounds });
 })();

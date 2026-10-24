@@ -407,6 +407,124 @@ function cityContactDetails(a,b){
 }
 // Coastal broad AABBs are rejection-only. The final certificate is the real
 // YXZ player/NPC OBB, with conservative advancement through their full poses.
+// Coast-only landing uses the rotated, frozen player collider, not merely its
+// upright root anchor. Every accepted floor still belongs to a finite real
+// surface beneath the root; a bridge above the previous root is never selected.
+// Finite rendered bridge sides share the existing approved vehicle body.
+let coastBridgeSideNetwork=null,coastBridgeSideGrid=null,coastBridgeSideSegments=null,coastBridgeSideFaces=null;
+let coastBridgeBottomNetwork=null,coastBridgeBottomGrid=null,coastBridgeBottomSegments=null,coastBridgeBottomFaces=null;
+function coastBridgeFaceContact(world,previous,next,bottom=false) {
+  const network=world?.network;if(!network?.segments)return null;
+  const cachedNetwork=bottom?coastBridgeBottomNetwork:coastBridgeSideNetwork;
+  if(network!==cachedNetwork){
+    const grid=new Map(),segments=network.segments.filter(segment=>segment.bridge&&!segment.shared);
+    if(bottom){
+      for(let ordinal=0;ordinal<segments.length;ordinal++)for(const triangle of[0,1]){
+        const[a,b]=segments[ordinal].rows,p=triangle?a[4]:a[0],q=b[0],r=triangle?b[4]:a[4],code=ordinal*2+triangle;
+        for(let x=Math.floor(Math.min(p.x,q.x,r.x)/64);x<=Math.floor(Math.max(p.x,q.x,r.x)/64);x++)for(let z=Math.floor(Math.min(p.z,q.z,r.z)/64);z<=Math.floor(Math.max(p.z,q.z,r.z)/64);z++){const k=x+','+z;if(!grid.has(k))grid.set(k,[]);grid.get(k).push(code);}
+      }
+    }else{
+    for(let ordinal=0;ordinal<segments.length;ordinal++)for(const edge of[0,4]){
+      const a=segments[ordinal].rows[0][edge],b=segments[ordinal].rows[1][edge],code=ordinal*2+(edge===4?1:0);
+      for(let x=Math.floor(Math.min(a.x,b.x)/64);x<=Math.floor(Math.max(a.x,b.x)/64);x++)for(let z=Math.floor(Math.min(a.z,b.z)/64);z<=Math.floor(Math.max(a.z,b.z)/64);z++){const k=x+','+z;if(!grid.has(k))grid.set(k,[]);grid.get(k).push(code);}
+    }
+    }
+    if(bottom){coastBridgeBottomNetwork=network;coastBridgeBottomGrid=grid;coastBridgeBottomSegments=segments;coastBridgeBottomFaces=new Map();}
+    else{coastBridgeSideNetwork=network;coastBridgeSideGrid=grid;coastBridgeSideSegments=segments;coastBridgeSideFaces=new Map();}
+  }
+  const faceGrid=bottom?coastBridgeBottomGrid:coastBridgeSideGrid,faceSegments=bottom?coastBridgeBottomSegments:coastBridgeSideSegments,faceCache=bottom?coastBridgeBottomFaces:coastBridgeSideFaces;
+  const start={x:previous.x,y:previous.y,z:previous.z,pitch:previous.pitch,yaw:previous.yaw,roll:previous.roll},finish={x:next.x,y:next.y,z:next.z,pitch:next.pitch,yaw:next.yaw,roll:next.roll},delta={};for(const k of['pitch','yaw','roll'])delta[k]=wrapAnglePi((finish[k]||0)-(start[k]||0));
+  const dx=finish.x-start.x,dy=finish.y-start.y,dz=finish.z-start.z,initialBody=cityPlayerBody(start),radius=Math.hypot(...initialBody.half)+Math.hypot(initialBody.x-start.x,initialBody.y-start.y,initialBody.z-start.z),turn=Math.abs(delta.pitch)+Math.abs(delta.yaw)+Math.abs(delta.roll),near=new Set();
+  for(let x=Math.floor((Math.min(start.x,finish.x)-radius)/64);x<=Math.floor((Math.max(start.x,finish.x)+radius)/64);x++)for(let z=Math.floor((Math.min(start.z,finish.z)-radius)/64);z<=Math.floor((Math.max(start.z,finish.z)+radius)/64);z++)for(const face of faceGrid.get(x+','+z)||[])near.add(face);
+  if(!near.size)return null;
+  const at=t=>({x:start.x+dx*t,y:start.y+dy*t,z:start.z+dz*t,pitch:(start.pitch||0)+delta.pitch*t,yaw:(start.yaw||0)+delta.yaw*t,roll:(start.roll||0)+delta.roll*t});
+  const local=cityPlayerBounds||{minX:-.98,maxX:.98,minY:0,maxY:1.25,minZ:-2.31,maxZ:2.31},corners=[];for(const x of[local.minX,local.maxX])for(const y of[local.minY,local.maxY])for(const z of[local.minZ,local.maxZ])corners.push([x,y,z]);
+  let earliest=null;
+  for(const code of near){
+    const ordinal=code>>1,edge=code%2?4:0,segment=faceSegments[ordinal],a=segment.rows[0][edge],b=bottom?segment.rows[1][0]:segment.rows[1][edge],c=bottom?(code%2?segment.rows[1][4]:segment.rows[0][4]):a,pad=radius+1e-7;
+    if(Math.max(a.x,b.x,c.x)<Math.min(start.x,finish.x)-pad||Math.min(a.x,b.x,c.x)>Math.max(start.x,finish.x)+pad||Math.max(a.z,b.z,c.z)<Math.min(start.z,finish.z)-pad||Math.min(a.z,b.z,c.z)>Math.max(start.z,finish.z)+pad||(bottom?Math.max(Math.fround(a.y-network.SLAB_DEPTH),Math.fround(b.y-network.SLAB_DEPTH),Math.fround(c.y-network.SLAB_DEPTH)):Math.max(a.y,b.y,c.y))<Math.min(start.y,finish.y)-pad||Math.min(Math.fround(a.y-network.SLAB_DEPTH),Math.fround(b.y-network.SLAB_DEPTH),Math.fround(c.y-network.SLAB_DEPTH))>Math.max(start.y,finish.y)+pad)continue;
+    let face=faceCache.get(code);
+    if(!face){
+      if(bottom){
+        const vertices=[a,b,c].map(p=>[p.x,Math.fround(p.y-network.SLAB_DEPTH),p.z]),u=vertices[1].map((v,i)=>v-vertices[0][i]),v=vertices[2].map((v,i)=>v-vertices[0][i]),cross=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],length=Math.hypot(...cross),sign=cross[1]>0?-1:1,[nx,ny,nz]=cross.map(v=>v*sign/length);
+        face={vertices,normal:{x:nx,y:ny,z:nz},plane:vertices[0][0]*nx+vertices[0][1]*ny+vertices[0][2]*nz,edges:vertices.map((p,i)=>vertices[(i+1)%3].map((v,j)=>v-p[j])),minX:Math.min(a.x,b.x,c.x),maxX:Math.max(a.x,b.x,c.x),minZ:Math.min(a.z,b.z,c.z),maxZ:Math.max(a.z,b.z,c.z),minY:Math.min(...vertices.map(p=>p[1])),maxY:Math.max(...vertices.map(p=>p[1])),ordinal,edge};
+      }else{
+      const down=p=>[p.x,Math.fround(p.y-network.SLAB_DEPTH),p.z],vertices=[[a.x,a.y,a.z],down(a),down(b),[b.x,b.y,b.z]];
+      let nx=b.z-a.z,nz=a.x-b.x;const length=Math.hypot(nx,nz),side=((a.x+b.x-segment.a.x-segment.b.x)*nx+(a.z+b.z-segment.a.z-segment.b.z)*nz)<0?-1:1;nx*=side/length;nz*=side/length;
+      face={vertices,normal:{x:nx,y:0,z:nz},plane:a.x*nx+a.z*nz,edges:vertices.map((p,i)=>vertices[(i+1)%4].map((v,j)=>v-p[j])),minX:Math.min(a.x,b.x),maxX:Math.max(a.x,b.x),minZ:Math.min(a.z,b.z),maxZ:Math.max(a.z,b.z),minY:Math.min(...vertices.map(p=>p[1])),maxY:Math.max(a.y,b.y),ordinal,edge};
+      }
+      faceCache.set(code,face);
+    }
+    if(bottom){
+      const n=[face.normal.x,face.normal.y,face.normal.z],planeGap=Math.abs(initialBody.x*n[0]+initialBody.y*n[1]+initialBody.z*n[2]-face.plane)-cityContactProjection(initialBody,n);
+      if(planeGap>Math.abs(dx*n[0]+dy*n[1]+dz*n[2])+turn*radius+1e-7)continue;
+    }
+    const axes=body=>{const out=[...body.axes,[face.normal.x,face.normal.y,face.normal.z]];for(const u of body.axes)for(const v of face.edges){const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(...n);if(l>1e-10)out.push(n.map(v=>v/l));}return out;};
+    const projection=(body,n)=>{let lo=Infinity,hi=-Infinity;for(const p of face.vertices){const v=p[0]*n[0]+p[1]*n[1]+p[2]*n[2];lo=Math.min(lo,v);hi=Math.max(hi,v);}const center=body.x*n[0]+body.y*n[1]+body.z*n[2],r=cityContactProjection(body,n);return{lo:lo-r,hi:hi+r,center};};
+    const gap=t=>{const pose=at(t),body=cityPlayerBody(pose);let best=-Infinity,normal=null;for(const n of axes(body)){const p=projection(body,n),a=p.lo-p.center,b=p.center-p.hi;if(Math.max(a,b)>best){best=Math.max(a,b);const sign=a>b?-1:1;normal=n.map(v=>v*sign);}}return{gap:best,normal,pose,body};};
+    const complete=(t,q)=>{const pose=q.pose,n={x:q.normal[0],y:q.normal[1],z:q.normal[2]},cp=Math.cos(pose.pitch),sp=Math.sin(pose.pitch),cy=Math.cos(pose.yaw),sy=Math.sin(pose.yaw),cr=Math.cos(pose.roll),sr=Math.sin(pose.roll);let support=Infinity,angular=-Infinity;const candidates=[];
+      for(const[x,y,z]of corners){const u=cr*x-sr*y,v=sr*x+cr*y,w=sp*v+cp*z,h=cp*v-sp*z,wx=cy*u+sy*w,wz=-sy*u+cy*w,offset=wx*n.x+h*n.y+wz*n.z,du=-delta.roll*v,dv=delta.roll*u,dw=sp*dv+delta.pitch*h,uy=cp*dv-delta.pitch*w,ux=cy*du+sy*dw+delta.yaw*wz,uz=-sy*du+cy*dw-delta.yaw*wx;support=Math.min(support,offset);candidates.push({offset,closing:-(ux*n.x+uy*n.y+uz*n.z)});}
+      for(const p of candidates)if(p.offset<=support+1e-7)angular=Math.max(angular,p.closing);
+      return{t,kind:bottom?'bridge-bottom':'bridge-side',box:face,normal:n,pose,depth:Math.max(0,-q.gap),angularClosingPerFraction:angular};};
+    const first=gap(0);
+    if(first.gap<=1e-7){const h=complete(0,first),closing=-(dx*h.normal.x+dy*h.normal.y+dz*h.normal.z)+h.angularClosingPerFraction;if(closing>1e-12&&h.normal.x*face.normal.x+h.normal.y*face.normal.y+h.normal.z*face.normal.z>=-1e-7&&(!earliest||h.t<earliest.t))earliest=h;continue;}
+    // A tilted corner may cross the infinite plane before it reaches this
+    // finite face. Decide entry at the actual quad, not at that extension.
+    let found=null;
+    if(turn<1e-12){let enter=0,exit=1,enterNormal=null;for(const n of axes(initialBody)){const p=projection(initialBody,n),v=dx*n[0]+dy*n[1]+dz*n[2];if(Math.abs(v)<1e-12){if(p.center<p.lo||p.center>p.hi){enter=2;break;}continue;}const a=(p.lo-p.center)/v,b=(p.hi-p.center)/v;if(Math.min(a,b)>enter){enter=Math.min(a,b);enterNormal=n.map(c=>c*(v>0?-1:1));}exit=Math.min(exit,Math.max(a,b));if(enter>exit)break;}if(enter<=exit&&enter<=1&&exit>=0)found=complete(enter,{...gap(enter),normal:enterNormal||first.normal});}
+    else{const bound=(q,span=1)=>{const n=q.normal,cy=Math.cos(q.pose.yaw),sy=Math.sin(q.pose.yaw),cp=Math.cos(q.pose.pitch),sp=Math.sin(q.pose.pitch),cross=(x,y,z)=>Math.hypot(y*n[2]-z*n[1],z*n[0]-x*n[2],x*n[1]-y*n[0]);return Math.abs(dx*n[0]+dy*n[1]+dz*n[2])+radius*(Math.abs(delta.yaw)*Math.hypot(n[0],n[2])+Math.abs(delta.pitch)*Math.min(1,cross(cy,0,-sy)+Math.abs(delta.yaw)*span)+Math.abs(delta.roll)*Math.min(1,cross(sy*cp,-sp,cy*cp)+(Math.abs(delta.yaw)+Math.abs(delta.pitch))*span));};let t=0;for(let i=0;i<96;i++){const q=gap(t);if(q.gap<=1e-7){found=complete(t,q);break;}const b=bound(q,1-t);if(b<1e-12||t+q.gap/b*.9>1){t=2;break;}t+=q.gap/b*.9;}if(!found&&t<=1){const search=(lo,hi,depth)=>{const mid=(lo+hi)/2,q=gap(mid),b=bound(q,(hi-lo)/2);if(q.gap>b*(hi-lo)/2+1e-7)return null;if(depth>=36||b*(hi-lo)<1e-7){for(const t of[lo,mid,hi]){const a=gap(t);if(a.gap<=1e-7)return complete(t,a);}return null;}return search(lo,mid,depth+1)||search(mid,hi,depth+1);};found=search(t,1,0);}}
+    if(found&&found.normal.x*face.normal.x+found.normal.y*face.normal.y+found.normal.z*face.normal.z>=-1e-7&&-(dx*found.normal.x+dy*found.normal.y+dz*found.normal.z)+found.angularClosingPerFraction>1e-12&&(!earliest||found.t<earliest.t))earliest=found;
+  }
+  return earliest;
+}
+function coastBridgeSideContact(world,previous,next) {return coastBridgeFaceContact(world,previous,next,false);}
+function coastBridgeBottomContact(world,previous,next) {return coastBridgeFaceContact(world,previous,next,true);}
+function coastBridgeBodyContact(world,previous,next) {
+  const side=coastBridgeSideContact(world,previous,next),bottom=coastBridgeBottomContact(world,previous,next);
+  return bottom&&(!side||bottom.t<side.t)?bottom:side;
+}
+function coastBridgeSideResolve(hit,previous,dt) {
+  if(hit.kind==='bridge-bottom'){state.isJumping6m=false;state.isAltitudeHold=false;}
+  const t=Math.max(0,hit.t-1e-5),n=hit.normal;
+  for(const k of['pitch','yaw','roll'])state[k]=(previous[k]||0)+wrapAnglePi(state[k]-(previous[k]||0))*t;
+  const push=(hit.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;
+  const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-(hit.angularClosingPerFraction||0)/Math.max(dt,1e-6),impact=Math.max(0,-inward);
+  if(impact>0){state.vPitch=state.vYaw=state.vRoll=0;state.vx-=1.25*inward*n.x;state.vy-=1.25*inward*n.y;state.vz-=1.25*inward*n.z;state.speed=(state.vx*-Math.sin(state.yaw)+state.vz*-Math.cos(state.yaw)>=0?1:-1)*Math.hypot(state.vx,state.vz);triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);}
+}
+
+function coastBodyGroundClearance(pose,surface) {
+  const body=cityPlayerBody({...pose,y:pose.y-(pose.suspensionSquash||0)-(pose.aeroSquash||0)}),n=surface.normal;
+  return(n.x*(body.x-pose.x)+n.y*(body.y-surface.height)+n.z*(body.z-pose.z)-cityContactProjection(body,[n.x,n.y,n.z]))/n.y;
+}
+
+function coastBodyGroundLanding(world,previous,next) {
+  const start=previous.contactPose||previous;
+  const finish={...next,y:next.y-(next.suspensionSquash||0)-(next.aeroSquash||0)};
+  const delta={};for(const key of ['pitch','yaw','roll'])delta[key]=wrapAnglePi((finish[key]||0)-(start[key]||0));
+  const steps=Math.max(1,Math.ceil(Math.hypot(finish.x-start.x,finish.y-start.y,finish.z-start.z)),Math.ceil((Math.abs(delta.pitch)+Math.abs(delta.yaw)+Math.abs(delta.roll))/.04));
+  const at=t=>({x:start.x+(finish.x-start.x)*t,y:start.y+(finish.y-start.y)*t,z:start.z+(finish.z-start.z)*t,pitch:(start.pitch||0)+delta.pitch*t,yaw:(start.yaw||0)+delta.yaw*t,roll:(start.roll||0)+delta.roll*t});
+  const corners=pose=>{const body=cityPlayerBody(pose),points=[];for(const x of [-1,1])for(const y of [-1,1])for(const z of [-1,1]){const p={x:body.x,y:body.y,z:body.z};for(let axis=0;axis<3;axis++){const amount=[x,y,z][axis]*body.half[axis];p.x+=body.axes[axis][0]*amount;p.y+=body.axes[axis][1]*amount;p.z+=body.axes[axis][2]*amount;}points.push(p);}return points;};
+  let old=corners(at(0));
+  for(let step=1;step<=steps;step++){
+    const points=corners(at(step/steps));let first=null;
+    for(let vertex=0;vertex<points.length;vertex++){
+      const a=old[vertex],b=points[vertex],hit=world.network.sweepLanding(a,b);
+      const options=hit?[hit]:world.network.candidates(a.x,a.z).filter(s=>s.solid&&a.y<s.height&&b.y-a.y+(s.normal.x*(b.x-a.x)+s.normal.z*(b.z-a.z))/s.normal.y< -1e-8).map(s=>({...s,t:0}));
+      for(const surface of options){
+        const t=(step-1+surface.t)/steps,root={x:previous.x+(next.x-previous.x)*t,z:previous.z+(next.z-previous.z)*t};
+        const plane=(x,z)=>surface.triangle?surface.triangle.a.y-(surface.normal.x*(x-surface.triangle.a.x)+surface.normal.z*(z-surface.triangle.a.z))/surface.normal.y:surface.height;
+        if(previous.y<plane(previous.x,previous.z)-.025)continue;
+        const height=plane(root.x,root.z),finite=world.network.candidates(root.x,root.z).find(s=>s.solid&&s.id===surface.id&&Math.abs(s.height-height)<.03);
+        if(!finite)continue;
+        const contact={...finite,t,x:root.x,z:root.z,height:finite.height,bodyContact:true};
+        if(!first||contact.t<first.t-1e-8||(Math.abs(contact.t-first.t)<1e-8&&contact.road))first=contact;
+      }
+    }
+    if(first)return first;old=points;
+  }
+  return null;
+}
+
 function coastTrafficBody(car,pose) {
   const b=car.mesh.userData?.cityContactBounds||globalThis.window?.RoadsterTrafficAssets?.cityContactBounds?.(car.mesh);
   return cityContactBody(pose,car.length,car.width||car.mesh.userData?.width||1.96,car.height,b,'YXZ');
@@ -538,6 +656,25 @@ function cityCanLandOnRoof(pose,box){
   if(!cityTouchesRoof(pose,box))return false;
   const minY=box.minY||0,solid=cityContactBody({x:(box.minX+box.maxX)/2,y:minY,z:(box.minZ+box.maxZ)/2},box.maxZ-box.minZ,box.maxX-box.minX,box.height-minY+.002);
   return cityContactInterval(cityPlayerBody(pose),solid)!==null;
+}
+// Rejection only: a fixed world plane must separate the WHOLE native body
+// throughout the translation chord, including the existing visual pitch/roll.
+// The caller additionally certifies flat, straight, non-RCS grounded motion;
+// other trajectories retain the original coastal building contact unchanged.
+function coastBuildingSeparated(previous,next,box) {
+  if([previous,next].some(q=>['x','y','z','pitch','yaw','roll'].some(k=>!Number.isFinite(q[k]??0))))return false;
+  const p=previous,a=cityPlayerBody(p);
+  if(!cityPlayerBounds)return false; // Missing native bounds retain legacy contact.
+  const radius=Math.hypot(...a.half)+Math.hypot(a.x-p.x,a.y-p.y,a.z-p.z);
+  const turn=['pitch','yaw','roll'].reduce((sum,k)=>sum+Math.abs(wrapAnglePi((next[k]||0)-(p[k]||0))),0);
+  // Presentation adds at most .032 pitch and .032 roll. Root suspension is
+  // vertical only and cannot cross either of these horizontal planes.
+  const pad=radius*(turn+.064)+1e-7;
+  for(const [axis,extent,lo,hi]of[['x',a.rx,box.minX,box.maxX],['z',a.rz,box.minZ,box.maxZ]]){
+    const shift=next[axis]-p[axis],min=a[axis]-extent+Math.min(0,shift)-pad,max=a[axis]+extent+Math.max(0,shift)+pad;
+    if(Number.isFinite(min)&&Number.isFinite(max)&&(max<lo||min>hi))return true;
+  }
+  return false;
 }
 function cityBuildingContact(pose,box) {
   const body=cityPlayerBody(pose);
@@ -791,6 +928,17 @@ function updateSimulation(dt, presentationDt = dt) {
     });
     // Continue animating blasted traffic cars during explosion aftermath!
     trafficCars.forEach((car) => {
+      // Destruction returns before the normal traffic controller. Its aftermath
+      // still retries each queue's placement policy; incident recovery stays
+      // behind the crash and never materializes inside another vehicle.
+      if (currentMap === 'highway' && car.mode === 'highway' &&
+          (car.highwayWaitingToSpawn !== undefined ||
+           (!(car.blastTimer > 0) && highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 })))) {
+        const refill = car.highwayWaitingToSpawn !== undefined ? highwayTraffic.retrySpawn : highwayTraffic.respawnBehind;
+        refill(car, trafficCars, LANE_CENTERS,
+          { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
+        return;
+      }
       if (car.blastTimer && car.blastTimer > 0) {
         car.blastTimer = Math.max(0, car.blastTimer - dt);
         car.mesh.position.x += car.blastVx * dt;
@@ -807,6 +955,11 @@ function updateSimulation(dt, presentationDt = dt) {
         car.mesh.rotation.x += car.blastVPitch * dt;
         car.mesh.rotation.y += car.blastVYaw * dt;
         car.mesh.rotation.z += car.blastVRoll * dt;
+        if (currentMap === 'highway' &&
+            (car.blastTimer <= 0.01 || highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 }))) {
+          highwayTraffic.respawnBehind(car, trafficCars, LANE_CENTERS,
+            { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
+        }
       }
     });
     if (!cityOwnsDrivingSound() && !coastOwnsDrivingSound()) sound.update(0, false, false, true);
@@ -1361,6 +1514,16 @@ function updateSimulation(dt, presentationDt = dt) {
         const key=axis==='x'?'vx':'vz',impactV=Math.max(0,-state[key]*n);
         if(impactV>0){state[key]+=1.35*impactV*n;state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);}
         if(impactV>10){window.RoadsterCityDiagnostics?.contact({kind:'boundary',axis,sign:cityWall.sign,height:45.3,normal:n});triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);}
+      } else if(coastWorld){
+        // Coast boundary impulse uses only outward normal motion, not tangent speed.
+        const nx=Math.abs(state.x)>limit?Math.sign(state.x):0,nz=Math.abs(state.z)>limit?Math.sign(state.z):0;
+        const closingX=nx?Math.max(0,state.vx*nx):0,closingZ=nz?Math.max(0,state.vz*nz):0;
+        state.x=THREE.MathUtils.clamp(state.x,-limit,limit);state.z=THREE.MathUtils.clamp(state.z,-limit,limit);
+        if(closingX>0)state.vx-=1.35*closingX*nx;if(closingZ>0)state.vz-=1.35*closingZ*nz;
+        state.speed=isAirborne?Math.hypot(state.vx,state.vz):-state.vx*Math.sin(state.yaw)-state.vz*Math.cos(state.yaw);
+        state.yaw-=wrapAnglePi(state.yaw)*(1.0-Math.pow(0.10,dt));
+        const impactV=Math.hypot(closingX,closingZ);
+        if(impactV>10)triggerPhysicsCollision(impactV,'crashReasonThreshold',0,2,0);
       } else {
         const impactV = Math.abs(state.speed);
         state.x = THREE.MathUtils.clamp(state.x, -limit, limit);state.z = THREE.MathUtils.clamp(state.z, -limit, limit);
@@ -1380,8 +1543,17 @@ function updateSimulation(dt, presentationDt = dt) {
   let freefallStartVy = null;
 
   // Coast-only continuous obstacle contact; legacy map1/2 response is unchanged.
+  let coastSeparatedBuilding=null;
   if (coastMotionStart) {
-    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state);
+    const flatStraight=coastGroundAttached&&!hasManualAttitudeInput&&driveInput.steer===0&&
+      ['pitch','roll','vPitch','vRoll','vYaw','steerInput','lateralG'].every(k=>Math.abs(state[k]||0)<1e-12)&&
+      coastSupport.normal.x===0&&coastSupport.normal.z===0;
+    let endSupport;
+    coastSeparatedBuilding=flatStraight?b=>{
+      endSupport ||= coastWorld.support({...state,previousY:coastMotionStart.y,grounded:true});
+      return endSupport?.solid&&endSupport.height===state.y&&endSupport.normal.x===0&&endSupport.normal.z===0&&coastBuildingSeparated(coastMotionStart,state,b);
+    }:null;
+    const contact = globalThis.window?.RoadsterCoast?.clipBuildings(coastMotionStart,state,coastSeparatedBuilding);
     if (contact) { triggerPhysicsCollision(contact.speed,'crashReasonBuilding',0,2,0); if (state.isDestroyed) return; }
   }
   // Sea is not a road: no automatic landing save or recharge before real contact.
@@ -1422,13 +1594,16 @@ function updateSimulation(dt, presentationDt = dt) {
 
   // Auto-landing save must ONLY engage when vehicle is falling fast towards ground, NEVER when climbing or hovering!
   const isDescendingTowardsGround = state.vy < -3.5 && !wantsHover && !state.isAltitudeHold && !state.isJumping6m;
+  // Keep the existing braking law, but a rotated coast hull can meet the
+  // selected real floor before its upright root reaches that floor.
+  const landingClearance=coastWorld&&coastSurface?.solid?Math.min(agl,coastBodyGroundClearance(state,coastSurface)):agl;
   const needsEmergencyLandingSave = (
     !coastSurface?.water && isDescendingTowardsGround &&
-    agl > 0.02 &&
-    agl <= minSafeBrakeAlt &&
+    landingClearance > 0.02 &&
+    landingClearance <= minSafeBrakeAlt &&
     (state.airRemaining > 0.01 || state.isAutoLandingSave) &&
     !state.isFreefalling &&
-    (downSpeed > 5.5 || state.isAutoLandingSave || (agl <= 3.0 && cosTiltNow < 0.55 && downSpeed > 2.5))
+    (downSpeed > 5.5 || state.isAutoLandingSave || (landingClearance <= 3.0 && cosTiltNow < 0.55 && downSpeed > 2.5))
   );
 
   if (needsEmergencyLandingSave) {
@@ -1567,17 +1742,22 @@ function updateSimulation(dt, presentationDt = dt) {
   }
 
   // Top, bottom and bounded structural contacts are different events.
-  const coastStructureHit=coastWorld?.network?.sweepStructures(coastMotionStart,state);
+  const coastNetworkHit=coastWorld?.network?.sweepStructures(coastMotionStart,state,1.25,false);
+  const coastBridgeTranslationHit=coastWorld?coastBridgeBodyContact(coastWorld,coastMotionStart,state):null;
+  const coastStructureHit=coastBridgeTranslationHit&&(!coastNetworkHit||coastBridgeTranslationHit.t<coastNetworkHit.t)?coastBridgeTranslationHit:coastNetworkHit;
   if(coastStructureHit){
     const h=coastStructureHit,t=Math.max(0,h.t-1e-5),n=h.normal;
-    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z,impact=Math.max(0,-inward);
+    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-((h.kind==='pier'||h.kind==='bridge-side'||h.kind==='bridge-bottom')?(h.angularClosingPerFraction||0)/Math.max(dt,1e-6):0),impact=Math.max(0,-inward);
     state.x=coastMotionStart.x+(state.x-coastMotionStart.x)*t;state.z=coastMotionStart.z+(state.z-coastMotionStart.z)*t;
     state.y=h.kind==='ceiling'?h.height-.002:coastMotionStart.y+(state.y-coastMotionStart.y)*t;
+    // Resolve a real pier contact in its detected yaw, never in the future pose.
+    if(h.kind==='pier'){state.yaw=coastMotionStart.yaw+wrapAnglePi(state.yaw-coastMotionStart.yaw)*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}
+    if(h.kind==='bridge-side'||h.kind==='bridge-bottom'){for(const k of['pitch','yaw','roll'])state[k]=(coastMotionStart[k]||0)+wrapAnglePi(state[k]-(coastMotionStart[k]||0))*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}
     if(inward<0){state.vx-=1.25*inward*n.x;state.vy-=1.25*inward*n.y;state.vz-=1.25*inward*n.z;}
-    if(h.kind==='ceiling'){state.isJumping6m=false;state.isAltitudeHold=false;}
+    if(h.kind==='ceiling'||h.kind==='bridge-bottom'){state.isJumping6m=false;state.isAltitudeHold=false;}
     state.speed=(state.vx*-Math.sin(state.yaw)+state.vz*-Math.cos(state.yaw)>=0?1:-1)*Math.hypot(state.vx,state.vz);
     if(coastGroundAttached)state.vy=-(coastSupport.normal.x*state.vx+coastSupport.normal.z*state.vz)/coastSupport.normal.y;
-    triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
+    if((h.kind!=='pier'&&h.kind!=='bridge-side'&&h.kind!=='bridge-bottom')||impact>0)triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;
   }
   const coastLanding=coastWorld&&!coastGroundAttached?coastWorld.network.sweepLanding(coastMotionStart,state):null;
   const contactFloorY = coastWorld ? (coastGroundAttached?coastSupport.height:coastLanding?.height??(coastSurface?.water?coastSurface.height:-Infinity)) : 0;
@@ -1684,6 +1864,7 @@ function updateSimulation(dt, presentationDt = dt) {
   state.vPitch *= Math.pow(0.20, dt);
   state.vYaw *= Math.pow(0.25, dt);
 
+  const coastBridgeAttitudeStart=coastWorld?{x:state.x,y:state.y,z:state.z,pitch:state.pitch,yaw:state.yaw,roll:state.roll}:null;
   state.roll = wrapAnglePi(state.roll + state.vRoll * dt);
   // Wing attitude assist follows the same delayed stabilizer as the RCS springs.
   if (pitchInput === 0 && (stabilizerDt > 0 || !isAirborne) && Math.abs(state.speed) > 28.0) {
@@ -1693,8 +1874,52 @@ function updateSimulation(dt, presentationDt = dt) {
   // Keep pitch continuous through +/-180 and complete forward/backward 360-degree loops.
   // THREE renders the Euler angle directly; no Euler extraction or airborne pitch clamp is needed.
   state.pitch += state.vPitch * dt;
+  const coastPierYawStart=coastWorld&&Math.abs(state.vYaw*dt)>1e-12?{x:state.x,y:state.y,z:state.z,yaw:state.yaw}:null;
   state.yaw += state.vYaw * dt;
+  // Only a real side candidate adds ordering work; the old pier-only path is
+  // byte-for-byte preserved when this finite side trajectory stays clear.
+  const coastBridgeAttitudeHit=coastBridgeAttitudeStart&&['pitch','yaw','roll'].some(k=>Math.abs(state[k]-coastBridgeAttitudeStart[k])>1e-12)?coastBridgeBodyContact(coastWorld,coastBridgeAttitudeStart,state):null;
+  const coastPierBeforeSide=coastBridgeAttitudeHit&&coastPierYawStart&&Math.abs(state.yaw-coastPierYawStart.yaw)>1e-12?coastWorld.network?.sweepPiers?.(coastPierYawStart,state):null;
+  if(coastBridgeAttitudeHit&&(!coastPierBeforeSide||coastBridgeAttitudeHit.t<coastPierBeforeSide.t)){
+    coastBridgeSideResolve(coastBridgeAttitudeHit,coastBridgeAttitudeStart,dt);if(state.isDestroyed)return;
+  }else{
+  // Translation/other structures retain their original phase. Only the later
+  // pure-yaw trajectory needs an additional finite pier contact check.
+  if(coastPierYawStart&&Math.abs(state.yaw-coastPierYawStart.yaw)>1e-12){
+    const h=coastWorld.network?.sweepPiers?.(coastPierYawStart,state);
+    if(h){const n=h.normal,t=Math.max(0,h.t-1e-5),impact=Math.max(0,(h.angularClosingPerFraction||0)/Math.max(dt,1e-6));
+      state.yaw=coastPierYawStart.yaw+wrapAnglePi(state.yaw-coastPierYawStart.yaw)*t;
+      const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;
+      if(impact>0){state.vYaw=0;state.vx+=1.25*impact*n.x;state.vy+=1.25*impact*n.y;state.vz+=1.25*impact*n.z;triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;}
+    }
+  }
+    if(coastBridgeAttitudeHit&&coastPierBeforeSide){
+      const t=coastPierBeforeSide.t,rest={x:state.x,y:state.y,z:state.z,yaw:state.yaw,pitch:coastBridgeAttitudeStart.pitch+wrapAnglePi(state.pitch-coastBridgeAttitudeStart.pitch)*t,roll:coastBridgeAttitudeStart.roll+wrapAnglePi(state.roll-coastBridgeAttitudeStart.roll)*t};
+      const hit=coastBridgeBodyContact(coastWorld,rest,state);if(hit){coastBridgeSideResolve(hit,rest,dt*(1-t));if(state.isDestroyed)return;}
+    }
+  }
 
+
+
+  // Complete the coast contact after attitude integration as well: a legal
+  // roll/pitch can touch the ground before the upright root descends to it.
+  const coastHullLanding=coastWorld&&!coastGroundAttached?coastBodyGroundLanding(coastWorld,coastMotionStart,state):null;
+  if(coastHullLanding){
+    const normal=coastHullLanding.normal,downImpactSpeed=Math.max(0,-(state.vx*normal.x+state.vy*normal.y+state.vz*normal.z)),cosTilt=Math.cos(state.roll)*Math.cos(state.pitch);
+    state.x=coastHullLanding.x;state.y=coastHullLanding.height;state.z=coastHullLanding.z;
+    coastSupport=coastHullLanding;coastGroundAttached=true;state.coastSupportId=coastSupport.id;state.wasAirborne=false;groundElevation=coastSupport.height;
+    state.vy=-(normal.x*state.vx+normal.z*state.vz)/normal.y;
+    state.jumpInertiaGraceSeconds=null;state.isAutoLandingSave=false;state.isJumping6m=false;
+    if(state.isAltitudeHold){state.isAltitudeHold=false;const badge=document.getElementById('key-n');if(badge)badge.classList.remove('active');}
+    if(downImpactSpeed>.8){state.suspensionSquash=Math.min(.048,downImpactSpeed*.0035);state.suspensionVelocity=downImpactSpeed*.004;}
+    if(downImpactSpeed>15.5||(downImpactSpeed>7.5&&cosTilt<.25)){triggerPhysicsCollision(downImpactSpeed*(cosTilt<.25?1.85:1.15),'crashReasonGround',0,3,0);if(state.isDestroyed)return;}
+    if(!isRetroBrakeFiring&&((!wantsHover&&!isRearThrusterFiring)||state.isFreefalling)){
+      state.airRemaining=Math.min(MAX_AIR_SECONDS,state.airRemaining+3.4*dt);state.airUsedContinuous=MAX_AIR_SECONDS-state.airRemaining;
+      if(state.airRemaining>2.2)state.isAutoDescending8s=false;if(state.airRemaining>=2.5&&!wantsHover||state.airRemaining>=9.95)state.isFreefalling=false;
+    }
+  }
+  // The resolved coastal support owns this same frame's display/score mode.
+  if(coastWorld&&coastGroundAttached)isAirborne=false;
   if(coastGroundAttached){
     const plane=coastWorld.network.groundAttitude(coastSupport.normal,state.yaw);
     state.pitch=plane.pitch;state.roll=plane.roll;state.vPitch=state.vRoll=0;
@@ -1782,6 +2007,7 @@ function updateSimulation(dt, presentationDt = dt) {
             }
             continue;
           }
+          if(coastWorld&&coastSeparatedBuilding?.(b))continue;
           const impactSpeed = Math.hypot(state.vx, state.vz, state.vy * 0.5);
           const dLeft = Math.abs(state.x - (b.minX - 1.1));
           const dRight = Math.abs(state.x - (b.maxX + 1.1));
@@ -1958,7 +2184,11 @@ function updateSimulation(dt, presentationDt = dt) {
       car.mesh.rotation.x += car.blastVPitch * dt;
       car.mesh.rotation.y += car.blastVYaw * dt;
       car.mesh.rotation.z += car.blastVRoll * dt;
-      if (car.blastTimer <= 0.01) {
+      if (currentMap === 'highway' &&
+          (car.blastTimer <= 0.01 || highwayTraffic.isOutOfBounds(car, LANE_CENTERS, { z: 0 }))) {
+        highwayTraffic.respawnBehind(car, trafficCars, LANE_CENTERS,
+          { x: state.x, y: state.y, z: 0, vx: state.vx, vz: state.vz }, WORLD_SPEED_SCALE);
+      } else if (car.blastTimer <= 0.01) {
         car.y = 0.0;
         car.mesh.position.y = 0.0;
         car.mesh.rotation.x = 0.0;
@@ -1977,6 +2207,7 @@ function updateSimulation(dt, presentationDt = dt) {
       advanceCityTraffic(car,dt);
     }
 
+    if (currentMap === 'highway' && car.highwayWaitingToSpawn !== undefined) return;
     const dx = Math.abs(state.x - car.mesh.position.x);
     const dz = Math.abs(playerWorldZ - car.mesh.position.z);
     const npcWorldY=currentMap==='coast'||currentMap==='city'?(car.mesh.position.y||0):0;
@@ -2015,6 +2246,15 @@ function updateSimulation(dt, presentationDt = dt) {
     const citySolidContact=cityNear&&cityContactInterval(cityPlayer,cityNpc)!==null;
     const cityBodyOverlap=cityNear&&(cityRoofTouch||citySolidContact);
     const bodyOverlap = currentMap==='city'?cityBodyOverlap:dx < 1.85 && dz < (car.length / 2 + 2.15);
+    // A reset can leave the previous explosion's NPCs airborne. Reject only
+    // certified vertical separation; the old road contact/damage stays intact.
+    // Root spheres contain every orientation and the unchanged visual lean.
+    if(currentMap==='highway'&&car.blastTimer>0&&(bodyOverlap||demoSweptHit)){
+      const a=cityPlayerBody(state),b=cityTrafficBody(car),p=car.mesh.position;
+      const radius=(body,x,y,z)=>Math.hypot(...body.half)+Math.hypot(body.x-x,body.y-y,body.z-z);
+      const visualY=Math.max(0,state.y-(state.suspensionSquash||0)-(state.aeroSquash||0));
+      if(Math.abs(visualY-p.y)>radius(a,state.x,state.y,state.z)+radius(b,p.x,p.y,p.z)+1e-7)return;
+    }
     if (bodyOverlap || demoSweptHit) {
       if (clearanceY >= -0.15 && clearanceY < 1.1) {
         if (state.vy < -18.0 && (currentMap!=='city'||citySolidContact)) {

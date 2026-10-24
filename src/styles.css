@@ -567,3 +567,19 @@ html, body {
 .render-health-panel button { width: 100%; min-height: 48px; border: 1px solid #7dd3fc; border-radius: 9px; color: #082f49; background: #7dd3fc; font: inherit; font-weight: 700; cursor: pointer; }
 .render-health-panel button:disabled { border-color: #475569; color: #94a3b8; background: #1e293b; cursor: wait; }
 .render-health-panel button:focus-visible { outline: 3px solid #f8fafc; outline-offset: 3px; }
+
+/* Local opt-in problem tools live inside settings/crash, never over driving. */
+.drive-problem-tools { margin-top: 22px; padding-top: 14px; border-top: 1px solid #3a829b66; }
+.drive-problem-tools summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+.drive-problem-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.crash-problem-tools { margin: 10px 0; }
+#drive-problem-data, #crash-problem-data { box-sizing: border-box; width: 100%; min-height: 128px; max-height: 240px; margin-top: 8px; padding: 10px; border: 1px solid #3a829b; border-radius: 8px; background: #07101b; color: #e8f4fc; font: 11px/1.5 monospace; resize: vertical; user-select: text; -webkit-user-select: text; touch-action: pan-y; }
+#drive-problem-data[hidden], #crash-problem-data[hidden] { display: none; }
+
+/* Local temporary replay controls; independent of reduced driving HUD modes. */
+.replay-panel[hidden]{display:none!important}
+.replay-panel{position:fixed;z-index:140;right:16px;bottom:18px;width:min(640px,calc(100vw - 32px));max-height:55vh;overflow:auto;padding:15px;border:1px solid #3f6b82;border-radius:16px;background:rgba(8,20,33,.96);box-shadow:0 12px 50px #0008;color:#dbeaf1;font-size:12px;pointer-events:auto}
+.replay-heading,.replay-actions,.replay-options{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.replay-heading{justify-content:space-between;margin-bottom:10px}.replay-heading strong{font-size:14px;color:#86e1f1}.replay-panel button,.replay-panel select{padding:7px 10px;background:#173348;border:1px solid #3e667f;border-radius:8px;color:#e5f3fa;cursor:pointer}.replay-panel button:disabled{opacity:.38;cursor:default}.replay-panel button:focus-visible,.replay-panel select:focus-visible{outline:2px solid #6ee7f2;outline-offset:2px}.replay-panel input[type=range]{width:100%;margin:14px 0 4px;accent-color:#55d7eb}.replay-panel output{display:block;margin-bottom:10px;font-family:monospace;color:#8edeea}.replay-options label{display:flex;align-items:center;gap:5px}.replay-panel p{margin:10px 0 0}.replay-note{color:#91aabb;font-size:11px;line-height:1.5}body[data-replay-active=true] #hud-side-panels,body[data-replay-active=true] #hud-footer,body[data-replay-active=true] #mobile-controls,body[data-replay-active=true] #modal-destroyed,body[data-replay-active=true] #hud-notifications{display:none!important}body[data-replay-active=true] #game-canvas-container canvas{touch-action:none}
+@media(max-width:640px){.replay-panel{right:8px;bottom:10px;width:calc(100vw - 16px);max-height:48vh;padding:10px}.replay-panel button,.replay-panel select{min-height:38px;padding:6px 9px}.replay-note{font-size:10px}.replay-options{gap:6px}}
+body[data-replay-active=true] #vfx-overlay-canvas{display:none!important}
+body[data-replay-active=true] #city-taxi-navigation,body[data-replay-active=true] #city-taxi-hud{display:none!important}

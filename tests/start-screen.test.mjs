@@ -199,11 +199,11 @@ test('world/weather use keyboard-native pressed buttons, and mode/traffic select
   assert.equal(h.els['card-map-city'].getAttribute('aria-pressed'), 'true');
   assert.equal(h.els['card-map-highway'].getAttribute('aria-pressed'), 'false');
   assert.equal(h.els['modal-weather-grid'].children.length, 4);
-  h.context.weatherIndex = 2;
+  h.context.weatherIndex = 0;
   const weather = h.els['modal-weather-grid'].children[2]; weather.focus(); h.context.renderModalWeatherGrid();
   assert.equal(h.els['modal-weather-grid'].children[2], weather); assert.equal(h.document.activeElement, weather);
   assert.equal(weather.getAttribute('aria-pressed'), 'true');
-  h.context.weatherIndex=3;h.context.renderModalWeatherGrid();assert.equal(h.els['modal-weather-grid'].children[3].getAttribute('aria-pressed'),'true');assert.equal(weather.getAttribute('aria-pressed'),'false');
+  h.context.weatherIndex=3;h.context.renderModalWeatherGrid();assert.equal(h.els['modal-weather-grid'].children[0].getAttribute('aria-pressed'),'true');assert.equal(weather.getAttribute('aria-pressed'),'false');
   for (const [value, mode, plaid] of [['plaid', 'realistic', true], ['fantasy', 'fantasy', false], ['realistic', 'realistic', false]]) {
     h.select('start-physics', value); assert.equal(h.state.physicsMode, mode); assert.equal(h.state.insaneMode, plaid); assert.equal(h.els['start-physics'].value, value);
   }

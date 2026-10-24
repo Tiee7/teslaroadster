@@ -1,0 +1,175 @@
+{
+  "schema": "coast-side-cpu-cost-v1",
+  "warmupFrames": 300,
+  "timedFrames": 1200,
+  "sameEveryFrameStateAcrossAllVariants": true,
+  "conditions": "Single supported initial pose then actual production numerical motion/tank/attitude, native approved model bounds;25s/1500frames per persistent VM, idle or real digital feedback steering/throttle/brake;3 trials. No per-frame pose/state assignments.",
+  "results": {
+    "idleBridge": {
+      "baseline9414": {
+        "physicsSha256": "6b1ee3737b7e1115d2bc7080d9a3374f77f0b9062a0ecca6d537df057ebd2ca8",
+        "trials": 3,
+        "framesPerTrial": 1500,
+        "warmupFrames": 300,
+        "timedFrames": 1200,
+        "impactsPerTrial": [
+          0,
+          0,
+          0
+        ],
+        "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+        "stepTimedMeanMs": 0.13370535444445983,
+        "stepP95MedianMs": 0.22842599999989943,
+        "queryTimedMeanMs": 0,
+        "queryFirstMedianMs": 0,
+        "cache": null,
+        "perTrialTimedMeansMs": [
+          0.1257511316666601,
+          0.11980943416667135,
+          0.15555549750004805
+        ]
+      },
+      "eagerCandidate": {
+        "physicsSha256": "ada206866520ca095ab9cc9f76e9822d2b6f28721a3c129145c2b383d78849cd",
+        "trials": 3,
+        "framesPerTrial": 1500,
+        "warmupFrames": 300,
+        "timedFrames": 1200,
+        "impactsPerTrial": [
+          0,
+          0,
+          0
+        ],
+        "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+        "stepTimedMeanMs": 2.123270284999989,
+        "stepP95MedianMs": 2.6411870000001727,
+        "queryTimedMeanMs": 0.9870701973611151,
+        "queryFirstMedianMs": 5.0463049999998475,
+        "cache": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 602
+        },
+        "perTrialTimedMeansMs": [
+          2.1110973191666647,
+          2.1340602650000253,
+          2.124653270833278
+        ]
+      },
+      "repaired": {
+        "physicsSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+        "trials": 3,
+        "framesPerTrial": 1500,
+        "warmupFrames": 300,
+        "timedFrames": 1200,
+        "impactsPerTrial": [
+          0,
+          0,
+          0
+        ],
+        "stateSequenceSha256": "66773e3fec8350dfdeb31cdbff15827fa0a4091b307edfe23132e681bebbc2e4",
+        "stepTimedMeanMs": 0.17419920249998314,
+        "stepP95MedianMs": 0.2772179999992659,
+        "queryTimedMeanMs": 0.0223942918055588,
+        "queryFirstMedianMs": 1.9847099999988131,
+        "cache": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "perTrialTimedMeansMs": [
+          0.17486878166667413,
+          0.17881452249995922,
+          0.16891430333331603
+        ]
+      }
+    },
+    "guidedDrive": {
+      "baseline9414": {
+        "physicsSha256": "6b1ee3737b7e1115d2bc7080d9a3374f77f0b9062a0ecca6d537df057ebd2ca8",
+        "trials": 3,
+        "framesPerTrial": 1500,
+        "warmupFrames": 300,
+        "timedFrames": 1200,
+        "impactsPerTrial": [
+          0,
+          0,
+          0
+        ],
+        "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+        "stepTimedMeanMs": 0.1299200052777807,
+        "stepP95MedianMs": 0.2064539999992121,
+        "queryTimedMeanMs": 0,
+        "queryFirstMedianMs": 0,
+        "cache": null,
+        "perTrialTimedMeansMs": [
+          0.13680598750001613,
+          0.12578877666665447,
+          0.1271652516666715
+        ]
+      },
+      "eagerCandidate": {
+        "physicsSha256": "ada206866520ca095ab9cc9f76e9822d2b6f28721a3c129145c2b383d78849cd",
+        "trials": 3,
+        "framesPerTrial": 1500,
+        "warmupFrames": 300,
+        "timedFrames": 1200,
+        "impactsPerTrial": [
+          0,
+          0,
+          0
+        ],
+        "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+        "stepTimedMeanMs": 4.568883336944466,
+        "stepP95MedianMs": 7.731997999999294,
+        "queryTimedMeanMs": 2.1961858272222337,
+        "queryFirstMedianMs": 4.960619000001316,
+        "cache": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 602
+        },
+        "perTrialTimedMeansMs": [
+          4.493089982500005,
+          4.462186768333368,
+          4.751373260000024
+        ]
+      },
+      "repaired": {
+        "physicsSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+        "trials": 3,
+        "framesPerTrial": 1500,
+        "warmupFrames": 300,
+        "timedFrames": 1200,
+        "impactsPerTrial": [
+          0,
+          0,
+          0
+        ],
+        "stateSequenceSha256": "a1de994600d1f59ea06b00a6d0fa3fc7c32a062fabe98dad03871edd73635f0d",
+        "stepTimedMeanMs": 0.19729293444447193,
+        "stepP95MedianMs": 0.2939829999995709,
+        "queryTimedMeanMs": 0.03131231444444792,
+        "queryFirstMedianMs": 2.161290000000008,
+        "cache": {
+          "gridCells": 45,
+          "gridEntries": 672,
+          "allocatedFiniteQuads": 0
+        },
+        "perTrialTimedMeansMs": [
+          0.20865343000002062,
+          0.19729037750002437,
+          0.18593499583337084
+        ]
+      }
+    }
+  },
+  "comparison": "New repaired contact feature remains slightly more CPU work than9414, which had no side contact. This reduces the unshipped eager candidate overhead; it does not establish whole-game FPS/GPU improvement. Cache counts are geometry-object cardinality, not heap byte measurements.",
+  "limits": [
+    "Production physics/tank/attitude excerpt through motionHarness, no GPU/render/HUD/NPC whole-frame FPS measurement.",
+    "One actual supported initialization then real digital steering/throttle/brake inputs only; no per-frame state or pose assignments.",
+    "Three independent persistent VM trials per variant/route, original native approved model bounding geometry.",
+    "Cache counts are object cardinality, not JS heap bytes; RSS source was not differentiated and no SIGKILL cause is asserted."
+  ],
+  "parallelTestFailure": "The first applicable batch had a coast-terrain-physics file-level SIGKILL; unchanged eager18 serial cases passed. Equal reported RSS does not identify kill cause. Original red retained; final sparse/index version is retested from scratch."
+}

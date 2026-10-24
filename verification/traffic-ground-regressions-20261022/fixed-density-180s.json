@@ -1,0 +1,65 @@
+{
+  "source": "src/highway-traffic.js",
+  "seconds": 180,
+  "count": 52,
+  "playerSpeedKmh": 360,
+  "firstEmptyAfter5s": null,
+  "maxEmptySeconds": 0,
+  "passes": 2019,
+  "samples": [
+    {
+      "seconds": 0,
+      "front": 29,
+      "live": 52,
+      "waiting": 0
+    },
+    {
+      "seconds": 1,
+      "front": 33,
+      "live": 38,
+      "waiting": 14
+    },
+    {
+      "seconds": 2,
+      "front": 36,
+      "live": 40,
+      "waiting": 12
+    },
+    {
+      "seconds": 5,
+      "front": 38,
+      "live": 44,
+      "waiting": 8
+    },
+    {
+      "seconds": 10,
+      "front": 38,
+      "live": 44,
+      "waiting": 8
+    },
+    {
+      "seconds": 30,
+      "front": 41,
+      "live": 47,
+      "waiting": 5
+    },
+    {
+      "seconds": 60,
+      "front": 41,
+      "live": 47,
+      "waiting": 5
+    },
+    {
+      "seconds": 120,
+      "front": 41,
+      "live": 46,
+      "waiting": 6
+    },
+    {
+      "seconds": 180,
+      "front": 39,
+      "live": 45,
+      "waiting": 7
+    }
+  ]
+}

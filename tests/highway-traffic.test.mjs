@@ -148,7 +148,7 @@ test('cooldown and sustained-blockage hysteresis prevent transient/ping-pong cha
 
 test('both road ends respawn safely, cancel old merge state and retain cruise speed', () => {
   for (const [z, vz, ahead] of [[64.9, -60, true], [-479.9, 0, false]]) {
-    const h = harness(), a = car(2, z, 25);
+    const h = harness(), a = car(2, z, 25, { highwayPassEligible: ahead });
     a.laneChange = { from: 2, to: 1, startX: lanes[2], elapsed: 1 };
     const occupied = car(2, ahead ? -452 : 55, 25);
     h.step([a, occupied], away(), 0.01); // Explicit velocity below controls which road end is crossed.
@@ -158,7 +158,7 @@ test('both road ends respawn safely, cancel old merge state and retain cruise sp
     assert.ok(!a.laneChange); assert.equal(a.desiredSpeed, 25); assert.ok(a.laneChangeCooldown > 2.9);
     assert.equal(a.mesh.position.x, lanes[a.laneIdx]);
     assert.ok(Math.abs(a.mesh.position.x - occupied.mesh.position.x) > 1.85 || Math.abs(a.mesh.position.z - occupied.mesh.position.z) > 24);
-    assert.ok(a.mesh.position.z >= -480 && a.mesh.position.z <= 65);
+    assert.ok(ahead ? a.mesh.position.z >= -475 && a.mesh.position.z <= -410 : a.mesh.position.z >= 20 && a.mesh.position.z <= 60, 'ordinary loop preserves its correct direction through remaining substeps');
     h.step([a, occupied], { ...away(), vz: -25 }, 0.01);
     assert.equal(a.highwayPassedThisFrame, false, 'a wrap scores at most once');
   }
@@ -167,39 +167,37 @@ test('both road ends respawn safely, cancel old merge state and retain cruise sp
 test('rear respawn accounts for a stopped player and never spawns a fast car into its stopping gap', () => {
   const h = harness(), a = car(2, -479.9, 30);
   h.step([a], { x: lanes[2], y: 0, z: 0, vx: 0, vz: 0 }, 0.05);
-  assert.notEqual(a.laneIdx, 2); assert.equal(a.desiredSpeed, 30);
+  assert.ok(a.laneIdx !== 2 || a.mesh.position.z > 185, 'a same-lane entry must be behind the full stopped-player closing envelope'); assert.equal(a.desiredSpeed, 30);
 });
 
 test('a completely occupied respawn area waits out of view and retries without duplicate rewards', () => {
-  const h = harness(), a = car(2, 64.9, 30);
-  const blockers = lanes.flatMap((_, lane) => [-452, -470, -434, -416].map(z => car(lane, z, 0)));
+  const h = harness(), a = car(2, 64.9, 30, { highwayPassEligible: true });
+  const blockers = lanes.flatMap((_, lane) => [-470, -430].map(z => car(lane, z, 0, { highwayRecycledBehind: false })));
   h.step([a, ...blockers], { ...away(), vz: -60 }, 0.05);
   assert.equal(a.highwayPassedThisFrame, true); assert.equal(a.highwayWaitingToSpawn, true); assert.equal(a.mesh.position.z, -510); assert.equal(a.mesh.visible, false);
   h.step([a, ...blockers], { ...away(), vz: -60 }, 0.05);
   assert.equal(a.highwayPassedThisFrame, false); assert.equal(a.highwayWaitingToSpawn, true);
   h.step([a], { ...away(), vz: -30 }, 0.05);
-  assert.equal(a.highwayWaitingToSpawn, undefined); assert.equal(a.mesh.visible, true); assert.ok(a.mesh.position.z > -480 && a.mesh.position.z < -400);
+  assert.equal(a.highwayWaitingToSpawn, undefined); assert.equal(a.mesh.visible, true); assert.ok(a.mesh.position.z >= -470 && a.mesh.position.z <= -416);
 });
 
-test('blast motion is excluded from driver control and lane recovery is smooth', () => {
+test('blast motion stays excluded from driver control, then an expired wreck refills behind', () => {
   const h = harness(), a = car(2, -50, 28, { blastTimer: 1, blastVx: 5 });
   a.laneChange = { from: 2, to: 1, startX: lanes[2], elapsed: 1 };
   h.step([a], away(), 0.05); assert.equal(a.mesh.position.z, -50); assert.ok(!a.laneChange);
   a.mesh.position.x = -4; a.blastTimer = 0;
   h.step([a], away(), 1 / 60);
-  assert.ok(Math.abs(a.mesh.position.x + 4) < 0.001); assert.ok(a.laneChange); assert.ok(a.laneChangeCooldown > 2);
+  assert.ok(a.mesh.position.z > 65); assert.equal(a.mesh.position.x, lanes[a.laneIdx]); assert.ok(!a.laneChange); assert.ok(a.laneChangeCooldown > 2); assert.equal(a.highwayRecycledBehind, true);
 });
 
-test('blast recovery waits for a safe lane instead of recentering into an adjacent NPC', () => {
+test('an expired displaced wreck is admitted behind, never recentered into its adjacent NPC', () => {
   const h = harness(), a = car(0, -100, 20, { recoverHighwayLane: true }), b = car(0, -100, 20);
   a.mesh.position.x = -10.1;
   run(h, [a, b], 2, { ...away(), y: 10, vz: -20 }, 60, () => {
-    assert.ok(Math.abs(a.mesh.position.x - b.mesh.position.x) >= 2.4 - 1e-8);
-    assert.ok(!a.laneChange); assert.equal(a.recoverHighwayLane, true);
+    assert.ok(Math.abs(a.mesh.position.x - b.mesh.position.x) >= 1.85 || Math.abs(a.mesh.position.z - b.mesh.position.z) >= 24);
+    assert.ok(!a.laneChange); assert.equal(a.recoverHighwayLane, undefined);
+    assert.equal(a.highwayRecycledBehind, true); assert.ok(a.mesh.position.z >= 95);
   });
-  b.mesh.position.z = -350;
-  h.step([a, b], { ...away(), y: 10, vz: -20 }, 1 / 60);
-  assert.ok(a.laneChange); assert.ok(!a.recoverHighwayLane);
 });
 
 test('a low blasted wreck uses the unchanged blast path when predicting a rear closing gap', () => {
@@ -266,7 +264,7 @@ function integrated(cars, overrides = {}, map = 'highway') {
 
 test('actual runtime traffic block moves once, preserves score/destruction guard and city movement', () => {
   const a = car(2, 0, 22), h = integrated([a]); h.step(0.05); close(a.mesh.position.z, 0);
-  const pass = car(2, 64.9, 20), scored = integrated([pass], { vz: -60, y: 10 }); scored.step(0.05);
+  const pass = car(2, 64.9, 20, { highwayPassEligible: true }), scored = integrated([pass], { vz: -60, y: 10 }); scored.step(0.05);
   assert.equal(scored.state.carsCleared, 1); assert.equal(scored.state.score, 0);
   scored.step(0); assert.equal(scored.state.carsCleared, 1, 'zero-duration frames cannot award a pass twice');
   scored.step(0.05); assert.equal(scored.state.carsCleared, 1);
@@ -276,6 +274,24 @@ test('actual runtime traffic block moves once, preserves score/destruction guard
   city.mesh.userData.wheels = [{ rotation: { x: 0 } }];
   cityRun.step(0.05); close(city.mesh.userData.wheels[0].rotation.x, -22 / 0.33 * 0.05); close(city.mesh.position.x, lanes[2] + 12 * 0.05); close(city.mesh.position.z, 20 - 7 * 0.05);
   assert.equal(city.desiredSpeed, 22); assert.equal(city.highwayPassedThisFrame, undefined);
+});
+
+for (const fps of [30, 60, 144]) test(`actual active traffic branch expires a blast behind on the same ${fps}Hz frame`, () => {
+  const a = car(2, -30, 20, { blastTimer: .001, blastVx: 0, blastVy: 0, blastVz: 0, blastVPitch: 2, blastVYaw: 3, blastVRoll: 1 });
+  const h = integrated([a], { vz: -20 }); h.step(1 / fps);
+  assert.equal(a.blastTimer, 0); assert.ok(a.mesh.position.z > 65); assert.equal(a.highwayPassEligible, false);
+  assert.equal(a.mesh.position.y, 0); assert.equal(h.state.carsCleared, 0); assert.equal(h.impacts.length, 0);
+});
+
+test('actual active blast crosses every boundary before expiry, then is admitted behind without a phantom collision', () => {
+  for (const [x, z, blastVx, blastVz, recycled] of [[-18.55, -30, -10, 0, false], [18.55, -30, 10, 0, false],
+    [lanes[2], -479.9, 0, -10, false], [lanes[2], 64.9, 0, 10, false], [lanes[2], 479.9, 0, 10, true]]) {
+    const a = car(2, z, 20, { blastTimer: 2, blastVx, blastVy: 0, blastVz, blastVPitch: 0, blastVYaw: 0, blastVRoll: 0, highwayRecycledBehind: recycled });
+    a.mesh.position.x = x;
+    const h = integrated([a], { vz: -20 }); h.step(1 / 60);
+    assert.equal(a.blastTimer, 0); assert.ok(a.mesh.position.z > 65 && a.mesh.position.z <= 415);
+    assert.equal(a.highwayPassEligible, false); assert.equal(h.state.carsCleared, 0); assert.equal(h.impacts.length, 0);
+  }
 });
 
 test('spawn code assigns one personal cruise speed and the controller is bundled before physics', () => {
@@ -345,7 +361,7 @@ test('racers react faster and merge continuously while ordinary drivers also act
   assert.ok(normal.laneChangeCooldown > racer.laneChangeCooldown);
 });
 
-test('new mixed-speed seeded traffic actually overtakes, uses every lane, retains identities, and never overlaps', () => {
+test('rear-only refills retain mixed-driver overtakes, identities and collision separation without promising perpetual front density', () => {
   for (const count of [36, 52]) {
     const cars = spawned(count, 77), targets = cars.map(a => [a.desiredSpeed, a.speedBand, a.driverType]);
     const h = integrated(cars, { x: 30, vz: -30 }), laneVisits = lanes.map(() => 0), emptyFrames = lanes.map(() => 0), longestEmpty = lanes.map(() => 0);
@@ -373,7 +389,9 @@ test('new mixed-speed seeded traffic actually overtakes, uses every lane, retain
     }
     assert.ok(merges >= 8, `active ordinary/racer overtakes: ${merges}`); assert.ok(racerMerges >= 2); assert.ok(merges > racerMerges, 'ordinary drivers also pass');
     assert.ok(wraps > 10); assert.ok(laneVisits.every(value => value > 100));
-    assert.ok(longestEmpty.every(value => value <= 3 * 30), `long lane vacancy: ${longestEmpty}`);
+    // User-requested rear-only recycling deliberately removes the old promise
+    // of a new forward obstacle in every lane within three seconds. Report it.
+    assert.ok(longestEmpty.every(Number.isFinite));
     for (let i = 0; i < cars.length; i++) assert.deepEqual([cars[i].desiredSpeed, cars[i].speedBand, cars[i].driverType], targets[i]);
     console.log(`mixed traffic ${count}: ${merges} overtakes (${racerMerges} racer), ${wraps} safe wraps, longest lane vacancy ${(Math.max(...longestEmpty) / 30).toFixed(2)}s`);
   }

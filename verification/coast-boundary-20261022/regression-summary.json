@@ -1,0 +1,112 @@
+{
+  "schema": "coast-boundary-regression-summary-v1",
+  "status": "applicable-final-byte-passed",
+  "at": "2026-10-22T18:06:43.205746+00:00",
+  "basePreview": "bb73a584f3e40b648ff142707d2204b45e36c459",
+  "publication": "same PR20, new unique preview only; keep old previews; no main or production",
+  "expectedMainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "game": {
+    "bytes": 5033960,
+    "sha256": "0eb20dba2b54680b3bad3c74f34fcb5ffa8294dc2974ef0ec8b8e1529b3aa2e5",
+    "gitBlob": "600f9d5a1464a7d00e1aeb301f0c1660d8fc650c"
+  },
+  "physicsSha256": "582245adaa9b5bb140ba22f22968865dceda94554fb11ec555756bb381926489",
+  "sourceEpochSha256": "d04b44acb36318f0de7d9e0387fbb30b4ae77068896cd893952017bfe6e18f3b",
+  "frozenInputFileCount": 230,
+  "runtimeTestSnapshotSha256": "b33b28b630f1330295a66a825c1674eddff10fee06263d384140faab1ae350f9",
+  "checks": {
+    "bundle": "pass",
+    "npmRunCheck": "pass",
+    "npmRunBuild": "pass",
+    "gitDiffCheck": "pass",
+    "node": "v24.19.0"
+  },
+  "tests": {
+    "mainFiles": 97,
+    "serialArtFiles": [
+      "tests/coast-art-lighting.test.mjs",
+      "tests/coast-art.test.mjs"
+    ],
+    "batches": {
+      "main": {
+        "rawLog": "applicable-main-final.tap",
+        "bytes": 284483,
+        "sha256": "1463b886cc725a0085bab5e588fd837e6b74015f4885c3a5a389d6bf8bdc20e1",
+        "tests": 1117,
+        "pass": 1117,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "todo": 0,
+        "durationMs": 428929.878569
+      },
+      "serialArt": {
+        "rawLog": "applicable-art-serial-final.tap",
+        "bytes": 10690,
+        "sha256": "995e79b2560abf10c3a28df2eeefd713f0a2c32562b7563ef01e9f1d2b6349d4",
+        "tests": 37,
+        "pass": 37,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "todo": 0,
+        "durationMs": 46363.618774
+      }
+    },
+    "uniqueCurrentPasses": 1154,
+    "fail": 0,
+    "skip": 0,
+    "baselineApplicablePasses": 1092,
+    "newUniqueTests": 62,
+    "newBoundaryCases": 57,
+    "newSourceGuardCases": 5,
+    "focusedNotAddedToUniqueTotal": true,
+    "excludedUnchangedPlannerFiles": [
+      "tests/highway-demo-clock.test.mjs",
+      "tests/highway-demo-consumed-certificate.test.mjs",
+      "tests/highway-demo-continuous.test.mjs",
+      "tests/highway-demo-floor-refill.test.mjs",
+      "tests/highway-demo-following.test.mjs",
+      "tests/highway-demo-lifecycle.test.mjs",
+      "tests/highway-demo-physics.test.mjs",
+      "tests/highway-demo-planning-cost.test.mjs",
+      "tests/highway-demo-routing.test.mjs",
+      "tests/highway-demo-scheduling.test.mjs",
+      "tests/highway-demo-successor.test.mjs",
+      "tests/highway-demo-weaving.test.mjs"
+    ],
+    "baselineReuse": "12 byte-frozen heavy highway planner files reuse prior1164 combined evidence; that prior coverage was1127 main passes+37 serial art, not one clean full run; two unexplained file-level batch failures remain retained. No fresh complete repository run is claimed.",
+    "rawLogsRetainedLocally": true,
+    "started": "2026-10-22T17:57:03.593935+00:00",
+    "finished": "2026-10-22T18:04:59.048605+00:00"
+  },
+  "baselineFailure": {
+    "cases": 9,
+    "actualProductionFatalCases": 9,
+    "sixMetresInwardControlHits": 0,
+    "normalClosingRangeMps": [
+      1.9739924459683011,
+      2.0853578476840333
+    ],
+    "witness": "baseline-grazing-reproduction.json",
+    "witnessSha256": "83c27bf4c549835443475da18d7525e25ec05173fc97d16b1110e874e9c31b6c",
+    "oldPhysicsFixtureSha256": "2c001737855bf9406ae29dce2c286a23d679cfe6b5a7fea9cd2e5103825432ad"
+  },
+  "runtimeChange": "one coast-only normal-response branch; remaining physics byte-exact bb73; generator/emitter identity pins and generated projection follow source",
+  "unchanged": [
+    "models/materials/scales",
+    "terrain and road/bridge geometry",
+    "normal driving forces/steering",
+    "night-default four-mode weather and day lights-off",
+    "single passenger",
+    "normal highway front supply and incident-only rear respawn",
+    "folded local game-only diagnostics"
+  ],
+  "limits": [
+    "Original coastal gap screenshot pixels/location remain unknown; this independent boundary defect is not claimed to match it.",
+    "CPU production motion/damage replay; sound/destruction presentation stubbed, random attitude impulses neutralized; no fresh full-browser/user-device GPU acceptance.",
+    "Legal supported starts, not a continuous drive from default spawn; west-water cases legally airborne.",
+    "No structure-index prototype integrated and no end-to-end frame-time/FPS improvement claimed."
+  ],
+  "allFrozenRuntimeTestAndBuildPinsUnchangedAfterRun": true
+}

@@ -1,0 +1,392 @@
+{
+  "schema": 1,
+  "baselineCommit": "9414c67d4706902c8b723a2b1f33fdb6e17262a9",
+  "baselinePhysicsSha256": "6b1ee3737b7e1115d2bc7080d9a3374f77f0b9062a0ecca6d537df057ebd2ca8",
+  "nativeRuntimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+  "geometry": {
+    "carVisibleVertices": 79257,
+    "slabBufferVertices": 5418,
+    "bottomTriangles": 602,
+    "slabMatrix": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "slabDepth": 0.7
+  },
+  "airSideMisses": [
+    {
+      "fps": 30,
+      "side": -1,
+      "initial": {
+        "x": 856.4010566049373,
+        "y": 43.208150988116444,
+        "z": 236.47905001409924,
+        "yaw": 2.415591753220372,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 30,
+        "vx": -19.916528511635722,
+        "vz": 22.43505943930618,
+        "vy": 0,
+        "wasAirborne": true,
+        "coastSupportId": null,
+        "airRemaining": 10
+      },
+      "firstTimeSeconds": 0.13333333333333333,
+      "firstPose": {
+        "x": 854.0717611646576,
+        "y": 43.120950988116434,
+        "z": 239.10289490874797,
+        "yaw": 2.415591753220372,
+        "pitch": 0,
+        "roll": 0,
+        "vx": -16.08200111331453,
+        "vy": -1.308,
+        "vz": 18.115639513653758,
+        "hullIntegrity": 100,
+        "airRemaining": 10
+      },
+      "visibleInsideDepthMetres": 0.0029721666538620184,
+      "actualCrossedTriangle": {
+        "point": {
+          "x": 854.1419849255709,
+          "y": 44.08712750740655,
+          "z": 239.82254954742342
+        },
+        "distance": 0.741830556347336,
+        "faceIndex": 657,
+        "normal": {
+          "x": -0.6641037302627456,
+          "y": 0,
+          "z": 0.7476404453018217
+        },
+        "segmentLength": 0.8083708135965797
+      },
+      "priorDamageCalls": 0
+    },
+    {
+      "fps": 30,
+      "side": 1,
+      "initial": {
+        "x": 835.8206438095802,
+        "y": 43.208150988116444,
+        "z": 259.66194476804895,
+        "yaw": -0.7260009003694212,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 30,
+        "vx": 19.916528511635722,
+        "vz": -22.43505943930618,
+        "vy": 0,
+        "wasAirborne": true,
+        "coastSupportId": null,
+        "airRemaining": 10
+      },
+      "firstTimeSeconds": 0.13333333333333333,
+      "firstPose": {
+        "x": 838.1499392498599,
+        "y": 43.120950988116434,
+        "z": 257.03809987340026,
+        "yaw": -0.7260009003694212,
+        "pitch": 0,
+        "roll": 0,
+        "vx": 16.08200111331453,
+        "vy": -1.308,
+        "vz": -18.115639513653758,
+        "hullIntegrity": 100,
+        "airRemaining": 10
+      },
+      "visibleInsideDepthMetres": 0.0008469353065407859,
+      "actualCrossedTriangle": {
+        "point": {
+          "x": 838.8396003476686,
+          "y": 44.08714153504121,
+          "z": 256.99342341436557
+        },
+        "distance": 0.7415333209489636,
+        "faceIndex": 659,
+        "normal": {
+          "x": -0.6641016040269476,
+          "y": 0,
+          "z": 0.7476423339597855
+        },
+        "segmentLength": 0.8083708135965373
+      },
+      "priorDamageCalls": 0
+    },
+    {
+      "fps": 60,
+      "side": -1,
+      "initial": {
+        "x": 856.4010566049373,
+        "y": 43.208150988116444,
+        "z": 236.47905001409924,
+        "yaw": 2.415591753220372,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 30,
+        "vx": -19.916528511635722,
+        "vz": 22.43505943930618,
+        "vy": 0,
+        "wasAirborne": true,
+        "coastSupportId": null,
+        "airRemaining": 10
+      },
+      "firstTimeSeconds": 0.13333333333333333,
+      "firstPose": {
+        "x": 854.040142099127,
+        "y": 43.12095098811645,
+        "z": 239.1385123414837,
+        "yaw": 2.415591753220372,
+        "pitch": 0,
+        "roll": 0,
+        "vx": -16.082001113314544,
+        "vy": -1.308,
+        "vz": 18.115639513653772,
+        "hullIntegrity": 100,
+        "airRemaining": 10
+      },
+      "visibleInsideDepthMetres": 0.002971431132763769,
+      "actualCrossedTriangle": {
+        "point": {
+          "x": 854.1419849255709,
+          "y": 44.08976276179557,
+          "z": 239.8225495474234
+        },
+        "distance": 0.29001242091918206,
+        "faceIndex": 657,
+        "normal": {
+          "x": -0.6641037302627456,
+          "y": 0,
+          "z": 0.7476404453018217
+        },
+        "segmentLength": 0.40425199919101434
+      },
+      "priorDamageCalls": 0
+    },
+    {
+      "fps": 60,
+      "side": 1,
+      "initial": {
+        "x": 835.8206438095802,
+        "y": 43.208150988116444,
+        "z": 259.66194476804895,
+        "yaw": -0.7260009003694212,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 30,
+        "vx": 19.916528511635722,
+        "vz": -22.43505943930618,
+        "vy": 0,
+        "wasAirborne": true,
+        "coastSupportId": null,
+        "airRemaining": 10
+      },
+      "firstTimeSeconds": 0.13333333333333333,
+      "firstPose": {
+        "x": 838.1815583153905,
+        "y": 43.12095098811645,
+        "z": 257.0024824406645,
+        "yaw": -0.7260009003694212,
+        "pitch": 0,
+        "roll": 0,
+        "vx": 16.082001113314544,
+        "vy": -1.308,
+        "vz": -18.115639513653772,
+        "hullIntegrity": 100,
+        "airRemaining": 10
+      },
+      "visibleInsideDepthMetres": 0.0008444548708297361,
+      "actualCrossedTriangle": {
+        "point": {
+          "x": 838.8396003476686,
+          "y": 44.08977779140414,
+          "z": 256.99342341436557
+        },
+        "distance": 0.28971513654920533,
+        "faceIndex": 659,
+        "normal": {
+          "x": -0.6641016040269476,
+          "y": 0,
+          "z": 0.7476423339597855
+        },
+        "segmentLength": 0.40425199919101434
+      },
+      "priorDamageCalls": 0
+    },
+    {
+      "fps": 144,
+      "side": -1,
+      "initial": {
+        "x": 856.4010566049373,
+        "y": 43.208150988116444,
+        "z": 236.47905001409924,
+        "yaw": 2.415591753220372,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 30,
+        "vx": -19.916528511635722,
+        "vz": 22.43505943930618,
+        "vy": 0,
+        "wasAirborne": true,
+        "coastSupportId": null,
+        "airRemaining": 10
+      },
+      "firstTimeSeconds": 0.125,
+      "firstPose": {
+        "x": 854.1557644176434,
+        "y": 43.131510363116426,
+        "z": 239.0082690821269,
+        "yaw": 2.415591753220372,
+        "pitch": 0,
+        "roll": 0,
+        "vx": -16.30347762910227,
+        "vy": -1.22625,
+        "vz": 18.36512269006201,
+        "hullIntegrity": 100,
+        "airRemaining": 10
+      },
+      "visibleInsideDepthMetres": 0.0015881972486582185,
+      "actualCrossedTriangle": {
+        "point": {
+          "x": 854.197017989355,
+          "y": 44.0802015133259,
+          "z": 239.8714335573462
+        },
+        "distance": 0.14257463132615908,
+        "faceIndex": 657,
+        "normal": {
+          "x": -0.6641037302627456,
+          "y": 0,
+          "z": 0.7476404453018217
+        },
+        "segmentLength": 0.17074049324321336
+      },
+      "priorDamageCalls": 0
+    },
+    {
+      "fps": 144,
+      "side": 1,
+      "initial": {
+        "x": 835.8206438095802,
+        "y": 43.208150988116444,
+        "z": 259.66194476804895,
+        "yaw": -0.7260009003694212,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 30,
+        "vx": 19.916528511635722,
+        "vz": -22.43505943930618,
+        "vy": 0,
+        "wasAirborne": true,
+        "coastSupportId": null,
+        "airRemaining": 10
+      },
+      "firstTimeSeconds": 0.125,
+      "firstPose": {
+        "x": 838.0659359968741,
+        "y": 43.131510363116426,
+        "z": 257.1327257000211,
+        "yaw": -0.7260009003694212,
+        "pitch": 0,
+        "roll": 0,
+        "vx": 16.30347762910227,
+        "vy": -1.22625,
+        "vz": -18.36512269006201,
+        "hullIntegrity": 100,
+        "airRemaining": 10
+      },
+      "visibleInsideDepthMetres": 0.0017590226981951673,
+      "actualCrossedTriangle": {
+        "point": {
+          "x": 838.9276720815769,
+          "y": 44.08021863775477,
+          "z": 257.07165410984817
+        },
+        "distance": 0.1422214721007485,
+        "faceIndex": 659,
+        "normal": {
+          "x": -0.6641016040269476,
+          "y": 0,
+          "z": 0.7476423339597855
+        },
+        "segmentLength": 0.1707404932432346
+      },
+      "priorDamageCalls": 0
+    }
+  ],
+  "continuousGroundWitness": {
+    "fps": 60,
+    "route": 0,
+    "station": 4600,
+    "outsideEdgeMetres": 40,
+    "initial": {
+      "x": 770.4179177907805,
+      "y": 3.691691283884546,
+      "z": 947.7779177065884,
+      "yaw": 0.5240797014378821,
+      "pitch": -0.05053705568446447,
+      "roll": -0.0187239598113103,
+      "speed": 15,
+      "vx": -7.506246542339183,
+      "vz": -12.986772610838345,
+      "vy": -0.7587018519283497,
+      "wasAirborne": false,
+      "coastSupportId": "terrain",
+      "airRemaining": 10
+    },
+    "keys": "Space[0,1.6); W[0,2); release thereafter; no state assignments",
+    "firstTimeSeconds": 1.7,
+    "firstPose": {
+      "x": 750.3652207687812,
+      "y": 15.724440213986576,
+      "z": 913.6789364891458,
+      "yaw": 0.5240797014378821,
+      "pitch": -0.05053705568446447,
+      "roll": -0.01872395981131092,
+      "vx": -15.80236300637099,
+      "vy": 9.873605626931864,
+      "vz": -26.965976165349424,
+      "hullIntegrity": 100,
+      "airRemaining": 7.305833333333219
+    },
+    "visibleInsideDepthMetres": 0.032030739029501376,
+    "actualCrossedTriangle": {
+      "point": {
+        "x": 749.7623099943103,
+        "y": 16.397584724059186,
+        "z": 913.5202095028039
+      },
+      "faceIndex": 1527,
+      "normal": {
+        "x": -0.505933989082578,
+        "y": 0,
+        "z": -0.8625721991178419
+      },
+      "distance": 0.5048801516618983,
+      "segmentLength": 0.5467041787927338
+    },
+    "priorDamageCalls": 0,
+    "search": "192 first bounded attempts +858 second bounded attempts; stopped at first strict reachable side-face witness; other bottom/unknown-face trials are not labelled side witnesses"
+  },
+  "limits": [
+    "Actual native r128 geometry, not GPU/display pixels.",
+    "Nearby terrain-supported initialization, not a whole route from default spawn.",
+    "Production damage law; destruction presentation stubbed; stop at first damage callback.",
+    "Original user screenshot pixels/location unavailable."
+  ]
+}

@@ -1,0 +1,47 @@
+"""Bundle src/ into the root index.html without third-party build tools."""
+from pathlib import Path
+import re
+import hashlib
+import json
+
+
+def bundle():
+    root = Path(__file__).resolve().parent
+    src_dir = root / 'src'
+    html = (src_dir / 'index.html').read_text(encoding='utf-8')
+    css = (src_dir / 'styles.css').read_text(encoding='utf-8')
+    js_files = ['config.js', 'city-clock.js', 'city-diagnostics.js', 'driving-score.js', 'audio.js', 'music.js', 'mobile-controls.js', 'coast-road-network.js', 'coast-map.js', 'world.js', 'highway-traffic.js', 'vehicles.js', 'reference-exterior.js', 'reference-cockpit.js', 'npc-traffic-assets.js', 'reference-traffic.js', 'weather-rain.js', 'taxi.js', 'ui-hud.js', 'leaderboard.js', 'start-screen.js', 'demo-numeric-projection.js', 'highway-demo.js', 'physics-main.js', 'render-health.js', 'render-diagnostics.js']
+    # Deterministic source identity, not a guessed Git commit or a timestamp.
+    # The root bundle cannot hash itself; hash all of its inputs instead.
+    inputs = ['src/index.html', 'src/styles.css', 'bundle_app.py'] + ['src/' + filename for filename in js_files]
+    hashes = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in inputs}
+    identity = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    build_info = {'schema': 'roadster-source-manifest-v1', 'id': identity, 'sourceSha256': hashes}
+    bundled_js_parts = ['window.RoadsterBuildInfo=Object.freeze(' + json.dumps(build_info, sort_keys=True, separators=(',', ':')) + ');']
+    for filename in js_files:
+        content = (src_dir / filename).read_text(encoding='utf-8')
+        bundled_js_parts.append(
+            '\n// =========================================================================\n'
+            f'// MODULE: {filename}\n'
+            '// =========================================================================\n' + content
+        )
+    bundled_js = '\n'.join(bundled_js_parts)
+    html, css_count = re.subn(
+        r'<link\s+rel=["\']stylesheet["\']\s+href=["\']styles\.css["\']\s*/?>',
+        lambda match: f'<style>\n{css}\n</style>',
+        html,
+    )
+    html, js_count = re.subn(
+        r'<!-- Modular Functional Scripts -->\s*(<script\s+src=["\'][^"\']+["\']></script>\s*)+',
+        lambda match: f'<!-- Modular Functional Scripts -->\n  <script>\n{bundled_js}\n  </script>',
+        html,
+    )
+    if css_count != 1 or js_count != 1:
+        raise ValueError('Expected exactly one CSS link and one modular scripts block')
+    out_html = root / 'index.html'
+    out_html.write_text(html, encoding='utf-8')
+    print(f'Bundled {out_html.name}: {len(html)} chars')
+
+
+if __name__ == '__main__':
+    bundle()

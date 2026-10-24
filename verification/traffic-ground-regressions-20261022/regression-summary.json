@@ -1,0 +1,254 @@
+{
+  "schema": "highway-continuity-regression-report-v1",
+  "createdAtUTC": "2026-10-22T14:19:31.921685+00:00",
+  "basePreview": "3417fa07d357b4231c36ac439caeb9460371cc31",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "scope": "Same draft PR20; highway-only repair and non-production preview. Coastal ground-gap report remains unresolved.",
+  "rootCause": "The preceding rear-recovery change incorrectly included ordinary longitudinal window recycling. The 52-car pool remained allocated but drained from the forward view. The single-passenger iteration did not change traffic source.",
+  "repair": "Separate normal forward/rear cycling from actual incident-only rear recovery; preserve queue direction and genuine pass eligibility without changing force/collision rules or frozen assets.",
+  "sourceEpoch": {
+    "path": "verification/traffic-ground-regressions-20261022/source-epoch.json",
+    "sha256": "2f29b8317572cc7c3c7ffc532594ad9bc64564af12d16bcb888ab90e929d3d69"
+  },
+  "artifact": {
+    "path": "/workspace/scratch/cb38b7731a0f/teslaroadster_improvements_20261022/index.html",
+    "bytes": 5003989,
+    "sha256": "190020081974b8c67c05ea87cd910e8167f343b0c5a6c4ebf9bcd5966cc48438",
+    "gitSha": "94cdf0e17421aa8469fdd35d01c76a135324ea0c"
+  },
+  "completeRun": {
+    "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+    "tests": 1094,
+    "pass": 1092,
+    "fail": 2,
+    "skipped": 0,
+    "duration_ms": 957989.427765,
+    "exitCode": 1,
+    "log": "full-suite-concurrency2.log",
+    "failureFile": "tests/weather-ground-numeric-projection.test.mjs",
+    "failureCount": 2,
+    "failureCause": "Final obsolete assertion required z=-481 ordinary longitudinal exit to use the >65m incident reservoir; every original 180-frame bit-exact state/car comparison passed beforehand."
+  },
+  "testOnlyCorrection": {
+    "file": "tests/weather-ground-numeric-projection.test.mjs",
+    "preservesOriginal20And52CarTrajectories": true,
+    "ordinaryRearAdmissionMetres": [
+      23,
+      55
+    ],
+    "incidentRearAdmissionMetres": [
+      95,
+      415
+    ],
+    "addedCases": [
+      "ordinary passed-car exit replenishes ahead and cannot manufacture pass credit",
+      "actual x31 lateral out-of-bounds incident recovers behind",
+      "52-car mixed normal-front/incident queues experience repeated hidden admission failures"
+    ],
+    "numericFileRetest": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 4244.06203
+    },
+    "diff": "numeric-projection-test-correction.diff",
+    "runtimeOrHtmlChanges": false
+  },
+  "finalRelatedRun": {
+    "command": "node --test --test-concurrency=2 tests/weather-ground-numeric-projection.test.mjs tests/highway-traffic.test.mjs tests/highway-traffic-behind.test.mjs tests/highway-traffic-forecast.test.mjs tests/highway-traffic-continuity.test.mjs tests/traffic-ground-source-boundary.test.mjs tests/weather-ground-source-boundary.test.mjs tests/single-passenger-source-boundary.test.mjs tests/coast-map-isolation.test.mjs tests/performance-source-boundary.test.mjs tests/h-brake-sound.test.mjs",
+    "tests": 192,
+    "pass": 192,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 30121.184991,
+    "exitCode": 0,
+    "log": "final-related-regressions.log"
+  },
+  "jointCoverage": {
+    "uniqueApplicableContracts": 1097,
+    "initialCompleteRunPasses": 1092,
+    "correctedReplacementContracts": 2,
+    "newContracts": 3,
+    "finalRelatedRunPasses": 192,
+    "overlapWithInitialPasses": 187,
+    "formula": "1092 + 192 - 187 = 1097; equivalently1094 + 3 newly added contracts",
+    "singleGreenCompleteRun": false,
+    "remainingApplicableTestFailures": 0,
+    "coastalKnownIssueExcluded": true
+  },
+  "runtimeSnapshot": {
+    "path": "full-suite-source-snapshot.json",
+    "sha256": "94269dcea8bfc1134860458bbbb95641957b63dd99764bd429adee4205e2d766",
+    "fileCount": 31,
+    "allBytesUnchangedAfterTestCorrection": true
+  },
+  "focusedRuns": {
+    "threeMinuteContinuity": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 18199.063676
+    },
+    "realSourcePlannerPhysicsDriving": {
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 176105.33779
+    },
+    "lifecycleAndForecast": {
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 2614.37876
+    },
+    "trafficAndBundledRuntime": {
+      "tests": 33,
+      "pass": 33,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 11201.145803
+    },
+    "sourceBoundariesIncludingNegativeDriftGuards": {
+      "tests": 109,
+      "pass": 109,
+      "fail": 0,
+      "skipped": 0,
+      "duration_ms": 10667.622941
+    },
+    "note": "Focused cases overlap the complete/final-related runs and are not added to the unique total."
+  },
+  "counterexample": {
+    "brokenSourceSha256": "ed27891b39a2f63e87134140cfc2abd54381a185e546f52c49c1cecde4c49b9a",
+    "seconds": 180,
+    "cars": 52,
+    "seed": 7,
+    "playerSpeedKmh": 360,
+    "brokenForwardEmptyBySeconds": 5,
+    "brokenRemainingContinuousEmptySeconds": 175,
+    "fixedEmptySeconds": 0,
+    "fixedFinalForwardCount": 39,
+    "controllerReplayOnly": true
+  },
+  "independentReview": {
+    "report": "final-audit-review.json",
+    "mustFixFindings": [],
+    "scope": "Read-only source/fixture/boundary review plus small independent queue property checks; not a second full suite."
+  },
+  "preserved": {
+    "taxiCapacity": 1,
+    "taxiSourceSha256": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "allOtherFrozenSourceMatches3417": true,
+    "vehicleModelsMaterialsScales": true,
+    "forceCollisionSteeringBrakingRules": true,
+    "previousWeatherGroundAndRenderChanges": true,
+    "originalEpochsAndOldWorktreeDraft": true
+  },
+  "coastalGroundReport": {
+    "status": "UNRESOLVED",
+    "includedInRepairPassLabel": false,
+    "screenshotInspected": false,
+    "terrainOrSupportOrTeleportPatch": false,
+    "evidenceBoundary": "Seam/bridge/slope CPU exclusions do not identify or disprove the user event; official image transfers yielded zero bytes/timeouts."
+  },
+  "limitations": [
+    "CPU controller and extracted real planner/physics tests are not a new full browser/GPU/FPS validation.",
+    "Publication and exact HTTP artifact readback are recorded separately after this commit is created."
+  ],
+  "rawEvidenceDirectory": "/workspace/shared/tesla-highway-recycle-20261022",
+  "evidence": {
+    "full-suite-concurrency2.log": {
+      "bytes": 125848,
+      "sha256": "659fd8b648d8e68f74ca47cf23bd6ef1f5921f373517132ed303059023da6b63"
+    },
+    "numeric-projection-corrected.log": {
+      "bytes": 1202,
+      "sha256": "5e7bc7bffe1f5fd382e7aa9d6479b34b9f100ea84fe3db59ea9f4a378a43ecbe"
+    },
+    "numeric-projection-test-correction.diff": {
+      "bytes": 5005,
+      "sha256": "c154d30abe9dea5ba8cc5ce3889555d0aae62eb2313b20d1b3069c35d865edfa"
+    },
+    "weather-ground-numeric-projection.original.test.mjs": {
+      "bytes": 3815,
+      "sha256": "bf0c5c9741ad3741f11b72061fafd50b3d5f088a64b4d0809592126714b52e8e"
+    },
+    "final-related-regressions.log": {
+      "bytes": 20409,
+      "sha256": "f04ecb501d7543faee46f1e5160020501c951b9ad6e66fa148e7f77a15e09450"
+    },
+    "full-suite-source-snapshot.json": {
+      "bytes": 3217,
+      "sha256": "94269dcea8bfc1134860458bbbb95641957b63dd99764bd429adee4205e2d766"
+    },
+    "traffic-180s-regressions.log": {
+      "bytes": 997,
+      "sha256": "2441d0acbd491a74184b1694b26663a111fcc2dd7506703bcb74534217c49451"
+    },
+    "continuous-driving-initial.log": {
+      "bytes": 2189,
+      "sha256": "fc47d5578e15a2d8b890a924012ff5a5bc561ab145e86324d61b32769876e9bc"
+    },
+    "traffic-lifecycle-forecast-corrected.log": {
+      "bytes": 3720,
+      "sha256": "fed5854b8f4a58066966d00befcb2006ca2e7ea87c4063d2b4c70260e76799ac"
+    },
+    "traffic-basic-bundled.log": {
+      "bytes": 3703,
+      "sha256": "27740b42deda3cd201f92f8e95fac900099c99c5cbef9b42df6daab538728d59"
+    },
+    "source-boundaries-final.log": {
+      "bytes": 11245,
+      "sha256": "c09228c0b76a5a2dc96ebaa462da81ffa52e277926067d06e2ab915f625b8c4e"
+    },
+    "traffic-focused-initial.log": {
+      "bytes": 12825,
+      "sha256": "da19578b8cf957904565ac12a47e0b16815129d2834f6697c3ad6b5b136dba20"
+    },
+    "source-boundaries-initial.log": {
+      "bytes": 13428,
+      "sha256": "adcdd4e7fd2826c3b5728f42e27e5183330761b773a59ad30540419436eaa8cc"
+    },
+    "original-depletion-contract.log": {
+      "bytes": 223,
+      "sha256": "fa7822b8ae3248520469054ba3f7d2e455532010d23c486112fea05f15775b08"
+    },
+    "original-depletion-180s.json": {
+      "bytes": 1056,
+      "sha256": "f30506dda05febedf9dd9ffe358962e8c640af437fa20ac7edb78961e0490739"
+    },
+    "fixed-density-180s.json": {
+      "bytes": 999,
+      "sha256": "65aa4b98f948a8926de7f6caa64963f3d15791118171418ae398ff2c29650325"
+    },
+    "audit-density.json": {
+      "bytes": 48693,
+      "sha256": "9c2c8c1c757dfc0c6c9a8bfd645b0b5b67f77bc2f5487fe4ffb5557abdf76e0a"
+    },
+    "final-audit-review.json": {
+      "bytes": 6935,
+      "sha256": "df35a26c832e2071462ce2d67fa203efd01e9dd3fd21fc97b06f27ae88c0610f"
+    },
+    "check.log": {
+      "bytes": 476,
+      "sha256": "b8c99a615df4a40b590cbe5aaca5118298eb5513257a85d14e9f33d4a6dd6b58"
+    },
+    "build.log": {
+      "bytes": 237,
+      "sha256": "5c025195302db886f8702d8bfaf37ba06f612f4db6112d34ce8c13b4cac944ab"
+    }
+  },
+  "whitespaceCheck": {
+    "runtimeTestsDocs": "clean",
+    "immutableArchiveException": "tests/fixtures/traffic-ground-regression-baseline/physics-main.js",
+    "historicalTrailingWhitespaceLines": [
+      835,
+      2493
+    ],
+    "archiveExactlyMatchesBasePreview": true,
+    "note": "Preserve exact historical bytes; do not normalize the frozen source fixture. Unscoped staged diff-check reports only these two pre-existing archive lines."
+  }
+}

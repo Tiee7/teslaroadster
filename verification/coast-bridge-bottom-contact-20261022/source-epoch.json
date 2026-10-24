@@ -1,0 +1,121 @@
+{
+  "schema": "coast-bridge-bottom-source-epoch-v1",
+  "basePreview": "ac55a1fc8fcd80fe04d594d8cce58006f1fa8fc5",
+  "mainUnchanged": "4451a11c9c09d031a9da037ce63afe4bb7f062e5",
+  "publicationScope": "preview-only; same PR20; keep prior unique previews",
+  "inheritedSideEpoch": "verification/coast-bridge-side-contact-20261022/source-epoch.json",
+  "inheritedSideEpochSha256": "9a2bbf8032f0f3fc74e9a6070217acc5a503299aebfc6f86afd241bbbeea6482",
+  "baselineSourceFixtures": {
+    "src/physics-main.js": {
+      "path": "tests/fixtures/coast-bridge-bottom-baseline/physics-main.js",
+      "sha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c"
+    },
+    "src/coast-road-network.js": {
+      "path": "tests/fixtures/coast-bridge-bottom-baseline/coast-road-network.js",
+      "sha256": "5279eb0f144d11562f5845d3eee058070fb2008ba000a4305a5649d6cf8f9e1d"
+    },
+    "src/demo-numeric-projection.js": {
+      "path": "tests/fixtures/coast-bridge-bottom-baseline/demo-numeric-projection.js",
+      "sha256": "717c6e291a2fb6c277911f81b48fb921c70355457d42cffbd092d6f92c297ea9"
+    },
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": {
+      "path": "tests/fixtures/coast-bridge-bottom-baseline/generate-numeric-projection-kernel.mjs",
+      "sha256": "dca91d8d49be88911c613283c762b9282b621c27ccbe9840497cc4b365a841cb"
+    },
+    "verification/demo-continuous/emit-browser-static-projection.mjs": {
+      "path": "tests/fixtures/coast-bridge-bottom-baseline/emit-browser-static-projection.mjs",
+      "sha256": "5c3edd0211c968194130f02fee4e0f098ddf9ef7fd7ac5af7e851847a0db7d99"
+    }
+  },
+  "frozenSourceSha256": {
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-map.js": "0f93f7bed63e23904ee7a0bf5839b8cb00760c6ba20a18cfa4193f136902e747",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/leaderboard.js": "49c35e4a210fdd29850d3efa2fd9d15ba084c2a54dedc4db791195aa55bba766",
+    "src/mobile-controls.js": "3a3345c189305ea4a6732f9130c348bf0e2e8141cacc6f4214aa2593685b2ab2",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/taxi.js": "5a228e3dd438fbcc0d4f5b5216608b09717ee6b975d05f094b879cc93aa0f88a",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821",
+    "src/render-diagnostics.js": "8254e1cbdf37ef1256726a3068f622ea70f6fb8d3be9006b0a8e069168499397",
+    "src/index.html": "17afb2a5e025200d7a8908aad639ba47f29e1e6d317123f4c40c73ed0f6d975d",
+    "src/styles.css": "2788eeeb0b2c79e612416b559ac73af0e6d0fa285674cd1a230f1dcb2e578774"
+  },
+  "authorizedSourceSha256": {
+    "src/physics-main.js": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+    "src/coast-road-network.js": "9ad29e5666e0d753953617b3c5ccf353bdd6bff732014a34f5200c0be13e2690",
+    "src/demo-numeric-projection.js": "0291464182fe7b273241f0024c433bb030669543773eb01dd2ae6990679566d0",
+    "verification/demo-continuous/generate-numeric-projection-kernel.mjs": "9630f64145e00e325ee14a730ef5b13bf4937cf5a581276cd0754cfb2b477595",
+    "verification/demo-continuous/emit-browser-static-projection.mjs": "ca0a2f12f6a76da3804d2deae0629478689834b4f23d6f1085bdd799d518d6a6"
+  },
+  "helperRegionSha256": "7d4882bc30d810a2b972fb9f820bdda5bc9e233b3bb695e87dfda77457bba9cd",
+  "baselineHelperRegionSha256": "22b6d73bc093dad1792b715fc61c7f1766236b0141fd83884d4ebbc517959bb8",
+  "physicsPhasePatches": [
+    {
+      "current": "  const coastNetworkHit=coastWorld?.network?.sweepStructures(coastMotionStart,state,1.25,false);\n  const coastBridgeTranslationHit=coastWorld?coastBridgeBodyContact(coastWorld,coastMotionStart,state):null;\n",
+      "baseline": "  const coastNetworkHit=coastWorld?.network?.sweepStructures(coastMotionStart,state);\n  const coastBridgeTranslationHit=coastWorld?coastBridgeSideContact(coastWorld,coastMotionStart,state):null;\n"
+    },
+    {
+      "current": "    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-((h.kind==='pier'||h.kind==='bridge-side'||h.kind==='bridge-bottom')?(h.angularClosingPerFraction||0)/Math.max(dt,1e-6):0),impact=Math.max(0,-inward);\n",
+      "baseline": "    const inward=state.vx*n.x+state.vy*n.y+state.vz*n.z-((h.kind==='pier'||h.kind==='bridge-side')?(h.angularClosingPerFraction||0)/Math.max(dt,1e-6):0),impact=Math.max(0,-inward);\n"
+    },
+    {
+      "current": "    if(h.kind==='bridge-side'||h.kind==='bridge-bottom'){for(const k of['pitch','yaw','roll'])state[k]=(coastMotionStart[k]||0)+wrapAnglePi(state[k]-(coastMotionStart[k]||0))*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}\n",
+      "baseline": "    if(h.kind==='bridge-side'){for(const k of['pitch','yaw','roll'])state[k]=(coastMotionStart[k]||0)+wrapAnglePi(state[k]-(coastMotionStart[k]||0))*t;const push=(h.depth||0)+.0001;state.x+=n.x*push;state.y+=n.y*push;state.z+=n.z*push;}\n"
+    },
+    {
+      "current": "    if(h.kind==='ceiling'||h.kind==='bridge-bottom'){state.isJumping6m=false;state.isAltitudeHold=false;}\n",
+      "baseline": "    if(h.kind==='ceiling'){state.isJumping6m=false;state.isAltitudeHold=false;}\n"
+    },
+    {
+      "current": "    if((h.kind!=='pier'&&h.kind!=='bridge-side'&&h.kind!=='bridge-bottom')||impact>0)triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;\n",
+      "baseline": "    if((h.kind!=='pier'&&h.kind!=='bridge-side')||impact>0)triggerPhysicsCollision(impact,'crashReasonBuilding',0,1,0);if(state.isDestroyed)return;\n"
+    },
+    {
+      "current": "  const coastBridgeAttitudeHit=coastBridgeAttitudeStart&&['pitch','yaw','roll'].some(k=>Math.abs(state[k]-coastBridgeAttitudeStart[k])>1e-12)?coastBridgeBodyContact(coastWorld,coastBridgeAttitudeStart,state):null;\n",
+      "baseline": "  const coastBridgeAttitudeHit=coastBridgeAttitudeStart&&['pitch','yaw','roll'].some(k=>Math.abs(state[k]-coastBridgeAttitudeStart[k])>1e-12)?coastBridgeSideContact(coastWorld,coastBridgeAttitudeStart,state):null;\n"
+    },
+    {
+      "current": "      const hit=coastBridgeBodyContact(coastWorld,rest,state);if(hit){coastBridgeSideResolve(hit,rest,dt*(1-t));if(state.isDestroyed)return;}\n",
+      "baseline": "      const hit=coastBridgeSideContact(coastWorld,rest,state);if(hit){coastBridgeSideResolve(hit,rest,dt*(1-t));if(state.isDestroyed)return;}\n"
+    }
+  ],
+  "planeClearCertificate": "    if(bottom){\n      const n=[face.normal.x,face.normal.y,face.normal.z],planeGap=Math.abs(initialBody.x*n[0]+initialBody.y*n[1]+initialBody.z*n[2]-face.plane)-cityContactProjection(initialBody,n);\n      if(planeGap>Math.abs(dx*n[0]+dy*n[1]+dz*n[2])+turn*radius+1e-7)continue;\n    }\n",
+  "intermediateUnprunedQuery": {
+    "path": "tests/fixtures/coast-bridge-bottom-baseline/unpruned-face-query.js",
+    "sha256": "267adf4c73224d2b99b089b46ccedc028a17b5bf29005ff715d29c08af8beb6d",
+    "sourcePhysicsSha256": "f4dddbf1d438ea76c7f681c062afb12ff49bb786e3850ebabc9323f56097b528"
+  },
+  "numericProjection": {
+    "previousPhysicsSha256": "8bbb2a8e3deeb6360c2fcc193b591929f2556c792653b54d3e2e02e45e5e0b8c",
+    "previousGeneratorSha256": "dca91d8d49be88911c613283c762b9282b621c27ccbe9840497cc4b365a841cb",
+    "previousProgramSha256": "e26fe5a46e6dc1b70ac1d77e31f5e320601ae806b9e89c99e51233547da45ea8",
+    "currentGeneratorSha256": "9630f64145e00e325ee14a730ef5b13bf4937cf5a581276cd0754cfb2b477595",
+    "currentProgramSha256": "9e6cad941938f73e1a066251e491216650476b1333e9f08775d8cb7cdd49dd88"
+  },
+  "response": {
+    "geometry": "original602 actual Float32 bottom triangles, not a fixed-height root ceiling or min/maxY quad",
+    "body": "existing full YXZ cityPlayerBody model-bounds proxy; no asset resize",
+    "integration": "existing translation and late paid-RCS phases; no fuel/time reintegration",
+    "normalRestitution": 0.25,
+    "contactToleranceMetres": 1e-07,
+    "localSeparationMetres": 0.0001,
+    "networkAPI": "includeCeiling defaults true; original3-argument results unchanged, actual player opts out of coarse ceiling only",
+    "ordering": "strictly earliest side/bottom before original pier/rail/abutment; existing candidate wins exact ties",
+    "planePrune": "full root-radius * sum of absolute shortest YXZ deltas plus normal translation, never endpoint-only or sampled rejection"
+  },
+  "evidenceBoundary": "Independent native r128 actual visible geometry/original rendered triangles plus production CPU motion/damage. Natural original bank support with only Space/KeyI input, no per-frame assignments; not full default-spawn journey, GPU pixels or original screenshot localization."
+}

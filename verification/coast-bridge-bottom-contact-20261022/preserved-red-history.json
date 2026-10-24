@@ -1,0 +1,58 @@
+{
+  "oldAc55Contract": {
+    "selectedCases": 4,
+    "pass": 0,
+    "fail": 4,
+    "skip": 0,
+    "log": "/workspace/shared/tesla-hourly-20261022-2138/audit/bottom-ac55-red-bounded.tap",
+    "note": "Real bounded primitive assertions, not the preceding file-level SIGKILL. Includes native triangle penetration and actual air-gap false impact.",
+    "portableLog": "verification/coast-bridge-bottom-contact-20261022/baseline-ac55-contract-red.json",
+    "portableLogEncoding": "JSON rawText field preserves every original TAP byte, including Node reporter blank-line indentation.",
+    "decodedRawSha256": "a8c1fae496c92fae348afd4f7fef6d8f66899b1142fb5163611dd3e3ec972e09",
+    "portableLogFileSha256": "4e854950aa84ec72e3ceab6f4931e6fb75eeae0beab9adbad413b6e43e6b3627"
+  },
+  "preservedEarlyRuns": [
+    {
+      "log": "new-source-guards-first.tap",
+      "reason": "New guard compared JS-only filenames with all frozen source file types; include original HTML/CSS, no runtime change."
+    },
+    {
+      "log": "all-source-guards-first.tap",
+      "reason": "Old pier epoch proof still read current network with the new explicit ceiling opt-out; read its exact historical527 fixture, keep current runtime pins checked separately."
+    },
+    {
+      "log": "audit/bottom-ac55-red.tap",
+      "reason": "File-level SIGKILL; OS cause not established. Later primitive Boolean assertions avoid formatting whole cyclic native mesh objects; bounded old four-case rerun supplies true assertion-red evidence."
+    },
+    {
+      "log": "audit/bottom-focused-first.tap",
+      "reason": "Initial new test oracle assumed callback count equals hull damage count, overestimated inverted air clearance, demanded a stricter old top suspension contract, and chose the opposite pi wrap. Correct original cooldown/native geometry/byte-exact baseline and existing shortwrap semantics are tested."
+    },
+    {
+      "log": "audit/bottom-focused-second.tap",
+      "reason": "Unpruned query also returned null for the chosen along-road320m chord; replace only the input with a true vertical cross-road swept contact.121 complete query results then match exactly."
+    }
+  ],
+  "externalLogRoot": "/workspace/shared/tesla-hourly-20261022-2138",
+  "sourceAfterCandidateFreeze": "ae889ddddd93613c84005d919f245614db572fe8d8c565ee27099e4890a3416f",
+  "limits": "No claim that unexplained file SIGKILL was diagnosed; no failed gameplay assertion is dropped to obtain green.",
+  "terrainOriginalFinalBatch": {
+    "portableLog": "verification/coast-bridge-bottom-contact-20261022/initial-terrain-file-sigkill.tap",
+    "signal": "SIGKILL",
+    "individualAssertionFailuresKnown": false,
+    "sampledNoYieldRssBeforeKill": 1109291008,
+    "sampledYieldMaxRss": 465014784,
+    "independentFreshVmsInYieldRun": 1565,
+    "osOOMCounterAvailable": false,
+    "limits": "RSS growth and successful yielding are observations, not an OS OOM diagnosis. Entire18 original assertion bodies remain unchanged.",
+    "minimalPatch": "verification/coast-bridge-bottom-contact-20261022/terrain-test-resource-adjustment.patch",
+    "actualOriginalPathRerun": {
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0,
+      "log": "/workspace/shared/tesla-hourly-20261022-2138/final-terrain-yield.tap",
+      "logSha256": "6fab272ea1fb00ef44d4da5f43ab3f00c7a26cf70ac46527810c63fb56a6a330"
+    }
+  }
+}

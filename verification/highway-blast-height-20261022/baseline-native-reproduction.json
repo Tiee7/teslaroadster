@@ -1,0 +1,101 @@
+{
+  "scope": "Independent native CPU geometry from exact6bf9 blast/aftermath/reset path; presentation isolated, explicit initial fatal event fixture. Full final actual-damage-block regression is separate.",
+  "cases": [
+    {
+      "fps": 30,
+      "delay": 0,
+      "t": 1.4666666666666666,
+      "impact": [
+        77.97987203393848,
+        "crashReasonThreshold",
+        7.5,
+        2.2,
+        0
+      ],
+      "playerTop": 1.1144949197769165,
+      "npcBottom": 16.6849408368395,
+      "gap": 15.570445917062582,
+      "variant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "fps": 30,
+      "delay": 0.2,
+      "t": 1.7666666666666666,
+      "impact": [
+        82.77777777777777,
+        "crashReasonThreshold",
+        7.5,
+        2.2,
+        0
+      ],
+      "playerTop": 1.1144949197769165,
+      "npcBottom": 12.521879925217533,
+      "gap": 11.407385005440617,
+      "variant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "fps": 60,
+      "delay": 0,
+      "t": 1.4666666666666666,
+      "impact": [
+        77.98275619367621,
+        "crashReasonThreshold",
+        7.5,
+        2.2,
+        0
+      ],
+      "playerTop": 1.1144949197769165,
+      "npcBottom": 16.416051947950603,
+      "gap": 15.301557028173686,
+      "variant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "fps": 60,
+      "delay": 0.2,
+      "t": 1.7833333333333334,
+      "impact": [
+        82.77777777777777,
+        "crashReasonThreshold",
+        7.5,
+        2.2,
+        0
+      ],
+      "playerTop": 1.1144949197769165,
+      "npcBottom": 12.049171735332576,
+      "gap": 10.93467681555566,
+      "variant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "fps": 144,
+      "delay": 0,
+      "t": 1.4791666666666667,
+      "impact": [
+        78.46378722724437,
+        "crashReasonThreshold",
+        7.5,
+        2.2,
+        0
+      ],
+      "playerTop": 1.1144949197769165,
+      "npcBottom": 16.109253344249087,
+      "gap": 14.99475842447217,
+      "variant": "roadster-7cebd25eb1b855fc"
+    },
+    {
+      "fps": 144,
+      "delay": 0.2,
+      "t": 1.7916666666666667,
+      "impact": [
+        82.77777777777777,
+        "crashReasonThreshold",
+        7.5,
+        2.2,
+        0
+      ],
+      "playerTop": 1.1144949197769165,
+      "npcBottom": 11.768118385710173,
+      "gap": 10.653623465933256,
+      "variant": "roadster-7cebd25eb1b855fc"
+    }
+  ]
+}
