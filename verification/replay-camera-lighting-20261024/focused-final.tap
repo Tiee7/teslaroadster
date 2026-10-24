@@ -1,0 +1,324 @@
+TAP version 13
+# Subtest: headlamp projection uses a finite below-horizon soft cone while preserving actual weather intensity/colors/day/destroyed rules
+ok 1 - headlamp projection uses a finite below-horizon soft cone while preserving actual weather intensity/colors/day/destroyed rules
+  ---
+  duration_ms: 582.426371
+  type: 'test'
+  ...
+# Subtest: headlamp studio clone owns an attached transformed target; repeated sync cannot mutate the live target or grow nodes
+ok 2 - headlamp studio clone owns an attached transformed target; repeated sync cannot mutate the live target or grow nodes
+  ---
+  duration_ms: 526.470168
+  type: 'test'
+  ...
+# Subtest: road shader patch validates r128, one spot call and both includes; point/directional/environment and diffuse remain byte-exact
+ok 3 - road shader patch validates r128, one spot call and both includes; point/directional/environment and diffuse remain byte-exact
+  ---
+  duration_ms: 479.907263
+  type: 'test'
+  ...
+# Subtest: headlamp incompatible version/layout/include fails explicitly with only projection disabled, not a blank game or silent stale patch
+ok 4 - headlamp incompatible version/layout/include fails explicitly with only projection disabled, not a blank game or silent stale patch
+  ---
+  duration_ms: 2430.536189
+  type: 'test'
+  ...
+# Subtest: actual r128 GGX counterexample reproduces severe pre-fix road clipping mathematically; bounded spot delta prevents that term without darkening diffuse/weather
+ok 5 - actual r128 GGX counterexample reproduces severe pre-fix road clipping mathematically; bounded spot delta prevents that term without darkening diffuse/weather
+  ---
+  duration_ms: 659.689873
+  type: 'test'
+  ...
+# {"scope":"CPU fixed-r128 BRDF witness/grid, not GPU/pixel acceptance","originalWitness":129.53668056416058,"maxima":[{"weather":0,"rawSpecularMaximum":56.5866364318428,"boundedSpecularMaximum":0.18,"unchangedDiffuseMaximum":0.029837471834511225},{"weather":1,"rawSpecularMaximum":25.748096174843557,"boundedSpecularMaximum":0.18,"unchangedDiffuseMaximum":0.056145780333757694},{"weather":2,"rawSpecularMaximum":280.4089905225116,"boundedSpecularMaximum":0.18,"unchangedDiffuseMaximum":0.009223949626260192}]}
+# Subtest: RAM replay explicitly succeeds f2, preserves production/main and every immutable numerical source
+ok 6 - RAM replay explicitly succeeds f2, preserves production/main and every immutable numerical source
+  ---
+  duration_ms: 53.12989
+  type: 'test'
+  ...
+# Subtest: only the declared replay UI/adapter files advance; taxi rules and ranked algorithms are byte exact outside guards
+ok 7 - only the declared replay UI/adapter files advance; taxi rules and ranked algorithms are byte exact outside guards
+  ---
+  duration_ms: 1.728505
+  type: 'test'
+  ...
+# Subtest: negative live guards reject every declared/frozen source drift and additional unknown gameplay modules
+ok 8 - negative live guards reject every declared/frozen source drift and additional unknown gameplay modules
+  ---
+  duration_ms: 394.821312
+  type: 'test'
+  ...
+# Subtest: autopilot replay succeeds the immutable first RAM epoch without changing its sample fields or numerical owners
+ok 9 - autopilot replay succeeds the immutable first RAM epoch without changing its sample fields or numerical owners
+  ---
+  duration_ms: 3.5512
+  type: 'test'
+  ...
+# Subtest: camera/lighting successor preserves immutable autopilot evidence, model/numerical owners and every vehicle sample field
+ok 10 - camera/lighting successor preserves immutable autopilot evidence, model/numerical owners and every vehicle sample field
+  ---
+  duration_ms: 33.821396
+  type: 'test'
+  ...
+# Subtest: RAM core copies samples, orders time and brackets/clamps seek without retaining caller arrays
+ok 11 - RAM core copies samples, orders time and brackets/clamps seek without retaining caller arrays
+  ---
+  duration_ms: 6.603103
+  type: 'test'
+  ...
+# Subtest: duration and byte limits stop and preserve the oldest samples, never overwrite or exceed reservation
+ok 12 - duration and byte limits stop and preserve the oldest samples, never overwrite or exceed reservation
+  ---
+  duration_ms: 1.286745
+  type: 'test'
+  ...
+# Subtest: generation/visibility/teleport cuts never interpolate across respawns
+ok 13 - generation/visibility/teleport cuts never interpolate across respawns
+  ---
+  duration_ms: 0.595947
+  type: 'test'
+  ...
+# Subtest: highway: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+ok 14 - highway: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+  ---
+  duration_ms: 984.785318
+  type: 'test'
+  ...
+# Subtest: city: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+ok 15 - city: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+  ---
+  duration_ms: 1089.668374
+  type: 'test'
+  ...
+# Subtest: coast: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+ok 16 - coast: all native vehicles, actual hierarchy animations, seek fidelity and exact live restore
+  ---
+  duration_ms: 862.910435
+  type: 'test'
+  ...
+# Subtest: actual reset/respawn markers cut short teleports and hidden vehicles remain in the clip
+ok 17 - actual reset/respawn markers cut short teleports and hidden vehicles remain in the clip
+  ---
+  duration_ms: 865.672382
+  type: 'test'
+  ...
+# Subtest: highway: real owner respawn/wrap forces a trajectory cut without changing its physics source
+ok 18 - highway: real owner respawn/wrap forces a trajectory cut without changing its physics source
+  ---
+  duration_ms: 787.677864
+  type: 'test'
+  ...
+# Subtest: city: real owner respawn/wrap forces a trajectory cut without changing its physics source
+ok 19 - city: real owner respawn/wrap forces a trajectory cut without changing its physics source
+  ---
+  duration_ms: 996.73192
+  type: 'test'
+  ...
+# Subtest: coast: real owner respawn/wrap forces a trajectory cut without changing its physics source
+ok 20 - coast: real owner respawn/wrap forces a trajectory cut without changing its physics source
+  ---
+  duration_ms: 848.026222
+  type: 'test'
+  ...
+# Subtest: focused replay buttons cannot run original R/F/T game shortcuts; native control defaults remain available
+ok 21 - focused replay buttons cannot run original R/F/T game shortcuts; native control defaults remain available
+  ---
+  duration_ms: 903.628202
+  type: 'test'
+  ...
+# Subtest: render-health recovery remains operable during replay and does not resume playback automatically
+ok 22 - render-health recovery remains operable during replay and does not resume playback automatically
+  ---
+  duration_ms: 819.011639
+  type: 'test'
+  ...
+# Subtest: FPV recordings use approved exterior yoke projection during playback and restore exact FPV presentation
+ok 23 - FPV recordings use approved exterior yoke projection during playback and restore exact FPV presentation
+  ---
+  duration_ms: 1689.56886
+  type: 'test'
+  ...
+# Subtest: production crash creates all 34 debris pieces, records their real poses and restores original aftermath
+ok 24 - production crash creates all 34 debris pieces, records their real poses and restores original aftermath
+  ---
+  duration_ms: 930.354185
+  type: 'test'
+  ...
+# Subtest: pause, seek, speed, loop and free pointer / keyboard / phone dolly controls are presentation only
+ok 25 - pause, seek, speed, loop and free pointer / keyboard / phone dolly controls are presentation only
+  ---
+  duration_ms: 831.696545
+  type: 'test'
+  ...
+# Subtest: background stops recording / pauses replay; pagehide and BFCache pageshow release every clip reference
+ok 26 - background stops recording / pauses replay; pagehide and BFCache pageshow release every clip reference
+  ---
+  duration_ms: 828.418752
+  type: 'test'
+  ...
+# Subtest: repeat record / play / clear cycles do not accumulate buffers or source/generated bindings
+ok 27 - repeat record / play / clear cycles do not accumulate buffers or source/generated bindings
+  ---
+  duration_ms: 858.304529
+  type: 'test'
+  ...
+# Subtest: menus cannot trap playback, and replacing traffic with the same count is refused without stale live bindings
+ok 28 - menus cannot trap playback, and replacing traffic with the same count is refused without stale live bindings
+  ---
+  duration_ms: 831.485271
+  type: 'test'
+  ...
+# Subtest: actual adapter automatically stops visibly at its buffer limit and retains its initial samples
+ok 29 - actual adapter automatically stops visibly at its buffer limit and retains its initial samples
+  ---
+  duration_ms: 1116.331445
+  type: 'test'
+  ...
+# Subtest: production animate bypasses every simulation / rank / taxi side effect throughout playback and pause
+ok 30 - production animate bypasses every simulation / rank / taxi side effect throughout playback and pause
+  ---
+  duration_ms: 845.810284
+  type: 'test'
+  ...
+# Subtest: real ranked controller rejects replay-time start and submit, and independent tick cannot advance a run
+ok 31 - real ranked controller rejects replay-time start and submit, and independent tick cannot advance a run
+  ---
+  duration_ms: 16.976354
+  type: 'test'
+  ...
+# Subtest: implementation is RAM-only, labels cinematic limits and is bundled in the required lifecycle order
+ok 32 - implementation is RAM-only, labels cinematic limits and is bundled in the required lifecycle order
+  ---
+  duration_ms: 0.778335
+  type: 'test'
+  ...
+# Subtest: autopilot already active: record real post-physics vehicle/traffic/attitude state, never replay driver inputs
+ok 33 - autopilot already active: record real post-physics vehicle/traffic/attitude state, never replay driver inputs
+  ---
+  duration_ms: 3550.426277
+  type: 'test'
+  ...
+# Subtest: autopilot UI can switch manual/auto/manual/auto during one recording without replacing its population or fields
+ok 34 - autopilot UI can switch manual/auto/manual/auto during one recording without replacing its population or fields
+  ---
+  duration_ms: 2931.668192
+  type: 'test'
+  ...
+# Subtest: autopilot pending preparation cannot race into record/playback; cancellation cannot late-start it
+ok 35 - autopilot pending preparation cannot race into record/playback; cancellation cannot late-start it
+  ---
+  duration_ms: 770.173219
+  type: 'test'
+  ...
+# Subtest: autopilot slow replacement confirmation accepts/cancels without overload and never resets its private clock
+ok 36 - autopilot slow replacement confirmation accepts/cancels without overload and never resets its private clock
+  ---
+  duration_ms: 3337.319002
+  type: 'test'
+  ...
+# Headlamp projection disabled: shader include mismatch
+# Subtest: autopilot preparation begun inside recording stays captured and must settle before playback entry
+ok 37 - autopilot preparation begun inside recording stays captured and must settle before playback entry
+  ---
+  duration_ms: 789.343442
+  type: 'test'
+  ...
+# Subtest: autopilot airborne live checkpoint is preserved; blur safety cancellation is never silently re-armed
+ok 38 - autopilot airborne live checkpoint is preserved; blur safety cancellation is never silently re-armed
+  ---
+  duration_ms: 1883.495057
+  type: 'test'
+  ...
+# Subtest: autopilot collision/debris and normal performance-stop transitions keep the recording valid
+ok 39 - autopilot collision/debris and normal performance-stop transitions keep the recording valid
+  ---
+  duration_ms: 2791.231342
+  type: 'test'
+  ...
+# Subtest: replay camera successor: low right-front-door mount is rigid in all maps/models, outside the native body and independent of zoom
+ok 40 - replay camera successor: low right-front-door mount is rigid in all maps/models, outside the native body and independent of zoom
+  ---
+  duration_ms: 5545.345359
+  type: 'test'
+  ...
+# Subtest: replay camera successor: NPC door clearance uses its preserved near/far bounds, terrain is a safety floor
+ok 41 - replay camera successor: NPC door clearance uses its preserved near/far bounds, terrain is a safety floor
+  ---
+  duration_ms: 850.083481
+  type: 'test'
+  ...
+# Subtest: replay camera successor: landing fixed point never translates across seek, target, playback speed, loop or zoom
+ok 42 - replay camera successor: landing fixed point never translates across seek, target, playback speed, loop or zoom
+  ---
+  duration_ms: 901.856622
+  type: 'test'
+  ...
+# Subtest: replay camera successor: real cockpit pose, view visibility and replay-only instruments restore across every model/cabin combination
+ok 43 - replay camera successor: real cockpit pose, view visibility and replay-only instruments restore across every model/cabin combination
+  ---
+  duration_ms: 3538.157775
+  type: 'test'
+  ...
+# Subtest: replay camera successor: existing live C cockpit shortcut remains reachable outside playback and blocked during it
+ok 44 - replay camera successor: existing live C cockpit shortcut remains reachable outside playback and blocked during it
+  ---
+  duration_ms: 968.566059
+  type: 'test'
+  ...
+# Subtest: replay camera successor: highway fixed point stays roadside through actual 840m wraps, forward/reverse, seek and camera switches
+ok 45 - replay camera successor: highway fixed point stays roadside through actual 840m wraps, forward/reverse, seek and camera switches
+  ---
+  duration_ms: 882.363571
+  type: 'test'
+  ...
+# Subtest: replay camera successor: unsupported highway-origin data cannot pretend to be fixed and replaced road owners stop recording safely
+ok 46 - replay camera successor: unsupported highway-origin data cannot pretend to be fixed and replaced road owners stop recording safely
+  ---
+  duration_ms: 1640.674933
+  type: 'test'
+  ...
+# Subtest: replay camera successor: shader incompatibility discovered during replay cannot be undone by historical lamp samples or live checkpoint restoration
+ok 47 - replay camera successor: shader incompatibility discovered during replay cannot be undone by historical lamp samples or live checkpoint restoration
+  ---
+  duration_ms: 841.333336
+  type: 'test'
+  ...
+# Subtest: replay camera successor: actual autopilot recording with the production light adapter survives every new view and preserves its live driver clock
+ok 48 - replay camera successor: actual autopilot recording with the production light adapter survives every new view and preserves its live driver clock
+  ---
+  duration_ms: 3540.061759
+  type: 'test'
+  ...
+# Subtest: visible weather order is day/dusk/night/rain while default and legacy physical indices remain night0/rain1/dusk2/day3
+ok 49 - visible weather order is day/dusk/night/rain while default and legacy physical indices remain night0/rain1/dusk2/day3
+  ---
+  duration_ms: 4.151502
+  type: 'test'
+  ...
+# Subtest: translated weather buttons keep stable instances, correct underlying selection across repeated renders
+ok 50 - translated weather buttons keep stable instances, correct underlying selection across repeated renders
+  ---
+  duration_ms: 2.061791
+  type: 'test'
+  ...
+# Subtest: day disables actual light visibility and energy across reset/map/menu policy without changing night/rain/dusk intensity
+ok 51 - day disables actual light visibility and energy across reset/map/menu policy without changing night/rain/dusk intensity
+  ---
+  duration_ms: 1.96628
+  type: 'test'
+  ...
+# Subtest: native reference/classic player and neutral menu clones switch only their two actual SpotLights, not mesh/material/geometry/scale
+ok 52 - native reference/classic player and neutral menu clones switch only their two actual SpotLights, not mesh/material/geometry/scale
+  ---
+  duration_ms: 800.723619
+  type: 'test'
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 57309.849444

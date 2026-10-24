@@ -10,6 +10,9 @@
   const debrisIds = new Map(), held = new Set(), qa = new THREE.Quaternion(), qb = new THREE.Quaternion();
   const effectRoot = new THREE.Group(); effectRoot.name = 'temporary-replay-debris'; effectRoot.visible = false; scene.add(effectRoot);
   const free = { yaw: 0, pitch: -.12, distance: 8, initialized: false, position: new THREE.Vector3(), drag: null };
+  let fixedPoint = null, instrumentTexture = null;
+  let roadScroll = 0, lastRoadPropZ = null, roadProp = null;
+  const instrumentMaps = new Map();
   const $ = id => document.getElementById(id);
   const zh = () => currentLang === 'zh';
   const active = () => mode === 'playing' || mode === 'paused';
@@ -53,7 +56,9 @@
     out[o + 14] = m?.uniforms?.uOpacity?.value ?? 0;
     out[o + 15] = n.isLight ? n.intensity : 0;
     out[o + 16] = binding.generation + (binding.playerTree ? resetGeneration : 0);
-    out[o + 17] = binding.wheel ? n.rotation.x : binding.steeringOnly ? n.rotation.z : coldGasTime.value;
+    // Wrapped road props have no wheel/steering animation: use their existing
+    // auxiliary slot for unwrapped road translation, without a new sample row.
+    out[o + 17] = binding.wrap ? roadScroll : binding.wheel ? n.rotation.x : binding.steeringOnly ? n.rotation.z : coldGasTime.value;
   }
   function applyOne(binding, a, b, o, alpha, restoring = false) {
     const n = binding.replayNode || binding.node;
@@ -111,6 +116,12 @@
   }
   function afterTick(dt) {
     if (mode !== 'recording') return;
+    if (currentMap === 'highway' && scrollingProps[0] !== roadProp) { finish('configuration'); return; }
+    if (currentMap === 'highway' && scrollingProps[0]) {
+      const z = scrollingProps[0].position.z;
+      if (lastRoadPropZ !== null) { const delta = z - lastRoadPropZ; roadScroll += delta - Math.round(delta / 840) * 840; }
+      lastRoadPropZ = z;
+    }
     elapsed += Math.max(0, dt);
     // Observe the existing controllers, never instrument their pinned kernels.
     // Native highway/city wraps exceed 40m; coast placement changes its cursor.
@@ -125,6 +136,7 @@
   }
   function releaseClip() {
     if (active()) exit();
+    restoreInstrumentMaps(); if (instrumentTexture) instrumentTexture.dispose(); instrumentTexture = null; fixedPoint = null; roadScroll = 0; lastRoadPropZ = null; roadProp = null;
     mode = 'drive'; buffer.clear(); bindings = []; baseCount = 0; debrisIds.clear(); metadata = null; checkpoint = null;
     // Clones share original generated geometry/material; never dispose live assets.
     effectRoot.clear(); effectRoot.visible = false; message = ''; elapsed = playhead = nextSample = 0; renderUi();
@@ -139,7 +151,8 @@
       if (!replace) return false;
     }
     releaseClip(); buildBindings();
-    metadata = { signature: signature(), population: trafficCars, map: currentMap, vehicles: trafficCars.length + 1, build: window.RoadsterBuildInfo?.id || '', weather: weatherIndex };
+    roadProp = currentMap === 'highway' ? scrollingProps[0] : null; lastRoadPropZ = roadProp?.position.z ?? null;
+    metadata = { signature: signature(), population: trafficCars, map: currentMap, vehicles: trafficCars.length + 1, build: window.RoadsterBuildInfo?.id || '', weather: weatherIndex, roadScrollVersion: 1 };
     $('replay-target').innerHTML = '<option value="0">Player / 我的车</option>' + trafficCars.map((_, i) => `<option value="${i + 1}">NPC ${i + 1} / 交通车 ${i + 1}</option>`).join('');
     targetIndex = 0;
     elapsed = nextSample = resetGeneration = 0; pendingCut = false; lastDestroyed = state.isDestroyed; lastAirborne = state.wasAirborne;
@@ -166,6 +179,7 @@
   function pause() { if (mode === 'playing') mode = 'paused'; clearInput(); renderUi(); }
   function exit() {
     if (!active()) return;
+    restoreInstrumentMaps();
     if (checkpoint) {
       setCockpitPerspective(cameraModeIndex === 3); setCockpitExteriorDetailsVisible(cameraModeIndex !== 3);
       bindings.forEach((b, i) => { if (!b.debris) applyOne(b, checkpoint.values, checkpoint.values, i * S, 0, true); });
@@ -176,17 +190,66 @@
       $('modal-destroyed')?.classList.toggle('hidden', checkpoint.destroyedModalHidden);
       if (checkpoint.taxiMarker) checkpoint.taxiMarker.visible = checkpoint.taxiMarkerVisible;
     }
+    window.RoadsterWeatherLights?.enforceSafety?.();
     checkpoint = null; effectRoot.visible = false; mode = 'drive'; document.body.dataset.replayActive = 'false'; clearInput(); resetClock(); renderUi();
   }
   function seek(time) { if (!active()) return; playhead = Math.max(0, Math.min(buffer.duration(), Number(time) || 0)); renderFrame(0); renderUi(); }
+  function restoreInstrumentMaps() {
+    for (const [material, map] of instrumentMaps) { material.map = map; material.needsUpdate = true; }
+    instrumentMaps.clear();
+  }
+  function presentCockpit() {
+    const inside = cameraMode === 'cockpit';
+    setCockpitPerspective(inside); setCockpitExteriorDetailsVisible(!inside); roadsterCanopyMesh.visible = !inside;
+    if (!inside) { restoreInstrumentMaps(); return; }
+    // Historical poses are authoritative; frozen live speed/fuel are not. The
+    // actual cabin display shows only a clearly labelled replay clock.
+    if (!instrumentTexture) { const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 200; instrumentTexture = new THREE.CanvasTexture(canvas); }
+    const ctx = instrumentTexture.image.getContext('2d');
+    if (ctx) { ctx.fillStyle = '#08111f'; ctx.fillRect(0, 0, 512, 200); ctx.textAlign = 'center'; ctx.fillStyle = '#7dd3fc'; ctx.font = 'bold 32px sans-serif'; ctx.fillText('REPLAY', 256, 75); ctx.fillStyle = '#ffffff'; ctx.font = '38px monospace'; ctx.fillText(playhead.toFixed(2) + ' s', 256, 137); }
+    instrumentTexture.needsUpdate = true;
+    playerWrapper.traverse(node => { for (const m of (Array.isArray(node.material) ? node.material : [node.material])) if (m?.map === cockpitHudTexture && !instrumentMaps.has(m)) { instrumentMaps.set(m, m.map); m.map = instrumentTexture; m.needsUpdate = true; } });
+  }
+  function lockFixedHere() {
+    if (!active()) return;
+    if (replayRoadScroll() === null) { message = 'fixed-unavailable'; renderUi(); return; }
+    fixedPoint = camera.position.clone(); fixedPoint.z -= replayRoadScroll(); cameraMode = 'fixed'; $('replay-camera').value = 'fixed'; clearInput(); renderFrame(0); renderUi();
+  }
+  function replayRoadScroll() {
+    if (currentMap !== 'highway') return 0;
+    if (metadata?.roadScrollVersion !== 1) return null;
+    const index = bindings.findIndex(b => b.wrap), pair = buffer.at(playhead);
+    if (index < 0 || !pair) return null;
+    const o = index * S + 17, a = pair.a.values[o], b = pair.b.values[o];
+    return Number.isFinite(a) && Number.isFinite(b) ? a + (b - a) * pair.alpha : null;
+  }
   function updateCamera(dt) {
+    if (cameraMode === 'cockpit') { targetIndex = 0; $('replay-target').value = '0'; }
     const car = targetIndex ? trafficCars[targetIndex - 1]?.mesh : playerWrapper;
     const anchor = car?.position || playerWrapper.position;
     const heading = targetIndex ? car.rotation.y : roadsterAttitudeGroup.rotation.y;
     const sin = Math.sin(heading), cos = Math.cos(heading);
     camera.up.set(0, 1, 0); camera.fov = 60; camera.near = .08;
     if (!free.initialized) { free.position.set(anchor.x + sin * 8, anchor.y + 3, anchor.z + cos * 8); free.yaw = heading; free.pitch = -.12; free.initialized = true; }
-    if (cameraMode === 'free') {
+    if (cameraMode === 'ground' || cameraMode === 'cockpit') {
+      // Right-front-door body-local mount, not a yaw-only chase. Both preserved
+      // NPC LOD bounds participate in clearance. The real cockpit eye is shared
+      // with live driving; no camera or playback writes physical state.
+      const root = cameraMode === 'cockpit' ? roadsterAttitudeGroup : targetIndex ? car : carMeshGroup;
+      playerWrapper.updateMatrixWorld(true); root.updateMatrixWorld(true);
+      const bounds = targetIndex ? window.RoadsterTrafficAssets?.cityContactBounds?.(car) : null;
+      const local = cameraMode === 'cockpit' ? new THREE.Vector3(0, COCKPIT_VIEW.eyeHeight, COCKPIT_VIEW.eyeZ) : new THREE.Vector3(Math.max(1.3, (bounds?.maxX || 0) + .25), .42, -.35);
+      camera.position.copy(local.applyMatrix4(root.matrixWorld));
+      camera.up.copy(new THREE.Vector3(0, 1, 0).transformDirection(root.matrixWorld));
+      const forward = new THREE.Vector3(0, cameraMode === 'cockpit' ? -COCKPIT_VIEW.downwardSlope : .025, -1).transformDirection(root.matrixWorld);
+      camera.lookAt(camera.position.clone().add(forward)); camera.near = .06;
+    } else if (cameraMode === 'fixed') {
+      if (replayRoadScroll() === null) { fixedPoint = null; cameraMode = 'free'; $('replay-camera').value = 'free'; message = 'fixed-unavailable'; updateCamera(dt); return; }
+      if (!fixedPoint) fixedPoint = new THREE.Vector3(anchor.x + cos * 5, anchor.y + 1.4, anchor.z - sin * 5 + 6 - replayRoadScroll());
+      // Highway uses a player-relative render origin. A roadside-fixed camera
+      // must translate in render Z with the road, not with the stationary car.
+      camera.position.copy(fixedPoint); camera.position.z += replayRoadScroll(); camera.lookAt(anchor.x, anchor.y + .65, anchor.z);
+    } else if (cameraMode === 'free') {
       const v = (held.has('ShiftLeft') || held.has('ShiftRight') ? 45 : 12) * Math.min(.05, dt);
       const forward = Number(held.has('KeyW')) - Number(held.has('KeyS')), side = Number(held.has('KeyD')) - Number(held.has('KeyA'));
       free.position.x += (-Math.sin(free.yaw) * forward + Math.cos(free.yaw) * side) * v;
@@ -195,16 +258,16 @@
       camera.position.copy(free.position);
       camera.lookAt(camera.position.x - Math.sin(free.yaw) * Math.cos(free.pitch) * 20, camera.position.y + Math.sin(free.pitch) * 20, camera.position.z - Math.cos(free.yaw) * Math.cos(free.pitch) * 20);
     } else {
-      const distance = free.distance;
-      const front = cameraMode === 'front', ground = cameraMode === 'ground';
-      const side = front ? distance * .72 : ground ? distance * .60 : 0;
-      const back = front ? -distance * .8 : distance;
-      camera.position.set(anchor.x + sin * back + cos * side, anchor.y + (ground ? .34 : front ? 1.3 : 2.4), anchor.z + cos * back - sin * side);
+      const distance = free.distance, front = cameraMode === 'front';
+      const side = front ? distance * .72 : 0, back = front ? -distance * .8 : distance;
+      camera.position.set(anchor.x + sin * back + cos * side, anchor.y + (front ? 1.3 : 2.4), anchor.z + cos * back - sin * side);
       camera.lookAt(anchor.x, anchor.y + .65, anchor.z);
     }
     const floor = currentMap === 'coast' ? (window.RoadsterCoast?.surface?.(camera.position.x, camera.position.z)?.height || 0) : 0;
-    camera.position.y = Math.max(floor + .12, camera.position.y); free.position.y = camera.position.y;
-    camera.updateProjectionMatrix();
+    // World-fixed really stays fixed through seek/loop. The cockpit is inside
+    // the car. Only movable exterior mounts receive a terrain-floor exception.
+    if (cameraMode !== 'fixed' && cameraMode !== 'cockpit') camera.position.y = Math.max(floor + .12, camera.position.y);
+    free.position.y = camera.position.y; camera.updateProjectionMatrix();
   }
   function enterFree() {
     free.position.copy(camera.position);
@@ -215,10 +278,11 @@
   function renderFrame(dt) {
     const pair = buffer.at(playhead); if (!pair) return;
     bindings.forEach((b, i) => applyOne(b, pair.a.values, pair.b.values, i * S, pair.alpha));
+    presentCockpit();
     coldGasTime.value = playhead;
     // Saved viewpoint must not hide plumes/body when watching from outside.
     for (const plume of allThrusterPlumes) plume.visible = (plume.children[0]?.material?.uniforms?.uPower?.value || 0) > .001;
-    updateCamera(dt); window.RoadsterTrafficAssets?.updateLods(trafficCars, camera.position); renderer.render(scene, camera);
+    updateCamera(dt); window.RoadsterTrafficAssets?.updateLods(trafficCars, camera.position); window.RoadsterWeatherLights?.enforceSafety?.(); renderer.render(scene, camera);
   }
   function frame(dt) {
     if (!active()) return false;
@@ -242,10 +306,15 @@
     $('replay-play').disabled = stats.frames < 2 || mode === 'recording' || mode === 'playing';
     $('replay-pause').disabled = mode !== 'playing'; $('replay-exit').disabled = !active(); $('replay-clear').disabled = !stats.frames || mode === 'recording';
     $('replay-seek').disabled = !active(); $('replay-seek').max = String(stats.duration); $('replay-seek').value = String(active() ? playhead : 0);
+    $('replay-target').disabled = cameraMode === 'cockpit'; $('replay-fixed-here').disabled = !active();
+    $('replay-fixed-here').textContent = text('Fix camera here', '固定此处');
+    $('replay-fixed-status').textContent = cameraMode === 'fixed' && fixedPoint ? text('World position locked; camera only turns toward the vehicle.', '世界坐标已锁定，镜头只朝车辆转向。') : text('Landing: seek to touchdown → position a Free view → Fix camera here → rewind and play. Camera switches keep the point.', '看着陆：拖至着陆时刻 → 自由机位放到旁边 → 固定此处 → 拖回起点播放。切换机位保留定点。');
+    $('replay-near').disabled = $('replay-far').disabled = ['fixed', 'ground', 'cockpit'].includes(cameraMode);
     $('replay-time').textContent = `${(active() ? playhead : stats.duration).toFixed(1)} / ${stats.duration.toFixed(1)} s · ${(stats.bytes / 1048576).toFixed(1)} / 32 MiB · ${metadata?.vehicles || 0} ${text('vehicles', '辆车')}`;
     const notices = { memory: text('Buffer limit reached. Recording stopped; clip retained.', '已达内存上限，录制自动停止，已有片段已保留。'), duration: text('5-minute limit reached. Clip retained.', '已达5分钟上限，录制自动停止，已有片段已保留。'), hidden: text('Page hidden: recording stopped / replay paused.', '页面转入后台：已停止录制或暂停回放。'), graphics: text('Graphics interrupted: recording stopped; clip retained.', '图形中断：录制已停止，片段已保留。'), configuration: text('Scene changed. Clear this clip before recording again.', '场景配置已改变，请清除片段后重新录制。'), busy: text('Close menus, finish the challenge or wait for autopilot preparation.', '请先关闭菜单、结束排位，或等待自动驾驶准备完成。'), locked: text('Clear the clip before changing map or configuration.', '请先清除临时片段，再更换地图或配置。') };
+    notices['fixed-unavailable'] = text('This clip has no verified highway road-origin data. Use Free view or record a new clip.', '此片段缺少已验证的高速道路原点信息，请用自由机位或重新录制。');
     $('replay-status').textContent = notices[message] || (mode === 'recording' ? text('Recording all vehicles — manual and autopilot. Stops at 5 min or 32 MiB; never overwrites.', '正在记录所有车辆（含手动和自动驾驶）。5分钟或32MiB自动停止，不循环覆盖。') : active() ? text('Playback only — autopilot, driving, score and taxi are frozen.', '回放中：自动驾驶、驾驶、计分、出租车均已冻结。') : text('Record → Stop → Play. Refresh / leaving this page clears the clip.', '录制 → 停止 → 回放。刷新或离开网页后清除。'));
-    $('replay-note').textContent = text('Vehicle / debris trajectories and jets recorded. Explosion fire/smoke, rain, audio and coastal ambient animation are not replayed. Free camera has ground clearance, not building avoidance. Drag to look; wheel / + / − to move; WASD + Q/E in Free view.', '记录车辆、碎片轨迹与喷气。爆炸火球烟雾、雨滴、音频及海岸环境动画暂不回放。自由镜头有贴地保护，无建筑避障。拖动转向；滚轮或＋／−移动；自由机位可用WASD＋Q/E。');
+    $('replay-note').textContent = text('Vehicle / debris trajectories and jets recorded. Explosion fire/smoke, rain, audio and coastal ambient animation are not replayed. Ground is a right-front-door mount with a terrain-clearance exception, not building avoidance. Cockpit uses the actual player cabin and a replay clock, not live telemetry. Drag to look; wheel / + / − to move; WASD + Q/E in Free view.', '记录车辆、碎片轨迹与喷气。爆炸火球烟雾、雨滴、音频及海岸环境动画暂不回放。贴地镜头刚性安装在右前门旁，仅必要时抬高避地，无建筑避障。车内为我的车实际驾驶舱，仪表显示回放时间而非实时遥测。拖动转向；滚轮或＋／−移动；自由机位可用WASD＋Q/E。');
   }
   $('btn-replay')?.addEventListener('click', () => { open = !open; renderUi(); });
   $('replay-record')?.addEventListener('click', record); $('replay-stop')?.addEventListener('click', () => { capture(true); finish(); });
@@ -253,9 +322,10 @@
   $('replay-clear')?.addEventListener('click', releaseClip); $('replay-close')?.addEventListener('click', () => { open = false; renderUi(); });
   $('replay-seek')?.addEventListener('input', e => seek(e.target.value)); $('replay-speed')?.addEventListener('change', e => { speed = Number(e.target.value); });
   $('replay-loop')?.addEventListener('change', e => { loop = e.target.checked; });
-  $('replay-camera')?.addEventListener('change', e => { if (e.target.value === 'free' && active()) enterFree(); else { cameraMode = e.target.value; free.initialized = false; } });
-  $('replay-target')?.addEventListener('change', e => { targetIndex = Math.max(0, Math.min(trafficCars.length, Number(e.target.value) || 0)); free.initialized = false; });
-  function dolly(amount) { free.distance = Math.max(2.5, Math.min(40, free.distance + amount)); if (cameraMode === 'free') { free.position.x += Math.sin(free.yaw) * Math.cos(free.pitch) * amount; free.position.z += Math.cos(free.yaw) * Math.cos(free.pitch) * amount; free.position.y -= Math.sin(free.pitch) * amount; } }
+  $('replay-camera')?.addEventListener('change', e => { if (e.target.value === 'free' && active()) enterFree(); else { if (e.target.value === 'fixed' && active() && !fixedPoint && replayRoadScroll() !== null) { fixedPoint = camera.position.clone(); fixedPoint.z -= replayRoadScroll(); } cameraMode = e.target.value; free.initialized = false; } if (active()) renderFrame(0); renderUi(); });
+  $('replay-fixed-here')?.addEventListener('click', lockFixedHere);
+  $('replay-target')?.addEventListener('change', e => { targetIndex = Math.max(0, Math.min(trafficCars.length, Number(e.target.value) || 0)); free.initialized = false; if (active()) renderFrame(0); });
+  function dolly(amount) { if (['ground', 'fixed', 'cockpit'].includes(cameraMode)) return; free.distance = Math.max(2.5, Math.min(40, free.distance + amount)); if (cameraMode === 'free') { free.position.x += Math.sin(free.yaw) * Math.cos(free.pitch) * amount; free.position.z += Math.cos(free.yaw) * Math.cos(free.pitch) * amount; free.position.y -= Math.sin(free.pitch) * amount; } }
   $('replay-near')?.addEventListener('click', () => dolly(-2)); $('replay-far')?.addEventListener('click', () => dolly(2));
   const canvas = renderer.domElement;
   canvas.addEventListener('pointerdown', e => { if (!active()) return; free.drag = { id: e.pointerId, x: e.clientX, y: e.clientY }; canvas.setPointerCapture?.(e.pointerId); });
@@ -287,7 +357,7 @@
     isActive: active, isBusy: busy, hasClip: () => buffer.stats().frames > 0,
     discontinuity: () => { if (mode === 'recording') { resetGeneration++; pendingCut = true; lastDestroyed = state.isDestroyed; lastAirborne = state.wasAirborne; } },
     markCar: car => { if (mode !== 'recording') return; const binding = bindings.find(b => b.car === car); if (binding) { binding.generation++; pendingCut = true; } },
-    render: renderUi, stats: () => ({ ...buffer.stats(), mode, playhead, baseCount, bindings: bindings.length, vehicles: metadata?.vehicles || 0, map: metadata?.map || null, cameraMode, speed, loop, checkpoint: Boolean(checkpoint), debris: debrisIds.size }),
+    render: renderUi, stats: () => ({ ...buffer.stats(), mode, playhead, baseCount, bindings: bindings.length, vehicles: metadata?.vehicles || 0, map: metadata?.map || null, cameraMode, fixedPoint: fixedPoint?.toArray() || null, speed, loop, checkpoint: Boolean(checkpoint), debris: debrisIds.size }),
     sample: time => { const p = buffer.at(time); return p ? { time: p.time, a: Array.from(p.a.values), b: Array.from(p.b.values), alpha: p.alpha } : null; }
   });
   // Install after the original game and before render-health. No numerical

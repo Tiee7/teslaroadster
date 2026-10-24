@@ -1,0 +1,28 @@
+# Replay cameras and bounded headlamp projection
+
+Successor to `26984ab7c8938235b42f8c9bfdc0dab49d670a22`, same PR20/dev branch; preview-only. Main and the user's f2 production remain untouched. This is not browser/GPU acceptance.
+
+## Using the cameras
+
+- Replay **Right door low / 右前门贴地** is a low body-local mount beside the right front door, not a rear chase. It follows the recorded full body attitude. The player lens is outside both approved skins; NPC clearance uses their preserved near/far model bounds. Terrain clearance may lift an exterior mount that would enter ground; building/obstacle avoidance is not promised.
+- For a landing, pause/seek to touchdown, choose **Free**, move beside the landing point, press **Fix camera here / 固定此处**, rewind and play. **Fixed world point** only turns toward the selected vehicle; it does not travel with it. Switching away/back preserves the locked position; pressing Fix here intentionally replaces it. Clear/new clip/pagehide discards it. Placement is manual, not landing prediction.
+- Highway uses a scrolling render origin: the fixed camera compensates measured, unwrapped road translation, including forward/reverse840m wraps. It stays roadside, not merely fixed relative to the player's stationary render Z. The existing wrapped-prop auxiliary slot17 stores that scalar; vehicle rows,18-float stride,20Hz sampling and32MiB accounting are unchanged. A changed road owner stops recording visibly. Missing/unsupported origin metadata refuses highway fixed placement with an explanation rather than treating old animation time as zero. Clips are page-RAM-only, so old sessions are not imported across reloads.
+- **Cockpit (player) / 车内（我的车）** uses the existing calibrated six-DOF driver eye and actual selected cabin. It explicitly targets the player; arbitrary NPCs have no supplied cockpit. The cabin display reads **REPLAY + clip time**, not frozen live speed/fuel presented as historical telemetry. Switching back/exit restores live materials, visibility, camera and instruments; pagehide disposes the temporary display texture. Live driving's existing **C** shortcut/camera button entry stays unchanged.
+
+## Headlight cause and scope
+
+The owner's screenshot shows a long saturated road reflection. Source/native matrix checks find real forward SpotLights, not a fake transparent road glow or a reversed live target. The prior1.02-degree downward aim,26.47-degree half-cone and65m legacy falloff admit wide far-road illumination. In pinned Three r128 legacy lighting, GGX specular from the low-roughness highway/city road can greatly exceed1 before NoToneMapping output. A concrete CPU witness gives about129.54 red-channel direct specular; this is a mathematical counterexample, **not** pixel reproduction of the screenshot.
+
+A presentation adapter loaded after the byte-exact original UI wraps its live weather-light owner and keeps original night/rain/dusk intensity2.4/2.8/2, colors, daytime-off and wreck-off rules. It applies10-degree downward aim,7-degree half-cone,.8 penumbra,38m distance and decay2. Flat-ground cone intersection is finite, roughly1.5–8.8m ahead of each source. The clone-only detached-target defect of r128 SpotLight.clone is also corrected without redirecting a clone to the live car.
+
+Only the three highway/city asphalt receivers get a pinned-r128 shader bridge: the **spot-loop GGX specular delta** is bounded to.18 per RGB per lamp (at most.36 for the two lamps). Original spot diffuse, point/directional lights, environment, normal/roughness textures, weather material values and global renderer are untouched. This is **not a bound on total scene brightness**. Coast's original high-roughness road/material stays byte-identical. Every model/geometry/material payload, physics, traffic, map, weather preset, autopilot and projection source stays byte-identical.
+
+Version, exact spot/header call counts, both shader includes and actual r128 unrolling are tested. An unsupported layout/include shows a compatibility warning and disables projected lamps instead of silently running an unbounded stale patch; replay samples and live checkpoint restoration cannot bypass that safety-off state. These checks do not establish actual driver compilation or image quality.
+
+## Evidence / retained limitations
+
+Native Three r128 CPU scenes test all three maps/both skins, selected cabin combinations, right-door geometry clearance, fixed seek/target/speed/loop/free placement, highway wrapping/reverse/origin-version failure, live C, playback/restore/pagehide, lamp weather lifecycle/clone targets, shader scope/counts/failure, and the real r128 F/G/D+distance+angular equations. Existing actual autopilot recording and all-vehicle fidelity tests remain included, plus a combined real driver/light-adapter/new-camera integration case.
+
+See the final summary/manifest and focused TAP for actual counts and unchanged planner exclusions. Independent source review found no remaining must-fix. No full-repository fresh-npm-test, browser visual, GPU, FPS or default-spawn journey claim.
+
+Still one temporary page-RAM clip, no download/upload/persistent replay storage:5 simulation minutes **or32MiB accounted data, whichever first**, no overwrite; this is not a total browser/GPU cap or a guaranteed5-minute recording. The old highway369-row minimum estimates about62.9s at20Hz before extra animation/debris, not a measured duration. Vehicle/debris/essential jets and lamps replay; explosion fire/smoke, rain, lightning flash, audio and coastal ambient rewind remain excluded. No video export/editor. The prior denied browser navigation and unknown extra HTTP action remain stopped; new code authorization is not browser authorization.

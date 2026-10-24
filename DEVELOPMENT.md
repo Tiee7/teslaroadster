@@ -244,3 +244,25 @@ serves a later commit.
 - Retain the original RAM-only cleanup,5min-or32MiB-first limit, no overwrite,
   no persistence/upload/download, no particle-perfect/video/obstruction promises.
   Five minutes is an upper bound, not a guaranteed clip duration on every map.
+
+## Replay camera / headlamp successor
+
+- Succeeds26984ab7; see `verification/replay-camera-lighting-20261024/`.
+  Right-front-door rigid low mount (terrain safety exception), a manually placed
+  world/roadside fixed point, and the actual player cockpit with replay-only
+  clock instruments. Highway fixed placement compensates recorded road origin;
+  old/missing origin metadata cannot silently act as valid coordinates.
+- Headlamp repair is confined to the existing weather-light owner and three
+  highway/city road spot-specular receivers. Actual r128 GGX arithmetic explains
+  the owner's saturated-road screenshot, but is not rendered-pixel proof. Keep
+  original light weather intensity/colors/diffuse and all global lighting/style;
+  version/include checks visibly disable unsafe projection on incompatibility,
+  including during historical lamp replay/live checkpoint restoration.
+- Runtime changes only replay adapter, replay HTML, headlamp HUD section and root
+  bundle. Original UI and numeric projection SHA inputs are also byte-exact.
+  Numerical owners, models/assets/material payloads, maps, weather presets
+  and existing autopilot recorder stay frozen. Full-GPU/browser acceptance remains
+  blocked by the prior explicit denial; no alternative navigation/HTTP route.
+- Follow same PR20/dev preview publication only. Never merge main, replace the
+  user's f2 production, duplicate an unchanged deployment, or discard old clips'
+  safety/ephemeral/memory limits. Preserve the earlier epochs and failing proof.

@@ -1,0 +1,160 @@
+{
+  "baseCommit": "26984ab7c8938235b42f8c9bfdc0dab49d670a22",
+  "scope": "Right-door / roadside-fixed / cockpit replay cameras and bounded headlamp projection; same dev PR20; no main merge or production promotion",
+  "verifiedAtUtc": "2026-10-24T09:27:26.868760Z",
+  "groups": {
+    "main": {
+      "tests": 1440,
+      "pass": 1440,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "terrain": {
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "art": {
+      "tests": 37,
+      "pass": 37,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "focused-final": {
+      "tests": 52,
+      "pass": 52,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "boundaries": {
+      "tests": 57,
+      "pass": 57,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  "groupProcesses": [
+    {
+      "group": "main",
+      "files": 112,
+      "exitCode": 0,
+      "seconds": 673.707240819931
+    },
+    {
+      "group": "terrain",
+      "files": 1,
+      "exitCode": 0,
+      "seconds": 10.685823917388916
+    },
+    {
+      "group": "art",
+      "files": 2,
+      "exitCode": 0,
+      "seconds": 43.2790732383728
+    }
+  ],
+  "uniqueApplicablePassingCases": 1495,
+  "focusedAndBoundaryCasesAreSubsets": true,
+  "recordedInputCount": 284,
+  "recordedInputsUnchangedThroughoutRun": true,
+  "sourceDriftAfterMain": {},
+  "skippedCases": 0,
+  "freshFullRepositoryNpmTestClaim": false,
+  "unchangedPlannerFilesRetainPriorEvidence": 10,
+  "freshReplayCameraSafetyCases": 8,
+  "freshCombinedRealAutopilotLightCameraCases": 1,
+  "freshHeadlampCases": 5,
+  "freshExistingAutopilotSuites": [
+    "tests/highway-demo-clock.test.mjs",
+    "tests/highway-demo-lifecycle.test.mjs"
+  ],
+  "runtimeChanged": [
+    "bundle_app.py",
+    "index.html",
+    "src/headlight-projection.js",
+    "src/index.html",
+    "src/replay.js"
+  ],
+  "unchangedNumericOwners": [
+    "src/ui-hud.js",
+    "src/physics-main.js",
+    "src/highway-demo.js",
+    "src/demo-numeric-projection.js"
+  ],
+  "shaderScope": "Only two car SpotLights specular delta on3 highway/city asphalt receivers;0.18 per RGB per lamp, not a whole-scene luminance bound. Original lamp weather intensities/colors, diffuse/point/directional/environment and road material parameters remain unchanged. No global dimming/tone-map/physics changes.",
+  "runtimeHashes": {
+    "src/audio.js": "b23863a246ae21e00b43faa3779ce8e64e2a5c47ecc0a42dbdd1496acf9c5662",
+    "src/city-clock.js": "49d4f465877dc2b33f0d7f8688da2ed8d63b53802c2fd0cd23c4946af1eaf4ac",
+    "src/city-diagnostics.js": "ef67c6f9a9b8a769c1ffd0842ed4653f0d7419cdcd951d9dd52c28a445bde977",
+    "src/coast-map.js": "3a95714d2e15aa2f30500cf5596ab1731137a2a93bd78f9d9d83f95ef8418cfe",
+    "src/coast-road-network.js": "9ad29e5666e0d753953617b3c5ccf353bdd6bff732014a34f5200c0be13e2690",
+    "src/config.js": "b464401a77b311409067f0168278d650d36cb7e5e010dc3c592b01900f592d13",
+    "src/demo-numeric-projection.js": "598d35f7bbda55ea2d408f3f433ac44f7c0e136f3de97dfc64e2d020ddd1fff1",
+    "src/driving-score.js": "eb2d82441d2e75fd2678461891631fdebe192844f3f984d06c81b35f4b3cef64",
+    "src/headlight-projection.js": "ff069d33b77506159289e1b1f72ed33b2f1fd1f2fb751b7f06aa69831769a586",
+    "src/highway-demo.js": "0cd1e9a3367a04565835f9ae042d4b1aa62ed710acaf2534c64f043c5fbaec07",
+    "src/highway-traffic.js": "7381a48eee3314a95961ad24cc353402e7d0bd5a5e62bb51cb66e3aa063200ec",
+    "src/index.html": "afb44e400094cd3ef94c3a5bd713e7e3d457bc0b97cae70903823259aa7f4fa5",
+    "src/leaderboard.js": "7c352894696349d66fa54411b66b3465351788161b060e31a2090f1147cebce6",
+    "src/mobile-controls.js": "5451890de12b3ecff07f933e483596f5f164ff37705309aa091657982b4c095d",
+    "src/music.js": "2fc359f534efe13eda8f19b355f9119e9230dd45cdfe935d789752ccabf2111e",
+    "src/npc-traffic-assets.js": "bcb1663f1f01512751d997d8db675856e180d53120d202807d31ece1c936705c",
+    "src/physics-main.js": "273e70d8f39cb2d6f9d47706b00fd27dbef21235052e01d255d9f7429432ed0e",
+    "src/reference-cockpit.js": "eaa622977aef138df766da6fd60ab372e87c4b02aa05afa438a981320b4922d2",
+    "src/reference-exterior.js": "3d99d3652f09b4b4a0fabb589674b70bb0cafde81ac0d6d4906128ea01a8c782",
+    "src/reference-traffic.js": "2adf00083355b6d91a60bfb6abb12be05d0aa1d006afe0af62d2e16b014aeb6a",
+    "src/render-diagnostics.js": "8254e1cbdf37ef1256726a3068f622ea70f6fb8d3be9006b0a8e069168499397",
+    "src/render-health.js": "b980a88fb323f1885e669b22e02ff88923861e78ef67ebc98c1579829c5d11d1",
+    "src/replay-core.js": "5bf06c62ae4628e8ceca3aae9929de3cb47f65f93eb4b5aca165ce06c6865aed",
+    "src/replay.js": "84f976fe322ff709f32baae17f012e0179e8ffd5d35e0207b2a40b7d465d5b18",
+    "src/start-screen.js": "00559095f5f055088112de9f93c1b07e35cf0bbe9e8572b111e47d6814bd9578",
+    "src/styles.css": "17621b926b56509d37c6a112f411f06c3ec1927c85c84b93516b7365df4460cd",
+    "src/taxi.js": "e376e158bd568e3ddd2ab381905b67588bb9452d58a8bc51dc73930058b871d2",
+    "src/ui-hud.js": "75ad7d56aead3544af1d1943241fe950450fc3d4c5ef254180cb609791b3eba4",
+    "src/vehicles.js": "d728a481506e75ea8670398e68dbece7ab145e6a2f1c52198d6cccf43caf37b8",
+    "src/weather-rain.js": "23984ee5ef9641c93b315cf784366d6cd97cf03c8eabf894f1eed33fa96beae0",
+    "src/world.js": "32732e2600da4f18846180816420bc1ef00964aed906800111656017b4519821"
+  },
+  "rootBundleSha256": "70aa80cff7ba220a9c2b1ef34af862fea3a4bce5197b81351df7f28c8d784f5e",
+  "nativeThreeRuntimeSha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+  "checks": {
+    "npm run check": "pass",
+    "npm run build": "pass",
+    "git diff --check": "pass",
+    "independentReview": "no must-fix"
+  },
+  "logSha256": {
+    "main.tap": "e7b2d1c79c6f6a8bf0f7f4e68e09548b27f08c2d06436895427b65b38816c9e4",
+    "terrain.tap": "e931e0caca7482bdaf4c0b3dbd1970a9395e67e2f2dc1e3194477d298502bcbc",
+    "art.tap": "5271c3ce12e0907874be6de6c066f9c2be1aef7d962f4613a1f3cffc6e68c76e",
+    "focused-final.tap": "b71812448dff79bb41ff35894d86ea01a8cf4e4137e14dbafe468549e73b6397",
+    "boundaries.tap": "9dbcdc1eeed6cfec707fe95c715604a0d15014ca0e5711fb39d062c4053fe998",
+    "check-final.log": "b8c99a615df4a40b590cbe5aaca5118298eb5513257a85d14e9f33d4a6dd6b58",
+    "build-final.log": "5c025195302db886f8702d8bfaf37ba06f612f4db6112d34ce8c13b4cac944ab",
+    "final-inputs.json": "867a9d06926737e95c48d20ff549789d5041a8d257468d6f7d2c2b95c3838cc5"
+  },
+  "testEnvironment": "Actual production highway driver, full original simulation, fixed clock, numerical projection and native Three r128 CPU scenes. Presentation DOM/media/renderer adapters, 52 spaced highway NPCs. New native cases cover real calibrated cabins, low right-door geometry, fixed/roadside transforms with wrap/seek/loop, origin-version failure, projector clone ownership, r128 shader matching/unrolling/fallback and exact CPU GGX/angular/distance arithmetic. Airborne witness is seeded, not planner-generated. No real-browser visual, GPU or FPS claim.",
+  "browser": "Previously denied exact preview navigation remains stopped pending explicit user reply. New autopilot request is not navigation authorization. Unknown extra HTTP action also remains stopped. READY/commit/source readback do not establish page/UI acceptance.",
+  "limits": {
+    "simulationDurationSeconds": 300,
+    "accountedBufferBytes": 33554432,
+    "sampleRateHz": 20,
+    "noSilentOverwrite": true,
+    "ephemeralPageRAMOnly": true,
+    "minHighwayRows": 369,
+    "estimatedBytesPerSample": 26632,
+    "assumedHzBudgetSeconds": 62.996455392009615,
+    "budgetEstimateNotMeasured": true
+  }
+}

@@ -34,13 +34,13 @@ class Dom {
   emit(type, extra = {}) { const e = { target: this, preventDefault() { this.prevented = true; }, stopImmediatePropagation() { this.stopped = true; }, ...extra }; for (const fn of this.listeners[type] || []) { fn(e); if (e.stopped) break; } return e; }
   dispatchEvent(event) { return this.emit(event.type || 'change', event); }
   closest() { return null; }
-  getContext() { return {}; }
+  getContext() { return { fillRect() {}, fillText() {} }; }
   setPointerCapture() {}
   setAttribute() {}
   showModal() { this.open = true; }
   close() { this.open = false; }
 }
-function fixture(map = 'highway', count = 52, { autopilot = false } = {}) {
+function fixture(map = 'highway', count = 52, { autopilot = false, adapterSource = adapter } = {}) {
   const ids = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(([, id]) => [id, new Dom(id)]));
   const document = new Dom(), window = new Dom(), canvas = new Dom(); document.body = new Dom(); document.hidden = false;
   document.getElementById = id => ids.get(id); document.createElement = () => new Dom();
@@ -73,7 +73,7 @@ function fixture(map = 'highway', count = 52, { autopilot = false } = {}) {
     window.RoadsterRanked = { tick() {}, render() {}, abort() {}, isActive: () => false, isDialogOpen: () => false, prepareForDemo: async () => {} };
     vm.runInContext(read('src/demo-numeric-projection.js') + '\n' + read('src/highway-demo.js'), c);
   }
-  vm.runInContext(core + '\n' + adapter, c);
+  vm.runInContext(core + '\n' + adapterSource, c);
   const api = window.RoadsterReplay, parts = c.parts;
   function tick(dt = .05) { now += dt * 1000; api.afterTick(dt); }
   function frame(dt = 1 / 60) { now += dt * 1000; c.animate(now); }
@@ -348,4 +348,92 @@ test('autopilot collision/debris and normal performance-stop transitions keep th
   assert.equal(crash.parts.scene.getObjectByName('temporary-replay-debris').children.filter(n => n.visible).length, 34); crash.api.exit(); assert.equal(JSON.stringify(crash.parts.state), state); assert.equal(crash.window.RoadsterDemo.isBusy(), false);
   const slow = fixture('highway', 52, { autopilot: true }); await slow.window.RoadsterDemo.toggle(); slow.api.record(); for (let i = 0; i < 3; i++) slow.frame();
   slow.frame(.2); assert.equal(slow.window.RoadsterDemo.isBusy(), false); assert.equal(slow.api.stats().mode, 'recording'); slow.frame(); slow.api.stop(); assert.ok(slow.api.stats().duration > 0); assert.equal(slow.api.play(), true); slow.api.exit();
+});
+
+function cameraChoice(f, value) { const select = f.ids.get('replay-camera'); select.value = value; select.emit('change'); }
+function nearVector(actual, expected, message) { assert.ok(actual.distanceTo(expected) < 1e-8, message + ': ' + actual.toArray() + ' / ' + expected.toArray()); }
+test('replay camera successor: low right-front-door mount is rigid in all maps/models, outside the native body and independent of zoom', () => {
+  for (const map of ['highway', 'city', 'coast']) for (const model of ['reference', 'classic']) {
+    const f = fixture(map), p = f.parts, T = f.c.THREE, api = f.api;
+    f.window.RoadsterVehicle.setModel(model); api.record();
+    p.playerWrapper.position.set(14, 8, -32); p.roadsterAttitudeGroup.rotation.set(.22, 1.1, -.18); p.carMeshGroup.rotation.set(.03, 0, .02); f.tick(); api.stop();
+    api.play(); api.pause(); cameraChoice(f, 'ground'); api.seek(.05); p.scene.updateMatrixWorld(true);
+    const expected = new T.Vector3(1.3, .42, -.35).applyMatrix4(p.carMeshGroup.matrixWorld);
+    nearVector(p.camera.position, expected, map + '/' + model + ' door mount');
+    nearVector(p.camera.up, new T.Vector3(0, 1, 0).transformDirection(p.carMeshGroup.matrixWorld), 'full roll/pitch inherited');
+    assert.equal(p.camera.near, .06);
+    const ray = new T.Raycaster(p.camera.position, p.camera.getWorldDirection(new T.Vector3()), 0, .08);
+    const visible = node => { for (let n = node; n; n = n.parent) if (!n.visible) return false; return true; };
+    assert.equal(ray.intersectObject(p.playerWrapper, true).filter(hit => visible(hit.object)).length, 0, 'lens/near interval is not inside the actual model');
+    f.ids.get('replay-near').emit('click'); api.seek(.05); nearVector(p.camera.position, expected, 'not a variable-distance chase'); api.exit();
+  }
+});
+test('replay camera successor: NPC door clearance uses its preserved near/far bounds, terrain is a safety floor', () => {
+  const f = fixture('coast'), p = f.parts, T = f.c.THREE, api = f.api; api.record(); p.trafficCars[0].mesh.position.set(0, 8, 0); p.trafficCars[0].mesh.rotation.set(.1, .7, -.2); f.tick(); api.stop(); api.play(); api.pause();
+  const target = f.ids.get('replay-target'); target.value = '1'; target.emit('change'); cameraChoice(f, 'ground'); api.seek(.05); p.scene.updateMatrixWorld(true);
+  const bounds = f.window.RoadsterTrafficAssets.cityContactBounds(p.trafficCars[0].mesh), local = p.trafficCars[0].mesh.worldToLocal(p.camera.position.clone());
+  assert.ok(local.x >= bounds.maxX + .24, 'outside every preserved LOD, not a fixed sedan width'); assert.ok(local.z < 0);
+  target.value = '0'; target.emit('change'); p.playerWrapper.position.y = -10; api.clear(); api.record(); f.tick(); api.stop(); api.play(); api.pause(); cameraChoice(f, 'ground'); api.seek(0);
+  const floor = f.window.RoadsterCoast.surface(p.camera.position.x, p.camera.position.z).height;
+  assert.ok(p.camera.position.y >= floor + .119999, 'do not bury lens in terrain; rigid mount has an explicit clearance exception');
+});
+test('replay camera successor: landing fixed point never translates across seek, target, playback speed, loop or zoom', () => {
+  const f = fixture(), p = f.parts, T = f.c.THREE, api = f.api; api.record(); p.playerWrapper.position.set(0, 15, -30); f.tick(); p.playerWrapper.position.set(4, 0, -75); f.tick(); api.stop(); api.play(); api.pause(); api.seek(.1); cameraChoice(f, 'fixed');
+  const point = p.camera.position.clone(); api.seek(0); nearVector(p.camera.position, point, 'world point survives rewind to the approach');
+  const desired = p.playerWrapper.position.clone().add(new T.Vector3(0, .65, 0)).sub(point).normalize(); nearVector(p.camera.getWorldDirection(new T.Vector3()), desired, 'only direction tracks');
+  f.ids.get('replay-far').emit('click'); api.frame(0); nearVector(p.camera.position, point, 'zoom cannot move fixed camera');
+  const target = f.ids.get('replay-target'); target.value = '1'; target.emit('change'); api.seek(.05); nearVector(p.camera.position, point, 'target switch cannot move point');
+  f.ids.get('replay-speed').value = '2'; f.ids.get('replay-speed').emit('change'); f.ids.get('replay-loop').checked = true; f.ids.get('replay-loop').emit('change'); api.play(); for (let i = 0; i < 4; i++) api.frame(.1); nearVector(p.camera.position, point, 'loop cannot move point');
+  api.pause(); cameraChoice(f, 'free'); f.canvas.emit('wheel', { deltaY: -1 }); api.frame(0); const adjusted = p.camera.position.clone(); f.ids.get('replay-fixed-here').emit('click'); assert.equal(api.stats().cameraMode, 'fixed'); api.seek(0); nearVector(p.camera.position, adjusted, 'explicit free-view placement captured'); api.clear(); assert.equal(api.stats().fixedPoint, null);
+});
+test('replay camera successor: real cockpit pose, view visibility and replay-only instruments restore across every model/cabin combination', () => {
+  for (const model of ['reference', 'classic']) for (const cockpit of ['reference', 'classic']) {
+    const f = fixture(), p = f.parts, T = f.c.THREE, api = f.api; f.window.RoadsterVehicle.setModel(model); f.window.RoadsterVehicle.setCockpit(cockpit);
+    f.evaluate('cameraModeIndex=3;setCockpitPerspective(true);setCockpitExteriorDetailsVisible(false);');
+    const originalMap = f.evaluate('cockpitHudTexture'), live = f.evaluate('[yokeWheelGroup.position.toArray(),yokeWheelGroup.scale.toArray()]'); const visible = []; p.playerWrapper.traverse(n => visible.push([n, n.visible]));
+    api.record(); p.playerWrapper.position.set(8, 7, 12); p.roadsterAttitudeGroup.rotation.set(.24, -.8, .21); p.wheels[0].rotation.x = -7; f.tick(); api.stop(); const state = JSON.stringify(p.state);
+    api.play(); api.pause(); const target = f.ids.get('replay-target'); target.value = '1'; target.emit('change'); cameraChoice(f, 'cockpit'); api.seek(.05); p.scene.updateMatrixWorld(true);
+    nearVector(p.camera.position, new T.Vector3(0, 1.04, -.15).applyMatrix4(p.roadsterAttitudeGroup.matrixWorld), 'same calibrated eye as real driving');
+    nearVector(p.camera.getWorldDirection(new T.Vector3()), new T.Vector3(0, -.04, -1).transformDirection(p.roadsterAttitudeGroup.matrixWorld), 'six-DOF cabin forward');
+    assert.equal(target.value, '0'); assert.equal(target.disabled, true); assert.equal(f.evaluate('cockpitPerspectiveActive'), true); assert.equal(f.evaluate('roadsterCanopyMesh.visible'), false);
+    assert.notEqual(f.evaluate('screenDisplay.material.map'), originalMap, 'do not misrepresent frozen live telemetry as recorded telemetry');
+    cameraChoice(f, 'ground'); api.seek(.05); assert.equal(f.evaluate('cockpitPerspectiveActive'), false); assert.equal(f.evaluate('screenDisplay.material.map'), originalMap);
+    cameraChoice(f, 'cockpit'); api.seek(0); const texture = f.evaluate('screenDisplay.material.map'); let disposed = 0; texture.addEventListener('dispose', () => disposed++); api.exit(); assert.equal(f.evaluate('screenDisplay.material.map'), originalMap); assert.deepEqual(f.evaluate('[yokeWheelGroup.position.toArray(),yokeWheelGroup.scale.toArray()]'), live); assert.ok(visible.every(([n, v]) => n.visible === v)); assert.equal(JSON.stringify(p.state), state); f.window.emit('pagehide'); assert.equal(disposed, 1); assert.equal(api.stats().frames, 0); assert.equal(f.evaluate('screenDisplay.material.map'), originalMap);
+  }
+});
+test('replay camera successor: existing live C cockpit shortcut remains reachable outside playback and blocked during it', () => {
+  const f = fixture(), hud = read('src/ui-hud.js'); f.c.Element = Dom; f.c.applyTranslations = () => {}; f.evaluate(hud.slice(hud.indexOf("window.addEventListener('keydown', (e)"), hud.indexOf("window.addEventListener('keyup', (e)")));
+  f.window.emit('keydown', { code: 'KeyC', target: { closest: () => null } }); assert.equal(f.evaluate('cameraModeIndex'), 3);
+  f.api.record(); f.tick(); f.api.stop(); f.api.play(); f.api.pause(); f.window.emit('keydown', { code: 'KeyC', target: { closest: () => null } }); assert.equal(f.evaluate('cameraModeIndex'), 3); f.api.exit();
+  f.window.emit('keydown', { code: 'KeyC', target: { closest: () => null } }); assert.equal(f.evaluate('cameraModeIndex'), 0);
+});
+test('replay camera successor: highway fixed point stays roadside through actual 840m wraps, forward/reverse, seek and camera switches', () => {
+  const f = fixture(), p = f.parts, api = f.api; p.scrollingProps[0].position.z = 419; api.record();
+  for (const z of [-419, -409, -419, 419, 409]) { p.scrollingProps[0].position.z = z; f.tick(); } api.stop(); api.play(); api.pause(); api.seek(.1); cameraChoice(f, 'fixed');
+  const roadIndex = f.evaluate('scrollingProps[0]'), lock = api.stats().fixedPoint.slice(), initialCamera = p.camera.position.z;
+  const scroll = t => { const sample = api.sample(t); return sample.a[(api.stats().baseCount - 1) * 18 + 17] + (sample.b[(api.stats().baseCount - 1) * 18 + 17] - sample.a[(api.stats().baseCount - 1) * 18 + 17]) * sample.alpha; };
+  for (const t of [0, .05, .075, .1, .15, .2, .25, 0]) { api.seek(t); assert.ok(Math.abs(p.camera.position.z - scroll(t) - lock[2]) < 1e-8, 'world roadside point, not render-origin point'); }
+  api.seek(.05); assert.notEqual(p.camera.position.z, initialCamera, 'highway render coordinate must compensate road motion'); assert.ok(Math.abs(roadIndex.position.z + 419) < 1e-8);
+  cameraChoice(f, 'front'); cameraChoice(f, 'fixed'); assert.deepEqual(api.stats().fixedPoint, lock); assert.ok(Math.abs(p.camera.position.z - scroll(.05) - lock[2]) < 1e-8);
+  const aux = time => api.sample(time).a[(api.stats().baseCount - 1) * 18 + 17]; assert.equal(aux(.05), 2); assert.equal(aux(.1), 12); assert.equal(aux(.2), 0); assert.equal(aux(.25), -10);
+});
+test('replay camera successor: unsupported highway-origin data cannot pretend to be fixed and replaced road owners stop recording safely', () => {
+  const f = fixture('highway', 52, { adapterSource: adapter.replace('roadScrollVersion: 1', 'roadScrollVersion: 0') }); f.api.record(); f.tick(); f.api.stop(); f.api.play(); f.api.pause(); cameraChoice(f, 'fixed'); assert.equal(f.api.stats().cameraMode, 'free'); assert.match(f.ids.get('replay-status').textContent, /no verified highway/); f.ids.get('replay-fixed-here').emit('click'); assert.equal(f.api.stats().fixedPoint, null);
+  const g = fixture(); g.api.record(); g.tick(); const initial = g.api.sample(0).a; g.parts.scrollingProps[0] = new g.c.THREE.Group(); g.tick(); assert.equal(g.api.stats().mode, 'drive'); assert.deepEqual(g.api.sample(0).a, initial); assert.match(g.ids.get('replay-status').textContent, /Scene changed/); g.api.clear(); assert.equal(g.api.stats().fixedPoint, null);
+});
+test('replay camera successor: shader incompatibility discovered during replay cannot be undone by historical lamp samples or live checkpoint restoration', () => {
+  const f = fixture(), { api } = f, ui = read('src/ui-hud.js'); f.evaluate('const roadMat=new THREE.MeshStandardMaterial(),cityAsphaltMat=roadMat.clone(),cityAsphaltEWMat=roadMat.clone();' + ui.slice(ui.indexOf('function syncVehicleWeatherLights('), ui.indexOf('function cycleWeatherMode(')) + read('src/headlight-projection.js'));
+  f.window.RoadsterWeatherLights.sync(); api.record(); f.tick(); api.stop(); api.play(); api.pause();
+  f.evaluate("roadMat.onBeforeCompile({fragmentShader:'missing lights include'},{});");
+  for (const time of [0, .05, 0]) { api.seek(time); api.frame(0); assert.equal(f.evaluate('headlightSpotL.intensity'), 0); assert.equal(f.evaluate('headlightSpotR.visible'), false); }
+  api.exit(); assert.equal(f.evaluate('headlightSpotL.intensity'), 0); assert.equal(f.evaluate('headlightSpotR.visible'), false); assert.equal(f.window.RoadsterWeatherLights.status().compatible, false);
+});
+test('replay camera successor: actual autopilot recording with the production light adapter survives every new view and preserves its live driver clock', async () => {
+  const f = fixture('highway', 52, { autopilot: true }), { api, parts: p } = f, ui = read('src/ui-hud.js');
+  f.evaluate('const roadMat=new THREE.MeshStandardMaterial(),cityAsphaltMat=roadMat.clone(),cityAsphaltEWMat=roadMat.clone();' + ui.slice(ui.indexOf('function syncVehicleWeatherLights('), ui.indexOf('function cycleWeatherMode(')) + read('src/headlight-projection.js'));
+  f.window.RoadsterWeatherLights.sync(); await f.window.RoadsterDemo.toggle(); assert.equal(api.record(), true); for (let i = 0; i < 12; i++) f.frame(); api.stop();
+  const physical = JSON.stringify(p.state), clock = JSON.stringify(f.window.RoadsterDemo.clockStats()); assert.equal(api.stats().vehicles, 53); api.play(); api.pause();
+  for (const mode of ['ground', 'fixed', 'cockpit', 'free', 'front', 'chase', 'fixed']) { cameraChoice(f, mode); api.seek(api.stats().duration / 2); api.frame(.05); assert.equal(JSON.stringify(p.state), physical); assert.equal(JSON.stringify(f.window.RoadsterDemo.clockStats()), clock); }
+  assert.equal(f.window.RoadsterWeatherLights.status().compatible, true); api.exit(); assert.equal(f.window.RoadsterDemo.isActive(), true); assert.equal(JSON.stringify(p.state), physical); assert.equal(JSON.stringify(f.window.RoadsterDemo.clockStats()), clock);
+  f.frame(); assert.ok(f.window.RoadsterDemo.clockStats().steps > JSON.parse(clock).steps); f.window.emit('pagehide'); assert.equal(api.stats().frames, 0); assert.equal(f.window.RoadsterDemo.isActive(), false);
 });
